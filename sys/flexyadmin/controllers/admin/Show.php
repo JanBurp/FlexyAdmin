@@ -106,14 +106,6 @@ class Show extends AdminController {
     // Data
     $this->data->table($name);
     $api = 'row';
-    // $data = $this->data->get_form($id);
-    // $options = $this->data->get_options();
-
-    // Fields
-    // $fields = $this->_prepareFields('form_set',$options);
-    // $fieldsets = $this->data->get_setting(array('form_set','fieldsets'));
-    // $fieldsetsKeys = $this->ui->get(array_keys($fieldsets));
-    // $fieldsets = array_combine($fieldsetsKeys,$fieldsets);
     
     // Show form
     $form = array(
@@ -121,75 +113,71 @@ class Show extends AdminController {
       'title'     => $this->ui->get($name),
       'id'        => $id,
       'api'       => $api
-      // 'fields'    => $fields,
-      // 'fieldsets' => $fieldsets,
-      // 'data'      => $data,
-      // 'options'   => $options,
     );
 	  $this->view_admin( 'vue/form', $form );
 	}
   
   
-  /**
-   * Geeft alle velden met nuttige informatie per veld
-   *
-   * @param string $set [grid_set|form_set]
-   * @return array
-   * @author Jan den Besten
-   */
-  private function _prepareFields($set='grid_set',$options=array()) {
-    $fields = $this->data->get_setting(array($set,'fields'));
-    $fields = array_combine($fields,$fields);
-
-    foreach ($fields as $field => $info) {
-      $fields[$field] = array(
-        // 'name'    => $this->ui->get($field),
-        'schema'  => $this->_getSchema($field,el($field,$options))
-      );
-      if ($validation = $this->data->get_setting(array('field_info',$field,'validation'))) $fields[$field]['schema']['validation'] = implode('|',$validation);
-      // if ($path = $this->data->get_setting(array('field_info',$field,'path'))) $fields[$field]['path'] = $path;
-      // $fields[$field] = array_merge($fields[$field],$extra);
-    }
-    if (empty($fields)) {
-      $fields['id'] = array(
-        'name'  => $this->ui->get('id'),
-        'schema'=> $this->_getSchema('id',$options)
-      );
-    }
-    return $fields;
-  }
-
-
-
-  /**
-   * Geeft schema(form) van gegeven veld
-   *
-   * @param string $field 
-   * @return array
-   * @author Jan den Besten
-   */
-  private function _getSchema($field,$options) {
-    $schema = $this->config->item('FIELDS_default');
-    // from prefix
-    $fieldPrefix = get_prefix($field);
-    $cfgPrefix  = $this->config->item('FIELDS_prefix');
-    if ( $prefixSchema = el($fieldPrefix,$cfgPrefix) ) {
-      $schema = array_merge($schema,$prefixSchema);
-    }
-    // Special fields
-    $cfgSpecial = $this->config->item('FIELDS_special');
-    if ( $specialSchema = el($field,$cfgSpecial)) {
-      $schema = array_merge($schema,$specialSchema);
-    }
-    // Has options??
-    if ($options) {
-      $schema['form-type'] = 'select';
-      if ($fieldPrefix==='media' or $fieldPrefix==='medias') $schema['form-type'] = 'media';
-    }
-    // Only the needed stuff
-    $schema=array_unset_keys($schema,array('grid','form','default','format' )); // TODO kan (deels) weg als oude ui weg is
-    return $schema;
-  }
+  // /**
+  //  * Geeft alle velden met nuttige informatie per veld
+  //  *
+  //  * @param string $set [grid_set|form_set]
+  //  * @return array
+  //  * @author Jan den Besten
+  //  */
+  // private function _prepareFields($set='grid_set',$options=array()) {
+  //   $fields = $this->data->get_setting(array($set,'fields'));
+  //   $fields = array_combine($fields,$fields);
+  //
+  //   foreach ($fields as $field => $info) {
+  //     $fields[$field] = array(
+  //       // 'name'    => $this->ui->get($field),
+  //       'schema'  => $this->_getSchema($field,el($field,$options))
+  //     );
+  //     if ($validation = $this->data->get_setting(array('field_info',$field,'validation'))) $fields[$field]['schema']['validation'] = implode('|',$validation);
+  //     // if ($path = $this->data->get_setting(array('field_info',$field,'path'))) $fields[$field]['path'] = $path;
+  //     // $fields[$field] = array_merge($fields[$field],$extra);
+  //   }
+  //   if (empty($fields)) {
+  //     $fields['id'] = array(
+  //       'name'  => $this->ui->get('id'),
+  //       'schema'=> $this->_getSchema('id',$options)
+  //     );
+  //   }
+  //   return $fields;
+  // }
+  //
+  //
+  //
+  // /**
+  //  * Geeft schema(form) van gegeven veld
+  //  *
+  //  * @param string $field
+  //  * @return array
+  //  * @author Jan den Besten
+  //  */
+  // private function _getSchema($field,$options) {
+  //   $schema = $this->config->item('FIELDS_default');
+  //   // from prefix
+  //   $fieldPrefix = get_prefix($field);
+  //   $cfgPrefix  = $this->config->item('FIELDS_prefix');
+  //   if ( $prefixSchema = el($fieldPrefix,$cfgPrefix) ) {
+  //     $schema = array_merge($schema,$prefixSchema);
+  //   }
+  //   // Special fields
+  //   $cfgSpecial = $this->config->item('FIELDS_special');
+  //   if ( $specialSchema = el($field,$cfgSpecial)) {
+  //     $schema = array_merge($schema,$specialSchema);
+  //   }
+  //   // Has options??
+  //   if ($options) {
+  //     $schema['form-type'] = 'select';
+  //     if ($fieldPrefix==='media' or $fieldPrefix==='medias') $schema['form-type'] = 'media';
+  //   }
+  //   // Only the needed stuff
+  //   $schema=array_unset_keys($schema,array('grid','form','default','format' )); // TODO kan (deels) weg als oude ui weg is
+  //   return $schema;
+  // }
 
 
 }

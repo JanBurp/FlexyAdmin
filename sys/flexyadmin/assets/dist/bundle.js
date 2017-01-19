@@ -1946,7 +1946,7 @@ module.exports = g;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.2';
+  var VERSION = '4.17.4';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -3501,9 +3501,9 @@ module.exports = g;
      * Shortcut fusion is an optimization to merge iteratee calls; this avoids
      * the creation of intermediate arrays and can greatly reduce the number of
      * iteratee executions. Sections of a chain sequence qualify for shortcut
-     * fusion if the section is applied to an array of at least `200` elements
-     * and any iteratees accept only one argument. The heuristic for whether a
-     * section qualifies for shortcut fusion is subject to change.
+     * fusion if the section is applied to an array and iteratees accept only
+     * one argument. The heuristic for whether a section qualifies for shortcut
+     * fusion is subject to change.
      *
      * Chaining is supported in custom builds as long as the `_#value` method is
      * directly or indirectly included in the build.
@@ -3662,8 +3662,8 @@ module.exports = g;
 
     /**
      * By default, the template delimiters used by lodash are like those in
-     * embedded Ruby (ERB). Change the following template settings to use
-     * alternative delimiters.
+     * embedded Ruby (ERB) as well as ES2015 template strings. Change the
+     * following template settings to use alternative delimiters.
      *
      * @static
      * @memberOf _
@@ -3810,8 +3810,7 @@ module.exports = g;
           resIndex = 0,
           takeCount = nativeMin(length, this.__takeCount__);
 
-      if (!isArr || arrLength < LARGE_ARRAY_SIZE ||
-          (arrLength == length && takeCount == length)) {
+      if (!isArr || (!isRight && arrLength == length && takeCount == length)) {
         return baseWrapperValue(array, this.__actions__);
       }
       var result = [];
@@ -3925,7 +3924,7 @@ module.exports = g;
      */
     function hashHas(key) {
       var data = this.__data__;
-      return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key);
+      return nativeCreate ? (data[key] !== undefined) : hasOwnProperty.call(data, key);
     }
 
     /**
@@ -4396,24 +4395,6 @@ module.exports = g;
      */
     function arrayShuffle(array) {
       return shuffleSelf(copyArray(array));
-    }
-
-    /**
-     * Used by `_.defaults` to customize its `_.assignIn` use.
-     *
-     * @private
-     * @param {*} objValue The destination value.
-     * @param {*} srcValue The source value.
-     * @param {string} key The key of the property to assign.
-     * @param {Object} object The parent object of `objValue`.
-     * @returns {*} Returns the value to assign.
-     */
-    function assignInDefaults(objValue, srcValue, key, object) {
-      if (objValue === undefined ||
-          (eq(objValue, objectProto[key]) && !hasOwnProperty.call(object, key))) {
-        return srcValue;
-      }
-      return objValue;
     }
 
     /**
@@ -5028,8 +5009,7 @@ module.exports = g;
       if (value == null) {
         return value === undefined ? undefinedTag : nullTag;
       }
-      value = Object(value);
-      return (symToStringTag && symToStringTag in value)
+      return (symToStringTag && symToStringTag in Object(value))
         ? getRawTag(value)
         : objectToString(value);
     }
@@ -5233,7 +5213,7 @@ module.exports = g;
       if (value === other) {
         return true;
       }
-      if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
+      if (value == null || other == null || (!isObjectLike(value) && !isObjectLike(other))) {
         return value !== value && other !== other;
       }
       return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
@@ -5256,17 +5236,12 @@ module.exports = g;
     function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
       var objIsArr = isArray(object),
           othIsArr = isArray(other),
-          objTag = arrayTag,
-          othTag = arrayTag;
+          objTag = objIsArr ? arrayTag : getTag(object),
+          othTag = othIsArr ? arrayTag : getTag(other);
 
-      if (!objIsArr) {
-        objTag = getTag(object);
-        objTag = objTag == argsTag ? objectTag : objTag;
-      }
-      if (!othIsArr) {
-        othTag = getTag(other);
-        othTag = othTag == argsTag ? objectTag : othTag;
-      }
+      objTag = objTag == argsTag ? objectTag : objTag;
+      othTag = othTag == argsTag ? objectTag : othTag;
+
       var objIsObj = objTag == objectTag,
           othIsObj = othTag == objectTag,
           isSameTag = objTag == othTag;
@@ -5714,7 +5689,6 @@ module.exports = g;
      * @returns {Object} Returns the new object.
      */
     function basePick(object, paths) {
-      object = Object(object);
       return basePickBy(object, paths, function(value, path) {
         return hasIn(object, path);
       });
@@ -7107,8 +7081,7 @@ module.exports = g;
           var args = arguments,
               value = args[0];
 
-          if (wrapper && args.length == 1 &&
-              isArray(value) && value.length >= LARGE_ARRAY_SIZE) {
+          if (wrapper && args.length == 1 && isArray(value)) {
             return wrapper.plant(value).value();
           }
           var index = 0,
@@ -7415,7 +7388,7 @@ module.exports = g;
       var func = Math[methodName];
       return function(number, precision) {
         number = toNumber(number);
-        precision = nativeMin(toInteger(precision), 292);
+        precision = precision == null ? 0 : nativeMin(toInteger(precision), 292);
         if (precision) {
           // Shift with exponential notation to avoid floating-point issues.
           // See [MDN](https://mdn.io/round#Examples) for more details.
@@ -7520,7 +7493,7 @@ module.exports = g;
       thisArg = newData[2];
       partials = newData[3];
       holders = newData[4];
-      arity = newData[9] = newData[9] == null
+      arity = newData[9] = newData[9] === undefined
         ? (isBindKey ? 0 : func.length)
         : nativeMax(newData[9] - length, 0);
 
@@ -7538,6 +7511,63 @@ module.exports = g;
       }
       var setter = data ? baseSetData : setData;
       return setWrapToString(setter(result, newData), func, bitmask);
+    }
+
+    /**
+     * Used by `_.defaults` to customize its `_.assignIn` use to assign properties
+     * of source objects to the destination object for all destination properties
+     * that resolve to `undefined`.
+     *
+     * @private
+     * @param {*} objValue The destination value.
+     * @param {*} srcValue The source value.
+     * @param {string} key The key of the property to assign.
+     * @param {Object} object The parent object of `objValue`.
+     * @returns {*} Returns the value to assign.
+     */
+    function customDefaultsAssignIn(objValue, srcValue, key, object) {
+      if (objValue === undefined ||
+          (eq(objValue, objectProto[key]) && !hasOwnProperty.call(object, key))) {
+        return srcValue;
+      }
+      return objValue;
+    }
+
+    /**
+     * Used by `_.defaultsDeep` to customize its `_.merge` use to merge source
+     * objects into destination objects that are passed thru.
+     *
+     * @private
+     * @param {*} objValue The destination value.
+     * @param {*} srcValue The source value.
+     * @param {string} key The key of the property to merge.
+     * @param {Object} object The parent object of `objValue`.
+     * @param {Object} source The parent object of `srcValue`.
+     * @param {Object} [stack] Tracks traversed source values and their merged
+     *  counterparts.
+     * @returns {*} Returns the value to assign.
+     */
+    function customDefaultsMerge(objValue, srcValue, key, object, source, stack) {
+      if (isObject(objValue) && isObject(srcValue)) {
+        // Recursively merge objects and arrays (susceptible to call stack limits).
+        stack.set(srcValue, objValue);
+        baseMerge(objValue, srcValue, undefined, customDefaultsMerge, stack);
+        stack['delete'](srcValue);
+      }
+      return objValue;
+    }
+
+    /**
+     * Used by `_.omit` to customize its `_.cloneDeep` use to only clone plain
+     * objects.
+     *
+     * @private
+     * @param {*} value The value to inspect.
+     * @param {string} key The key of the property to inspect.
+     * @returns {*} Returns the uncloned value or `undefined` to defer cloning to `_.cloneDeep`.
+     */
+    function customOmitClone(value) {
+      return isPlainObject(value) ? undefined : value;
     }
 
     /**
@@ -7711,9 +7741,9 @@ module.exports = g;
      */
     function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
       var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
-          objProps = keys(object),
+          objProps = getAllKeys(object),
           objLength = objProps.length,
-          othProps = keys(other),
+          othProps = getAllKeys(other),
           othLength = othProps.length;
 
       if (objLength != othLength && !isPartial) {
@@ -7951,7 +7981,15 @@ module.exports = g;
      * @param {Object} object The object to query.
      * @returns {Array} Returns the array of symbols.
      */
-    var getSymbols = nativeGetSymbols ? overArg(nativeGetSymbols, Object) : stubArray;
+    var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
+      if (object == null) {
+        return [];
+      }
+      object = Object(object);
+      return arrayFilter(nativeGetSymbols(object), function(symbol) {
+        return propertyIsEnumerable.call(object, symbol);
+      });
+    };
 
     /**
      * Creates an array of the own and inherited enumerable symbols of `object`.
@@ -8435,29 +8473,6 @@ module.exports = g;
       data[1] = newBitmask;
 
       return data;
-    }
-
-    /**
-     * Used by `_.defaultsDeep` to customize its `_.merge` use.
-     *
-     * @private
-     * @param {*} objValue The destination value.
-     * @param {*} srcValue The source value.
-     * @param {string} key The key of the property to merge.
-     * @param {Object} object The parent object of `objValue`.
-     * @param {Object} source The parent object of `srcValue`.
-     * @param {Object} [stack] Tracks traversed source values and their merged
-     *  counterparts.
-     * @returns {*} Returns the value to assign.
-     */
-    function mergeDefaults(objValue, srcValue, key, object, source, stack) {
-      if (isObject(objValue) && isObject(srcValue)) {
-        // Recursively merge objects and arrays (susceptible to call stack limits).
-        stack.set(srcValue, objValue);
-        baseMerge(objValue, srcValue, undefined, mergeDefaults, stack);
-        stack['delete'](srcValue);
-      }
-      return objValue;
     }
 
     /**
@@ -10202,7 +10217,7 @@ module.exports = g;
      *
      * var users = [
      *   { 'user': 'barney',  'active': false },
-     *   { 'user': 'fred',    'active': false},
+     *   { 'user': 'fred',    'active': false },
      *   { 'user': 'pebbles', 'active': true }
      * ];
      *
@@ -12771,7 +12786,7 @@ module.exports = g;
       if (typeof func != 'function') {
         throw new TypeError(FUNC_ERROR_TEXT);
       }
-      start = start === undefined ? 0 : nativeMax(toInteger(start), 0);
+      start = start == null ? 0 : nativeMax(toInteger(start), 0);
       return baseRest(function(args) {
         var array = args[start],
             otherArgs = castSlice(args, 0, start);
@@ -13441,7 +13456,7 @@ module.exports = g;
      * date objects, error objects, maps, numbers, `Object` objects, regexes,
      * sets, strings, symbols, and typed arrays. `Object` objects are compared
      * by their own, not inherited, enumerable properties. Functions and DOM
-     * nodes are **not** supported.
+     * nodes are compared by strict equality, i.e. `===`.
      *
      * @static
      * @memberOf _
@@ -14461,7 +14476,9 @@ module.exports = g;
      * // => 3
      */
     function toSafeInteger(value) {
-      return baseClamp(toInteger(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER);
+      return value
+        ? baseClamp(toInteger(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER)
+        : (value === 0 ? value : 0);
     }
 
     /**
@@ -14715,7 +14732,7 @@ module.exports = g;
      * // => { 'a': 1, 'b': 2 }
      */
     var defaults = baseRest(function(args) {
-      args.push(undefined, assignInDefaults);
+      args.push(undefined, customDefaultsAssignIn);
       return apply(assignInWith, undefined, args);
     });
 
@@ -14739,7 +14756,7 @@ module.exports = g;
      * // => { 'a': { 'b': 2, 'c': 3 } }
      */
     var defaultsDeep = baseRest(function(args) {
-      args.push(undefined, mergeDefaults);
+      args.push(undefined, customDefaultsMerge);
       return apply(mergeWith, undefined, args);
     });
 
@@ -15401,7 +15418,7 @@ module.exports = g;
       });
       copyObject(object, getAllKeysIn(object), result);
       if (isDeep) {
-        result = baseClone(result, CLONE_DEEP_FLAG | CLONE_FLAT_FLAG | CLONE_SYMBOLS_FLAG);
+        result = baseClone(result, CLONE_DEEP_FLAG | CLONE_FLAT_FLAG | CLONE_SYMBOLS_FLAG, customOmitClone);
       }
       var length = paths.length;
       while (length--) {
@@ -16550,7 +16567,10 @@ module.exports = g;
      */
     function startsWith(string, target, position) {
       string = toString(string);
-      position = baseClamp(toInteger(position), 0, string.length);
+      position = position == null
+        ? 0
+        : baseClamp(toInteger(position), 0, string.length);
+
       target = baseToString(target);
       return string.slice(position, position + target.length) == target;
     }
@@ -16669,9 +16689,9 @@ module.exports = g;
         options = undefined;
       }
       string = toString(string);
-      options = assignInWith({}, options, settings, assignInDefaults);
+      options = assignInWith({}, options, settings, customDefaultsAssignIn);
 
-      var imports = assignInWith({}, options.imports, settings.imports, assignInDefaults),
+      var imports = assignInWith({}, options.imports, settings.imports, customDefaultsAssignIn),
           importsKeys = keys(imports),
           importsValues = baseValues(imports, importsKeys);
 
@@ -18755,14 +18775,13 @@ module.exports = g;
     // Add `LazyWrapper` methods for `_.drop` and `_.take` variants.
     arrayEach(['drop', 'take'], function(methodName, index) {
       LazyWrapper.prototype[methodName] = function(n) {
-        var filtered = this.__filtered__;
-        if (filtered && !index) {
-          return new LazyWrapper(this);
-        }
         n = n === undefined ? 1 : nativeMax(toInteger(n), 0);
 
-        var result = this.clone();
-        if (filtered) {
+        var result = (this.__filtered__ && !index)
+          ? new LazyWrapper(this)
+          : this.clone();
+
+        if (result.__filtered__) {
           result.__takeCount__ = nativeMin(n, result.__takeCount__);
         } else {
           result.__views__.push({
@@ -19410,8 +19429,8 @@ var t=Ai[e];y(Oi,e,function(){for(var n=arguments,r=arguments.length,i=new Array
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/*!
- * Vue.js v2.1.4
- * (c) 2014-2016 Evan You
+ * Vue.js v2.1.10
+ * (c) 2014-2017 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -19438,8 +19457,8 @@ function _toString (val) {
  * If the conversion fails, return original string.
  */
 function toNumber (val) {
-  var n = parseFloat(val, 10);
-  return (n || n === 0) ? n : val
+  var n = parseFloat(val);
+  return isNaN(n) ? val : n
 }
 
 /**
@@ -19497,14 +19516,14 @@ function isPrimitive (value) {
  */
 function cached (fn) {
   var cache = Object.create(null);
-  return function cachedFn (str) {
+  return (function cachedFn (str) {
     var hit = cache[str];
     return hit || (cache[str] = fn(str))
-  }
+  })
 }
 
 /**
- * Camelize a hyphen-delmited string.
+ * Camelize a hyphen-delimited string.
  */
 var camelizeRE = /-(\w)/g;
 var camelize = cached(function (str) {
@@ -19612,6 +19631,11 @@ function noop () {}
 var no = function () { return false; };
 
 /**
+ * Return same value
+ */
+var identity = function (_) { return _; };
+
+/**
  * Generate a static keys string from compiler modules.
  */
 function genStaticKeys (modules) {
@@ -19625,13 +19649,15 @@ function genStaticKeys (modules) {
  * if they are plain objects, do they have the same shape?
  */
 function looseEqual (a, b) {
-  /* eslint-disable eqeqeq */
-  return a == b || (
-    isObject(a) && isObject(b)
-      ? JSON.stringify(a) === JSON.stringify(b)
-      : false
-  )
-  /* eslint-enable eqeqeq */
+  var isObjectA = isObject(a);
+  var isObjectB = isObject(b);
+  if (isObjectA && isObjectB) {
+    return JSON.stringify(a) === JSON.stringify(b)
+  } else if (!isObjectA && !isObjectB) {
+    return String(a) === String(b)
+  } else {
+    return false
+  }
 }
 
 function looseIndexOf (arr, val) {
@@ -19667,7 +19693,7 @@ var config = {
   /**
    * Ignore certain custom elements
    */
-  ignoredElements: null,
+  ignoredElements: [],
 
   /**
    * Custom user key aliases for v-on
@@ -19690,6 +19716,11 @@ var config = {
    * Get the namespace of an element
    */
   getTagNamespace: noop,
+
+  /**
+   * Parse the real tag name for the specific platform.
+   */
+  parsePlatformTagName: identity,
 
   /**
    * Check if an attribute must be bound using property, e.g. value
@@ -19900,10 +19931,10 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
       this.set = Object.create(null);
     }
     Set.prototype.has = function has (key) {
-      return this.set[key] !== undefined
+      return this.set[key] === true
     };
     Set.prototype.add = function add (key) {
-      this.set[key] = 1;
+      this.set[key] = true;
     };
     Set.prototype.clear = function clear () {
       this.set = Object.create(null);
@@ -20121,9 +20152,8 @@ function protoAugment (target, src) {
 /**
  * Augment an target Object or Array by defining
  * hidden properties.
- *
- * istanbul ignore next
  */
+/* istanbul ignore next */
 function copyAugment (target, src, keys) {
   for (var i = 0, l = keys.length; i < l; i++) {
     var key = keys[i];
@@ -20136,7 +20166,7 @@ function copyAugment (target, src, keys) {
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
  */
-function observe (value) {
+function observe (value, asRootData) {
   if (!isObject(value)) {
     return
   }
@@ -20151,6 +20181,9 @@ function observe (value) {
     !value._isVue
   ) {
     ob = new Observer(value);
+  }
+  if (asRootData && ob) {
+    ob.vmCount++;
   }
   return ob
 }
@@ -20589,11 +20622,14 @@ function resolveAsset (
     return
   }
   var assets = options[type];
-  var res = assets[id] ||
-    // camelCase ID
-    assets[camelize(id)] ||
-    // Pascal Case ID
-    assets[capitalize(camelize(id))];
+  // check local registration variations first
+  if (hasOwn(assets, id)) { return assets[id] }
+  var camelizedId = camelize(id);
+  if (hasOwn(assets, camelizedId)) { return assets[camelizedId] }
+  var PascalCaseId = capitalize(camelizedId);
+  if (hasOwn(assets, PascalCaseId)) { return assets[PascalCaseId] }
+  // fallback to prototype chain
+  var res = assets[id] || assets[camelizedId] || assets[PascalCaseId];
   if ("development" !== 'production' && warnMissing && !res) {
     warn(
       'Failed to resolve ' + type.slice(0, -1) + ': ' + id,
@@ -20615,10 +20651,10 @@ function validateProp (
   var absent = !hasOwn(propsData, key);
   var value = propsData[key];
   // handle boolean props
-  if (isBooleanType(prop.type)) {
+  if (isType(Boolean, prop.type)) {
     if (absent && !hasOwn(prop, 'default')) {
       value = false;
-    } else if (value === '' || value === hyphenate(key)) {
+    } else if (!isType(String, prop.type) && (value === '' || value === hyphenate(key))) {
       value = true;
     }
   }
@@ -20698,7 +20734,7 @@ function assertProp (
     }
     for (var i = 0; i < type.length && !valid; i++) {
       var assertedType = assertType(value, type[i]);
-      expectedTypes.push(assertedType.expectedType);
+      expectedTypes.push(assertedType.expectedType || '');
       valid = assertedType.valid;
     }
   }
@@ -20759,12 +20795,12 @@ function getType (fn) {
   return match && match[1]
 }
 
-function isBooleanType (fn) {
+function isType (type, fn) {
   if (!Array.isArray(fn)) {
-    return getType(fn) === 'Boolean'
+    return getType(fn) === getType(type)
   }
   for (var i = 0, len = fn.length; i < len; i++) {
-    if (getType(fn[i]) === 'Boolean') {
+    if (getType(fn[i]) === getType(type)) {
       return true
     }
   }
@@ -20795,6 +20831,7 @@ var util = Object.freeze({
 	toObject: toObject,
 	noop: noop,
 	no: no,
+	identity: identity,
 	genStaticKeys: genStaticKeys,
 	looseEqual: looseEqual,
 	looseIndexOf: looseIndexOf,
@@ -20896,576 +20933,12 @@ var initProxy;
 
 /*  */
 
-
-var queue = [];
-var has$1 = {};
-var circular = {};
-var waiting = false;
-var flushing = false;
-var index = 0;
-
-/**
- * Reset the scheduler's state.
- */
-function resetSchedulerState () {
-  queue.length = 0;
-  has$1 = {};
-  {
-    circular = {};
-  }
-  waiting = flushing = false;
-}
-
-/**
- * Flush both queues and run the watchers.
- */
-function flushSchedulerQueue () {
-  flushing = true;
-
-  // Sort queue before flush.
-  // This ensures that:
-  // 1. Components are updated from parent to child. (because parent is always
-  //    created before the child)
-  // 2. A component's user watchers are run before its render watcher (because
-  //    user watchers are created before the render watcher)
-  // 3. If a component is destroyed during a parent component's watcher run,
-  //    its watchers can be skipped.
-  queue.sort(function (a, b) { return a.id - b.id; });
-
-  // do not cache length because more watchers might be pushed
-  // as we run existing watchers
-  for (index = 0; index < queue.length; index++) {
-    var watcher = queue[index];
-    var id = watcher.id;
-    has$1[id] = null;
-    watcher.run();
-    // in dev build, check and stop circular updates.
-    if ("development" !== 'production' && has$1[id] != null) {
-      circular[id] = (circular[id] || 0) + 1;
-      if (circular[id] > config._maxUpdateCount) {
-        warn(
-          'You may have an infinite update loop ' + (
-            watcher.user
-              ? ("in watcher with expression \"" + (watcher.expression) + "\"")
-              : "in a component render function."
-          ),
-          watcher.vm
-        );
-        break
-      }
-    }
-  }
-
-  // devtool hook
-  /* istanbul ignore if */
-  if (devtools && config.devtools) {
-    devtools.emit('flush');
-  }
-
-  resetSchedulerState();
-}
-
-/**
- * Push a watcher into the watcher queue.
- * Jobs with duplicate IDs will be skipped unless it's
- * pushed when the queue is being flushed.
- */
-function queueWatcher (watcher) {
-  var id = watcher.id;
-  if (has$1[id] == null) {
-    has$1[id] = true;
-    if (!flushing) {
-      queue.push(watcher);
-    } else {
-      // if already flushing, splice the watcher based on its id
-      // if already past its id, it will be run next immediately.
-      var i = queue.length - 1;
-      while (i >= 0 && queue[i].id > watcher.id) {
-        i--;
-      }
-      queue.splice(Math.max(i, index) + 1, 0, watcher);
-    }
-    // queue the flush
-    if (!waiting) {
-      waiting = true;
-      nextTick(flushSchedulerQueue);
-    }
-  }
-}
-
-/*  */
-
-var uid$2 = 0;
-
-/**
- * A watcher parses an expression, collects dependencies,
- * and fires callback when the expression value changes.
- * This is used for both the $watch() api and directives.
- */
-var Watcher = function Watcher (
-  vm,
-  expOrFn,
-  cb,
-  options
-) {
-  if ( options === void 0 ) options = {};
-
-  this.vm = vm;
-  vm._watchers.push(this);
-  // options
-  this.deep = !!options.deep;
-  this.user = !!options.user;
-  this.lazy = !!options.lazy;
-  this.sync = !!options.sync;
-  this.expression = expOrFn.toString();
-  this.cb = cb;
-  this.id = ++uid$2; // uid for batching
-  this.active = true;
-  this.dirty = this.lazy; // for lazy watchers
-  this.deps = [];
-  this.newDeps = [];
-  this.depIds = new _Set();
-  this.newDepIds = new _Set();
-  // parse expression for getter
-  if (typeof expOrFn === 'function') {
-    this.getter = expOrFn;
-  } else {
-    this.getter = parsePath(expOrFn);
-    if (!this.getter) {
-      this.getter = function () {};
-      "development" !== 'production' && warn(
-        "Failed watching path: \"" + expOrFn + "\" " +
-        'Watcher only accepts simple dot-delimited paths. ' +
-        'For full control, use a function instead.',
-        vm
-      );
-    }
-  }
-  this.value = this.lazy
-    ? undefined
-    : this.get();
-};
-
-/**
- * Evaluate the getter, and re-collect dependencies.
- */
-Watcher.prototype.get = function get () {
-  pushTarget(this);
-  var value = this.getter.call(this.vm, this.vm);
-  // "touch" every property so they are all tracked as
-  // dependencies for deep watching
-  if (this.deep) {
-    traverse(value);
-  }
-  popTarget();
-  this.cleanupDeps();
-  return value
-};
-
-/**
- * Add a dependency to this directive.
- */
-Watcher.prototype.addDep = function addDep (dep) {
-  var id = dep.id;
-  if (!this.newDepIds.has(id)) {
-    this.newDepIds.add(id);
-    this.newDeps.push(dep);
-    if (!this.depIds.has(id)) {
-      dep.addSub(this);
-    }
-  }
-};
-
-/**
- * Clean up for dependency collection.
- */
-Watcher.prototype.cleanupDeps = function cleanupDeps () {
-    var this$1 = this;
-
-  var i = this.deps.length;
-  while (i--) {
-    var dep = this$1.deps[i];
-    if (!this$1.newDepIds.has(dep.id)) {
-      dep.removeSub(this$1);
-    }
-  }
-  var tmp = this.depIds;
-  this.depIds = this.newDepIds;
-  this.newDepIds = tmp;
-  this.newDepIds.clear();
-  tmp = this.deps;
-  this.deps = this.newDeps;
-  this.newDeps = tmp;
-  this.newDeps.length = 0;
-};
-
-/**
- * Subscriber interface.
- * Will be called when a dependency changes.
- */
-Watcher.prototype.update = function update () {
-  /* istanbul ignore else */
-  if (this.lazy) {
-    this.dirty = true;
-  } else if (this.sync) {
-    this.run();
-  } else {
-    queueWatcher(this);
-  }
-};
-
-/**
- * Scheduler job interface.
- * Will be called by the scheduler.
- */
-Watcher.prototype.run = function run () {
-  if (this.active) {
-    var value = this.get();
-      if (
-        value !== this.value ||
-      // Deep watchers and watchers on Object/Arrays should fire even
-      // when the value is the same, because the value may
-      // have mutated.
-      isObject(value) ||
-      this.deep
-    ) {
-      // set new value
-      var oldValue = this.value;
-      this.value = value;
-      if (this.user) {
-        try {
-          this.cb.call(this.vm, value, oldValue);
-        } catch (e) {
-          /* istanbul ignore else */
-          if (config.errorHandler) {
-            config.errorHandler.call(null, e, this.vm);
-          } else {
-            "development" !== 'production' && warn(
-              ("Error in watcher \"" + (this.expression) + "\""),
-              this.vm
-            );
-            throw e
-          }
-        }
-      } else {
-        this.cb.call(this.vm, value, oldValue);
-      }
-    }
-  }
-};
-
-/**
- * Evaluate the value of the watcher.
- * This only gets called for lazy watchers.
- */
-Watcher.prototype.evaluate = function evaluate () {
-  this.value = this.get();
-  this.dirty = false;
-};
-
-/**
- * Depend on all deps collected by this watcher.
- */
-Watcher.prototype.depend = function depend () {
-    var this$1 = this;
-
-  var i = this.deps.length;
-  while (i--) {
-    this$1.deps[i].depend();
-  }
-};
-
-/**
- * Remove self from all dependencies' subscriber list.
- */
-Watcher.prototype.teardown = function teardown () {
-    var this$1 = this;
-
-  if (this.active) {
-    // remove self from vm's watcher list
-    // this is a somewhat expensive operation so we skip it
-    // if the vm is being destroyed or is performing a v-for
-    // re-render (the watcher list is then filtered by v-for).
-    if (!this.vm._isBeingDestroyed && !this.vm._vForRemoving) {
-      remove$1(this.vm._watchers, this);
-    }
-    var i = this.deps.length;
-    while (i--) {
-      this$1.deps[i].removeSub(this$1);
-    }
-    this.active = false;
-  }
-};
-
-/**
- * Recursively traverse an object to evoke all converted
- * getters, so that every nested property inside the object
- * is collected as a "deep" dependency.
- */
-var seenObjects = new _Set();
-function traverse (val) {
-  seenObjects.clear();
-  _traverse(val, seenObjects);
-}
-
-function _traverse (val, seen) {
-  var i, keys;
-  var isA = Array.isArray(val);
-  if ((!isA && !isObject(val)) || !Object.isExtensible(val)) {
-    return
-  }
-  if (val.__ob__) {
-    var depId = val.__ob__.dep.id;
-    if (seen.has(depId)) {
-      return
-    }
-    seen.add(depId);
-  }
-  if (isA) {
-    i = val.length;
-    while (i--) { _traverse(val[i], seen); }
-  } else {
-    keys = Object.keys(val);
-    i = keys.length;
-    while (i--) { _traverse(val[keys[i]], seen); }
-  }
-}
-
-/*  */
-
-function initState (vm) {
-  vm._watchers = [];
-  initProps(vm);
-  initMethods(vm);
-  initData(vm);
-  initComputed(vm);
-  initWatch(vm);
-}
-
-var isReservedProp = { key: 1, ref: 1, slot: 1 };
-
-function initProps (vm) {
-  var props = vm.$options.props;
-  if (props) {
-    var propsData = vm.$options.propsData || {};
-    var keys = vm.$options._propKeys = Object.keys(props);
-    var isRoot = !vm.$parent;
-    // root instance props should be converted
-    observerState.shouldConvert = isRoot;
-    var loop = function ( i ) {
-      var key = keys[i];
-      /* istanbul ignore else */
-      {
-        if (isReservedProp[key]) {
-          warn(
-            ("\"" + key + "\" is a reserved attribute and cannot be used as component prop."),
-            vm
-          );
-        }
-        defineReactive$$1(vm, key, validateProp(key, props, propsData, vm), function () {
-          if (vm.$parent && !observerState.isSettingProps) {
-            warn(
-              "Avoid mutating a prop directly since the value will be " +
-              "overwritten whenever the parent component re-renders. " +
-              "Instead, use a data or computed property based on the prop's " +
-              "value. Prop being mutated: \"" + key + "\"",
-              vm
-            );
-          }
-        });
-      }
-    };
-
-    for (var i = 0; i < keys.length; i++) loop( i );
-    observerState.shouldConvert = true;
-  }
-}
-
-function initData (vm) {
-  var data = vm.$options.data;
-  data = vm._data = typeof data === 'function'
-    ? data.call(vm)
-    : data || {};
-  if (!isPlainObject(data)) {
-    data = {};
-    "development" !== 'production' && warn(
-      'data functions should return an object.',
-      vm
-    );
-  }
-  // proxy data on instance
-  var keys = Object.keys(data);
-  var props = vm.$options.props;
-  var i = keys.length;
-  while (i--) {
-    if (props && hasOwn(props, keys[i])) {
-      "development" !== 'production' && warn(
-        "The data property \"" + (keys[i]) + "\" is already declared as a prop. " +
-        "Use prop default value instead.",
-        vm
-      );
-    } else {
-      proxy(vm, keys[i]);
-    }
-  }
-  // observe data
-  observe(data);
-  data.__ob__ && data.__ob__.vmCount++;
-}
-
-var computedSharedDefinition = {
-  enumerable: true,
-  configurable: true,
-  get: noop,
-  set: noop
-};
-
-function initComputed (vm) {
-  var computed = vm.$options.computed;
-  if (computed) {
-    for (var key in computed) {
-      var userDef = computed[key];
-      if (typeof userDef === 'function') {
-        computedSharedDefinition.get = makeComputedGetter(userDef, vm);
-        computedSharedDefinition.set = noop;
-      } else {
-        computedSharedDefinition.get = userDef.get
-          ? userDef.cache !== false
-            ? makeComputedGetter(userDef.get, vm)
-            : bind$1(userDef.get, vm)
-          : noop;
-        computedSharedDefinition.set = userDef.set
-          ? bind$1(userDef.set, vm)
-          : noop;
-      }
-      Object.defineProperty(vm, key, computedSharedDefinition);
-    }
-  }
-}
-
-function makeComputedGetter (getter, owner) {
-  var watcher = new Watcher(owner, getter, noop, {
-    lazy: true
-  });
-  return function computedGetter () {
-    if (watcher.dirty) {
-      watcher.evaluate();
-    }
-    if (Dep.target) {
-      watcher.depend();
-    }
-    return watcher.value
-  }
-}
-
-function initMethods (vm) {
-  var methods = vm.$options.methods;
-  if (methods) {
-    for (var key in methods) {
-      vm[key] = methods[key] == null ? noop : bind$1(methods[key], vm);
-      if ("development" !== 'production' && methods[key] == null) {
-        warn(
-          "method \"" + key + "\" has an undefined value in the component definition. " +
-          "Did you reference the function correctly?",
-          vm
-        );
-      }
-    }
-  }
-}
-
-function initWatch (vm) {
-  var watch = vm.$options.watch;
-  if (watch) {
-    for (var key in watch) {
-      var handler = watch[key];
-      if (Array.isArray(handler)) {
-        for (var i = 0; i < handler.length; i++) {
-          createWatcher(vm, key, handler[i]);
-        }
-      } else {
-        createWatcher(vm, key, handler);
-      }
-    }
-  }
-}
-
-function createWatcher (vm, key, handler) {
-  var options;
-  if (isPlainObject(handler)) {
-    options = handler;
-    handler = handler.handler;
-  }
-  if (typeof handler === 'string') {
-    handler = vm[handler];
-  }
-  vm.$watch(key, handler, options);
-}
-
-function stateMixin (Vue) {
-  // flow somehow has problems with directly declared definition object
-  // when using Object.defineProperty, so we have to procedurally build up
-  // the object here.
-  var dataDef = {};
-  dataDef.get = function () {
-    return this._data
-  };
-  {
-    dataDef.set = function (newData) {
-      warn(
-        'Avoid replacing instance root $data. ' +
-        'Use nested data properties instead.',
-        this
-      );
-    };
-  }
-  Object.defineProperty(Vue.prototype, '$data', dataDef);
-
-  Vue.prototype.$set = set$1;
-  Vue.prototype.$delete = del;
-
-  Vue.prototype.$watch = function (
-    expOrFn,
-    cb,
-    options
-  ) {
-    var vm = this;
-    options = options || {};
-    options.user = true;
-    var watcher = new Watcher(vm, expOrFn, cb, options);
-    if (options.immediate) {
-      cb.call(vm, watcher.value);
-    }
-    return function unwatchFn () {
-      watcher.teardown();
-    }
-  };
-}
-
-function proxy (vm, key) {
-  if (!isReserved(key)) {
-    Object.defineProperty(vm, key, {
-      configurable: true,
-      enumerable: true,
-      get: function proxyGetter () {
-        return vm._data[key]
-      },
-      set: function proxySetter (val) {
-        vm._data[key] = val;
-      }
-    });
-  }
-}
-
-/*  */
-
 var VNode = function VNode (
   tag,
   data,
   children,
   text,
   elm,
-  ns,
   context,
   componentOptions
 ) {
@@ -21474,12 +20947,12 @@ var VNode = function VNode (
   this.children = children;
   this.text = text;
   this.elm = elm;
-  this.ns = ns;
+  this.ns = undefined;
   this.context = context;
   this.functionalContext = undefined;
   this.key = data && data.key;
   this.componentOptions = componentOptions;
-  this.child = undefined;
+  this.componentInstance = undefined;
   this.parent = undefined;
   this.raw = false;
   this.isStatic = false;
@@ -21489,12 +20962,26 @@ var VNode = function VNode (
   this.isOnce = false;
 };
 
-var emptyVNode = function () {
+var prototypeAccessors = { child: {} };
+
+// DEPRECATED: alias for componentInstance for backwards compat.
+/* istanbul ignore next */
+prototypeAccessors.child.get = function () {
+  return this.componentInstance
+};
+
+Object.defineProperties( VNode.prototype, prototypeAccessors );
+
+var createEmptyVNode = function () {
   var node = new VNode();
   node.text = '';
   node.isComment = true;
   return node
 };
+
+function createTextVNode (val) {
+  return new VNode(undefined, undefined, undefined, String(val))
+}
 
 // optimized shallow clone
 // used for static nodes and slot nodes because they may be reused across
@@ -21507,10 +20994,10 @@ function cloneVNode (vnode) {
     vnode.children,
     vnode.text,
     vnode.elm,
-    vnode.ns,
     vnode.context,
     vnode.componentOptions
   );
+  cloned.ns = vnode.ns;
   cloned.isStatic = vnode.isStatic;
   cloned.key = vnode.key;
   cloned.isCloned = true;
@@ -21523,376 +21010,6 @@ function cloneVNodes (vnodes) {
     res[i] = cloneVNode(vnodes[i]);
   }
   return res
-}
-
-/*  */
-
-function mergeVNodeHook (def, hookKey, hook, key) {
-  key = key + hookKey;
-  var injectedHash = def.__injected || (def.__injected = {});
-  if (!injectedHash[key]) {
-    injectedHash[key] = true;
-    var oldHook = def[hookKey];
-    if (oldHook) {
-      def[hookKey] = function () {
-        oldHook.apply(this, arguments);
-        hook.apply(this, arguments);
-      };
-    } else {
-      def[hookKey] = hook;
-    }
-  }
-}
-
-/*  */
-
-function updateListeners (
-  on,
-  oldOn,
-  add,
-  remove$$1,
-  vm
-) {
-  var name, cur, old, fn, event, capture, once;
-  for (name in on) {
-    cur = on[name];
-    old = oldOn[name];
-    if (!cur) {
-      "development" !== 'production' && warn(
-        "Invalid handler for event \"" + name + "\": got " + String(cur),
-        vm
-      );
-    } else if (!old) {
-      once = name.charAt(0) === '~'; // Prefixed last, checked first
-      event = once ? name.slice(1) : name;
-      capture = event.charAt(0) === '!';
-      event = capture ? event.slice(1) : event;
-      if (Array.isArray(cur)) {
-        add(event, (cur.invoker = arrInvoker(cur)), once, capture);
-      } else {
-        if (!cur.invoker) {
-          fn = cur;
-          cur = on[name] = {};
-          cur.fn = fn;
-          cur.invoker = fnInvoker(cur);
-        }
-        add(event, cur.invoker, once, capture);
-      }
-    } else if (cur !== old) {
-      if (Array.isArray(old)) {
-        old.length = cur.length;
-        for (var i = 0; i < old.length; i++) { old[i] = cur[i]; }
-        on[name] = old;
-      } else {
-        old.fn = cur;
-        on[name] = old;
-      }
-    }
-  }
-  for (name in oldOn) {
-    if (!on[name]) {
-      once = name.charAt(0) === '~'; // Prefixed last, checked first
-      event = once ? name.slice(1) : name;
-      capture = event.charAt(0) === '!';
-      event = capture ? event.slice(1) : event;
-      remove$$1(event, oldOn[name].invoker, capture);
-    }
-  }
-}
-
-function arrInvoker (arr) {
-  return function (ev) {
-    var arguments$1 = arguments;
-
-    var single = arguments.length === 1;
-    for (var i = 0; i < arr.length; i++) {
-      single ? arr[i](ev) : arr[i].apply(null, arguments$1);
-    }
-  }
-}
-
-function fnInvoker (o) {
-  return function (ev) {
-    var single = arguments.length === 1;
-    single ? o.fn(ev) : o.fn.apply(null, arguments);
-  }
-}
-
-/*  */
-
-function normalizeChildren (
-  children,
-  ns,
-  nestedIndex
-) {
-  if (isPrimitive(children)) {
-    return [createTextVNode(children)]
-  }
-  if (Array.isArray(children)) {
-    var res = [];
-    for (var i = 0, l = children.length; i < l; i++) {
-      var c = children[i];
-      var last = res[res.length - 1];
-      //  nested
-      if (Array.isArray(c)) {
-        res.push.apply(res, normalizeChildren(c, ns, ((nestedIndex || '') + "_" + i)));
-      } else if (isPrimitive(c)) {
-        if (last && last.text) {
-          last.text += String(c);
-        } else if (c !== '') {
-          // convert primitive to vnode
-          res.push(createTextVNode(c));
-        }
-      } else if (c instanceof VNode) {
-        if (c.text && last && last.text) {
-          if (!last.isCloned) {
-            last.text += c.text;
-          }
-        } else {
-          // inherit parent namespace
-          if (ns) {
-            applyNS(c, ns);
-          }
-          // default key for nested array children (likely generated by v-for)
-          if (c.tag && c.key == null && nestedIndex != null) {
-            c.key = "__vlist" + nestedIndex + "_" + i + "__";
-          }
-          res.push(c);
-        }
-      }
-    }
-    return res
-  }
-}
-
-function createTextVNode (val) {
-  return new VNode(undefined, undefined, undefined, String(val))
-}
-
-function applyNS (vnode, ns) {
-  if (vnode.tag && !vnode.ns) {
-    vnode.ns = ns;
-    if (vnode.children) {
-      for (var i = 0, l = vnode.children.length; i < l; i++) {
-        applyNS(vnode.children[i], ns);
-      }
-    }
-  }
-}
-
-/*  */
-
-function getFirstComponentChild (children) {
-  return children && children.filter(function (c) { return c && c.componentOptions; })[0]
-}
-
-/*  */
-
-var activeInstance = null;
-
-function initLifecycle (vm) {
-  var options = vm.$options;
-
-  // locate first non-abstract parent
-  var parent = options.parent;
-  if (parent && !options.abstract) {
-    while (parent.$options.abstract && parent.$parent) {
-      parent = parent.$parent;
-    }
-    parent.$children.push(vm);
-  }
-
-  vm.$parent = parent;
-  vm.$root = parent ? parent.$root : vm;
-
-  vm.$children = [];
-  vm.$refs = {};
-
-  vm._watcher = null;
-  vm._inactive = false;
-  vm._isMounted = false;
-  vm._isDestroyed = false;
-  vm._isBeingDestroyed = false;
-}
-
-function lifecycleMixin (Vue) {
-  Vue.prototype._mount = function (
-    el,
-    hydrating
-  ) {
-    var vm = this;
-    vm.$el = el;
-    if (!vm.$options.render) {
-      vm.$options.render = emptyVNode;
-      {
-        /* istanbul ignore if */
-        if (vm.$options.template && vm.$options.template.charAt(0) !== '#') {
-          warn(
-            'You are using the runtime-only build of Vue where the template ' +
-            'option is not available. Either pre-compile the templates into ' +
-            'render functions, or use the compiler-included build.',
-            vm
-          );
-        } else {
-          warn(
-            'Failed to mount component: template or render function not defined.',
-            vm
-          );
-        }
-      }
-    }
-    callHook(vm, 'beforeMount');
-    vm._watcher = new Watcher(vm, function () {
-      vm._update(vm._render(), hydrating);
-    }, noop);
-    hydrating = false;
-    // manually mounted instance, call mounted on self
-    // mounted is called for render-created child components in its inserted hook
-    if (vm.$vnode == null) {
-      vm._isMounted = true;
-      callHook(vm, 'mounted');
-    }
-    return vm
-  };
-
-  Vue.prototype._update = function (vnode, hydrating) {
-    var vm = this;
-    if (vm._isMounted) {
-      callHook(vm, 'beforeUpdate');
-    }
-    var prevEl = vm.$el;
-    var prevVnode = vm._vnode;
-    var prevActiveInstance = activeInstance;
-    activeInstance = vm;
-    vm._vnode = vnode;
-    // Vue.prototype.__patch__ is injected in entry points
-    // based on the rendering backend used.
-    if (!prevVnode) {
-      // initial render
-      vm.$el = vm.__patch__(
-        vm.$el, vnode, hydrating, false /* removeOnly */,
-        vm.$options._parentElm,
-        vm.$options._refElm
-      );
-    } else {
-      // updates
-      vm.$el = vm.__patch__(prevVnode, vnode);
-    }
-    activeInstance = prevActiveInstance;
-    // update __vue__ reference
-    if (prevEl) {
-      prevEl.__vue__ = null;
-    }
-    if (vm.$el) {
-      vm.$el.__vue__ = vm;
-    }
-    // if parent is an HOC, update its $el as well
-    if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
-      vm.$parent.$el = vm.$el;
-    }
-    if (vm._isMounted) {
-      callHook(vm, 'updated');
-    }
-  };
-
-  Vue.prototype._updateFromParent = function (
-    propsData,
-    listeners,
-    parentVnode,
-    renderChildren
-  ) {
-    var vm = this;
-    var hasChildren = !!(vm.$options._renderChildren || renderChildren);
-    vm.$options._parentVnode = parentVnode;
-    vm.$vnode = parentVnode; // update vm's placeholder node without re-render
-    if (vm._vnode) { // update child tree's parent
-      vm._vnode.parent = parentVnode;
-    }
-    vm.$options._renderChildren = renderChildren;
-    // update props
-    if (propsData && vm.$options.props) {
-      observerState.shouldConvert = false;
-      {
-        observerState.isSettingProps = true;
-      }
-      var propKeys = vm.$options._propKeys || [];
-      for (var i = 0; i < propKeys.length; i++) {
-        var key = propKeys[i];
-        vm[key] = validateProp(key, vm.$options.props, propsData, vm);
-      }
-      observerState.shouldConvert = true;
-      {
-        observerState.isSettingProps = false;
-      }
-      vm.$options.propsData = propsData;
-    }
-    // update listeners
-    if (listeners) {
-      var oldListeners = vm.$options._parentListeners;
-      vm.$options._parentListeners = listeners;
-      vm._updateListeners(listeners, oldListeners);
-    }
-    // resolve slots + force update if has children
-    if (hasChildren) {
-      vm.$slots = resolveSlots(renderChildren, parentVnode.context);
-      vm.$forceUpdate();
-    }
-  };
-
-  Vue.prototype.$forceUpdate = function () {
-    var vm = this;
-    if (vm._watcher) {
-      vm._watcher.update();
-    }
-  };
-
-  Vue.prototype.$destroy = function () {
-    var vm = this;
-    if (vm._isBeingDestroyed) {
-      return
-    }
-    callHook(vm, 'beforeDestroy');
-    vm._isBeingDestroyed = true;
-    // remove self from parent
-    var parent = vm.$parent;
-    if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
-      remove$1(parent.$children, vm);
-    }
-    // teardown watchers
-    if (vm._watcher) {
-      vm._watcher.teardown();
-    }
-    var i = vm._watchers.length;
-    while (i--) {
-      vm._watchers[i].teardown();
-    }
-    // remove reference from data ob
-    // frozen object may not have observer.
-    if (vm._data.__ob__) {
-      vm._data.__ob__.vmCount--;
-    }
-    // call the last hook...
-    vm._isDestroyed = true;
-    callHook(vm, 'destroyed');
-    // turn off all instance listeners.
-    vm.$off();
-    // remove __vue__ reference
-    if (vm.$el) {
-      vm.$el.__vue__ = null;
-    }
-    // invoke destroy hooks on current rendered tree
-    vm.__patch__(vm._vnode, null);
-  };
-}
-
-function callHook (vm, hook) {
-  var handlers = vm.$options[hook];
-  if (handlers) {
-    for (var i = 0, j = handlers.length; i < j; i++) {
-      handlers[i].call(vm);
-    }
-  }
-  vm.$emit('hook:' + hook);
 }
 
 /*  */
@@ -21974,7 +21091,7 @@ function createComponent (
   var name = Ctor.options.name || tag;
   var vnode = new VNode(
     ("vue-component-" + (Ctor.cid) + (name ? ("-" + name) : '')),
-    data, undefined, undefined, undefined, undefined, context,
+    data, undefined, undefined, undefined, context,
     { Ctor: Ctor, propsData: propsData, listeners: listeners, tag: tag, children: children }
   );
   return vnode
@@ -21994,19 +21111,17 @@ function createFunctionalComponent (
       props[key] = validateProp(key, propOptions, propsData);
     }
   }
-  var vnode = Ctor.options.render.call(
-    null,
-    // ensure the createElement function in functional components
-    // gets a unique context - this is necessary for correct named slot check
-    bind$1(createElement, { _self: Object.create(context) }),
-    {
-      props: props,
-      data: data,
-      parent: context,
-      children: normalizeChildren(children),
-      slots: function () { return resolveSlots(children, context); }
-    }
-  );
+  // ensure the createElement function in functional components
+  // gets a unique context - this is necessary for correct named slot check
+  var _context = Object.create(context);
+  var h = function (a, b, c, d) { return createElement(_context, a, b, c, d, true); };
+  var vnode = Ctor.options.render.call(null, h, {
+    props: props,
+    data: data,
+    parent: context,
+    children: children,
+    slots: function () { return resolveSlots(children, context); }
+  });
   if (vnode instanceof VNode) {
     vnode.functionalContext = context;
     if (data.slot) {
@@ -22049,8 +21164,8 @@ function init (
   parentElm,
   refElm
 ) {
-  if (!vnode.child || vnode.child._isDestroyed) {
-    var child = vnode.child = createComponentInstanceForVnode(
+  if (!vnode.componentInstance || vnode.componentInstance._isDestroyed) {
+    var child = vnode.componentInstance = createComponentInstanceForVnode(
       vnode,
       activeInstance,
       parentElm,
@@ -22069,7 +21184,7 @@ function prepatch (
   vnode
 ) {
   var options = vnode.componentOptions;
-  var child = vnode.child = oldVnode.child;
+  var child = vnode.componentInstance = oldVnode.componentInstance;
   child._updateFromParent(
     options.propsData, // updated props
     options.listeners, // updated listeners
@@ -22079,23 +21194,23 @@ function prepatch (
 }
 
 function insert (vnode) {
-  if (!vnode.child._isMounted) {
-    vnode.child._isMounted = true;
-    callHook(vnode.child, 'mounted');
+  if (!vnode.componentInstance._isMounted) {
+    vnode.componentInstance._isMounted = true;
+    callHook(vnode.componentInstance, 'mounted');
   }
   if (vnode.data.keepAlive) {
-    vnode.child._inactive = false;
-    callHook(vnode.child, 'activated');
+    vnode.componentInstance._inactive = false;
+    callHook(vnode.componentInstance, 'activated');
   }
 }
 
 function destroy$1 (vnode) {
-  if (!vnode.child._isDestroyed) {
+  if (!vnode.componentInstance._isDestroyed) {
     if (!vnode.data.keepAlive) {
-      vnode.child.$destroy();
+      vnode.componentInstance.$destroy();
     } else {
-      vnode.child._inactive = true;
-      callHook(vnode.child, 'deactivated');
+      vnode.componentInstance._inactive = true;
+      callHook(vnode.componentInstance, 'deactivated');
     }
   }
 }
@@ -22217,26 +21332,194 @@ function mergeHook$1 (one, two) {
 
 /*  */
 
+function mergeVNodeHook (def, hookKey, hook, key) {
+  key = key + hookKey;
+  var injectedHash = def.__injected || (def.__injected = {});
+  if (!injectedHash[key]) {
+    injectedHash[key] = true;
+    var oldHook = def[hookKey];
+    if (oldHook) {
+      def[hookKey] = function () {
+        oldHook.apply(this, arguments);
+        hook.apply(this, arguments);
+      };
+    } else {
+      def[hookKey] = hook;
+    }
+  }
+}
+
+/*  */
+
+var normalizeEvent = cached(function (name) {
+  var once = name.charAt(0) === '~'; // Prefixed last, checked first
+  name = once ? name.slice(1) : name;
+  var capture = name.charAt(0) === '!';
+  name = capture ? name.slice(1) : name;
+  return {
+    name: name,
+    once: once,
+    capture: capture
+  }
+});
+
+function createEventHandle (fn) {
+  var handle = {
+    fn: fn,
+    invoker: function () {
+      var arguments$1 = arguments;
+
+      var fn = handle.fn;
+      if (Array.isArray(fn)) {
+        for (var i = 0; i < fn.length; i++) {
+          fn[i].apply(null, arguments$1);
+        }
+      } else {
+        fn.apply(null, arguments);
+      }
+    }
+  };
+  return handle
+}
+
+function updateListeners (
+  on,
+  oldOn,
+  add,
+  remove$$1,
+  vm
+) {
+  var name, cur, old, event;
+  for (name in on) {
+    cur = on[name];
+    old = oldOn[name];
+    event = normalizeEvent(name);
+    if (!cur) {
+      "development" !== 'production' && warn(
+        "Invalid handler for event \"" + (event.name) + "\": got " + String(cur),
+        vm
+      );
+    } else if (!old) {
+      if (!cur.invoker) {
+        cur = on[name] = createEventHandle(cur);
+      }
+      add(event.name, cur.invoker, event.once, event.capture);
+    } else if (cur !== old) {
+      old.fn = cur;
+      on[name] = old;
+    }
+  }
+  for (name in oldOn) {
+    if (!on[name]) {
+      event = normalizeEvent(name);
+      remove$$1(event.name, oldOn[name].invoker, event.capture);
+    }
+  }
+}
+
+/*  */
+
+// The template compiler attempts to minimize the need for normalization by
+// statically analyzing the template at compile time.
+//
+// For plain HTML markup, normalization can be completely skipped because the
+// generated render function is guaranteed to return Array<VNode>. There are
+// two cases where extra normalization is needed:
+
+// 1. When the children contains components - because a functional component
+// may return an Array instead of a single root. In this case, just a simple
+// nomralization is needed - if any child is an Array, we flatten the whole
+// thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
+// because functional components already normalize their own children.
+function simpleNormalizeChildren (children) {
+  for (var i = 0; i < children.length; i++) {
+    if (Array.isArray(children[i])) {
+      return Array.prototype.concat.apply([], children)
+    }
+  }
+  return children
+}
+
+// 2. When the children contains constrcuts that always generated nested Arrays,
+// e.g. <template>, <slot>, v-for, or when the children is provided by user
+// with hand-written render functions / JSX. In such cases a full normalization
+// is needed to cater to all possible types of children values.
+function normalizeChildren (children) {
+  return isPrimitive(children)
+    ? [createTextVNode(children)]
+    : Array.isArray(children)
+      ? normalizeArrayChildren(children)
+      : undefined
+}
+
+function normalizeArrayChildren (children, nestedIndex) {
+  var res = [];
+  var i, c, last;
+  for (i = 0; i < children.length; i++) {
+    c = children[i];
+    if (c == null || typeof c === 'boolean') { continue }
+    last = res[res.length - 1];
+    //  nested
+    if (Array.isArray(c)) {
+      res.push.apply(res, normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i)));
+    } else if (isPrimitive(c)) {
+      if (last && last.text) {
+        last.text += String(c);
+      } else if (c !== '') {
+        // convert primitive to vnode
+        res.push(createTextVNode(c));
+      }
+    } else {
+      if (c.text && last && last.text) {
+        res[res.length - 1] = createTextVNode(last.text + c.text);
+      } else {
+        // default key for nested array children (likely generated by v-for)
+        if (c.tag && c.key == null && nestedIndex != null) {
+          c.key = "__vlist" + nestedIndex + "_" + i + "__";
+        }
+        res.push(c);
+      }
+    }
+  }
+  return res
+}
+
+/*  */
+
+function getFirstComponentChild (children) {
+  return children && children.filter(function (c) { return c && c.componentOptions; })[0]
+}
+
+/*  */
+
+var SIMPLE_NORMALIZE = 1;
+var ALWAYS_NORMALIZE = 2;
+
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
 function createElement (
+  context,
   tag,
   data,
-  children
+  children,
+  normalizationType,
+  alwaysNormalize
 ) {
-  if (data && (Array.isArray(data) || typeof data !== 'object')) {
+  if (Array.isArray(data) || isPrimitive(data)) {
+    normalizationType = children;
     children = data;
     data = undefined;
   }
-  // make sure to use real instance instead of proxy as context
-  return _createElement(this._self, tag, data, children)
+  if (alwaysNormalize) { normalizationType = ALWAYS_NORMALIZE; }
+  return _createElement(context, tag, data, children, normalizationType)
 }
 
 function _createElement (
   context,
   tag,
   data,
-  children
+  children,
+  normalizationType
 ) {
   if (data && data.__ob__) {
     "development" !== 'production' && warn(
@@ -22244,11 +21527,11 @@ function _createElement (
       'Always create fresh vnode data objects in each render!',
       context
     );
-    return
+    return createEmptyVNode()
   }
   if (!tag) {
     // in case of component :is set to falsy value
-    return emptyVNode()
+    return createEmptyVNode()
   }
   // support single function children as default scoped slot
   if (Array.isArray(children) &&
@@ -22257,31 +21540,58 @@ function _createElement (
     data.scopedSlots = { default: children[0] };
     children.length = 0;
   }
+  if (normalizationType === ALWAYS_NORMALIZE) {
+    children = normalizeChildren(children);
+  } else if (normalizationType === SIMPLE_NORMALIZE) {
+    children = simpleNormalizeChildren(children);
+  }
+  var vnode, ns;
   if (typeof tag === 'string') {
     var Ctor;
-    var ns = config.getTagNamespace(tag);
+    ns = config.getTagNamespace(tag);
     if (config.isReservedTag(tag)) {
       // platform built-in elements
-      return new VNode(
-        tag, data, normalizeChildren(children, ns),
-        undefined, undefined, ns, context
-      )
+      vnode = new VNode(
+        config.parsePlatformTagName(tag), data, children,
+        undefined, undefined, context
+      );
     } else if ((Ctor = resolveAsset(context.$options, 'components', tag))) {
       // component
-      return createComponent(Ctor, data, context, children, tag)
+      vnode = createComponent(Ctor, data, context, children, tag);
     } else {
       // unknown or unlisted namespaced elements
       // check at runtime because it may get assigned a namespace when its
       // parent normalizes children
-      var childNs = tag === 'foreignObject' ? 'xhtml' : ns;
-      return new VNode(
-        tag, data, normalizeChildren(children, childNs),
-        undefined, undefined, ns, context
-      )
+      vnode = new VNode(
+        tag, data, children,
+        undefined, undefined, context
+      );
     }
   } else {
     // direct component options / constructor
-    return createComponent(tag, data, context, children)
+    vnode = createComponent(tag, data, context, children);
+  }
+  if (vnode) {
+    if (ns) { applyNS(vnode, ns); }
+    return vnode
+  } else {
+    return createEmptyVNode()
+  }
+}
+
+function applyNS (vnode, ns) {
+  vnode.ns = ns;
+  if (vnode.tag === 'foreignObject') {
+    // use default namespace inside foreignObject
+    return
+  }
+  if (vnode.children) {
+    for (var i = 0, l = vnode.children.length; i < l; i++) {
+      var child = vnode.children[i];
+      if (child.tag && !child.ns) {
+        applyNS(child, ns);
+      }
+    }
   }
 }
 
@@ -22295,12 +21605,14 @@ function initRender (vm) {
   var renderContext = parentVnode && parentVnode.context;
   vm.$slots = resolveSlots(vm.$options._renderChildren, renderContext);
   vm.$scopedSlots = {};
-  // bind the public createElement fn to this instance
+  // bind the createElement fn to this instance
   // so that we get proper render context inside it.
-  vm.$createElement = bind$1(createElement, vm);
-  if (vm.$options.el) {
-    vm.$mount(vm.$options.el);
-  }
+  // args order: tag, data, children, normalizationType, alwaysNormalize
+  // internal version is used by render functions compiled from templates
+  vm._c = function (a, b, c, d) { return createElement(vm, a, b, c, d, false); };
+  // normalization is always applied for the public version, used in
+  // user-written render functions.
+  vm.$createElement = function (a, b, c, d) { return createElement(vm, a, b, c, d, true); };
 }
 
 function renderMixin (Vue) {
@@ -22358,21 +21670,21 @@ function renderMixin (Vue) {
           vm
         );
       }
-      vnode = emptyVNode();
+      vnode = createEmptyVNode();
     }
     // set parent
     vnode.parent = _parentVnode;
     return vnode
   };
 
-  // shorthands used in render functions
-  Vue.prototype._h = createElement;
   // toString for mustaches
   Vue.prototype._s = _toString;
+  // convert text to vnode
+  Vue.prototype._v = createTextVNode;
   // number conversion
   Vue.prototype._n = toNumber;
   // empty vnode
-  Vue.prototype._e = emptyVNode;
+  Vue.prototype._e = createEmptyVNode;
   // loose equal
   Vue.prototype._q = looseEqual;
   // loose indexOf
@@ -22426,7 +21738,6 @@ function renderMixin (Vue) {
   }
 
   // filter resolution helper
-  var identity = function (_) { return _; };
   Vue.prototype._f = function resolveFilter (id) {
     return resolveAsset(this.$options, 'filters', id, true) || identity
   };
@@ -22437,7 +21748,7 @@ function renderMixin (Vue) {
     render
   ) {
     var ret, i, l, keys, key;
-    if (Array.isArray(val)) {
+    if (Array.isArray(val) || typeof val === 'string') {
       ret = new Array(val.length);
       for (i = 0, l = val.length; i < l; i++) {
         ret[i] = render(val[i], i);
@@ -22462,11 +21773,16 @@ function renderMixin (Vue) {
   Vue.prototype._t = function (
     name,
     fallback,
-    props
+    props,
+    bindObject
   ) {
     var scopedSlotFn = this.$scopedSlots[name];
     if (scopedSlotFn) { // scoped slot
-      return scopedSlotFn(props || {}) || fallback
+      props = props || {};
+      if (bindObject) {
+        extend(props, bindObject);
+      }
+      return scopedSlotFn(props) || fallback
     } else {
       var slotNodes = this.$slots[name];
       // warn duplicate slot usage
@@ -22503,7 +21819,8 @@ function renderMixin (Vue) {
           if (key === 'class' || key === 'style') {
             data[key] = value[key];
           } else {
-            var hash = asProp || config.mustUseProp(tag, key)
+            var type = data.attrs && data.attrs.type;
+            var hash = asProp || config.mustUseProp(tag, type, key)
               ? data.domProps || (data.domProps = {})
               : data.attrs || (data.attrs = {});
             hash[key] = value[key];
@@ -22530,14 +21847,13 @@ function renderMixin (Vue) {
 }
 
 function resolveSlots (
-  renderChildren,
+  children,
   context
 ) {
   var slots = {};
-  if (!renderChildren) {
+  if (!children) {
     return slots
   }
-  var children = normalizeChildren(renderChildren) || [];
   var defaultSlot = [];
   var name, child;
   for (var i = 0, l = children.length; i < l; i++) {
@@ -22570,23 +21886,46 @@ function resolveSlots (
 
 function initEvents (vm) {
   vm._events = Object.create(null);
+  vm._hasHookEvent = false;
   // init parent attached events
   var listeners = vm.$options._parentListeners;
-  var add = function (event, fn, once) {
-    once ? vm.$once(event, fn) : vm.$on(event, fn);
-  };
-  var remove$$1 = bind$1(vm.$off, vm);
-  vm._updateListeners = function (listeners, oldListeners) {
-    updateListeners(listeners, oldListeners || {}, add, remove$$1, vm);
-  };
   if (listeners) {
-    vm._updateListeners(listeners);
+    updateComponentListeners(vm, listeners);
   }
 }
 
+var target;
+
+function add$1 (event, fn, once) {
+  if (once) {
+    target.$once(event, fn);
+  } else {
+    target.$on(event, fn);
+  }
+}
+
+function remove$2 (event, fn) {
+  target.$off(event, fn);
+}
+
+function updateComponentListeners (
+  vm,
+  listeners,
+  oldListeners
+) {
+  target = vm;
+  updateListeners(listeners, oldListeners || {}, add$1, remove$2, vm);
+}
+
 function eventsMixin (Vue) {
+  var hookRE = /^hook:/;
   Vue.prototype.$on = function (event, fn) {
     var vm = this;(vm._events[event] || (vm._events[event] = [])).push(fn);
+    // optimize hook:event cost by using a boolean flag marked at registration
+    // instead of a hash lookup
+    if (hookRE.test(event)) {
+      vm._hasHookEvent = true;
+    }
     return vm
   };
 
@@ -22646,6 +21985,792 @@ function eventsMixin (Vue) {
 
 /*  */
 
+var activeInstance = null;
+
+function initLifecycle (vm) {
+  var options = vm.$options;
+
+  // locate first non-abstract parent
+  var parent = options.parent;
+  if (parent && !options.abstract) {
+    while (parent.$options.abstract && parent.$parent) {
+      parent = parent.$parent;
+    }
+    parent.$children.push(vm);
+  }
+
+  vm.$parent = parent;
+  vm.$root = parent ? parent.$root : vm;
+
+  vm.$children = [];
+  vm.$refs = {};
+
+  vm._watcher = null;
+  vm._inactive = false;
+  vm._isMounted = false;
+  vm._isDestroyed = false;
+  vm._isBeingDestroyed = false;
+}
+
+function lifecycleMixin (Vue) {
+  Vue.prototype._mount = function (
+    el,
+    hydrating
+  ) {
+    var vm = this;
+    vm.$el = el;
+    if (!vm.$options.render) {
+      vm.$options.render = createEmptyVNode;
+      {
+        /* istanbul ignore if */
+        if (vm.$options.template && vm.$options.template.charAt(0) !== '#') {
+          warn(
+            'You are using the runtime-only build of Vue where the template ' +
+            'option is not available. Either pre-compile the templates into ' +
+            'render functions, or use the compiler-included build.',
+            vm
+          );
+        } else {
+          warn(
+            'Failed to mount component: template or render function not defined.',
+            vm
+          );
+        }
+      }
+    }
+    callHook(vm, 'beforeMount');
+    vm._watcher = new Watcher(vm, function updateComponent () {
+      vm._update(vm._render(), hydrating);
+    }, noop);
+    hydrating = false;
+    // manually mounted instance, call mounted on self
+    // mounted is called for render-created child components in its inserted hook
+    if (vm.$vnode == null) {
+      vm._isMounted = true;
+      callHook(vm, 'mounted');
+    }
+    return vm
+  };
+
+  Vue.prototype._update = function (vnode, hydrating) {
+    var vm = this;
+    if (vm._isMounted) {
+      callHook(vm, 'beforeUpdate');
+    }
+    var prevEl = vm.$el;
+    var prevVnode = vm._vnode;
+    var prevActiveInstance = activeInstance;
+    activeInstance = vm;
+    vm._vnode = vnode;
+    // Vue.prototype.__patch__ is injected in entry points
+    // based on the rendering backend used.
+    if (!prevVnode) {
+      // initial render
+      vm.$el = vm.__patch__(
+        vm.$el, vnode, hydrating, false /* removeOnly */,
+        vm.$options._parentElm,
+        vm.$options._refElm
+      );
+    } else {
+      // updates
+      vm.$el = vm.__patch__(prevVnode, vnode);
+    }
+    activeInstance = prevActiveInstance;
+    // update __vue__ reference
+    if (prevEl) {
+      prevEl.__vue__ = null;
+    }
+    if (vm.$el) {
+      vm.$el.__vue__ = vm;
+    }
+    // if parent is an HOC, update its $el as well
+    if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
+      vm.$parent.$el = vm.$el;
+    }
+    // updated hook is called by the scheduler to ensure that children are
+    // updated in a parent's updated hook.
+  };
+
+  Vue.prototype._updateFromParent = function (
+    propsData,
+    listeners,
+    parentVnode,
+    renderChildren
+  ) {
+    var vm = this;
+    var hasChildren = !!(vm.$options._renderChildren || renderChildren);
+    vm.$options._parentVnode = parentVnode;
+    vm.$vnode = parentVnode; // update vm's placeholder node without re-render
+    if (vm._vnode) { // update child tree's parent
+      vm._vnode.parent = parentVnode;
+    }
+    vm.$options._renderChildren = renderChildren;
+    // update props
+    if (propsData && vm.$options.props) {
+      observerState.shouldConvert = false;
+      {
+        observerState.isSettingProps = true;
+      }
+      var propKeys = vm.$options._propKeys || [];
+      for (var i = 0; i < propKeys.length; i++) {
+        var key = propKeys[i];
+        vm[key] = validateProp(key, vm.$options.props, propsData, vm);
+      }
+      observerState.shouldConvert = true;
+      {
+        observerState.isSettingProps = false;
+      }
+      vm.$options.propsData = propsData;
+    }
+    // update listeners
+    if (listeners) {
+      var oldListeners = vm.$options._parentListeners;
+      vm.$options._parentListeners = listeners;
+      updateComponentListeners(vm, listeners, oldListeners);
+    }
+    // resolve slots + force update if has children
+    if (hasChildren) {
+      vm.$slots = resolveSlots(renderChildren, parentVnode.context);
+      vm.$forceUpdate();
+    }
+  };
+
+  Vue.prototype.$forceUpdate = function () {
+    var vm = this;
+    if (vm._watcher) {
+      vm._watcher.update();
+    }
+  };
+
+  Vue.prototype.$destroy = function () {
+    var vm = this;
+    if (vm._isBeingDestroyed) {
+      return
+    }
+    callHook(vm, 'beforeDestroy');
+    vm._isBeingDestroyed = true;
+    // remove self from parent
+    var parent = vm.$parent;
+    if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
+      remove$1(parent.$children, vm);
+    }
+    // teardown watchers
+    if (vm._watcher) {
+      vm._watcher.teardown();
+    }
+    var i = vm._watchers.length;
+    while (i--) {
+      vm._watchers[i].teardown();
+    }
+    // remove reference from data ob
+    // frozen object may not have observer.
+    if (vm._data.__ob__) {
+      vm._data.__ob__.vmCount--;
+    }
+    // call the last hook...
+    vm._isDestroyed = true;
+    callHook(vm, 'destroyed');
+    // turn off all instance listeners.
+    vm.$off();
+    // remove __vue__ reference
+    if (vm.$el) {
+      vm.$el.__vue__ = null;
+    }
+    // invoke destroy hooks on current rendered tree
+    vm.__patch__(vm._vnode, null);
+  };
+}
+
+function callHook (vm, hook) {
+  var handlers = vm.$options[hook];
+  if (handlers) {
+    for (var i = 0, j = handlers.length; i < j; i++) {
+      handlers[i].call(vm);
+    }
+  }
+  if (vm._hasHookEvent) {
+    vm.$emit('hook:' + hook);
+  }
+}
+
+/*  */
+
+
+var queue = [];
+var has$1 = {};
+var circular = {};
+var waiting = false;
+var flushing = false;
+var index = 0;
+
+/**
+ * Reset the scheduler's state.
+ */
+function resetSchedulerState () {
+  queue.length = 0;
+  has$1 = {};
+  {
+    circular = {};
+  }
+  waiting = flushing = false;
+}
+
+/**
+ * Flush both queues and run the watchers.
+ */
+function flushSchedulerQueue () {
+  flushing = true;
+  var watcher, id, vm;
+
+  // Sort queue before flush.
+  // This ensures that:
+  // 1. Components are updated from parent to child. (because parent is always
+  //    created before the child)
+  // 2. A component's user watchers are run before its render watcher (because
+  //    user watchers are created before the render watcher)
+  // 3. If a component is destroyed during a parent component's watcher run,
+  //    its watchers can be skipped.
+  queue.sort(function (a, b) { return a.id - b.id; });
+
+  // do not cache length because more watchers might be pushed
+  // as we run existing watchers
+  for (index = 0; index < queue.length; index++) {
+    watcher = queue[index];
+    id = watcher.id;
+    has$1[id] = null;
+    watcher.run();
+    // in dev build, check and stop circular updates.
+    if ("development" !== 'production' && has$1[id] != null) {
+      circular[id] = (circular[id] || 0) + 1;
+      if (circular[id] > config._maxUpdateCount) {
+        warn(
+          'You may have an infinite update loop ' + (
+            watcher.user
+              ? ("in watcher with expression \"" + (watcher.expression) + "\"")
+              : "in a component render function."
+          ),
+          watcher.vm
+        );
+        break
+      }
+    }
+  }
+
+  // call updated hooks
+  index = queue.length;
+  while (index--) {
+    watcher = queue[index];
+    vm = watcher.vm;
+    if (vm._watcher === watcher && vm._isMounted) {
+      callHook(vm, 'updated');
+    }
+  }
+
+  // devtool hook
+  /* istanbul ignore if */
+  if (devtools && config.devtools) {
+    devtools.emit('flush');
+  }
+
+  resetSchedulerState();
+}
+
+/**
+ * Push a watcher into the watcher queue.
+ * Jobs with duplicate IDs will be skipped unless it's
+ * pushed when the queue is being flushed.
+ */
+function queueWatcher (watcher) {
+  var id = watcher.id;
+  if (has$1[id] == null) {
+    has$1[id] = true;
+    if (!flushing) {
+      queue.push(watcher);
+    } else {
+      // if already flushing, splice the watcher based on its id
+      // if already past its id, it will be run next immediately.
+      var i = queue.length - 1;
+      while (i >= 0 && queue[i].id > watcher.id) {
+        i--;
+      }
+      queue.splice(Math.max(i, index) + 1, 0, watcher);
+    }
+    // queue the flush
+    if (!waiting) {
+      waiting = true;
+      nextTick(flushSchedulerQueue);
+    }
+  }
+}
+
+/*  */
+
+var uid$2 = 0;
+
+/**
+ * A watcher parses an expression, collects dependencies,
+ * and fires callback when the expression value changes.
+ * This is used for both the $watch() api and directives.
+ */
+var Watcher = function Watcher (
+  vm,
+  expOrFn,
+  cb,
+  options
+) {
+  this.vm = vm;
+  vm._watchers.push(this);
+  // options
+  if (options) {
+    this.deep = !!options.deep;
+    this.user = !!options.user;
+    this.lazy = !!options.lazy;
+    this.sync = !!options.sync;
+  } else {
+    this.deep = this.user = this.lazy = this.sync = false;
+  }
+  this.cb = cb;
+  this.id = ++uid$2; // uid for batching
+  this.active = true;
+  this.dirty = this.lazy; // for lazy watchers
+  this.deps = [];
+  this.newDeps = [];
+  this.depIds = new _Set();
+  this.newDepIds = new _Set();
+  this.expression = expOrFn.toString();
+  // parse expression for getter
+  if (typeof expOrFn === 'function') {
+    this.getter = expOrFn;
+  } else {
+    this.getter = parsePath(expOrFn);
+    if (!this.getter) {
+      this.getter = function () {};
+      "development" !== 'production' && warn(
+        "Failed watching path: \"" + expOrFn + "\" " +
+        'Watcher only accepts simple dot-delimited paths. ' +
+        'For full control, use a function instead.',
+        vm
+      );
+    }
+  }
+  this.value = this.lazy
+    ? undefined
+    : this.get();
+};
+
+/**
+ * Evaluate the getter, and re-collect dependencies.
+ */
+Watcher.prototype.get = function get () {
+  pushTarget(this);
+  var value = this.getter.call(this.vm, this.vm);
+  // "touch" every property so they are all tracked as
+  // dependencies for deep watching
+  if (this.deep) {
+    traverse(value);
+  }
+  popTarget();
+  this.cleanupDeps();
+  return value
+};
+
+/**
+ * Add a dependency to this directive.
+ */
+Watcher.prototype.addDep = function addDep (dep) {
+  var id = dep.id;
+  if (!this.newDepIds.has(id)) {
+    this.newDepIds.add(id);
+    this.newDeps.push(dep);
+    if (!this.depIds.has(id)) {
+      dep.addSub(this);
+    }
+  }
+};
+
+/**
+ * Clean up for dependency collection.
+ */
+Watcher.prototype.cleanupDeps = function cleanupDeps () {
+    var this$1 = this;
+
+  var i = this.deps.length;
+  while (i--) {
+    var dep = this$1.deps[i];
+    if (!this$1.newDepIds.has(dep.id)) {
+      dep.removeSub(this$1);
+    }
+  }
+  var tmp = this.depIds;
+  this.depIds = this.newDepIds;
+  this.newDepIds = tmp;
+  this.newDepIds.clear();
+  tmp = this.deps;
+  this.deps = this.newDeps;
+  this.newDeps = tmp;
+  this.newDeps.length = 0;
+};
+
+/**
+ * Subscriber interface.
+ * Will be called when a dependency changes.
+ */
+Watcher.prototype.update = function update () {
+  /* istanbul ignore else */
+  if (this.lazy) {
+    this.dirty = true;
+  } else if (this.sync) {
+    this.run();
+  } else {
+    queueWatcher(this);
+  }
+};
+
+/**
+ * Scheduler job interface.
+ * Will be called by the scheduler.
+ */
+Watcher.prototype.run = function run () {
+  if (this.active) {
+    var value = this.get();
+    if (
+      value !== this.value ||
+      // Deep watchers and watchers on Object/Arrays should fire even
+      // when the value is the same, because the value may
+      // have mutated.
+      isObject(value) ||
+      this.deep
+    ) {
+      // set new value
+      var oldValue = this.value;
+      this.value = value;
+      if (this.user) {
+        try {
+          this.cb.call(this.vm, value, oldValue);
+        } catch (e) {
+          /* istanbul ignore else */
+          if (config.errorHandler) {
+            config.errorHandler.call(null, e, this.vm);
+          } else {
+            "development" !== 'production' && warn(
+              ("Error in watcher \"" + (this.expression) + "\""),
+              this.vm
+            );
+            throw e
+          }
+        }
+      } else {
+        this.cb.call(this.vm, value, oldValue);
+      }
+    }
+  }
+};
+
+/**
+ * Evaluate the value of the watcher.
+ * This only gets called for lazy watchers.
+ */
+Watcher.prototype.evaluate = function evaluate () {
+  this.value = this.get();
+  this.dirty = false;
+};
+
+/**
+ * Depend on all deps collected by this watcher.
+ */
+Watcher.prototype.depend = function depend () {
+    var this$1 = this;
+
+  var i = this.deps.length;
+  while (i--) {
+    this$1.deps[i].depend();
+  }
+};
+
+/**
+ * Remove self from all dependencies' subscriber list.
+ */
+Watcher.prototype.teardown = function teardown () {
+    var this$1 = this;
+
+  if (this.active) {
+    // remove self from vm's watcher list
+    // this is a somewhat expensive operation so we skip it
+    // if the vm is being destroyed.
+    if (!this.vm._isBeingDestroyed) {
+      remove$1(this.vm._watchers, this);
+    }
+    var i = this.deps.length;
+    while (i--) {
+      this$1.deps[i].removeSub(this$1);
+    }
+    this.active = false;
+  }
+};
+
+/**
+ * Recursively traverse an object to evoke all converted
+ * getters, so that every nested property inside the object
+ * is collected as a "deep" dependency.
+ */
+var seenObjects = new _Set();
+function traverse (val) {
+  seenObjects.clear();
+  _traverse(val, seenObjects);
+}
+
+function _traverse (val, seen) {
+  var i, keys;
+  var isA = Array.isArray(val);
+  if ((!isA && !isObject(val)) || !Object.isExtensible(val)) {
+    return
+  }
+  if (val.__ob__) {
+    var depId = val.__ob__.dep.id;
+    if (seen.has(depId)) {
+      return
+    }
+    seen.add(depId);
+  }
+  if (isA) {
+    i = val.length;
+    while (i--) { _traverse(val[i], seen); }
+  } else {
+    keys = Object.keys(val);
+    i = keys.length;
+    while (i--) { _traverse(val[keys[i]], seen); }
+  }
+}
+
+/*  */
+
+function initState (vm) {
+  vm._watchers = [];
+  var opts = vm.$options;
+  if (opts.props) { initProps(vm, opts.props); }
+  if (opts.methods) { initMethods(vm, opts.methods); }
+  if (opts.data) {
+    initData(vm);
+  } else {
+    observe(vm._data = {}, true /* asRootData */);
+  }
+  if (opts.computed) { initComputed(vm, opts.computed); }
+  if (opts.watch) { initWatch(vm, opts.watch); }
+}
+
+var isReservedProp = { key: 1, ref: 1, slot: 1 };
+
+function initProps (vm, props) {
+  var propsData = vm.$options.propsData || {};
+  var keys = vm.$options._propKeys = Object.keys(props);
+  var isRoot = !vm.$parent;
+  // root instance props should be converted
+  observerState.shouldConvert = isRoot;
+  var loop = function ( i ) {
+    var key = keys[i];
+    /* istanbul ignore else */
+    {
+      if (isReservedProp[key]) {
+        warn(
+          ("\"" + key + "\" is a reserved attribute and cannot be used as component prop."),
+          vm
+        );
+      }
+      defineReactive$$1(vm, key, validateProp(key, props, propsData, vm), function () {
+        if (vm.$parent && !observerState.isSettingProps) {
+          warn(
+            "Avoid mutating a prop directly since the value will be " +
+            "overwritten whenever the parent component re-renders. " +
+            "Instead, use a data or computed property based on the prop's " +
+            "value. Prop being mutated: \"" + key + "\"",
+            vm
+          );
+        }
+      });
+    }
+  };
+
+  for (var i = 0; i < keys.length; i++) loop( i );
+  observerState.shouldConvert = true;
+}
+
+function initData (vm) {
+  var data = vm.$options.data;
+  data = vm._data = typeof data === 'function'
+    ? data.call(vm)
+    : data || {};
+  if (!isPlainObject(data)) {
+    data = {};
+    "development" !== 'production' && warn(
+      'data functions should return an object:\n' +
+      'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
+      vm
+    );
+  }
+  // proxy data on instance
+  var keys = Object.keys(data);
+  var props = vm.$options.props;
+  var i = keys.length;
+  while (i--) {
+    if (props && hasOwn(props, keys[i])) {
+      "development" !== 'production' && warn(
+        "The data property \"" + (keys[i]) + "\" is already declared as a prop. " +
+        "Use prop default value instead.",
+        vm
+      );
+    } else {
+      proxy(vm, keys[i]);
+    }
+  }
+  // observe data
+  observe(data, true /* asRootData */);
+}
+
+var computedSharedDefinition = {
+  enumerable: true,
+  configurable: true,
+  get: noop,
+  set: noop
+};
+
+function initComputed (vm, computed) {
+  for (var key in computed) {
+    /* istanbul ignore if */
+    if ("development" !== 'production' && key in vm) {
+      warn(
+        "existing instance property \"" + key + "\" will be " +
+        "overwritten by a computed property with the same name.",
+        vm
+      );
+    }
+    var userDef = computed[key];
+    if (typeof userDef === 'function') {
+      computedSharedDefinition.get = makeComputedGetter(userDef, vm);
+      computedSharedDefinition.set = noop;
+    } else {
+      computedSharedDefinition.get = userDef.get
+        ? userDef.cache !== false
+          ? makeComputedGetter(userDef.get, vm)
+          : bind$1(userDef.get, vm)
+        : noop;
+      computedSharedDefinition.set = userDef.set
+        ? bind$1(userDef.set, vm)
+        : noop;
+    }
+    Object.defineProperty(vm, key, computedSharedDefinition);
+  }
+}
+
+function makeComputedGetter (getter, owner) {
+  var watcher = new Watcher(owner, getter, noop, {
+    lazy: true
+  });
+  return function computedGetter () {
+    if (watcher.dirty) {
+      watcher.evaluate();
+    }
+    if (Dep.target) {
+      watcher.depend();
+    }
+    return watcher.value
+  }
+}
+
+function initMethods (vm, methods) {
+  for (var key in methods) {
+    vm[key] = methods[key] == null ? noop : bind$1(methods[key], vm);
+    if ("development" !== 'production' && methods[key] == null) {
+      warn(
+        "method \"" + key + "\" has an undefined value in the component definition. " +
+        "Did you reference the function correctly?",
+        vm
+      );
+    }
+  }
+}
+
+function initWatch (vm, watch) {
+  for (var key in watch) {
+    var handler = watch[key];
+    if (Array.isArray(handler)) {
+      for (var i = 0; i < handler.length; i++) {
+        createWatcher(vm, key, handler[i]);
+      }
+    } else {
+      createWatcher(vm, key, handler);
+    }
+  }
+}
+
+function createWatcher (vm, key, handler) {
+  var options;
+  if (isPlainObject(handler)) {
+    options = handler;
+    handler = handler.handler;
+  }
+  if (typeof handler === 'string') {
+    handler = vm[handler];
+  }
+  vm.$watch(key, handler, options);
+}
+
+function stateMixin (Vue) {
+  // flow somehow has problems with directly declared definition object
+  // when using Object.defineProperty, so we have to procedurally build up
+  // the object here.
+  var dataDef = {};
+  dataDef.get = function () {
+    return this._data
+  };
+  {
+    dataDef.set = function (newData) {
+      warn(
+        'Avoid replacing instance root $data. ' +
+        'Use nested data properties instead.',
+        this
+      );
+    };
+  }
+  Object.defineProperty(Vue.prototype, '$data', dataDef);
+
+  Vue.prototype.$set = set$1;
+  Vue.prototype.$delete = del;
+
+  Vue.prototype.$watch = function (
+    expOrFn,
+    cb,
+    options
+  ) {
+    var vm = this;
+    options = options || {};
+    options.user = true;
+    var watcher = new Watcher(vm, expOrFn, cb, options);
+    if (options.immediate) {
+      cb.call(vm, watcher.value);
+    }
+    return function unwatchFn () {
+      watcher.teardown();
+    }
+  };
+}
+
+function proxy (vm, key) {
+  if (!isReserved(key)) {
+    Object.defineProperty(vm, key, {
+      configurable: true,
+      enumerable: true,
+      get: function proxyGetter () {
+        return vm._data[key]
+      },
+      set: function proxySetter (val) {
+        vm._data[key] = val;
+      }
+    });
+  }
+}
+
+/*  */
+
 var uid = 0;
 
 function initMixin (Vue) {
@@ -22676,10 +22801,13 @@ function initMixin (Vue) {
     vm._self = vm;
     initLifecycle(vm);
     initEvents(vm);
+    initRender(vm);
     callHook(vm, 'beforeCreate');
     initState(vm);
     callHook(vm, 'created');
-    initRender(vm);
+    if (vm.$options.el) {
+      vm.$mount(vm.$options.el);
+    }
   };
 }
 
@@ -22791,7 +22919,8 @@ function initExtend (Vue) {
       if (!/^[a-zA-Z][\w-]*$/.test(name)) {
         warn(
           'Invalid component name: "' + name + '". Component names ' +
-          'can only contain alphanumeric characaters and the hyphen.'
+          'can only contain alphanumeric characters and the hyphen, ' +
+          'and must start with a letter.'
         );
       }
     }
@@ -22871,6 +23000,10 @@ function initAssetRegisters (Vue) {
 
 var patternTypes = [String, RegExp];
 
+function getComponentName (opts) {
+  return opts && (opts.Ctor.options.name || opts.tag)
+}
+
 function matches (pattern, name) {
   if (typeof pattern === 'string') {
     return pattern.split(',').indexOf(name) > -1
@@ -22879,22 +23012,64 @@ function matches (pattern, name) {
   }
 }
 
+function pruneCache (cache, filter) {
+  for (var key in cache) {
+    var cachedNode = cache[key];
+    if (cachedNode) {
+      var name = getComponentName(cachedNode.componentOptions);
+      if (name && !filter(name)) {
+        pruneCacheEntry(cachedNode);
+        cache[key] = null;
+      }
+    }
+  }
+}
+
+function pruneCacheEntry (vnode) {
+  if (vnode) {
+    if (!vnode.componentInstance._inactive) {
+      callHook(vnode.componentInstance, 'deactivated');
+    }
+    vnode.componentInstance.$destroy();
+  }
+}
+
 var KeepAlive = {
   name: 'keep-alive',
   abstract: true,
+
   props: {
     include: patternTypes,
     exclude: patternTypes
   },
+
   created: function created () {
     this.cache = Object.create(null);
   },
+
+  destroyed: function destroyed () {
+    var this$1 = this;
+
+    for (var key in this.cache) {
+      pruneCacheEntry(this$1.cache[key]);
+    }
+  },
+
+  watch: {
+    include: function include (val) {
+      pruneCache(this.cache, function (name) { return matches(val, name); });
+    },
+    exclude: function exclude (val) {
+      pruneCache(this.cache, function (name) { return !matches(val, name); });
+    }
+  },
+
   render: function render () {
     var vnode = getFirstComponentChild(this.$slots.default);
-    if (vnode && vnode.componentOptions) {
-      var opts = vnode.componentOptions;
+    var componentOptions = vnode && vnode.componentOptions;
+    if (componentOptions) {
       // check pattern
-      var name = opts.Ctor.options.name || opts.tag;
+      var name = getComponentName(componentOptions);
       if (name && (
         (this.include && !matches(this.include, name)) ||
         (this.exclude && matches(this.exclude, name))
@@ -22904,25 +23079,16 @@ var KeepAlive = {
       var key = vnode.key == null
         // same constructor may get registered as different local components
         // so cid alone is not enough (#3269)
-        ? opts.Ctor.cid + (opts.tag ? ("::" + (opts.tag)) : '')
+        ? componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : '')
         : vnode.key;
       if (this.cache[key]) {
-        vnode.child = this.cache[key].child;
+        vnode.componentInstance = this.cache[key].componentInstance;
       } else {
         this.cache[key] = vnode;
       }
       vnode.data.keepAlive = true;
     }
     return vnode
-  },
-  destroyed: function destroyed () {
-    var this$1 = this;
-
-    for (var key in this.cache) {
-      var vnode = this$1.cache[key];
-      callHook(vnode.child, 'deactivated');
-      vnode.child.$destroy();
-    }
   }
 };
 
@@ -22972,14 +23138,15 @@ Object.defineProperty(Vue$3.prototype, '$isServer', {
   get: isServerRendering
 });
 
-Vue$3.version = '2.1.4';
+Vue$3.version = '2.1.10';
 
 /*  */
 
 // attributes that should be using props for binding
-var mustUseProp = function (tag, attr) {
+var acceptValue = makeMap('input,textarea,option,select');
+var mustUseProp = function (tag, type, attr) {
   return (
-    (attr === 'value' && (tag === 'input' || tag === 'textarea' || tag === 'option')) ||
+    (attr === 'value' && acceptValue(tag)) && type !== 'button' ||
     (attr === 'selected' && tag === 'option') ||
     (attr === 'checked' && tag === 'input') ||
     (attr === 'muted' && tag === 'video')
@@ -23017,8 +23184,8 @@ function genClassForVnode (vnode) {
   var data = vnode.data;
   var parentNode = vnode;
   var childNode = vnode;
-  while (childNode.child) {
-    childNode = childNode.child._vnode;
+  while (childNode.componentInstance) {
+    childNode = childNode.componentInstance._vnode;
     if (childNode.data) {
       data = mergeClassData(childNode.data, data);
     }
@@ -23087,8 +23254,7 @@ function stringifyClass (value) {
 
 var namespaceMap = {
   svg: 'http://www.w3.org/2000/svg',
-  math: 'http://www.w3.org/1998/Math/MathML',
-  xhtml: 'http://www.w3.org/1999/xhtml'
+  math: 'http://www.w3.org/1998/Math/MathML'
 };
 
 var isHTMLTag = makeMap(
@@ -23108,7 +23274,7 @@ var isHTMLTag = makeMap(
 // this map is intentionally selective, only covering SVG elements that may
 // contain child elements.
 var isSVG = makeMap(
-  'svg,animate,circle,clippath,cursor,defs,desc,ellipse,filter,font,' +
+  'svg,animate,circle,clippath,cursor,defs,desc,ellipse,filter,' +
   'font-face,g,glyph,image,line,marker,mask,missing-glyph,path,pattern,' +
   'polygon,polyline,rect,switch,symbol,text,textpath,tspan,use,view',
   true
@@ -23229,10 +23395,6 @@ function setTextContent (node, text) {
   node.textContent = text;
 }
 
-function childNodes (node) {
-  return node.childNodes
-}
-
 function setAttribute (node, key, val) {
   node.setAttribute(key, val);
 }
@@ -23250,7 +23412,6 @@ var nodeOps = Object.freeze({
 	nextSibling: nextSibling,
 	tagName: tagName,
 	setTextContent: setTextContent,
-	childNodes: childNodes,
 	setAttribute: setAttribute
 });
 
@@ -23276,7 +23437,7 @@ function registerRef (vnode, isRemoval) {
   if (!key) { return }
 
   var vm = vnode.context;
-  var ref = vnode.child || vnode.elm;
+  var ref = vnode.componentInstance || vnode.elm;
   var refs = vm.$refs;
   if (isRemoval) {
     if (Array.isArray(refs[key])) {
@@ -23363,16 +23524,16 @@ function createPatchFunction (backend) {
   function createRmCb (childElm, listeners) {
     function remove$$1 () {
       if (--remove$$1.listeners === 0) {
-        removeElement(childElm);
+        removeNode(childElm);
       }
     }
     remove$$1.listeners = listeners;
     return remove$$1
   }
 
-  function removeElement (el) {
+  function removeNode (el) {
     var parent = nodeOps.parentNode(el);
-    // element may have already been removed due to v-html
+    // element may have already been removed due to v-html / v-text
     if (parent) {
       nodeOps.removeChild(parent, el);
     }
@@ -23396,7 +23557,7 @@ function createPatchFunction (backend) {
         if (
           !inPre &&
           !vnode.ns &&
-          !(config.ignoredElements && config.ignoredElements.indexOf(tag) > -1) &&
+          !(config.ignoredElements.length && config.ignoredElements.indexOf(tag) > -1) &&
           config.isUnknownElement(tag)
         ) {
           warn(
@@ -23436,7 +23597,7 @@ function createPatchFunction (backend) {
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
     var i = vnode.data;
     if (isDef(i)) {
-      var isReactivated = isDef(vnode.child) && i.keepAlive;
+      var isReactivated = isDef(vnode.componentInstance) && i.keepAlive;
       if (isDef(i = i.hook) && isDef(i = i.init)) {
         i(vnode, false /* hydrating */, parentElm, refElm);
       }
@@ -23444,13 +23605,30 @@ function createPatchFunction (backend) {
       // it should've created a child instance and mounted it. the child
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
-      if (isDef(vnode.child)) {
+      if (isDef(vnode.componentInstance)) {
         initComponent(vnode, insertedVnodeQueue);
         if (isReactivated) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm);
         }
         return true
       }
+    }
+  }
+
+  function initComponent (vnode, insertedVnodeQueue) {
+    if (vnode.data.pendingInsert) {
+      insertedVnodeQueue.push.apply(insertedVnodeQueue, vnode.data.pendingInsert);
+    }
+    vnode.elm = vnode.componentInstance.$el;
+    if (isPatchable(vnode)) {
+      invokeCreateHooks(vnode, insertedVnodeQueue);
+      setScope(vnode);
+    } else {
+      // empty component root.
+      // skip all element-related modules except for ref (#3455)
+      registerRef(vnode);
+      // make sure to invoke the insert hook
+      insertedVnodeQueue.push(vnode);
     }
   }
 
@@ -23461,8 +23639,8 @@ function createPatchFunction (backend) {
     // again. It's not ideal to involve module-specific logic in here but
     // there doesn't seem to be a better way to do it.
     var innerNode = vnode;
-    while (innerNode.child) {
-      innerNode = innerNode.child._vnode;
+    while (innerNode.componentInstance) {
+      innerNode = innerNode.componentInstance._vnode;
       if (isDef(i = innerNode.data) && isDef(i = i.transition)) {
         for (i = 0; i < cbs.activate.length; ++i) {
           cbs.activate[i](emptyNode, innerNode);
@@ -23478,7 +23656,11 @@ function createPatchFunction (backend) {
 
   function insert (parent, elm, ref) {
     if (parent) {
-      nodeOps.insertBefore(parent, elm, ref);
+      if (ref) {
+        nodeOps.insertBefore(parent, elm, ref);
+      } else {
+        nodeOps.appendChild(parent, elm);
+      }
     }
   }
 
@@ -23493,8 +23675,8 @@ function createPatchFunction (backend) {
   }
 
   function isPatchable (vnode) {
-    while (vnode.child) {
-      vnode = vnode.child._vnode;
+    while (vnode.componentInstance) {
+      vnode = vnode.componentInstance._vnode;
     }
     return isDef(vnode.tag)
   }
@@ -23507,23 +23689,6 @@ function createPatchFunction (backend) {
     if (isDef(i)) {
       if (i.create) { i.create(emptyNode, vnode); }
       if (i.insert) { insertedVnodeQueue.push(vnode); }
-    }
-  }
-
-  function initComponent (vnode, insertedVnodeQueue) {
-    if (vnode.data.pendingInsert) {
-      insertedVnodeQueue.push.apply(insertedVnodeQueue, vnode.data.pendingInsert);
-    }
-    vnode.elm = vnode.child.$el;
-    if (isPatchable(vnode)) {
-      invokeCreateHooks(vnode, insertedVnodeQueue);
-      setScope(vnode);
-    } else {
-      // empty component root.
-      // skip all element-related modules except for ref (#3455)
-      registerRef(vnode);
-      // make sure to invoke the insert hook
-      insertedVnodeQueue.push(vnode);
     }
   }
 
@@ -23570,7 +23735,7 @@ function createPatchFunction (backend) {
           removeAndInvokeRemoveHook(ch);
           invokeDestroyHook(ch);
         } else { // Text node
-          nodeOps.removeChild(parentElm, ch.elm);
+          removeNode(ch.elm);
         }
       }
     }
@@ -23588,7 +23753,7 @@ function createPatchFunction (backend) {
         rm.listeners += listeners;
       }
       // recursively invoke hooks on child component root node
-      if (isDef(i = vnode.child) && isDef(i = i._vnode) && isDef(i.data)) {
+      if (isDef(i = vnode.componentInstance) && isDef(i = i._vnode) && isDef(i.data)) {
         removeAndInvokeRemoveHook(i, rm);
       }
       for (i = 0; i < cbs.remove.length; ++i) {
@@ -23600,7 +23765,7 @@ function createPatchFunction (backend) {
         rm();
       }
     } else {
-      removeElement(vnode.elm);
+      removeNode(vnode.elm);
     }
   }
 
@@ -23658,14 +23823,14 @@ function createPatchFunction (backend) {
               'Make sure each v-for item has a unique key.'
             );
           }
-          if (elmToMove.tag !== newStartVnode.tag) {
-            // same key but different element. treat as new element
-            createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
-            newStartVnode = newCh[++newStartIdx];
-          } else {
+          if (sameVnode(elmToMove, newStartVnode)) {
             patchVnode(elmToMove, newStartVnode, insertedVnodeQueue);
             oldCh[idxInOld] = undefined;
             canMove && nodeOps.insertBefore(parentElm, newStartVnode.elm, oldStartVnode.elm);
+            newStartVnode = newCh[++newStartIdx];
+          } else {
+            // same key but different element. treat as new element
+            createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
             newStartVnode = newCh[++newStartIdx];
           }
         }
@@ -23692,7 +23857,7 @@ function createPatchFunction (backend) {
         vnode.key === oldVnode.key &&
         (vnode.isCloned || vnode.isOnce)) {
       vnode.elm = oldVnode.elm;
-      vnode.child = oldVnode.child;
+      vnode.componentInstance = oldVnode.componentInstance;
       return
     }
     var i;
@@ -23740,6 +23905,11 @@ function createPatchFunction (backend) {
   }
 
   var bailed = false;
+  // list of modules that can skip create hook during hydration because they
+  // are already rendered on the client or has no need for initialization
+  var isRenderedModule = makeMap('attrs,style,class,staticClass,staticStyle,key');
+
+  // Note: this is a browser-only function so we can assume elms are DOM nodes.
   function hydrate (elm, vnode, insertedVnodeQueue) {
     {
       if (!assertNodeMatch(elm, vnode)) {
@@ -23752,7 +23922,7 @@ function createPatchFunction (backend) {
     var children = vnode.children;
     if (isDef(data)) {
       if (isDef(i = data.hook) && isDef(i = i.init)) { i(vnode, true /* hydrating */); }
-      if (isDef(i = vnode.child)) {
+      if (isDef(i = vnode.componentInstance)) {
         // child component. it should have hydrated its own tree.
         initComponent(vnode, insertedVnodeQueue);
         return true
@@ -23760,37 +23930,43 @@ function createPatchFunction (backend) {
     }
     if (isDef(tag)) {
       if (isDef(children)) {
-        var childNodes = nodeOps.childNodes(elm);
         // empty element, allow client to pick up and populate children
-        if (!childNodes.length) {
+        if (!elm.hasChildNodes()) {
           createChildren(vnode, children, insertedVnodeQueue);
         } else {
           var childrenMatch = true;
-          if (childNodes.length !== children.length) {
-            childrenMatch = false;
-          } else {
-            for (var i$1 = 0; i$1 < children.length; i$1++) {
-              if (!hydrate(childNodes[i$1], children[i$1], insertedVnodeQueue)) {
-                childrenMatch = false;
-                break
-              }
+          var childNode = elm.firstChild;
+          for (var i$1 = 0; i$1 < children.length; i$1++) {
+            if (!childNode || !hydrate(childNode, children[i$1], insertedVnodeQueue)) {
+              childrenMatch = false;
+              break
             }
+            childNode = childNode.nextSibling;
           }
-          if (!childrenMatch) {
+          // if childNode is not null, it means the actual childNodes list is
+          // longer than the virtual children list.
+          if (!childrenMatch || childNode) {
             if ("development" !== 'production' &&
                 typeof console !== 'undefined' &&
                 !bailed) {
               bailed = true;
               console.warn('Parent: ', elm);
-              console.warn('Mismatching childNodes vs. VNodes: ', childNodes, children);
+              console.warn('Mismatching childNodes vs. VNodes: ', elm.childNodes, children);
             }
             return false
           }
         }
       }
       if (isDef(data)) {
-        invokeCreateHooks(vnode, insertedVnodeQueue);
+        for (var key in data) {
+          if (!isRenderedModule(key)) {
+            invokeCreateHooks(vnode, insertedVnodeQueue);
+            break
+          }
+        }
       }
+    } else if (elm.data !== vnode.text) {
+      elm.data = vnode.text;
     }
     return true
   }
@@ -23799,10 +23975,10 @@ function createPatchFunction (backend) {
     if (vnode.tag) {
       return (
         vnode.tag.indexOf('vue-component') === 0 ||
-        vnode.tag.toLowerCase() === nodeOps.tagName(node).toLowerCase()
+        vnode.tag.toLowerCase() === (node.tagName && node.tagName.toLowerCase())
       )
     } else {
-      return _toString(vnode.text) === node.data
+      return node.nodeType === (vnode.isComment ? 8 : 3)
     }
   }
 
@@ -23812,7 +23988,6 @@ function createPatchFunction (backend) {
       return
     }
 
-    var elm, parent;
     var isInitialPatch = false;
     var insertedVnodeQueue = [];
 
@@ -23852,11 +24027,18 @@ function createPatchFunction (backend) {
           // create an empty node and replace it
           oldVnode = emptyNodeAt(oldVnode);
         }
-
         // replacing existing element
-        elm = oldVnode.elm;
-        parent = nodeOps.parentNode(elm);
-        createElm(vnode, insertedVnodeQueue, parent, nodeOps.nextSibling(elm));
+        var oldElm = oldVnode.elm;
+        var parentElm$1 = nodeOps.parentNode(oldElm);
+        createElm(
+          vnode,
+          insertedVnodeQueue,
+          // extremely rare edge case: do not insert if old element is in a
+          // leaving transition. Only happens when combining transition +
+          // keep-alive + HOCs. (#4590)
+          oldElm._leaveCb ? null : parentElm$1,
+          nodeOps.nextSibling(oldElm)
+        );
 
         if (vnode.parent) {
           // component root element replaced.
@@ -23873,8 +24055,8 @@ function createPatchFunction (backend) {
           }
         }
 
-        if (parent !== null) {
-          removeVnodes(parent, [oldVnode], 0, 0);
+        if (parentElm$1 !== null) {
+          removeVnodes(parentElm$1, [oldVnode], 0, 0);
         } else if (isDef(oldVnode.tag)) {
           invokeDestroyHook(oldVnode);
         }
@@ -23896,14 +24078,15 @@ var directives = {
   }
 };
 
-function updateDirectives (
-  oldVnode,
-  vnode
-) {
-  if (!oldVnode.data.directives && !vnode.data.directives) {
-    return
+function updateDirectives (oldVnode, vnode) {
+  if (oldVnode.data.directives || vnode.data.directives) {
+    _update(oldVnode, vnode);
   }
+}
+
+function _update (oldVnode, vnode) {
   var isCreate = oldVnode === emptyNode;
+  var isDestroy = vnode === emptyNode;
   var oldDirs = normalizeDirectives$1(oldVnode.data.directives, oldVnode.context);
   var newDirs = normalizeDirectives$1(vnode.data.directives, vnode.context);
 
@@ -23932,9 +24115,9 @@ function updateDirectives (
 
   if (dirsWithInsert.length) {
     var callInsert = function () {
-      dirsWithInsert.forEach(function (dir) {
-        callHook$1(dir, 'inserted', vnode, oldVnode);
-      });
+      for (var i = 0; i < dirsWithInsert.length; i++) {
+        callHook$1(dirsWithInsert[i], 'inserted', vnode, oldVnode);
+      }
     };
     if (isCreate) {
       mergeVNodeHook(vnode.data.hook || (vnode.data.hook = {}), 'insert', callInsert, 'dir-insert');
@@ -23945,9 +24128,9 @@ function updateDirectives (
 
   if (dirsWithPostpatch.length) {
     mergeVNodeHook(vnode.data.hook || (vnode.data.hook = {}), 'postpatch', function () {
-      dirsWithPostpatch.forEach(function (dir) {
-        callHook$1(dir, 'componentUpdated', vnode, oldVnode);
-      });
+      for (var i = 0; i < dirsWithPostpatch.length; i++) {
+        callHook$1(dirsWithPostpatch[i], 'componentUpdated', vnode, oldVnode);
+      }
     }, 'dir-postpatch');
   }
 
@@ -23955,7 +24138,7 @@ function updateDirectives (
     for (key in oldDirs) {
       if (!newDirs[key]) {
         // no longer present, unbind
-        callHook$1(oldDirs[key], 'unbind', oldVnode);
+        callHook$1(oldDirs[key], 'unbind', oldVnode, oldVnode, isDestroy);
       }
     }
   }
@@ -23987,10 +24170,10 @@ function getRawDirName (dir) {
   return dir.rawName || ((dir.name) + "." + (Object.keys(dir.modifiers || {}).join('.')))
 }
 
-function callHook$1 (dir, hook, vnode, oldVnode) {
+function callHook$1 (dir, hook, vnode, oldVnode, isDestroy) {
   var fn = dir.def && dir.def[hook];
   if (fn) {
-    fn(vnode.elm, dir, vnode, oldVnode);
+    fn(vnode.elm, dir, vnode, oldVnode, isDestroy);
   }
 }
 
@@ -24020,6 +24203,11 @@ function updateAttrs (oldVnode, vnode) {
     if (old !== cur) {
       setAttr(elm, key, cur);
     }
+  }
+  // #4391: in IE9, setting type can reset value for input[type=radio]
+  /* istanbul ignore if */
+  if (isIE9 && attrs.value !== oldAttrs.value) {
+    setAttr(elm, 'value', attrs.value);
   }
   for (key in oldAttrs) {
     if (attrs[key] == null) {
@@ -24094,8 +24282,37 @@ var klass = {
   update: updateClass
 };
 
-// skip type checking this file because we need to attach private properties
-// to elements
+/*  */
+
+var target$1;
+
+function add$2 (
+  event,
+  handler,
+  once,
+  capture
+) {
+  if (once) {
+    var oldHandler = handler;
+    var _target = target$1; // save current target element in closure
+    handler = function (ev) {
+      remove$3(event, handler, capture, _target);
+      arguments.length === 1
+        ? oldHandler(ev)
+        : oldHandler.apply(null, arguments);
+    };
+  }
+  target$1.addEventListener(event, handler, capture);
+}
+
+function remove$3 (
+  event,
+  handler,
+  capture,
+  _target
+) {
+  (_target || target$1).removeEventListener(event, handler, capture);
+}
 
 function updateDOMListeners (oldVnode, vnode) {
   if (!oldVnode.data.on && !vnode.data.on) {
@@ -24103,26 +24320,8 @@ function updateDOMListeners (oldVnode, vnode) {
   }
   var on = vnode.data.on || {};
   var oldOn = oldVnode.data.on || {};
-  var add = vnode.elm._v_add || (
-    vnode.elm._v_add = function (event, handler, once, capture) {
-      if (once) {
-        var oldHandler = handler;
-        handler = function (ev) {
-          remove(event, handler, capture);
-          arguments.length === 1
-            ? oldHandler(ev)
-            : oldHandler.apply(null, arguments);
-        };
-      }
-      vnode.elm.addEventListener(event, handler, capture);
-    }
-  );
-  var remove = vnode.elm._v_remove || (
-    vnode.elm._v_remove = function (event, handler, capture) {
-      vnode.elm.removeEventListener(event, handler, capture);
-    }
-  );
-  updateListeners(on, oldOn, add, remove, vnode.context);
+  target$1 = vnode.elm;
+  updateListeners(on, oldOn, add$2, remove$3, vnode.context);
 }
 
 var events = {
@@ -24159,19 +24358,52 @@ function updateDOMProps (oldVnode, vnode) {
       if (vnode.children) { vnode.children.length = 0; }
       if (cur === oldProps[key]) { continue }
     }
+
     if (key === 'value') {
       // store value as _value as well since
       // non-string values will be stringified
       elm._value = cur;
       // avoid resetting cursor position when value is the same
       var strCur = cur == null ? '' : String(cur);
-      if (elm.value !== strCur && !elm.composing) {
+      if (shouldUpdateValue(elm, vnode, strCur)) {
         elm.value = strCur;
       }
     } else {
       elm[key] = cur;
     }
   }
+}
+
+// check platforms/web/util/attrs.js acceptValue
+
+
+function shouldUpdateValue (
+  elm,
+  vnode,
+  checkVal
+) {
+  return (!elm.composing && (
+    vnode.tag === 'option' ||
+    isDirty(elm, checkVal) ||
+    isInputChanged(vnode, checkVal)
+  ))
+}
+
+function isDirty (elm, checkVal) {
+  // return true when textbox (.number and .trim) loses focus and its value is not equal to the updated value
+  return document.activeElement !== elm && elm.value !== checkVal
+}
+
+function isInputChanged (vnode, newVal) {
+  var value = vnode.elm.value;
+  var modifiers = vnode.elm._vModifiers; // injected by v-model runtime
+  if ((modifiers && modifiers.number) || vnode.elm.type === 'number') {
+    return toNumber(value) !== toNumber(newVal)
+  }
+  if (modifiers && modifiers.trim) {
+    return value.trim() !== newVal.trim()
+  }
+  return value !== newVal
 }
 
 var domProps = {
@@ -24225,8 +24457,8 @@ function getStyle (vnode, checkChild) {
 
   if (checkChild) {
     var childNode = vnode;
-    while (childNode.child) {
-      childNode = childNode.child._vnode;
+    while (childNode.componentInstance) {
+      childNode = childNode.componentInstance._vnode;
       if (childNode.data && (styleData = normalizeStyleData(childNode.data))) {
         extend(res, styleData);
       }
@@ -24400,7 +24632,11 @@ if (hasTransition) {
   }
 }
 
-var raf = (inBrowser && window.requestAnimationFrame) || setTimeout;
+// binding to window is necessary to make hot reload work in IE in strict mode
+var raf = inBrowser && window.requestAnimationFrame
+  ? window.requestAnimationFrame.bind(window)
+  : setTimeout;
+
 function nextFrame (fn) {
   raf(function () {
     raf(fn);
@@ -24518,7 +24754,7 @@ function toMs (s) {
 
 /*  */
 
-function enter (vnode) {
+function enter (vnode, toggleDisplay) {
   var el = vnode.elm;
 
   // call leave callback now
@@ -24540,8 +24776,10 @@ function enter (vnode) {
   var css = data.css;
   var type = data.type;
   var enterClass = data.enterClass;
+  var enterToClass = data.enterToClass;
   var enterActiveClass = data.enterActiveClass;
   var appearClass = data.appearClass;
+  var appearToClass = data.appearToClass;
   var appearActiveClass = data.appearActiveClass;
   var beforeEnter = data.beforeEnter;
   var enter = data.enter;
@@ -24571,6 +24809,7 @@ function enter (vnode) {
 
   var startClass = isAppear ? appearClass : enterClass;
   var activeClass = isAppear ? appearActiveClass : enterActiveClass;
+  var toClass = isAppear ? appearToClass : enterToClass;
   var beforeEnterHook = isAppear ? (beforeAppear || beforeEnter) : beforeEnter;
   var enterHook = isAppear ? (typeof appear === 'function' ? appear : enter) : enter;
   var afterEnterHook = isAppear ? (afterAppear || afterEnter) : afterEnter;
@@ -24585,6 +24824,7 @@ function enter (vnode) {
 
   var cb = el._enterCb = once(function () {
     if (expectsCSS) {
+      removeTransitionClass(el, toClass);
       removeTransitionClass(el, activeClass);
     }
     if (cb.cancelled) {
@@ -24604,7 +24844,6 @@ function enter (vnode) {
       var parent = el.parentNode;
       var pendingNode = parent && parent._pending && parent._pending[vnode.key];
       if (pendingNode &&
-          pendingNode.context === vnode.context &&
           pendingNode.tag === vnode.tag &&
           pendingNode.elm._leaveCb) {
         pendingNode.elm._leaveCb();
@@ -24619,6 +24858,7 @@ function enter (vnode) {
     addTransitionClass(el, startClass);
     addTransitionClass(el, activeClass);
     nextFrame(function () {
+      addTransitionClass(el, toClass);
       removeTransitionClass(el, startClass);
       if (!cb.cancelled && !userWantsControl) {
         whenTransitionEnds(el, type, cb);
@@ -24627,6 +24867,7 @@ function enter (vnode) {
   }
 
   if (vnode.data.show) {
+    toggleDisplay && toggleDisplay();
     enterHook && enterHook(el, cb);
   }
 
@@ -24657,6 +24898,7 @@ function leave (vnode, rm) {
   var css = data.css;
   var type = data.type;
   var leaveClass = data.leaveClass;
+  var leaveToClass = data.leaveToClass;
   var leaveActiveClass = data.leaveActiveClass;
   var beforeLeave = data.beforeLeave;
   var leave = data.leave;
@@ -24676,6 +24918,7 @@ function leave (vnode, rm) {
       el.parentNode._pending[vnode.key] = null;
     }
     if (expectsCSS) {
+      removeTransitionClass(el, leaveToClass);
       removeTransitionClass(el, leaveActiveClass);
     }
     if (cb.cancelled) {
@@ -24710,6 +24953,7 @@ function leave (vnode, rm) {
       addTransitionClass(el, leaveClass);
       addTransitionClass(el, leaveActiveClass);
       nextFrame(function () {
+        addTransitionClass(el, leaveToClass);
         removeTransitionClass(el, leaveClass);
         if (!cb.cancelled && !userWantsControl) {
           whenTransitionEnds(el, type, cb);
@@ -24745,6 +24989,9 @@ var autoCssTransition = cached(function (name) {
     enterClass: (name + "-enter"),
     leaveClass: (name + "-leave"),
     appearClass: (name + "-enter"),
+    enterToClass: (name + "-enter-to"),
+    leaveToClass: (name + "-leave-to"),
+    appearToClass: (name + "-enter-to"),
     enterActiveClass: (name + "-enter-active"),
     leaveActiveClass: (name + "-leave-active"),
     appearActiveClass: (name + "-enter-active")
@@ -24836,17 +25083,17 @@ var model = {
       if (isIE || isEdge) {
         setTimeout(cb, 0);
       }
-    } else if (
-      (vnode.tag === 'textarea' || el.type === 'text') &&
-      !binding.modifiers.lazy
-    ) {
-      if (!isAndroid) {
-        el.addEventListener('compositionstart', onCompositionStart);
-        el.addEventListener('compositionend', onCompositionEnd);
-      }
-      /* istanbul ignore if */
-      if (isIE9) {
-        el.vmodel = true;
+    } else if (vnode.tag === 'textarea' || el.type === 'text') {
+      el._vModifiers = binding.modifiers;
+      if (!binding.modifiers.lazy) {
+        if (!isAndroid) {
+          el.addEventListener('compositionstart', onCompositionStart);
+          el.addEventListener('compositionend', onCompositionEnd);
+        }
+        /* istanbul ignore if */
+        if (isIE9) {
+          el.vmodel = true;
+        }
       }
     }
   },
@@ -24934,8 +25181,8 @@ function trigger (el, type) {
 
 // recursively search for possible transition defined inside the component root
 function locateNode (vnode) {
-  return vnode.child && (!vnode.data || !vnode.data.transition)
-    ? locateNode(vnode.child._vnode)
+  return vnode.componentInstance && (!vnode.data || !vnode.data.transition)
+    ? locateNode(vnode.componentInstance._vnode)
     : vnode
 }
 
@@ -24945,13 +25192,18 @@ var show = {
 
     vnode = locateNode(vnode);
     var transition = vnode.data && vnode.data.transition;
+    var originalDisplay = el.__vOriginalDisplay =
+      el.style.display === 'none' ? '' : el.style.display;
     if (value && transition && !isIE9) {
-      enter(vnode);
+      vnode.data.show = true;
+      enter(vnode, function () {
+        el.style.display = originalDisplay;
+      });
+    } else {
+      el.style.display = value ? originalDisplay : 'none';
     }
-    var originalDisplay = el.style.display === 'none' ? '' : el.style.display;
-    el.style.display = value ? originalDisplay : 'none';
-    el.__vOriginalDisplay = originalDisplay;
   },
+
   update: function update (el, ref, vnode) {
     var value = ref.value;
     var oldValue = ref.oldValue;
@@ -24961,9 +25213,11 @@ var show = {
     vnode = locateNode(vnode);
     var transition = vnode.data && vnode.data.transition;
     if (transition && !isIE9) {
+      vnode.data.show = true;
       if (value) {
-        enter(vnode);
-        el.style.display = el.__vOriginalDisplay;
+        enter(vnode, function () {
+          el.style.display = el.__vOriginalDisplay;
+        });
       } else {
         leave(vnode, function () {
           el.style.display = 'none';
@@ -24971,6 +25225,18 @@ var show = {
       }
     } else {
       el.style.display = value ? el.__vOriginalDisplay : 'none';
+    }
+  },
+
+  unbind: function unbind (
+    el,
+    binding,
+    vnode,
+    oldVnode,
+    isDestroy
+  ) {
+    if (!isDestroy) {
+      el.style.display = el.__vOriginalDisplay;
     }
   }
 };
@@ -24993,10 +25259,13 @@ var transitionProps = {
   type: String,
   enterClass: String,
   leaveClass: String,
+  enterToClass: String,
+  leaveToClass: String,
   enterActiveClass: String,
   leaveActiveClass: String,
   appearClass: String,
-  appearActiveClass: String
+  appearActiveClass: String,
+  appearToClass: String
 };
 
 // in case the child is also an abstract component, e.g. <keep-alive>
@@ -25040,10 +25309,15 @@ function hasParentTransition (vnode) {
   }
 }
 
+function isSameChild (child, oldChild) {
+  return oldChild.key === child.key && oldChild.tag === child.tag
+}
+
 var Transition = {
   name: 'transition',
   props: transitionProps,
   abstract: true,
+
   render: function render (h) {
     var this$1 = this;
 
@@ -25099,9 +25373,15 @@ var Transition = {
       return placeholder(h, rawChild)
     }
 
-    var key = child.key = child.key == null || child.isStatic
-      ? ("__v" + (child.tag + this._uid) + "__")
-      : child.key;
+    // ensure a key that is unique to the vnode type and to this transition
+    // component instance. This key will be used to remove pending leaving nodes
+    // during entering.
+    var id = "__transition-" + (this._uid) + "-";
+    var key = child.key = child.key == null
+      ? id + child.tag
+      : isPrimitive(child.key)
+        ? (String(child.key).indexOf(id) === 0 ? child.key : id + child.key)
+        : child.key;
     var data = (child.data || (child.data = {})).transition = extractTransitionData(this);
     var oldRawChild = this._vnode;
     var oldChild = getRealChild(oldRawChild);
@@ -25112,11 +25392,10 @@ var Transition = {
       child.data.show = true;
     }
 
-    if (oldChild && oldChild.data && oldChild.key !== key) {
+    if (oldChild && oldChild.data && !isSameChild(child, oldChild)) {
       // replace old child transition data with fresh one
       // important for dynamic transitions!
-      var oldData = oldChild.data.transition = extend({}, data);
-
+      var oldData = oldChild && (oldChild.data.transition = extend({}, data));
       // handle transition mode
       if (mode === 'out-in') {
         // return placeholder node and queue update when leave finishes
@@ -25327,6 +25606,15 @@ Vue$3.prototype.$mount = function (
   return this._mount(el, hydrating)
 };
 
+if ("development" !== 'production' &&
+    inBrowser && typeof console !== 'undefined') {
+  console[console.info ? 'info' : 'log'](
+    "You are running Vue in development mode.\n" +
+    "Make sure to turn on production mode when deploying for production.\n" +
+    "See more tips at https://vuejs.org/guide/deployment.html"
+  );
+}
+
 // devtools global hook
 /* istanbul ignore next */
 setTimeout(function () {
@@ -25335,10 +25623,10 @@ setTimeout(function () {
       devtools.emit('init', Vue$3);
     } else if (
       "development" !== 'production' &&
-      inBrowser && /Chrome\/\d+/.test(window.navigator.userAgent)
+      inBrowser && !isEdge && /Chrome\/\d+/.test(window.navigator.userAgent)
     ) {
-      console.log(
-        'Download the Vue Devtools for a better development experience:\n' +
+      console[console.info ? 'info' : 'log'](
+        'Download the Vue Devtools extension for a better development experience:\n' +
         'https://github.com/vuejs/vue-devtools'
       );
     }
@@ -25440,22 +25728,6 @@ var IS_REGEX_CAPTURING_BROKEN = false;
 
 // Special Elements (can contain anything)
 var isScriptOrStyle = makeMap('script,style', true);
-var hasLang = function (attr) { return attr.name === 'lang' && attr.value !== 'html'; };
-var isSpecialTag = function (tag, isSFC, stack) {
-  if (isScriptOrStyle(tag)) {
-    return true
-  }
-  if (isSFC && stack.length === 1) {
-    // top-level template that has no pre-processor
-    if (tag === 'template' && !stack[0].attrs.some(hasLang)) {
-      return false
-    } else {
-      return true
-    }
-  }
-  return false
-};
-
 var reCache = {};
 
 var ltRE = /&lt;/g;
@@ -25484,7 +25756,7 @@ function parseHTML (html, options) {
   while (html) {
     last = html;
     // Make sure we're not in a script or style element
-    if (!lastTag || !isSpecialTag(lastTag, options.sfc, stack)) {
+    if (!lastTag || !isScriptOrStyle(lastTag)) {
       var textEnd = html.indexOf('<');
       if (textEnd === 0) {
         // Comment:
@@ -25519,7 +25791,7 @@ function parseHTML (html, options) {
         if (endTagMatch) {
           var curIndex = index;
           advance(endTagMatch[0].length);
-          parseEndTag(endTagMatch[0], endTagMatch[1], curIndex, index);
+          parseEndTag(endTagMatch[1], curIndex, index);
           continue
         }
 
@@ -25576,7 +25848,7 @@ function parseHTML (html, options) {
       });
       index += html.length - rest.length;
       html = rest;
-      parseEndTag('</' + stackedTag + '>', stackedTag, index - endTagLength, index);
+      parseEndTag(stackedTag, index - endTagLength, index);
     }
 
     if (html === last && options.chars) {
@@ -25622,10 +25894,10 @@ function parseHTML (html, options) {
 
     if (expectHTML) {
       if (lastTag === 'p' && isNonPhrasingTag(tagName)) {
-        parseEndTag('', lastTag);
+        parseEndTag(lastTag);
       }
       if (canBeLeftOpenTag(tagName) && lastTag === tagName) {
-        parseEndTag('', tagName);
+        parseEndTag(tagName);
       }
     }
 
@@ -25652,7 +25924,7 @@ function parseHTML (html, options) {
     }
 
     if (!unary) {
-      stack.push({ tag: tagName, attrs: attrs });
+      stack.push({ tag: tagName, lowerCasedTag: tagName.toLowerCase(), attrs: attrs });
       lastTag = tagName;
       unarySlash = '';
     }
@@ -25662,16 +25934,19 @@ function parseHTML (html, options) {
     }
   }
 
-  function parseEndTag (tag, tagName, start, end) {
-    var pos;
+  function parseEndTag (tagName, start, end) {
+    var pos, lowerCasedTagName;
     if (start == null) { start = index; }
     if (end == null) { end = index; }
 
+    if (tagName) {
+      lowerCasedTagName = tagName.toLowerCase();
+    }
+
     // Find the closest opened tag of the same type
     if (tagName) {
-      var needle = tagName.toLowerCase();
       for (pos = stack.length - 1; pos >= 0; pos--) {
-        if (stack[pos].tag.toLowerCase() === needle) {
+        if (stack[pos].lowerCasedTag === lowerCasedTagName) {
           break
         }
       }
@@ -25691,11 +25966,11 @@ function parseHTML (html, options) {
       // Remove the open elements from the stack
       stack.length = pos;
       lastTag = pos && stack[pos - 1].tag;
-    } else if (tagName.toLowerCase() === 'br') {
+    } else if (lowerCasedTagName === 'br') {
       if (options.start) {
         options.start(tagName, [], true, start, end);
       }
-    } else if (tagName.toLowerCase() === 'p') {
+    } else if (lowerCasedTagName === 'p') {
       if (options.start) {
         options.start(tagName, [], false, start, end);
       }
@@ -25748,13 +26023,24 @@ function parseFilters (exp) {
         case 0x22: inDouble = true; break         // "
         case 0x27: inSingle = true; break         // '
         case 0x60: inTemplateString = true; break // `
-        case 0x2f: inRegex = true; break          // /
         case 0x28: paren++; break                 // (
         case 0x29: paren--; break                 // )
         case 0x5B: square++; break                // [
         case 0x5D: square--; break                // ]
         case 0x7B: curly++; break                 // {
         case 0x7D: curly--; break                 // }
+      }
+      if (c === 0x2f) { // /
+        var j = i - 1;
+        var p = (void 0);
+        // find first non-whitespace prev char
+        for (; j >= 0; j--) {
+          p = exp.charAt(j);
+          if (p !== ' ') { break }
+        }
+        if (!p || !/[\w$]/.test(p)) {
+          inRegex = true;
+        }
       }
     }
   }
@@ -25794,7 +26080,7 @@ function wrapFilter (exp, filter) {
 /*  */
 
 var defaultTagRE = /\{\{((?:.|\n)+?)\}\}/g;
-var regexEscapeRE = /[-.*+?^${}()|[\]/\\]/g;
+var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g;
 
 var buildRegex = cached(function (delimiters) {
   var open = delimiters[0].replace(regexEscapeRE, '\\$&');
@@ -26096,7 +26382,7 @@ function parse (
         "development" !== 'production' && warn$1(
           'Templates should only be responsible for mapping the state to the ' +
           'UI. Avoid placing tags with side-effects in your templates, such as ' +
-          "<" + tag + ">."
+          "<" + tag + ">" + ', as they will not be parsed.'
         );
       }
 
@@ -26233,19 +26519,20 @@ function parse (
           currentParent.attrsMap.placeholder === text) {
         return
       }
+      var children = currentParent.children;
       text = inPre || text.trim()
         ? decodeHTMLCached(text)
         // only preserve whitespace if its not right after a starting tag
-        : preserveWhitespace && currentParent.children.length ? ' ' : '';
+        : preserveWhitespace && children.length ? ' ' : '';
       if (text) {
         var expression;
         if (!inVPre && text !== ' ' && (expression = parseText(text, delimiters))) {
-          currentParent.children.push({
+          children.push({
             type: 2,
             expression: expression,
             text: text
           });
-        } else {
+        } else if (text !== ' ' || children[children.length - 1].text !== ' ') {
           currentParent.children.push({
             type: 3,
             text: text
@@ -26356,6 +26643,23 @@ function processIfConditions (el, parent) {
   }
 }
 
+function findPrevElement (children) {
+  var i = children.length;
+  while (i--) {
+    if (children[i].type === 1) {
+      return children[i]
+    } else {
+      if ("development" !== 'production' && children[i].text !== ' ') {
+        warn$1(
+          "text \"" + (children[i].text.trim()) + "\" between v-if and v-else(-if) " +
+          "will be ignored."
+        );
+      }
+      children.pop();
+    }
+  }
+}
+
 function addIfCondition (el, condition) {
   if (!el.ifConditions) {
     el.ifConditions = [];
@@ -26418,6 +26722,7 @@ function processAttrs (el) {
       if (bindRE.test(name)) { // v-bind
         name = name.replace(bindRE, '');
         value = parseFilters(value);
+        isProp = false;
         if (modifiers) {
           if (modifiers.prop) {
             isProp = true;
@@ -26428,7 +26733,7 @@ function processAttrs (el) {
             name = camelize(name);
           }
         }
-        if (isProp || platformMustUseProp(el.tag, name)) {
+        if (isProp || platformMustUseProp(el.tag, el.attrsMap.type, name)) {
           addProp(el, name, value);
         } else {
           addAttr(el, name, value);
@@ -26495,13 +26800,6 @@ function makeAttrsMap (attrs) {
     map[attrs[i].name] = attrs[i].value;
   }
   return map
-}
-
-function findPrevElement (children) {
-  var i = children.length;
-  while (i--) {
-    if (children[i].tag) { return children[i] }
-  }
 }
 
 function isForbiddenTag (el) {
@@ -26757,6 +27055,8 @@ function bind$2 (el, dir) {
   };
 }
 
+/*  */
+
 var baseDirectives = {
   bind: bind$2,
   cloak: noop
@@ -26769,6 +27069,7 @@ var warn$2;
 var transforms$1;
 var dataGenFns;
 var platformDirectives$1;
+var isPlatformReservedTag$1;
 var staticRenderFns;
 var onceCount;
 var currentOptions;
@@ -26787,7 +27088,8 @@ function generate (
   transforms$1 = pluckModuleFunction(options.modules, 'transformCode');
   dataGenFns = pluckModuleFunction(options.modules, 'genData');
   platformDirectives$1 = options.directives || {};
-  var code = ast ? genElement(ast) : '_h("div")';
+  isPlatformReservedTag$1 = options.isReservedTag || no;
+  var code = ast ? genElement(ast) : '_c("div")';
   staticRenderFns = prevStaticRenderFns;
   onceCount = prevOnceCount;
   return {
@@ -26817,8 +27119,8 @@ function genElement (el) {
     } else {
       var data = el.plain ? undefined : genData(el);
 
-      var children = el.inlineTemplate ? null : genChildren(el);
-      code = "_h('" + (el.tag) + "'" + (data ? ("," + data) : '') + (children ? ("," + children) : '') + ")";
+      var children = el.inlineTemplate ? null : genChildren(el, true);
+      code = "_c('" + (el.tag) + "'" + (data ? ("," + data) : '') + (children ? ("," + children) : '') + ")";
     }
     // module transforms
     for (var i = 0; i < transforms$1.length; i++) {
@@ -27015,10 +27317,54 @@ function genScopedSlot (key, el) {
       : genElement(el)) + "}"
 }
 
-function genChildren (el) {
-  if (el.children.length) {
-    return '[' + el.children.map(genNode).join(',') + ']'
+function genChildren (el, checkSkip) {
+  var children = el.children;
+  if (children.length) {
+    var el$1 = children[0];
+    // optimize single v-for
+    if (children.length === 1 &&
+        el$1.for &&
+        el$1.tag !== 'template' &&
+        el$1.tag !== 'slot') {
+      return genElement(el$1)
+    }
+    var normalizationType = getNormalizationType(children);
+    return ("[" + (children.map(genNode).join(',')) + "]" + (checkSkip
+        ? normalizationType ? ("," + normalizationType) : ''
+        : ''))
   }
+}
+
+// determine the normalization needed for the children array.
+// 0: no normalization needed
+// 1: simple normalization needed (possible 1-level deep nested array)
+// 2: full normalization needed
+function getNormalizationType (children) {
+  var res = 0;
+  for (var i = 0; i < children.length; i++) {
+    var el = children[i];
+    if (el.type !== 1) {
+      continue
+    }
+    if (needsNormalization(el) ||
+        (el.ifConditions && el.ifConditions.some(function (c) { return needsNormalization(c.block); }))) {
+      res = 2;
+      break
+    }
+    if (maybeComponent(el) ||
+        (el.ifConditions && el.ifConditions.some(function (c) { return maybeComponent(c.block); }))) {
+      res = 1;
+    }
+  }
+  return res
+}
+
+function needsNormalization (el) {
+  return el.for !== undefined || el.tag === 'template' || el.tag === 'slot'
+}
+
+function maybeComponent (el) {
+  return !isPlatformReservedTag$1(el.tag)
 }
 
 function genNode (node) {
@@ -27030,21 +27376,33 @@ function genNode (node) {
 }
 
 function genText (text) {
-  return text.type === 2
+  return ("_v(" + (text.type === 2
     ? text.expression // no need for () because already wrapped in _s()
-    : transformSpecialNewlines(JSON.stringify(text.text))
+    : transformSpecialNewlines(JSON.stringify(text.text))) + ")")
 }
 
 function genSlot (el) {
   var slotName = el.slotName || '"default"';
   var children = genChildren(el);
-  return ("_t(" + slotName + (children ? ("," + children) : '') + (el.attrs ? ((children ? '' : ',null') + ",{" + (el.attrs.map(function (a) { return ((camelize(a.name)) + ":" + (a.value)); }).join(',')) + "}") : '') + ")")
+  var res = "_t(" + slotName + (children ? ("," + children) : '');
+  var attrs = el.attrs && ("{" + (el.attrs.map(function (a) { return ((camelize(a.name)) + ":" + (a.value)); }).join(',')) + "}");
+  var bind$$1 = el.attrsMap['v-bind'];
+  if ((attrs || bind$$1) && !children) {
+    res += ",null";
+  }
+  if (attrs) {
+    res += "," + attrs;
+  }
+  if (bind$$1) {
+    res += (attrs ? '' : ',null') + "," + bind$$1;
+  }
+  return res + ')'
 }
 
 // componentName is el.component, take it as argument to shun flow's pessimistic refinement
 function genComponent (componentName, el) {
-  var children = el.inlineTemplate ? null : genChildren(el);
-  return ("_h(" + componentName + "," + (genData(el)) + (children ? ("," + children) : '') + ")")
+  var children = el.inlineTemplate ? null : genChildren(el, true);
+  return ("_c(" + componentName + "," + (genData(el)) + (children ? ("," + children) : '') + ")")
 }
 
 function genProps (props) {
@@ -27303,10 +27661,13 @@ function genCheckboxModel (
   var falseValueBinding = getBindingAttr(el, 'false-value') || 'false';
   addProp(el, 'checked',
     "Array.isArray(" + value + ")" +
-      "?_i(" + value + "," + valueBinding + ")>-1" +
-      ":_q(" + value + "," + trueValueBinding + ")"
+      "?_i(" + value + "," + valueBinding + ")>-1" + (
+        trueValueBinding === 'true'
+          ? (":(" + value + ")")
+          : (":_q(" + value + "," + trueValueBinding + ")")
+      )
   );
-  addHandler(el, 'change',
+  addHandler(el, 'click',
     "var $$a=" + value + "," +
         '$$el=$event.target,' +
         "$$c=$$el.checked?(" + trueValueBinding + "):(" + falseValueBinding + ");" +
@@ -27337,7 +27698,7 @@ function genRadioModel (
   var valueBinding = getBindingAttr(el, 'value') || 'null';
   valueBinding = number ? ("_n(" + valueBinding + ")") : valueBinding;
   addProp(el, 'checked', ("_q(" + value + "," + valueBinding + ")"));
-  addHandler(el, 'change', genAssignmentCode(value, valueBinding), null, true);
+  addHandler(el, 'click', genAssignmentCode(value, valueBinding), null, true);
 }
 
 function genDefaultModel (
@@ -27377,10 +27738,12 @@ function genDefaultModel (
   valueExpression = number || type === 'number'
     ? ("_n(" + valueExpression + ")")
     : valueExpression;
+
   var code = genAssignmentCode(value, valueExpression);
   if (isNative && needCompositionGuard) {
     code = "if($event.target.composing)return;" + code;
   }
+
   // inputs with type="file" are read only and setting the input's
   // value will throw an error.
   if ("development" !== 'production' &&
@@ -27390,8 +27753,12 @@ function genDefaultModel (
       "File inputs are read only. Use a v-on:change listener instead."
     );
   }
+
   addProp(el, 'value', isNative ? ("_s(" + value + ")") : ("(" + value + ")"));
   addHandler(el, event, code, null, true);
+  if (trim || number || type === 'number') {
+    addHandler(el, 'blur', '$forceUpdate()');
+  }
 }
 
 function genSelect (
@@ -28575,7 +28942,7 @@ module.exports = function spread(callback) {
 "use strict";
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var ArrayProto=Array.prototype;var nodeError=new Error('Passed arguments must be of Node');var blurEvent=void 0;var blurList=[];var Events=[];function isNode(val){return val instanceof window.Node;}function isNodeList(val){return val instanceof window.NodeList||val instanceof NodeList||val instanceof window.HTMLCollection||val instanceof Array;}var NodeList=function(){function NodeList(args){_classCallCheck(this,NodeList);var nodes=args;if(args[0]===window){nodes=[window];}else if(typeof args[0]==='string'){nodes=(args[1]||document).querySelectorAll(args[0]);if(args[1]){this.owner=args[1];}}else if(0 in args&&!isNode(args[0])&&args[0]&&'length'in args[0]){nodes=args[0];if(args[1]){this.owner=args[1];}}if(nodes){for(var i in nodes){this[i]=nodes[i];}this.length=nodes.length;}else{this.length=0;}}_createClass(NodeList,[{key:'concat',value:function concat(){var nodes=ArrayProto.slice.call(this);function flatten(arr){for(var i in arr){if(isNode(arr[i])){if(!~nodes.indexOf(arr[i]))nodes.push(arr[i]);}else if(arr[i]){flatten(arr[i]);}}}for(var i in arguments){var arg=arguments[i];if(isNode(arg)){if(!~nodes.indexOf(arg))nodes.push(arg);}else if(isNodeList(arg)){flatten(arg);}else{throw Error('Concat arguments must be of a Node, NodeList, HTMLCollection, or Array of (Node, NodeList, HTMLCollection, Array)');}}return new NodeList([nodes,this]);}},{key:'delete',value:function _delete(){return flatten(this).filter(function(el){if(el.remove){el.remove();}else if(el.parentNode){el.parentNode.removeChild(el);}return document.body.contains(el);});}},{key:'each',value:function each(){ArrayProto.forEach.apply(this,arguments);return this;}},{key:'filter',value:function filter(){return new NodeList([ArrayProto.filter.apply(this,arguments),this]);}},{key:'find',value:function find(element){var nodes=[];flatten(this).forEach(function(node){nodes.push.apply(nodes,node.querySelectorAll(element));});return NodeListJS(nodes,this.owner);}},{key:'findChildren',value:function findChildren(element){var _this=this;if(element)return this.find(element).filter(function(el){return _this.includes(el.parentElement);});return flatten(this.map(function(el){return el.children;}));}},{key:'forEach',value:function forEach(){ArrayProto.forEach.apply(this,arguments);return this;}},{key:'includes',value:function includes(element,index){return~this.indexOf(element,index);}},{key:'map',value:function map(){for(var _len=arguments.length,args=Array(_len),_key=0;_key<_len;_key++){args[_key]=arguments[_key];}return flatten(ArrayProto.map.apply(this,args),this);}},{key:'parent',value:function parent(){return this.map(function(el){return el.parentNode;});}},{key:'pop',value:function pop(amount){if(typeof amount!=='number'){amount=1;}var nodes=[];var pop=ArrayProto.pop.bind(this);while(amount--){nodes.push(pop());}return new NodeList([nodes,this]);}},{key:'push',value:function push(){for(var _len2=arguments.length,args=Array(_len2),_key2=0;_key2<_len2;_key2++){args[_key2]=arguments[_key2];}for(var i in args){if(!isNode(args[i]))throw nodeError;if(!~this.indexOf(args[i]))ArrayProto.push.call(this,args[i]);}return this;}},{key:'shift',value:function shift(amount){if(typeof amount!=='number'){amount=1;}var nodes=[];var shift=ArrayProto.shift.bind(this);while(amount--){nodes.push(shift());}return new NodeList([nodes,this]);}},{key:'slice',value:function slice(){for(var _len3=arguments.length,args=Array(_len3),_key3=0;_key3<_len3;_key3++){args[_key3]=arguments[_key3];}return new NodeList([ArrayProto.slice.apply(this,args),this]);}},{key:'splice',value:function splice(){for(var _len4=arguments.length,args=Array(_len4),_key4=0;_key4<_len4;_key4++){args[_key4]=arguments[_key4];}for(var i=2,l=args.length;i<l;i++){if(!isNode(args[i]))throw nodeError;}return new NodeList([ArrayProto.splice.apply(this,args),this]);}},{key:'unshift',value:function unshift(){var unshift=ArrayProto.unshift.bind(this);for(var _len5=arguments.length,args=Array(_len5),_key5=0;_key5<_len5;_key5++){args[_key5]=arguments[_key5];}for(var i in args){if(!isNode(args[i]))throw nodeError;if(!~this.indexOf(args[i]))unshift(args[i]);}return this;}// classes
 },{key:'addClass',value:function addClass(classes){return this.toggleClass(classes,true);}},{key:'removeClass',value:function removeClass(classes){return this.toggleClass(classes,false);}},{key:'toggleClass',value:function toggleClass(classes,value){var _this2=this;var method=value===undefined||value===null?'toggle':value?'add':'remove';if(typeof classes==='string'){classes=classes.trim().replace(/\s+/,' ').split(' ');}classes.forEach(function(c){return _this2.each(function(el){return el.classList[method](c);});});return this;}},{key:'get',value:function get(prop){var arr=[];for(var i in this){if(this[i]!==null){this[i]=this[i][prop];}arr.push(this[i]);}return flatten(arr,this);}},{key:'set',value:function set(prop,value){var i=void 0;if(prop.constructor===Object){for(i in this){if(this[i]){for(var key in prop){if(key in this[i]){this[i][key]=prop[key];}}}}}else{for(i in this){if(prop in this[i]){this[i][prop]=value;}}}return this;}},{key:'call',value:function call(){for(var _len6=arguments.length,args=Array(_len6),_key6=0;_key6<_len6;_key6++){args[_key6]=arguments[_key6];}var method=ArrayProto.shift.call(args);var arr=[];var returnThis=true;for(var i in this){if(this[i]&&this[i][method]instanceof Function){this[i]=this[i][method].apply(this[i],args);arr.push(this[i]);if(returnThis&&this[i]!==undefined){returnThis=false;}}else{arr.push(undefined);}}return returnThis?this:flatten(arr,this);}},{key:'item',value:function item(index){return new NodeList([[this[index]],this]);}},{key:'on',// event handlers
-value:function on(events,selector,callback){var _this3=this;if(typeof events==='string'){events=events.trim().replace(/\s+/,' ').split(' ');}if(!this||!this.length)return this;if(callback===undefined){callback=selector;selector=null;}if(!callback)return this;var fn=callback;callback=selector?function(e){var els=new NodeList([selector,this]);if(!els.length){return;}els.some(function(el){var target=el.contains(e.target);if(target)fn.call(el,e,el);return target;});}:function(e){fn.apply(this,[e,this]);};events.forEach(function(event){for(var i in _this3){if(_this3[i]===window||isNode(_this3[i])){_this3[i].addEventListener(event,callback,false);Events.push({el:_this3[i],event:event,callback:callback});}}});return this;}},{key:'off',value:function off(events,callback){var _this4=this;if(events instanceof Function){callback=events;events=null;}if(typeof events==='string'&&callback instanceof Function){var _loop=function _loop(i){Events.forEach(function(e){events.events.split(' ').forEach(function(event){if(Events[e]&&Events[e].el===_this4[i]&&Events[e].event===event&&Events[e].callback===callback){Events[e].el.removeEventListener(Events[e].event,Events[e].callback);delete Events[e];}});});};for(var i in this){_loop(i);}}else if(typeof events==='string'){var _loop2=function _loop2(_i){Events.forEach(function(e){events.split(' ').forEach(function(event){if(Events[e]&&Events[e].el===_this4[_i]&&Events[e].event===event){Events[e].el.removeEventListener(Events[e].event,Events[e].callback);delete Events[e];}});});};for(var _i in this){_loop2(_i);}}else if(callback instanceof Function){for(var _i2 in this){for(var e in Events){if(Events[e]&&Events[e].el===this[_i2]&&Events[e].callback===callback){Events[e].el.removeEventListener(Events[e].event,Events[e].callback);delete Events[e];}}}}else{for(var _i3 in this){for(var _e in Events){if(Events[_e]&&Events[_e].el===this[_i3]){Events[_e].el.removeEventListener(Events[_e].event,Events[_e].callback);delete Events[_e];}}}}Events=Events.filter(function(el){return el!==undefined;});return this;}},{key:'onBlur',value:function onBlur(callback){if(!this||!this.length)return this;if(!callback)return this;this.each(function(el){blurList.push({el:el,callback:callback});});if(!blurEvent){blurEvent=function blurEvent(e){blurList.forEach(function(item){var target=item.el.contains(e.target)||item.el===e.target;if(!target)item.callback.call(item.el,e,item.el);});};document.addEventListener('click',blurEvent,false);document.addEventListener('touchstart',blurEvent,false);}return this;}},{key:'offBlur',value:function offBlur(callback){this.each(function(el){for(var e in blurList){if(blurList[e]&&blurList[e].el===el&&(!callback||blurList[e].callback===callback)){delete blurList[e];}}});blurList=blurList.filter(function(el){return el!==undefined;});return this;}},{key:'asArray',get:function get(){return ArrayProto.slice.call(this);}}]);return NodeList;}();var NL=NodeList.prototype;function flatten(arr,owner){var list=[];for(var i in arr){var el=arr[i];if(isNode(el)){if(!~list.indexOf(el))list.push(el);}else if(isNodeList(el)){for(var id in el){list.push(el[id]);}}else if(el!==null){arr.get=NL.get;arr.set=NL.set;arr.call=NL.call;arr.owner=owner;return arr;}}return new NodeList([list,owner]);}Object.getOwnPropertyNames(ArrayProto).forEach(function(key){if(key!=='join'&&key!=='copyWithin'&&key!=='fill'&&NL[key]===undefined){NL[key]=ArrayProto[key];}});if(window.Symbol&&Symbol.iterator){NL[Symbol.iterator]=NL.values=ArrayProto[Symbol.iterator];}var div=document.createElement('div');function setterGetter(prop){var _arguments=arguments,_this5=this;if(div[prop]instanceof Function){NL[prop]=function(){var arr=[];var returnThis=true;for(var i in NL){var el=NL[i];if(el&&el[prop]instanceof Function){el=el[prop].apply(el,_arguments);arr.push(el);if(returnThis&&el!==undefined){returnThis=false;}}else{arr.push(undefined);}}return returnThis?_this5:flatten(arr,_this5);};}else{Object.defineProperty(NL,prop,{get:function get(){var arr=[];for(var i in this){if(this[i]!==null){this[i]=this[i][prop];}arr.push(this[i]);}return flatten(arr,this);},set:function set(value){for(var i in this){if(i){var o=this[i];if(o&&prop in o){o[prop]=value;}}}}});}}for(var prop in div){setterGetter(prop);}function NodeListJS(){return new NodeList(arguments);}window.NL=NodeListJS;exports.default=NodeListJS;
+value:function on(events,selector,callback){var _this3=this;if(typeof events==='string'){events=events.trim().replace(/\s+/,' ').split(' ');}if(!this||!this.length)return this;if(callback===undefined){callback=selector;selector=null;}if(!callback)return this;var fn=callback;callback=selector?function(e){var els=new NodeList([selector,this]);if(!els.length){return;}els.some(function(el){var target=el.contains(e.target);if(target)fn.call(el,e,el);return target;});}:function(e){fn.apply(this,[e,this]);};events.forEach(function(event){for(var i in _this3){if(_this3[i]===window||isNode(_this3[i])){_this3[i].addEventListener(event,callback,false);Events.push({el:_this3[i],event:event,callback:callback});}}});return this;}},{key:'off',value:function off(events,callback){var _this4=this;if(events instanceof Function){callback=events;events=null;}if(typeof events==='string'&&callback instanceof Function){var _loop=function _loop(i){Events.forEach(function(e){events.events.split(' ').forEach(function(event){if(Events[e]&&Events[e].el===_this4[i]&&Events[e].event===event&&Events[e].callback===callback){Events[e].el.removeEventListener(Events[e].event,Events[e].callback);delete Events[e];}});});};for(var i in this){_loop(i);}}else if(typeof events==='string'){var _loop2=function _loop2(i){Events.forEach(function(e){events.split(' ').forEach(function(event){if(Events[e]&&Events[e].el===_this4[i]&&Events[e].event===event){Events[e].el.removeEventListener(Events[e].event,Events[e].callback);delete Events[e];}});});};for(var i in this){_loop2(i);}}else if(callback instanceof Function){for(var i in this){for(var e in Events){if(Events[e]&&Events[e].el===this[i]&&Events[e].callback===callback){Events[e].el.removeEventListener(Events[e].event,Events[e].callback);delete Events[e];}}}}else{for(var _i in this){for(var _e in Events){if(Events[_e]&&Events[_e].el===this[_i]){Events[_e].el.removeEventListener(Events[_e].event,Events[_e].callback);delete Events[_e];}}}}Events=Events.filter(function(el){return el!==undefined;});return this;}},{key:'onBlur',value:function onBlur(callback){if(!this||!this.length)return this;if(!callback)return this;this.each(function(el){blurList.push({el:el,callback:callback});});if(!blurEvent){blurEvent=function blurEvent(e){blurList.forEach(function(item){var target=item.el.contains(e.target)||item.el===e.target;if(!target)item.callback.call(item.el,e,item.el);});};document.addEventListener('click',blurEvent,false);document.addEventListener('touchstart',blurEvent,false);}return this;}},{key:'offBlur',value:function offBlur(callback){this.each(function(el){for(var e in blurList){if(blurList[e]&&blurList[e].el===el&&(!callback||blurList[e].callback===callback)){delete blurList[e];}}});blurList=blurList.filter(function(el){return el!==undefined;});return this;}},{key:'asArray',get:function get(){return ArrayProto.slice.call(this);}}]);return NodeList;}();var NL=NodeList.prototype;function flatten(arr,owner){var list=[];for(var i in arr){var el=arr[i];if(isNode(el)){if(!~list.indexOf(el))list.push(el);}else if(isNodeList(el)){for(var id in el){list.push(el[id]);}}else if(el!==null){arr.get=NL.get;arr.set=NL.set;arr.call=NL.call;arr.owner=owner;return arr;}}return new NodeList([list,owner]);}Object.getOwnPropertyNames(ArrayProto).forEach(function(key){if(key!=='join'&&key!=='copyWithin'&&key!=='fill'&&NL[key]===undefined){NL[key]=ArrayProto[key];}});if(window.Symbol&&Symbol.iterator){NL[Symbol.iterator]=NL.values=ArrayProto[Symbol.iterator];}var div=document.createElement('div');function setterGetter(prop){var _arguments=arguments,_this5=this;if(div[prop]instanceof Function){NL[prop]=function(){var arr=[];var returnThis=true;for(var i in NL){var el=NL[i];if(el&&el[prop]instanceof Function){el=el[prop].apply(el,_arguments);arr.push(el);if(returnThis&&el!==undefined){returnThis=false;}}else{arr.push(undefined);}}return returnThis?_this5:flatten(arr,_this5);};}else{Object.defineProperty(NL,prop,{get:function get(){var arr=[];for(var i in this){if(this[i]!==null){this[i]=this[i][prop];}arr.push(this[i]);}return flatten(arr,this);},set:function set(value){for(var i in this){if(i){var o=this[i];if(o&&prop in o){o[prop]=value;}}}}});}}for(var prop in div){setterGetter(prop);}function NodeListJS(){return new NodeList(arguments);}window.NL=NodeListJS;exports.default=NodeListJS;
 
 /***/ },
 /* 49 */
@@ -28766,8 +29133,8 @@ type:Number,default:5}},methods:{/**
 data:function data(){return{row:{},fields:{},fieldsets:{},validationErrors:{},isSaving:false,tinymceOptions:{}};},created:function created(){// settings
 this.tinymceOptions=JSON.parse(_flexy.tinymceOptions);// Load Form
 this.reloadForm();},methods:{reloadForm:function reloadForm(apiParts){var self=this;_flexyState2.default.api({url:self.apiUrl(apiParts)}).then(function(response){if(!_.isUndefined(response.data)){if(response.data.success){// Zijn er settings meegekomen?
-if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.field_info;self.fieldsets=response.data.settings.fieldsets;}// Data en die aanvullen met data
-self.row=response.data.data;}}return response;});},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url=this.api+'?table='+this.name+'&where='+this.primary+'&as_form=true&settings=field_info|form_set.fieldsets';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].schema['name'];},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].schema.options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},// Pas kleur van optie aan als het een kleurenveld is
+if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.form_set.field_info;self.fieldsets=response.data.settings.form_set.fieldsets;}// Data en die aanvullen met data
+self.row=response.data.data;}}return response;});},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url=this.api+'?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},// Pas kleur van optie aan als het een kleurenveld is
 selectStyle:function selectStyle(field,option){var style='';if(field.substr(0,4)==='rgb_'){style="background-color:"+option+';color:'+_jdbTools2.default.complementColor(option)+';';}return style;},dateObject:function dateObject(value){if(value==='0000-00-00'){var date=new Date();}else{var year=value.substr(0,4);var month=value.substr(5,2);var day=value.substr(8,2);var date=new Date(year,month,day);}return date;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){var self=this;if(!this.isSaving){window.location.assign(self.returnUrl());}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){window.location.assign(self.returnUrl());}});}},returnUrl:function returnUrl(){var url='admin/show/grid/'+this.name;if(this.path&&this.path!=='false')url='admin/show/media/'+this.path;console.log(this.path,url);return url;},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=_.clone(this.row);// Prepare data for ajax call
 for(var field in data){if(field.indexOf('.abstract')>0){delete data[field];}else{if(this.isType('checkbox',field)){data[field]=data[field]?1:0;}if(this.isType('select',field)&&this.isMultiple(field)){data[field]=[];for(var i=0;i<this.row[field].length;i++){data[field].push(this.row[field][i].id);}}}}console.log(data);return _flexyState2.default.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':data}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){// console.log('updateField',field,value);
 this.row[field]=value;},updateSelect:function updateSelect(field,selected){if(!this.isMultiple(field)){var value=selected[0].value;}else{var value=[];for(var i=0;i<selected.length;i++){value.push({'id':selected[i].value});}}this.updateField(field,value);},// TinyMCE changed
@@ -28841,8 +29208,8 @@ this.reloadPage({offset:this.offset,limit:this.limit,order:this.order,filter:thi
      */draggableOptions:function draggableOptions(){return{// group         : { name:'tree', pull:true},
 draggable:'tr',handle:'.draggable-handle',forceFallback:true};}},methods:{reloadPage:function reloadPage(apiParts){var self=this;_flexyState2.default.api({url:self.apiUrl(apiParts)}).then(function(response){if(!_.isUndefined(response.data)){if(response.data.success){// Stel url in van browser
 self.newUrl();// Zijn er settings meegekomen?
-if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.field_info;}// Data en die aanvullen met data
-var data=response.data.data;self.items=self.addInfo(data,true);self.dataInfo=response.data.info;}}return response;});},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url=this.api;if(this.gridType()==='media'){url+='?table=res_assets&path='+this.name;}else{url+='?table='+this.name+'&txt_abstract='+parts.txt_abstract+'&as_grid='+parts.as_grid;}url+='&offset='+parts.offset+'&limit='+parts.limit+'&order='+parts.order+'&filter={'+_jdbTools2.default.encodeURL(parts.filter)+'}';if(this.fields.length==0)url+='&settings=field_info';return url;},newUrl:function newUrl(){if(this.changeUrlApi){var parts=this.apiParts;var stateObj=parts;history.pushState(stateObj,"",location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+_jdbTools2.default.encodeURL(parts.filter)+'"}');}},hasData:function hasData(){return this.items.length>0;},/*
+if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.grid_set.field_info;}// Data en die aanvullen met data
+var data=response.data.data;self.items=self.addInfo(data,true);self.dataInfo=response.data.info;}}return response;});},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url=this.api;if(this.gridType()==='media'){url+='?table=res_assets&path='+this.name;}else{url+='?table='+this.name+'&txt_abstract='+parts.txt_abstract+'&as_grid='+parts.as_grid;}url+='&offset='+parts.offset+'&limit='+parts.limit+'&order='+parts.order+'&filter={'+_jdbTools2.default.encodeURL(parts.filter)+'}';if(this.fields.length==0)url+='&settings=grid_set';return url;},newUrl:function newUrl(){if(this.changeUrlApi){var parts=this.apiParts;var stateObj=parts;history.pushState(stateObj,"",location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+_jdbTools2.default.encodeURL(parts.filter)+'"}');}},hasData:function hasData(){return this.items.length>0;},/*
       Voeg (tree)info toe aan meegegeven items
     */addInfo:function addInfo(items,addSchema){var data=items;var isTree=this.gridType()=='tree';if(isTree){var parents={};var level=0;var parent_key=0;}for(var i=0;i<data.length;i++){var row=data[i];var id=row['id'];// Add schema to each cell
 if(addSchema===true){for(var field in row){var schema={'type':'string','grid-type':'text','readonly':false};if(this.fields[field])schema=this.fields[field].schema;data[i][field]={'type':schema['grid-type']||schema['form-type'],'value':row[field]};if(schema.type==='number'&&schema['form-type']==='select'){var jsonValue=JSON.parse(row[field].value);data[i][field]={'type':schema['grid-type']||schema['form-type'],'value':Object.values(jsonValue)[0],'id':Object.keys(jsonValue)[0]};}data[i][field].name=field;}}// Add tree info to each row
@@ -30947,23 +31314,23 @@ module.exports = __vue_exports__
   \****************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "navbar navbar-fixed-top",
     attrs: {
       "id": "messages"
     }
-  }, [_h('transition-group', {
+  }, [_c('transition-group', {
     attrs: {
       "name": "slideUp",
       "tag": "div"
     }
-  }, [_vm._l((_vm.state.messages), function(message, id) {
-    return _h('div', {
+  }, _vm._l((_vm.state.messages), function(message, id) {
+    return _c('div', {
       key: message,
       staticClass: "alert",
       class: _vm.typeClass(message)
-    }, [(message.type === 'danger') ? _h('flexy-button', {
+    }, [(message.type === 'danger') ? _c('flexy-button', {
       staticClass: "btn-danger message-button",
       attrs: {
         "icon": "close"
@@ -30973,13 +31340,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.removeMessage(id)
         }
       }
-    }) : _vm._e(), " ", _h('div', {
+    }) : _vm._e(), _vm._v(" "), _c('div', {
       staticClass: "message-text",
       domProps: {
         "innerHTML": _vm._s(message.text)
       }
-    })])
-  })])])
+    })], 1)
+  }))], 1)
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -30997,8 +31364,8 @@ if (false) {
   \**************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', [_vm._t("default")])
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_vm._t("default")], 2)
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -31016,8 +31383,8 @@ if (false) {
   \**************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('button', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('button', {
     staticClass: "flexy-button",
     class: _vm.buttonClass,
     attrs: {
@@ -31026,12 +31393,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     on: {
       "click": _vm.openDropdown
     }
-  }, [(_vm.iconComputed !== '') ? _h('span', {
+  }, [(_vm.iconComputed !== '') ? _c('span', {
     class: _vm.iconClass,
     attrs: {
       "disabled": _vm.buttonClass.indexOf('disabled')
     }
-  }) : _vm._e(), (_vm.text !== '') ? _h('span', [_vm._s(_vm.text)]) : _vm._e()])
+  }) : _vm._e(), (_vm.text !== '') ? _c('span', [_vm._v(_vm._s(_vm.text))]) : _vm._e()])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -31049,12 +31416,12 @@ if (false) {
   \******************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "mediapicker"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "mediapicker-selection"
-  }, [_h('flexy-button', {
+  }, [_c('flexy-button', {
     staticClass: "btn-outline-warning",
     attrs: {
       "icon": {
@@ -31067,7 +31434,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.choose = !_vm.choose
       }
     }
-  }), " ", _h('draggable', {
+  }), _vm._v(" "), _c('draggable', {
     attrs: {
       "list": _vm.thumbs(),
       "options": _vm.draggableOptions
@@ -31077,10 +31444,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.dragEnd($event)
       }
     }
-  }, [_vm._l((_vm.thumbs()), function(img, index) {
-    return _h('div', {
+  }, _vm._l((_vm.thumbs()), function(img, index) {
+    return _c('div', {
       staticClass: "mediapicker-thumb"
-    }, [_h('flexy-button', {
+    }, [_c('flexy-button', {
       staticClass: "btn-danger",
       attrs: {
         "icon": "remove"
@@ -31090,17 +31457,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.removeMedia(index)
         }
       }
-    }), " ", _h('flexy-thumb', {
+    }), _vm._v(" "), _c('flexy-thumb', {
       attrs: {
         "size": "lg",
         "src": img.src,
         "alt": img.alt,
         "value": img.value
       }
-    })])
-  })])]), " ", (_vm.choose) ? _h('div', {
+    })], 1)
+  }))], 1), _vm._v(" "), (_vm.choose) ? _c('div', {
     staticClass: "mediapicker-choose"
-  }, [_h('flexy-grid', {
+  }, [_c('flexy-grid', {
     attrs: {
       "type": "mediapicker",
       "api": "table",
@@ -31114,7 +31481,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.addMedia($event)
       }
     }
-  })]) : _vm._e()])
+  })], 1) : _vm._e()])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -31132,8 +31499,8 @@ if (false) {
   \*************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "modal flexy-modal",
     class: {
       'hidden': !_vm.settings.show
@@ -31141,7 +31508,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "id": "flexyadmin-modal"
     }
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "modal-dialog modal-sm",
     on: {
       "keyup": [function($event) {
@@ -31152,9 +31519,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.enter()
       }]
     }
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "modal-content"
-  }, [_h('div', {
+  }, [_c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -31162,7 +31529,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       expression: "settings.title!==''"
     }],
     staticClass: "modal-header bg-primary text-white"
-  }, [_h('flexy-button', {
+  }, [_c('flexy-button', {
     staticClass: "btn-danger",
     attrs: {
       "icon": "remove"
@@ -31172,14 +31539,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.close()
       }
     }
-  }), " ", _h('h4', {
+  }), _vm._v(" "), _c('h4', {
     staticClass: "modal-title"
-  }, [_vm._s(_vm.settings.title)])]), " ", _h('div', {
+  }, [_vm._v(_vm._s(_vm.settings.title))])], 1), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
-  }, [_vm._s(_vm.settings.body)]), " ", _h('div', {
+  }, [_vm._v(_vm._s(_vm.settings.body))]), _vm._v(" "), _c('div', {
     staticClass: "modal-footer"
-  }, [_vm._l((_vm.settings.buttons), function(button, index) {
-    return _h('button', {
+  }, _vm._l((_vm.settings.buttons), function(button, index) {
+    return _c('button', {
       staticClass: "btn",
       class: button.class,
       attrs: {
@@ -31190,8 +31557,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.clickedButton(index)
         }
       }
-    }, [_vm._s(button.title)])
-  })])])])])
+    }, [_vm._v(_vm._s(button.title))])
+  }))])])])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -31209,10 +31576,10 @@ if (false) {
   \******************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "colorpicker"
-  }, [_h('input', {
+  }, [_c('input', {
     staticClass: "form-control",
     attrs: {
       "id": _vm.name_input,
@@ -31226,7 +31593,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.changeColor($event.target.value)
       }
     }
-  }), " ", _h('input', {
+  }), _vm._v(" "), _c('input', {
     staticClass: "form-control form-picker",
     attrs: {
       "type": "color",
@@ -31259,17 +31626,17 @@ if (false) {
   \*************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "flexy-thumb"
-  }, [(_vm.type === 'image') ? _h('img', {
+  }, [(_vm.type === 'image') ? _c('img', {
     class: _vm.mediaClass,
     attrs: {
       "src": _vm.src,
       "alt": _vm.alt,
       "title": _vm.alt
     }
-  }) : _vm._e(), " ", (_vm.type !== 'image') ? _h('span', {
+  }) : _vm._e(), _vm._v(" "), (_vm.type !== 'image') ? _c('span', {
     staticClass: "fa",
     class: _vm.type,
     attrs: {
@@ -31293,18 +31660,18 @@ if (false) {
   \**************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('a', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('a', {
     attrs: {
       "href": _vm.href
     }
-  }, [_vm._m(0)])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  }, _vm._m(0))
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _vm._l((_vm.chars), function(char) {
-    return _h('span', {
+    return _c('span', {
       staticClass: "flexy-block btn btn-secondary",
       class: char.css
-    }, [_vm._s(char.char)])
+    }, [_vm._v(_vm._s(char.char))])
   })
 }]}
 if (false) {
@@ -31323,10 +31690,10 @@ if (false) {
   \***************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "datepicker"
-  }, [_h('input', {
+  }, [_c('input', {
     staticClass: "form-control datepicker-input",
     class: {
       'with-reset-button': _vm.clearButton
@@ -31347,7 +31714,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.$emit('input', $event.target.value)
       }
     }
-  }), " ", (_vm.clearButton && _vm.value) ? _h('button', {
+  }), _vm._v(" "), (_vm.clearButton && _vm.value) ? _c('button', {
     staticClass: "close",
     attrs: {
       "type": "button"
@@ -31357,7 +31724,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.$emit('input', '')
       }
     }
-  }, [_h('span', ["×"])]) : _vm._e(), " ", _h('div', {
+  }, [_c('span', [_vm._v("×")])]) : _vm._e(), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -31365,13 +31732,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       expression: "displayDayView"
     }],
     staticClass: "datepicker-popup"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "datepicker-inner"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "datepicker-body"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "datepicker-ctrl"
-  }, [_h('span', {
+  }, [_c('span', {
     class: _vm.preBtnClasses,
     attrs: {
       "aria-hidden": "true"
@@ -31381,7 +31748,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.preNextMonthClick(0)
       }
     }
-  }), " ", _h('span', {
+  }), _vm._v(" "), _c('span', {
     class: _vm.nextBtnClasses,
     attrs: {
       "aria-hidden": "true"
@@ -31391,26 +31758,26 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.preNextMonthClick(1)
       }
     }
-  }), " ", _h('p', {
+  }), _vm._v(" "), _c('p', {
     on: {
       "click": _vm.switchMonthView
     }
-  }, [_vm._s(_vm.stringifyDayHeader(_vm.currDate))])]), " ", _h('div', {
+  }, [_vm._v(_vm._s(_vm.stringifyDayHeader(_vm.currDate)))])]), _vm._v(" "), _c('div', {
     staticClass: "datepicker-weekRange"
-  }, [_vm._l((_vm.text.daysOfWeek), function(w) {
-    return _h('span', [_vm._s(w)])
-  })]), " ", _h('div', {
+  }, _vm._l((_vm.text.daysOfWeek), function(w) {
+    return _c('span', [_vm._v(_vm._s(w))])
+  })), _vm._v(" "), _c('div', {
     staticClass: "datepicker-dateRange"
-  }, [_vm._l((_vm.dateRange), function(d) {
-    return _h('span', {
+  }, _vm._l((_vm.dateRange), function(d) {
+    return _c('span', {
       class: d.sclass,
       on: {
         "click": function($event) {
           _vm.daySelect(d)
         }
       }
-    }, [_vm._s(d.text)])
-  })])])])]), " ", _h('div', {
+    }, [_vm._v(_vm._s(d.text))])
+  }))])])]), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -31418,13 +31785,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       expression: "displayMonthView"
     }],
     staticClass: "datepicker-popup"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "datepicker-inner"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "datepicker-body"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "datepicker-ctrl"
-  }, [_h('span', {
+  }, [_c('span', {
     class: _vm.preBtnClasses,
     attrs: {
       "aria-hidden": "true"
@@ -31434,7 +31801,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.preNextYearClick(0)
       }
     }
-  }), " ", _h('span', {
+  }), _vm._v(" "), _c('span', {
     class: _vm.nextBtnClasses,
     attrs: {
       "aria-hidden": "true"
@@ -31444,14 +31811,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.preNextYearClick(1)
       }
     }
-  }), " ", _h('p', {
+  }), _vm._v(" "), _c('p', {
     on: {
       "click": _vm.switchDecadeView
     }
-  }, [_vm._s(_vm.stringifyYearHeader(_vm.currDate))])]), " ", _h('div', {
+  }, [_vm._v(_vm._s(_vm.stringifyYearHeader(_vm.currDate)))])]), _vm._v(" "), _c('div', {
     staticClass: "datepicker-monthRange"
   }, [_vm._l((_vm.text.months), function(m, index) {
-    return [_h('span', {
+    return [_c('span', {
       class: {
         'datepicker-dateRange-item-active':
         (_vm.text.months[_vm.parse(_vm.value).getMonth()] === m) &&
@@ -31462,8 +31829,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.monthSelect(index)
         }
       }
-    }, [_vm._s(m.substr(0, 3))])]
-  })])])])]), " ", _h('div', {
+    }, [_vm._v(_vm._s(m.substr(0, 3)))])]
+  })], 2)])])]), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -31471,13 +31838,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       expression: "displayYearView"
     }],
     staticClass: "datepicker-popup"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "datepicker-inner"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "datepicker-body"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "datepicker-ctrl"
-  }, [_h('span', {
+  }, [_c('span', {
     class: _vm.preBtnClasses,
     attrs: {
       "aria-hidden": "true"
@@ -31487,7 +31854,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.preNextDecadeClick(0)
       }
     }
-  }), " ", _h('span', {
+  }), _vm._v(" "), _c('span', {
     class: _vm.nextBtnClasses,
     attrs: {
       "aria-hidden": "true"
@@ -31497,10 +31864,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.preNextDecadeClick(1)
       }
     }
-  }), " ", _h('p', [_vm._s(_vm.stringifyDecadeHeader(_vm.currDate))])]), " ", _h('div', {
+  }), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.stringifyDecadeHeader(_vm.currDate)))])]), _vm._v(" "), _c('div', {
     staticClass: "datepicker-monthRange decadeRange"
   }, [_vm._l((_vm.decadeRange), function(decade) {
-    return [_h('span', {
+    return [_c('span', {
       class: {
         'datepicker-dateRange-item-active': _vm.parse(this.value).getFullYear() === decade.text
       },
@@ -31510,8 +31877,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.yearSelect(decade.text)
         }
       }
-    }, [_vm._s(decade.text)])]
-  })])])])])])
+    }, [_vm._v(_vm._s(decade.text))])]
+  })], 2)])])])])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -31529,8 +31896,8 @@ if (false) {
   \*****************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "card grid",
     class: _vm.gridTypeClass(),
     on: {
@@ -31550,18 +31917,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.dropUploadHover = false
       }
     }
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "card-header"
-  }, [_h('h1', [_vm._s(_vm.title)]), " ", " ", _h('form', {
+  }, [_c('h1', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('form', {
     staticClass: "form-inline",
     on: {
       "submit": function($event) {
         _vm.startFinding($event)
       }
     }
-  }, [(!_vm.extendedFind) ? _h('div', {
+  }, [(!_vm.extendedFind) ? _c('div', {
     staticClass: "form-group"
-  }, [_h('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model.trim",
@@ -31586,11 +31953,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.findTerm = $event.target.value.trim()
       }, function($event) {
         _vm.findChanged()
-      }]
+      }],
+      "blur": function($event) {
+        _vm.$forceUpdate()
+      }
     }
-  })]) : _vm._e(), " ", _h('div', {
+  })]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "btn-group"
-  }, [_h('flexy-button', {
+  }, [_c('flexy-button', {
     staticClass: "btn-default",
     attrs: {
       "icon": "search"
@@ -31602,7 +31972,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.startFinding($event)
       }
     }
-  }), " ", (_vm.findTerm !== '' || _vm.extendedFind) ? _h('flexy-button', {
+  }), _vm._v(" "), (_vm.findTerm !== '' || _vm.extendedFind) ? _c('flexy-button', {
     staticClass: "btn-default text-danger",
     attrs: {
       "icon": "remove"
@@ -31614,7 +31984,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.stopFind()
       }
     }
-  }) : _vm._e(), " ", (_vm.findTerm !== '' || _vm.extendedFind) ? _h('flexy-button', {
+  }) : _vm._e(), _vm._v(" "), (_vm.findTerm !== '' || _vm.extendedFind) ? _c('flexy-button', {
     staticClass: "btn-default",
     class: {
       'text-warning': _vm.extendedFind
@@ -31632,10 +32002,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.extendedFind = !_vm.extendedFind
       }
     }
-  }) : _vm._e()])])]), " ", " ", (_vm.extendedFind) ? _h('div', {
+  }) : _vm._e()], 1)])]), _vm._v(" "), (_vm.extendedFind) ? _c('div', {
     staticClass: "card-header grid-extended-find"
-  }, [_h('h4', [_vm._s(_vm.$lang.grid_extended_search)]), " ", _vm._l((_vm.extendedTerm), function(term, index) {
-    return _h('form', {
+  }, [_c('h4', [_vm._v(_vm._s(_vm.$lang.grid_extended_search))]), _vm._v(" "), _vm._l((_vm.extendedTerm), function(term, index) {
+    return _c('form', {
       staticClass: "form-inline",
       attrs: {
         "index": index
@@ -31647,9 +32017,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.startFinding($event)
         }
       }
-    }, [_h('div', {
+    }, [_c('div', {
       staticClass: "form-group grid-extended-search-and"
-    }, [_h('select', {
+    }, [_c('select', {
       directives: [{
         name: "model",
         rawName: "v-model",
@@ -31670,26 +32040,26 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           })[0]
         }
       }
-    }, [_h('option', {
+    }, [_c('option', {
       attrs: {
         "value": "OR"
       },
       domProps: {
         "selected": term.and == 'OR'
       }
-    }, [_vm._s(_vm.$lang.grid_search_or)]), " ", _h('option', {
+    }, [_vm._v(_vm._s(_vm.$lang.grid_search_or))]), _vm._v(" "), _c('option', {
       attrs: {
         "value": "AND"
       },
       domProps: {
         "selected": term.and == 'AND'
       }
-    }, [_vm._s(_vm.$lang.grid_search_and)])])]), " ", _h('div', {
+    }, [_vm._v(_vm._s(_vm.$lang.grid_search_and))])])]), _vm._v(" "), _c('div', {
       staticClass: "form-group grid-extended-search-field",
       class: {
         'has-danger': !term.field
       }
-    }, [_h('select', {
+    }, [_c('select', {
       directives: [{
         name: "model",
         rawName: "v-model",
@@ -31710,16 +32080,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           })[0]
         }
       }
-    }, [_vm._l((_vm.fields), function(field, key) {
-      return _h('option', {
+    }, _vm._l((_vm.fields), function(field, key) {
+      return _c('option', {
         domProps: {
           "value": key,
           "selected": term.field === key
         }
-      }, [_vm._s(field.schema.name)])
-    })])]), " ", _h('div', {
+      }, [_vm._v(_vm._s(field.name))])
+    }))]), _vm._v(" "), _c('div', {
       staticClass: "form-group grid-extended-search-equals"
-    }, [_h('select', {
+    }, [_c('select', {
       directives: [{
         name: "model",
         rawName: "v-model",
@@ -31740,33 +32110,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           })[0]
         }
       }
-    }, [_h('option', {
+    }, [_c('option', {
       attrs: {
         "value": "exist"
       },
       domProps: {
         "selected": term.equals === 'exist'
       }
-    }, [_vm._s(_vm.$lang.grid_search_exist)]), " ", _h('option', {
+    }, [_vm._v(_vm._s(_vm.$lang.grid_search_exist))]), _vm._v(" "), _c('option', {
       attrs: {
         "value": "word"
       },
       domProps: {
         "selected": term.equals === 'word'
       }
-    }, [_vm._s(_vm.$lang.grid_search_word)]), " ", _h('option', {
+    }, [_vm._v(_vm._s(_vm.$lang.grid_search_word))]), _vm._v(" "), _c('option', {
       attrs: {
         "value": "exact"
       },
       domProps: {
         "selected": term.equals === 'exact'
       }
-    }, [_vm._s(_vm.$lang.grid_search_exact)])])]), " ", _h('div', {
+    }, [_vm._v(_vm._s(_vm.$lang.grid_search_exact))])])]), _vm._v(" "), _c('div', {
       staticClass: "form-group grid-extended-search-term",
       class: {
         'has-danger': term.term === ''
       }
-    }, [_h('input', {
+    }, [_c('input', {
       directives: [{
         name: "model",
         rawName: "v-model",
@@ -31788,7 +32158,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           term.term = $event.target.value
         }
       }
-    })]), " ", _h('flexy-button', {
+    })]), _vm._v(" "), _c('flexy-button', {
       staticClass: "btn-outline-danger",
       attrs: {
         "icon": "remove"
@@ -31800,7 +32170,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.extendedSearchRemove(index)
         }
       }
-    }), " ", _h('flexy-button', {
+    }), _vm._v(" "), _c('flexy-button', {
       staticClass: "btn-outline-warning",
       attrs: {
         "icon": "plus"
@@ -31812,16 +32182,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.extendedSearchAdd()
         }
       }
-    })])
-  })]) : _vm._e(), " ", " ", _h('div', {
+    })], 1)
+  })], 2) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "card-block table-responsive"
-  }, [_h('table', {
+  }, [_c('table', {
     staticClass: "table table-bordered table-sm grid-data"
-  }, [_h('thead', [_h('tr', [_vm._l((_vm.fields), function(field, key) {
-    return [(_vm.isPrimaryHeader(field)) ? _h('th', {
+  }, [_c('thead', [_c('tr', [_vm._l((_vm.fields), function(field, key) {
+    return [(_vm.isPrimaryHeader(field)) ? _c('th', {
       staticClass: "text-primary grid-actions",
       class: _vm.headerClass(field)
-    }, [(_vm.gridType() !== 'media') ? _h('flexy-button', {
+    }, [(_vm.gridType() !== 'media') ? _c('flexy-button', {
       staticClass: "btn-outline-warning",
       attrs: {
         "icon": "plus"
@@ -31831,7 +32201,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.newItem()
         }
       }
-    }) : _vm._e(), " ", (_vm.type !== 'mediapicker') ? _h('flexy-button', {
+    }) : _vm._e(), _vm._v(" "), (_vm.type !== 'mediapicker') ? _c('flexy-button', {
       staticClass: "btn-outline-danger",
       class: {
         disabled: !_vm.hasSelection()
@@ -31844,7 +32214,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.removeItems()
         }
       }
-    }) : _vm._e(), " ", _h('flexy-button', {
+    }) : _vm._e(), _vm._v(" "), _c('flexy-button', {
       staticClass: "btn-outline-info",
       attrs: {
         "icon": "dot-circle-o"
@@ -31854,21 +32224,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.reverseSelection()
         }
       }
-    }), " ", (_vm.isMediaThumbs()) ? _h('div', {
+    }), _vm._v(" "), (_vm.isMediaThumbs()) ? _c('div', {
       staticClass: "dropdown",
       attrs: {
         "id": "dropdown-sort"
       }
-    }, [_h('flexy-button', {
+    }, [_c('flexy-button', {
       staticClass: "btn-outline-info",
       attrs: {
         "icon": "sort-amount-asc",
         "dropdown": "dropdown-sort"
       }
-    }), " ", _h('div', {
+    }), _vm._v(" "), _c('div', {
       staticClass: "dropdown-menu"
-    }, [_vm._l((_vm.fields), function(field, key) {
-      return (field.schema.sortable) ? _h('a', {
+    }, _vm._l((_vm.fields), function(field, key) {
+      return (field.schema.sortable) ? _c('a', {
         staticClass: "dropdown-item",
         class: {
           'selected': (_vm.apiParts.order.indexOf(key) >= 0)
@@ -31880,15 +32250,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             })
           }
         }
-      }, [(_vm.apiParts.order == key) ? _h('span', {
+      }, [(_vm.apiParts.order == key) ? _c('span', {
         staticClass: "fa fa-caret-up"
-      }) : _vm._e(), " ", (_vm.apiParts.order == '_' + key) ? _h('span', {
+      }) : _vm._e(), _vm._v(" "), (_vm.apiParts.order == '_' + key) ? _c('span', {
         staticClass: "fa fa-caret-down"
-      }) : _vm._e(), "\n                    " + _vm._s(field.schema.name) + "\n                  "]) : _vm._e()
-    })])]) : _vm._e()]) : _vm._e(), " ", (_vm.isNormalVisibleHeader(field)) ? _h('th', {
+      }) : _vm._e(), _vm._v("\n                    " + _vm._s(field.name) + "\n                  ")]) : _vm._e()
+    }))], 1) : _vm._e()], 1) : _vm._e(), _vm._v(" "), (_vm.isNormalVisibleHeader(field)) ? _c('th', {
       staticClass: "text-primary",
       class: _vm.headerClass(field)
-    }, [_h('a', {
+    }, [_c('a', {
       on: {
         "click": function($event) {
           _vm.reloadPage({
@@ -31896,12 +32266,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           })
         }
       }
-    }, [_h('span', [_vm._s(field.schema.name)]), " ", (_vm.apiParts.order == key) ? _h('span', {
+    }, [_c('span', [_vm._v(_vm._s(field.name))]), _vm._v(" "), (_vm.apiParts.order == key) ? _c('span', {
       staticClass: "fa fa-caret-up"
-    }) : _vm._e(), " ", (_vm.apiParts.order == '_' + key) ? _h('span', {
+    }) : _vm._e(), _vm._v(" "), (_vm.apiParts.order == '_' + key) ? _c('span', {
       staticClass: "fa fa-caret-down"
     }) : _vm._e()])]) : _vm._e()]
-  })])]), " ", " ", (_vm.hasData()) ? _h('draggable', {
+  })], 2)]), _vm._v(" "), (_vm.hasData()) ? _c('draggable', {
     attrs: {
       "list": _vm.items,
       "element": "tbody",
@@ -31911,17 +32281,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "start": _vm.draggable_onStart,
       "end": _vm.draggable_onEnd
     }
-  }, [(_vm.gridType() === 'media') ? _h('tr', {
+  }, [(_vm.gridType() === 'media') ? _c('tr', {
     staticClass: "grid-upload",
     class: {
       'dropping': _vm.dropUploadHover
     }
-  }, [_h('td', {
+  }, [_c('td', {
     staticClass: "grid-upload-dropbox",
     attrs: {
       "colspan": "100"
     }
-  }, [_h('flexy-button', {
+  }, [_c('flexy-button', {
     staticClass: "btn-outline-warning",
     attrs: {
       "icon": "plus"
@@ -31931,12 +32301,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.newItem()
       }
     }
-  }), " ", _h('span', {
+  }), _vm._v(" "), _c('span', {
     staticClass: "upload-spinner fa fa-spinner fa-pulse fa-fw",
     class: {
       'show': _vm.uploadFiles.length > 0
     }
-  }), "\n            " + _vm._s(_vm.$lang.upload_choose) + "\n            ", _h('input', {
+  }), _vm._v("\n            " + _vm._s(_vm.$lang.upload_choose) + "\n            "), _c('input', {
     attrs: {
       "id": "browsefiles",
       "type": "file",
@@ -31946,8 +32316,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     on: {
       "change": _vm.addUploadFiles
     }
-  })])]) : _vm._e(), " ", " ", _vm._l((_vm.items), function(row) {
-    return _h('tr', {
+  })], 1)]) : _vm._e(), _vm._v(" "), _vm._l((_vm.items), function(row) {
+    return _c('tr', {
       directives: [{
         name: "show",
         rawName: "v-show",
@@ -31963,9 +32333,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         "level": _vm.rowLevel(row)
       }
     }, [_vm._l((row), function(cell) {
-      return [(cell.type == 'primary') ? _h('td', {
+      return [(cell.type == 'primary') ? _c('td', {
         staticClass: "action"
-      }, [(_vm.gridType() !== 'media') ? _h('flexy-button', {
+      }, [(_vm.gridType() !== 'media') ? _c('flexy-button', {
         staticClass: "btn-outline-warning",
         attrs: {
           "icon": "pencil"
@@ -31975,7 +32345,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.editItem(cell.value)
           }
         }
-      }) : _vm._e(), " ", (_vm.type !== 'mediapicker') ? _h('flexy-button', {
+      }) : _vm._e(), _vm._v(" "), (_vm.type !== 'mediapicker') ? _c('flexy-button', {
         staticClass: "btn-outline-danger",
         attrs: {
           "icon": "remove"
@@ -31985,7 +32355,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.removeItems(row.id.value)
           }
         }
-      }) : _vm._e(), " ", _h('flexy-button', {
+      }) : _vm._e(), _vm._v(" "), _c('flexy-button', {
         staticClass: "btn-outline-info",
         attrs: {
           "icon": {
@@ -31998,7 +32368,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.select(row.id.value)
           }
         }
-      }), " ", (_vm.gridType() === 'tree' || _vm.gridType() === 'ordered') ? _h('flexy-button', {
+      }), _vm._v(" "), (_vm.gridType() === 'tree' || _vm.gridType() === 'ordered') ? _c('flexy-button', {
         staticClass: "draggable-handle btn-outline-info",
         class: {
           'active': _vm.isDragging(row.id.value)
@@ -32006,7 +32376,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         attrs: {
           "icon": "arrows-v"
         }
-      }) : _vm._e()]) : _h('flexy-grid-cell', {
+      }) : _vm._e()], 1) : _c('flexy-grid-cell', {
         attrs: {
           "focus": false,
           "type": cell.type,
@@ -32026,13 +32396,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.select(row.id.value)
           }
         }
-      }), " ", " "]
-    })])
-  })]) : _vm._e()])]), " ", " ", _h('div', {
+      })]
+    })], 2)
+  })], 2) : _vm._e()], 1)]), _vm._v(" "), _c('div', {
     staticClass: "card-footer text-muted"
-  }, [(_vm.gridType() === 'media') ? _h('div', {
+  }, [(_vm.gridType() === 'media') ? _c('div', {
     staticClass: "btn-group actions"
-  }, [_h('flexy-button', {
+  }, [_c('flexy-button', {
     class: {
       'btn-outline-primary': _vm.getMediaView() !== 'list', 'btn-primary': _vm.getMediaView() === 'list'
     },
@@ -32045,7 +32415,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.setMediaView('list')
       }
     }
-  }), " ", _h('flexy-button', {
+  }), _vm._v(" "), _c('flexy-button', {
     class: {
       'btn-outline-primary': _vm.getMediaView() !== 'small', 'btn-primary': _vm.getMediaView() === 'small'
     },
@@ -32058,7 +32428,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.setMediaView('small')
       }
     }
-  }), " ", _h('flexy-button', {
+  }), _vm._v(" "), _c('flexy-button', {
     class: {
       'btn-outline-primary': _vm.getMediaView() !== 'thumbs', 'btn-primary': _vm.getMediaView() === 'thumbs'
     },
@@ -32071,7 +32441,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.setMediaView('thumbs')
       }
     }
-  })]) : _vm._e(), " ", (_vm.needsPagination()) ? _h('flexy-pagination', {
+  })], 1) : _vm._e(), _vm._v(" "), (_vm.needsPagination()) ? _c('flexy-pagination', {
     attrs: {
       "total": _vm.dataInfo.total_rows,
       "pages": _vm.dataInfo.num_pages,
@@ -32085,11 +32455,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         })
       }
     }
-  }) : _vm._e(), " ", (!_vm.needsPagination()) ? _h('div', {
+  }) : _vm._e(), _vm._v(" "), (!_vm.needsPagination()) ? _c('div', {
     staticClass: "pagination-container"
-  }, [_h('span', {
+  }, [_c('span', {
     staticClass: "pagination-info text-primary"
-  }, [_vm._s(_vm._f("replace")(_vm.$lang.grid_total, _vm.dataInfo.total_rows))])]) : _vm._e()])])
+  }, [_vm._v(_vm._s(_vm._f("replace")(_vm.$lang.grid_total, _vm.dataInfo.total_rows)))])]) : _vm._e()], 1)])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32107,13 +32477,15 @@ if (false) {
   \*****************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "timepicker"
-  }, [_h('select', {
+  }, [_c('select', {
     staticClass: "custom-select timepicker-hours",
     attrs: {
-      "id": _vm.name_hours,
+      "id": _vm.name_hours
+    },
+    domProps: {
       "value": _vm.hours()
     },
     on: {
@@ -32121,17 +32493,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.changeHours($event.target.value)
       }
     }
-  }, [_vm._l((_vm.range(23)), function(hour) {
-    return _h('option', {
+  }, _vm._l((_vm.range(23)), function(hour) {
+    return _c('option', {
       domProps: {
         "selected": (hour.value == _vm.hours()),
         "value": hour.value
       }
-    }, [_vm._s(hour.text)])
-  })]), "\n  :\n  ", _h('select', {
+    }, [_vm._v(_vm._s(hour.text))])
+  })), _vm._v("\n  :\n  "), _c('select', {
     staticClass: "custom-select timepicker-minutes",
     attrs: {
-      "id": _vm.name_minutes,
+      "id": _vm.name_minutes
+    },
+    domProps: {
       "value": _vm.minutes()
     },
     on: {
@@ -32139,14 +32513,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.changeMinutes($event.target.value)
       }
     }
-  }, [_vm._l((_vm.range(59)), function(minute) {
-    return _h('option', {
+  }, _vm._l((_vm.range(59)), function(minute) {
+    return _c('option', {
       domProps: {
         "selected": (minute.value == _vm.minutes()),
         "value": minute.value
       }
-    }, [_vm._s(minute.text)])
-  })])])
+    }, [_vm._v(_vm._s(minute.text))])
+  }))])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32164,10 +32538,10 @@ if (false) {
   \*********************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "datetimepicker"
-  }, [_h('datepicker', {
+  }, [_c('datepicker', {
     attrs: {
       "id": _vm.name_date,
       "name": _vm.name_date,
@@ -32179,7 +32553,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.changeDate($event)
       }
     }
-  }), " ", _h('timepicker', {
+  }), _vm._v(" "), _c('timepicker', {
     attrs: {
       "id": _vm.name_time,
       "name": _vm.name_time,
@@ -32190,7 +32564,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.changeTime($event)
       }
     }
-  })])
+  })], 1)
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32208,8 +32582,8 @@ if (false) {
   \**********************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return (_vm.type !== 'hidden') ? _h('td', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.type !== 'hidden') ? _c('td', {
     class: _vm.cellClass(),
     attrs: {
       "type": _vm.type,
@@ -32223,14 +32597,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.cancelEdit()
       }
     }
-  }, [(_vm.showTreeNode) ? _h('span', {
+  }, [(_vm.showTreeNode) ? _c('span', {
     staticClass: "fa fa-level-up fa-rotate-90 text-muted"
-  }) : _vm._e(), " ", (_vm.isType('relation', _vm.type)) ? [_vm._l((_vm.relationItems(_vm.item)), function(item) {
-    return _h('span', {
+  }) : _vm._e(), _vm._v(" "), (_vm.isType('relation', _vm.type)) ? _vm._l((_vm.relationItems(_vm.item)), function(item) {
+    return _c('span', {
       staticClass: "grid-relation-item"
-    }, [_vm._s(item)])
-  })] : _vm._e(), " ", (_vm.isType('media', _vm.type)) ? [(_vm.item !== '') ? [_vm._l((_vm.thumbs(_vm.item)), function(img) {
-    return _h('flexy-thumb', {
+    }, [_vm._v(_vm._s(item))])
+  }) : _vm._e(), _vm._v(" "), (_vm.isType('media', _vm.type)) ? [(_vm.item !== '') ? _vm._l((_vm.thumbs(_vm.item)), function(img) {
+    return _c('flexy-thumb', {
       attrs: {
         "src": img.src,
         "alt": img.alt
@@ -32241,29 +32615,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         }
       }
     })
-  })] : _vm._e()] : _vm._e(), " ", (_vm.isType('color', _vm.type)) ? [_h('div', {
+  }) : _vm._e()] : _vm._e(), _vm._v(" "), (_vm.isType('color', _vm.type)) ? [_c('div', {
     staticClass: "color-thumb-sm",
     style: ('color:' + _vm.complementColor(_vm.item) + ';background-color:' + _vm.item)
-  }, [_vm._s(_vm.item)])] : _vm._e(), " ", (_vm.isType('checkbox', _vm.type)) ? [_h('div', {
+  }, [_vm._v(_vm._s(_vm.item))])] : _vm._e(), _vm._v(" "), (_vm.isType('checkbox', _vm.type)) ? [_c('div', {
     on: {
       "click": _vm.clickEdit
     }
-  }, [(_vm.item) ? _h('span', {
+  }, [(_vm.item) ? _c('span', {
     staticClass: "fa fa-check text-success",
     attrs: {
       "value": _vm.item
     }
-  }) : _h('span', {
+  }) : _c('span', {
     staticClass: "fa fa-minus text-warning",
     attrs: {
       "value": _vm.item
     }
-  }), " "])] : _vm._e(), " ", (_vm.isType('url', _vm.type)) ? [_h('a', {
+  })])] : _vm._e(), _vm._v(" "), (_vm.isType('url', _vm.type)) ? [_c('a', {
     attrs: {
       "href": _vm.item,
       "target": "_blank"
     }
-  }, [_vm._s(_vm.item)])] : _vm._e(), " ", (_vm.isType('default', _vm.type)) ? [_h('span', {
+  }, [_vm._v(_vm._s(_vm.item))])] : _vm._e(), _vm._v(" "), (_vm.isType('default', _vm.type)) ? [_c('span', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -32275,7 +32649,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.startEdit()
       }
     }
-  }, [_vm._s(_vm.item)]), " ", (_vm.editable) ? _h('input', {
+  }, [_vm._v(_vm._s(_vm.item))]), _vm._v(" "), (_vm.editable) ? _c('input', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -32297,7 +32671,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.cancelEdit()
       }
     }
-  }) : _vm._e()] : _vm._e()]) : _vm._e()
+  }) : _vm._e()] : _vm._e()], 2) : _vm._e()
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32315,8 +32689,8 @@ if (false) {
   \*******************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     ref: "panel",
     class: ['tab-pane', {
       'active fade': _vm.active,
@@ -32325,7 +32699,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "role": "tabpanel"
     }
-  }, [_vm._t("default")])
+  }, [_vm._t("default")], 2)
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32343,94 +32717,94 @@ if (false) {
   \******************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "pagination-container"
-  }, [_h('ul', {
+  }, [_c('ul', {
     staticClass: "pagination"
-  }, [(_vm.current > 1 && _vm.pages > _vm.buttons) ? _h('li', {
+  }, [(_vm.current > 1 && _vm.pages > _vm.buttons) ? _c('li', {
     staticClass: "page-item"
-  }, [_h('a', {
+  }, [_c('a', {
     staticClass: "page-link",
     on: {
       "click": function($event) {
         _vm.jumpToPage(1)
       }
     }
-  }, [_h('span', {
+  }, [_c('span', {
     staticClass: "fa fa-fast-backward"
-  })])]) : _vm._e(), " ", (_vm.current > 10 && _vm.pages > _vm.buttons) ? _h('li', {
+  })])]) : _vm._e(), _vm._v(" "), (_vm.current > 10 && _vm.pages > _vm.buttons) ? _c('li', {
     staticClass: "page-item"
-  }, [_h('a', {
+  }, [_c('a', {
     staticClass: "page-link",
     on: {
       "click": function($event) {
         _vm.jumpToPage(_vm.current - 10)
       }
     }
-  }, [_h('span', {
+  }, [_c('span', {
     staticClass: "fa fa-backward"
-  })])]) : _vm._e(), " ", (_vm.current > 1 && _vm.pages > _vm.buttons) ? _h('li', {
+  })])]) : _vm._e(), _vm._v(" "), (_vm.current > 1 && _vm.pages > _vm.buttons) ? _c('li', {
     staticClass: "page-item"
-  }, [_h('a', {
+  }, [_c('a', {
     staticClass: "page-link",
     on: {
       "click": function($event) {
         _vm.jumpToPage(_vm.current - 1)
       }
     }
-  }, [_h('span', {
+  }, [_c('span', {
     staticClass: "fa fa-chevron-left"
-  })])]) : _vm._e(), " ", _vm._l((_vm.pagesButtons()), function(page) {
-    return _h('li', {
+  })])]) : _vm._e(), _vm._v(" "), _vm._l((_vm.pagesButtons()), function(page) {
+    return _c('li', {
       staticClass: "page-item",
       class: {
         active: (page == _vm.current)
       }
-    }, [_h('a', {
+    }, [_c('a', {
       staticClass: "page-link",
       on: {
         "click": function($event) {
           _vm.jumpToPage(page)
         }
       }
-    }, [_vm._s(page)])])
-  }), " ", (_vm.current < _vm.pages - 1 && _vm.pages > _vm.buttons) ? _h('li', {
+    }, [_vm._v(_vm._s(page))])])
+  }), _vm._v(" "), (_vm.current < _vm.pages - 1 && _vm.pages > _vm.buttons) ? _c('li', {
     staticClass: "page-item"
-  }, [_h('a', {
+  }, [_c('a', {
     staticClass: "page-link",
     on: {
       "click": function($event) {
         _vm.jumpToPage(_vm.current + 1)
       }
     }
-  }, [_h('span', {
+  }, [_c('span', {
     staticClass: "fa fa-chevron-right"
-  })])]) : _vm._e(), " ", (_vm.current < _vm.pages - 10 && _vm.pages > _vm.buttons) ? _h('li', {
+  })])]) : _vm._e(), _vm._v(" "), (_vm.current < _vm.pages - 10 && _vm.pages > _vm.buttons) ? _c('li', {
     staticClass: "page-item"
-  }, [_h('a', {
+  }, [_c('a', {
     staticClass: "page-link",
     on: {
       "click": function($event) {
         _vm.jumpToPage(_vm.current + 10)
       }
     }
-  }, [_h('span', {
+  }, [_c('span', {
     staticClass: "fa fa-forward"
-  })])]) : _vm._e(), " ", (_vm.current < _vm.pages - 1 && _vm.pages > _vm.buttons) ? _h('li', {
+  })])]) : _vm._e(), _vm._v(" "), (_vm.current < _vm.pages - 1 && _vm.pages > _vm.buttons) ? _c('li', {
     staticClass: "page-item"
-  }, [_h('a', {
+  }, [_c('a', {
     staticClass: "page-link",
     on: {
       "click": function($event) {
         _vm.jumpToPage(_vm.pages - 1)
       }
     }
-  }, [_h('span', {
+  }, [_c('span', {
     staticClass: "fa fa-fast-forward"
-  })])]) : _vm._e()]), " ", _h('span', {
+  })])]) : _vm._e()], 2), _vm._v(" "), _c('span', {
     staticClass: "pagination-info text-primary"
-  }, [_vm._s(_vm._f("replace")(_vm.$lang.grid_pagination, _vm.total, _vm.pages))])])
+  }, [_vm._v(_vm._s(_vm._f("replace")(_vm.$lang.grid_pagination, _vm.total, _vm.pages)))])])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32448,10 +32822,10 @@ if (false) {
   \**********************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     class: ['card', _vm.panelType]
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "bg-primary text-white",
     class: ['card-header', {
       'accordion-toggle': _vm.inAccordion
@@ -32462,17 +32836,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.inAccordion && _vm.toggle()
       }
     }
-  }, [_vm._t("header", [_h('h1', {
+  }, [_vm._t("header", [_c('h1', {
     staticClass: "card-title text-white"
-  }, [_vm._s(_vm.header)])])]), " ", _h('transition', {
+  }, [_vm._v(_vm._s(_vm.header))])])], 2), _vm._v(" "), _c('transition', {
     attrs: {
       "name": "collapse"
     }
-  }, [(_vm.open) ? _h('div', {
+  }, [(_vm.open) ? _c('div', {
     staticClass: "card-collapse"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "card-block"
-  }, [_vm._t("default")])]) : _vm._e()])])
+  }, [_vm._t("default")], 2)]) : _vm._e()])], 1)
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32490,8 +32864,8 @@ if (false) {
   \************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h(_vm.isLi ? 'li' : 'div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c(_vm.isLi ? 'li' : 'div', {
     directives: [{
       name: "click-outside",
       rawName: "v-click-outside",
@@ -32506,7 +32880,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       'input-group-btn': _vm.inInput,
       'btn-group': !_vm.isLi && !_vm.inInput
     }]
-  }, [_vm._t("before"), " ", _vm._t("button", [(_vm.isLi) ? _h('a', {
+  }, [_vm._t("before"), _vm._v(" "), _vm._t("button", [(_vm.isLi) ? _c('a', {
     class: ['dropdown-toggle', _vm.buttonSize, {
       disabled: _vm.disabled
     }],
@@ -32519,9 +32893,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.show = false
       }
     }
-  }, ["\n      " + _vm._s(_vm.text) + "\n      ", _h('span', {
+  }, [_vm._v("\n      " + _vm._s(_vm.text) + "\n      "), _c('span', {
     staticClass: "caret"
-  })]) : _h('button', {
+  })]) : _c('button', {
     class: ['btn btn-' + _vm.type, _vm.buttonSize, 'dropdown-toggle'],
     attrs: {
       "type": "button",
@@ -32533,11 +32907,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.show = false
       }
     }
-  }, ["\n      " + _vm._s(_vm.text) + "\n      ", _h('span', {
+  }, [_vm._v("\n      " + _vm._s(_vm.text) + "\n      "), _c('span', {
     staticClass: "caret"
-  })]), " "]), " ", _vm._t("dropdown-menu", [_h('ul', {
+  })])]), _vm._v(" "), _vm._t("dropdown-menu", [_c('ul', {
     staticClass: "dropdown-menu"
-  }, [_vm._t("default")])])])
+  }, [_vm._t("default")], 2)])], 2)
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32555,17 +32929,17 @@ if (false) {
   \*****************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "card form"
-  }, [_h('div', {
+  }, [_c('div', {
     staticClass: "card-header"
-  }, [_h('h1', [_vm._s(_vm.title)]), " ", _h('div', {
+  }, [_c('h1', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('div', {
     staticClass: "btn-group",
     attrs: {
       "role": "group"
     }
-  }, [_h('flexy-button', {
+  }, [_c('flexy-button', {
     staticClass: "btn-danger",
     attrs: {
       "icon": "close",
@@ -32577,7 +32951,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.cancel()
       }
     }
-  }), " ", _h('flexy-button', {
+  }), _vm._v(" "), _c('flexy-button', {
     staticClass: "btn-warning",
     attrs: {
       "icon": "save",
@@ -32589,7 +32963,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.save()
       }
     }
-  }), " ", _h('flexy-button', {
+  }), _vm._v(" "), _c('flexy-button', {
     staticClass: "btn-info",
     attrs: {
       "icon": "check",
@@ -32601,31 +32975,31 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.submit()
       }
     }
-  })])]), " ", _h('div', {
+  })], 1)]), _vm._v(" "), _c('div', {
     staticClass: "card-block"
-  }, [_h('tabs', {
+  }, [_c('tabs', {
     attrs: {
       "navStyle": "tabs"
     }
-  }, [_vm._l((_vm.fieldsets), function(fieldset, name) {
-    return _h('tab', {
+  }, _vm._l((_vm.fieldsets), function(fieldset, name) {
+    return _c('tab', {
       attrs: {
         "header": name
       }
     }, [_vm._l((fieldset), function(field) {
-      return [(!_vm.isType('hidden', field)) ? [_h('div', {
+      return [(!_vm.isType('hidden', field)) ? [_c('div', {
         staticClass: "form-group row",
         class: _vm.validationClass(field)
-      }, [(_vm.validationErrors[field]) ? _h('div', {
+      }, [(_vm.validationErrors[field]) ? _c('div', {
         staticClass: "validation-error form-text text-danger"
-      }, [_vm._s(_vm.validationErrors[field])]) : _vm._e(), " ", _h('label', {
+      }, [_vm._v(_vm._s(_vm.validationErrors[field]))]) : _vm._e(), _vm._v(" "), _c('label', {
         staticClass: "col-md-3 form-control-label",
         attrs: {
           "for": field
         }
-      }, [_vm._s(_vm.label(field))]), " ", _h('div', {
+      }, [_vm._v(_vm._s(_vm.label(field)))]), _vm._v(" "), _c('div', {
         staticClass: "col-md-9"
-      }, [(_vm.isType('textarea', field)) ? [_h('textarea', {
+      }, [(_vm.isType('textarea', field)) ? [_c('textarea', {
         staticClass: "form-control",
         attrs: {
           "id": field,
@@ -32640,7 +33014,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.updateField(field, $event.target.value)
           }
         }
-      })] : _vm._e(), " ", (_vm.isType('wysiwyg', field)) ? [_h('tinymce', {
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('wysiwyg', field)) ? [_c('tinymce', {
         attrs: {
           "id": field,
           "options": _vm.tinymceOptions,
@@ -32649,7 +33023,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         on: {
           "change": _vm.updateText
         }
-      })] : _vm._e(), " ", (_vm.isType('checkbox', field)) ? [_h('input', {
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('checkbox', field)) ? [_c('input', {
         staticClass: "form-check-input",
         attrs: {
           "type": "checkbox",
@@ -32664,7 +33038,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.updateField(field, $event.target.checked)
           }
         }
-      })] : _vm._e(), " ", (_vm.isType('datepicker', field)) ? [_h('datepicker', {
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('datepicker', field)) ? [_c('datepicker', {
         attrs: {
           "id": field,
           "name": field,
@@ -32676,7 +33050,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.updateField(field, $event)
           }
         }
-      })] : _vm._e(), " ", (_vm.isType('timepicker', field)) ? [_h('timepicker', {
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('timepicker', field)) ? [_c('timepicker', {
         attrs: {
           "id": field,
           "name": field,
@@ -32687,7 +33061,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.updateField(field, $event)
           }
         }
-      })] : _vm._e(), " ", (_vm.isType('datetimepicker', field)) ? [_h('datetimepicker', {
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('datetimepicker', field)) ? [_c('datetimepicker', {
         attrs: {
           "id": field,
           "name": field,
@@ -32698,7 +33072,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.updateField(field, $event)
           }
         }
-      })] : _vm._e(), " ", (_vm.isType('colorpicker', field)) ? [_h('colorpicker', {
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('colorpicker', field)) ? [_c('colorpicker', {
         attrs: {
           "id": field,
           "name": field,
@@ -32709,7 +33083,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.updateField(field, $event)
           }
         }
-      })] : _vm._e(), " ", (_vm.isType('mediapicker', field)) ? [_h('mediapicker', {
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('mediapicker', field)) ? [_c('mediapicker', {
         attrs: {
           "id": field,
           "name": field,
@@ -32721,28 +33095,30 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.updateField(field, $event)
           }
         }
-      })] : _vm._e(), " ", (_vm.isType('select', field)) ? [_h('select', {
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('select', field)) ? [_c('select', {
         staticClass: "form-control",
         attrs: {
           "id": field,
           "name": field,
-          "value": _vm.row[field],
           "multiple": _vm.isMultiple(field)
+        },
+        domProps: {
+          "value": _vm.row[field]
         },
         on: {
           "input": function($event) {
             _vm.updateSelect(field, $event.target.selectedOptions)
           }
         }
-      }, [_vm._l((_vm.fields[field].schema.options.data), function(option) {
-        return _h('option', {
+      }, _vm._l((_vm.fields[field].options.data), function(option) {
+        return _c('option', {
           style: (_vm.selectStyle(field, option.value)),
           domProps: {
             "value": option.value,
             "selected": _vm.isSelectedOption(field, _vm.row[field], option.value)
           }
-        }, [_vm._s(option.name)])
-      })])] : _vm._e(), " ", (_vm.isType('default', field)) ? [_h('input', {
+        }, [_vm._v(_vm._s(option.name))])
+      }))] : _vm._e(), _vm._v(" "), (_vm.isType('default', field)) ? [_c('input', {
         staticClass: "form-control",
         attrs: {
           "type": "text",
@@ -32758,9 +33134,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.updateField(field, $event.target.value)
           }
         }
-      })] : _vm._e()])])] : _vm._e()]
-    })])
-  })])])])
+      })] : _vm._e()], 2)])] : _vm._e()]
+    })], 2)
+  }))], 1)])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32778,18 +33154,18 @@ if (false) {
   \********************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     attrs: {
       "tabs": ""
     }
-  }, [_h('ul', {
+  }, [_c('ul', {
     class: _vm.navStyleClass,
     attrs: {
       "role": "tablist"
     }
   }, [_vm._l((_vm.headers), function(header) {
-    return [(header._isTab) ? _h('li', {
+    return [(header._isTab) ? _c('li', {
       staticClass: "nav-item",
       class: {
         active: header.active, disabled: header.disabled
@@ -32800,7 +33176,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.select(header)
         }
       }
-    }, [_vm._t("header", [_h('a', {
+    }, [_vm._t("header", [_c('a', {
       staticClass: "nav-link",
       class: {
         active: header.active
@@ -32811,7 +33187,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       domProps: {
         "innerHTML": _vm._s(header.header)
       }
-    })])]) : _vm._e(), " ", (header._isTabGroup) ? _h('dropdown', {
+    })])], 2) : _vm._e(), _vm._v(" "), (header._isTabGroup) ? _c('dropdown', {
       class: {
         active: header.active
       },
@@ -32819,13 +33195,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         "text": header.header,
         "disabled": header.disabled
       }
-    }, [_vm._l((header.tabs), function(tab) {
-      return _h('li', {
+    }, _vm._l((header.tabs), function(tab) {
+      return _c('li', {
         staticClass: "nav-item",
         class: {
           disabled: tab.disabled
         }
-      }, [_h('a', {
+      }, [_c('a', {
         staticClass: "nav-link",
         class: {
           active: header.active
@@ -32839,11 +33215,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.select(tab)
           }
         }
-      }, [_vm._s(tab.header)])])
-    })]) : _vm._e()]
-  })]), " ", _h('div', {
+      }, [_vm._v(_vm._s(tab.header))])])
+    })) : _vm._e()]
+  })], 2), _vm._v(" "), _c('div', {
     staticClass: "tab-content"
-  }, [_vm._t("default")])])
+  }, [_vm._t("default")], 2)])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()

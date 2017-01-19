@@ -1,1 +1,1 @@
-<ul class="nav nav-pills nav-stacked lev<?=$lev?>"><?=$menu?></ul>
+<ul class="nav nav-pills flex-column lev<?=$lev?>"><?=$menu?></ul>

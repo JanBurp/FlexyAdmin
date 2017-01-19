@@ -1,1 +1,1 @@
-<ul class="nav nav-pills lev<?=$lev?>"><?=$menu?></ul>
+<ul class="nav nav-pills justify-content-end lev<?=$lev?>"><?=$menu?></ul>

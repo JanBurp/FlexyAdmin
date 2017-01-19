@@ -185,47 +185,18 @@ class Api_Model extends CI_Model {
 
       // Init table & settings
       $this->data->table($this->args['table']);
-      $this->data->add_schemaform_info();
       
       // Haal alle gevraagde settings op (enkele afzonderlijk, of alles)
       if ( $this->args['settings']!==true and $this->args['settings']!=='true') {
         $this->result['settings'] = array();
         $types = explode('|',$this->args['settings']);
         foreach ($types as $type) {
-          $type_elements = explode('.',$type);
-          $this->result['settings'][$type] = $this->data->get_setting( $type_elements );
+          $this->result['settings'][$type] = $this->data->get_setting( $type );
         }
       }
       else {
         $this->result['settings'] = $this->data->get_settings();
       }
-      
-      // Alleen field_info van gevraagde velden & Voeg er extra data aantoe (UIname,options etc)
-      if (isset($this->result['settings']['field_info'])) {
-        if (el('as_grid',$this->args,false)) {
-          $fields = $this->data->get_setting(array('grid_set','fields'));
-        }
-        elseif ($this->args['table']==='res_assets' and $this->args['path']) {
-          $fields = $this->data->get_setting(array('files','thumb_select'));
-          $this->data->add_schemaform_info($fields,array('path'=>$this->args['path']));
-          $this->result['settings']['field_info'] = $this->data->get_setting('field_info');
-        }
-        else {
-          $fields = $this->data->get_setting(array('fields'));
-        }
-        $this->result['settings']['field_info'] = array_keep_keys($this->result['settings']['field_info'],$fields);
-        $this->result['settings']['field_info'] = sort_keys($this->result['settings']['field_info'],$fields);
-      }
-      
-      // Prepare fieldsets
-      if (isset($this->result['settings']['form_set.fieldsets'])) {
-        $fieldsets = $this->result['settings']['form_set.fieldsets'];
-        $fieldsetsKeys = $this->ui->get(array_keys($fieldsets));
-        $fieldsets = array_combine($fieldsetsKeys,$fieldsets);
-        $this->result['settings']['fieldsets'] = $fieldsets;
-        if (isset($this->result['settings']['form_set.fieldsets'])) unset($this->result['settings']['form_set.fieldsets']);
-      }
-      
     }
 
     // Prepare end result
@@ -248,12 +219,10 @@ class Api_Model extends CI_Model {
     }
     
     // Add message
-    if ($this->message) {
-      $this->result['message']=$this->message;
-    }
+    if ($this->message) $this->result['message']=$this->message;
     
     // Add format
-    if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
+    // if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
     
     // Add info
     if (isset($this->info) and $this->info) $this->result['info']=$this->info;
