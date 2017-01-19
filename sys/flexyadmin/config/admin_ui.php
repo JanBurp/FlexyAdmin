@@ -41,6 +41,7 @@ $config['side_menu']['cfg_tables'] = array(
  * TinyMCE settings
  */
 $config['wysiwyg'] = array(
+  'selector'   => 'textarea.wysiwyg',
   'plugins'    => 'fullscreen,table,image,link,code',
   'height'     => 400,
   // 'menubar'    => "edit format table",

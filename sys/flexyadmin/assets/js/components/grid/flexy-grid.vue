@@ -63,6 +63,7 @@ export default {
     return {
       items       : [],
       fields      : [],
+      searchable_fields : [],
       dataInfo    : {},
       selected    : [],
       apiParts    : {
@@ -149,6 +150,7 @@ export default {
             // Zijn er settings meegekomen?
             if ( !_.isUndefined(response.data.settings) ) {
               self.fields = response.data.settings.grid_set.field_info;
+              self.searchable_fields = response.data.settings.grid_set.searchable_fields;
             }
             // Data en die aanvullen met data
             var data = response.data.data;
@@ -171,7 +173,9 @@ export default {
         url += '?table='+this.name + '&txt_abstract='+parts.txt_abstract + '&as_grid='+parts.as_grid;
       }
       url += '&offset='+parts.offset + '&limit='+parts.limit + '&order='+parts.order + '&filter={'+jdb.encodeURL(parts.filter)+'}';
-      if (this.fields.length==0) url += '&settings=grid_set';
+      if (this.fields.length==0) {
+        url += '&settings=grid_set';
+      }
       return url;
     },
     
@@ -743,25 +747,25 @@ export default {
       <h4>{{$lang.grid_extended_search}}</h4>
       <form v-for="(term,index) in extendedTerm" class="form-inline" @submit.stop.prevent="startFinding($event)" :index="index">
         <div class="form-group grid-extended-search-and">
-          <select class="form-control form-control-sm" name="grid-extended-search-and[]" v-model="term.and">
+          <select class="form-control custom-select" name="grid-extended-search-and[]" v-model="term.and">
             <option value="OR" :selected="term.and=='OR'">{{$lang.grid_search_or}}</option>
             <option value="AND" :selected="term.and=='AND'">{{$lang.grid_search_and}}</option>
           </select>
         </div>
         <div class="form-group grid-extended-search-field" :class="{'has-danger':!term.field}">
-          <select class="form-control form-control-sm" name="grid-extended-search-field[]" v-model="term.field">
-            <option v-for="(field,key) in fields" :value="key" :selected="term.field===key">{{field.name}}</option>
+          <select class="form-control custom-select" name="grid-extended-search-field[]" v-model="term.field">
+            <option v-for="field in searchable_fields" :value="field" :selected="term.field===field">{{fields[field].name}}</option>
           </select>
         </div>
         <div class="form-group grid-extended-search-equals">
-          <select class="form-control form-control-sm" name="grid-extended-search-equals[]" v-model="term.equals">
+          <select class="form-control custom-select" name="grid-extended-search-equals[]" v-model="term.equals">
             <option value="exist" :selected="term.equals==='exist'">{{$lang.grid_search_exist}}</option>
             <option value="word" :selected="term.equals==='word'">{{$lang.grid_search_word}}</option>
             <option value="exact" :selected="term.equals==='exact'">{{$lang.grid_search_exact}}</option>
           </select>
         </div>
         <div class="form-group grid-extended-search-term" :class="{'has-danger':term.term===''}">
-          <input type="text" class="form-control form-control-sm" v-model="term.term" :placeholder="$lang.grid_search" name="grid-extended-search-term[]">
+          <input type="text" class="form-control" v-model="term.term" :placeholder="$lang.grid_search" name="grid-extended-search-term[]">
         </div>
         <flexy-button @click.native.stop.prevent="extendedSearchRemove(index)" icon="remove" class="btn-outline-danger" />
         <flexy-button @click.native.stop.prevent="extendedSearchAdd()" icon="plus" class="btn-outline-warning" />
