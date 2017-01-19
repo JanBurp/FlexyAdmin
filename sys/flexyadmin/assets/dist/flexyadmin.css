@@ -5431,10 +5431,26 @@ a > .fa, .btn > .fa {
 
 .progress {
   position: absolute;
+  left: 0px;
+  top: -2px;
+  height: 6px;
   margin: 0;
-  height: 2px;
   border-radius: 0;
-  width: 100%; }
+  width: 100%;
+  z-index: 99999999; }
+
+.progress[value] {
+  color: #D00; }
+
+/* IE10 */
+.progress::-webkit-progress-bar-value {
+  background: #D00; }
+
+.progress::-webkit-progress-value {
+  background: #D00; }
+
+.progress::-moz-progress-bar {
+  background: #D00; }
 
 /* HEADER */
 #header {
@@ -5468,7 +5484,7 @@ a > .fa, .btn > .fa {
   padding-left: 0; }
 
 #main {
-  padding-right: .5rem; }
+  padding: 0 .5rem .5rem; }
   #main > .card {
     margin-top: 1rem; }
   #main > .card:first-child {
@@ -5555,9 +5571,9 @@ a > .fa, .btn > .fa {
     text-align: center;
     text-transform: uppercase;
     border-radius: 0.25rem; }
-  .grid .card-header .form-inline .form-group {
-    margin: 0;
-    min-height: 0; }
+  .grid #grid-find {
+    padding-top: .4rem;
+    padding-bottom: 0.1rem; }
   .grid .card-header.grid-extended-find {
     background-color: #eceeef !important;
     color: #696 !important; }
@@ -5776,12 +5792,15 @@ a > .fa, .btn > .fa {
 
 .form-control-label {
   font-weight: bold;
-  padding-top: .5rem;
+  padding-top: .25rem;
   padding-bottom: 0;
   margin-bottom: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; }
+
+.form-control {
+  padding-bottom: .25rem; }
 
 .form-group.row input, .form-group.row select, .form-group.row textarea, .form-group.row .mce-tinymce, .form-group.row .form-control, .form-group.row .mediapicker {
   border-color: #636c72 !important; }
@@ -5796,15 +5815,15 @@ a > .fa, .btn > .fa {
   border-radius: 0.25rem;
   background-color: #fff5dd; }
 
-.form .form-group {
-  min-height: 2.35rem; }
-
 select.form-control:not([size]):not([multiple]) {
   height: auto; }
 
+.custom-select {
+  height: 2.13rem;
+  padding-top: 0.5rem; }
+
 .form-check-input {
-  margin-left: 0;
-  margin-top: .75rem; }
+  margin-left: 0; }
 
 .validation-error {
   padding: .25rem 1rem;
@@ -5814,9 +5833,6 @@ textarea {
   min-height: 5rem;
   max-height: 30rem; }
 
-.custom-select {
-  height: calc(2.5rem - 1px); }
-
 .mce-tinymce {
   border-radius: 0.25rem; }
 
@@ -5824,7 +5840,8 @@ body.mce-fullscreen .mce-tinymce {
   z-index: 9999999; }
 
 .form-control.datepicker-input {
-  width: 7rem; }
+  width: 7rem;
+  margin-bottom: 0; }
 
 .datepicker-popup {
   border-color: #696 !important;

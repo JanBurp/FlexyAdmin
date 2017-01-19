@@ -744,10 +744,10 @@ this.state.progress=percent;this.debug&&console.log('state.progress',this.state.
    * - url, de url van de api (auth,table,row, etc)
    * - data, de mee te geven parameters
    * - Laat ook progress bar & spinner zien
-   */api:function api(options){var self=this;self.showProgress();var method='GET';if(options.url==='row'&&!_.isUndefined(options.data.where))method='POST';var defaultRequest={method:method,headers:{'Authorization':_flexy.auth_token,'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},transformRequest:[function(data){if(!options.formData){var requestString='';if(data){requestString=_jdbTools2.default.serializeJSON(data);}return requestString;}return data;}],onDownloadProgress:function onDownloadProgress(progressEvent){if(options.onDownloadProgress){options.onDownloadProgress(progressEvent);}else{self.setProgress(progressEvent.loaded,progressEvent.total);}}};// Request Options
+   */api:function api(options){var self=this;self.showProgress();var method='GET';if(options.url==='row'&&!_.isUndefined(options.data.where))method='POST';var defaultRequest={method:method,headers:{'Authorization':_flexy.auth_token,'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},transformRequest:[function(data){if(!options.formData){var requestString='';if(data){requestString=_jdbTools2.default.serializeJSON(data);}return requestString;}return data;}],onDownloadProgress:function onDownloadProgress(progressEvent){if(options.onDownloadProgress){options.onDownloadProgress(progressEvent);}else{self.setProgress(progressEvent.loaded,progressEvent.total);}},timeout:1000};// Request Options
 var request=_.extend(defaultRequest,options);// Standard URL for request
-request.url='_api/'+request.url;self.debug&&console.log('api > ',request);return _axios2.default.request(request).then(function(response){// trace/bug?
-if(typeof response.data==='string'&&response.data.substr(0,1)==='<'){self.addMessage(response.data,'danger');console.log('TRACE',_jdbTools2.default.stripHTML(response.data));var startOfObject=response.data.indexOf('{"success":');response.data=JSON.parse(response.data.substr(startOfObject));}self.hideProgress();self.debug&&console.log('api < ',response);return response;}).catch(function(error){self.hideProgress();// self.addMessage( 'ERROR','danger');
+request.url='_api/'+request.url;self.debug&&console.log('api > ',request);return _axios2.default.request(request).then(function(response){self.hideProgress();self.debug&&console.log('api < ',response);// trace/bug?
+if(typeof response.data==='string'&&response.data.substr(0,1)==='<'){self.addMessage(response.data,'danger');console.log('TRACE',_jdbTools2.default.stripHTML(response.data));var startOfObject=response.data.indexOf('{"success":');response.data=JSON.parse(response.data.substr(startOfObject));}return response;}).catch(function(error){self.hideProgress();// self.addMessage( 'ERROR','danger');
 console.log('api ERROR <',request,error);return{'error':error};});}};
 
 /***/ },
@@ -29487,7 +29487,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/li
 
 
 // module
-exports.push([module.i, "\n.dropdown {position:absolute!important;margin-left:.35rem;\n}\n.flexy-button.no-border {border-color:transparent;\n}\n.flexy-button.btn-icon {width:1.85rem;height:1.6rem;padding:.1rem 0 1.4rem;text-align:center;\n}\n.flexy-button.btn-icon.dropdown-toggle {width:3.2rem;\n}\n.flexy-button.btn-icon .fa {width:1rem;\n}\n.flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;\n}\n.flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;\n}\n.flexy-button.btn-lg .fa {font-size:2rem;\n}\n.flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;\n}\n.flexy-button.btn-xlg .fa {font-size:3.5rem;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.dropdown {position:absolute!important;margin-left:.35rem;\n}\n.flexy-button {cursor:pointer;\n}\n.flexy-button.no-border {border-color:transparent;\n}\n.flexy-button.btn-icon {width:1.8rem;height:1.55rem;padding:.1rem 0 1rem;text-align:center;\n}\n.flexy-button.btn-icon.dropdown-toggle {width:3.2rem;\n}\n.flexy-button.btn-icon .fa {width:1rem;\n}\n.flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;\n}\n.flexy-button-text {position:relative;top:.1rem;\n}\n.flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;\n}\n.flexy-button.btn-lg .fa {font-size:2rem;\n}\n.flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;\n}\n.flexy-button.btn-xlg .fa {font-size:3.5rem;\n}\n\n\n", ""]);
 
 // exports
 
@@ -29601,7 +29601,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader
 
 
 // module
-exports.push([module.i, "\n.timepicker-hours, .timepicker-minutes {padding-left:.25rem;padding-right:.25rem;\n}\n", ""]);
+exports.push([module.i, "\n.timepicker-hours, .timepicker-minutes {padding-left:.25rem;padding-right:1.5rem;\n}\n", ""]);
 
 // exports
 
@@ -31398,7 +31398,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "disabled": _vm.buttonClass.indexOf('disabled')
     }
-  }) : _vm._e(), (_vm.text !== '') ? _c('span', [_vm._v(_vm._s(_vm.text))]) : _vm._e()])
+  }) : _vm._e(), _vm._v(" "), (_vm.text !== '') ? _c('span', {
+    staticClass: "flexy-button-text"
+  }, [_vm._v(_vm._s(_vm.text))]) : _vm._e()])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -33096,7 +33098,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           }
         }
       })] : _vm._e(), _vm._v(" "), (_vm.isType('select', field)) ? [_c('select', {
-        staticClass: "form-control",
+        staticClass: "form-control custom-select",
         attrs: {
           "id": field,
           "name": field,
