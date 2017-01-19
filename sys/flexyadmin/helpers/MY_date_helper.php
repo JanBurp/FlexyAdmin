@@ -14,6 +14,20 @@ function unix_to_normal($time = '', $seconds = TRUE) {
 
 
 
+function date_to_unix($time = '')
+{
+	$time = str_replace(array('-', ':', ' '), '', $time);
+	// YYYYMMDD
+	return mktime(0,0,0,
+		substr($time, 4, 2),
+		substr($time, 6, 2),
+		substr($time, 0, 4)
+	);
+}
+
+
+
+
 /**
  * Geeft datum/tijd in MySQL formaat, klaar om in de database te stoppen
  *
