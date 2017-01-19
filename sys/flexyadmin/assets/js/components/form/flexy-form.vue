@@ -24,11 +24,6 @@ export default {
     'name':String,
     'primary':Number,
     'api':String,
-    // 'path':String,
-    // 'fields':[Object,Array],
-    // 'fieldsets':[Object,Array],
-    // 'data':[Object,Array],
-    // 'options':[Object,Array],
   },
   
   computed : {
@@ -63,14 +58,10 @@ export default {
       fieldsets: {},
       validationErrors : {},
       isSaving : false,
-      tinymceOptions : {},
     }
   },
   
   created : function() {
-    // settings
-    this.tinymceOptions = JSON.parse(_flexy.tinymceOptions);
-    // Load Form
     this.reloadForm();
   },
   
@@ -91,10 +82,26 @@ export default {
             }
             // Data en die aanvullen met data
             self.row = response.data.data;
+            // TinyMCE
+            self.createWysiwyg();
           }
         }
         return response;
       });
+    },
+    
+    createWysiwyg: function() {
+      var self=this;
+      var init = _.extend(_flexy.tinymceOptions,{
+        setup : function(ed){
+          ed.on('NodeChange', function(e){ self.updateText(ed); })
+          ed.on('keyup', function(e){ self.updateText(ed); });
+        }
+      });
+      // Wait just a bit...
+      window.setTimeout(function(){
+        tinymce.init(init);
+      }, 10 );
     },
     
     apiUrl : function(parts) {
@@ -240,6 +247,8 @@ export default {
             }
           }
           else {
+            // Validation error
+            response.error = true;
             flexyState.addMessage( self.$lang.form_validation_error, 'danger');
             if ( !_.isUndefined(response.data.info) ) self.validationErrors = response.data.info.validation_errors;
           }
@@ -274,8 +283,8 @@ export default {
     },
     
     // TinyMCE changed
-    updateText : function(editor,content) {
-      this.updateField(editor.id,content);
+    updateText : function(editor) {
+      this.updateField(editor.id,editor.getContent());
     }
     
   }
@@ -302,7 +311,7 @@ export default {
           <template v-if="!isType('hidden',field)">
           
             <div class="form-group row" :class="validationClass(field)">
-              <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
+              <div v-if="validationErrors[field]" class="validation-error">{{validationErrors[field]}}</div>
               <label class="col-md-3 form-control-label" :for="field">{{label(field)}}</label>
               <div class="col-md-9">
 
@@ -313,7 +322,7 @@ export default {
               
                 <template v-if="isType('wysiwyg',field)">
                   <!-- WYSIWYG -->
-                  <tinymce :id="field" :options="tinymceOptions" @change="updateText" :content="row[field]"></tinymce>
+                  <textarea class="form-control wysiwyg" :id="field" :name="field" :value="row[field]">
                 </template>
 
                 <template v-if="isType('checkbox',field)">
@@ -348,7 +357,7 @@ export default {
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
-                  <select class="form-control custom-select" :id="field" :name="field" :value="row[field]" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
+                  <select class="form-control custom-select" :id="field" :name="field" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
                     <option v-for="option in fields[field].options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{option.name}}</option>
                   </select>
                 </template>

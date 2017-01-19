@@ -9,6 +9,9 @@
 
 Class Res_assets extends Data_Core {
   
+  // Some methods use the global set path
+  private $media_path = '';
+  
   // Error message if uploading has error
   private $error_message = '';
   
@@ -119,6 +122,19 @@ Class Res_assets extends Data_Core {
     }
     return $assets;
   }
+  
+  /**
+   * Stel de assets map in
+   *
+   * @param string $path 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function set_folder($path) {
+    $this->media_path = $path;
+    return $this;
+  }
+  
   
   
   /**
@@ -424,6 +440,30 @@ Class Res_assets extends Data_Core {
 
     return $file;
 	}
+  
+
+  /**
+   * Grid set aanpassen als er een map is ingesteld en er dus files worden opgevraagd (ip2longv ruwe data)
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_grid_set() {
+    if ($this->media_path) {
+      $grid_set = el('grid_set',$this->settings);
+      $grid_set['fields'] = $this->settings['files']['thumb_select'];
+      $field_info = $this->get_setting_field_info_extended($grid_set['fields'],array('path'=>$this->media_path));
+      $grid_set['field_info'] = $field_info;
+      $searchable_fields = array_combine($grid_set['fields'],$grid_set['fields']);
+      $searchable_fields = array_unset_keys($searchable_fields,array('id','media_thumb'));
+      $grid_set['searchable_fields'] = array_values($searchable_fields);
+    }
+    else {
+      $grid_set=parent::get_setting_grid_set();
+    }
+    return $grid_set;
+  }
+  
   
   
   /**

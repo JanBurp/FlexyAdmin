@@ -5463,8 +5463,13 @@ a > .fa, .btn > .fa {
 
 /* MESSAGES */
 #messages {
-  top: -1px;
+  position: fixed;
+  left: 0px;
+  top: 0px;
   max-height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
   overflow: auto;
   opacity: .9;
   z-index: 99999999; }
@@ -5815,19 +5820,22 @@ a > .fa, .btn > .fa {
   border-radius: 0.25rem;
   background-color: #fff5dd; }
 
-select.form-control:not([size]):not([multiple]) {
-  height: auto; }
-
 .custom-select {
-  height: 2.13rem;
+  height: 2.13rem !important;
   padding-top: 0.5rem; }
 
 .form-check-input {
   margin-left: 0; }
 
+.form-group.has-danger {
+  background-color: #ffd577 !important; }
+
 .validation-error {
-  padding: .25rem 1rem;
-  font-weight: bold; }
+  display: inline-block;
+  width: 100%;
+  background-color: #ffd577;
+  font-weight: bold;
+  padding: .25rem 1rem; }
 
 textarea {
   min-height: 5rem;

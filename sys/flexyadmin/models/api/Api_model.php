@@ -185,6 +185,9 @@ class Api_Model extends CI_Model {
 
       // Init table & settings
       $this->data->table($this->args['table']);
+      if (isset($this->args['path']) && $this->args['table']==='res_assets') {
+        $this->data->set_folder($this->args['path']);
+      }
       
       // Haal alle gevraagde settings op (enkele afzonderlijk, of alles)
       if ( $this->args['settings']!==true and $this->args['settings']!=='true') {

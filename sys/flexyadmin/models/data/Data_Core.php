@@ -1220,7 +1220,7 @@ Class Data_Core extends CI_Model {
     $fields = array_combine($fields,$fields);
     // Vul field_info aan met eventuele extra velden
     $field_info = $this->settings['field_info'];
-    $field_info = array_merge($field_info,$fields);
+    $field_info = array_merge($fields,$field_info);
     // Alleen de meegegeven velden
     $field_info = array_keep_keys($field_info,$fields);
     
@@ -1270,8 +1270,25 @@ Class Data_Core extends CI_Model {
    */
   public function get_setting_grid_set() {
     $grid_set = el('grid_set',$this->settings);
+    // Voeg relatie velden toe (...to_many)
+    if (isset($grid_set['with'])) {
+      foreach ($grid_set['with'] as $type => $relations) {
+        if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
+        if ($relations) {
+          foreach ($relations as $what => $info) {
+            if (in_array($type,array('one_to_many','many_to_many'))) {
+              $field=el('result_name',$info);
+              if ($field and $field!='abstract') $grid_set['fields'][] = $field;
+            }
+          }
+        }
+      }
+    }
     $field_info = $this->get_setting_field_info_extended($grid_set['fields']);
     $grid_set['field_info'] = $field_info;
+    $searchable_fields = array_combine($grid_set['fields'],$grid_set['fields']);
+    $searchable_fields = array_unset_keys($searchable_fields,array('id','order','self_parent','uri'));
+    $grid_set['searchable_fields'] = array_values($searchable_fields);
     return $grid_set;
   }
   
@@ -1294,6 +1311,10 @@ Class Data_Core extends CI_Model {
       }
       $form_set['fields'] = $fields;
     }
+    // Hernoem fieldset keys
+    $fieldset_keys = array_keys($form_set['fieldsets']);
+    $fieldset_keys = $this->ui->get($fieldset_keys);
+    $form_set['fieldsets'] = array_combine($fieldset_keys,$form_set['fieldsets']);
     $field_info = $this->get_setting_field_info_extended($form_set['fields'],array(),true);
     $form_set['field_info'] = $field_info;
     return $form_set;
