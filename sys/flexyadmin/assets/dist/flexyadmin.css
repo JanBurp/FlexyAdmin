@@ -5636,6 +5636,8 @@ a > .fa, .btn > .fa {
     padding-left: 2rem; }
   .grid #dropdown-sort .dropdown-item.selected {
     padding-left: .35rem; }
+  .grid #dropdown-sort:hover .dropdown-menu, .grid #dropdown-sort.dropdown.open .dropdown-menu {
+    display: block; }
   .grid th.grid-header-type-primary {
     width: 2rem;
     white-space: nowrap; }
