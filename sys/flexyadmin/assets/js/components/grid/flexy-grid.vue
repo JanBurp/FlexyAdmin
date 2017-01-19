@@ -148,7 +148,7 @@ export default {
             self.newUrl();
             // Zijn er settings meegekomen?
             if ( !_.isUndefined(response.data.settings) ) {
-              self.fields = response.data.settings.field_info;
+              self.fields = response.data.settings.grid_set.field_info;
             }
             // Data en die aanvullen met data
             var data = response.data.data;
@@ -171,7 +171,7 @@ export default {
         url += '?table='+this.name + '&txt_abstract='+parts.txt_abstract + '&as_grid='+parts.as_grid;
       }
       url += '&offset='+parts.offset + '&limit='+parts.limit + '&order='+parts.order + '&filter={'+jdb.encodeURL(parts.filter)+'}';
-      if (this.fields.length==0) url += '&settings=field_info';
+      if (this.fields.length==0) url += '&settings=grid_set';
       return url;
     },
     
@@ -750,7 +750,7 @@ export default {
         </div>
         <div class="form-group grid-extended-search-field" :class="{'has-danger':!term.field}">
           <select class="form-control form-control-sm" name="grid-extended-search-field[]" v-model="term.field">
-            <option v-for="(field,key) in fields" :value="key" :selected="term.field===key">{{field.schema.name}}</option>
+            <option v-for="(field,key) in fields" :value="key" :selected="term.field===key">{{field.name}}</option>
           </select>
         </div>
         <div class="form-group grid-extended-search-equals">
@@ -785,14 +785,14 @@ export default {
                     <a v-for="(field,key) in fields" v-if="field.schema.sortable" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(apiParts.order.indexOf(key)>=0)}">
                       <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
                       <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
-                      {{field.schema.name}}
+                      {{field.name}}
                     </a>
                   </div>
                 </div>
                 
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
-                <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.schema.name}}</span>
+                <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.name}}</span>
                   <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
                   <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
                 </a>  

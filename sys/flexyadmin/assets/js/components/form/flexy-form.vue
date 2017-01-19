@@ -86,8 +86,8 @@ export default {
           if (response.data.success) {
             // Zijn er settings meegekomen?
             if ( !_.isUndefined(response.data.settings) ) {
-              self.fields = response.data.settings.field_info;
-              self.fieldsets = response.data.settings.fieldsets;
+              self.fields = response.data.settings.form_set.field_info;
+              self.fieldsets = response.data.settings.form_set.fieldsets;
             }
             // Data en die aanvullen met data
             self.row = response.data.data;
@@ -100,13 +100,13 @@ export default {
     apiUrl : function(parts) {
       parts = _.extend( this.apiParts, parts );
       this.apiParts = parts;
-      var url = this.api + '?table='+this.name + '&where='+this.primary + '&as_form=true&settings=field_info|form_set.fieldsets';
+      var url = this.api + '?table='+this.name + '&where='+this.primary + '&as_form=true&settings=form_set';
       return url;
     },
     
     label : function(field) {
       if (_.isUndefined(this.fields[field])) return field;
-      return this.fields[field].schema['name'];
+      return this.fields[field].name;
     },
         
     isType : function( type,field ) {
@@ -120,7 +120,7 @@ export default {
     isMultiple : function( field ) {
       var multiple = false;
       if (_.isUndefined(this.fields[field])) return false;
-      if (this.fields[field].schema.options.multiple) multiple='multiple';
+      if (this.fields[field].options.multiple) multiple='multiple';
       if (flexyState.debug) console.log('isMultiple',field,multiple);
       return multiple;
     },
@@ -349,7 +349,7 @@ export default {
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <select class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
-                    <option v-for="option in fields[field].schema.options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{option.name}}</option>
+                    <option v-for="option in fields[field].options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{option.name}}</option>
                   </select>
                 </template>
               

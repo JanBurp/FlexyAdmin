@@ -60,6 +60,26 @@ class DataTest extends CITestCase {
     $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $this->CI->data->get_setting( 'fields' ) );
     $this->assertEquals( array( 'str_title','str_module'), $this->CI->data->get_setting( 'abstract_fields' ) );
     $this->assertEquals( 'order', $this->CI->data->get_setting( 'order_by' ) );
+    
+    // gridset
+    $grid_set = $this->CI->data->get_setting('grid_set');
+    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module'), $grid_set['fields'] );
+    $this->assertEquals( array(), $grid_set['with'] );
+    $this->assertEquals( 'select', $grid_set['field_info']['str_module']['schema']['form-type'] );
+    $this->assertEquals( 'media', $grid_set['field_info']['medias_fotos']['schema']['form-type'] );
+    $this->assertEquals( 'pictures', $grid_set['field_info']['medias_fotos']['path'] );
+    
+    // formset
+    $form_set = $this->CI->data->get_setting('form_set');
+    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $form_set['fields'] );
+    $this->assertEquals( array('many_to_many'=>array()), $form_set['with'] );
+    $this->assertEquals( 'select', $form_set['field_info']['str_module']['schema']['form-type'] );
+    $this->assertEquals( 'media', $form_set['field_info']['medias_fotos']['schema']['form-type'] );
+    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['options']);
+    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['options']['data']);
+    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['options']);
+    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['options']['data']);
+    $this->assertEquals( 'pictures', $grid_set['field_info']['medias_fotos']['path'] );
   }
 
 

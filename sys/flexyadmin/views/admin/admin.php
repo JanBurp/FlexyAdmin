@@ -18,12 +18,11 @@
 
 <div id="main" class="container-fluid">
 
+  <progress class="progress progress-danger progress-striped" :value="state.progress" max="100"></progress>
   <flexy-messages v-show="state.messages.length > 0" :messages="state.messages"></flexy-messages>
-  
   <flexy-modal :options="state.modal"></flexy-modal>
   
-  <div id="header" class="navbar navbar-fixed-top">
-    <progress class="progress progress-danger progress-striped" :value="state.progress" max="100"></progress>
+  <div id="header" class="navbar navbar-fixed-top flex-row d-flex justify-content-between">
     <div class="navbar-brand navbar-collapse">
       <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>"><span class="flexy-block btn btn-secondary">
         <span class="fa fa-home fa-lg"></span>
