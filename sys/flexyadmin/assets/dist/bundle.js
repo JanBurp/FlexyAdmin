@@ -33081,7 +33081,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           }
         }
       })] : _vm._e(), _vm._v(" "), (_vm.isType('select', field)) ? [_c('select', {
-        staticClass: "form-control custom-select",
+        staticClass: "form-control",
+        class: {
+          'custom-select': !_vm.isMultiple(field)
+        },
         attrs: {
           "id": field,
           "name": field,
