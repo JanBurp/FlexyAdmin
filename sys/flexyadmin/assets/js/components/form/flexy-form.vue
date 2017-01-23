@@ -357,7 +357,7 @@ export default {
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
-                  <select class="form-control custom-select" :id="field" :name="field" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
+                  <select class="form-control" :class="{'custom-select':!isMultiple(field)}" :id="field" :name="field" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
                     <option v-for="option in fields[field].options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{option.name}}</option>
                   </select>
                 </template>
