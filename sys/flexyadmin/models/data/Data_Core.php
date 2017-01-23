@@ -269,9 +269,10 @@ Class Data_Core extends CI_Model {
       $this->settings = $cached;
     }
     else {
-      // Haal de default settings op
+      // Haal de default & huidige settings op
       $this->config->load( 'data/data', true);
       $default = $this->config->item( 'data/data' );
+      $default = array_merge($default,$this->settings); // Default aanpassen met eventueel al eerder ingesteld settings
       $this->settings = $default;
       // Stel eventueel de tabel in als die is meegegeven
       if ($table) $this->settings['table'] = $table;
@@ -431,12 +432,13 @@ Class Data_Core extends CI_Model {
       $field_info = array();
       
       // 1) Uit (depricated) cfg_field_info
-      $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
-      if (!empty($field_info['str_options'])) {
-        $data = explode('|',$field_info['str_options']);
-        $options['data'] = array_combine($data,$data);
-        $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
-        // if ($options['multiple']===FALSE) $options=$options['data'];
+      if (isset($this->cfg)) {
+        $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
+        if (!empty($field_info['str_options'])) {
+          $data = explode('|',$field_info['str_options']);
+          $options['data'] = array_combine($data,$data);
+          $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
+        }
       }
 
       // Via many_to_one
@@ -1519,9 +1521,9 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    // Empty?
-    foreach ($options as $key => $row) {
-      if (count($row)===1 && isset($row['field'])) $options[$key] = FALSE;
+    foreach ($options as $field => $row) {
+      // Empty?
+      if (count($row)===1 && isset($row['field'])) $options[$field] = FALSE;
     }
     
     if ($one!==FALSE) return $options[$one];
