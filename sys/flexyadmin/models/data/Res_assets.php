@@ -54,17 +54,18 @@ Class Res_assets extends Data_Core {
   
   
   public function __construct() {
-    $this->autoset['assets'] = array();
-    parent::__construct('res_assets');
     $this->lang->load('update_delete');
+    // Load assets config
+    $this->autoset['assets'] = array();
+    $this->config->load('assets',true);
+    $this->settings = $this->config->get_item('assets');
+    parent::__construct('res_assets');
     // Add current filemanager_view setting:
     $user_id = $this->get_user_id();
     if ($user_id) {
       $this->settings['grid_set']['grid_view'] = $this->db->query( 'SELECT `str_filemanager_view` FROM `cfg_users` WHERE `id`='.$user_id )->row_object()->str_filemanager_view;
     }
   }
-  
-  
   
   /**
    * Autoset informatie over alle assets
@@ -73,6 +74,7 @@ Class Res_assets extends Data_Core {
    * @author Jan den Besten
    */
   protected function _autoset_assets() {
+    $this->load->helper('directory');
     $paths = directory_map($this->config->item('ASSETSFOLDER'),1);
     $paths = array_diff($paths,$this->system_assets);
     $assets = array();
