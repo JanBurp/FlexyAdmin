@@ -274,7 +274,7 @@ export default {
       // Console
       if (isTree && flexyState.debug) {
         console.log('treeInfo:');
-        _.forEach(data,function(row){ console.log('id:',row.id.value,'order:',row.order.value,'level:',row._info.level,'isChild:',row._info.is_child,'hasChildren:',row._info.has_children,'title:',row.str_title.value); });
+        _.forEach(data,function(row){ console.log('id:',row.id.value,'order:',row.order.value,'self_parent:',row.self_parent.value,'level:',row._info.level,'isChild:',row._info.is_child,'hasChildren:',row._info.has_children,'title:',row.str_title.value); });
       }
       return data;
     },
@@ -646,8 +646,12 @@ export default {
           // Pas parent van verplaatste item aan
           // Bijna altijd 0, behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
           // Check eerst of het niet de laatste is, want dan hoeven we al niet verder te kijken
-          if (newIndex+1 < this.items.length) {
-            parent_id = this.items[newIndex+1].self_parent.value;
+          var plus = 0;
+          if (newIndex>=oldIndex) plus=1;
+          if ( newIndex+plus < self.items.length ) {
+            if (!_.isUndefined(self.items[newIndex+plus])) {
+              parent_id = self.items[newIndex+plus].self_parent.value;
+            }
           }
           items[oldIndex].self_parent.value = parent_id;
           // Verplaats item & children
