@@ -167,7 +167,7 @@ export default {
           self.setProgress(progressEvent.loaded,progressEvent.total);
         }
       },
-      timeout: 1000,
+      // timeout: 1000,
     };
     
     // Request Options
