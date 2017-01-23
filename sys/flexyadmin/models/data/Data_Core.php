@@ -47,7 +47,7 @@ Class Data_Core extends CI_Model {
   /**
    * Set off while developing
    */
-  private $settings_cachning = TRUE;
+  private $settings_caching = TRUE;
 
   /**
    * Testing this
@@ -291,7 +291,7 @@ Class Data_Core extends CI_Model {
         // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
         $this->_autoset( );
       }
-      if ($this->settings_cachning) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
+      if ($this->settings_caching) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
     // if ($table==='tbl_links')  trace_($this->settings['abstract_fields']);
     return $this->settings;
@@ -432,7 +432,7 @@ Class Data_Core extends CI_Model {
       // 1) Uit (depricated) cfg_field_info
       $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
       if (!empty($field_info['str_options'])) {
-        $data = explode('|',$field_info['str_options']);
+        $data = explode(' | ',$field_info['str_options']);
         $options['data'] = array_combine($data,$data);
         $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
         // if ($options['multiple']===FALSE) $options=$options['data'];
