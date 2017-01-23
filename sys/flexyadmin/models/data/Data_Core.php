@@ -429,10 +429,11 @@ Class Data_Core extends CI_Model {
       $options = array();
 
       $field_info = array();
+      
       // 1) Uit (depricated) cfg_field_info
       $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
       if (!empty($field_info['str_options'])) {
-        $data = explode(' | ',$field_info['str_options']);
+        $data = explode('|',$field_info['str_options']);
         $options['data'] = array_combine($data,$data);
         $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
         // if ($options['multiple']===FALSE) $options=$options['data'];
