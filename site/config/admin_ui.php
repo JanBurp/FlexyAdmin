@@ -25,8 +25,8 @@ $config['side_menu']['media'] = array(
  */
 $config['wysiwyg'] = array(
   'plugins'                   => 'fullscreen,paste,textpattern,wordcount,table,image,imagetools,link,autolink,charmap,media,code',
+  'max-height'                 => 400,
   'autoresize_max_height'     => 500,
-  // 'height'                 => 400,
   'paste_as_text'             => true,
   'paste_word_valid_elements' => 'b,strong,i,em,a',
   'link_title'                => false,

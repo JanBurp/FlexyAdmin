@@ -35,21 +35,25 @@
 }
 
 // Sizes
-.form {
-//  .form-group {min-height:2.35rem;}
+
+select:-moz-focusring {
+  color: transparent!important;
+  text-shadow: 0 0 0 #000!important;
 }
 
 select.form-control:not([size]):not([multiple]) {
 //  height:auto;
 }
-.custom-select {
+.custom-select:not(.form-control-sm) {
   height: 2.13rem!important;
   padding-top:0.5rem;
+}
+.form-control-sm {
+  padding-top:.35rem;
 }
 
 .form-check-input {
   margin-left:0;
-//  margin-top:.75rem;
 }
 
 // Validation
@@ -129,6 +133,15 @@ body.mce-fullscreen .mce-tinymce{
       margin-right:.25rem;
       cursor:move;
       >.flexy-button {position:absolute;}
+    }
+    .mediapicker-thumb-button {
+      display:block;
+      float:left;
+      width:3.5rem;
+      height:5rem;
+      border:dashed 2px $brand-warning;
+      cursor:default;
+      >.flexy-button {top:2rem;left:2rem;}
     }
   }
   .mediapicker-choose {
