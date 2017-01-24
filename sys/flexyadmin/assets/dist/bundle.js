@@ -29112,12 +29112,12 @@ type:Number,default:5}},methods:{/**
 
 "use strict";
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 8);var _flexyThumb2=_interopRequireDefault(_flexyThumb);var _timepicker=__webpack_require__(/*! ./timepicker.vue */ 16);var _timepicker2=_interopRequireDefault(_timepicker);var _datetimepicker=__webpack_require__(/*! ./datetimepicker.vue */ 82);var _datetimepicker2=_interopRequireDefault(_datetimepicker);var _colorpicker=__webpack_require__(/*! ./colorpicker.vue */ 81);var _colorpicker2=_interopRequireDefault(_colorpicker);var _mediapicker=__webpack_require__(/*! ./mediapicker.vue */ 83);var _mediapicker2=_interopRequireDefault(_mediapicker);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 86);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 87);var _Tabs2=_interopRequireDefault(_Tabs);var _Datepicker=__webpack_require__(/*! ../../vue-strap-src/Datepicker.vue */ 17);var _Datepicker2=_interopRequireDefault(_Datepicker);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,flexyThumb:_flexyThumb2.default,timepicker:_timepicker2.default,datetimepicker:_datetimepicker2.default,colorpicker:_colorpicker2.default,mediapicker:_mediapicker2.default,tab:_Tab2.default,tabs:_Tabs2.default,datepicker:_Datepicker2.default},props:{'title':String,'name':String,'primary':Number,'api':String},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden','primary','uri','order'],checkbox:['checkbox'],datepicker:['date'],timepicker:['time'],datetimepicker:['datetime'],colorpicker:['color','rgb'],mediapicker:['media','medias'],select:['select'],textarea:['textarea'],wysiwyg:['wysiwyg']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(types[type]);}types.default=defaultTypes;return types;}},// Copy of props.data
-data:function data(){return{row:{},fields:{},fieldsets:{},validationErrors:{},isSaving:false};},created:function created(){this.reloadForm();},methods:{reloadForm:function reloadForm(apiParts){var self=this;_flexyState2.default.api({url:self.apiUrl(apiParts)}).then(function(response){if(!_.isUndefined(response.data)){if(response.data.success){// Zijn er settings meegekomen?
+data:function data(){return{row:{},fields:{},fieldsets:{},validationErrors:{},isSaving:false,insertForm:[]};},created:function created(){this.reloadForm();},methods:{reloadForm:function reloadForm(apiParts){var self=this;_flexyState2.default.api({url:self.apiUrl(apiParts)}).then(function(response){if(!_.isUndefined(response.data)){if(response.data.success){// Zijn er settings meegekomen?
 if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.form_set.field_info;self.fieldsets=response.data.settings.form_set.fieldsets;}// Data en die aanvullen met data
 self.row=response.data.data;// TinyMCE
 self.createWysiwyg();}}return response;});},createWysiwyg:function createWysiwyg(){var self=this;var init=_.extend(_flexy.tinymceOptions,{setup:function setup(ed){ed.on('NodeChange',function(e){self.updateText(ed);});ed.on('keyup',function(e){self.updateText(ed);});}});// Wait just a bit...
-window.setTimeout(function(){tinymce.init(init);},10);},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url=this.api+'?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},// Pas kleur van optie aan als het een kleurenveld is
-selectStyle:function selectStyle(field,option){var style='';if(field.substr(0,4)==='rgb_'){style="background-color:"+option+';color:'+_jdbTools2.default.complementColor(option)+';';}return style;},dateObject:function dateObject(value){if(value==='0000-00-00'){var date=new Date();}else{var year=value.substr(0,4);var month=value.substr(5,2);var day=value.substr(8,2);var date=new Date(year,month,day);}return date;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){var self=this;if(!this.isSaving){window.location.assign(self.returnUrl());}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){window.location.assign(self.returnUrl());}});}},returnUrl:function returnUrl(){var url='admin/show/grid/'+this.name;if(this.path&&this.path!=='false')url='admin/show/media/'+this.path;console.log(this.path,url);return url;},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=_.clone(this.row);// Prepare data for ajax call
+window.setTimeout(function(){tinymce.init(init);},10);},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url=this.api+'?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},hasInsertRights:function hasInsertRights(field){if(_.isUndefined(this.fields[field]))return false;if(_.isUndefined(this.fields[field].options))return false;if(_.isUndefined(this.fields[field].options.insert_rights))return false;return this.fields[field].options.insert_rights;},// Pas kleur van optie aan als het een kleurenveld is
+selectStyle:function selectStyle(field,option){var style='';if(field.substr(0,4)==='rgb_'){style="background-color:"+option+';color:'+_jdbTools2.default.complementColor(option)+';';}return style;},dateObject:function dateObject(value){if(value==='0000-00-00'){var date=new Date();}else{var year=value.substr(0,4);var month=value.substr(5,2);var day=value.substr(8,2);var date=new Date(year,month,day);}return date;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},newInsertForm:function newInsertForm(field){this.insertForm[field]={show:true,field:field,table:this.fields[field].options.table};console.log('newInsertForm',field,this.insertForm[field]);},showInsertForm:function showInsertForm(field){var show=false;if(!_.isUndefined(this.insertForm[field]))show=this.insertForm[field].show;console.log('showInsertForm',field,show);return show;},cancel:function cancel(){var self=this;if(!this.isSaving){window.location.assign(self.returnUrl());}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){window.location.assign(self.returnUrl());}});}},returnUrl:function returnUrl(){var url='admin/show/grid/'+this.name;if(this.path&&this.path!=='false')url='admin/show/media/'+this.path;console.log(this.path,url);return url;},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=_.clone(this.row);// Prepare data for ajax call
 for(var field in data){if(field.indexOf('.abstract')>0){delete data[field];}else{if(this.isType('checkbox',field)){data[field]=data[field]?1:0;}if(this.isType('select',field)&&this.isMultiple(field)){data[field]=[];for(var i=0;i<this.row[field].length;i++){data[field].push(this.row[field][i].id);}}}}console.log(data);return _flexyState2.default.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':data}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{// Validation error
 response.error=true;_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){// console.log('updateField',field,value);
 this.row[field]=value;},updateSelect:function updateSelect(field,selected){if(!this.isMultiple(field)){var value=selected[0].value;}else{var value=[];for(var i=0;i<selected.length;i++){value.push({'id':selected[i].value});}}this.updateField(field,value);},// TinyMCE changed
@@ -29135,7 +29135,7 @@ updateText:function updateText(editor){this.updateField(editor.id,editor.getCont
 "use strict";
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _vuedraggable=__webpack_require__(/*! vuedraggable */ 18);var _vuedraggable2=_interopRequireDefault(_vuedraggable);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 8);var _flexyThumb2=_interopRequireDefault(_flexyThumb);var _flexyGrid=__webpack_require__(/*! ../grid/flexy-grid.vue */ 10);var _flexyGrid2=_interopRequireDefault(_flexyGrid);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'MediaPicker',components:{draggable:_vuedraggable2.default,flexyButton:_flexyButton2.default,flexyThumb:_flexyThumb2.default,flexyGrid:_flexyGrid2.default},props:{'value':String,'name':String,'path':String},computed:{draggableOptions:function draggableOptions(){return{// group         : { name:'tree', pull:true},
 // draggable     : 'div',
-forceFallback:true};}},data:function data(){return{media:this.value,choose:false};},methods:{thumbs:function thumbs(){var media=_.trim(this.media,'|');var array=media.split('|');var thumbs=[];for(var i=0;i<array.length;i++){if(array[i]!==''){thumbs[i]={value:array[i],src:'_media/thumb/'+this.path+'/'+array[i],alt:array[i]};}}return thumbs;},addMedia:function addMedia(media){var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia=newMedia.concat(media);newMedia=_.uniq(newMedia);this.changeMedia(newMedia);},removeMedia:function removeMedia(index){var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia.splice(index,1);this.changeMedia(newMedia);},dragEnd:function dragEnd(event){var oldIndex=event.oldIndex;var newIndex=event.newIndex;var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia.splice(newIndex,0,newMedia.splice(oldIndex,1)[0]);this.changeMedia(newMedia);},changeMedia:function changeMedia(media){if(typeof media!=='string')media=_.join(media,'|');this.media=media;this.$emit('input',this.media);}}};
+forceFallback:true};}},data:function data(){return{media:this.value,choose:false};},methods:{thumbs:function thumbs(){var media=_.trim(this.media,'|');var array=media.split('|');var thumbs=[];for(var i=0;i<array.length;i++){if(array[i]!==''){thumbs[i]={value:array[i],src:'_media/thumb/'+this.path+'/'+array[i],alt:array[i]};}}return thumbs;},addMedia:function addMedia(media){var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);var item=media[0];console.log(media,newMedia,newMedia.indexOf(item));if(newMedia.indexOf(item)<0){newMedia=media.concat(newMedia);newMedia=_.uniq(newMedia);this.changeMedia(newMedia);}},removeMedia:function removeMedia(index){var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia.splice(index,1);this.changeMedia(newMedia);},dragEnd:function dragEnd(event){var oldIndex=event.oldIndex;var newIndex=event.newIndex;var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia.splice(newIndex,0,newMedia.splice(oldIndex,1)[0]);this.changeMedia(newMedia);},changeMedia:function changeMedia(media){if(typeof media!=='string')media=_.join(media,'|');this.media=media;this.$emit('input',this.media);}}};
 
 /***/ },
 /* 61 */
@@ -29470,7 +29470,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/li
 
 
 // module
-exports.push([module.i, "\n.dropdown {position:absolute!important;margin-left:.35rem;\n}\n.flexy-button {cursor:pointer;\n}\n.flexy-button.no-border {border-color:transparent;\n}\n.flexy-button.btn-icon {width:1.8rem;height:1.55rem;padding:.1rem 0 1rem;text-align:center;\n}\n.flexy-button.btn-icon.dropdown-toggle {width:3.2rem;\n}\n.flexy-button.btn-icon .fa {width:1rem;\n}\n.flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;\n}\n.flexy-button-text {position:relative;top:.1rem;\n}\n.flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;\n}\n.flexy-button.btn-lg .fa {font-size:2rem;\n}\n.flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;\n}\n.flexy-button.btn-xlg .fa {font-size:3.5rem;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.dropdown {position:absolute!important;margin-left:.35rem;\n}\n.flexy-button {cursor:pointer;width:2rem;height:1.55rem;padding:.15rem .5rem 1rem .4rem;text-align:center;\n}\n.flexy-button.no-border {border-color:transparent;\n}\n.flexy-button.btn-icon.dropdown-toggle {width:3.2rem;\n}\n.flexy-button.btn-icon .fa {width:1rem;margin:0;\n}\n.flexy-button.btn-text {width:auto!important;padding-right:.55rem;\n}\n.flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;\n}\n.flexy-button.btn-lg .fa {font-size:2rem;\n}\n.flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;\n}\n.flexy-button.btn-xlg .fa {font-size:3.5rem;\n}\n", ""]);
 
 // exports
 
@@ -31406,6 +31406,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "mediapicker"
   }, [_c('div', {
     staticClass: "mediapicker-selection"
+  }, [_c('div', {
+    staticClass: "mediapicker-thumb mediapicker-thumb-button"
   }, [_c('flexy-button', {
     staticClass: "btn-outline-warning",
     attrs: {
@@ -31419,7 +31421,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.choose = !_vm.choose
       }
     }
-  }), _vm._v(" "), _c('draggable', {
+  })], 1), _vm._v(" "), _c('draggable', {
     attrs: {
       "list": _vm.thumbs(),
       "options": _vm.draggableOptions
@@ -31970,7 +31972,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }) : _vm._e(), _vm._v(" "), (_vm.findTerm !== '' || _vm.extendedFind) ? _c('flexy-button', {
-    staticClass: "btn-default",
+    staticClass: "btn-outline-warning",
     class: {
       'text-warning': _vm.extendedFind
     },
@@ -32040,10 +32042,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "selected": term.and == 'AND'
       }
     }, [_vm._v(_vm._s(_vm.$lang.grid_search_and))])])]), _vm._v(" "), _c('div', {
-      staticClass: "form-group grid-extended-search-field",
-      class: {
-        'has-danger': !term.field
-      }
+      staticClass: "form-group grid-extended-search-field"
     }, [_c('select', {
       directives: [{
         name: "model",
@@ -32051,7 +32050,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         value: (term.field),
         expression: "term.field"
       }],
-      staticClass: "form-control custom-select",
+      staticClass: "form-control form-control-sm custom-select",
       attrs: {
         "name": "grid-extended-search-field[]"
       },
@@ -32081,7 +32080,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         value: (term.equals),
         expression: "term.equals"
       }],
-      staticClass: "form-control custom-select",
+      staticClass: "form-control form-control-sm custom-select",
       attrs: {
         "name": "grid-extended-search-equals[]"
       },
@@ -32117,10 +32116,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "selected": term.equals === 'exact'
       }
     }, [_vm._v(_vm._s(_vm.$lang.grid_search_exact))])])]), _vm._v(" "), _c('div', {
-      staticClass: "form-group grid-extended-search-term",
-      class: {
-        'has-danger': term.term === ''
-      }
+      staticClass: "form-group grid-extended-search-term"
     }, [_c('input', {
       directives: [{
         name: "model",
@@ -32128,7 +32124,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         value: (term.term),
         expression: "term.term"
       }],
-      staticClass: "form-control",
+      staticClass: "form-control form-control-sm",
       attrs: {
         "type": "text",
         "placeholder": _vm.$lang.grid_search,
@@ -32919,27 +32915,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "card form"
   }, [_c('div', {
     staticClass: "card-header"
-  }, [_c('h1', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('div', {
-    staticClass: "btn-group",
+  }, [_c('h1', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('div', [_c('flexy-button', {
+    staticClass: "btn-outline-info",
     attrs: {
-      "role": "group"
-    }
-  }, [_c('flexy-button', {
-    staticClass: "btn-danger",
-    attrs: {
-      "icon": "close",
-      "text": _vm.$lang.cancel,
-      "disabled": _vm.isSaving
-    },
-    nativeOn: {
-      "click": function($event) {
-        _vm.cancel()
-      }
-    }
-  }), _vm._v(" "), _c('flexy-button', {
-    staticClass: "btn-warning",
-    attrs: {
-      "icon": "save",
+      "icon": "long-arrow-down",
       "text": _vm.$lang.save,
       "disabled": _vm.isSaving
     },
@@ -32949,15 +32928,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }), _vm._v(" "), _c('flexy-button', {
-    staticClass: "btn-info",
+    staticClass: "btn-outline-warning",
     attrs: {
-      "icon": "check",
+      "icon": "level-down fa-rotate-90",
       "text": _vm.$lang.submit,
       "disabled": _vm.isSaving
     },
     nativeOn: {
       "click": function($event) {
         _vm.submit()
+      }
+    }
+  }), _vm._v(" "), _c('flexy-button', {
+    staticClass: "btn-outline-danger",
+    attrs: {
+      "icon": "long-arrow-left",
+      "text": _vm.$lang.cancel,
+      "disabled": _vm.isSaving
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.cancel()
       }
     }
   })], 1)]), _vm._v(" "), _c('div', {
@@ -32983,7 +32974,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           "for": field
         }
       }, [_vm._v(_vm._s(_vm.label(field)))]), _vm._v(" "), _c('div', {
-        staticClass: "col-md-9"
+        class: _vm.hasInsertRights(field) ? 'col-md-8' : 'col-md-9'
       }, [(_vm.isType('textarea', field)) ? [_c('textarea', {
         staticClass: "form-control",
         attrs: {
@@ -33119,7 +33110,26 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
             _vm.updateField(field, $event.target.value)
           }
         }
-      })] : _vm._e()], 2)])] : _vm._e()]
+      })] : _vm._e(), _vm._v(" "), _c('div', {
+        directives: [{
+          name: "show",
+          rawName: "v-show",
+          value: (_vm.showInsertForm(field)),
+          expression: "showInsertForm(field)"
+        }]
+      }, [_c('h1', [_vm._v("YES")])])], 2), _vm._v(" "), (_vm.hasInsertRights(field)) ? _c('div', {
+        staticClass: "col-md-1"
+      }, [_c('flexy-button', {
+        staticClass: "btn-outline-warning",
+        attrs: {
+          "icon": "plus"
+        },
+        nativeOn: {
+          "click": function($event) {
+            _vm.newInsertForm(field)
+          }
+        }
+      })], 1) : _vm._e()])] : _vm._e()]
     })], 2)
   }))], 1)])
 },staticRenderFns: []}

@@ -29,6 +29,7 @@
   #grid-find {
     padding-top:.4rem;
     padding-bottom:0.1rem;
+    margin-right:1px;
   }
 
   
@@ -52,6 +53,7 @@
     form:last-child{
       margin-bottom:0;
     }
+    .form-group,.flexy-button {margin-left:1px;}
   }
    
    // CARD BLOCK
@@ -246,7 +248,7 @@
       // UPLOAD ROW
       tr.grid-upload {
         background-color:$gray-lightest;
-        border:dashed 2px $gray-lighter;
+        border:dashed 2px $brand-warning;
         td.grid-upload-dropbox {
           display:block;
           width:100%;
@@ -261,6 +263,10 @@
           }
           .upload-spinner {display:block;margin:auto;}
         }
+      }
+      tr.grid-upload:hover {
+        border-color:$brand-danger;
+        box-shadow:none;
       }
       
     }
