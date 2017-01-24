@@ -47,7 +47,7 @@ Class Data_Core extends CI_Model {
   /**
    * Set off while developing
    */
-  private $settings_caching = TRUE;
+  private $settings_caching = FALSE;
 
   /**
    * Testing this
@@ -1249,7 +1249,7 @@ Class Data_Core extends CI_Model {
           unset($options['path']);
         }
         if ($include_options) {
-          $options=array_keep_keys($options,array('data','multiple','api'));
+          $options=array_keep_keys($options,array('table','data','multiple','api','insert_rights'));
           $info['options'] = $options;
         }
       }
@@ -1441,6 +1441,10 @@ Class Data_Core extends CI_Model {
             $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(0,0, $where_primary_key );
             $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
             $this->data->table($this->settings['table']); // Terug naar huidige data table.
+          }
+          // Rechten om nieuwe aan te maken?
+          if ($this->flexy_auth->has_rights($other_table)) {
+            $field_options['insert_rights'] = TRUE;
           }
         }
         

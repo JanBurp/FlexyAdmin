@@ -1,4 +1,4 @@
-a {outline: none !important;}
+* {outline:none !important;}
 a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 
 /* BTN */
@@ -57,7 +57,11 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
     >* {margin:0 1rem 0 0;float:left;}
     >*:last-child {margin:0;float:right;}
     >*:first-child {margin:0;float:left;}
-    .btn {text-transform:uppercase};
+    .flexy-button.btn-outline-primary:not(:hover),
+    .flexy-button.btn-outline-info:not(:hover),
+    .flexy-button.btn-outline-default:not(:hover),
+    .flexy-button.btn-outline-warning:not(:hover),
+    .flexy-button.btn-outline-danger:not(:hover) {background-color:$body-bg;}
   }
 }
 

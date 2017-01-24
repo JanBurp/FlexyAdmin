@@ -741,7 +741,7 @@ export default {
         <div class="btn-group">
           <flexy-button @click.native.stop.prevent="startFinding($event)" icon="search" class="btn-default" />
           <flexy-button @click.native.stop.prevent="stopFind()" icon="remove" class="btn-default text-danger" v-if="findTerm!=='' || extendedFind" />
-          <flexy-button @click.native.stop.prevent="extendedFind=!extendedFind" :icon="{'chevron-up':extendedFind,'chevron-down':!extendedFind}" class="btn-default" :class="{'text-warning':extendedFind}" v-if="findTerm!=='' || extendedFind" />
+          <flexy-button @click.native.stop.prevent="extendedFind=!extendedFind" :icon="{'chevron-up':extendedFind,'chevron-down':!extendedFind}" class="btn-outline-warning" :class="{'text-warning':extendedFind}" v-if="findTerm!=='' || extendedFind" />
         </div>
       </form>
     </div>
@@ -756,20 +756,20 @@ export default {
             <option value="AND" :selected="term.and=='AND'">{{$lang.grid_search_and}}</option>
           </select>
         </div>
-        <div class="form-group grid-extended-search-field" :class="{'has-danger':!term.field}">
-          <select class="form-control custom-select" name="grid-extended-search-field[]" v-model="term.field">
+        <div class="form-group grid-extended-search-field">
+          <select class="form-control form-control-sm custom-select" name="grid-extended-search-field[]" v-model="term.field">
             <option v-for="field in searchable_fields" :value="field" :selected="term.field===field">{{fields[field].name}}</option>
           </select>
         </div>
         <div class="form-group grid-extended-search-equals">
-          <select class="form-control custom-select" name="grid-extended-search-equals[]" v-model="term.equals">
+          <select class="form-control form-control-sm custom-select" name="grid-extended-search-equals[]" v-model="term.equals">
             <option value="exist" :selected="term.equals==='exist'">{{$lang.grid_search_exist}}</option>
             <option value="word" :selected="term.equals==='word'">{{$lang.grid_search_word}}</option>
             <option value="exact" :selected="term.equals==='exact'">{{$lang.grid_search_exact}}</option>
           </select>
         </div>
-        <div class="form-group grid-extended-search-term" :class="{'has-danger':term.term===''}">
-          <input type="text" class="form-control" v-model="term.term" :placeholder="$lang.grid_search" name="grid-extended-search-term[]">
+        <div class="form-group grid-extended-search-term">
+          <input type="text" class="form-control form-control-sm" v-model="term.term" :placeholder="$lang.grid_search" name="grid-extended-search-term[]">
         </div>
         <flexy-button @click.native.stop.prevent="extendedSearchRemove(index)" icon="remove" class="btn-outline-danger" />
         <flexy-button @click.native.stop.prevent="extendedSearchAdd()" icon="plus" class="btn-outline-warning" />
