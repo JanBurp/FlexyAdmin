@@ -13,7 +13,7 @@ class File extends CI_Controller {
   /**
    * Always serve files from these folders
    */
-  private $serve_rights = array( 'css','fonts','js','lists' );
+  private $serve_rights = array( 'css','fonts','js' );
   
 	
 	function __construct()	{

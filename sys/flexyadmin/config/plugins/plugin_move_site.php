@@ -69,7 +69,6 @@ $config['move'] = array(
   SITEPATH.'assets/less-default',
   SITEPATH.'assets/pictures',
   SITEPATH.'assets/downloads',
-  SITEPATH.'assets/lists',
 );
 
 // Paths & files to merge (keep newest)

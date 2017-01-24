@@ -18,7 +18,7 @@ Class Options_Paths extends CI_Model {
     $options=array();
 		$map=$this->config->item('ASSETS');
 		$files=read_map($map,'dir');
-    $files=array_unset_keys($files,array('css','fonts','img','js','lists','_thumbcache','less-bootstrap','less-default'));
+    $files=array_unset_keys($files,array('css','fonts','img','js','_thumbcache','less-bootstrap','less-default'));
 		$options=array_keys($files);
     array_unshift($options,'');
     $options=array_combine($options,$options);
