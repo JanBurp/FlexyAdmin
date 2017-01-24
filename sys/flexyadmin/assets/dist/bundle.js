@@ -33540,8 +33540,8 @@ module.exports = function(module) {
  * - Global Vue Settings (Mixins)
  * 
  * @author: Jan den Besten
- */var _=__webpack_require__(/*! lodash */ 20);// TinyMCE Global
-_flexy.tinymceOptions=JSON.parse(_flexy.tinymceOptions);tinymce.init(_flexy.tinymceOptions);// Language settings
+ */var _=__webpack_require__(/*! lodash */ 20);// TinyMCE Global & Set extra
+_flexy.tinymceOptions=JSON.parse(_flexy.tinymceOptions);_flexy.tinymceOptions['link_list']='_api/get_link_list?_authorization='+_flexy.auth_token,tinymce.init(_flexy.tinymceOptions);// Language settings
 var LOCALES={};// _flexy.language_keys = JSON.parse(_flexy.language_keys);
 LOCALES['lang']=_flexy.language;LOCALES[_flexy.language]=_flexy.language_keys;window.VueStrapLang=function(){return LOCALES[_flexy.language]['strap_lang'];};_vue2.default.use(_vueLang2.default,{lang:_flexy.language,locales:LOCALES});_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};}});/**
  Main Vue Instance
