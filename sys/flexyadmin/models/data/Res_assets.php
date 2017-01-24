@@ -50,7 +50,7 @@ Class Res_assets extends Data_Core {
     'suffix_2'   => '',
   );
 
-  private $system_assets = array('_thumbcache/','img/','css/','fonts/','js/','less-default/','less-bootstrap/','lists/');
+  private $system_assets = array('_thumbcache/','img/','css/','fonts/','js/','less-default/','less-bootstrap/');
   
   
   public function __construct() {

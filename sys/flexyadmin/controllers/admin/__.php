@@ -153,7 +153,7 @@ class __ extends AdminController {
 		$assets=$this->config->item('ASSETS');
 		// set user maps
 		$maps=read_map($assets,'dir',FALSE,FALSE);
-    $maps=array_unset_keys($maps,array('css','js','img','lists'));
+    $maps=array_unset_keys($maps,array('css','js','img'));
 		foreach ($maps as $map => $value) {
 			$path=$assets.$map;
       $this->_add_content('<p>'.$path.'</p>');
