@@ -24,7 +24,7 @@ $config['side_menu']['media'] = array(
  * TinyMCE settings
  */
 $config['wysiwyg'] = array(
-  'plugins'               => 'fullscreen,table,image,link,autolink,code',
+  'plugins'               => 'fullscreen,table,image,imagetools,link,autolink,charmap,code',
   'autoresize_max_height' => 500,
   // 'height'                => 400,
   // 'menubar'            => "edit format table",
@@ -32,6 +32,7 @@ $config['wysiwyg'] = array(
   'toolbar1'              => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link unlink | charmap image | code fullscreen',
   
   'link_title'            => false,
+  'image_dimensions'      => false,
 );
 
 
