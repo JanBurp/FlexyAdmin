@@ -61,9 +61,13 @@ export default {
     addMedia : function(media) {
       var currentMedia = _.trim(this.media,'|').split('|');
       var newMedia = _.clone(currentMedia);
-      newMedia = newMedia.concat(media);
-      newMedia = _.uniq(newMedia);
-      this.changeMedia(newMedia);
+      var item = media[0];
+      console.log(media,newMedia,newMedia.indexOf(item));
+      if (newMedia.indexOf(item)<0) {
+        newMedia = media.concat(newMedia);
+        newMedia = _.uniq(newMedia);
+        this.changeMedia(newMedia);
+      }
     },
     
     removeMedia : function(index) {
@@ -96,7 +100,9 @@ export default {
 <template>
   <div class="mediapicker">
     <div class="mediapicker-selection">
-      <flexy-button :icon="{'plus':!choose,'chevron-up':choose}" class="btn-outline-warning" @click.native="choose=!choose" />
+      <div class="mediapicker-thumb mediapicker-thumb-button">
+        <flexy-button :icon="{'plus':!choose,'chevron-up':choose}" class="btn-outline-warning" @click.native="choose=!choose" />
+      </div>
       <draggable :list="thumbs()" :options="draggableOptions" @end="dragEnd($event)">
         <div v-for="(img,index) in thumbs()" class="mediapicker-thumb">
           <flexy-button icon="remove" class="btn-danger" @click.native="removeMedia(index)"/>
