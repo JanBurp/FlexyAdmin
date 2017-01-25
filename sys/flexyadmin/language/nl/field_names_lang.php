@@ -1,5 +1,7 @@
 <?php
 
+$lang['tbl_site']         = 'Instellingen';
+
 // Most standard fields
 $lang['str_title']        = "Titel";
 $lang['str_title_nl']     = $lang['str_title']. ' NL';
