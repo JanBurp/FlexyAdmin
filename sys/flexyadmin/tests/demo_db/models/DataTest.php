@@ -72,7 +72,7 @@ class DataTest extends CITestCase {
     // formset
     $form_set = $this->CI->data->get_setting('form_set');
     $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $form_set['fields'] );
-    $this->assertEquals( array('many_to_many'=>array()), $form_set['with'] );
+    $this->assertEquals( array(), $form_set['with'] );
     $this->assertEquals( 'select', $form_set['field_info']['str_module']['schema']['form-type'] );
     $this->assertEquals( 'media', $form_set['field_info']['medias_fotos']['schema']['form-type'] );
     $this->assertInternalType( 'array', $form_set['field_info']['str_module']['options']);
@@ -711,6 +711,7 @@ class DataTest extends CITestCase {
     $this->CI->data->set( array('str_insert'=>$random_string ) );
     $this->CI->data->insert();
     $insert_id = $this->CI->data->insert_id();
+    // trace_($this->CI->data->get_query_info());
     $this->assertGreaterThan( 0, $insert_id ); // Succes of niet...
     // check of de data id hetzelfde is
     $value = $this->CI->data->get_field( 'str_insert', array('id'=>$insert_id));
