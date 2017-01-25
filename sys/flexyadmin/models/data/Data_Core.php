@@ -294,7 +294,7 @@ Class Data_Core extends CI_Model {
       }
       if ($this->settings_caching) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
-    // if ($table==='tbl_links')  trace_($this->settings['abstract_fields']);
+    // if ($table==='tbl_themas')  trace_($this->settings);
     return $this->settings;
   }
   
@@ -748,23 +748,10 @@ Class Data_Core extends CI_Model {
     }
     $grid_set['pagination']    = (el('b_pagination',$table_info,TRUE)?true:false);
 
-    // Relaties
-    // $grid_set['with'] = array();
-    // // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
-    // $many_to_one = el( array('relations','many_to_one'), $this->settings );
-    // if ($many_to_one) $grid_set['with']['many_to_one']=$many_to_one;
-    // // many_to_many, als in oude instellingen gevraagd is
-    // if (el('b_grid_add_many',$table_info)) {
-    //   $many_to_many = el( array('relations','many_to_many'), $this->settings );
-    //   if ($many_to_many) $grid_set['with']['many_to_many'] = $many_to_many;
-    // }
-    
-    // relaties?
-    $grid_set['with']      = array();
-    // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
-    if (isset($this->settings['relations']['many_to_one'])) $grid_set['with']['many_to_one']=array();
+    // relaties, default
+    $grid_set['with']  = array('many_to_one');
     // many_to_many, als in oude instellingen gevraagd is
-    if (el('b_grid_add_many',$table_info)) $grid_set['with']['many_to_many']=array();
+    if (el('b_grid_add_many',$table_info)) $grid_set['with'][]='many_to_many';
 
     return $grid_set;
   }
@@ -784,12 +771,8 @@ Class Data_Core extends CI_Model {
     $main_fieldset = $this->settings['table'];
     $fieldsets = array($main_fieldset=>array());
     
-    // relaties?
-    $form_set['with']      = array();
-    // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
-    if (isset($this->settings['relations']['many_to_one'])) $form_set['with']['many_to_one']=array();
-    // many_to_many, als in oude instellingen gevraagd is
-    if (el('b_form_add_many',$table_info)) $form_set['with']['many_to_many']=array();
+    // relaties default
+    $form_set['with']      = array('many_to_one','many_to_many');
     
     // fields / formset
     $form_set['fields'] = $this->settings['fields'];
@@ -1267,22 +1250,11 @@ Class Data_Core extends CI_Model {
    */
   public function get_setting_grid_set() {
     $grid_set = el('grid_set',$this->settings);
-    // Voeg relatie velden toe (...to_many)
-    if (isset($grid_set['with'])) {
-      foreach ($grid_set['with'] as $type => $relations) {
-        if (empty($relations) or is_string($relations)) $relations = $this->get_setting(array('relations',$type));
-        if ($relations) {
-          foreach ($relations as $what => $info) {
-            if (in_array($type,array('one_to_many','many_to_many'))) {
-              $field=el('result_name',$info);
-              if ($field and $field!='abstract') $grid_set['fields'][] = $field;
-            }
-          }
-        }
-      }
-    }
+    $grid_set = $this->_complete_relations_of_set($grid_set,'grid_set');
+
     $field_info = $this->get_setting_field_info_extended($grid_set['fields']);
     $grid_set['field_info'] = $field_info;
+
     $searchable_fields = array_combine($grid_set['fields'],$grid_set['fields']);
     $searchable_fields = array_unset_keys($searchable_fields,array('id','order','self_parent','uri'));
     $grid_set['searchable_fields'] = array_values($searchable_fields);
@@ -1299,6 +1271,8 @@ Class Data_Core extends CI_Model {
    */
   public function get_setting_form_set() {
     $form_set = el('form_set',$this->settings);
+    
+    // Fields
     $fields = el('fields',$form_set);
     // Als fields niet bestaat, haal die uit de fieldsets
     if (!$fields) {
@@ -1312,9 +1286,58 @@ Class Data_Core extends CI_Model {
     $fieldset_keys = array_keys($form_set['fieldsets']);
     $fieldset_keys = $this->ui->get($fieldset_keys);
     $form_set['fieldsets'] = array_combine($fieldset_keys,$form_set['fieldsets']);
-    $field_info = $this->get_setting_field_info_extended($form_set['fields'],array(),true);
-    $form_set['field_info'] = $field_info;
+
+    // Relaties
+    $form_set = $this->_complete_relations_of_set($form_set,'form_set');
+    
+    // Field info
+    $form_set['field_info'] = $this->get_setting_field_info_extended($form_set['fields'],array(),true);
     return $form_set;
+  }
+  
+  /**
+   * Maak relatie settings compleet (en default) voor grid_set en form_set
+   *
+   * @param array $set 
+   * @param string $set_type 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _complete_relations_of_set($set,$set_type) {
+    // Default
+    if (!isset($set['with'])) {
+      if ($set_type==='grid_set') 
+        $set['with'] = array('many_to_one');
+      else 
+        $set['with'] = array('many_to_one','many_to_many');
+    }
+    
+    // Relaties
+    foreach ($set['with'] as $type => $relations) {
+      // Vul aan als alleen maar de types zijn ingesteld
+      if (is_numeric($type)) {
+        unset($set['with'][$type]);
+        $type = $relations;
+        $relations = $this->get_setting(array('relations',$type));
+      }
+      // Loop alle relaties langs en complementeer die
+      if ($relations) {
+        foreach ($relations as $what => $info) {
+          $field = 'abstract';
+          $set['with'][$type][$what] = $field;
+          // Vul ook de velden aan als relatie veld er nog niet instaat
+          if (!in_array($what,$set['fields'])) {
+            $set['fields'][] = $what;
+            if ($set_type==='form_set') {
+              $first_fieldset = array_keys($set['fieldsets']);
+              $first_fieldset = current($first_fieldset);
+              $set['fieldsets'][$first_fieldset][] = $what;
+            }
+          }
+        }
+      }
+    }
+    return $set;
   }
   
   
@@ -2195,22 +2218,13 @@ Class Data_Core extends CI_Model {
     $this->select( $grid_set['fields'] );
     
     // Relations
-    if (isset($grid_set['with'])) {
-      foreach ($grid_set['with'] as $type => $relations) {
-        if (empty($relations) or is_string($relations)) $grid_set['with'][$type] = $this->get_setting(array('relations',$type));
+    foreach ($grid_set['with'] as $type => $relations) {
+      foreach ($relations as $what => $fields) {
+        $json = (in_array($type,array('one_to_many','many_to_many')));
+        $this->with( $type, array( $what=>$fields), $json, FALSE );
       }
-      foreach ($grid_set['with'] as $type => $relations) {
-        if ($relations) {
-          foreach ($relations as $what => $info) {
-            $json = (in_array($type,array('one_to_many','many_to_many')));
-            $fields='abstract';
-            if ($type==='one_to_one') $fields=$info;
-            $this->with( $type, array( $what=>$fields), $json, FALSE );
-          }
-        }
-      }
-      if (isset($grid_set['with']['many_to_one'])) $many_to_one_fields = array_keys($grid_set['with']['many_to_one']);
     }
+    if (isset($grid_set['with']['many_to_one'])) $many_to_one_fields = array_keys($grid_set['with']['many_to_one']);
     
     // Order_by
     if (empty($sort)) {
@@ -2279,13 +2293,13 @@ Class Data_Core extends CI_Model {
       $this->tm_jump_to_today = TRUE;
     }
 
-    // prepare as grid result (foreign keys include abstract and foreign data in a json)
+    // Prepare as grid result (foreign keys include abstract and foreign data in a json)
     $result = $this->_get_result();
     if (isset($grid_set['with']['many_to_one'])) {
       foreach ($result as $id => $row) {
         foreach ($row as $field => $value) {
           if (in_array($field,$many_to_one_fields)) {
-            $abstract_field = $grid_set['with']['many_to_one'][$field]['result_name'].'.abstract';
+            $abstract_field = $this->settings['relations']['many_to_one'][$field]['result_name'].'.abstract';
             if (isset($row[$abstract_field])) {
               $result[$id][$field] = '{"'.$value.'":"'.$row[$abstract_field].'"}';
               unset($result[$id][$abstract_field]);
@@ -2313,17 +2327,11 @@ Class Data_Core extends CI_Model {
     if (empty($this->tm_select)) $this->select( $form_set['fields'] );
     
     // Relations
-    if (isset($form_set['with'])) {
-      foreach ($form_set['with'] as $type => $relations) {
-        if (empty($relations) or is_string($relations)) $relations = $this->get_setting(array('relations',$type));
-        if ($relations) {
-          foreach ($relations as $what => $info ) {
-            if (is_numeric($what) and is_string($info)) $what=$info;
-            $fields='abstract';
-            if ($type==='one_to_one' and is_array($info)) $fields=$info;
-            if ( in_array($what,$form_set['fields']) or $what!=='user_changed') {
-              $this->with( $type, array( $what=>$fields) );
-            }
+    foreach ($form_set['with'] as $type => $relations) {
+      if ($type!=='many_to_one') {
+        foreach ($relations as $what => $fields ) {
+          if ( $what!=='user_changed') {
+            $this->with( $type, array( $what=>$fields) );
           }
         }
       }
