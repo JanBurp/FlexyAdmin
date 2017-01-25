@@ -4278,6 +4278,16 @@ Class Data_Core extends CI_Model {
     }
     
     /**
+     * Maak een hash van wachtwoordvelden
+     */
+    foreach ( $set as $key => $value ) {
+      $type = get_prefix($key);
+      if (in_array($type,$this->config->item('PASSWORD_field_types'))) {
+        $set[$key] = $this->flexy_auth->hash_password( $value );
+      }
+    }
+    
+    /**
      * Ga door als de set niet leeg is
      */
     if (!empty($set) or $to_many or $to_one) {
