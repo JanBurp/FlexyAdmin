@@ -26,8 +26,10 @@ import accordion        from './vue-strap-src/Accordion.vue'
 import panel            from './vue-strap-src/Panel.vue'
 
 
-// TinyMCE Global
+// TinyMCE Global & Set extra
 _flexy.tinymceOptions = JSON.parse(_flexy.tinymceOptions);
+_flexy.tinymceOptions['link_list'] = '_api/get_link_list?_authorization='+_flexy.auth_token,
+_flexy.tinymceOptions['image_list'] = '_api/get_image_list?_authorization='+_flexy.auth_token,
 tinymce.init( _flexy.tinymceOptions );
 
 // Language settings
