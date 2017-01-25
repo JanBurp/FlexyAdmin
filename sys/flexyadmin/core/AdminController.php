@@ -13,8 +13,10 @@ require_once(APPPATH."core/BasicController.php");
  
 class AdminController extends BasicController {
 
-  private $view_data    = array();
-  private $current_uri  = '';
+  private $view_data            = array();
+  private $current_uri          = '';
+  private $split_uri_table = array( 'tbl_site','cfg_users' );
+  
   /**
    * Alle language files die nodig zijn
    */
@@ -39,9 +41,14 @@ class AdminController extends BasicController {
     
     // Uri voor current menu item
     $this->current_uri = $this->uri->segment_array();
-    $this->current_uri = array_slice($this->current_uri,0,4);
-    $this->current_uri = implode('/',$this->current_uri);
-    $this->current_uri = str_replace('/show/form/','/show/grid/',$this->current_uri);
+    if (count($this->current_uri)>=4 and !in_array($this->current_uri[4],$this->split_uri_table)) {
+      $this->current_uri = array_slice($this->current_uri,0,4);
+      $this->current_uri = implode('/',$this->current_uri);
+      $this->current_uri = str_replace('/show/form/','/show/grid/',$this->current_uri);
+    }
+    else {
+      $this->current_uri = implode('/',$this->current_uri);
+    }
 	}
   
   // public function _show_message() {

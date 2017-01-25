@@ -179,7 +179,6 @@ class Row extends Api_Model {
    * @author Jan den Besten
    */
   public function index() {
-
     // Check rechten
     if ($this->args['table']==='res_assets' AND isset($this->args['path'])) {
       if ( !$this->_has_rights('media_'.$this->args['path']) ) {
@@ -187,7 +186,7 @@ class Row extends Api_Model {
       }
     }
     else {
-      if (!$this->_has_rights($this->args['table'])) {
+      if ( !$this->_has_rights( $this->args['table'], el('where',$this->args)) ) {
         return $this->_result_status401();
       }
     }
