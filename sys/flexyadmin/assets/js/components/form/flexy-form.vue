@@ -188,13 +188,13 @@ export default {
         field : field,
         table : this.fields[field].options.table,
       }
-      console.log('newInsertForm',field,this.insertForm[field]);
+      // console.log('newInsertForm',field,this.insertForm[field]);
     },
     
     showInsertForm : function(field) {
       var show = false;
       if ( !_.isUndefined(this.insertForm[field]) ) show = this.insertForm[field].show;
-      console.log('showInsertForm',field,show);
+      // console.log('showInsertForm',field,show);
       return show;
     },
     
