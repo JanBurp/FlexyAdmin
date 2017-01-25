@@ -126,16 +126,6 @@ class auth extends Api_Model {
       $data = array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language','auth_token'=>'token'),false);
     }
     
-    // // create JWT token bij login
-    // if (isset($this->args['password'])) {
-    //   $this->cors = '*';
-    //   $token = array(
-    //     'username' => el('username',$data,''),
-    //     'password' => $this->args['password'],
-    //   );
-    //   $this->jwt_token = JWT::encode( $token, $this->jwt_key );
-    // }
-    
     return $data;
   }
   

@@ -82,19 +82,15 @@ export default {
 
 <style>
   .dropdown {position:absolute!important;margin-left:.35rem;}
-  .flexy-button {cursor:pointer;}
+  .flexy-button {cursor:pointer;width:2rem;height:1.55rem;padding:.15rem .5rem 1rem .4rem;text-align:center;}
   .flexy-button.no-border {border-color:transparent;}
-  .flexy-button.btn-icon {width:1.8rem;height:1.55rem;padding:.1rem 0 1rem;text-align:center;}
   .flexy-button.btn-icon.dropdown-toggle {width:3.2rem;}
-  .flexy-button.btn-icon .fa {width:1rem;}
-  .flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;}
-  .flexy-button-text {position:relative;top:.1rem;}
+  .flexy-button.btn-icon .fa {width:1rem;margin:0;}
+  .flexy-button.btn-text {width:auto!important;padding-right:.55rem;}
 
   .flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;}
   .flexy-button.btn-lg .fa {font-size:2rem;}
 
   .flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;}
   .flexy-button.btn-xlg .fa {font-size:3.5rem;}
-
-
-</style>
+  </style>
