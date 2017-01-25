@@ -121,9 +121,22 @@ class Flexy_auth extends Ion_auth {
    */
   public function login_with_authorization_header() {
     $loggedIn = FALSE;
+    // Van header
     $this->auth_token = $this->input->get_request_header('Authorization', TRUE);
+    // Van GET
+    if (empty($this->auth_token) or $this->auth_token==='undefined') {
+      $this->auth_token = $this->input->get('_authorization', TRUE);
+    }
+      
     if (!empty($this->auth_token) and $this->auth_token!=='undefined') {
-      $auth_data = (array) JWT::decode( $this->auth_token, $this->auth_key, array('HS256') );
+      $error_reporting = error_reporting();
+      error_reporting(0);
+      try {
+        $auth_data = (array) JWT::decode( $this->auth_token, $this->auth_key, array('HS256') );
+      } catch (Exception $e) {
+        $auth_data = array();
+      }      
+      error_reporting($error_reporting);
       if (isset($auth_data['username']) and isset($auth_data['password']) ) {
         $loggedIn = $this->login( $auth_data['username'], $auth_data['password'] );
       }
