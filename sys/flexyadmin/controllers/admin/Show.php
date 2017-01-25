@@ -74,17 +74,22 @@ class Show extends AdminController {
    * @author Jan den Besten
    */
   private function _order($order) {
+    $order=trim($order,',| ');
     if (empty($order)) {
-      $order = $this->data->get_setting('order_by');
+      $order = $this->data->get_setting(array('grid_set','order_by'));
       if (!empty($order)) {
-        $order = explode(',',$order)[0];
-        $order = explode(' ',$order);
-        if (isset($order[1]) and strtoupper($order[1])==='DESC') {
-          $order = '_'.$order[0];
+        $order = explode(',',$order);
+        foreach ($order as $key => $item) {
+          $item = explode(' ',trim($item));
+          if (isset($item[1]) and strtoupper($item[1])==='DESC') {
+            $item = '_'.$item[0];
+          }
+          else {
+            $item = $item[0];
+          }
+          $order[$key] = $item;
         }
-        else {
-          $order = $order[0];
-        }
+        $order = implode(',',$order);
       }
     }
     return $order;
