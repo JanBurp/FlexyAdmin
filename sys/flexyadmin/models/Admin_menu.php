@@ -90,7 +90,7 @@ Class Admin_menu extends CI_Model {
   private function _process_items( $base_url, $items ) {
     $menuItems = array();
     foreach ($items as $key=>$item) {
-      if ($this->has_rights($item)) {
+      if ($this->has_group_rights($item)) {
         if (isset($item['type'])) {
           switch ($item['type']) {
 
@@ -107,12 +107,14 @@ Class Admin_menu extends CI_Model {
             // One table
             case 'table':
               $table = el('table',$item,$key);
-              $menuItems[$table] = $this->_process_item($base_url, array(
-                'name'  => el('name',$item,$this->ui->get($table)),
-                'uri'   => 'show/grid/'.$table,
-                'icon'  => el('icon',$item,''),
-                'class' => el('class',$item,''),
-              ));
+              if ($this->flexy_auth->has_rights($table)) {
+                $menuItems[$table] = $this->_process_item($base_url, array(
+                  'name'  => el('name',$item,$this->ui->get($table)),
+                  'uri'   => 'show/grid/'.$table,
+                  'icon'  => el('icon',$item,''),
+                  'class' => el('class',$item,''),
+                ));
+              }
               break;
             
             // Multiple tables
@@ -184,7 +186,7 @@ Class Admin_menu extends CI_Model {
     return $menuItems;
   }
   
-  private function has_rights($item) {
+  private function has_group_rights($item) {
     // All
     if (!isset($item['user_group'])) return true;
     // Tools
