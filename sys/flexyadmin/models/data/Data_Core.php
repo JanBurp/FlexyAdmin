@@ -1270,7 +1270,7 @@ Class Data_Core extends CI_Model {
     // Voeg relatie velden toe (...to_many)
     if (isset($grid_set['with'])) {
       foreach ($grid_set['with'] as $type => $relations) {
-        if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
+        if (empty($relations) or is_string($relations)) $relations = $this->get_setting(array('relations',$type));
         if ($relations) {
           foreach ($relations as $what => $info) {
             if (in_array($type,array('one_to_many','many_to_many'))) {
@@ -2197,7 +2197,7 @@ Class Data_Core extends CI_Model {
     // Relations
     if (isset($grid_set['with'])) {
       foreach ($grid_set['with'] as $type => $relations) {
-        if (empty($relations)) $grid_set['with'][$type] = $this->get_setting(array('relations',$type));
+        if (empty($relations) or is_string($relations)) $grid_set['with'][$type] = $this->get_setting(array('relations',$type));
       }
       foreach ($grid_set['with'] as $type => $relations) {
         if ($relations) {
@@ -2315,7 +2315,7 @@ Class Data_Core extends CI_Model {
     // Relations
     if (isset($form_set['with'])) {
       foreach ($form_set['with'] as $type => $relations) {
-        if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
+        if (empty($relations) or is_string($relations)) $relations = $this->get_setting(array('relations',$type));
         if ($relations) {
           foreach ($relations as $what => $info ) {
             if (is_numeric($what) and is_string($info)) $what=$info;
