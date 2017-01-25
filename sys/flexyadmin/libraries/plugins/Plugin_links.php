@@ -17,7 +17,6 @@ class Plugin_links extends Plugin {
 	
 	function _after_update() {
 		$this->_update_links_in_text();
-		$this->_create_link_list();
 		return $this->newData;
 	}
 	
@@ -27,16 +26,10 @@ class Plugin_links extends Plugin {
 		if ($this->table==$linkTable or $this->table==$menuTable) {
 			$this->newData=array();
 			$this->_update_links_in_text();
-			$this->_create_link_list();
 		}
 		return TRUE;
 	}
 	
-	function _create_link_list() {
-		if (!isset($this->CI->editor_lists)) $this->CI->load->library('editor_lists');
-		$this->CI->queu->add_call(@$this->CI->editor_lists,'create_list','links');
-	}
-		
 	function _update_links_in_text() {
 		// what is changed?
     $changedFields=array_diff_multi($this->oldData,$this->newData);

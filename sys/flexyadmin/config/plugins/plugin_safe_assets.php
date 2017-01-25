@@ -49,7 +49,6 @@ $config['file_types'] = array(
 	SITEPATH.'stats'				      => 'xml',
 	SITEPATH.'assets'							=> 'css|img|js',
 	SITEPATH.'assets/_thumbcache'	=> 'jpg|jpeg|gif|png|tiff|cur',
-	SITEPATH.'assets/lists'				=> 'js',
 	SITEPATH.'assets/css'					=> 'css|htc|php|eot|svg|ttf|woff|otf|less|map',
 	SITEPATH.'assets/img'					=> 'jpg|jpeg|gif|png|tiff|cur|ico|swf|flv', 
 	SITEPATH.'assets/js'					=> 'js|css|html|swf|jpg|jpeg|gif|png|tiff|cur|map',

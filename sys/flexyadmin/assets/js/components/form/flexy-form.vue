@@ -58,6 +58,7 @@ export default {
       fieldsets: {},
       validationErrors : {},
       isSaving : false,
+      insertForm : [],
     }
   },
   
@@ -146,6 +147,13 @@ export default {
       return selected;
     },
     
+    hasInsertRights : function(field) {
+      if ( _.isUndefined(this.fields[field]) ) return false;
+      if ( _.isUndefined(this.fields[field].options) ) return false;
+      if ( _.isUndefined(this.fields[field].options.insert_rights) ) return false;
+      return this.fields[field].options.insert_rights;
+    },
+    
     // Pas kleur van optie aan als het een kleurenveld is
     selectStyle : function(field,option) {
       var style = '';
@@ -172,6 +180,22 @@ export default {
       var validation='';
       if (this.validationErrors[field]) validation = 'has-danger';
       return validation;
+    },
+    
+    newInsertForm : function(field) {
+      this.insertForm[field] = {
+        show  : true,
+        field : field,
+        table : this.fields[field].options.table,
+      }
+      console.log('newInsertForm',field,this.insertForm[field]);
+    },
+    
+    showInsertForm : function(field) {
+      var show = false;
+      if ( !_.isUndefined(this.insertForm[field]) ) show = this.insertForm[field].show;
+      console.log('showInsertForm',field,show);
+      return show;
     },
     
     cancel : function() {
@@ -296,10 +320,10 @@ export default {
 <div class="card form">
   <div class="card-header">
     <h1>{{title}}</h1>
-    <div class="btn-group" role="group">
-      <flexy-button @click.native="cancel()" icon="close" :text="$lang.cancel" :disabled="isSaving" class="btn-danger"/>
-      <flexy-button @click.native="save()"   icon="save" :text="$lang.save" :disabled="isSaving" class="btn-warning"/>
-      <flexy-button @click.native="submit()" icon="check" :text="$lang.submit" :disabled="isSaving" class="btn-info"/>
+    <div>
+      <flexy-button @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-info"/>
+      <flexy-button @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-warning"/>
+      <flexy-button @click.native="cancel()" icon="long-arrow-left" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
     </div>
   </div>
 
@@ -313,7 +337,7 @@ export default {
             <div class="form-group row" :class="validationClass(field)">
               <div v-if="validationErrors[field]" class="validation-error">{{validationErrors[field]}}</div>
               <label class="col-md-3 form-control-label" :for="field">{{label(field)}}</label>
-              <div class="col-md-9">
+              <div :class="hasInsertRights(field) ? 'col-md-8' : 'col-md-9'">
 
                 <template v-if="isType('textarea',field)">
                   <!-- Textarea -->
@@ -367,6 +391,14 @@ export default {
                   <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
                 </template>
 
+                <div v-show="showInsertForm(field)">
+                  <h1>YES</h1>
+                </div>
+
+              </div>
+              
+              <div class="col-md-1" v-if="hasInsertRights(field)">
+                <flexy-button @click.native="newInsertForm(field)" icon="plus" class="btn-outline-warning" />
               </div>
             </div>
             

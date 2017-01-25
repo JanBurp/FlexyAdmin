@@ -5338,7 +5338,7 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
     display: none !important; } }
 
 /* FLEXYADMIN */
-a {
+* {
   outline: none !important; }
 
 a > .fa, .btn > .fa {
@@ -5403,8 +5403,12 @@ a > .fa, .btn > .fa {
     .card > .card-header > *:first-child {
       margin: 0;
       float: left; }
-    .card > .card-header .btn {
-      text-transform: uppercase; }
+    .card > .card-header .flexy-button.btn-outline-primary:not(:hover),
+    .card > .card-header .flexy-button.btn-outline-info:not(:hover),
+    .card > .card-header .flexy-button.btn-outline-default:not(:hover),
+    .card > .card-header .flexy-button.btn-outline-warning:not(:hover),
+    .card > .card-header .flexy-button.btn-outline-danger:not(:hover) {
+      background-color: #fff; }
 
 /* Responsive */
 @media (max-width: 767px) {
@@ -5451,8 +5455,7 @@ a > .fa, .btn > .fa {
 #header {
   padding: 0 .5rem 0 0;
   background-color: #f7f7f9;
-  border-bottom: solid 1px #eceeef;
-  height: 45.5px; }
+  border-bottom: solid 1px #eceeef; }
   #header .nav {
     padding-top: .1rem; }
 
@@ -5478,7 +5481,7 @@ a > .fa, .btn > .fa {
 
 /* CONTENT */
 #content {
-  margin: 1rem 0px 0px; }
+  margin: 1.35rem 0px 0px; }
 
 #flexy-menu-side {
   padding-left: 0; }
@@ -5524,8 +5527,8 @@ a > .fa, .btn > .fa {
     left: 50%;
     top: 50%;
     font-size: 5rem;
-    color: #D90;
-    text-shadow: 0px 0px 0.5rem #464a4c; }
+    color: #636c72;
+    text-shadow: 0px 0px 0.5rem #fff; }
 
 /* TRANSITIONS */
 .slideUp-enter-active {
@@ -5573,7 +5576,8 @@ a > .fa, .btn > .fa {
     border-radius: 0.25rem; }
   .grid #grid-find {
     padding-top: .4rem;
-    padding-bottom: 0.1rem; }
+    padding-bottom: 0.1rem;
+    margin-right: 1px; }
   .grid .card-header.grid-extended-find {
     background-color: #eceeef !important;
     color: #696 !important; }
@@ -5590,6 +5594,8 @@ a > .fa, .btn > .fa {
       display: none; }
     .grid .card-header.grid-extended-find form:last-child {
       margin-bottom: 0; }
+    .grid .card-header.grid-extended-find .form-group, .grid .card-header.grid-extended-find .flexy-button {
+      margin-left: 1px; }
   .grid .card-block {
     padding: 0; }
   .grid .grid-upload {
@@ -5752,7 +5758,7 @@ a > .fa, .btn > .fa {
     display: none; }
   .grid.grid-media-view-thumbs table.grid-data tbody tr.grid-upload, .grid.grid-media-view-small table.grid-data tbody tr.grid-upload {
     background-color: #f7f7f9;
-    border: dashed 2px #eceeef; }
+    border: dashed 2px #D90; }
     .grid.grid-media-view-thumbs table.grid-data tbody tr.grid-upload td.grid-upload-dropbox, .grid.grid-media-view-small table.grid-data tbody tr.grid-upload td.grid-upload-dropbox {
       display: block;
       width: 100%;
@@ -5767,6 +5773,9 @@ a > .fa, .btn > .fa {
       .grid.grid-media-view-thumbs table.grid-data tbody tr.grid-upload td.grid-upload-dropbox .upload-spinner, .grid.grid-media-view-small table.grid-data tbody tr.grid-upload td.grid-upload-dropbox .upload-spinner {
         display: block;
         margin: auto; }
+  .grid.grid-media-view-thumbs table.grid-data tbody tr.grid-upload:hover, .grid.grid-media-view-small table.grid-data tbody tr.grid-upload:hover {
+    border-color: #D00;
+    box-shadow: none; }
 
 .grid.grid-media-view-small table.grid-data tbody tr {
   width: 7rem;
@@ -5817,9 +5826,20 @@ a > .fa, .btn > .fa {
   border-radius: 0.25rem;
   background-color: #fff5dd; }
 
-.custom-select {
+select:-moz-focusring {
+  color: transparent !important;
+  text-shadow: 0 0 0 #000 !important; }
+
+.custom-select:not(.form-control-sm):not(.input-group-sm > .form-control):not(
+.input-group-sm > .input-group-addon):not(
+.input-group-sm > .input-group-btn > .btn) {
   height: 2.13rem !important;
   padding-top: 0.5rem; }
+
+.form-control-sm, .input-group-sm > .form-control,
+.input-group-sm > .input-group-addon,
+.input-group-sm > .input-group-btn > .btn {
+  padding-top: .35rem; }
 
 .form-check-input {
   margin-left: 0; }
@@ -5890,6 +5910,16 @@ body.mce-fullscreen .mce-tinymce {
       cursor: move; }
       .mediapicker .mediapicker-selection .mediapicker-thumb > .flexy-button {
         position: absolute; }
+    .mediapicker .mediapicker-selection .mediapicker-thumb-button {
+      display: block;
+      float: left;
+      width: 3.5rem;
+      height: 5rem;
+      border: dashed 2px #D90;
+      cursor: default; }
+      .mediapicker .mediapicker-selection .mediapicker-thumb-button > .flexy-button {
+        top: 2rem;
+        left: 2rem; }
   .mediapicker .mediapicker-choose {
     margin: .5rem 0 0; }
     .mediapicker .mediapicker-choose > .card {
