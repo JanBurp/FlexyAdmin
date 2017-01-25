@@ -70,8 +70,9 @@ Class cfg_users extends Data_Core {
   
   
   /**
-   * Aanpassing voor ->_update_insert(): leeg wachtwoord veld wordt uit de set gehaald.
-   * Hierdoor wordt alleen een wachtwoord aangepast als die een nieuwe waarde heeft en wordt een wachtwoord nooit leeg.
+   * Aanpassing voor ->_update_insert():
+   * - Leeg wachtwoord veld wordt uit de set gehaald. Hierdoor wordt alleen een wachtwoord aangepast als die een nieuwe waarde heeft en wordt een wachtwoord nooit leeg.
+   * - Als email/username niet is veranderd, validatie aanpassen zodat niet wordt gecheck of het een unieke waare is
    *
    * @param string $type 
    * @param string $set 
@@ -89,11 +90,34 @@ Class cfg_users extends Data_Core {
     }
     
     /**
-     * Verwijder lege wachtwoorden uit de set, zodat die niet overschreven worden in de db
+     * Haal huidige waarden op voor email & username om te vergelijken
      */
+    $select = array('str_username','email_email');
+    $select = array_intersect($select,array_keys($this->tm_set));
+    if (!empty($select)) {
+      $id = $this->tm_set[$this->settings['primary_key']];
+      $sql = 'SELECT `'.implode('`,`',$select).'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = '.$id;
+      $query = $this->db->query($sql);
+      $current =$query->row_array();
+    }
+    
     foreach ( $this->tm_set as $key => $value ) {
+      /**
+       * Verwijder lege wachtwoorden uit de set, zodat die niet overschreven worden in de db
+       */
       if ( empty($value) and in_array(get_prefix($key), $this->config->item('PASSWORD_field_types') ) ) {
         unset( $this->tm_set[$key] );
+      }
+      
+      /**
+       * Verwijder email en username als die hetzelfde zijn uit de set, updaten is niet nodig (en validatie ook niet)
+       */
+      if ($current) {
+        if (in_array($key,$select)) {
+          if ( $current_value=el($key,$current,NULL) and $current_value===$value) {
+            unset( $this->tm_set[$key] );
+          }
+        }
       }
     }
     
