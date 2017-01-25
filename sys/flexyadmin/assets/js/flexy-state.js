@@ -193,8 +193,13 @@ export default {
       if (error.response) {
         // The request was made, but the server responded with a status code
         // that falls out of the range of 2xx
-        console.log('api ERROR <',error,error.response,error.config);
-        self.addMessage(error.response.data,'danger');
+        if (error.response.status==401) {
+          self.addMessage(_flexy.language_keys.api_error_401,'danger');
+        }
+        else {
+          console.log('api ERROR <',error, error.response, error.config);
+          self.addMessage(error.response.data,'danger');
+        }
       } else {
         // Something happened in setting up the request that triggered an Error
         console.log('api ERROR <', error.message,error.config);
