@@ -384,15 +384,6 @@ Class Data_Core extends CI_Model {
         $field_info['default'] = $this->field_data( $field, 'default' );
       }
       
-      // Verzamal de rest van de field info, eerst uit depricated cfg_field_info en uit de db
-      // $field_info_db = $this->db->where('field_field',$table.'.'.$field)->get_row('cfg_field_info');
-      // if (is_array($field_info) and is_array($field_info_db)) {
-      //   $field_info = array_merge($field_info,$field_info_db);
-      // }
-      // else {
-      //   if (!is_array($field_info)) $field_info=$field_info_db;
-      //   if (!is_array($field_info)) $field_info=NULL;
-      // }
       $fields_info[$field] = $field_info;
       // Combineer, met oa de default waarde
       $settings_fields_info[$field] = array('default'=>$field_info['default']);
@@ -409,10 +400,13 @@ Class Data_Core extends CI_Model {
         // find in (depricated) media_info
         $full_field=$table.'.'.$field;
         $media_info = $this->db->like('fields_media_fields',$full_field)->get_row('cfg_media_info');
-        $settings_fields_info[$field]['path'] = $media_info['path'];
-        // trace_($media_info);
-        // $media_info = $this->db->like('fields_media_fields',$full_field)->get_row('cfg_media_info');
-        // $settings_fields_info[$field]['path'] = 'test';
+        // Or Default 'pictures'
+        if ($media_info and $path=el('path',$media_info)) {
+          $settings_fields_info[$field]['path'] = $path;
+        }
+        else {
+          $settings_fields_info[$field]['path'] = 'pictures';
+        }
       }
       
     }
