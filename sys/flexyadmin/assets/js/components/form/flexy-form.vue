@@ -290,6 +290,7 @@ export default {
     
     updateField : function( field, value ) {
       // console.log('updateField',field,value);
+      this.validationErrors = {};
       this.row[field] = value;
     },
     
