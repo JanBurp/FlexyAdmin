@@ -2,9 +2,7 @@
 
 /* --- Settings for data model 'cfg_users' --- Created @ Thu 28 April 2016, 17:02 */
 
-
 $config['table']    = 'cfg_users';
-$config['fields']   = array( 'id', 'str_username', 'gpw_password', 'email_email', 'ip_address', 'salt', 'activation_code', 'forgotten_password_code', 'forgotten_password_time', 'remember_code', 'created_on', 'last_login', 'b_active', 'str_language', 'str_filemanager_view' );
 $config['order_by'] = 'str_username,id';
 
 $config['relations'] = array(
@@ -23,15 +21,13 @@ $config['relations'] = array(
 $config['grid_set'] = array(
   'fields'    => array( 'id','str_username', 'rel_users__groups', 'email_email', 'str_language','b_active'),
   'order_by'  => 'rel_users__groups.id, str_username',
-  'with'      => array( 'many_to_many' => array('rel_users__groups'=>'abstract') ),
+  'with'      => array( 'many_to_many' ),
 );
 
 $config['form_set'] = array(
-  'fields'    => array( 'id','str_username', 'rel_users__groups', 'gpw_password', 'email_email', 'str_language'),
-  'with'      => array( 'many_to_many'=>array('rel_users__groups') ),
   'fieldsets' => array('Users'=>array( 'id','str_username', 'rel_users__groups', 'gpw_password', 'email_email', 'str_language')),
+  'with'      => array( 'many_to_many' ),
 );
-
 
 
 $config['multiple_groups'] = FALSE;
