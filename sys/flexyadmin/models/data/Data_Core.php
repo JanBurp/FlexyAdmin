@@ -693,7 +693,7 @@ Class Data_Core extends CI_Model {
         $rel_table = 'rel_'.remove_prefix($this->settings['table']).'__'.remove_prefix($other_table);
         $this_key  = $this->settings['primary_key'].'_'.remove_prefix($this->settings['table']);
         $other_key = $this->settings['primary_key'].'_'.remove_prefix($other_table);
-        $name  = $other_table;
+        $name      = $rel_table;
         if (in_array($name,$names)) {
           echo( 'Double many_to_many relations, name conflict ');
         }
