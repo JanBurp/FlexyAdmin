@@ -1,5 +1,7 @@
 <?php 
 
+$lang['vue_api_error_401'] = 'Je hebt geen rechten voor dit item';
+
 $lang['vue_cancel']        = "Annuleer";
 $lang['vue_submit']        = "Invoeren";
 $lang['vue_ok']            = "Ok";
