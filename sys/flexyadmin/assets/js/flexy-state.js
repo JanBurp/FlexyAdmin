@@ -190,8 +190,16 @@ export default {
     })
     .catch(function (error) {
       self.hideProgress();
-      // self.addMessage( 'ERROR','danger');
-      console.log('api ERROR <',request,error);
+      if (error.response) {
+        // The request was made, but the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log('api ERROR <',error,error.response,error.config);
+        self.addMessage(error.response.data,'danger');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('api ERROR <', error.message,error.config);
+        self.addMessage(error.response.data,'danger');
+      }
       return {'error':error};
     });
   },
