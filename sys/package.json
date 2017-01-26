@@ -1,8 +1,8 @@
 {
   "name": "FlexyAdmin",
-  "version": "3.5.0-alpha_3",
+  "version": "3.5.0-alpha_4",
   "description": "== FLEXYADMIN == (c) Jan den Besten www.flexyadmin.com",
-  "author": "Jan den Besten",
+  "author": "Jan den Besen",
   "license": "ISC",
   "private": true,
   "main": "index.php",
