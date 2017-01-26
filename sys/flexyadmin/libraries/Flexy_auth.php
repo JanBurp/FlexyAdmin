@@ -535,7 +535,7 @@ class Flexy_auth extends Ion_auth {
       // Create random password and save it to user
       $password_info = $this->_create_new_password($user['user_id']);
   		$set = array(
-  		   'gpw_password'  => $password_info['hash_password'],
+  		   'gpw_password'  => $password_info['password'], // Hash gebeurt in data
   		   'remember_code' => NULL,
   		);
       $successfully_changed_password_in_db = $this->data->table('cfg_users')->where('id',$user['user_id'])->set($set)->update();
