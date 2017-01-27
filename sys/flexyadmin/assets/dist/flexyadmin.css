@@ -5501,17 +5501,11 @@ a > .fa, .btn > .fa {
   border-radius: .25rem; }
 
 /* HELP */
-.flexy-help {
-  display: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 25%;
-  height: 100%;
-  box-shadow: 0 0 0.5rem #292b2c;
-  z-index: 9999; }
-  .flexy-help > .card {
-    height: 100%; }
+.flexy-help .nav-link {
+  cursor: pointer; }
+
+.flexy-help h2 {
+  color: #696; }
 
 /* MASK */
 #mask {

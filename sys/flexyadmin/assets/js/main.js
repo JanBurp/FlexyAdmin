@@ -14,6 +14,7 @@ import Lang             from 'vue-lang'
 
 import flexyState       from './flexy-state.js'
 import FlexyMessages    from './components/flexy-messages.vue'
+import FlexyHelp        from './components/flexy-help.vue'
 
 import FlexyBlocks      from './components/flexy-blocks.vue'
 import FlexyButton      from './components/flexy-button.vue'
@@ -21,9 +22,6 @@ import FlexyModal       from './components/flexy-modal.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
-
-import accordion        from './vue-strap-src/Accordion.vue'
-import panel            from './vue-strap-src/Panel.vue'
 
 
 // TinyMCE Global & Set extra
@@ -64,7 +62,7 @@ var vm = new Vue({
     FlexyPagination,
     FlexyGrid,
     FlexyForm,
-    accordion,panel
+    FlexyHelp
   },
 
   data : {
