@@ -5802,6 +5802,9 @@ a > .fa, .btn > .fa {
 .sortable-fallback {
   display: none; }
 
+.tabs.single-tab > ul.nav-tabs {
+  display: none; }
+
 .form-control-label {
   font-weight: bold;
   padding-top: .25rem;

@@ -108,14 +108,12 @@ class Show extends AdminController {
       
     // Data
     $this->data->table($name);
-    $api = 'row';
     
     // Show form
     $form = array(
       'name'      => $name,
       'title'     => $this->ui->get($name),
       'id'        => $id,
-      'api'       => $api
     );
 	  $this->view_admin( 'vue/form', $form );
 	}
