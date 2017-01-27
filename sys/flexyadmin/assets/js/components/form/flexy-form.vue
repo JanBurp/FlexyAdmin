@@ -23,7 +23,6 @@ export default {
     'title':String,
     'name':String,
     'primary':Number,
-    'api':String,
   },
   
   computed : {
@@ -58,7 +57,7 @@ export default {
       fieldsets: {},
       validationErrors : {},
       isSaving : false,
-      insertForm : [],
+      insertForm : {},
     }
   },
   
@@ -108,13 +107,18 @@ export default {
     apiUrl : function(parts) {
       parts = _.extend( this.apiParts, parts );
       this.apiParts = parts;
-      var url = this.api + '?table='+this.name + '&where='+this.primary + '&as_form=true&settings=form_set';
+      var url = 'row?table='+this.name + '&where='+this.primary + '&as_form=true&settings=form_set';
       return url;
     },
     
     label : function(field) {
       if (_.isUndefined(this.fields[field])) return field;
       return this.fields[field].name;
+    },
+    
+    tabsClass : function() {
+      if (Object.keys(this.fieldsets).length<2) return 'single-tab';
+      return '';
     },
         
     isType : function( type,field ) {
@@ -182,13 +186,18 @@ export default {
       return validation;
     },
     
-    newInsertForm : function(field) {
-      this.insertForm[field] = {
-        show  : true,
-        field : field,
-        table : this.fields[field].options.table,
+    toggleInsertForm : function(field) {
+      if (this.showInsertForm(field)) {
+        this.insertForm[field].show = false;
       }
-      // console.log('newInsertForm',field,this.insertForm[field]);
+      else {
+        this.$set(this.insertForm,field,{
+          show  : true,
+          field : field,
+          table : this.fields[field].options.table,
+        });
+      }
+      console.log('toggleInsertForm',field,this.insertForm);
     },
     
     showInsertForm : function(field) {
@@ -196,6 +205,12 @@ export default {
       if ( !_.isUndefined(this.insertForm[field]) ) show = this.insertForm[field].show;
       // console.log('showInsertForm',field,show);
       return show;
+    },
+    
+    subForm : function(field,property) {
+      console.log('subForm',field,property);
+      if ( _.isUndefined(this.insertForm[field]) ) return '';
+      return this.insertForm[field][property];
     },
     
     cancel : function() {
@@ -330,7 +345,7 @@ export default {
 
   <div class="card-block">
     
-    <tabs navStyle="tabs">
+    <tabs navStyle="tabs" class="tabs" :class="tabsClass()">
       <tab v-for="(fieldset,name) in fieldsets" :header="name">
         <template v-for="field in fieldset">
           <template v-if="!isType('hidden',field)">
@@ -392,14 +407,14 @@ export default {
                   <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
                 </template>
 
-                <div v-show="showInsertForm(field)">
-                  <h1>YES</h1>
+                <div v-if="showInsertForm(field)">
+                  <flexy-form :title="label(field)" :name="subForm(field,'table')" :primary="-1" api=""></flexy-form>
                 </div>
 
               </div>
               
               <div class="col-md-1" v-if="hasInsertRights(field)">
-                <flexy-button @click.native="newInsertForm(field)" icon="plus" class="btn-outline-warning" />
+                <flexy-button @click.native="toggleInsertForm(field)" icon="plus" class="btn-outline-warning" />
               </div>
             </div>
             
