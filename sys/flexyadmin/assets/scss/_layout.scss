@@ -72,16 +72,22 @@
 
 /* HELP */
 .flexy-help {
-  display:none;
-  position:fixed;
-  top:0;
-  right:0;
-  width:25%;
-  height:100%;
-  box-shadow:0 0 .5rem $gray-dark;
-  z-index:9999;
-  >.card {height:100%;}
+  .nav-link {cursor:pointer;}
+  h2 {color:$brand-primary;}
 }
+//.flexy-help {
+//  display:none;
+//  position:fixed;
+//  top:0;
+//  right:0;
+//  width:25%;
+//  height:100%;
+//  box-shadow:0 0 .5rem $gray-dark;
+//  z-index:9999;
+//  >.card {height:100%;}
+//}
+
+
 
 /* MASK */
 #mask {

@@ -22,6 +22,7 @@ class Help extends AdminController {
     ksort($helpFiles);
     
     $help_items = array();
+    // $current_uri = $this->uri->uri_string();
     foreach ($helpFiles as $file => $item) {
       $title=str_replace('_',' ',get_suffix(str_replace('.html','',$item['name']),'__'));
       if (!empty($title)) {
@@ -31,7 +32,7 @@ class Help extends AdminController {
           foreach ($matches[1] as $match) {
             $help=$this->ui->get_help($match);
             if ($help) {
-              $help=h($this->ui->get(remove_prefix($match,'.')),3).$help;
+              $help=h( $this->ui->get(remove_prefix($match,'.')) ).$help;
               $html=str_replace('['.$match.']',$help,$html);
             }
           }
@@ -48,11 +49,11 @@ class Help extends AdminController {
           'title'   => $title,
           'content' => $html,
         );
-
       }
     }
-
-		$content = $this->load->view( 'admin/vue/accordion', array('items'=>$help_items), true );
+    
+		$content = $this->load->view( 'admin/vue/help', array('items'=>$help_items), true );
+    
 		$this->view_admin('',array('content'=>$content));
 	}
 
