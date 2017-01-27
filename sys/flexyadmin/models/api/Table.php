@@ -188,10 +188,14 @@ class Table extends Api_Model {
       }
       else {
         // Geen grid & geen media - where, txt_abstract, options
-        if ( isset($this->args['where']) ) $this->data->where( $this->args['where'] );
-        if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
-        if ( el('as_options',$this->args,false) ) $this->data->select_abstract( TRUE );
-        $items = $this->data->get_result( $this->args['limit'], $this->args['offset'] );
+        if ( el('as_options',$this->args,false) ) {
+          $items = $this->data->get_options();
+        }
+        else {
+          if ( isset($this->args['where']) ) $this->data->where( $this->args['where'] );
+          if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
+          $items = $this->data->get_result( $this->args['limit'], $this->args['offset'] );
+        }
       }
     }
     
