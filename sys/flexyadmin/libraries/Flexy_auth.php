@@ -926,7 +926,6 @@ class Flexy_auth extends Ion_auth {
     // Rechten voor aanpassen van zichzelf als:
     // - cfg_users
     // - user_id === id van huidige user
-    xdebug_break();
     if ($item==$this->tables['users'] and $id==$user_info['user_id'] ) return RIGHTS_EDIT;
 
     // Anders normale rechten:
