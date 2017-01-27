@@ -1,3 +1,8 @@
+// Fieldsets
+.tabs.single-tab {
+  >ul.nav-tabs {display:none;}
+}
+
 // Label styling
 .form-control-label {
   font-weight:bold;
@@ -35,7 +40,6 @@
 }
 
 // Sizes
-
 select:-moz-focusring {
   color: transparent!important;
   text-shadow: 0 0 0 #000!important;
