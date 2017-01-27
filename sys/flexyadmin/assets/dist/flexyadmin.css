@@ -5507,6 +5507,13 @@ a > .fa, .btn > .fa {
 .flexy-help h2 {
   color: #696; }
 
+.flexy-help h3 {
+  margin-top: 2rem;
+  color: #696; }
+
+.flexy-help h3::before {
+  content: '- '; }
+
 /* MASK */
 #mask {
   position: fixed;

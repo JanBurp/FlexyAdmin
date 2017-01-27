@@ -74,6 +74,13 @@
 .flexy-help {
   .nav-link {cursor:pointer;}
   h2 {color:$brand-primary;}
+  h3 {
+    margin-top:2rem;
+    color:$brand-primary;
+  }
+  h3::before {
+    content:'- ';
+  }
 }
 //.flexy-help {
 //  display:none;
