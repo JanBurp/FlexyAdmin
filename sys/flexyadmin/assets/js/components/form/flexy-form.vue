@@ -20,9 +20,13 @@ export default {
   name: 'FlexyForm',
   components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,tab,tabs,datepicker},
   props:{
-    'title':String,
-    'name':String,
-    'primary':Number,
+    'title'   :String,
+    'name'    :String,
+    'primary' :Number,
+    'subform':{
+      type:Boolean,
+      default:false,
+    },
   },
   
   computed : {
@@ -69,7 +73,7 @@ export default {
     
     reloadForm : function(apiParts) {
       var self = this;
-      flexyState.api({
+      return flexyState.api({
         url       : self.apiUrl(apiParts),
       })
       .then(function(response){
@@ -213,6 +217,30 @@ export default {
       return this.insertForm[field][property];
     },
     
+    subFormAdded : function(field,event) {
+      var self = this;
+      self.insertForm[field].show = false;
+      flexyState.api({
+        url : 'table?table='+self.name+'&as_options=true',
+      })
+      .then(function(response){
+        if (!_.isUndefined(response.data)) {
+          console.log('reloaded',field,event);
+          console.log(response.data.data);
+          // Vervang de opties 
+          self.fields[field].options = response.data.data[field];
+          // Selecteer zojuist toegevoegde item
+          self.row[field] = event;
+        }
+        return response;
+      });      
+      // self.reloadForm().then(function(){
+      //   // Selecteer zojuist toegevoegde item
+      //   console.log('reloaded',event);
+      //   self.row[field] = event;
+      // });
+    },
+    
     cancel : function() {
       var self=this;
       if (!this.isSaving) {
@@ -236,6 +264,17 @@ export default {
       if (this.path && this.path!=='false')  url='admin/show/media/' + this.path;
       console.log(this.path,url);
       return url;
+    },
+
+    add : function() {
+      var self=this;
+      if (!this.isSaving) {
+        this.postForm().then(function (response) {
+          if (!response.error) {
+            self.$emit('added',response.data.data.id);
+          }
+        })
+      }
     },
     
     save : function() {
@@ -337,9 +376,10 @@ export default {
   <div class="card-header">
     <h1>{{title}}</h1>
     <div>
-      <flexy-button @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-info"/>
-      <flexy-button @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-warning"/>
-      <flexy-button @click.native="cancel()" icon="long-arrow-left" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
+      <flexy-button v-if="!subform" @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-info"/>
+      <flexy-button v-if="!subform" @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-warning"/>
+      <flexy-button v-if="!subform" @click.native="cancel()" icon="long-arrow-left" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
+      <flexy-button v-if="subform" @click.native="add()" :text="$lang.add" :disabled="isSaving" class="btn-outline-warning"/>
     </div>
   </div>
 
@@ -408,7 +448,7 @@ export default {
                 </template>
 
                 <div v-if="showInsertForm(field)">
-                  <flexy-form :title="label(field)" :name="subForm(field,'table')" :primary="-1" api=""></flexy-form>
+                  <flexy-form :title="label(field)" :name="subForm(field,'table')" :primary="-1" :subform="true" @added="subFormAdded(field,$event)"></flexy-form>
                 </div>
 
               </div>

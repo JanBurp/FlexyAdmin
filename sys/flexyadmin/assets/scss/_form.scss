@@ -17,6 +17,13 @@
   padding-bottom:.25rem;
 }
 
+.form-group.row {
+  .col-md-1 {
+    padding-top:.5rem;
+    * {float:right;}
+  }
+}
+
 // Input Border color
 .form-group.row {
   input, select, textarea, .mce-tinymce, .form-control, .mediapicker {

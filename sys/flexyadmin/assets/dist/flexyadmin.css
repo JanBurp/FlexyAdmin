@@ -5817,6 +5817,11 @@ a > .fa, .btn > .fa {
 .form-control {
   padding-bottom: .25rem; }
 
+.form-group.row .col-md-1 {
+  padding-top: .5rem; }
+  .form-group.row .col-md-1 * {
+    float: right; }
+
 .form-group.row input, .form-group.row select, .form-group.row textarea, .form-group.row .mce-tinymce, .form-group.row .form-control, .form-group.row .mediapicker {
   border-color: #636c72 !important; }
 
