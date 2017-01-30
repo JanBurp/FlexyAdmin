@@ -212,10 +212,10 @@ function &DB($params = '', $query_builder_override = NULL)
   // $driver = 'CI_DB_'.$params['dbdriver'].'_driver';
   // $DB = new $driver($params);
 
-  // JdB, changes from here. 2015-05-02
+  // JdB, changes from here. 2015-05-02 - Loading old DB driver
   $my_driver = config_item('subclass_prefix').'DB_mysqli_driver';
   $my_driver_file = APPPATH.'core/'.$my_driver.'.php';
-  if (file_exists($my_driver_file)) {
+  if (config_item('USE_OLD_DB') and file_exists($my_driver_file)) {
     require_once($my_driver_file);
   	$driver = 'MY_DB_'.$params['dbdriver'].'_driver';
   }
