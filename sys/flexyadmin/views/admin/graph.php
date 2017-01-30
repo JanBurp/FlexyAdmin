@@ -1,44 +1,30 @@
-<table class="table table-bordered <?=$class?>">
+<div class="card grid graph">
+  <h1 class="card-header"><?=$title?></h1>
 
-	<thead>
-		<tr class="caption <?=$caption["class"];?>">
-			<td colspan="100">
-				<table>
-					<thead>
-						<tr>
-							<?php foreach($caption["row"] as $cell): ?>
-								<td class="<?=$cell["class"];?>"><?=$cell["cell"];?></td>
-							<?php endforeach; ?>
-						</tr>
-					</thead>
-				</table>
-			</td>
-		</tr>
-	</thead>
+  <div class="card-block table-responsive">
+    <table class="table table-bordered table-hover table-sm">
 
-	<tbody>
-	<?php 
-	if (isset($rows) and !empty($rows)) {
-		?><tr><?php 
-		foreach ($rows as $key => $value) {
-			$row=$value['row'];
-			?><td class='bar <?=$value['class']?>'>
-				<div class="graphBarTop" style="height:<?=110-$row[1]['percentage']?>px">
-				</div>
-				<div class="graphBar" style="height:<?=$row[1]['percentage']?>px">
-					<span class="verticalText" title="<?=$row[1]['value'];?>"><?=$row[1]['value'];?></span>
-				</div>
-			</td><?php 
-		}
-		?></tr>
-		<tr><?php 
-		foreach ($rows as $key => $value) {
-			$row=$value['row'];
-			?><td class='<?=$value['class']?>'><?=$row[0]['value'];?></td><?php 
-		}
-		?></tr><?php 
-	}
-	?>
-	</tbody>
-
-</table>
+    	<tbody>
+    	<?php if (isset($rows) and !empty($rows)): ?>
+    	  <tr>
+          <?php foreach ($rows as $key => $value): ?>
+    			<td class='bar'>
+    				<div class="graph-bar-top" style="height:<?=110-$value['row'][1]['percentage']?>px"></div>
+    				<div class="graph-bar" style="height:<?=$value['row'][1]['percentage']?>px">
+    					<span class="vertical-text" title="<?=$value['row'][1]['value'];?>"><?=$value['row'][1]['value'];?></span>
+    				</div>
+    			</td>
+          <?php endforeach ?>
+    		</tr>
+    		<tr>
+          <?php foreach ($rows as $key => $value): ?>
+            <td class='<?=$value['class']?>'><?=$value['row'][0]['value'];?></td>
+          <?php endforeach ?>
+    		</tr>
+      <?php endif ?>
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+    

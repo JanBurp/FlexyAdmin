@@ -12,7 +12,7 @@
         <?php foreach ($data as $id => $row): ?>
           <tr data-id="<?=$id?>">
             <?php foreach ($row as $key => $value): ?>
-              <td data-id="<?=$id?>" data-field="<?=$key?>" data-value="<?=$value?>"><?=$value?></td>
+              <td data-id="<?=$id?>" data-field="<?=$key?>" data-value="<?=strip_tags($value)?>"><?=$value?></td>
             <?php endforeach ?>
           </tr>
         <?php endforeach ?>
