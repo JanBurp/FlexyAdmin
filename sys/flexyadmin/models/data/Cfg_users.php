@@ -92,13 +92,14 @@ Class cfg_users extends Data_Core {
     /**
      * Haal huidige waarden op voor email & username om te vergelijken
      */
+    $current = FALSE;
     $select = array('str_username','email_email');
     $select = array_intersect($select,array_keys($this->tm_set));
     if (!empty($select)) {
       $id = $this->tm_set[$this->settings['primary_key']];
       $sql = 'SELECT `'.implode('`,`',$select).'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = '.$id;
       $query = $this->db->query($sql);
-      $current =$query->row_array();
+      $current = $query->row_array();
     }
     
     foreach ( $this->tm_set as $key => $value ) {
