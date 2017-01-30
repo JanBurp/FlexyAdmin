@@ -15,7 +15,14 @@ class AdminController extends BasicController {
 
   private $view_data            = array();
   private $current_uri          = '';
-  private $split_uri_table = array( 'tbl_site','cfg_users' );
+  private $keep_uris            = array(
+    'admin/show/form/tbl_site',
+    'admin/show/form/cfg_users'
+  );
+  private $replace_uris         = array(
+    '#admin/plugin/stats/.*#'   => 'admin/plugin/stats/',
+    '#admin/show/form/(.*)/.*#' => 'admin/show/grid/$1',
+  );
   
   /**
    * Alle language files die nodig zijn
@@ -40,15 +47,16 @@ class AdminController extends BasicController {
 		}
     
     // Uri voor current menu item
-    $this->current_uri = $this->uri->segment_array();
-    if (count($this->current_uri)>=4 and !in_array($this->current_uri[4],$this->split_uri_table)) {
-      $this->current_uri = array_slice($this->current_uri,0,4);
-      $this->current_uri = implode('/',$this->current_uri);
-      $this->current_uri = str_replace('/show/form/','/show/grid/',$this->current_uri);
+    $this->current_uri = uri_string();
+    $parts = $this->uri->segment_array();
+    $parts = array_slice($parts,0,4);
+    $parts = implode('/',$parts);
+    if ( !in_array($parts,$this->keep_uris) ) {
+      foreach ($this->replace_uris as $search => $replace) {
+        $this->current_uri = preg_replace($search,$replace,$this->current_uri);
+      }
     }
-    else {
-      $this->current_uri = implode('/',$this->current_uri);
-    }
+
 	}
   
   // public function _show_message() {
