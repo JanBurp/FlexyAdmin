@@ -207,18 +207,14 @@ class Db extends AdminController {
 				$this->lang->load('form');
 				$form=new form($this->config->item('API_db_restore'));
 				$data=array( "userfile"	=> array("type"=>"file","label"=>lang('file')) );
-										 // "sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) );
 				$form->set_data($data,lang('db_restore'));
 				$this->_add_content($form->render());
 			}
 			else {
-				// $sure=$this->input->post('sure');
-				// if ($sure and ($sure==$this->cfg->get('CFG_configurations','key'))) {
-					$sql=$this->_upload_sql();
-					if ($sql) {
-						$this->_sql($sql,"Restore","Restoring ...");			
-					}
-				// }
+				$sql=$this->_upload_sql();
+				if ($sql) {
+					$this->_sql($sql,"Restore","Restoring ...");			
+				}
 			}
 		}
 		$this->view_admin(lang('db_restore'));
@@ -361,9 +357,7 @@ class Db extends AdminController {
 					$this->lang->load('help');
 					$this->lang->load('form');
 					$form=new form($this->config->item('API_db_sql'));
-					$data=array( 	"sql" => array("type"=>"textarea","value"=>$sql),
-					 							"sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) // insert license here!!
-											);
+					$data=array( "sql" => array("type"=>"textarea","value"=>$sql)  );
 					$form->set_data($data,"Are you sure to run this Query?");
 					$this->_add_content($form->render());
 				}

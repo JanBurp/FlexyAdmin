@@ -21,7 +21,7 @@ class Search_replace extends CI_Model {
 		// This is for sites with uri's to different languages
 		$languages=$this->config->item('languages');
 		if (count($languages)>1) {
-			$autoMenuCfg=$this->cfg->get('cfg_auto_menu');
+			$autoMenuCfg = $this->data->table('cfg_auto_menu')->get_result();
 			if ($autoMenuCfg) {
 				$languageCfg=find_row_by_value($autoMenuCfg,'split by language');
 				if (isset($languageCfg['str_parameters'])) {
@@ -280,6 +280,7 @@ class Search_replace extends CI_Model {
 
   /**
    * Vervangt bestandsnamen in specifieke tabel/veld
+   * TODO: Dit moet anders.... opties zit ergens anders nu.
    *
    * @param string $table 
    * @param string $field 
@@ -290,7 +291,7 @@ class Search_replace extends CI_Model {
    */
   public function media_in($table,$field,$search,$replace='') {
 		$result=array();
-    $path=$this->cfg->get('cfg_media_info',$table.'.'.$field,'path');
+    $path = $this->cfg->get('cfg_media_info',$table.'.'.$field,'path'); // TODO
     if (!empty($path)) $path.='/';
     // strace_($path);
     

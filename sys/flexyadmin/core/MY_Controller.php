@@ -129,9 +129,6 @@ class MY_Controller extends CI_Controller {
 
 	private function _init_flexy_admin($isAdmin=false) {
     if ($this->config->item('PROFILER')) $this->output->enable_profiler(TRUE);
-    // load db config
-		$this->load->model('cfg');
-		$this->cfg->set_if_admin($isAdmin);
 	}
   
   /**

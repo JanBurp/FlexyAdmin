@@ -17,8 +17,7 @@ class Plugin_resize_images extends Plugin {
       $maps=array($args[0]);
     }
     else {
-      $imgInfo=$this->CI->cfg->get('cfg_img_info');
-      $maps=array_keys($imgInfo);
+      $maps=$this->CI->assets->get_assets_folders(FALSE);
     }
 
     $actiondata=array();

@@ -101,7 +101,7 @@ class DataTest extends CITestCase {
     $this->CI->data->table( 'tbl_links' );
     // ->get_abstract_fields()
     $abstract_fields = $this->CI->data->get_abstract_fields();
-    $this->assertEquals( array('str_title'), $abstract_fields );
+    $this->assertEquals( array('str_title','url_url'), $abstract_fields );
   }
 
 

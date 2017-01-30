@@ -21,7 +21,7 @@ class Plugin_links extends Plugin {
 	}
 	
 	function _after_delete() {
-		$linkTable=$this->CI->cfg->get('CFG_configurations','table');
+		$linkTable='tbl_links';
 		$menuTable=get_menu_table();
 		if ($this->table==$linkTable or $this->table==$menuTable) {
 			$this->newData=array();
