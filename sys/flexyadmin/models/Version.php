@@ -38,13 +38,14 @@ class Version extends CI_Model {
     exec('git rev-list --all --count',$output);
     if (!empty($output)) {
       $this->revision = current($output);
+      if ($this->revision<3000) $this->revision = '?';
       // commit hash
       exec('git rev-parse --verify HEAD 2> /dev/null', $output);
       if (!empty($output)) {
         $this->hash = substr($output[1],0,8);
       }
       // date last commit
-      exec("git show", $output);
+      exec("git log -1", $output);
       if ( $key=array_preg_search('^Date:\s',$output) ) {
         $key=current($key);
         $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[$key])))));
