@@ -137,10 +137,10 @@ class MY_Form_validation extends CI_Form_validation {
    */
   public function get_validations($table,$field,$validation=array(),$as_array=FALSE) {
     $validation[]=$this->_get_flexy_cfg_validation($field);
-    $validation[]=$this->_get_global_cfg_validation($field);
-		$validation[]=$this->_get_cfg_validation($table,$field);
-		$validation[]=$this->_get_db_validation($table,$field);
-    $validation[]=$this->_get_db_options_validation($table,$field);
+    // $validation[]=$this->_get_global_cfg_validation($field);
+    // $validation[]=$this->_get_cfg_validation($table,$field);
+    $validation[]=$this->_get_db_validation($table,$field);
+    // $validation[]=$this->_get_db_options_validation($table,$field);
 		$validations=$this->combine_validations($validation,$as_array);
     // trace_(['get_validations',$table,$field,$validation,$validations]);
     return $validations;
@@ -167,36 +167,36 @@ class MY_Form_validation extends CI_Form_validation {
 	}
 
   
-  /**
-   * Geeft validation rules die voor globaal voor een veld zijn ingesteld in cfg_field_info
-   *
-   * @param string $field 
-   * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
-   * @author Jan den Besten
-   */
-	private function _get_global_cfg_validation($field) {
-    $global_validation = array(
-      'rules'		=> $this->CI->cfg->get('CFG_field',"*.".$field,'str_validation_rules'),
-			'params'	=> $this->CI->cfg->get('CFG_field',"*.".$field,'str_validation_parameters')
-    );
-    return $global_validation;
-	}
+  //   /**
+  //    * Geeft validation rules die voor globaal voor een veld zijn ingesteld in cfg_field_info
+  //    *
+  //    * @param string $field
+  //    * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
+  //    * @author Jan den Besten
+  //    */
+  // private function _get_global_cfg_validation($field) {
+  //     $global_validation = array(
+  //       'rules'    => $this->CI->cfg->get('CFG_field',"*.".$field,'str_validation_rules'),
+  //     'params'  => $this->CI->cfg->get('CFG_field',"*.".$field,'str_validation_parameters')
+  //     );
+  //     return $global_validation;
+  // }
   
-  /**
-   * Geeft validation rules die voor een veld ingesteld zijn in cfg_field_info
-   *
-   * @param string $table 
-   * @param string $field 
-   * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
-   * @author Jan den Besten
-   */
-	private function _get_cfg_validation($table,$field) {
-    $validation = array(
-      'rules'		=> $this->CI->cfg->get('CFG_field',$table.".".$field,'str_validation_rules'),
-			'params'	=> $this->CI->cfg->get('CFG_field',$table.".".$field,'str_validation_parameters')
-    );
-    return $validation;
-	}
+  //   /**
+  //    * Geeft validation rules die voor een veld ingesteld zijn in cfg_field_info
+  //    *
+  //    * @param string $table
+  //    * @param string $field
+  //    * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
+  //    * @author Jan den Besten
+  //    */
+  // private function _get_cfg_validation($table,$field) {
+  //     $validation = array(
+  //       'rules'    => $this->CI->cfg->get('CFG_field',$table.".".$field,'str_validation_rules'),
+  //     'params'  => $this->CI->cfg->get('CFG_field',$table.".".$field,'str_validation_parameters')
+  //     );
+  //     return $validation;
+  // }
   
   /**
    * Geeft validation rules die standaard uit de veld informatie uit database gehaald kan worden.
@@ -227,27 +227,27 @@ class MY_Form_validation extends CI_Form_validation {
 	}
   
   
-  /**
-   * Geeft validation rule 'is_option[]' als het gegeven veld opties heeft ingesteld
-   *
-   * @param string $table 
-   * @param string $field 
-   * @return string
-   * @author Jan den Besten
-   */
-  private function _get_db_options_validation($table,$field) {
-    $validation=array();
-		$options=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
-    if ($options) {
-      $multiple=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'b_multi_options');
-      if ($multiple)
-        $validation['rules']='valid_options';
-      else
-        $validation['rules']='valid_option';
-      $validation['params']=str_replace('|',',',$options);
-    }
-    return $validation;
-  }
+  // /**
+  //  * Geeft validation rule 'is_option[]' als het gegeven veld opties heeft ingesteld
+  //  *
+  //  * @param string $table
+  //  * @param string $field
+  //  * @return string
+  //  * @author Jan den Besten
+  //  */
+  // private function _get_db_options_validation($table,$field) {
+  //   $validation=array();
+  //     $options=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
+  //   if ($options) {
+  //     $multiple=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'b_multi_options');
+  //     if ($multiple)
+  //       $validation['rules']='valid_options';
+  //     else
+  //       $validation['rules']='valid_option';
+  //     $validation['params']=str_replace('|',',',$options);
+  //   }
+  //   return $validation;
+  // }
   
   
   /**

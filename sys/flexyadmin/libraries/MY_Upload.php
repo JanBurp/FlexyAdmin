@@ -198,6 +198,7 @@ class MY_Upload extends CI_Upload {
   
   /**
    * Vult velden in database automatisch aan de hand van instellingen in **Media Info**
+   * TODO: database model maken voor dit soort dingen
    *
    * @param string $image Bestand
    * @param string $path Pad naar bestand
@@ -205,37 +206,37 @@ class MY_Upload extends CI_Upload {
    * @author Jan den Besten
    */
 	public function auto_fill_fields($image,$path) {
-		$uPath=str_replace($this->_CI->config->item('ASSETS'),"",$path);
-		$cfg=$this->_CI->cfg->get('CFG_media_info',$uPath,'fields_autofill_fields');
-		if (!empty($cfg)) {
-			$fields=explode('|',$cfg);
-			if (count($fields)>0) {
-				foreach ($fields as $field) {
-					$table=get_prefix($field,'.');
-					$field=remove_prefix($field,'.');
-					$fieldPre=get_prefix($field);
-					if (empty($fieldPre)) $fieldPre=$field;
-					$cleanName=str_replace('_',' ',get_file_without_extension($image));
-					// TODO: database model maken voor dit soort dingen
-					switch ($fieldPre) {
-						case 'user':
-							$this->_CI->db->set( 'user', $this->_CI->flexy_auth->get_user()['id']);
-							break;
-						case 'media':
-						case 'medias':
-							$this->_CI->db->set($field,$image);
-							break;
-						case 'dat':
-							$this->_CI->db->set($field,date("Y-m-d"));
-							break;
-						case 'str':
-							$this->_CI->db->set($field,$cleanName);
-							break;
-					}
-				}
-        $this->_CI->db->insert($table);
-			}
-		}
+    // $uPath=str_replace($this->_CI->config->item('ASSETS'),"",$path);
+    // $cfg=$this->_CI->cfg->get('CFG_media_info',$uPath,'fields_autofill_fields');
+    // if (!empty($cfg)) {
+    //   $fields=explode('|',$cfg);
+    //   if (count($fields)>0) {
+    //     foreach ($fields as $field) {
+    //       $table=get_prefix($field,'.');
+    //       $field=remove_prefix($field,'.');
+    //       $fieldPre=get_prefix($field);
+    //       if (empty($fieldPre)) $fieldPre=$field;
+    //       $cleanName=str_replace('_',' ',get_file_without_extension($image));
+    //       // TODO: database model maken voor dit soort dingen
+    //       switch ($fieldPre) {
+    //         case 'user':
+    //           $this->_CI->db->set( 'user', $this->_CI->flexy_auth->get_user()['id']);
+    //           break;
+    //         case 'media':
+    //         case 'medias':
+    //           $this->_CI->db->set($field,$image);
+    //           break;
+    //         case 'dat':
+    //           $this->_CI->db->set($field,date("Y-m-d"));
+    //           break;
+    //         case 'str':
+    //           $this->_CI->db->set($field,$cleanName);
+    //           break;
+    //       }
+    //     }
+    //         $this->_CI->db->insert($table);
+    //   }
+    // }
 		return TRUE;
 	}
 	

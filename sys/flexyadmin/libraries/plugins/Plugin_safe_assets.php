@@ -173,7 +173,7 @@ class Plugin_safe_assets extends Plugin {
 		foreach ($maps as $map => $value) {
 			$path=$assets.$map;
 			if (!isset($mapsToClean[$path])) {
-				$filetypes=str_replace(',','|',$this->CI->cfg->get('cfg_media_info',$map,'str_types'));
+				$filetypes = str_replace(',','|', $this->CI->assets->get_folder_settings(array($path,'types')));
 				$mapsToClean[$path]=$filetypes;
 			}
 		}
@@ -204,7 +204,7 @@ class Plugin_safe_assets extends Plugin {
 	function _create_htaccess($path,$types) {
 		$types=strtolower($types).'|'.strtoupper($types);
     $map=get_suffix($path,'/');
-    $serve_restricted=$this->CI->cfg->get('cfg_media_info',$map,'b_serve_restricted');
+    $serve_restricted = $this->CI->assets->get_folder_settings(array($map,'serve_restricted'));
     if ($serve_restricted) $types='';
 		$htaccess="Order Allow,Deny\nDeny from all\n<Files ~ \"\.(".$types.")$\">\nAllow from all\n</Files>\n";
 		if (has_string('htc',$types)) {

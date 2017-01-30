@@ -13,3 +13,15 @@ $config['options'] = array(
     'data' => array(''=>'','forms.contact'=>'forms.contact','example'=>'example'),
   ),
 );
+
+
+$config['grid_set'] = array(
+  'fields' => array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module'),
+);
+
+$config['form_set'] = array(
+  'fieldsets' => array(
+    'tbl_menu' => array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible'),
+    'Extra'    => array('str_module','stx_description','str_keywords'),
+  ),
+);
