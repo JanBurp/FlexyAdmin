@@ -5802,6 +5802,13 @@ a > .fa, .btn > .fa {
 .sortable-fallback {
   display: none; }
 
+/* GRAPH */
+.graph .bar {
+  padding: 0; }
+
+.graph .graph-bar {
+  background-color: #D90; }
+
 .tabs.single-tab > ul.nav-tabs {
   display: none; }
 

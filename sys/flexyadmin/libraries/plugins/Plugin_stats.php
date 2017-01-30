@@ -21,7 +21,7 @@ class Plugin_stats extends Plugin {
   private $keep = 93; // days to keep log in database (3 months)
 
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 		$this->CI->load->helper('date');
 		$this->CI->load->model("grid");
@@ -30,7 +30,7 @@ class Plugin_stats extends Plugin {
 	}
 
 	
-	function _admin_api($args=NULL) {
+	public function _admin_api($args=NULL) {
 		if (isset($args[0])) $year=$args[0];
 		if (isset($args[1])) $month=$args[1];
 
@@ -137,7 +137,7 @@ class Plugin_stats extends Plugin {
     return $this->content;
 	}
 
-	function _lang($stats) {
+	private function _lang($stats) {
 		if (is_array($stats)) {
 			foreach ($stats as $id => $row) {
 				foreach ($row as $key => $value) {
@@ -149,34 +149,32 @@ class Plugin_stats extends Plugin {
 		return $stats;
 	}
 
-	function _add_graph($stats,$title,$s='') {
+	private function _add_graph($stats,$title,$s='') {
 		if (!empty($stats)) {
 			$graph=new graph();
 			$graph->set_data($stats,langp('stats_'.$title,$s));
 			$graph->set_max(find_max($stats,'views'));
 			$renderGraph=$graph->render("html","","grid graph stats");
 			$data=$this->CI->load->view("admin/graph",$renderGraph,true);
+  		$this->add_content($data);
+  		$this->add_content(br());
 		}
-		else $data="";
-		$this->add_content($data);
-		$this->add_content(br());
 	}
 	
-	function _add_table($stats,$title,$s='') {
+	private function _add_table($stats,$title,$s='') {
 		if (!empty($stats) and is_array($stats)) {
 			$stats=$this->_lang($stats);
-			$grid=new grid();
-			$grid->set_data($stats,langp('stats_'.$title,$s));
-			$renderGrid=$grid->render("html","","grid home");
-			$data["stats"]=$this->CI->load->view("admin/grid",$renderGrid,true);
+      $grid=new grid();
+      $grid->set_data($stats,langp('stats_'.$title,$s));
+      $renderGrid=$grid->render("html","","grid home");
+      $data["stats"]=$this->CI->load->view("admin/grid",$renderGrid,true);
+      $this->add_content($data["stats"]);
+      $this->add_content(br());
 		}
-		else $data["stats"]="";
-		$this->add_content($data["stats"]);		
-		$this->add_content(br());
 	}
 
 
-	function _show_stat($type) {
+	private function _show_stat($type) {
 		$data=$this->Data[$type];
 		switch ($type) {
 			case 'this_year':
@@ -193,27 +191,27 @@ class Plugin_stats extends Plugin {
 				$this->_add_graph($data,$type,$this->MonthTxt);
 				break;
 
-			case 'top_10_referers':
-			case 'top_10_pages':
-				if ($type=='top_10_referers') {
-					foreach ($data as $key => $value) {
-						$data[$key]['referer']=anchor($value['referer'],str_replace('http://','',$value['referer']),array('target'=>'_blank'));
-					}
-				}
-				else {
-					foreach ($data as $key => $value) {
-            if (!is_string($value['page'])) $value['page']='';
-            $data[$key]['page']=anchor($value['page'],$value['page'],array('target'=>'_blank'));
-					}
-				}
-			case 'top_10_google':
-			case 'top_10_browsers':
-			case 'top_10_platform':
+      case 'top_10_referers':
+      case 'top_10_pages':
+        if ($type=='top_10_referers') {
+          foreach ($data as $key => $value) {
+            $data[$key]['referer']=anchor($value['referer'],str_replace('http://','',$value['referer']),array('target'=>'_blank'));
+          }
+        }
+        else {
+          foreach ($data as $key => $value) {
+                if (!is_string($value['page'])) $value['page']='';
+                $data[$key]['page']=anchor($value['page'],$value['page'],array('target'=>'_blank'));
+          }
+        }
+      case 'top_10_google':
+      case 'top_10_browsers':
+      case 'top_10_platform':
         foreach ($data as $key => $value) {
           if (isset($value['search']) and !is_string($value['search'])) $data[$key]['search']='';
         }
-				$this->_add_table($data,$type,$this->MonthTxt);
-				break;
+        $this->_add_table($data,$type,$this->MonthTxt);
+        break;
 		}
 		
 	}
@@ -226,18 +224,18 @@ class Plugin_stats extends Plugin {
   //   $this->add_content(anchor($xmlMonth));
   // }
 
-	function _xmlYearFile($year='') {
+	private function _xmlYearFile($year='') {
 		if (empty($year)) $year=$this->Data['year'];
 		return $this->CI->config->item('STATS').$year.'.xml';
 	}
 
-	function _xmlMonthFile($month='',$year='') {
+	private function _xmlMonthFile($month='',$year='') {
 		if (empty($year)) 	$year=$this->Data['year'];
 		if (empty($month)) 	$month=$this->Data['month'];
 		return $this->CI->config->item('STATS').$year.'-'.sprintf('%02d',$month).'.xml';
 	}
 
-	function _stat2xml($stats=NULL) {
+	private function _stat2xml($stats=NULL) {
 		if (empty($stats)) $stats=$this->Data;
 
 		$xmlYearFile=$this->_xmlYearFile($stats['year']);
@@ -254,7 +252,7 @@ class Plugin_stats extends Plugin {
 		write_file($xmlMonthFile, $xmlMonth);
 	}
 
-  function _clean_id_bug($a) {
+  private function _clean_id_bug($a) {
     foreach ($a as $key => $value) {
       if ($key=='id' and count($a)==1) return $this->_clean_id_bug($value);
       if ($key=='id' and !is_array($value)) unset($a['id']);
@@ -263,7 +261,7 @@ class Plugin_stats extends Plugin {
     return $a;
   }
 
-	function _stat_data_from_xml() {
+	private function _stat_data_from_xml() {
 		$xmlYearFile=$this->_xmlYearFile();
 		$yearData=array();
 		if (file_exists($xmlYearFile)) {
@@ -320,7 +318,7 @@ class Plugin_stats extends Plugin {
 		return $xmlData;
 	}
 
-	function _stat_data_from_db($type,$month='',$year='') {
+	private function _stat_data_from_db($type,$month='',$year='') {
     // if ($this->Total<=0) return array();
 		if (empty($month))	$month=$this->Month;
 		if (empty($year))		$year=$this->Year;
@@ -456,13 +454,6 @@ class Plugin_stats extends Plugin {
 		return $data;
 	}
 
-
-	function _get_show_type() {
-		return 'grid stats';
-	}
-
-
-	
 }
 
 ?>

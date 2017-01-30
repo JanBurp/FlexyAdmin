@@ -288,7 +288,7 @@ class Grid extends CI_Model {
     $current_ids=explode('_',$this->currentId);
 
 		$renderData=array();
-    $renderData['table']=$table;
+    $renderData['title']=current($this->captions)['cell'];
 
 		if ($this->pagin) {
 			$this->pagination->initialize($this->pagin);
@@ -306,53 +306,14 @@ class Grid extends CI_Model {
 		$renderData["caption"]["class"]="$table $class";
 		$renderData["caption"]["row"]=$this->captions;
 
-		$renderData["heading"]["class"]="$table $class";
+		$renderData["headers"]=array();
     $firstOrder=remove_suffix($this->order[0],'.');
 		foreach($this->headings as $name=>$heading) {
-			$orderClass='';
-			if ($firstOrder==$name) $orderClass=' headerSortDown';
-			if ($firstOrder=='_'.$name) $orderClass=' headerSortUp';
-			if ($name=='id') $orderClass.=' edit';
-      $prefix=get_prefix($name);
-      if (strpos($name,'.')!==FALSE) $prefix=get_prefix(get_suffix($name,'.'));
-      if ($prefix=='id' and $name!='id') $prefix='id_';
-			$renderData["heading"]["row"][]=array(	"class"	=>"$table $name ".$prefix." $class ".alternator("oddcol","evencol").$orderClass, "cell"	=> $heading );
+			$renderData["headers"][]=$name;
 		}
 
 		$data=$this->rows;
-		$alt="";
-		if (is_array($data)) {
-			foreach($data as $id=>$row) {
-				$currClass="";
-				if ($this->currentId!=NULL and in_array($id,$current_ids)) $currClass="current ";
-				if ($alt=="evenrow") $alt="oddrow"; else $alt="evenrow";
-				$tableRowClass="$table id$id $class $currClass $alt";
-				$tableRowId=$id;
-
-				$tableCells=array();
-				$cn=0;
-				foreach($row as $name=>$cell) {
-          $cellClass='';
-					// if (empty($cell)) $cell="&nbsp;";
-					$pre=get_prefix($name);
-          if (strpos($name,'.')!==FALSE) $pre=get_prefix(get_suffix($name,'.'));
-					if ($pre==$name) $pre="";
-          if ($pre=='id' and $pre!=$name) $pre='id_';
-          $cell_value=$cell;
-          if (is_array($cell)) {
-            $cell_value=$cell['value'];
-            if (el('editable',$cell)) $cellClass.=' editable';
-          }
-					$tableCells[]=array(	"class"	=> "$table id$id $name $pre $class $currClass nr$cn $cellClass ".alternator("oddcol","evencol"), 
-																"cell"	=> $cell_value );
-					$cn++;
-				}
-
-				$renderData["rows"][]=array(	"class"	=> $tableRowClass,
-																"id"		=> $tableRowId,
-																"row"	=> $tableCells );
-			}
-		}
+    $renderData['data']=$data;
 		
 		log_('info',"grid: rendering");
 		$this->renderData=$renderData;
