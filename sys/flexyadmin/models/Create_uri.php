@@ -112,9 +112,9 @@ class Create_uri extends CI_Model {
  			$uri_source=$this->table_data[$this->source_field];
  		else
  			$uri_source=$this->table_data['id'];
- 		$createUri=true;
 
-    if ($this->cfg->get('CFG_table',$this->table,'b_freeze_uris')) $createUri=false;
+    $createUri =  $this->data->table($this->table)->get_setting('update_uris');
+    
     if (isset($this->table_data['b_freeze_uri']) and $this->table_data['b_freeze_uri']) $createUri=false;
     if (empty($uri)) $createUri=true;
     if ($overrule) $createUri=true;

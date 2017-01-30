@@ -41,8 +41,7 @@
 				if (isset($_FILES[$key]['name']) and !empty($_FILES[$key]['name']) ) {
           // Upload het bestand
           if (empty($this->settings['allowed_types'])) {
-    				$mediaCfg=$this->cfg->get('CFG_media_info',$this->settings['upload_path']);
-    				$this->settings['allowed_types']=$mediaCfg['str_types'];
+    				$this->settings['allowed_types'] = $this->assets->get_folder_settings(array($this->settings['upload_path'],'str_types'));
           }
 					$this->upload->initialize( $this->settings );
 					$result=$this->upload->upload_file($key);

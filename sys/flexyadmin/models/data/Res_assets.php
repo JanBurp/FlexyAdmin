@@ -87,35 +87,35 @@ Class Res_assets extends Data_Core {
         $assets[$path] = array_merge($assets[$path],$this->default_assets_sizes);
       }
       // Depricated: uit cfg_media_info & cfg_img_info
-      $path_info = $this->cfg->get( 'cfg_media_info', $path );
-      if ($path_info) {
-        $assets[$path]['types']            = el('str_types',$path_info, $assets[$path]['types']);
-        $assets[$path]['encrypt_name']     = el('b_encrypt_name',$path_info, $assets[$path]['encrypt_name']);
-        $assets[$path]['media_fields']     = el('fields_media_fields',$path_info, $assets[$path]['media_fields']);
-        $assets[$path]['autofill']         = el('str_autofill',$path_info, $assets[$path]['autofill']);
-        $assets[$path]['autofill_fields']  = el('fields_autofill_fields',$path_info, $assets[$path]['autofill_fields']);
-        $assets[$path]['in_link_list']     = el('b_in_link_list',$path_info, $assets[$path]['in_link_list']);
-        $assets[$path]['user_restricted']  = el('b_user_restricted',$path_info, $assets[$path]['user_restricted']);
-        $assets[$path]['serve_restricted'] = el('b_serve_restricted',$path_info, $assets[$path]['serve_restricted']);
-      }
-      $img_info = $this->cfg->get( 'cfg_img_info', $path );
-      if ($img_info) {
-        $assets[$path]['min_width']  = el('int_min_width',$img_info, $assets[$path]['min_width']);
-        $assets[$path]['min_height'] = el('int_min_height',$img_info, $assets[$path]['min_height']);
-        $assets[$path]['resize_img'] = el('b_resize_img',$img_info, $assets[$path]['resize_img']);
-        $assets[$path]['img_width']  = el('int_img_width',$img_info, $assets[$path]['img_width']);
-        $assets[$path]['img_height'] = el('int_img_height',$img_info, $assets[$path]['img_height']);
-        $assets[$path]['create_1']   = el('b_create_1',$img_info, $assets[$path]['create_1']);
-        $assets[$path]['width_1']    = el('int_width_1',$img_info, $assets[$path]['width_1']);
-        $assets[$path]['height_1']   = el('int_height_1',$img_info, $assets[$path]['height_1']);
-        $assets[$path]['prefix_1']   = el('str_prefix_1',$img_info, $assets[$path]['prefix_1']);
-        $assets[$path]['suffix_1']   = el('str_suffix_1',$img_info, $assets[$path]['suffix_1']);
-        $assets[$path]['create_2']   = el('b_create_2',$img_info, $assets[$path]['create_2']);
-        $assets[$path]['width_2']    = el('int_width_2',$img_info, $assets[$path]['width_2']);
-        $assets[$path]['height_2']   = el('int_height_2',$img_info, $assets[$path]['height_2']);
-        $assets[$path]['prefix_2']   = el('str_prefix_2',$img_info, $assets[$path]['prefix_2']);
-        $assets[$path]['suffix_2']   = el('str_suffix_2',$img_info, $assets[$path]['suffix_2']);
-      }
+      // $path_info = $this->cfg->get( 'cfg_media_info', $path );
+      // if ($path_info) {
+      //   $assets[$path]['types']            = el('str_types',$path_info, $assets[$path]['types']);
+      //   $assets[$path]['encrypt_name']     = el('b_encrypt_name',$path_info, $assets[$path]['encrypt_name']);
+      //   $assets[$path]['media_fields']     = el('fields_media_fields',$path_info, $assets[$path]['media_fields']);
+      //   $assets[$path]['autofill']         = el('str_autofill',$path_info, $assets[$path]['autofill']);
+      //   $assets[$path]['autofill_fields']  = el('fields_autofill_fields',$path_info, $assets[$path]['autofill_fields']);
+      //   $assets[$path]['in_link_list']     = el('b_in_link_list',$path_info, $assets[$path]['in_link_list']);
+      //   $assets[$path]['user_restricted']  = el('b_user_restricted',$path_info, $assets[$path]['user_restricted']);
+      //   $assets[$path]['serve_restricted'] = el('b_serve_restricted',$path_info, $assets[$path]['serve_restricted']);
+      // }
+      // $img_info = $this->cfg->get( 'cfg_img_info', $path );
+      // if ($img_info) {
+      //   $assets[$path]['min_width']  = el('int_min_width',$img_info, $assets[$path]['min_width']);
+      //   $assets[$path]['min_height'] = el('int_min_height',$img_info, $assets[$path]['min_height']);
+      //   $assets[$path]['resize_img'] = el('b_resize_img',$img_info, $assets[$path]['resize_img']);
+      //   $assets[$path]['img_width']  = el('int_img_width',$img_info, $assets[$path]['img_width']);
+      //   $assets[$path]['img_height'] = el('int_img_height',$img_info, $assets[$path]['img_height']);
+      //   $assets[$path]['create_1']   = el('b_create_1',$img_info, $assets[$path]['create_1']);
+      //   $assets[$path]['width_1']    = el('int_width_1',$img_info, $assets[$path]['width_1']);
+      //   $assets[$path]['height_1']   = el('int_height_1',$img_info, $assets[$path]['height_1']);
+      //   $assets[$path]['prefix_1']   = el('str_prefix_1',$img_info, $assets[$path]['prefix_1']);
+      //   $assets[$path]['suffix_1']   = el('str_suffix_1',$img_info, $assets[$path]['suffix_1']);
+      //   $assets[$path]['create_2']   = el('b_create_2',$img_info, $assets[$path]['create_2']);
+      //   $assets[$path]['width_2']    = el('int_width_2',$img_info, $assets[$path]['width_2']);
+      //   $assets[$path]['height_2']   = el('int_height_2',$img_info, $assets[$path]['height_2']);
+      //   $assets[$path]['prefix_2']   = el('str_prefix_2',$img_info, $assets[$path]['prefix_2']);
+      //   $assets[$path]['suffix_2']   = el('str_suffix_2',$img_info, $assets[$path]['suffix_2']);
+      // }
     }
     
     if (!defined('PHPUNIT_TEST')) {
@@ -509,12 +509,14 @@ Class Res_assets extends Data_Core {
   /**
    * Geeft de diverse formaten ingesteld voor gegeven map
    *
-   * @param string $path 
+   * @param mixed $path 
    * @return array
    * @author Jan den Besten
    */
   public function get_folder_settings($path) {
-    return $this->get_setting(array('assets',$path));
+    if (!is_array($path)) $path=array($path);
+    array_unshift($path,'assets');
+    return $this->get_setting($path);
   }
   
   /**

@@ -28,8 +28,6 @@ class Plugin_bulkupload extends Plugin {
     $this->doAction=false;
 		if ($this->CI->flexy_auth->can_use_tools()) {
 
-			$mediaCfg=$this->CI->cfg->get('CFG_media_info');
-
       // Collect files
 			$bulkMap=$this->config['folder'];
 			$files=scan_map($bulkMap);
@@ -51,9 +49,9 @@ class Plugin_bulkupload extends Plugin {
 				$this->CI->load->library('form');
 				$form=new form();
 				$options=array();
-				foreach ($mediaCfg as $info) {
-					$options[$info['path']]=$info['path'];
-				}
+        // TODO: check if this works
+        $options=$this->CI->assets->get_assets_folders( FALSE );
+        $options = array_combine($options,$options);
 				$form_fields=array(
           "path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options),
 					"rename"			=> array('label'=>"Autorename"),
@@ -144,7 +142,7 @@ class Plugin_bulkupload extends Plugin {
     $config['allowed_types'] = implode("|",$this->CI->config->item('FILE_types_img'));
     $this->CI->upload->config($config);
     
-    $mediaCfg=$this->CI->cfg->get('CFG_media_info');
+    // $mediaCfg=$this->CI->cfg->get('CFG_media_info');
     $bulkMap=$this->config['folder'];
     $saveFile=$this->_newName($path,$file,$rename,TRUE);
 
@@ -152,13 +150,13 @@ class Plugin_bulkupload extends Plugin {
     if ($moved) {
       // resize
       $resized=$this->CI->upload->resize_image($path,$saveFile);
-      // autofill
-      $cfg=$mediaCfg[str_replace(SITEPATH.'assets/','',$path)];
-      if (!isset($cfg['str_autofill']) or $cfg['str_autofill']=='bulk upload' or $cfg['str_autofill']=='both') {
-        $autoFill=$this->CI->upload->auto_fill_fields($saveFile,$path);
-      }
-      // fill in media table
-      $userRestricted=$this->CI->cfg->get('CFG_media_info',$path,'b_user_restricted');
+      // TODO: autofill
+      // $cfg=$mediaCfg[str_replace(SITEPATH.'assets/','',$path)];
+      // if (!isset($cfg['str_autofill']) or $cfg['str_autofill']=='bulk upload' or $cfg['str_autofill']=='both') {
+      //   $autoFill=$this->CI->upload->auto_fill_fields($saveFile,$path);
+      // }
+      // TODO: $userRestricted... fill in media table
+      $userRestricted = FALSE; //$this->CI->cfg->get('CFG_media_info',$path,'b_user_restricted');
       if ($userRestricted)
         $this->CI->assets->insert_file($path,$saveFile,$userRestricted);
       else

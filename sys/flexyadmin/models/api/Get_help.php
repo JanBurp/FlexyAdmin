@@ -28,7 +28,7 @@ class get_help extends Api_Model {
   public function index() {
     if (!$this->logged_in()) return $this->_result_status401();
     
-		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
+		$commonHelp = $this->data->table('cfg_configurations')->get_field('txt_help');
     $map='sys/flexyadmin/views/help';
     $helpFiles=read_map($map);
     ksort($helpFiles);
