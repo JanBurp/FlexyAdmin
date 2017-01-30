@@ -135,7 +135,7 @@ class Graph extends CI_Model {
 		if (!empty($type)) $this->set_type($type);
 		
 		$table=array();
-		$table["class"]="$tableClass $extraClass";
+    $table['title']=current($this->captions)['cell'];
 
 		$table["caption"]["class"]="$tableClass $extraClass";
 		$table["caption"]["row"]=$this->captions;
