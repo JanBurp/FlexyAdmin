@@ -13,8 +13,8 @@ class Help extends AdminController {
 	}
 
 	public function index($page='') {
-		$lang=$this->flexy_auth->get_user()['str_language'];
-		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
+		$lang = $this->flexy_auth->get_user()['str_language'];
+		$commonHelp = $this->data->table('cfg_configurations')->get_field('txt_help');
 
     // Lees alle help bestanden in en zet ze om naar HTML
     $map=APPPATH.'views/help';

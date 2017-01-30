@@ -372,7 +372,7 @@ Class Data_Core extends CI_Model {
     $fields_info = array();
     $settings_fields_info = array();
     foreach ($fields as $field) {
-      $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
+      $field_info = array();
       
       /**
        * Default, eerst uit schemaform, dan uit database
@@ -397,16 +397,7 @@ Class Data_Core extends CI_Model {
        * Media path
        */
       if (in_array(get_prefix($field),array('media','medias'))) {
-        // find in (depricated) media_info
-        $full_field=$table.'.'.$field;
-        $media_info = $this->db->like('fields_media_fields',$full_field)->get_row('cfg_media_info');
-        // Or Default 'pictures'
-        if ($media_info and $path=el('path',$media_info)) {
-          $settings_fields_info[$field]['path'] = $path;
-        }
-        else {
-          $settings_fields_info[$field]['path'] = 'pictures';
-        }
+        $settings_fields_info[$field]['path'] = 'pictures';
       }
       
     }
@@ -425,16 +416,6 @@ Class Data_Core extends CI_Model {
 
       $field_info = array();
       
-      // 1) Uit (depricated) cfg_field_info
-      if (isset($this->cfg)) {
-        $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
-        if (!empty($field_info['str_options'])) {
-          $data = explode('|',$field_info['str_options']);
-          $options['data'] = array_combine($data,$data);
-          $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
-        }
-      }
-
       // Via many_to_one
       if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
         $other_table = el( array('relations','many_to_one',$field,'other_table'), $this->settings);
@@ -501,24 +482,19 @@ Class Data_Core extends CI_Model {
     if (empty($fields)) $fields = $this->settings['fields'];
     $order_by = '';
     
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $order_by = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_order_by');
-    
     // Zoek mogelijke standaard order fields
-    if (empty($order_by)) {
-        $order_fields = $this->config->item( 'ORDER_default_fields' );
-        do {
-          $possible_order_field = each( $order_fields );
-          if ($possible_order_field) {
-            $possible_order_field = explode( ' ', $possible_order_field['value'] ); // split DESC/ASC
-            $possible_field = $possible_order_field[0];
-            if ( $key=in_array_like($possible_field, $fields) ) {
-              $order_by = $fields[$key];
-              if ( isset($possible_order_field[1]) ) $order_by .= ' ' . $possible_order_field[1]; // add DESC/ASC
-            }
-          }
-        } while (empty($order_by) and $possible_order_field);
-    }
+    $order_fields = $this->config->item( 'ORDER_default_fields' );
+    do {
+      $possible_order_field = each( $order_fields );
+      if ($possible_order_field) {
+        $possible_order_field = explode( ' ', $possible_order_field['value'] ); // split DESC/ASC
+        $possible_field = $possible_order_field[0];
+        if ( $key=in_array_like($possible_field, $fields) ) {
+          $order_by = $fields[$key];
+          if ( isset($possible_order_field[1]) ) $order_by .= ' ' . $possible_order_field[1]; // add DESC/ASC
+        }
+      }
+    } while (empty($order_by) and $possible_order_field);
 
     // Als leeg: Pak dat het laatste standaard order veld ('id')
     if (empty($order_by)) $order_by = $order_fields[count($order_fields)-1];
@@ -534,14 +510,8 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_max_rows() {
-    $this->load->model('cfg');
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $max_rows = $this->cfg->get( 'cfg_table_info',$this->settings['table'], 'int_max_rows');
-    // Anders is het gewoon standaard 0
-    return intval($max_rows);
+    return 0;
   }
-  
-
 
   /**
    * Autoset update_uris
@@ -550,14 +520,8 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_update_uris() {
-    // Heeft alleen maar nu als een 'uri' veld bestaat
-    $this->load->model('cfg');
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $update_uris = ! $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'b_freeze_uris');
-    return settype($update_uris,'bool');
+    return true;
   }
-
-
 
   /**
    * Autoset abstract fields
@@ -572,15 +536,6 @@ Class Data_Core extends CI_Model {
     if (empty($fields)) $fields = $this->settings['fields'];
     if ( !is_array($fields) ) $fields = explode( ',', $fields );
     
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $this->load->model('cfg');
-    $this->cfg->load( 'cfg_table_info' );
-    $abstract_fields = $this->cfg->get( 'cfg_table_info', $table, 'str_abstract_fields');
-    if ($abstract_fields) {
-      $abstract_fields = explode(',',$abstract_fields);
-      if (is_string($abstract_fields)) $abstract_fields = explode('|',$abstract_fields);
-    }
-
     // Als leeg zoek op type velden
 		if (empty($abstract_fields)) {
       $abstract_fields=array();
@@ -615,10 +570,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_abstract_filter() {
-    $this->load->model('cfg');
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $abstract_filter = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_options_where');
-    return $abstract_filter;
+    return '';
   }
   
   
@@ -721,18 +673,12 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_grid_set() {
-    $this->load->model('cfg');
-    $table_info = $this->cfg->get( 'cfg_table_info',$this->settings['table'] );
     $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
 
-    $grid_set['fields'] = $this->settings['fields'];
-    foreach ($grid_set['fields'] as $key => $field) {
-      $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
-      if ( !in_array($field,$show_always) and !el('b_show_in_grid',$field_info,TRUE) ) unset($grid_set['fields'][$key]);
-    }
+    $grid_set['fields']        = $this->settings['fields'];
     $grid_set['fields']        = array_values($grid_set['fields']); // reset keys
     $grid_set['order_by']      = $this->settings['order_by'];
-    $grid_set['jump_to_today'] = (el('b_jump_to_today',$table_info,TRUE)?true:false);
+    $grid_set['jump_to_today'] = false;
     if ($grid_set['jump_to_today']) {
       // Kan het wel? Is er een veld waarmee het zinvol is?
       $possible_jump = FALSE;
@@ -746,13 +692,11 @@ Class Data_Core extends CI_Model {
       }
       $grid_set['jump_to_today'] = $possible_jump;
     }
-    $grid_set['pagination']    = (el('b_pagination',$table_info,TRUE)?true:false);
+    $grid_set['pagination']    = true;
 
     // relaties, default
     $grid_set['with']  = array('many_to_one');
-    // many_to_many, als in oude instellingen gevraagd is
-    if (el('b_grid_add_many',$table_info)) $grid_set['with'][]='many_to_many';
-
+    
     return $grid_set;
   }
 
@@ -765,8 +709,6 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_form_set() {
-    $this->load->model('cfg');
-    $table_info = $this->cfg->get( 'cfg_table_info',$this->settings['table'] );
     $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
     $main_fieldset = $this->settings['table'];
     $fieldsets = array($main_fieldset=>array());
@@ -787,19 +729,10 @@ Class Data_Core extends CI_Model {
     }
     
     foreach ($form_set['fields'] as $key => $field) {
-      $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
-      // Show?
-      if ( !in_array($field,$show_always) and !el('b_show_in_form',$field_info,TRUE) ) {
-        unset($form_set['fields'][$key]);
-      }
-      // in which fieldset/tab?
-      else {
-        $fieldset = el('str_fieldset',$field_info );
-        if (!$fieldset) $fieldset=$main_fieldset;
-        // trace_([$fieldset,$main_fieldset]);
-        if (!isset($fieldsets[$fieldset])) $fieldsets[$fieldset]=array();
-        array_push( $fieldsets[$fieldset], $field );
-      }
+      $fieldset=$main_fieldset;
+      // trace_([$fieldset,$main_fieldset]);
+      if (!isset($fieldsets[$fieldset])) $fieldsets[$fieldset]=array();
+      array_push( $fieldsets[$fieldset], $field );
     }
     $form_set['fields'] = array_values($form_set['fields']); // reset keys
     $form_set['fieldsets'] = $fieldsets;
