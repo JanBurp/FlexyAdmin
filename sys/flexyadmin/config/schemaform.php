@@ -319,6 +319,7 @@ $config['FIELDS_special'] = array(
   // Aangepast door:
 	'user_changed' => array(
     'type'        => 'integer',
+    'grid-type'   => 'abstract',
     'form-type'   => 'hidden',
     'readonly'    => true,
     'grid'        => 'function_user'
@@ -429,6 +430,7 @@ $config['FIELDS_special'] = array(
   // Tijdstip van laatste aanpassing
   'tme_last_changed' => array(
     'type'        => 'string',
+    'grid-type'   => 'string',
     'form-type'   => 'hidden',
     'readonly'    => true,
   ),

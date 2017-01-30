@@ -27,6 +27,7 @@ export default {
         color     : ['color'],
         url       : ['url'],
         relation  : ['relation'],
+        abstract  : ['abstract'],
       };
       var defaultTypes = [];
       for(var type in types) {
@@ -95,6 +96,13 @@ export default {
         items[i] = items[i].replace(/{/,'').replace(/}/,'').trim();
       }
       return items;
+    },
+    
+    itemObject : function(item) {
+      if (typeof(item)!=='Object') {
+        item = JSON.parse(item);
+      }
+      return item;
     },
     
     select : function() {
@@ -190,6 +198,10 @@ export default {
 
     <template v-if="isType('relation',type)">
       <span class="grid-relation-item" v-for="item in relationItems(item)">{{item}}</span>
+    </template>
+
+    <template v-if="isType('abstract',type)">
+      <span v-for="(abstract,key) in itemObject(item)">{{abstract}}</span>
     </template>
 
     <template v-if="isType('media',type)">
