@@ -89,6 +89,7 @@ export default {
       extendedFind        : true,
       extendedTermDefault : { field:'',term:'',and:'OR',equals:'exist' },
       extendedTerm        : [],
+      oldExtendedTerm     : [],
       uploadFiles         : [],
       dropUploadHover     : false,
     }
@@ -520,6 +521,7 @@ export default {
     
     findChanged : function() {
       if (this.findTerm==='') this.stopFind();
+      this.oldExtendedTerm = [];
     },
     
     stopFind : function() {
@@ -527,6 +529,29 @@ export default {
       this.extendedFind = false;
       this.extendedTerm = [_.clone(this.extendedTermDefault)];
       this.reloadPage({offset:0,filter:''});
+    },
+    
+    toggleExtendedFind : function() {
+      if (this.extendedFind) {
+        this.extendedFind = false;
+        this.findTerm = '';
+        if (!_.isUndefined(this.extendedTerm[0])) {
+          this.findTerm = this.extendedTerm[0].term;
+          this.oldExtendedTerm = this.extendedTerm;
+        }
+      }
+      else {
+        this.extendedFind = true;
+        if (this.oldExtendedTerm.length>0) {
+          this.extendedTerm = this.oldExtendedTerm;
+        }
+        else {
+          this.extendedTerm = [_.clone(this.extendedTermDefault)];
+          this.extendedTerm[0].term = this.findTerm;
+          this.extendedTerm[0].field = this.searchable_fields[0];
+        }
+      }
+      this.startFinding();
     },
     
     extendedSearchAdd : function() {
@@ -740,8 +765,8 @@ export default {
         </div>
         <div class="btn-group">
           <flexy-button @click.native.stop.prevent="startFinding($event)" icon="search" class="btn-default" />
-          <flexy-button @click.native.stop.prevent="stopFind()" icon="remove" class="btn-default text-danger" v-if="findTerm!=='' || extendedFind" />
-          <flexy-button @click.native.stop.prevent="extendedFind=!extendedFind" :icon="{'chevron-up':extendedFind,'chevron-down':!extendedFind}" class="btn-outline-warning" :class="{'text-warning':extendedFind}" v-if="findTerm!=='' || extendedFind" />
+          <flexy-button @click.native.stop.prevent="stopFind()" icon="refresh" class="btn-default text-danger" v-if="findTerm!=='' || extendedFind" />
+          <flexy-button @click.native.stop.prevent="toggleExtendedFind()" :icon="{'chevron-up':extendedFind,'chevron-down':!extendedFind}" class="btn-outline-warning" :class="{'text-warning':extendedFind}" />
         </div>
       </form>
     </div>
@@ -751,7 +776,7 @@ export default {
       <h4>{{$lang.grid_extended_search}}</h4>
       <form v-for="(term,index) in extendedTerm" class="form-inline" @submit.stop.prevent="startFinding($event)" :index="index">
         <div class="form-group grid-extended-search-and">
-          <select class="form-control custom-select" name="grid-extended-search-and[]" v-model="term.and">
+          <select class="form-control form-control-sm custom-select" name="grid-extended-search-and[]" v-model="term.and">
             <option value="OR" :selected="term.and=='OR'">{{$lang.grid_search_or}}</option>
             <option value="AND" :selected="term.and=='AND'">{{$lang.grid_search_and}}</option>
           </select>

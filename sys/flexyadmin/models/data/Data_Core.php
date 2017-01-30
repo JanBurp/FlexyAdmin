@@ -2256,7 +2256,8 @@ Class Data_Core extends CI_Model {
         $fields = $grid_set['fields'];
         if (isset($grid_set['with'])) {
           foreach ($grid_set['with'] as $type => $with) {
-            foreach ($with as $with_info) {
+            $relations = $this->get_setting(array('relations',$type));
+            foreach ($relations as $what => $with_info) {
               $other_fields = $this->get_other_table_abstract_fields( $with_info['other_table'] );
               if ($other_fields) {
                 foreach ($other_fields as $other_field) {
