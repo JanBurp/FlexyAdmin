@@ -829,13 +829,9 @@ class Flexy_auth extends Ion_auth {
 		if (!$groups) return FALSE;
     
     $tables = $this->db->list_tables();
-    $medias = array();
-    $sql = 'SELECT `path` FROM `cfg_media_info`';
-    $query = $this->db->query($sql);
-    if ($query) {
-      foreach ($query->result() as $row) {
-        $medias[] = 'media_'.$row->path;
-      }
+    $medias = $this->assets->get_assets_folders( FALSE );
+    foreach ($medias as $key=>$path) {
+      $medias[$key] = 'media_'.$path;
     }
     $items  = array_merge($tables,$medias);
     
