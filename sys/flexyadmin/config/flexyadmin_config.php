@@ -10,6 +10,9 @@
  * @author			Jan den Besten
 **/
 
+$config['USE_OLD_DB']             = TRUE;
+
+
 $config['PROFILER']               = FALSE;
 
 $config['PHP_version']						= substr(phpversion(),0,1);

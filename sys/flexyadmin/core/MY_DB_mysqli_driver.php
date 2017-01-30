@@ -477,48 +477,41 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 			$order="self_parent";
 		}
 		else {
-			// find in table info
-			if (isset($this->CI->cfg)) {
-				$order=$this->CI->cfg->get('CFG_table',$table,'str_order_by');
-				// or first standard order field
-				if (empty($order) and !empty($table)) {
-					if (!empty($fallbackOrder))
-						$order=$fallbackOrder;
-					else {
-						$stdFields=$this->CI->config->item('ORDER_default_fields');
-						$fields=$this->list_fields($table);
+			// or first standard order field
+			if (empty($order) and !empty($table)) {
+				if (!empty($fallbackOrder))
+					$order=$fallbackOrder;
+				else {
+					$stdFields=$this->CI->config->item('ORDER_default_fields');
+					$fields=$this->list_fields($table);
+					do {
+						$curr=current($stdFields);
+						$curr=explode(" ",$curr);
+						$testField=trim($curr[0]);
+						reset($fields);
 						do {
-							$curr=current($stdFields);
-							$curr=explode(" ",$curr);
-							$testField=trim($curr[0]);
-							reset($fields);
-							do {
-								if (strncmp($testField,current($fields),strlen($testField))==0) {
-									$order=current($fields);
-									if (isset($curr[1])) $order.=" ".$curr[1];
-								}
-							} while (empty($order) and next($fields));
-						}
-						while (empty($order) and next($stdFields));
+							if (strncmp($testField,current($fields),strlen($testField))==0) {
+								$order=current($fields);
+								if (isset($curr[1])) $order.=" ".$curr[1];
+							}
+						} while (empty($order) and next($fields));
 					}
+					while (empty($order) and next($stdFields));
 				}
-				$order=$table.'.'.trim($order);
-        // trace_if(($table=='tbl_leerlingen'),array('table'=>$table,'order'=>$order));
-        
-				// check if it is not id, add id to it to prefent dubious sort results (if id exists)
-				if ($order!=PRIMARY_KEY) {
-          if ($this->field_exists(PRIMARY_KEY,$table)) {
-            $order=add_string($order,PRIMARY_KEY,',');   
-          }
-				}
-        // trace_($order);
-				
-				if ($set and $order) $this->order_by($order);
 			}
+			$order=$table.'.'.trim($order);
+      // trace_if(($table=='tbl_leerlingen'),array('table'=>$table,'order'=>$order));
+      
+			// check if it is not id, add id to it to prefent dubious sort results (if id exists)
+			if ($order!=PRIMARY_KEY) {
+        if ($this->field_exists(PRIMARY_KEY,$table)) {
+          $order=add_string($order,PRIMARY_KEY,',');   
+        }
+			}
+      // trace_($order);
+			
+			if ($set and $order) $this->order_by($order);
 		}
-    // if ($set) $this->order=$this->qb_orderby;
-    // trace_if(($table=='tbl_leerlingen'),array('table'=>$table,'order'=>$order,'$this'=>$this->qb_orderby));
-    
 		return $order;
 	}
 
@@ -1507,7 +1500,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		 * add options if asked for
 		 */
 		if ($options and !empty($result)) {
-			$result=$this->_add_field_options($result,$table,$options);
+      // $result=$this->_add_field_options($result,$table,$options);
 			// options of foreigntables
 			$result=$this->_add_foreign_options($result,$this->get_foreign_tables($table),$table,$options);
 			// options of many tables
@@ -1544,42 +1537,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		return $result;
 	}
 	
-  /**
-   * Plaatst many velden op goede volgorde in resultaat
-   *
-   * @param array $result 
-   * @param array $manyResult 
-   * @param int $id 
-   * @return array
-   * @author Jan den Besten
-   * @internal
-   */
-  private function _insert_many_at_set_place($result,$manyResult,$id) {
-    foreach ($manyResult as $rel => $relData) {
-      $manyOrder='';
-			if (isset($this->CI->cfg)) $manyOrder=$this->CI->cfg->get('CFG_table',$rel,'str_form_many_order');
-      if (empty($manyOrder)) $manyOrder='last';
-			switch ($manyOrder) {
-				case 'first':
-					// always first: id, uri, order, self_parent
-					$firstResult=$result[$id];
-					$lastResult=$result[$id];
-					unset($lastResult[PRIMARY_KEY]);
-					unset($lastResult['uri']);
-					unset($lastResult['order']);
-					unset($lastResult['self_parent']);
-					$firstResult=array_diff_assoc($firstResult,$lastResult);
-					$result[$id]=array_merge($firstResult,array($rel=>$relData),$lastResult); // first many fields
-					break;
-				case 'last':
-				default:
-					$result[$id]=array_merge($result[$id],array($rel=>$relData)); // normal order
-					break;
-			}
-		}
-    return $result;
-  }
-  
   
   /**
    * Geeft resultaat als PHP array string
@@ -1915,12 +1872,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
     $cleanTable=remove_suffix($cleanTable,'___');
 		$abFields=array();
 		/**
-		 * First check if abstract fields are set for this table
-		 */
-		$f=$this->CI->cfg->get('CFG_table',$cleanTable,"str_abstract_fields");
-		if (isset($f) and !empty($f) and empty($abFields)) $abFields=explode_pre(",",$f,$cleanTable.".");
-		/**
-		 * If not set: Auto abstract fields according to prefixes
+		 * Auto abstract fields according to prefixes
 		 */
 		if (empty($abFields)) {
 			$allFields=$this->list_fields($cleanTable);
@@ -2039,13 +1991,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 			if (empty($tables) or !is_array($tables)) {
 				// list all tables with right name
 				$like=$this->CI->config->item('REL_table_prefix')."_".remove_prefix($table).$this->CI->config->item('REL_table_split');
-				if (isset($this->CI->cfg)) {
-					// first table with info (for order)
-					$tablesWithInfo=$this->CI->cfg->get('CFG_table');
-					$tablesWithInfo=array_keys($tablesWithInfo);
-					$tablesWithInfo=filter_by($tablesWithInfo,$like);
-					if (!empty($tablesWithInfo)) $tablesWithInfo=array_combine($tablesWithInfo,$tablesWithInfo);
-				}
 				// add tables with no info
 				$tables=$this->list_tables();
 				$tables=filter_by($tables,$like);
@@ -2195,14 +2140,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 				foreach ($foreignTables as $key => $forTable) {
           if (!is_array($select_fields) or in_array($key,$select_fields)) {
   					$cleanTable=rtrim($forTable['table'],'_');
-  					$optionsWhere=$this->CI->cfg->get('CFG_table',$cleanTable,'str_options_where');
-  					// override options Where with Field Info, if there is any
-  					if (!empty($table)) {
-  						$cfgKey=$table.'.'.$forTable['key'];
-  						$optWhere=$this->CI->cfg->get('CFG_field',$cfgKey,'str_options_where');
-  						if (!empty($optWhere)) $optionsWhere=$optWhere;
-  					}
-  					$options[$key]=$this->get_options($cleanTable,$optionsWhere);
+  					$options[$key]=$this->get_options($cleanTable);
           }
 				}
 			}
@@ -2226,8 +2164,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 			$options=array();
 			if (isset($manyTables)) {
 				foreach ($manyTables as $rel => $jTable) {
-					$optionsWhere=$this->CI->cfg->get('CFG_table',$jTable["join"],'str_options_where');
-					$options[$rel]=$this->get_options($jTable["join"],$optionsWhere);
+					$options[$rel]=$this->get_options($jTable["join"],'');
 				}
 			}
 			if (count($options)>0) {
@@ -2239,35 +2176,35 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 			return $out;
 		}
 
-	/**
-	 * Voeg opties toe van alle velden in de tabel waarvan opties ingesteld zijn in cfg_field_info
-	 *
-	 * @param array	$out huidige resultaat
-	 * @param string $table
-	 * @param array $select_fields[false]
-	 * @return array
-		 */
-	 private function _add_field_options($out,$table,$select_fields=false) {
-			// search options in cfg_field_info for every field, if found, give the options
-			$fields=$this->list_fields($table);
-      if (is_array($select_fields)) $fields=array_intersect($fields,$select_fields);
-      
-			foreach($fields as $field) {
-        // specifiek veld
-				$options=$this->CI->cfg->get('CFG_field',$table.".".$field,'str_options');
-        // of generiek veld
-        if (empty($options)) $options=$this->CI->cfg->get('CFG_field',"*.".$field,'str_options');
-        
-				if (isset($options) and !empty($options))	{
-					$options=explode("|",$options);
-					if ($this->CI->cfg->get('CFG_field',$table.".".$field,'b_multi_options'))
-						$out["multi_options"][$field]=array_combine($options,$options);
-					else
-						$out["options"][$field]=array_combine($options,$options);
-				}
-			}
-			return $out;
-		}
+  // /**
+  //  * Voeg opties toe van alle velden in de tabel waarvan opties ingesteld zijn in cfg_field_info
+  //  *
+  //  * @param array  $out huidige resultaat
+  //  * @param string $table
+  //  * @param array $select_fields[false]
+  //  * @return array
+  //    */
+  //  private function _add_field_options($out,$table,$select_fields=false) {
+  //     // search options in cfg_field_info for every field, if found, give the options
+  //     $fields=$this->list_fields($table);
+  //       if (is_array($select_fields)) $fields=array_intersect($fields,$select_fields);
+  //
+  //     foreach($fields as $field) {
+  //         // specifiek veld
+  //       $options=$this->CI->cfg->get('CFG_field',$table.".".$field,'str_options');
+  //         // of generiek veld
+  //         if (empty($options)) $options=$this->CI->cfg->get('CFG_field',"*.".$field,'str_options');
+  //
+  //       if (isset($options) and !empty($options))  {
+  //         $options=explode("|",$options);
+  //         if ($this->CI->cfg->get('CFG_field',$table.".".$field,'b_multi_options'))
+  //           $out["multi_options"][$field]=array_combine($options,$options);
+  //         else
+  //           $out["options"][$field]=array_combine($options,$options);
+  //       }
+  //     }
+  //     return $out;
+  //   }
 
 
 	/**
@@ -2295,7 +2232,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 				foreach($jt as $rel=>$jTable) {
 					$out[$id][$rel]=array();
 				}
-        $out=$this->_insert_many_at_set_place($out,$jt,$id);
 			}
 		}
 
@@ -2303,7 +2239,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		 * add options if asked for
 		 */
 		if ($this->options) {
-			$out=$this->_add_field_options($out,$table,$this->options);
+      // $out=$this->_add_field_options($out,$table,$this->options);
 			// foreign table options
 			$ft=$this->get_foreign_tables($table);
 			$out=$this->_add_foreign_options($out,$ft,$table,$this->options);
@@ -2380,23 +2316,23 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
       case 'medias':
       case 'media':
         $value='';
-        $path=$this->CI->cfg->get('cfg_media_info',$info['table'].'.'.$field,'path');
-        if (!isset($files[$path])) $files[$path] = $this->CI->assets->get_files($path);
-        if (!empty($files[$path])) {
-          if ($type=='media') {
-            if (rand(1,4)>2) {
-              $value=random_element($files[$path]);
-              $value=$value['file'];
-            }
-          }
-          else {
-            $value='';
-            for ($i=0; $i < rand(0,4); $i++) { 
-              $media=random_element($files[$path]);
-              $value=add_string($value,$media['file'],'|');
-            }
-          }
-        }
+        // $path=$this->CI->cfg->get('cfg_media_info',$info['table'].'.'.$field,'path');
+        // if (!isset($files[$path])) $files[$path] = $this->CI->assets->get_files($path);
+        // if (!empty($files[$path])) {
+        //   if ($type=='media') {
+        //     if (rand(1,4)>2) {
+        //       $value=random_element($files[$path]);
+        //       $value=$value['file'];
+        //     }
+        //   }
+        //   else {
+        //     $value='';
+        //     for ($i=0; $i < rand(0,4); $i++) {
+        //       $media=random_element($files[$path]);
+        //       $value=add_string($value,$media['file'],'|');
+        //     }
+        //   }
+        // }
         break;
 
       case 'url' :
@@ -2445,13 +2381,13 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
         }
         else {
           $value=str_replace(array('.',','),'',$this->CI->lorem->getContent(rand(1,5),'plain'));
-          if (isset($info['table'])) {
-            $options=$this->CI->cfg->get('cfg_field_info',$info['table'].'.'.$field,'str_options');
-            if (!empty($options)) {
-              $options=explode('|',$options);
-              $value=random_element($options);
-            }
-          }
+          // if (isset($info['table'])) {
+          //   $options=$this->CI->cfg->get('cfg_field_info',$info['table'].'.'.$field,'str_options');
+          //   if (!empty($options)) {
+          //     $options=explode('|',$options);
+          //     $value=random_element($options);
+          //   }
+          // }
         }
         break;
 
