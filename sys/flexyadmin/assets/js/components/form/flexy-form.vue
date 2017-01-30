@@ -221,6 +221,7 @@ export default {
       var self = this;
       self.insertForm[field].show = false;
       flexyState.api({
+        // TODO: alleen opties van dit veld wellicht?
         url : 'table?table='+self.name+'&as_options=true',
       })
       .then(function(response){
