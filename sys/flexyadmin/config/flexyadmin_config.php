@@ -10,7 +10,7 @@
  * @author			Jan den Besten
 **/
 
-$config['USE_OLD_DB']             = TRUE;
+$config['USE_OLD_DB']             = defined('PHPUNIT_TEST')?TRUE:FALSE;
 
 
 $config['PROFILER']               = FALSE;
