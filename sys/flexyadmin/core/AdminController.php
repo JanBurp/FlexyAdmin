@@ -34,7 +34,6 @@ class AdminController extends BasicController {
 		parent::__construct(true);
     $this->load->library('flexy_auth');
     $this->load->model('version');
-		$this->load->model("ui");
     $this->load->model("admin_menu");
     // $this->load->library("menu");
 

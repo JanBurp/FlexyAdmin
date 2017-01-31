@@ -231,13 +231,21 @@ class MY_Lang extends CI_Lang {
    * @author Jan den Besten
    */
 	public function ui_help($field,$table='') {
+    $CI =& get_instance();
     $this->load('ui_help');
     
-    if (!isset($table)) {
-      return $this->line('help__'.$field,false,false);
+    if (empty($table)) {
+      if (strpos($field,'.')) {
+        $table = get_prefix($field,'.');
+        $field = get_suffix($field,'.');
+        $help = $this->line('help__'.$table.'.',false,false);
+        return el($field,$help,'');
+      }
+      else {
+        return $this->line('help__'.$field,false,false);
+      }
     }
-    
-    if ($this->flexy_auth->has_rights($table)) {
+    if ($CI->flexy_auth->has_rights($table)) {
       $tableHelp = '<h2>'.$this->line('help__'.$table,false,false).'</h2>';
       $fieldsHelp = $this->line('help__'.$table.'.',false,false);
       if ($fieldsHelp) {
@@ -245,8 +253,9 @@ class MY_Lang extends CI_Lang {
 					$tableHelp .= div('help-field')."<h3>".$this->ui($table.'.'.$field)."</h3>".$help._div();
         }
       }
+      return $tableHelp;
     }
-    return $tableHelp;
+    return $table;
 	}
   
   
