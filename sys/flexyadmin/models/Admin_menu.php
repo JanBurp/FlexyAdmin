@@ -109,7 +109,7 @@ Class Admin_menu extends CI_Model {
               $table = el('table',$item,$key);
               if ($this->flexy_auth->has_rights($table)) {
                 $menuItems[$table] = $this->_process_item($base_url, array(
-                  'name'  => el('name',$item,$this->ui->get($table)),
+                  'name'  => el('name',$item,$this->lang->ui($table)),
                   'uri'   => 'show/grid/'.$table,
                   'icon'  => el('icon',$item,''),
                   'class' => el('class',$item,''),
@@ -125,7 +125,7 @@ Class Admin_menu extends CI_Model {
                 if (!in_array($table,$this->hidden_tables)) {
                   if (!isset($menuItems[$table])) {
                     $menuItems[$table] = $this->_process_item($base_url, array(
-                      'name'  => $this->ui->get($table),
+                      'name'  => $this->lang->ui($table),
                       'uri'   => 'show/grid/'.$table,
                       'icon'  => el('icon',$item,''),
                       'class' => el('class',$item,''),
@@ -139,7 +139,7 @@ Class Admin_menu extends CI_Model {
             case 'media':
               $path = el('path',$item,$key);
               $menuItems['media_'.$path] = $this->_process_item($base_url, array(
-                'name'  => el('name',$item,$this->ui->get($path)),
+                'name'  => el('name',$item,$this->lang->ui('media_'.$path)),
                 'uri'   => 'show/media/'.$path,
                 'icon'  => el('icon',$item,''),
                 'class' => el('class',$item,''),
@@ -152,7 +152,7 @@ Class Admin_menu extends CI_Model {
               foreach ($medias as $media) {
                 if (!isset($menuItems['media_'.$media])) {
                   $menuItems['media_'.$media] = $this->_process_item($base_url, array(
-                    'name'  => $this->ui->get($media),
+                    'name'  => $this->lang->ui('media_'.$media),
                     'uri'   => 'show/media/'.$media,
                     'icon'  => el('icon',$item,''),
                     'class' => el('class',$item,''),

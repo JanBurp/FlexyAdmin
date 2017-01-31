@@ -1,8 +1,15 @@
 <?php
 
+// Standaard Tabellen
 $lang['tbl_site']         = 'Instellingen';
+$lang['tbl_menu']         = "Pagina's";
+$lang['tbl_links']        = "Links";
 
-// Most standard fields
+// Standaard Mappen
+$lang['media_pictures']   = "Afbeeldingen";
+$lang['media_downloads']  = "Downloads";
+
+// Standard velden
 $lang['str_title']        = "Titel";
 $lang['str_title_nl']     = $lang['str_title']. ' NL';
 $lang['str_title_en']     = $lang['str_title']. ' EN';
@@ -15,11 +22,11 @@ $lang['txt_text_en']      = $lang['txt_text']. ' EN';
 $lang['txt_error_nl']     = 'Error NL';
 $lang['txt_error_en']     = 'Error EN';
 
-// Most used extra fields
-$lang['media_photo']      = "Foto";
-$lang['medias_photos']    = "Foto's";
-$lang['media_picture']    = "Foto";
-$lang['medias_pictures']  = "Foto's";
+// Veel gebruikte velden
+$lang['media_photo']      = "Afbeelding";
+$lang['medias_photos']    = "Afbeeldingen";
+$lang['media_picture']    = "Afbeelding";
+$lang['medias_pictures']  = "Afbeeldingen";
 $lang['b_visible']        = "Zichtbaar";
 $lang['b_active']         = "Aktief";
 $lang['b_restricted']     = "Afgeschermd";

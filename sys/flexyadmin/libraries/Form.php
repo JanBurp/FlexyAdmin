@@ -1111,7 +1111,7 @@ class Form {
       //             $out.=icon('delete');
       //             $first=FALSE;
       //           }
-      //           $out.=form_label($this->CI->ui->get($subfieldName),$subAttr['name'],$labelClass);
+      //           $out.=form_label($this->CI->lang->ui($subfieldName),$subAttr['name'],$labelClass);
       //           if ($preSub=='txt') {
       //             $this->hasHtmlField=true;
       //             $subAttr["rows"]=5;

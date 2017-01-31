@@ -115,7 +115,7 @@ class MY_Form_validation extends CI_Form_validation {
         $thisTable=get_prefix($field);
         $field=remove_prefix($field);
       }
-      $label      = $this->CI->ui->get($field,$thisTable);
+      $label      = $this->CI->lang->ui($thisTable.'.'.$field);
       $validation = $this->get_validations($thisTable,$field);
       $this->set_rules($field, $label, $validation);
 		}

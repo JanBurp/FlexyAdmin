@@ -108,7 +108,7 @@
       foreach ($data as $key => $field) {
         $value=el('value',$field,'');
       	if (substr($key,0,1)!='_' and !empty($value)) {
-    			$showKey=$this->ui->get($key);
+    			$showKey=$this->lang->ui($key);
     			$body.="<b>$showKey:&nbsp;</b>";
     			$body.="$value<br/><br/>";
     			if (isset($data[$key]['options'][$value])) {
