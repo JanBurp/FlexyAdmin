@@ -1124,7 +1124,6 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_setting_field_info_extended($fields=array(),$extra=array(),$include_options=FALSE) {
-    $this->load->model('ui');
     $this->config->load('schemaform',true);
     $schemaform = $this->config->item('schemaform');
     
