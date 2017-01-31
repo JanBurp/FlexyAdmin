@@ -82,7 +82,7 @@ function langp($s1="",$sn="") {
     default:
       $out=$line;
   }
-  $out=$CI->ui->replace_ui_names($out);
+  $out=$CI->lang->replace_ui($out);
 	return $out;
 }
 

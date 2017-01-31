@@ -424,69 +424,6 @@ class Api_Model extends CI_Model {
     return $this->flexy_auth->is_super_admin();
   }
   
-  
-  // /**
-  //  * Returns settings for table of path
-  //  *
-  //  * @param string $what table_name or path
-  //  * @param string $type [table|path]
-  //  * @return array
-  //  * @author Jan den Besten
-  //  */
-  // protected function get_settings( $what ) {
-  //
-  //   return $settings;
-  // }
-  
-  // /**
-  //  * Returns settings for table
-  //  *
-  //  * @param string $table table_name or path
-  //  * @return array
-  //  * @author Jan den Besten
-  //  */
-  // protected function _get_table_settings( $table ) {
-  //   $this->data->table( $table );
-  //   $settings = $this->data->get_settings();
-  //   $settings['options'] = $this->data->get_options();
-  //
-  //   $this->load->model('ui');
-  //   // field ui_names
-  //   if (isset($settings['field_info'])) {
-  //     foreach ($settings['field_info'] as $field => $info) {
-  //       $settings['field_info'][$field]['ui_name'] = $this->ui->get( $field, $settings['table'] );
-  //     }
-  //   }
-  //   $table_info = array();
-  //   // table ui_name
-  //   $table_info['ui_name']  = $this->ui->get( $settings['table'] );
-  //   // sortable | tree
-  //   $table_info['sortable'] = !in_array('order',$settings['fields']);
-  //   $table_info['tree']     = in_array('self_parent',$settings['fields']);
-  //   $settings = array_add_after( $settings, 'table', array('table_info'=>$table_info) );
-  //   return $settings;
-  // }
-  //
-  // /**
-  //  * Returns settings for path
-  //  *
-  //  * @param string $path path
-  //  * @return array
-  //  * @author Jan den Besten
-  //  */
-  // protected function _get_path_settings( $path ) {
-  //   $this->load->model('ui');
-  //   $settings['ui_name'] = $this->ui->get( $path );
-  //   $settings['str_types'] = $this->cfg->get('cfg_media_info',$path,'str_types');
-  //   // $settings = array_keep_keys( $settings, array('str_types') );
-  //   $img_info = $this->cfg->get('cfg_img_info',$path);
-  //   if ($img_info) {
-  //     $img_info = array_keep_keys( $img_info, array('int_min_width','int_min_height') );
-  //     $settings = array_merge( $settings,$img_info );
-  //   }
-  //   return $settings;
-  // }
-  
 }
 
 ?>

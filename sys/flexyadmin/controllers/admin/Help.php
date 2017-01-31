@@ -30,9 +30,9 @@ class Help extends AdminController {
         $matches=array();
         if (preg_match_all("/\[(.*)\]/uiUsm", $html,$matches)) {
           foreach ($matches[1] as $match) {
-            $help=$this->ui->get_help($match);
+            $help=$this->lang->ui_help($match);
             if ($help) {
-              $help=h( $this->ui->get(remove_prefix($match,'.')) ).$help;
+              $help=h( $this->lang->ui(remove_prefix($match,'.')) ).$help;
               $html=str_replace('['.$match.']',$help,$html);
             }
           }

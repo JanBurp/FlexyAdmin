@@ -163,8 +163,93 @@ class MY_Lang extends CI_Lang {
 	public function get_all() {
 		return $this->language;
 	}
-
-
+  
+  /**
+   * Geeft UI name van een veld of tabel of assets pad.
+   * Zijn te vinden in het language bestand ui_lang
+   * Voorbeelden:
+   * - tbl_menu             - Menu
+   * - str_title            - Titel
+   * - tbl_links.str_title  - Linknaam
+   * - media_pictures       - Foto's
+   *
+   * @param string $item 
+   * @return string
+   * @author Jan den Besten
+   */
+	public function ui($item) {
+    $this->load('ui');
+    if (is_array($item)) {
+			foreach($item as $key => $value) {
+				$item[$key] = $this->ui($value);
+			}
+      return $item;
+    }
+    // From Lang
+    $ui = $this->line($item,false,false);
+    // Only field?
+    if (empty($ui)) $ui = $this->line(remove_prefix($item,'.'),false,false);
+    // Create?
+    if (empty($ui)) {
+      $ui = remove_prefix($item,'.');
+  		$ui = remove_prefix($ui);
+  		$ui = str_replace("__","-",$ui);
+  		$ui = str_replace("_"," ",$ui);
+  		$ui = ucwords($ui);
+    }
+    return $ui;
+	}
+  
+  /**
+   * Vervang in meegegeven tekst alle woorden (die gevonden worden en op z'n minste één _ in de naam hebben) door een mooie UI name
+   *
+   * @param string $s 
+   * @return string
+   * @author Jan den Besten
+   */
+	public function replace_ui($s) {
+    $s=preg_split("/\b/",$s);
+    foreach ($s as $key => $word) {
+      // only replace if word has a underscore and no dot
+      if (has_string('_',$word) and !has_string('.',$word)) {
+        $newword=$this->ui($word);
+        if (!empty($newword)) $s[$key]=$newword;
+      }
+    }
+    $s=implode('',$s);
+    $s=str_replace(' .','.',$s);
+		return $s;
+	}
+  
+  
+  /**
+   * Geeft helptekst behorend bij dit item zoals het in **ui_help** staat
+   *
+   * @param string $name['']
+   * @param string $table['']
+   * @return string
+   * @author Jan den Besten
+   */
+	public function ui_help($field,$table='') {
+    $this->load('ui_help');
+    
+    if (!isset($table)) {
+      return $this->line('help__'.$field,false,false);
+    }
+    
+    if ($this->flexy_auth->has_rights($table)) {
+      $tableHelp = '<h2>'.$this->line('help__'.$table,false,false).'</h2>';
+      $fieldsHelp = $this->line('help__'.$table.'.',false,false);
+      if ($fieldsHelp) {
+        foreach ($fieldsHelp as $field => $help) {
+					$tableHelp .= div('help-field')."<h3>".$this->ui($table.'.'.$field)."</h3>".$help._div();
+        }
+      }
+    }
+    return $tableHelp;
+	}
+  
+  
 	/**
 	 * Fetch a single line of text from the language array
 	 *
