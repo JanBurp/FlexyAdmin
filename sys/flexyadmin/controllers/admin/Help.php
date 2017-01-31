@@ -32,7 +32,7 @@ class Help extends AdminController {
           foreach ($matches[1] as $match) {
             $help=$this->lang->ui_help($match);
             if ($help) {
-              $help=h( $this->lang->ui(remove_prefix($match,'.')) ).$help;
+              $help=h( $this->lang->ui(remove_prefix($match,'.')),2 ).$help;
               $html=str_replace('['.$match.']',$help,$html);
             }
           }
