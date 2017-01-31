@@ -92,8 +92,7 @@
     }
     else {
       // Send standard
-      $this->load->model('ui');
-      $this->load->library('parser');
+            $this->load->library('parser');
       // old replace -- for backward compatibility
       $old_replace=array();
       foreach ($replace as $key => $value) {
