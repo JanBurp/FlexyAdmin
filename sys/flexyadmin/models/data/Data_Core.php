@@ -1141,7 +1141,7 @@ Class Data_Core extends CI_Model {
     foreach ($field_info as $field => $info) {
       if (!is_array($info)) $info=array();
       // UI name
-      $info['name'] = $this->ui->get($field);
+      $info['name'] = $this->lang->ui($field);
       // Schema: default
       $schema = $schemaform['FIELDS_default'];
       // Schema: from prefix
@@ -1217,7 +1217,7 @@ Class Data_Core extends CI_Model {
     }
     // Hernoem fieldset keys
     $fieldset_keys = array_keys($form_set['fieldsets']);
-    $fieldset_keys = $this->ui->get($fieldset_keys);
+    $fieldset_keys = $this->lang->ui($fieldset_keys);
     $form_set['fieldsets'] = array_combine($fieldset_keys,$form_set['fieldsets']);
 
     // Relaties
@@ -2361,7 +2361,7 @@ Class Data_Core extends CI_Model {
   //       );
   //     }
   //     $tabs[]=array(
-  //       'title' => $this->ui->get($tabtitle),
+  //       'title' => $this->lang->ui($tabtitle),
   //       'items' => $items,
   //     );
   //   }

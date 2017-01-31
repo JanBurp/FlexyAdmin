@@ -66,7 +66,7 @@ class Plugin_export extends Plugin {
 		$tableOptions=array();
 		foreach ($tables as $key=>$table) {
 			if ($this->config('use_ui_names'))
-				$tableOptions[$table]=$this->CI->ui->get($table);
+				$tableOptions[$table]=$this->CI->lang->ui($table);
 			else
 				$tableOptions[$table]=$table;
 		}
@@ -155,7 +155,7 @@ class Plugin_export extends Plugin {
 			$ui_data=array();
 			foreach ($data as $id => $row) {
 				foreach ($row as $field => $value) {
-					$ui_data[$id][$this->CI->ui->get($field)]=$value;
+					$ui_data[$id][$this->CI->lang->ui($field)]=$value;
 				}
 			}
 			$data=$ui_data;
@@ -190,7 +190,7 @@ class Plugin_export extends Plugin {
 		if (!empty($out)) {
       if ($download) {
   			$filename=$table;
-  			if ($this->config('use_ui_names')) $filename=$this->CI->ui->get($filename);
+  			if ($this->config('use_ui_names')) $filename=$this->CI->lang->ui($filename);
         $this->_download($filename,$type,$out);
       }
   		return $out;
