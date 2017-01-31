@@ -100,8 +100,6 @@ class MY_Form_validation extends CI_Form_validation {
    * @author Jan den Besten
    */
   public function validate_data($data,$table='') {
-    // For fetching the labels
-    $this->CI->load->model('ui');
     // (re)Set data
     $this->set_data($data);
     $this->_field_data=array();
