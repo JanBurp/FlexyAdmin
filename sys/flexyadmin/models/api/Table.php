@@ -111,8 +111,7 @@ class Table extends Api_Model {
   
 	public function __construct() {
 		parent::__construct();
-    $this->load->model('ui');
-	}
+    	}
   
   /**
    * Gets the data and information and returns it

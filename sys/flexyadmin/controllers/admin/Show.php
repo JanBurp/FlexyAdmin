@@ -12,8 +12,7 @@ class Show extends AdminController {
 	public function __construct() {
 		parent::__construct();
     $this->config->load('schemaform');
-    $this->load->model('ui');
-	}
+    	}
 
 	public function index() {
 		$this->view_admin( 'admin_404' );

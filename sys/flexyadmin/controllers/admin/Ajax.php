@@ -15,8 +15,7 @@ class Ajax extends AjaxController {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('ui');
-    $this->load->library('form_validation');
+		    $this->load->library('form_validation');
     $this->lang->load('ajax');
     $this->lang->load('form_validation');
     $this->load->helper('string');

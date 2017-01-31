@@ -168,8 +168,7 @@ class Row extends Api_Model {
 
 	public function __construct() {
 		parent::__construct();
-    $this->load->model('ui');
-	}
+    	}
   
 
   /**

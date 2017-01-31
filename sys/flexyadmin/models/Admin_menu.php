@@ -17,8 +17,7 @@ Class Admin_menu extends CI_Model {
     parent::__construct();
     $this->config->load('admin_ui',true);
     $this->ui_config = $this->config->item('admin_ui');
-    $this->load->model('ui');
-    $this->load->library('menu');
+        $this->load->library('menu');
     $this->load->helper('language');
     $this->lang->load('help');
     $this->user = $this->flexy_auth->get_user();
