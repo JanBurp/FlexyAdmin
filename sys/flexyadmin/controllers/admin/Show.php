@@ -45,7 +45,7 @@ class Show extends AdminController {
     
     // Show grid
     $grid = array(
-      'title'    => $this->ui->get($name),
+      'title'    => $this->lang->ui($name),
       'name'     => $name,
       'api'      => $api,
       'order'    => $options['order'],
@@ -112,7 +112,7 @@ class Show extends AdminController {
     // Show form
     $form = array(
       'name'      => $name,
-      'title'     => $this->ui->get($name),
+      'title'     => $this->lang->ui($name),
       'id'        => $id,
     );
 	  $this->view_admin( 'vue/form', $form );

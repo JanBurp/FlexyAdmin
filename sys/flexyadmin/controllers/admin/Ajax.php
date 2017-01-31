@@ -135,7 +135,7 @@ class Ajax extends AjaxController {
     $result['method']=__METHOD__;
     if ($error) $result['error']=lang($error);
     if ($validation_errors) {
-      $result['validation_errors']=safe_quotes($this->ui->replace_ui_names($validation_errors));
+      $result['validation_errors']=safe_quotes($this->lang->replace_ui($validation_errors));
     }
     else {
       $result['validation_errors']=false;

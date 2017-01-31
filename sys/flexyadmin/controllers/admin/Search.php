@@ -86,7 +86,7 @@ class Search extends AdminController {
                                         ->select_abstract()
                                         ->get_row();
 								$abstract = $abstract['abstract'];
-								$htmlTest.="<h4>".$this->ui->get($table)." - <i>$abstract</i></h4>";
+								$htmlTest.="<h4>".$this->lang->ui($table)." - <i>$abstract</i></h4>";
                 if ($matches) {
                   $htmlTest.='<ol>';
                   foreach ($matches[0] as $match) {
