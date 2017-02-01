@@ -5,6 +5,8 @@
 $config['table']    = 'cfg_users';
 $config['order_by'] = 'str_username,id';
 
+$config['abstract_fields'] = array('str_username');
+
 $config['relations'] = array(
   'many_to_many' => array (
     'rel_users__groups' => array(
