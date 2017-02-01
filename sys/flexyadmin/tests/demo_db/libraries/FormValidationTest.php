@@ -49,29 +49,29 @@ class FormValidationTest extends CITestCase {
     }
 
     // tbl_menu.str_module
-    $tests=array(
-      array('str_module','example',true),
-      array('str_module','test',false),
-      array('str_module','|',false),
-    );
-    foreach ($tests as $test) {
-      $result=array_pop($test);
-
-      $validated = $this->CI->form_validation->validate_data(array($test[0]=>$test[1]),'tbl_menu');
-      $errors    = $this->CI->form_validation->get_error_messages();
-
-      if ($result) {
-        $this->assertTrue($validated);
-        $this->assertInternalType('array',$errors);
-        $this->assertCount(0,$errors);
-      }
-      else {
-        $this->assertFalse($validated);
-        $this->assertInternalType('array',$errors);
-        $this->assertCount(1,$errors);
-      }
-
-    }
+    // $tests=array(
+    //   array('str_module','example',true),
+    //   array('str_module','test',false),
+    //   array('str_module','|',false),
+    // );
+    // foreach ($tests as $test) {
+    //   $result=array_pop($test);
+    //
+    //   $validated = $this->CI->form_validation->validate_data(array($test[0]=>$test[1]),'tbl_menu');
+    //   $errors    = $this->CI->form_validation->get_error_messages();
+    //
+    //   if ($result) {
+    //     $this->assertTrue($validated);
+    //     $this->assertInternalType('array',$errors);
+    //     $this->assertCount(0,$errors);
+    //   }
+    //   else {
+    //     $this->assertFalse($validated);
+    //     $this->assertInternalType('array',$errors);
+    //     $this->assertCount(1,$errors);
+    //   }
+    //
+    // }
   }
 
 

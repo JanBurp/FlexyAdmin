@@ -90,59 +90,20 @@ class ApiMediaTest extends ApiTestModel {
       $this->assertEquals( false, $result['data'] );
     }
     
-    // UPLOADING files
-    // $upload_files=scandir($this->upload_path);
-    // $upload_files=array_slice($upload_files,2,2);
-    // $this->CI->load->view('../upload',array('files'=>$upload_files));
-    // foreach ($upload_files as $file) {
-    //   trace_($this->upload_path.'/'.$file);
-    //   $_FILES      = array( 'file' => array(
-    //     'name'     => $file,
-    //     'tmp_name' => '/tmp/php42up23',
-    //     // 'type'     => 'text/plain',
-    //     // 'size'     => 42,
-    //     // 'error'    => 0
-    //   ));
-    //
-    // };
-
-
-    
-    
-    
-    // Delete some files
-    // $files=array_slice($files,0,2);
-    // foreach ($files as $id => $file) {
-    //   $path=$file['path'];
-    //   $name=$file['file'];
+ 
+    // Try to delete wrong filenames
+    // for ($i=0; $i < 3; $i++) {
+    //   $name=random_string();
     //   // delete
     //   $this->CI->media->set_args( array('POST'=>array('path'=>$path, 'where'=>$name) ) );
     //   $result = $this->CI->media->index();
-    //
     //   $this->assertArrayNotHasKey( 'status', $result );
     //   $this->assertArrayHasKey( 'success', $result );
-    //   $this->assertEquals( true, $result['success'] );
-    //   $this->assertArrayNotHasKey( 'error', $result );
+    //   $this->assertEquals( false, $result['success'] );
+    //   $this->assertArrayHasKey( 'error', $result );
     //   $this->assertArrayHasKey( 'data', $result );
-    //   $this->assertEquals( true, $result['data'] );
+    //   $this->assertEquals( false, $result['data'] );
     // }
-
-    // Try to delete wrong filenames
-    for ($i=0; $i < 3; $i++) { 
-      $name=random_string();
-      // delete
-      $this->CI->media->set_args( array('POST'=>array('path'=>$path, 'where'=>$name) ) );
-      $result = $this->CI->media->index();
-      $this->assertArrayNotHasKey( 'status', $result );
-      $this->assertArrayHasKey( 'success', $result );
-      $this->assertEquals( false, $result['success'] );
-      $this->assertArrayHasKey( 'error', $result );
-      $this->assertArrayHasKey( 'data', $result );
-      $this->assertEquals( false, $result['data'] );
-    }
-
-    
-    
     
     
   }
