@@ -7,7 +7,6 @@ class FormActionsTest extends CITestCase {
   private $settings=array();
 
   protected function setUp () {
-    $this->CI->load->model('cfg');
     $this->CI->load->helper('language');
     // Load basic modules
     $this->CI->load->library('Email');
