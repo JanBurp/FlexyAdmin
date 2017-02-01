@@ -12,6 +12,11 @@
   
 	<testsuites>
     
+    <!-- All -->
+    <testsuite name="all">
+      <directory suffix="Test.php">flexyadmin/tests</directory>
+		</testsuite>
+    
     <!-- Latest / Busy -->
     <testsuite name="busy">
       <!-- <file>flexyadmin/tests/demo_db/models/DataTest.php</file> -->

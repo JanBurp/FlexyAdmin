@@ -54,7 +54,6 @@ class ApiTableTest extends ApiTestModel {
         'data|1|email_email'  => array( 'type' => 'string' ),
         'data|1'  => array( 'hasKey' => 'stx_description' ),
         'data|1'  => array( 'hasKey' => 'stx_keywords' ),
-        'data|1'  => array( 'hasKey' => 'str_google_analytics' ),
         'info'    => array( 'type' => 'array' ),
         'info'    => array( 'count' => 3 ),
         'info'    => array( 'hasKey' => 'num_rows' ),
