@@ -99,7 +99,7 @@ Class cfg_users extends Data_Core {
       $id = $this->tm_set[$this->settings['primary_key']];
       $sql = 'SELECT `'.implode('`,`',$select).'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = '.$id;
       $query = $this->db->query($sql);
-      $current = $query->row_array();
+      if ($query) $current = $query->row_array();
     }
     
     foreach ( $this->tm_set as $key => $value ) {
