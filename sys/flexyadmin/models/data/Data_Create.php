@@ -29,7 +29,6 @@ Class Data_Create extends CI_Model {
     
     $this->load->library('parser');
     $this->load->library('form_validation');
-    $this->load->model('cfg');
     $this->load->model( 'data/data', 'data' );
 	}
   

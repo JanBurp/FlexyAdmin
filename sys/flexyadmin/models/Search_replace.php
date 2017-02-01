@@ -12,10 +12,7 @@ class Search_replace extends CI_Model {
    private $field_types = array('txt');
    private $media_types = array('media','medias');
    private $langRegex = '';
-	
-	
-   /**
-     */
+
    public function __construct() {
 		parent::__construct();
 		// This is for sites with uri's to different languages
@@ -280,7 +277,6 @@ class Search_replace extends CI_Model {
 
   /**
    * Vervangt bestandsnamen in specifieke tabel/veld
-   * TODO: Dit moet anders.... opties zit ergens anders nu.
    *
    * @param string $table 
    * @param string $field 
@@ -291,9 +287,9 @@ class Search_replace extends CI_Model {
    */
   public function media_in($table,$field,$search,$replace='') {
 		$result=array();
-    $path = $this->cfg->get('cfg_media_info',$table.'.'.$field,'path'); // TODO
+    $this->data->table($table);
+    $path = $this->data->get_setting(array('options',$field,$path));
     if (!empty($path)) $path.='/';
-    // strace_($path);
     
     if (!is_array($search)) {
       $search=array($search=>$replace);
@@ -304,8 +300,6 @@ class Search_replace extends CI_Model {
       if (!empty($r)) $r=str_replace($path,'', remove_assets($r) );
       $search[$s]=$r;
     }
-    
-    // strace_($search);
     
 		$this->db->select("id,$field");
     $this->db->where("$field !=","");
