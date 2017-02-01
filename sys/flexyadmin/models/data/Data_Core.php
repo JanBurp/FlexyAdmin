@@ -363,8 +363,6 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_field_info( $table='', $fields=array() ) {
-
-    $this->load->model('cfg');
     $this->load->library('form_validation');
     if (empty($table)) $table = $this->settings['table'];
     if (empty($fields)) $fields = $this->settings['fields'];
@@ -478,7 +476,6 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_order_by( $fields=array() ) {
-    $this->load->model('cfg');
     if (empty($fields)) $fields = $this->settings['fields'];
     $order_by = '';
     
