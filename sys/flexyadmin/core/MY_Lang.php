@@ -107,31 +107,52 @@ class MY_Lang extends CI_Lang {
 		// Changes end here. JdB
 
 
-		// Determine where the language file is and load it
-		if ($alt_path != '' && file_exists($alt_path.'language/'.$idiom.'/'.$langfile))
-		{
-			include($alt_path.'language/'.$idiom.'/'.$langfile);
-		}
-		else
-		{
-			$found = FALSE;
-
-			foreach (get_instance()->load->get_package_paths(TRUE) as $package_path)
+    // JDB:Load from codeigniter->flexyadmin->site
+    $paths = get_instance()->load->get_package_paths(TRUE);
+    array_unshift($paths,SITEPATH);
+    array_unshift($paths,APPPATH);
+    array_unshift($paths,BASEPATH);
+    $paths = array_unique($paths);
+    
+    foreach ($paths as $path) {
+			if (file_exists($path.'language/'.$idiom.'/'.$langfile))
 			{
-				if (file_exists($package_path.'language/'.$idiom.'/'.$langfile))
-				{
-					include($package_path.'language/'.$idiom.'/'.$langfile);
-					$found = TRUE;
-					break;
-				}
+				include($path.'language/'.$idiom.'/'.$langfile);
+				$found = TRUE;
 			}
-
-			if ($found !== TRUE)
-			{
-        log_message('error', 'Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
-        // show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
-			}
+    }
+		if ($found !== TRUE)
+		{
+      log_message('error', 'Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
+      // show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
 		}
+    //
+    // // Determine where the language file is and load it
+    // if ($alt_path != '' && file_exists($alt_path.'language/'.$idiom.'/'.$langfile))
+    // {
+    //   include($alt_path.'language/'.$idiom.'/'.$langfile);
+    // }
+    // else
+    // {
+    //   $found = FALSE;
+    //
+    //   foreach (get_instance()->load->get_package_paths(TRUE) as $package_path)
+    //   {
+    //     if (file_exists($package_path.'language/'.$idiom.'/'.$langfile))
+    //     {
+    //       include($package_path.'language/'.$idiom.'/'.$langfile);
+    //       $found = TRUE;
+    //       break;
+    //     }
+    //   }
+    //
+    //   if ($found !== TRUE)
+    //   {
+    //         log_message('error', 'Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
+    //         // show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
+    //   }
+    // }
+    // End JDB
 
 
 		if ( ! isset($lang))
