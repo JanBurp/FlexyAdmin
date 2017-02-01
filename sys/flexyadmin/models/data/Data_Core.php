@@ -1249,6 +1249,10 @@ Class Data_Core extends CI_Model {
         $type = $relations;
         $relations = $this->get_setting(array('relations',$type));
       }
+      else {
+        $complete_relations = $this->get_setting(array('relations',$type));
+        $relations = array_keep_keys($complete_relations,$relations);
+      }
       // Loop alle relaties langs en complementeer die
       if ($relations) {
         foreach ($relations as $what => $info) {
