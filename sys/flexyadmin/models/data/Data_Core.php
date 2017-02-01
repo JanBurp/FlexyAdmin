@@ -972,7 +972,7 @@ Class Data_Core extends CI_Model {
       }
     }
     // Maak de SQL
-		$sql = "CONCAT_WS('|',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`) AS `" . $abstract_field_name . "`";
+		$sql = "REPLACE( CONCAT_WS('|',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`), '||','' )  AS `" . $abstract_field_name . "`";
     return $sql;
 	}
   
