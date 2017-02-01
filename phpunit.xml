@@ -11,6 +11,11 @@
 	stopOnSkipped="false">
   
 	<testsuites>
+
+    <!-- All -->
+    <testsuite name="all">
+      <directory suffix="Test.php">sys/flexyadmin/tests</directory>
+		</testsuite>
     
     <!-- Busy -->
     <testsuite name="busy">
