@@ -676,13 +676,13 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-18e44f5a!vue-loader/lib/selector?type=styles&index=0!./flexy-button.vue */ 104)
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-7795762e!vue-loader/lib/selector?type=styles&index=0!./flexy-button.vue */ 110)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-button.vue */ 51)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-18e44f5a!vue-loader/lib/selector?type=template&index=0!./flexy-button.vue */ 87)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-7795762e!vue-loader/lib/selector?type=template&index=0!./flexy-button.vue */ 98)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -694,7 +694,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-button.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/flexy-button.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -705,9 +705,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-18e44f5a", __vue_options__)
+    hotAPI.createRecord("data-v-7795762e", __vue_options__)
   } else {
-    hotAPI.reload("data-v-18e44f5a", __vue_options__)
+    hotAPI.reload("data-v-7795762e", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-button.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -1127,13 +1127,13 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-29fbe676!vue-loader/lib/selector?type=styles&index=0!./flexy-thumb.vue */ 107)
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-3c0fb56f!vue-loader/lib/selector?type=styles&index=0!./flexy-thumb.vue */ 108)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-thumb.vue */ 56)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-29fbe676!vue-loader/lib/selector?type=template&index=0!./flexy-thumb.vue */ 91)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-3c0fb56f!vue-loader/lib/selector?type=template&index=0!./flexy-thumb.vue */ 93)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1145,7 +1145,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-thumb.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/flexy-thumb.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -1156,9 +1156,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-29fbe676", __vue_options__)
+    hotAPI.createRecord("data-v-3c0fb56f", __vue_options__)
   } else {
-    hotAPI.reload("data-v-29fbe676", __vue_options__)
+    hotAPI.reload("data-v-3c0fb56f", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-thumb.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -1182,7 +1182,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-pagination.vue */ 55)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-6df5883b!vue-loader/lib/selector?type=template&index=0!./flexy-pagination.vue */ 99)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-e56e8c5e!vue-loader/lib/selector?type=template&index=0!./flexy-pagination.vue */ 103)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1194,7 +1194,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-pagination.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/flexy-pagination.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -1205,9 +1205,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6df5883b", __vue_options__)
+    hotAPI.createRecord("data-v-e56e8c5e", __vue_options__)
   } else {
-    hotAPI.reload("data-v-6df5883b", __vue_options__)
+    hotAPI.reload("data-v-e56e8c5e", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-pagination.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -1231,7 +1231,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-grid.vue */ 63)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-4dbe28d0!vue-loader/lib/selector?type=template&index=0!./flexy-grid.vue */ 94)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-24762f42!vue-loader/lib/selector?type=template&index=0!./flexy-grid.vue */ 89)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1243,7 +1243,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/grid/flexy-grid.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/grid/flexy-grid.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -1254,9 +1254,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4dbe28d0", __vue_options__)
+    hotAPI.createRecord("data-v-24762f42", __vue_options__)
   } else {
-    hotAPI.reload("data-v-4dbe28d0", __vue_options__)
+    hotAPI.reload("data-v-24762f42", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-grid.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -1567,13 +1567,13 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-529cf6a2!vue-loader/lib/selector?type=styles&index=0!./timepicker.vue */ 110)
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-c41b8b68!vue-loader/lib/selector?type=styles&index=0!./timepicker.vue */ 112)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./timepicker.vue */ 61)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-529cf6a2!vue-loader/lib/selector?type=template&index=0!./timepicker.vue */ 95)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-c41b8b68!vue-loader/lib/selector?type=template&index=0!./timepicker.vue */ 102)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1585,7 +1585,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/form/timepicker.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/form/timepicker.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -1596,9 +1596,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-529cf6a2", __vue_options__)
+    hotAPI.createRecord("data-v-c41b8b68", __vue_options__)
   } else {
-    hotAPI.reload("data-v-529cf6a2", __vue_options__)
+    hotAPI.reload("data-v-c41b8b68", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] timepicker.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -1619,13 +1619,13 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-310057a0!vue-loader/lib/selector?type=styles&index=0!./Datepicker.vue */ 109)
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-2bc5fa5a!vue-loader/lib/selector?type=styles&index=0!./Datepicker.vue */ 107)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./Datepicker.vue */ 64)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-310057a0!vue-loader/lib/selector?type=template&index=0!./Datepicker.vue */ 93)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-2bc5fa5a!vue-loader/lib/selector?type=template&index=0!./Datepicker.vue */ 91)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1637,7 +1637,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/vue-strap-src/Datepicker.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/vue-strap-src/Datepicker.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -1648,9 +1648,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-310057a0", __vue_options__)
+    hotAPI.createRecord("data-v-2bc5fa5a", __vue_options__)
   } else {
-    hotAPI.reload("data-v-310057a0", __vue_options__)
+    hotAPI.reload("data-v-2bc5fa5a", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] Datepicker.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -19116,13 +19116,13 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-2be934a7!vue-loader/lib/selector?type=styles&index=0!./flexy-blocks.vue */ 108)
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-06debd86!vue-loader/lib/selector?type=styles&index=0!./flexy-blocks.vue */ 104)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-blocks.vue */ 50)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-2be934a7!vue-loader/lib/selector?type=template&index=0!./flexy-blocks.vue */ 92)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-06debd86!vue-loader/lib/selector?type=template&index=0!./flexy-blocks.vue */ 86)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -19134,7 +19134,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-blocks.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/flexy-blocks.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -19145,9 +19145,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2be934a7", __vue_options__)
+    hotAPI.createRecord("data-v-06debd86", __vue_options__)
   } else {
-    hotAPI.reload("data-v-2be934a7", __vue_options__)
+    hotAPI.reload("data-v-06debd86", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-blocks.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -19171,7 +19171,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-help.vue */ 52)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-d85ba1bc!vue-loader/lib/selector?type=template&index=0!./flexy-help.vue */ 100)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-91106d90!vue-loader/lib/selector?type=template&index=0!./flexy-help.vue */ 99)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -19183,7 +19183,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-help.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/flexy-help.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -19194,9 +19194,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-d85ba1bc", __vue_options__)
+    hotAPI.createRecord("data-v-91106d90", __vue_options__)
   } else {
-    hotAPI.reload("data-v-d85ba1bc", __vue_options__)
+    hotAPI.reload("data-v-91106d90", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-help.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -19220,7 +19220,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-messages.vue */ 53)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-0236572d!vue-loader/lib/selector?type=template&index=0!./flexy-messages.vue */ 86)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-46b4f643!vue-loader/lib/selector?type=template&index=0!./flexy-messages.vue */ 94)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -19232,7 +19232,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-messages.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/flexy-messages.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -19243,9 +19243,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0236572d", __vue_options__)
+    hotAPI.createRecord("data-v-46b4f643", __vue_options__)
   } else {
-    hotAPI.reload("data-v-0236572d", __vue_options__)
+    hotAPI.reload("data-v-46b4f643", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-messages.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -19266,13 +19266,13 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-1d14121c!vue-loader/lib/selector?type=styles&index=0!./flexy-modal.vue */ 105)
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-6e21bac6!vue-loader/lib/selector?type=styles&index=0!./flexy-modal.vue */ 109)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-modal.vue */ 54)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-1d14121c!vue-loader/lib/selector?type=template&index=0!./flexy-modal.vue */ 89)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-6e21bac6!vue-loader/lib/selector?type=template&index=0!./flexy-modal.vue */ 97)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -19284,7 +19284,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-modal.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/flexy-modal.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -19295,9 +19295,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1d14121c", __vue_options__)
+    hotAPI.createRecord("data-v-6e21bac6", __vue_options__)
   } else {
-    hotAPI.reload("data-v-1d14121c", __vue_options__)
+    hotAPI.reload("data-v-6e21bac6", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-modal.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -19321,7 +19321,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-form.vue */ 59)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-e9bdde50!vue-loader/lib/selector?type=template&index=0!./flexy-form.vue */ 102)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-531356fc!vue-loader/lib/selector?type=template&index=0!./flexy-form.vue */ 95)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -19333,7 +19333,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/form/flexy-form.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/form/flexy-form.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -19344,9 +19344,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-e9bdde50", __vue_options__)
+    hotAPI.createRecord("data-v-531356fc", __vue_options__)
   } else {
-    hotAPI.reload("data-v-e9bdde50", __vue_options__)
+    hotAPI.reload("data-v-531356fc", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-form.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -29136,7 +29136,7 @@ forceFallback:true};}},data:function data(){return{media:this.value,choose:false
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 8);var _flexyThumb2=_interopRequireDefault(_flexyThumb);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'VueGridCell',components:{flexyThumb:_flexyThumb2.default,flexyButton:_flexyButton2.default},props:['type','name','primary','value','level','editable','readonly','options','focus'],// created : function() {
 //   console.log(this.options);
 // },
-computed:{inputID:function inputID(){return _jdbTools2.default.createUUID();},fieldTypes:function fieldTypes(){var types={checkbox:['checkbox'],media:['media','medias'],color:['color'],url:['url'],relation:['relation'],abstract:['abstract']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(type);}types.default=defaultTypes;return types;},showTreeNode:function showTreeNode(){return this.name==="str_title"&&this.level>0;}},data:function data(){return{item:this.value,oldItem:this.value,isEditing:false};},methods:{cellClass:function cellClass(){var c=[];c.push('grid-cell-type-'+this.type);if(this.editable)c.push('grid-cell-editable');if(this.readonly)c.push('text-muted');if(this.focus)c.push('has-focus');if(this.isEditing)c.push('is-editing');return c;},isType:function isType(type,fieldType){var is=false;if(type==='default'){is=this.fieldTypes['default'].indexOf(fieldType)===-1;}else{is=this.fieldTypes[type].indexOf(fieldType)>=0;}return is;},thumbs:function thumbs(media){var path=this.options.path;if(_.isUndefined(path))path=this.options.schema.path;var array=media.split('|');for(var i=0;i<array.length;i++){array[i]={src:'_media/thumb/'+path+'/'+array[i],alt:array[i]};}return array;},complementColor:function complementColor(color){return _jdbTools2.default.complementColor(color);},relationItems:function relationItems(string){var items=string.split(',');for(var i=0;i<items.length;i++){items[i]=items[i].replace(/{/,'').replace(/}/,'').trim();}return items;},itemObject:function itemObject(item){if(typeof item!=='Object'){item=JSON.parse(item);}return item;},select:function select(){this.$emit('select');},saveEdit:function saveEdit(value){var self=this;self.isEditing=false;if(value!==this.oldItem){self.postField(value).then(function(response){if(response.error){self.cancelEdit();}else{self.item=value;}});}},startEdit:function startEdit(){if(this.editable&&!this.readonly){this.isEditing=true;this.oldItem=this.item;var inputEL=document.getElementById(this.inputID);inputEL.style.display="block";inputEL.focus();}},cancelEdit:function cancelEdit(){this.item=this.oldItem;this.isEditing=false;},clickEdit:function clickEdit(){var self=this;var currentValue=self.item;if(this.editable&&this.type==='checkbox'){var newValue=1;if(currentValue)newValue=0;self.postField(newValue).then(function(response){if(!response.error){self.item=newValue;}});}},postField:function postField(value){var self=this;var data={};data[self.name]=value;return _flexyState2.default.api({url:'row','data':{'table':this.primary.table,'where':this.primary.id,'data':data}}).then(function(response){if(!response.error){if(!_.isUndefined(response.data.info.validation)&&response.data.info.validation===false){// Validaiton error
+computed:{inputID:function inputID(){return _jdbTools2.default.createUUID();},fieldTypes:function fieldTypes(){var types={checkbox:['checkbox'],media:['media','medias'],color:['color'],url:['url'],relation:['relation'],select:['select'],abstract:['abstract']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(type);}types.default=defaultTypes;return types;},showTreeNode:function showTreeNode(){return this.name==="str_title"&&this.level>0;}},data:function data(){return{item:this.value,oldItem:this.value,isEditing:false};},methods:{cellClass:function cellClass(){var c=[];c.push('grid-cell-type-'+this.type);if(this.editable)c.push('grid-cell-editable');if(this.readonly)c.push('text-muted');if(this.focus)c.push('has-focus');if(this.isEditing)c.push('is-editing');return c;},isType:function isType(type,fieldType){var is=false;if(type==='default'){is=this.fieldTypes['default'].indexOf(fieldType)===-1;}else{is=this.fieldTypes[type].indexOf(fieldType)>=0;}return is;},thumbs:function thumbs(media){var path=this.options.path;if(_.isUndefined(path))path=this.options.schema.path;var array=media.split('|');for(var i=0;i<array.length;i++){array[i]={src:'_media/thumb/'+path+'/'+array[i],alt:array[i]};}return array;},complementColor:function complementColor(color){return _jdbTools2.default.complementColor(color);},relationItems:function relationItems(string){var items=string.split(',');for(var i=0;i<items.length;i++){items[i]=items[i].replace(/{/,'').replace(/}/,'').trim();}return items;},selectItem:function selectItem(value){if(!value)return'';value=value.toString();return value.replace(/\|/g,'<span class="grid-cell-seperator">|</span>');},itemObject:function itemObject(item){if(typeof item!=='Object'){item=JSON.parse(item);}return item;},select:function select(){this.$emit('select');},saveEdit:function saveEdit(value){var self=this;self.isEditing=false;if(value!==this.oldItem){self.postField(value).then(function(response){if(response.error){self.cancelEdit();}else{self.item=value;}});}},startEdit:function startEdit(){if(this.editable&&!this.readonly){this.isEditing=true;this.oldItem=this.item;var inputEL=document.getElementById(this.inputID);inputEL.style.display="block";inputEL.focus();}},cancelEdit:function cancelEdit(){this.item=this.oldItem;this.isEditing=false;},clickEdit:function clickEdit(){var self=this;var currentValue=self.item;if(this.editable&&this.type==='checkbox'){var newValue=1;if(currentValue)newValue=0;self.postField(newValue).then(function(response){if(!response.error){self.item=newValue;}});}},postField:function postField(value){var self=this;var data={};data[self.name]=value;return _flexyState2.default.api({url:'row','data':{'table':this.primary.table,'where':this.primary.id,'data':data}}).then(function(response){if(!response.error){if(!_.isUndefined(response.data.info.validation)&&response.data.info.validation===false){// Validaiton error
 response.error=true;for(var error in response.data.info.validation_errors){_flexyState2.default.addMessage(response.data.info.validation_errors[error],'danger');}}else{// Ok!
 _flexyState2.default.addMessage(self.$lang.grid_edit_success);}}else{// Error
 _flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});}}};
@@ -29179,7 +29179,7 @@ level=0;}// add level info
 row._info.level=level;}// Keep new row
 data[i]=row;}// Add more tree info (has_children)
 if(isTree&&parents!=={}){_.forEach(data,function(row,key){var id=row.id.value;var level=parents[id];if(level){data[key]._info.has_children=true;}});}// Console
-if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,function(row){console.log('id:',row.id.value,'order:',row.order.value,'self_parent:',row.self_parent.value,'level:',row._info.level,'isChild:',row._info.is_child,'hasChildren:',row._info.has_children,'title:',row.str_title.value);});}return data;},gridType:function gridType(){var type=this.type;if(type==='mediapicker'){type='media';this.changeUrlApi=false;}if(typeof this.fields.order!=='undefined'&&(this.apiParts.order===''||this.apiParts.order==='order')&&this.apiParts.filter==='')type='ordered';if(typeof this.fields.self_parent!=='undefined'&&(this.apiParts.order===''||this.apiParts.order==='order')&&this.apiParts.filter==='')type='tree';return type;},gridTypeClass:function gridTypeClass(){var c='grid-type-'+this.gridType();if(this.gridType()==='media'){c+=' grid-media-view-'+this.getMediaView();}return c;},needsPagination:function needsPagination(){return typeof this.dataInfo.num_pages!=='undefined'&&this.dataInfo.num_pages>1;},isPrimaryHeader:function isPrimaryHeader(field){var headerType=field.schema['grid-type']||field.schema['form-type'];return headerType==='primary';},isNormalVisibleHeader:function isNormalVisibleHeader(field){var headerType=field.schema['grid-type']||field.schema['form-type'];return headerType!=='hidden'&&headerType!=='primary';},isMediaThumbs:function isMediaThumbs(){return this.gridType()==='media'&&this.getMediaView()!=='list';},getMediaView:function getMediaView(){return _flexyState2.default.getMediaView();},setMediaView:function setMediaView(view){return _flexyState2.default.setMediaView(view);},headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},// setFocus : function(id,cell) {
+if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,function(row){console.log('id:',row.id.value,'order:',row.order.value,'self_parent:',row.self_parent.value,'level:',row._info.level,'isChild:',row._info.is_child,'hasChildren:',row._info.has_children,'title:',row.str_title.value);});}return data;},gridType:function gridType(){var type=this.type;if(type==='mediapicker'){type='media';this.changeUrlApi=false;}if(typeof this.fields.order!=='undefined'&&(this.apiParts.order===''||this.apiParts.order==='order')&&this.apiParts.filter==='')type='ordered';if(typeof this.fields.self_parent!=='undefined'&&(this.apiParts.order===''||this.apiParts.order==='order')&&this.apiParts.filter==='')type='tree';return type;},gridTypeClass:function gridTypeClass(){var c='grid-type-'+this.gridType();if(this.gridType()==='media'){c+=' grid-media-view-'+this.getMediaView();}return c;},needsPagination:function needsPagination(){return typeof this.dataInfo.num_pages!=='undefined'&&this.dataInfo.num_pages>1;},isPrimaryHeader:function isPrimaryHeader(field){var headerType=field.schema['grid-type']||field.schema['form-type'];return headerType==='primary';},isNormalVisibleHeader:function isNormalVisibleHeader(field){var headerType=field.schema['grid-type']||field.schema['form-type'];return headerType!=='hidden'&&headerType!=='primary';},isMediaThumbs:function isMediaThumbs(){return this.gridType()==='media'&&this.getMediaView()!=='list';},getMediaView:function getMediaView(){return _flexyState2.default.getMediaView();},setMediaView:function setMediaView(view){return _flexyState2.default.setMediaView(view);},headerClass:function headerClass(field){var c='grid-header-type-'+field.schema['form-type'];if(!_.isUndefined(field.schema['readonly'])){if(field.schema['readonly'])c+=' grid-header-muted';}return c;},// setFocus : function(id,cell) {
 //   this.focus = {id:id,cell:cell};
 // },
 // setFocusNext : function() {
@@ -29393,83 +29393,7 @@ justified:false,navStyle:{type:String,default:null},value:{type:Number,default:0
 /* unknown exports provided */
 /* all exports used */
 /*!************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
-  \************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.dropdown {position:absolute!important;margin-left:.35rem;\n}\n.flexy-button {cursor:pointer;width:2rem;height:1.55rem;padding:.15rem .5rem 1rem .4rem;text-align:center;\n}\n.flexy-button.no-border {border-color:transparent;\n}\n.flexy-button.btn-icon.dropdown-toggle {width:3.2rem;\n}\n.flexy-button.btn-icon .fa {width:1rem;margin:0;\n}\n.flexy-button.btn-text {width:auto!important;padding-right:.55rem;\n}\n.flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;\n}\n.flexy-button.btn-lg .fa {font-size:2rem;\n}\n.flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;\n}\n.flexy-button.btn-xlg .fa {font-size:3.5rem;\n}\n", ""]);
-
-// exports
-
-
-/***/ },
-/* 69 */
-/* unknown exports provided */
-/* all exports used */
-/*!***********************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
-  \***********************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.flexy-modal {display:block;height:auto;background-color:rgba(0,0,0,.5)\n}\n.flexy-modal.hidden {display:block;height:0px;\n}\n.flexy-modal .modal-header .flexy-button {float:right;\n}\n.flexy-modal .modal-footer .btn {margin-left:1rem;\n}\n", ""]);
-
-// exports
-
-
-/***/ },
-/* 70 */
-/* unknown exports provided */
-/* all exports used */
-/*!****************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-1f7ed48c!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/colorpicker.vue ***!
-  \****************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.colorpicker .form-control {width:6rem;margin-right:.5rem;float:left;\n}\n.colorpicker .form-picker {height:2.35rem;width:3rem;padding:0;margin-right:0;\n}\n", ""]);
-
-// exports
-
-
-/***/ },
-/* 71 */
-/* unknown exports provided */
-/* all exports used */
-/*!***********************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
-  \***********************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.flexy-thumb {display:inline;margin:0;\n}\n.flexy-thumb .fa {font-size:1.6rem;\n}\n.flexy-thumb img {width:auto;\n}\n.grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;\n}\n.grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;\n}\n.grid-media-view-small .flexy-thumb .fa {font-size:5rem;\n}\n.grid-media-view-small .flexy-thumb img {width:auto;max-width:6rem;height:auto;max-height:6rem;\n}\n.media-thumb-sm {\n  height:1.75rem;\n  border-radius:2px;\n}\n.media-thumb-lg {\n  height:5rem;\n  border-radius:2px;\n}\n", ""]);
-
-// exports
-
-
-/***/ },
-/* 72 */
-/* unknown exports provided */
-/* all exports used */
-/*!************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-2be934a7!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-blocks.vue ***!
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-06debd86!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-blocks.vue ***!
   \************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -29484,11 +29408,49 @@ exports.push([module.i, "\n.flexy-block {text-transform:uppercase;margin-right:1
 
 
 /***/ },
-/* 73 */
+/* 69 */
+/* unknown exports provided */
+/* all exports used */
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-0f93c750!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/colorpicker.vue ***!
+  \****************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.colorpicker .form-control {width:6rem;margin-right:.5rem;float:left;\n}\n.colorpicker .form-picker {height:2.35rem;width:3rem;padding:0;margin-right:0;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 70 */
+/* unknown exports provided */
+/* all exports used */
+/*!******************************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-19a715e9!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/components/Tabs.vue ***!
+  \******************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n[tabs] > .tab-content {\n  margin: 15px 0;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 71 */
 /* unknown exports provided */
 /* all exports used */
 /*!*************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-310057a0!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/Datepicker.vue ***!
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-2bc5fa5a!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/Datepicker.vue ***!
   \*************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -29503,20 +29465,58 @@ exports.push([module.i, "\n.datepicker {\n  position: relative;\n  display: inli
 
 
 /***/ },
-/* 74 */
+/* 72 */
 /* unknown exports provided */
 /* all exports used */
-/*!***************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-529cf6a2!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/timepicker.vue ***!
-  \***************************************************************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-3c0fb56f!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
+  \***********************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
+exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
 // imports
 
 
 // module
-exports.push([module.i, "\n.timepicker-hours, .timepicker-minutes {padding-left:.25rem;padding-right:1.5rem;\n}\n", ""]);
+exports.push([module.i, "\n.flexy-thumb {display:inline;margin:0;\n}\n.flexy-thumb .fa {font-size:1.6rem;\n}\n.flexy-thumb img {width:auto;\n}\n.grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;\n}\n.grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;\n}\n.grid-media-view-small .flexy-thumb .fa {font-size:5rem;\n}\n.grid-media-view-small .flexy-thumb img {width:auto;max-width:6rem;height:auto;max-height:6rem;\n}\n.media-thumb-sm {\n  height:1.75rem;\n  border-radius:2px;\n}\n.media-thumb-lg {\n  height:5rem;\n  border-radius:2px;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 73 */
+/* unknown exports provided */
+/* all exports used */
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-6e21bac6!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
+  \***********************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.flexy-modal {display:block;height:auto;background-color:rgba(0,0,0,.5)\n}\n.flexy-modal.hidden {display:block;height:0px;\n}\n.flexy-modal .modal-header .flexy-button {float:right;\n}\n.flexy-modal .modal-footer .btn {margin-left:1rem;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 74 */
+/* unknown exports provided */
+/* all exports used */
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-7795762e!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
+  \************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.dropdown {position:absolute!important;margin-left:.35rem;\n}\n.flexy-button {cursor:pointer;width:2rem;height:1.55rem;padding:.15rem .5rem 1rem .4rem;text-align:center;\n}\n.flexy-button.no-border {border-color:transparent;\n}\n.flexy-button.btn-icon.dropdown-toggle {width:3.2rem;\n}\n.flexy-button.btn-icon .fa {width:1rem;margin:0;\n}\n.flexy-button.btn-text {width:auto!important;padding-right:.55rem;\n}\n.flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;\n}\n.flexy-button.btn-lg .fa {font-size:2rem;\n}\n.flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;\n}\n.flexy-button.btn-xlg .fa {font-size:3.5rem;\n}\n", ""]);
 
 // exports
 
@@ -29526,7 +29526,7 @@ exports.push([module.i, "\n.timepicker-hours, .timepicker-minutes {padding-left:
 /* unknown exports provided */
 /* all exports used */
 /*!*******************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-afeca60c!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
   \*******************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -29544,9 +29544,9 @@ exports.push([module.i, "\n.datetimepicker .datepicker {float:left;margin-right:
 /* 76 */
 /* unknown exports provided */
 /* all exports used */
-/*!******************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-fb4c1c5a!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/components/Tabs.vue ***!
-  \******************************************************************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-c41b8b68!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/timepicker.vue ***!
+  \***************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
@@ -29554,7 +29554,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader
 
 
 // module
-exports.push([module.i, "\n[tabs] > .tab-content {\n  margin: 15px 0;\n}\n", ""]);
+exports.push([module.i, "\n.timepicker-hours, .timepicker-minutes {padding-left:.25rem;padding-right:1.5rem;\n}\n", ""]);
 
 // exports
 
@@ -30881,13 +30881,13 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-1f7ed48c!vue-loader/lib/selector?type=styles&index=0!./colorpicker.vue */ 106)
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-0f93c750!vue-loader/lib/selector?type=styles&index=0!./colorpicker.vue */ 105)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./colorpicker.vue */ 57)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-1f7ed48c!vue-loader/lib/selector?type=template&index=0!./colorpicker.vue */ 90)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-0f93c750!vue-loader/lib/selector?type=template&index=0!./colorpicker.vue */ 87)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -30899,7 +30899,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/form/colorpicker.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/form/colorpicker.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -30910,9 +30910,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1f7ed48c", __vue_options__)
+    hotAPI.createRecord("data-v-0f93c750", __vue_options__)
   } else {
-    hotAPI.reload("data-v-1f7ed48c", __vue_options__)
+    hotAPI.reload("data-v-0f93c750", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] colorpicker.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -30933,13 +30933,13 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-55b24e50!vue-loader/lib/selector?type=styles&index=0!./datetimepicker.vue */ 111)
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-afeca60c!vue-loader/lib/selector?type=styles&index=0!./datetimepicker.vue */ 111)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./datetimepicker.vue */ 58)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-55b24e50!vue-loader/lib/selector?type=template&index=0!./datetimepicker.vue */ 96)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-afeca60c!vue-loader/lib/selector?type=template&index=0!./datetimepicker.vue */ 101)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -30951,7 +30951,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/form/datetimepicker.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/form/datetimepicker.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -30962,9 +30962,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-55b24e50", __vue_options__)
+    hotAPI.createRecord("data-v-afeca60c", __vue_options__)
   } else {
-    hotAPI.reload("data-v-55b24e50", __vue_options__)
+    hotAPI.reload("data-v-afeca60c", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] datetimepicker.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -30988,7 +30988,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./mediapicker.vue */ 60)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-1ab6e8fb!vue-loader/lib/selector?type=template&index=0!./mediapicker.vue */ 88)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-3a0a1a91!vue-loader/lib/selector?type=template&index=0!./mediapicker.vue */ 92)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -31000,7 +31000,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/form/mediapicker.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/form/mediapicker.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -31011,9 +31011,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1ab6e8fb", __vue_options__)
+    hotAPI.createRecord("data-v-3a0a1a91", __vue_options__)
   } else {
-    hotAPI.reload("data-v-1ab6e8fb", __vue_options__)
+    hotAPI.reload("data-v-3a0a1a91", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] mediapicker.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -31037,7 +31037,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-grid-cell.vue */ 62)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-5ab6a527!vue-loader/lib/selector?type=template&index=0!./flexy-grid-cell.vue */ 97)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-534b1bbd!vue-loader/lib/selector?type=template&index=0!./flexy-grid-cell.vue */ 96)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -31049,7 +31049,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/grid/flexy-grid-cell.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/components/grid/flexy-grid-cell.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -31060,9 +31060,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5ab6a527", __vue_options__)
+    hotAPI.createRecord("data-v-534b1bbd", __vue_options__)
   } else {
-    hotAPI.reload("data-v-5ab6a527", __vue_options__)
+    hotAPI.reload("data-v-534b1bbd", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] flexy-grid-cell.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -31086,7 +31086,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./Dropdown.vue */ 65)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-e8664b34!vue-loader/lib/selector?type=template&index=0!./Dropdown.vue */ 101)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-9dc3f908!vue-loader/lib/selector?type=template&index=0!./Dropdown.vue */ 100)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -31098,7 +31098,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/vue-strap-src/components/Dropdown.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/vue-strap-src/components/Dropdown.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -31109,9 +31109,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-e8664b34", __vue_options__)
+    hotAPI.createRecord("data-v-9dc3f908", __vue_options__)
   } else {
-    hotAPI.reload("data-v-e8664b34", __vue_options__)
+    hotAPI.reload("data-v-9dc3f908", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] Dropdown.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -31135,7 +31135,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./Tab.vue */ 66)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-5eecd950!vue-loader/lib/selector?type=template&index=0!./Tab.vue */ 98)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-29ffda7a!vue-loader/lib/selector?type=template&index=0!./Tab.vue */ 90)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -31147,7 +31147,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/vue-strap-src/components/Tab.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/vue-strap-src/components/Tab.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -31158,9 +31158,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5eecd950", __vue_options__)
+    hotAPI.createRecord("data-v-29ffda7a", __vue_options__)
   } else {
-    hotAPI.reload("data-v-5eecd950", __vue_options__)
+    hotAPI.reload("data-v-29ffda7a", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] Tab.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -31181,13 +31181,13 @@ var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-fb4c1c5a!vue-loader/lib/selector?type=styles&index=0!./Tabs.vue */ 112)
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-19a715e9!vue-loader/lib/selector?type=styles&index=0!./Tabs.vue */ 106)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./Tabs.vue */ 67)
 
 /* template */
-var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-fb4c1c5a!vue-loader/lib/selector?type=template&index=0!./Tabs.vue */ 103)
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-19a715e9!vue-loader/lib/selector?type=template&index=0!./Tabs.vue */ 88)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -31199,7 +31199,7 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/vue-strap-src/components/Tabs.vue"
+__vue_options__.__file = "/Users/jan/Sites/projecten_2017/www.bvfamilie.nl/dev.bvfamilie.nl/sys/flexyadmin/assets/js/vue-strap-src/components/Tabs.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -31210,9 +31210,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-fb4c1c5a", __vue_options__)
+    hotAPI.createRecord("data-v-19a715e9", __vue_options__)
   } else {
-    hotAPI.reload("data-v-fb4c1c5a", __vue_options__)
+    hotAPI.reload("data-v-19a715e9", __vue_options__)
   }
 })()}
 if (__vue_options__.functional) {console.error("[vue-loader] Tabs.vue: functional components are not supported and should be defined in plain js files using render functions.")}
@@ -31224,49 +31224,29 @@ module.exports = __vue_exports__
 /* 86 */
 /* unknown exports provided */
 /* all exports used */
-/*!****************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-0236572d!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-messages.vue ***!
-  \****************************************************************************************************************************************************************************/
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-06debd86!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-blocks.vue ***!
+  \**************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "navbar navbar-fixed-top",
+  return _c('a', {
     attrs: {
-      "id": "messages"
+      "href": _vm.href
     }
-  }, [_c('transition-group', {
-    attrs: {
-      "name": "slideUp",
-      "tag": "div"
-    }
-  }, _vm._l((_vm.state.messages), function(message, id) {
-    return _c('div', {
-      key: message,
-      staticClass: "alert",
-      class: _vm.typeClass(message)
-    }, [(message.type === 'danger') ? _c('flexy-button', {
-      staticClass: "btn-danger message-button",
-      attrs: {
-        "icon": "close"
-      },
-      nativeOn: {
-        "click": function($event) {
-          _vm.removeMessage(id)
-        }
-      }
-    }) : _vm._e(), _vm._v(" "), _c('div', {
-      staticClass: "message-text",
-      domProps: {
-        "innerHTML": _vm._s(message.text)
-      }
-    })], 1)
-  }))], 1)
-},staticRenderFns: []}
+  }, _vm._m(0))
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _vm._l((_vm.chars), function(char) {
+    return _c('span', {
+      staticClass: "flexy-block btn btn-secondary",
+      class: char.css
+    }, [_vm._v(_vm._s(char.char))])
+  })
+}]}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-0236572d", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-06debd86", module.exports)
   }
 }
 
@@ -31274,205 +31254,8 @@ if (false) {
 /* 87 */
 /* unknown exports provided */
 /* all exports used */
-/*!**************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-18e44f5a!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
-  \**************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('button', {
-    staticClass: "flexy-button",
-    class: _vm.buttonClass,
-    attrs: {
-      "type": "button"
-    },
-    on: {
-      "click": _vm.openDropdown
-    }
-  }, [(_vm.iconComputed !== '') ? _c('span', {
-    class: _vm.iconClass,
-    attrs: {
-      "disabled": _vm.buttonClass.indexOf('disabled')
-    }
-  }) : _vm._e(), _vm._v(" "), (_vm.text !== '') ? _c('span', {
-    staticClass: "flexy-button-text"
-  }, [_vm._v(_vm._s(_vm.text))]) : _vm._e()])
-},staticRenderFns: []}
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-18e44f5a", module.exports)
-  }
-}
-
-/***/ },
-/* 88 */
-/* unknown exports provided */
-/* all exports used */
 /*!******************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-1ab6e8fb!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/mediapicker.vue ***!
-  \******************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "mediapicker"
-  }, [_c('div', {
-    staticClass: "mediapicker-selection"
-  }, [_c('div', {
-    staticClass: "mediapicker-thumb mediapicker-thumb-button"
-  }, [_c('flexy-button', {
-    staticClass: "btn-outline-warning",
-    attrs: {
-      "icon": {
-        'plus': !_vm.choose,
-        'chevron-up': _vm.choose
-      }
-    },
-    nativeOn: {
-      "click": function($event) {
-        _vm.choose = !_vm.choose
-      }
-    }
-  })], 1), _vm._v(" "), _c('draggable', {
-    attrs: {
-      "list": _vm.thumbs(),
-      "options": _vm.draggableOptions
-    },
-    on: {
-      "end": function($event) {
-        _vm.dragEnd($event)
-      }
-    }
-  }, _vm._l((_vm.thumbs()), function(img, index) {
-    return _c('div', {
-      staticClass: "mediapicker-thumb"
-    }, [_c('flexy-button', {
-      staticClass: "btn-danger",
-      attrs: {
-        "icon": "remove"
-      },
-      nativeOn: {
-        "click": function($event) {
-          _vm.removeMedia(index)
-        }
-      }
-    }), _vm._v(" "), _c('flexy-thumb', {
-      attrs: {
-        "size": "lg",
-        "src": img.src,
-        "alt": img.alt,
-        "value": img.value
-      }
-    })], 1)
-  }))], 1), _vm._v(" "), (_vm.choose) ? _c('div', {
-    staticClass: "mediapicker-choose"
-  }, [_c('flexy-grid', {
-    attrs: {
-      "type": "mediapicker",
-      "api": "table",
-      "name": "pictures",
-      "title": _vm.$lang.file_select,
-      "offset": "0",
-      "limit": "10"
-    },
-    on: {
-      "grid-selected": function($event) {
-        _vm.addMedia($event)
-      }
-    }
-  })], 1) : _vm._e()])
-},staticRenderFns: []}
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1ab6e8fb", module.exports)
-  }
-}
-
-/***/ },
-/* 89 */
-/* unknown exports provided */
-/* all exports used */
-/*!*************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-1d14121c!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
-  \*************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "modal flexy-modal",
-    class: {
-      'hidden': !_vm.settings.show
-    },
-    attrs: {
-      "id": "flexyadmin-modal"
-    }
-  }, [_c('div', {
-    staticClass: "modal-dialog modal-sm",
-    on: {
-      "keyup": [function($event) {
-        if (_vm._k($event.keyCode, "esc", 27)) { return; }
-        _vm.close()
-      }, function($event) {
-        if (_vm._k($event.keyCode, "enter", 13)) { return; }
-        _vm.enter()
-      }]
-    }
-  }, [_c('div', {
-    staticClass: "modal-content"
-  }, [_c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.settings.title !== ''),
-      expression: "settings.title!==''"
-    }],
-    staticClass: "modal-header bg-primary text-white"
-  }, [_c('flexy-button', {
-    staticClass: "btn-danger",
-    attrs: {
-      "icon": "remove"
-    },
-    nativeOn: {
-      "click": function($event) {
-        _vm.close()
-      }
-    }
-  }), _vm._v(" "), _c('h4', {
-    staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.settings.title))])], 1), _vm._v(" "), _c('div', {
-    staticClass: "modal-body"
-  }, [_vm._v(_vm._s(_vm.settings.body))]), _vm._v(" "), _c('div', {
-    staticClass: "modal-footer"
-  }, _vm._l((_vm.settings.buttons), function(button, index) {
-    return _c('button', {
-      staticClass: "btn",
-      class: button.class,
-      attrs: {
-        "type": "button"
-      },
-      on: {
-        "click": function($event) {
-          _vm.clickedButton(index)
-        }
-      }
-    }, [_vm._v(_vm._s(button.title))])
-  }))])])])
-},staticRenderFns: []}
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1d14121c", module.exports)
-  }
-}
-
-/***/ },
-/* 90 */
-/* unknown exports provided */
-/* all exports used */
-/*!******************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-1f7ed48c!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/colorpicker.vue ***!
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-0f93c750!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/colorpicker.vue ***!
   \******************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31513,286 +31296,99 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1f7ed48c", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-0f93c750", module.exports)
   }
 }
 
 /***/ },
-/* 91 */
+/* 88 */
 /* unknown exports provided */
 /* all exports used */
-/*!*************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-29fbe676!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
-  \*************************************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-19a715e9!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/vue-strap-src/components/Tabs.vue ***!
+  \********************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "flexy-thumb"
-  }, [(_vm.type === 'image') ? _c('img', {
-    class: _vm.mediaClass,
     attrs: {
-      "src": _vm.src,
-      "alt": _vm.alt,
-      "title": _vm.alt
+      "tabs": ""
     }
-  }) : _vm._e(), _vm._v(" "), (_vm.type !== 'image') ? _c('span', {
-    staticClass: "fa",
-    class: _vm.type,
+  }, [_c('ul', {
+    class: _vm.navStyleClass,
     attrs: {
-      "title": _vm.src
+      "role": "tablist"
     }
-  }) : _vm._e()])
+  }, [_vm._l((_vm.headers), function(header) {
+    return [(header._isTab) ? _c('li', {
+      staticClass: "nav-item",
+      class: {
+        active: header.active, disabled: header.disabled
+      },
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.select(header)
+        }
+      }
+    }, [_vm._t("header", [_c('a', {
+      staticClass: "nav-link",
+      class: {
+        active: header.active
+      },
+      attrs: {
+        "href": "#"
+      },
+      domProps: {
+        "innerHTML": _vm._s(header.header)
+      }
+    })])], 2) : _vm._e(), _vm._v(" "), (header._isTabGroup) ? _c('dropdown', {
+      class: {
+        active: header.active
+      },
+      attrs: {
+        "text": header.header,
+        "disabled": header.disabled
+      }
+    }, _vm._l((header.tabs), function(tab) {
+      return _c('li', {
+        staticClass: "nav-item",
+        class: {
+          disabled: tab.disabled
+        }
+      }, [_c('a', {
+        staticClass: "nav-link",
+        class: {
+          active: header.active
+        },
+        attrs: {
+          "href": "#"
+        },
+        on: {
+          "click": function($event) {
+            $event.preventDefault();
+            _vm.select(tab)
+          }
+        }
+      }, [_vm._v(_vm._s(tab.header))])])
+    })) : _vm._e()]
+  })], 2), _vm._v(" "), _c('div', {
+    staticClass: "tab-content"
+  }, [_vm._t("default")], 2)])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-29fbe676", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-19a715e9", module.exports)
   }
 }
 
 /***/ },
-/* 92 */
-/* unknown exports provided */
-/* all exports used */
-/*!**************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-2be934a7!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-blocks.vue ***!
-  \**************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('a', {
-    attrs: {
-      "href": _vm.href
-    }
-  }, _vm._m(0))
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._l((_vm.chars), function(char) {
-    return _c('span', {
-      staticClass: "flexy-block btn btn-secondary",
-      class: char.css
-    }, [_vm._v(_vm._s(char.char))])
-  })
-}]}
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-2be934a7", module.exports)
-  }
-}
-
-/***/ },
-/* 93 */
-/* unknown exports provided */
-/* all exports used */
-/*!***************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-310057a0!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/vue-strap-src/Datepicker.vue ***!
-  \***************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "datepicker"
-  }, [_c('input', {
-    staticClass: "form-control datepicker-input",
-    class: {
-      'with-reset-button': _vm.clearButton
-    },
-    style: ({
-      width: _vm.width
-    }),
-    attrs: {
-      "type": "text",
-      "placeholder": _vm.placeholder
-    },
-    domProps: {
-      "value": _vm.value
-    },
-    on: {
-      "click": _vm.inputClick,
-      "input": function($event) {
-        _vm.$emit('input', $event.target.value)
-      }
-    }
-  }), _vm._v(" "), (_vm.clearButton && _vm.value) ? _c('button', {
-    staticClass: "close",
-    attrs: {
-      "type": "button"
-    },
-    on: {
-      "click": function($event) {
-        _vm.$emit('input', '')
-      }
-    }
-  }, [_c('span', [_vm._v("×")])]) : _vm._e(), _vm._v(" "), _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.displayDayView),
-      expression: "displayDayView"
-    }],
-    staticClass: "datepicker-popup"
-  }, [_c('div', {
-    staticClass: "datepicker-inner"
-  }, [_c('div', {
-    staticClass: "datepicker-body"
-  }, [_c('div', {
-    staticClass: "datepicker-ctrl"
-  }, [_c('span', {
-    class: _vm.preBtnClasses,
-    attrs: {
-      "aria-hidden": "true"
-    },
-    on: {
-      "click": function($event) {
-        _vm.preNextMonthClick(0)
-      }
-    }
-  }), _vm._v(" "), _c('span', {
-    class: _vm.nextBtnClasses,
-    attrs: {
-      "aria-hidden": "true"
-    },
-    on: {
-      "click": function($event) {
-        _vm.preNextMonthClick(1)
-      }
-    }
-  }), _vm._v(" "), _c('p', {
-    on: {
-      "click": _vm.switchMonthView
-    }
-  }, [_vm._v(_vm._s(_vm.stringifyDayHeader(_vm.currDate)))])]), _vm._v(" "), _c('div', {
-    staticClass: "datepicker-weekRange"
-  }, _vm._l((_vm.text.daysOfWeek), function(w) {
-    return _c('span', [_vm._v(_vm._s(w))])
-  })), _vm._v(" "), _c('div', {
-    staticClass: "datepicker-dateRange"
-  }, _vm._l((_vm.dateRange), function(d) {
-    return _c('span', {
-      class: d.sclass,
-      on: {
-        "click": function($event) {
-          _vm.daySelect(d)
-        }
-      }
-    }, [_vm._v(_vm._s(d.text))])
-  }))])])]), _vm._v(" "), _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.displayMonthView),
-      expression: "displayMonthView"
-    }],
-    staticClass: "datepicker-popup"
-  }, [_c('div', {
-    staticClass: "datepicker-inner"
-  }, [_c('div', {
-    staticClass: "datepicker-body"
-  }, [_c('div', {
-    staticClass: "datepicker-ctrl"
-  }, [_c('span', {
-    class: _vm.preBtnClasses,
-    attrs: {
-      "aria-hidden": "true"
-    },
-    on: {
-      "click": function($event) {
-        _vm.preNextYearClick(0)
-      }
-    }
-  }), _vm._v(" "), _c('span', {
-    class: _vm.nextBtnClasses,
-    attrs: {
-      "aria-hidden": "true"
-    },
-    on: {
-      "click": function($event) {
-        _vm.preNextYearClick(1)
-      }
-    }
-  }), _vm._v(" "), _c('p', {
-    on: {
-      "click": _vm.switchDecadeView
-    }
-  }, [_vm._v(_vm._s(_vm.stringifyYearHeader(_vm.currDate)))])]), _vm._v(" "), _c('div', {
-    staticClass: "datepicker-monthRange"
-  }, [_vm._l((_vm.text.months), function(m, index) {
-    return [_c('span', {
-      class: {
-        'datepicker-dateRange-item-active':
-        (_vm.text.months[_vm.parse(_vm.value).getMonth()] === m) &&
-        _vm.currDate.getFullYear() === _vm.parse(_vm.value).getFullYear()
-      },
-      on: {
-        "click": function($event) {
-          _vm.monthSelect(index)
-        }
-      }
-    }, [_vm._v(_vm._s(m.substr(0, 3)))])]
-  })], 2)])])]), _vm._v(" "), _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.displayYearView),
-      expression: "displayYearView"
-    }],
-    staticClass: "datepicker-popup"
-  }, [_c('div', {
-    staticClass: "datepicker-inner"
-  }, [_c('div', {
-    staticClass: "datepicker-body"
-  }, [_c('div', {
-    staticClass: "datepicker-ctrl"
-  }, [_c('span', {
-    class: _vm.preBtnClasses,
-    attrs: {
-      "aria-hidden": "true"
-    },
-    on: {
-      "click": function($event) {
-        _vm.preNextDecadeClick(0)
-      }
-    }
-  }), _vm._v(" "), _c('span', {
-    class: _vm.nextBtnClasses,
-    attrs: {
-      "aria-hidden": "true"
-    },
-    on: {
-      "click": function($event) {
-        _vm.preNextDecadeClick(1)
-      }
-    }
-  }), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.stringifyDecadeHeader(_vm.currDate)))])]), _vm._v(" "), _c('div', {
-    staticClass: "datepicker-monthRange decadeRange"
-  }, [_vm._l((_vm.decadeRange), function(decade) {
-    return [_c('span', {
-      class: {
-        'datepicker-dateRange-item-active': _vm.parse(this.value).getFullYear() === decade.text
-      },
-      on: {
-        "click": function($event) {
-          $event.stopPropagation();
-          _vm.yearSelect(decade.text)
-        }
-      }
-    }, [_vm._v(_vm._s(decade.text))])]
-  })], 2)])])])])
-},staticRenderFns: []}
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-310057a0", module.exports)
-  }
-}
-
-/***/ },
-/* 94 */
+/* 89 */
 /* unknown exports provided */
 /* all exports used */
 /*!*****************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-4dbe28d0!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/grid/flexy-grid.vue ***!
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-24762f42!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/grid/flexy-grid.vue ***!
   \*****************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32358,230 +31954,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-4dbe28d0", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-24762f42", module.exports)
   }
 }
 
 /***/ },
-/* 95 */
-/* unknown exports provided */
-/* all exports used */
-/*!*****************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-529cf6a2!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/timepicker.vue ***!
-  \*****************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "timepicker"
-  }, [_c('select', {
-    staticClass: "custom-select timepicker-hours",
-    attrs: {
-      "id": _vm.name_hours
-    },
-    domProps: {
-      "value": _vm.hours()
-    },
-    on: {
-      "input": function($event) {
-        _vm.changeHours($event.target.value)
-      }
-    }
-  }, _vm._l((_vm.range(23)), function(hour) {
-    return _c('option', {
-      domProps: {
-        "selected": (hour.value == _vm.hours()),
-        "value": hour.value
-      }
-    }, [_vm._v(_vm._s(hour.text))])
-  })), _vm._v("\n  :\n  "), _c('select', {
-    staticClass: "custom-select timepicker-minutes",
-    attrs: {
-      "id": _vm.name_minutes
-    },
-    domProps: {
-      "value": _vm.minutes()
-    },
-    on: {
-      "input": function($event) {
-        _vm.changeMinutes($event.target.value)
-      }
-    }
-  }, _vm._l((_vm.range(59)), function(minute) {
-    return _c('option', {
-      domProps: {
-        "selected": (minute.value == _vm.minutes()),
-        "value": minute.value
-      }
-    }, [_vm._v(_vm._s(minute.text))])
-  }))])
-},staticRenderFns: []}
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-529cf6a2", module.exports)
-  }
-}
-
-/***/ },
-/* 96 */
-/* unknown exports provided */
-/* all exports used */
-/*!*********************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-55b24e50!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
-  \*********************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "datetimepicker"
-  }, [_c('datepicker', {
-    attrs: {
-      "id": _vm.name_date,
-      "name": _vm.name_date,
-      "value": _vm.date(),
-      "format": "yyyy-MM-dd"
-    },
-    on: {
-      "input": function($event) {
-        _vm.changeDate($event)
-      }
-    }
-  }), _vm._v(" "), _c('timepicker', {
-    attrs: {
-      "id": _vm.name_time,
-      "name": _vm.name_time,
-      "value": _vm.time()
-    },
-    on: {
-      "input": function($event) {
-        _vm.changeTime($event)
-      }
-    }
-  })], 1)
-},staticRenderFns: []}
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-55b24e50", module.exports)
-  }
-}
-
-/***/ },
-/* 97 */
-/* unknown exports provided */
-/* all exports used */
-/*!**********************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-5ab6a527!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/grid/flexy-grid-cell.vue ***!
-  \**********************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.type !== 'hidden') ? _c('td', {
-    class: _vm.cellClass(),
-    attrs: {
-      "type": _vm.type,
-      "name": _vm.name,
-      "value": _vm.item,
-      "level": _vm.level
-    },
-    on: {
-      "keyup": function($event) {
-        if (_vm._k($event.keyCode, "esc", 27)) { return; }
-        _vm.cancelEdit()
-      }
-    }
-  }, [(_vm.showTreeNode) ? _c('span', {
-    staticClass: "fa fa-level-up fa-rotate-90 text-muted"
-  }) : _vm._e(), _vm._v(" "), (_vm.isType('relation', _vm.type)) ? _vm._l((_vm.relationItems(_vm.item)), function(item) {
-    return _c('span', {
-      staticClass: "grid-relation-item"
-    }, [_vm._v(_vm._s(item))])
-  }) : _vm._e(), _vm._v(" "), (_vm.isType('abstract', _vm.type)) ? _vm._l((_vm.itemObject(_vm.item)), function(abstract, key) {
-    return _c('span', [_vm._v(_vm._s(abstract))])
-  }) : _vm._e(), _vm._v(" "), (_vm.isType('media', _vm.type)) ? [(_vm.item !== '') ? _vm._l((_vm.thumbs(_vm.item)), function(img) {
-    return _c('flexy-thumb', {
-      attrs: {
-        "src": img.src,
-        "alt": img.alt
-      },
-      nativeOn: {
-        "click": function($event) {
-          _vm.select()
-        }
-      }
-    })
-  }) : _vm._e()] : _vm._e(), _vm._v(" "), (_vm.isType('color', _vm.type)) ? [_c('div', {
-    staticClass: "color-thumb-sm",
-    style: ('color:' + _vm.complementColor(_vm.item) + ';background-color:' + _vm.item)
-  }, [_vm._v(_vm._s(_vm.item))])] : _vm._e(), _vm._v(" "), (_vm.isType('checkbox', _vm.type)) ? [_c('div', {
-    on: {
-      "click": _vm.clickEdit
-    }
-  }, [(_vm.item) ? _c('span', {
-    staticClass: "fa fa-check text-success",
-    attrs: {
-      "value": _vm.item
-    }
-  }) : _c('span', {
-    staticClass: "fa fa-minus text-warning",
-    attrs: {
-      "value": _vm.item
-    }
-  })])] : _vm._e(), _vm._v(" "), (_vm.isType('url', _vm.type)) ? [_c('a', {
-    attrs: {
-      "href": _vm.item,
-      "target": "_blank"
-    }
-  }, [_vm._v(_vm._s(_vm.item))])] : _vm._e(), _vm._v(" "), (_vm.isType('default', _vm.type)) ? [_c('span', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (!_vm.isEditing),
-      expression: "!isEditing"
-    }],
-    on: {
-      "click": function($event) {
-        _vm.startEdit()
-      }
-    }
-  }, [_vm._v(_vm._s(_vm.item))]), _vm._v(" "), (_vm.editable) ? _c('input', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.isEditing),
-      expression: "isEditing"
-    }],
-    attrs: {
-      "id": _vm.inputID
-    },
-    domProps: {
-      "value": _vm.item
-    },
-    on: {
-      "change": function($event) {
-        _vm.saveEdit($event.target.value)
-      },
-      "keyup": function($event) {
-        if (_vm._k($event.keyCode, "esc", 27)) { return; }
-        _vm.cancelEdit()
-      }
-    }
-  }) : _vm._e()] : _vm._e()], 2) : _vm._e()
-},staticRenderFns: []}
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-5ab6a527", module.exports)
-  }
-}
-
-/***/ },
-/* 98 */
+/* 90 */
 /* unknown exports provided */
 /* all exports used */
 /*!*******************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-5eecd950!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/vue-strap-src/components/Tab.vue ***!
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-29ffda7a!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/vue-strap-src/components/Tab.vue ***!
   \*******************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32600,244 +31982,391 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-5eecd950", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-29ffda7a", module.exports)
   }
 }
 
 /***/ },
-/* 99 */
+/* 91 */
+/* unknown exports provided */
+/* all exports used */
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-2bc5fa5a!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/vue-strap-src/Datepicker.vue ***!
+  \***************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "datepicker"
+  }, [_c('input', {
+    staticClass: "form-control datepicker-input",
+    class: {
+      'with-reset-button': _vm.clearButton
+    },
+    style: ({
+      width: _vm.width
+    }),
+    attrs: {
+      "type": "text",
+      "placeholder": _vm.placeholder
+    },
+    domProps: {
+      "value": _vm.value
+    },
+    on: {
+      "click": _vm.inputClick,
+      "input": function($event) {
+        _vm.$emit('input', $event.target.value)
+      }
+    }
+  }), _vm._v(" "), (_vm.clearButton && _vm.value) ? _c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": function($event) {
+        _vm.$emit('input', '')
+      }
+    }
+  }, [_c('span', [_vm._v("×")])]) : _vm._e(), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.displayDayView),
+      expression: "displayDayView"
+    }],
+    staticClass: "datepicker-popup"
+  }, [_c('div', {
+    staticClass: "datepicker-inner"
+  }, [_c('div', {
+    staticClass: "datepicker-body"
+  }, [_c('div', {
+    staticClass: "datepicker-ctrl"
+  }, [_c('span', {
+    class: _vm.preBtnClasses,
+    attrs: {
+      "aria-hidden": "true"
+    },
+    on: {
+      "click": function($event) {
+        _vm.preNextMonthClick(0)
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    class: _vm.nextBtnClasses,
+    attrs: {
+      "aria-hidden": "true"
+    },
+    on: {
+      "click": function($event) {
+        _vm.preNextMonthClick(1)
+      }
+    }
+  }), _vm._v(" "), _c('p', {
+    on: {
+      "click": _vm.switchMonthView
+    }
+  }, [_vm._v(_vm._s(_vm.stringifyDayHeader(_vm.currDate)))])]), _vm._v(" "), _c('div', {
+    staticClass: "datepicker-weekRange"
+  }, _vm._l((_vm.text.daysOfWeek), function(w) {
+    return _c('span', [_vm._v(_vm._s(w))])
+  })), _vm._v(" "), _c('div', {
+    staticClass: "datepicker-dateRange"
+  }, _vm._l((_vm.dateRange), function(d) {
+    return _c('span', {
+      class: d.sclass,
+      on: {
+        "click": function($event) {
+          _vm.daySelect(d)
+        }
+      }
+    }, [_vm._v(_vm._s(d.text))])
+  }))])])]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.displayMonthView),
+      expression: "displayMonthView"
+    }],
+    staticClass: "datepicker-popup"
+  }, [_c('div', {
+    staticClass: "datepicker-inner"
+  }, [_c('div', {
+    staticClass: "datepicker-body"
+  }, [_c('div', {
+    staticClass: "datepicker-ctrl"
+  }, [_c('span', {
+    class: _vm.preBtnClasses,
+    attrs: {
+      "aria-hidden": "true"
+    },
+    on: {
+      "click": function($event) {
+        _vm.preNextYearClick(0)
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    class: _vm.nextBtnClasses,
+    attrs: {
+      "aria-hidden": "true"
+    },
+    on: {
+      "click": function($event) {
+        _vm.preNextYearClick(1)
+      }
+    }
+  }), _vm._v(" "), _c('p', {
+    on: {
+      "click": _vm.switchDecadeView
+    }
+  }, [_vm._v(_vm._s(_vm.stringifyYearHeader(_vm.currDate)))])]), _vm._v(" "), _c('div', {
+    staticClass: "datepicker-monthRange"
+  }, [_vm._l((_vm.text.months), function(m, index) {
+    return [_c('span', {
+      class: {
+        'datepicker-dateRange-item-active':
+        (_vm.text.months[_vm.parse(_vm.value).getMonth()] === m) &&
+        _vm.currDate.getFullYear() === _vm.parse(_vm.value).getFullYear()
+      },
+      on: {
+        "click": function($event) {
+          _vm.monthSelect(index)
+        }
+      }
+    }, [_vm._v(_vm._s(m.substr(0, 3)))])]
+  })], 2)])])]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.displayYearView),
+      expression: "displayYearView"
+    }],
+    staticClass: "datepicker-popup"
+  }, [_c('div', {
+    staticClass: "datepicker-inner"
+  }, [_c('div', {
+    staticClass: "datepicker-body"
+  }, [_c('div', {
+    staticClass: "datepicker-ctrl"
+  }, [_c('span', {
+    class: _vm.preBtnClasses,
+    attrs: {
+      "aria-hidden": "true"
+    },
+    on: {
+      "click": function($event) {
+        _vm.preNextDecadeClick(0)
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    class: _vm.nextBtnClasses,
+    attrs: {
+      "aria-hidden": "true"
+    },
+    on: {
+      "click": function($event) {
+        _vm.preNextDecadeClick(1)
+      }
+    }
+  }), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.stringifyDecadeHeader(_vm.currDate)))])]), _vm._v(" "), _c('div', {
+    staticClass: "datepicker-monthRange decadeRange"
+  }, [_vm._l((_vm.decadeRange), function(decade) {
+    return [_c('span', {
+      class: {
+        'datepicker-dateRange-item-active': _vm.parse(this.value).getFullYear() === decade.text
+      },
+      on: {
+        "click": function($event) {
+          $event.stopPropagation();
+          _vm.yearSelect(decade.text)
+        }
+      }
+    }, [_vm._v(_vm._s(decade.text))])]
+  })], 2)])])])])
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-2bc5fa5a", module.exports)
+  }
+}
+
+/***/ },
+/* 92 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-6df5883b!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-pagination.vue ***!
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-3a0a1a91!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/mediapicker.vue ***!
   \******************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "pagination-container d-flex justify-content-between"
-  }, [_c('ul', {
-    staticClass: "pagination"
-  }, [(_vm.current > 1 && _vm.pages > _vm.buttons) ? _c('li', {
-    staticClass: "page-item"
-  }, [_c('a', {
-    staticClass: "page-link",
-    on: {
+    staticClass: "mediapicker"
+  }, [_c('div', {
+    staticClass: "mediapicker-selection"
+  }, [_c('div', {
+    staticClass: "mediapicker-thumb mediapicker-thumb-button"
+  }, [_c('flexy-button', {
+    staticClass: "btn-outline-warning",
+    attrs: {
+      "icon": {
+        'plus': !_vm.choose,
+        'chevron-up': _vm.choose
+      }
+    },
+    nativeOn: {
       "click": function($event) {
-        _vm.jumpToPage(1)
+        _vm.choose = !_vm.choose
       }
     }
-  }, [_c('span', {
-    staticClass: "fa fa-fast-backward"
-  })])]) : _vm._e(), _vm._v(" "), (_vm.current > 10 && _vm.pages > _vm.buttons) ? _c('li', {
-    staticClass: "page-item"
-  }, [_c('a', {
-    staticClass: "page-link",
+  })], 1), _vm._v(" "), _c('draggable', {
+    attrs: {
+      "list": _vm.thumbs(),
+      "options": _vm.draggableOptions
+    },
     on: {
-      "click": function($event) {
-        _vm.jumpToPage(_vm.current - 10)
+      "end": function($event) {
+        _vm.dragEnd($event)
       }
     }
-  }, [_c('span', {
-    staticClass: "fa fa-backward"
-  })])]) : _vm._e(), _vm._v(" "), (_vm.current > 1 && _vm.pages > _vm.buttons) ? _c('li', {
-    staticClass: "page-item"
-  }, [_c('a', {
-    staticClass: "page-link",
-    on: {
-      "click": function($event) {
-        _vm.jumpToPage(_vm.current - 1)
-      }
-    }
-  }, [_c('span', {
-    staticClass: "fa fa-chevron-left"
-  })])]) : _vm._e(), _vm._v(" "), _vm._l((_vm.pagesButtons()), function(page) {
-    return _c('li', {
-      staticClass: "page-item",
-      class: {
-        active: (page == _vm.current)
-      }
-    }, [_c('a', {
-      staticClass: "page-link",
-      on: {
+  }, _vm._l((_vm.thumbs()), function(img, index) {
+    return _c('div', {
+      staticClass: "mediapicker-thumb"
+    }, [_c('flexy-button', {
+      staticClass: "btn-danger",
+      attrs: {
+        "icon": "remove"
+      },
+      nativeOn: {
         "click": function($event) {
-          _vm.jumpToPage(page)
+          _vm.removeMedia(index)
         }
       }
-    }, [_vm._v(_vm._s(page))])])
-  }), _vm._v(" "), (_vm.current < _vm.pages - 1 && _vm.pages > _vm.buttons) ? _c('li', {
-    staticClass: "page-item"
-  }, [_c('a', {
-    staticClass: "page-link",
+    }), _vm._v(" "), _c('flexy-thumb', {
+      attrs: {
+        "size": "lg",
+        "src": img.src,
+        "alt": img.alt,
+        "value": img.value
+      }
+    })], 1)
+  }))], 1), _vm._v(" "), (_vm.choose) ? _c('div', {
+    staticClass: "mediapicker-choose"
+  }, [_c('flexy-grid', {
+    attrs: {
+      "type": "mediapicker",
+      "api": "table",
+      "name": "pictures",
+      "title": _vm.$lang.file_select,
+      "offset": "0",
+      "limit": "10"
+    },
     on: {
-      "click": function($event) {
-        _vm.jumpToPage(_vm.current + 1)
+      "grid-selected": function($event) {
+        _vm.addMedia($event)
       }
     }
-  }, [_c('span', {
-    staticClass: "fa fa-chevron-right"
-  })])]) : _vm._e(), _vm._v(" "), (_vm.current < _vm.pages - 10 && _vm.pages > _vm.buttons) ? _c('li', {
-    staticClass: "page-item"
-  }, [_c('a', {
-    staticClass: "page-link",
-    on: {
-      "click": function($event) {
-        _vm.jumpToPage(_vm.current + 10)
-      }
-    }
-  }, [_c('span', {
-    staticClass: "fa fa-forward"
-  })])]) : _vm._e(), _vm._v(" "), (_vm.current < _vm.pages - 1 && _vm.pages > _vm.buttons) ? _c('li', {
-    staticClass: "page-item"
-  }, [_c('a', {
-    staticClass: "page-link",
-    on: {
-      "click": function($event) {
-        _vm.jumpToPage(_vm.pages - 1)
-      }
-    }
-  }, [_c('span', {
-    staticClass: "fa fa-fast-forward"
-  })])]) : _vm._e()], 2), _vm._v(" "), _c('span', {
-    staticClass: "pagination-info text-primary"
-  }, [_vm._v(_vm._s(_vm._f("replace")(_vm.$lang.grid_pagination, _vm.total, _vm.pages)))])])
+  })], 1) : _vm._e()])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-6df5883b", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-3a0a1a91", module.exports)
   }
 }
 
 /***/ },
-/* 100 */
+/* 93 */
 /* unknown exports provided */
 /* all exports used */
-/*!************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-d85ba1bc!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-help.vue ***!
-  \************************************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-3c0fb56f!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
+  \*************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "flexy-help row"
-  }, [_c('div', {
-    staticClass: "flexy-help-menu col-sm-3"
-  }, [_c('ul', {
-    staticClass: "nav nav-pills flex-column"
-  }, _vm._l((_vm.helpItems), function(item, key) {
-    return _c('li', {
-      staticClass: "nav-item"
-    }, [_c('a', {
-      staticClass: "nav-link",
-      class: {
-        'active': key === _vm.visibleItem
-      },
-      on: {
-        "click": function($event) {
-          _vm.visibleItem = key
-        }
-      }
-    }, [_vm._v(_vm._s(item.title))])])
-  }))]), _vm._v(" "), _c('div', {
-    staticClass: "flexy-help-content col-sm-9"
-  }, _vm._l((_vm.helpItems), function(item, key) {
-    return _c('div', {
-      directives: [{
-        name: "show",
-        rawName: "v-show",
-        value: (key === _vm.visibleItem),
-        expression: "key===visibleItem"
-      }],
-      staticClass: "card"
-    }, [_c('h1', {
-      staticClass: "card-header bg-primary text-white"
-    }, [_vm._v(_vm._s(item.title))]), _vm._v(" "), _c('div', {
-      staticClass: "card-block",
-      domProps: {
-        "innerHTML": _vm._s(item.content)
-      }
-    })])
-  }))])
+    staticClass: "flexy-thumb"
+  }, [(_vm.type === 'image') ? _c('img', {
+    class: _vm.mediaClass,
+    attrs: {
+      "src": _vm.src,
+      "alt": _vm.alt,
+      "title": _vm.alt
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.type !== 'image') ? _c('span', {
+    staticClass: "fa",
+    class: _vm.type,
+    attrs: {
+      "title": _vm.src
+    }
+  }) : _vm._e()])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-d85ba1bc", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-3c0fb56f", module.exports)
   }
 }
 
 /***/ },
-/* 101 */
+/* 94 */
 /* unknown exports provided */
 /* all exports used */
-/*!************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-e8664b34!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/vue-strap-src/components/Dropdown.vue ***!
-  \************************************************************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-46b4f643!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-messages.vue ***!
+  \****************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c(_vm.isLi ? 'li' : 'div', {
-    directives: [{
-      name: "click-outside",
-      rawName: "v-click-outside",
-      value: (_vm.blur),
-      expression: "blur"
-    }],
-    tag: "div",
-    class: [{
-      open: _vm.show,
-      disabled: _vm.disabled,
-      dropdown: _vm.isLi,
-      'input-group-btn': _vm.inInput,
-      'btn-group': !_vm.isLi && !_vm.inInput
-    }]
-  }, [_vm._t("before"), _vm._v(" "), _vm._t("button", [(_vm.isLi) ? _c('a', {
-    class: ['dropdown-toggle', _vm.buttonSize, {
-      disabled: _vm.disabled
-    }],
+  return _c('div', {
+    staticClass: "navbar navbar-fixed-top",
     attrs: {
-      "role": "button"
-    },
-    on: {
-      "keyup": function($event) {
-        if (_vm._k($event.keyCode, "esc", 27)) { return; }
-        _vm.show = false
-      }
+      "id": "messages"
     }
-  }, [_vm._v("\n      " + _vm._s(_vm.text) + "\n      "), _c('span', {
-    staticClass: "caret"
-  })]) : _c('button', {
-    class: ['btn btn-' + _vm.type, _vm.buttonSize, 'dropdown-toggle'],
+  }, [_c('transition-group', {
     attrs: {
-      "type": "button",
-      "disabled": _vm.disabled
-    },
-    on: {
-      "keyup": function($event) {
-        if (_vm._k($event.keyCode, "esc", 27)) { return; }
-        _vm.show = false
-      }
+      "name": "slideUp",
+      "tag": "div"
     }
-  }, [_vm._v("\n      " + _vm._s(_vm.text) + "\n      "), _c('span', {
-    staticClass: "caret"
-  })])]), _vm._v(" "), _vm._t("dropdown-menu", [_c('ul', {
-    staticClass: "dropdown-menu"
-  }, [_vm._t("default")], 2)])], 2)
+  }, _vm._l((_vm.state.messages), function(message, id) {
+    return _c('div', {
+      key: message,
+      staticClass: "alert",
+      class: _vm.typeClass(message)
+    }, [(message.type === 'danger') ? _c('flexy-button', {
+      staticClass: "btn-danger message-button",
+      attrs: {
+        "icon": "close"
+      },
+      nativeOn: {
+        "click": function($event) {
+          _vm.removeMessage(id)
+        }
+      }
+    }) : _vm._e(), _vm._v(" "), _c('div', {
+      staticClass: "message-text",
+      domProps: {
+        "innerHTML": _vm._s(message.text)
+      }
+    })], 1)
+  }))], 1)
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-e8664b34", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-46b4f643", module.exports)
   }
 }
 
 /***/ },
-/* 102 */
+/* 95 */
 /* unknown exports provided */
 /* all exports used */
 /*!*****************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-e9bdde50!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/flexy-form.vue ***!
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-531356fc!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/flexy-form.vue ***!
   \*****************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -33085,7 +32614,460 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-e9bdde50", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-531356fc", module.exports)
+  }
+}
+
+/***/ },
+/* 96 */
+/* unknown exports provided */
+/* all exports used */
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-534b1bbd!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/grid/flexy-grid-cell.vue ***!
+  \**********************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.type !== 'hidden') ? _c('td', {
+    class: _vm.cellClass(),
+    attrs: {
+      "type": _vm.type,
+      "name": _vm.name,
+      "value": _vm.item,
+      "level": _vm.level
+    },
+    on: {
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.cancelEdit()
+      }
+    }
+  }, [(_vm.showTreeNode) ? _c('span', {
+    staticClass: "fa fa-level-up fa-rotate-90 text-muted"
+  }) : _vm._e(), _vm._v(" "), (_vm.isType('relation', _vm.type)) ? [_vm._l((_vm.relationItems(_vm.item)), function(item) {
+    return [(item !== '') ? _c('span', {
+      staticClass: "grid-relation-item"
+    }, [_vm._v(_vm._s(item))]) : _vm._e()]
+  })] : _vm._e(), _vm._v(" "), (_vm.isType('abstract', _vm.type)) ? _vm._l((_vm.itemObject(_vm.item)), function(abstract, key) {
+    return _c('span', [_vm._v(_vm._s(abstract))])
+  }) : _vm._e(), _vm._v(" "), (_vm.isType('media', _vm.type)) ? [(_vm.item !== '') ? _vm._l((_vm.thumbs(_vm.item)), function(img) {
+    return _c('flexy-thumb', {
+      attrs: {
+        "src": img.src,
+        "alt": img.alt
+      },
+      nativeOn: {
+        "click": function($event) {
+          _vm.select()
+        }
+      }
+    })
+  }) : _vm._e()] : _vm._e(), _vm._v(" "), (_vm.isType('color', _vm.type)) ? [_c('div', {
+    staticClass: "color-thumb-sm",
+    style: ('color:' + _vm.complementColor(_vm.item) + ';background-color:' + _vm.item)
+  }, [_vm._v(_vm._s(_vm.item))])] : _vm._e(), _vm._v(" "), (_vm.isType('checkbox', _vm.type)) ? [_c('div', {
+    on: {
+      "click": _vm.clickEdit
+    }
+  }, [(_vm.item) ? _c('span', {
+    staticClass: "fa fa-check text-success",
+    attrs: {
+      "value": _vm.item
+    }
+  }) : _c('span', {
+    staticClass: "fa fa-minus text-warning",
+    attrs: {
+      "value": _vm.item
+    }
+  })])] : _vm._e(), _vm._v(" "), (_vm.isType('url', _vm.type)) ? [_c('a', {
+    attrs: {
+      "href": _vm.item,
+      "target": "_blank"
+    }
+  }, [_vm._v(_vm._s(_vm.item))])] : _vm._e(), _vm._v(" "), (_vm.isType('select', _vm.type)) ? [_c('span', {
+    domProps: {
+      "innerHTML": _vm._s(_vm.selectItem(_vm.item))
+    }
+  })] : _vm._e(), _vm._v(" "), (_vm.isType('default', _vm.type)) ? [_c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (!_vm.isEditing),
+      expression: "!isEditing"
+    }],
+    on: {
+      "click": function($event) {
+        _vm.startEdit()
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.item))]), _vm._v(" "), (_vm.editable) ? _c('input', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.isEditing),
+      expression: "isEditing"
+    }],
+    attrs: {
+      "id": _vm.inputID
+    },
+    domProps: {
+      "value": _vm.item
+    },
+    on: {
+      "change": function($event) {
+        _vm.saveEdit($event.target.value)
+      },
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.cancelEdit()
+      }
+    }
+  }) : _vm._e()] : _vm._e()], 2) : _vm._e()
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-534b1bbd", module.exports)
+  }
+}
+
+/***/ },
+/* 97 */
+/* unknown exports provided */
+/* all exports used */
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-6e21bac6!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
+  \*************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "modal flexy-modal",
+    class: {
+      'hidden': !_vm.settings.show
+    },
+    attrs: {
+      "id": "flexyadmin-modal"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog modal-sm",
+    on: {
+      "keyup": [function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.close()
+      }, function($event) {
+        if (_vm._k($event.keyCode, "enter", 13)) { return; }
+        _vm.enter()
+      }]
+    }
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.settings.title !== ''),
+      expression: "settings.title!==''"
+    }],
+    staticClass: "modal-header bg-primary text-white"
+  }, [_c('flexy-button', {
+    staticClass: "btn-danger",
+    attrs: {
+      "icon": "remove"
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.close()
+      }
+    }
+  }), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.settings.title))])], 1), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_vm._v(_vm._s(_vm.settings.body))]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, _vm._l((_vm.settings.buttons), function(button, index) {
+    return _c('button', {
+      staticClass: "btn",
+      class: button.class,
+      attrs: {
+        "type": "button"
+      },
+      on: {
+        "click": function($event) {
+          _vm.clickedButton(index)
+        }
+      }
+    }, [_vm._v(_vm._s(button.title))])
+  }))])])])
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-6e21bac6", module.exports)
+  }
+}
+
+/***/ },
+/* 98 */
+/* unknown exports provided */
+/* all exports used */
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-7795762e!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
+  \**************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('button', {
+    staticClass: "flexy-button",
+    class: _vm.buttonClass,
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.openDropdown
+    }
+  }, [(_vm.iconComputed !== '') ? _c('span', {
+    class: _vm.iconClass,
+    attrs: {
+      "disabled": _vm.buttonClass.indexOf('disabled')
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.text !== '') ? _c('span', {
+    staticClass: "flexy-button-text"
+  }, [_vm._v(_vm._s(_vm.text))]) : _vm._e()])
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-7795762e", module.exports)
+  }
+}
+
+/***/ },
+/* 99 */
+/* unknown exports provided */
+/* all exports used */
+/*!************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-91106d90!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-help.vue ***!
+  \************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "flexy-help row"
+  }, [_c('div', {
+    staticClass: "flexy-help-menu col-sm-3"
+  }, [_c('ul', {
+    staticClass: "nav nav-pills flex-column"
+  }, _vm._l((_vm.helpItems), function(item, key) {
+    return _c('li', {
+      staticClass: "nav-item"
+    }, [_c('a', {
+      staticClass: "nav-link",
+      class: {
+        'active': key === _vm.visibleItem
+      },
+      on: {
+        "click": function($event) {
+          _vm.visibleItem = key
+        }
+      }
+    }, [_vm._v(_vm._s(item.title))])])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "flexy-help-content col-sm-9"
+  }, _vm._l((_vm.helpItems), function(item, key) {
+    return _c('div', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (key === _vm.visibleItem),
+        expression: "key===visibleItem"
+      }],
+      staticClass: "card"
+    }, [_c('h1', {
+      staticClass: "card-header bg-primary text-white"
+    }, [_vm._v(_vm._s(item.title))]), _vm._v(" "), _c('div', {
+      staticClass: "card-block",
+      domProps: {
+        "innerHTML": _vm._s(item.content)
+      }
+    })])
+  }))])
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-91106d90", module.exports)
+  }
+}
+
+/***/ },
+/* 100 */
+/* unknown exports provided */
+/* all exports used */
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-9dc3f908!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/vue-strap-src/components/Dropdown.vue ***!
+  \************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c(_vm.isLi ? 'li' : 'div', {
+    directives: [{
+      name: "click-outside",
+      rawName: "v-click-outside",
+      value: (_vm.blur),
+      expression: "blur"
+    }],
+    tag: "div",
+    class: [{
+      open: _vm.show,
+      disabled: _vm.disabled,
+      dropdown: _vm.isLi,
+      'input-group-btn': _vm.inInput,
+      'btn-group': !_vm.isLi && !_vm.inInput
+    }]
+  }, [_vm._t("before"), _vm._v(" "), _vm._t("button", [(_vm.isLi) ? _c('a', {
+    class: ['dropdown-toggle', _vm.buttonSize, {
+      disabled: _vm.disabled
+    }],
+    attrs: {
+      "role": "button"
+    },
+    on: {
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.show = false
+      }
+    }
+  }, [_vm._v("\n      " + _vm._s(_vm.text) + "\n      "), _c('span', {
+    staticClass: "caret"
+  })]) : _c('button', {
+    class: ['btn btn-' + _vm.type, _vm.buttonSize, 'dropdown-toggle'],
+    attrs: {
+      "type": "button",
+      "disabled": _vm.disabled
+    },
+    on: {
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.show = false
+      }
+    }
+  }, [_vm._v("\n      " + _vm._s(_vm.text) + "\n      "), _c('span', {
+    staticClass: "caret"
+  })])]), _vm._v(" "), _vm._t("dropdown-menu", [_c('ul', {
+    staticClass: "dropdown-menu"
+  }, [_vm._t("default")], 2)])], 2)
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-9dc3f908", module.exports)
+  }
+}
+
+/***/ },
+/* 101 */
+/* unknown exports provided */
+/* all exports used */
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-afeca60c!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
+  \*********************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "datetimepicker"
+  }, [_c('datepicker', {
+    attrs: {
+      "id": _vm.name_date,
+      "name": _vm.name_date,
+      "value": _vm.date(),
+      "format": "yyyy-MM-dd"
+    },
+    on: {
+      "input": function($event) {
+        _vm.changeDate($event)
+      }
+    }
+  }), _vm._v(" "), _c('timepicker', {
+    attrs: {
+      "id": _vm.name_time,
+      "name": _vm.name_time,
+      "value": _vm.time()
+    },
+    on: {
+      "input": function($event) {
+        _vm.changeTime($event)
+      }
+    }
+  })], 1)
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-afeca60c", module.exports)
+  }
+}
+
+/***/ },
+/* 102 */
+/* unknown exports provided */
+/* all exports used */
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-c41b8b68!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/timepicker.vue ***!
+  \*****************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "timepicker"
+  }, [_c('select', {
+    staticClass: "custom-select timepicker-hours",
+    attrs: {
+      "id": _vm.name_hours
+    },
+    domProps: {
+      "value": _vm.hours()
+    },
+    on: {
+      "input": function($event) {
+        _vm.changeHours($event.target.value)
+      }
+    }
+  }, _vm._l((_vm.range(23)), function(hour) {
+    return _c('option', {
+      domProps: {
+        "selected": (hour.value == _vm.hours()),
+        "value": hour.value
+      }
+    }, [_vm._v(_vm._s(hour.text))])
+  })), _vm._v("\n  :\n  "), _c('select', {
+    staticClass: "custom-select timepicker-minutes",
+    attrs: {
+      "id": _vm.name_minutes
+    },
+    domProps: {
+      "value": _vm.minutes()
+    },
+    on: {
+      "input": function($event) {
+        _vm.changeMinutes($event.target.value)
+      }
+    }
+  }, _vm._l((_vm.range(59)), function(minute) {
+    return _c('option', {
+      domProps: {
+        "selected": (minute.value == _vm.minutes()),
+        "value": minute.value
+      }
+    }, [_vm._v(_vm._s(minute.text))])
+  }))])
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-c41b8b68", module.exports)
   }
 }
 
@@ -33093,82 +33075,104 @@ if (false) {
 /* 103 */
 /* unknown exports provided */
 /* all exports used */
-/*!********************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-fb4c1c5a!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/vue-strap-src/components/Tabs.vue ***!
-  \********************************************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-e56e8c5e!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-pagination.vue ***!
+  \******************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    attrs: {
-      "tabs": ""
-    }
+    staticClass: "pagination-container d-flex justify-content-between"
   }, [_c('ul', {
-    class: _vm.navStyleClass,
-    attrs: {
-      "role": "tablist"
+    staticClass: "pagination"
+  }, [(_vm.current > 1 && _vm.pages > _vm.buttons) ? _c('li', {
+    staticClass: "page-item"
+  }, [_c('a', {
+    staticClass: "page-link",
+    on: {
+      "click": function($event) {
+        _vm.jumpToPage(1)
+      }
     }
-  }, [_vm._l((_vm.headers), function(header) {
-    return [(header._isTab) ? _c('li', {
-      staticClass: "nav-item",
+  }, [_c('span', {
+    staticClass: "fa fa-fast-backward"
+  })])]) : _vm._e(), _vm._v(" "), (_vm.current > 10 && _vm.pages > _vm.buttons) ? _c('li', {
+    staticClass: "page-item"
+  }, [_c('a', {
+    staticClass: "page-link",
+    on: {
+      "click": function($event) {
+        _vm.jumpToPage(_vm.current - 10)
+      }
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-backward"
+  })])]) : _vm._e(), _vm._v(" "), (_vm.current > 1 && _vm.pages > _vm.buttons) ? _c('li', {
+    staticClass: "page-item"
+  }, [_c('a', {
+    staticClass: "page-link",
+    on: {
+      "click": function($event) {
+        _vm.jumpToPage(_vm.current - 1)
+      }
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-chevron-left"
+  })])]) : _vm._e(), _vm._v(" "), _vm._l((_vm.pagesButtons()), function(page) {
+    return _c('li', {
+      staticClass: "page-item",
       class: {
-        active: header.active, disabled: header.disabled
-      },
+        active: (page == _vm.current)
+      }
+    }, [_c('a', {
+      staticClass: "page-link",
       on: {
         "click": function($event) {
-          $event.preventDefault();
-          _vm.select(header)
+          _vm.jumpToPage(page)
         }
       }
-    }, [_vm._t("header", [_c('a', {
-      staticClass: "nav-link",
-      class: {
-        active: header.active
-      },
-      attrs: {
-        "href": "#"
-      },
-      domProps: {
-        "innerHTML": _vm._s(header.header)
+    }, [_vm._v(_vm._s(page))])])
+  }), _vm._v(" "), (_vm.current < _vm.pages - 1 && _vm.pages > _vm.buttons) ? _c('li', {
+    staticClass: "page-item"
+  }, [_c('a', {
+    staticClass: "page-link",
+    on: {
+      "click": function($event) {
+        _vm.jumpToPage(_vm.current + 1)
       }
-    })])], 2) : _vm._e(), _vm._v(" "), (header._isTabGroup) ? _c('dropdown', {
-      class: {
-        active: header.active
-      },
-      attrs: {
-        "text": header.header,
-        "disabled": header.disabled
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-chevron-right"
+  })])]) : _vm._e(), _vm._v(" "), (_vm.current < _vm.pages - 10 && _vm.pages > _vm.buttons) ? _c('li', {
+    staticClass: "page-item"
+  }, [_c('a', {
+    staticClass: "page-link",
+    on: {
+      "click": function($event) {
+        _vm.jumpToPage(_vm.current + 10)
       }
-    }, _vm._l((header.tabs), function(tab) {
-      return _c('li', {
-        staticClass: "nav-item",
-        class: {
-          disabled: tab.disabled
-        }
-      }, [_c('a', {
-        staticClass: "nav-link",
-        class: {
-          active: header.active
-        },
-        attrs: {
-          "href": "#"
-        },
-        on: {
-          "click": function($event) {
-            $event.preventDefault();
-            _vm.select(tab)
-          }
-        }
-      }, [_vm._v(_vm._s(tab.header))])])
-    })) : _vm._e()]
-  })], 2), _vm._v(" "), _c('div', {
-    staticClass: "tab-content"
-  }, [_vm._t("default")], 2)])
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-forward"
+  })])]) : _vm._e(), _vm._v(" "), (_vm.current < _vm.pages - 1 && _vm.pages > _vm.buttons) ? _c('li', {
+    staticClass: "page-item"
+  }, [_c('a', {
+    staticClass: "page-link",
+    on: {
+      "click": function($event) {
+        _vm.jumpToPage(_vm.pages - 1)
+      }
+    }
+  }, [_c('span', {
+    staticClass: "fa fa-fast-forward"
+  })])]) : _vm._e()], 2), _vm._v(" "), _c('span', {
+    staticClass: "pagination-info text-primary"
+  }, [_vm._v(_vm._s(_vm._f("replace")(_vm.$lang.grid_pagination, _vm.total, _vm.pages)))])])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-fb4c1c5a", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-e56e8c5e", module.exports)
   }
 }
 
@@ -33177,14 +33181,14 @@ if (false) {
 /* unknown exports provided */
 /* all exports used */
 /*!*********************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-06debd86!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-blocks.vue ***!
   \*********************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-button.vue */ 68);
+var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-06debd86!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-blocks.vue */ 68);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
@@ -33193,8 +33197,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-button.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-button.vue");
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-06debd86!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-blocks.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-06debd86!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-blocks.vue");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -33207,25 +33211,25 @@ if(false) {
 /* 105 */
 /* unknown exports provided */
 /* all exports used */
-/*!********************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
-  \********************************************************************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-0f93c750!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/colorpicker.vue ***!
+  \*************************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-modal.vue */ 69);
+var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-0f93c750!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./colorpicker.vue */ 69);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
+var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-modal.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-modal.vue");
+		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-0f93c750!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./colorpicker.vue", function() {
+			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-0f93c750!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./colorpicker.vue");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -33238,15 +33242,15 @@ if(false) {
 /* 106 */
 /* unknown exports provided */
 /* all exports used */
-/*!*************************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-1f7ed48c!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/colorpicker.vue ***!
-  \*************************************************************************************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-19a715e9!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/components/Tabs.vue ***!
+  \***************************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-1f7ed48c!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./colorpicker.vue */ 70);
+var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-19a715e9!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./Tabs.vue */ 70);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
@@ -33255,8 +33259,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1f7ed48c!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./colorpicker.vue", function() {
-			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1f7ed48c!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./colorpicker.vue");
+		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-19a715e9!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Tabs.vue", function() {
+			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-19a715e9!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Tabs.vue");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -33269,15 +33273,15 @@ if(false) {
 /* 107 */
 /* unknown exports provided */
 /* all exports used */
-/*!********************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
-  \********************************************************************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-2bc5fa5a!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/Datepicker.vue ***!
+  \**********************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-thumb.vue */ 71);
+var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-2bc5fa5a!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./Datepicker.vue */ 71);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
@@ -33286,8 +33290,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-thumb.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-thumb.vue");
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-2bc5fa5a!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Datepicker.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-2bc5fa5a!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Datepicker.vue");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -33300,15 +33304,15 @@ if(false) {
 /* 108 */
 /* unknown exports provided */
 /* all exports used */
-/*!*********************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-2be934a7!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-blocks.vue ***!
-  \*********************************************************************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-3c0fb56f!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
+  \********************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-2be934a7!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-blocks.vue */ 72);
+var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-3c0fb56f!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-thumb.vue */ 72);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
@@ -33317,8 +33321,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-2be934a7!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-blocks.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-2be934a7!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-blocks.vue");
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-3c0fb56f!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-thumb.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-3c0fb56f!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-thumb.vue");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -33331,15 +33335,15 @@ if(false) {
 /* 109 */
 /* unknown exports provided */
 /* all exports used */
-/*!**********************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-310057a0!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/Datepicker.vue ***!
-  \**********************************************************************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-6e21bac6!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
+  \********************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-310057a0!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./Datepicker.vue */ 73);
+var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-6e21bac6!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-modal.vue */ 73);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
@@ -33348,8 +33352,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-310057a0!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Datepicker.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-310057a0!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Datepicker.vue");
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6e21bac6!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-modal.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6e21bac6!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-modal.vue");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -33362,25 +33366,25 @@ if(false) {
 /* 110 */
 /* unknown exports provided */
 /* all exports used */
-/*!************************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-529cf6a2!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/timepicker.vue ***!
-  \************************************************************************************************************************************************************************************************************/
+/*!*********************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-7795762e!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
+  \*********************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-529cf6a2!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./timepicker.vue */ 74);
+var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-7795762e!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-button.vue */ 74);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
+var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-529cf6a2!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./timepicker.vue", function() {
-			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-529cf6a2!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./timepicker.vue");
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-7795762e!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-button.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-7795762e!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-button.vue");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -33394,14 +33398,14 @@ if(false) {
 /* unknown exports provided */
 /* all exports used */
 /*!****************************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-afeca60c!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
   \****************************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./datetimepicker.vue */ 75);
+var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-afeca60c!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./datetimepicker.vue */ 75);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
@@ -33410,8 +33414,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./datetimepicker.vue", function() {
-			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./datetimepicker.vue");
+		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-afeca60c!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./datetimepicker.vue", function() {
+			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-afeca60c!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./datetimepicker.vue");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -33424,15 +33428,15 @@ if(false) {
 /* 112 */
 /* unknown exports provided */
 /* all exports used */
-/*!***************************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-fb4c1c5a!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/components/Tabs.vue ***!
-  \***************************************************************************************************************************************************************************************************************/
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-c41b8b68!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/timepicker.vue ***!
+  \************************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-fb4c1c5a!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./Tabs.vue */ 76);
+var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-c41b8b68!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./timepicker.vue */ 76);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
@@ -33441,8 +33445,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-fb4c1c5a!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Tabs.vue", function() {
-			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-fb4c1c5a!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Tabs.vue");
+		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-c41b8b68!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./timepicker.vue", function() {
+			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-c41b8b68!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./timepicker.vue");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
