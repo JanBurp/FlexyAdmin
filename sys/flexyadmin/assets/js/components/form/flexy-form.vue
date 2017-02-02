@@ -155,6 +155,12 @@ export default {
       return selected;
     },
     
+    selectItem : function (value) {
+      if (!value) return '';
+      value = value.toString();
+      return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');
+    },
+    
     hasInsertRights : function(field) {
       if ( _.isUndefined(this.fields[field]) ) return false;
       if ( _.isUndefined(this.fields[field].options) ) return false;
@@ -439,7 +445,7 @@ export default {
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <select class="form-control" :class="{'custom-select':!isMultiple(field)}" :id="field" :name="field" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
-                    <option v-for="option in fields[field].options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{option.name}}</option>
+                    <option v-for="option in fields[field].options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{selectItem(option.name)}}</option>
                   </select>
                 </template>
               
