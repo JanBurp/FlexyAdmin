@@ -134,6 +134,12 @@
      white-space:nowrap;
    }
    
+   
+   th.grid-header-muted {
+     font-weight:normal;
+   }
+   
+   
    // Table cell (grid-cell)
    td {
      overflow:hidden;
@@ -145,6 +151,11 @@
    td.grid-cell-type-color {max-width:0;min-width:5rem;}
    td.grid-cell-type-checkbox {text-align:center;}
    td.grid-cell-editable {cursor:pointer;}
+   
+   .grid-cell-seperator {
+     color:$gray-lighter;
+     margin:0 .25rem;
+   }
    
    // FOOTER
    .card-footer {

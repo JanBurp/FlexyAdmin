@@ -27,6 +27,7 @@ export default {
         color     : ['color'],
         url       : ['url'],
         relation  : ['relation'],
+        select    : ['select'],
         abstract  : ['abstract'],
       };
       var defaultTypes = [];
@@ -96,6 +97,12 @@ export default {
         items[i] = items[i].replace(/{/,'').replace(/}/,'').trim();
       }
       return items;
+    },
+    
+    selectItem : function (value) {
+      if (!value) return '';
+      value = value.toString();
+      return value.replace(/\|/g,'<span class="grid-cell-seperator">|</span>');
     },
     
     itemObject : function(item) {
@@ -197,7 +204,9 @@ export default {
     <span v-if="showTreeNode" class="fa fa-level-up fa-rotate-90 text-muted"></span>
 
     <template v-if="isType('relation',type)">
-      <span class="grid-relation-item" v-for="item in relationItems(item)">{{item}}</span>
+      <template v-for="item in relationItems(item)">
+        <span class="grid-relation-item" v-if="item!==''">{{item}}</span>
+      </template>
     </template>
 
     <template v-if="isType('abstract',type)">
@@ -223,6 +232,10 @@ export default {
     
     <template v-if="isType('url',type)">
       <a :href="item" target="_blank">{{item}}</a>
+    </template>
+    
+    <template v-if="isType('select',type)">
+      <span v-html="selectItem(item)"></span>
     </template>
 
     <template v-if="isType('default',type)">
