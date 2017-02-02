@@ -17,7 +17,7 @@ Class Admin_menu extends CI_Model {
     parent::__construct();
     $this->config->load('admin_ui',true);
     $this->ui_config = $this->config->item('admin_ui');
-        $this->load->library('menu');
+    $this->load->library('menu');
     $this->load->helper('language');
     $this->lang->load('help');
     $this->user = $this->flexy_auth->get_user();
@@ -57,7 +57,10 @@ Class Admin_menu extends CI_Model {
       $first=false;
     }
 
-    return array('headermenu'=>$headerMenu->render(),'sidemenu'=>$sideMenu->render());
+    return array(
+      'headermenu'=>$headerMenu->render(),
+      'sidemenu'=>$sideMenu->render()
+    );
   }
   
   /**
@@ -70,10 +73,11 @@ Class Admin_menu extends CI_Model {
    */
   private function _process_item( $base_url, $item ) {
     $menuItem = array(
-      'name'  => $item['name'],
-      'uri'   => $base_url.str_replace('{user_id}',$this->user['id'],$item['uri']),
-      'icon'  => el('icon',$item,''),
-      'class' => el('class',$item,''),
+      'name'       => $item['name'],
+      'uri'        => $base_url.str_replace('{user_id}',$this->user['id'],$item['uri']),
+      'icon'       => el('icon',$item,''),
+      'iconactive' => el('iconactive',$item,''),
+      'class'      => el('class',$item,''),
     );
     return $menuItem;
   }
@@ -108,10 +112,11 @@ Class Admin_menu extends CI_Model {
               $table = el('table',$item,$key);
               if ($this->flexy_auth->has_rights($table)) {
                 $menuItems[$table] = $this->_process_item($base_url, array(
-                  'name'  => el('name',$item,$this->lang->ui($table)),
-                  'uri'   => 'show/grid/'.$table,
-                  'icon'  => el('icon',$item,''),
-                  'class' => el('class',$item,''),
+                  'name'       => el('name',$item,$this->lang->ui($table)),
+                  'uri'        => 'show/grid/'.$table,
+                  'icon'       => el('icon',$item,''),
+                  'iconactive' => el('iconactive',$item,''),
+                  'class'      => el('class',$item,''),
                 ));
               }
               break;
@@ -124,10 +129,11 @@ Class Admin_menu extends CI_Model {
                 if (!in_array($table,$this->hidden_tables)) {
                   if (!isset($menuItems[$table])) {
                     $menuItems[$table] = $this->_process_item($base_url, array(
-                      'name'  => $this->lang->ui($table),
-                      'uri'   => 'show/grid/'.$table,
-                      'icon'  => el('icon',$item,''),
-                      'class' => el('class',$item,''),
+                      'name'       => $this->lang->ui($table),
+                      'uri'        => 'show/grid/'.$table,
+                      'icon'       => el('icon',$item,''),
+                      'iconactive' => el('iconactive',$item,''),
+                      'class'      => el('class',$item,''),
                     ));
                   }
                 }
@@ -138,10 +144,11 @@ Class Admin_menu extends CI_Model {
             case 'media':
               $path = el('path',$item,$key);
               $menuItems['media_'.$path] = $this->_process_item($base_url, array(
-                'name'  => el('name',$item,$this->lang->ui('media_'.$path)),
-                'uri'   => 'show/media/'.$path,
-                'icon'  => el('icon',$item,''),
-                'class' => el('class',$item,''),
+                'name'       => el('name',$item,$this->lang->ui('media_'.$path)),
+                'uri'        => 'show/media/'.$path,
+                'icon'       => el('icon',$item,''),
+                'iconactive' => el('iconactive',$item,''),
+                'class'      => el('class',$item,''),
               ));
               break;
 
@@ -151,10 +158,11 @@ Class Admin_menu extends CI_Model {
               foreach ($medias as $media) {
                 if (!isset($menuItems['media_'.$media])) {
                   $menuItems['media_'.$media] = $this->_process_item($base_url, array(
-                    'name'  => $this->lang->ui('media_'.$media),
-                    'uri'   => 'show/media/'.$media,
-                    'icon'  => el('icon',$item,''),
-                    'class' => el('class',$item,''),
+                    'name'       => $this->lang->ui('media_'.$media),
+                    'uri'        => 'show/media/'.$media,
+                    'icon'       => el('icon',$item,''),
+                    'iconactive' => el('iconactive',$item,''),
+                    'class'      => el('class',$item,''),
                   ));
                 }
               }
