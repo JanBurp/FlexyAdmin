@@ -325,9 +325,12 @@ export default {
       return flexyState.setMediaView(view);
     },
 
-    
     headerClass : function(field) {
-      return 'grid-header-type-'+field.schema['form-type'];
+      var c = 'grid-header-type-'+field.schema['form-type'];
+      if (!_.isUndefined(field.schema['readonly'])) {
+        if (field.schema['readonly']) c+=' grid-header-muted';
+      }
+      return c;
     },
     
     // setFocus : function(id,cell) {
