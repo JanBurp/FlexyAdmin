@@ -805,6 +805,16 @@ class Menu {
         if ($pos==count($menu)) $order_style.='last';
         $order_style=trim($order_style);
         
+        // Current
+        $current = ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:''));
+        
+        // Icon
+        $icon = el('icon',$item,'');
+        $iconactive = el('iconactive',$item);
+        if ($iconactive and $current) {
+          $icon = $iconactive;
+        }
+        
         // render item
         $item_html=$this->CI->load->view($this->settings['view_path'].'/'.$view.'.php',array(
           'title'       => $title,
@@ -815,13 +825,13 @@ class Menu {
           '_pos'        => $_pos,
 					'order'       => $order_style,
 					'sub'         => (isset($item['sub']))?$styles['is_sub']:'',
-          'current'     => ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:'')),
+          'current'     => $current,
           'class_uri'   => $classUri,
           'class'       => el('class',$item,' '),
           'attr'        => attributes(el('attr',$item,'')),
           'clickable'   => (!empty($thisUri)),
           'submenu'     => $submenu,
-          'icon'        => el('icon',$item),
+          'icon'        => $icon,
         ),true);
 
         $html.=$item_html;

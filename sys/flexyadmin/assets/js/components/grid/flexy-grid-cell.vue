@@ -205,7 +205,7 @@ export default {
 
     <template v-if="isType('relation',type)">
       <template v-for="item in relationItems(item)">
-        <span class="grid-relation-item" v-if="item!==''">{{item}}</span>
+        <span class="grid-relation-item" v-if="item!==''" v-html="selectItem(item)"></span>
       </template>
     </template>
 
