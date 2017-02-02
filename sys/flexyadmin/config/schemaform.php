@@ -61,7 +61,7 @@ $config['FIELDS_prefix'] = array (
   ),
 	'tbl'				=> array(
     'type'        => 'integer',
-    'form-type'   => 'select',
+    'form-type'   => 'string',
     'grid-type'   => 'relation',
     'grid'        => 'function_join',
     'form'        => 'function_join',
