@@ -143,10 +143,11 @@ class Api_Model extends CI_Model {
    * @author Jan den Besten
    */
   protected function _result_norights() {
+    $this->lang->load('vue');
     log_message('info', 'API NO RIGHTS : '.array2json($this->args));
     $this->result=array(
       'success' => false,
-      'error' => 'NO RIGHTS',
+      'error'   => lang('vue_api_error_401'),
     );
     return $this->result;
   }
