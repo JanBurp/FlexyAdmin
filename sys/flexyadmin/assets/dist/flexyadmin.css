@@ -5648,6 +5648,8 @@ a > .fa, .btn > .fa {
   .grid th.grid-header-type-primary {
     width: 2rem;
     white-space: nowrap; }
+  .grid th.grid-header-muted {
+    font-weight: normal; }
   .grid td {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -5665,6 +5667,9 @@ a > .fa, .btn > .fa {
     text-align: center; }
   .grid td.grid-cell-editable {
     cursor: pointer; }
+  .grid .grid-cell-seperator {
+    color: #eceeef;
+    margin: 0 .25rem; }
   .grid .card-footer {
     padding: .35rem .35rem; }
     .grid .card-footer .actions {

@@ -2235,7 +2235,7 @@ Class Data_Core extends CI_Model {
           if (in_array($field,$many_to_one_fields)) {
             $abstract_field = $this->settings['relations']['many_to_one'][$field]['result_name'].'.abstract';
             if (isset($row[$abstract_field])) {
-              $result[$id][$field] = '{"'.$value.'":"'.$row[$abstract_field].'"}';
+              $result[$id][$field] = '{"'.$value.'":"'.trim($row[$abstract_field],'|, ').'"}';
               unset($result[$id][$abstract_field]);
             }
           }
