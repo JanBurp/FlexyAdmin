@@ -40,7 +40,6 @@ export default {
     },
 
     changeTime : function(time) {
-      console.log('changeTime',time);
       this.changeDateTime( this.date() + ' ' + time )
     },
     

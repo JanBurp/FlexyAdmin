@@ -5851,9 +5851,7 @@ select:-moz-focusring {
   color: transparent !important;
   text-shadow: 0 0 0 #000 !important; }
 
-.custom-select:not(.form-control-sm):not(.input-group-sm > .form-control):not(
-.input-group-sm > .input-group-addon):not(
-.input-group-sm > .input-group-btn > .btn) {
+.custom-select {
   height: 2.13rem !important;
   padding-top: 0.5rem; }
 
