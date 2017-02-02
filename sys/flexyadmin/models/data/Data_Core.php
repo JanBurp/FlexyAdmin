@@ -1146,7 +1146,7 @@ Class Data_Core extends CI_Model {
       // Schema: from fieldname
       $schema       = array_merge($schema, el(array('FIELDS_special',$field),$schemaform,array()) );
       // Options
-      $options = $this->get_options($field);
+      $options = $this->get_options($field,array('many_to_many','one_to_many'));
       if ($options) {
         $schema['form-type'] = 'select';
         if ($fieldPrefix==='media' or $fieldPrefix==='medias') {
@@ -1215,7 +1215,7 @@ Class Data_Core extends CI_Model {
     $fieldset_keys = array_keys($form_set['fieldsets']);
     $fieldset_keys = $this->lang->ui($fieldset_keys);
     $form_set['fieldsets'] = array_combine($fieldset_keys,$form_set['fieldsets']);
-
+    
     // Relaties
     $form_set = $this->_complete_relations_of_set($form_set,'form_set');
     

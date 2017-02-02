@@ -186,6 +186,9 @@ export default {
         var startOfObject = response.data.indexOf('{"success":');
         response.data = JSON.parse(response.data.substr(startOfObject));
       }
+      if (!_.isUndefined(response.data.error)) {
+        self.addMessage(response.data.error,'danger');
+      }
       return response;
     })
     .catch(function (error) {

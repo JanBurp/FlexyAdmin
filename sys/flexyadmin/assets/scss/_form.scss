@@ -55,7 +55,7 @@ select:-moz-focusring {
 select.form-control:not([size]):not([multiple]) {
 //  height:auto;
 }
-.custom-select:not(.form-control-sm) {
+.custom-select {
   height: 2.13rem!important;
   padding-top:0.5rem;
 }
