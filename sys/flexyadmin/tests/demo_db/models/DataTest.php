@@ -91,7 +91,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( array('str_title','str_module'), $abstract_fields );
     // ->get_compiled_abstract_select()
     $abstract_fields_sql  = $this->CI->data->get_compiled_abstract_select();
-    $this->assertEquals( "CONCAT_WS('|',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`) AS `abstract`", $abstract_fields_sql );
+    $this->assertEquals( "REPLACE( CONCAT_WS('|',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`), '||','' )  AS `abstract`", $abstract_fields_sql );
     // ->select_abstract()
     $query = $this->CI->data->select_abstract()->get();
     $this->assertEquals( 5, $query->num_rows() );
