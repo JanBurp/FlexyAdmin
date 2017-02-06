@@ -8,12 +8,16 @@
  */
 
 class MY_Form_validation extends CI_Form_validation {
+  
+  private $schemaform = array();
    
   public function __construct() {
     parent::__construct();
     $this->CI = @get_instance();
     $this->CI->load->helper('email');
     $this->CI->lang->load('regex_validation');
+    $this->CI->config->load('schemaform',true);
+    $this->schemaform = $this->CI->config->get_item('schemaform');
   }
   
   /**
@@ -91,6 +95,7 @@ class MY_Form_validation extends CI_Form_validation {
     return $messages;
   }
   
+  
   /**
    * Validate given date for a table
    *
@@ -102,10 +107,10 @@ class MY_Form_validation extends CI_Form_validation {
   public function validate_data($data,$table='') {
     // (re)Set data
     $this->set_data($data);
-    $this->_field_data=array();
-    $this->_config_rules=array();
-    $this->_error_array=array();
-    $this->_error_messages=array();
+    $this->_field_data     = array();
+    $this->_config_rules   = array();
+    $this->_error_array    = array();
+    $this->_error_messages = array();
     // Set rules
 		foreach($data as $field=>$value) {
       $thisTable=$table;
@@ -114,13 +119,14 @@ class MY_Form_validation extends CI_Form_validation {
         $field=remove_prefix($field);
       }
       $label      = $this->CI->lang->ui($thisTable.'.'.$field);
-      $validation = $this->get_validations($thisTable,$field);
+      $validation = $this->get_rules($thisTable,$field);
       $this->set_rules($field, $label, $validation);
 		}
     // Run validation
     $result=$this->run();
 		return $result;
   }
+  
   
   /**
    * Geeft alle validation rules van een gegeven veld uit een gegeven tabel.
@@ -133,69 +139,58 @@ class MY_Form_validation extends CI_Form_validation {
    * @return string
    * @author Jan den Besten
    */
-  public function get_validations($table,$field,$validation=array(),$as_array=FALSE) {
-    $validation[]=$this->_get_flexy_cfg_validation($field);
-    // $validation[]=$this->_get_global_cfg_validation($field);
-    // $validation[]=$this->_get_cfg_validation($table,$field);
-    $validation[]=$this->_get_db_validation($table,$field);
-    // $validation[]=$this->_get_db_options_validation($table,$field);
-		$validations=$this->combine_validations($validation,$as_array);
+  public function get_rules($table,$field,$validation=array(),$as_array=FALSE) {
+    $validation[]=$this->_get_schemaform_rules($field);
+    $validation[]=$this->_get_data_settings_rules($table,$field);
+    $validation[]=$this->_get_db_rules($table,$field);
+    $validation[]=$this->_get_db_options_rules($table,$field);
+		$validations=$this->combine_rules($validation,$as_array);
     // trace_(['get_validations',$table,$field,$validation,$validations]);
     return $validations;
   }
 
   /**
-   * Geeft validation rules die in flexyadmin_config.php ingesteld zijn voor een veld
+   * Geeft validation rules die in schemaform.php ingesteld zijn voor een veld
    *
    * @param string $field 
    * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
    * @author Jan den Besten
    */
-	private function _get_flexy_cfg_validation($field) {
-    $pre=get_prefix($field);
-    $validation=el( array($field,'validation'), $this->CI->config->item('FIELDS_special'),'');                                             // Special fields
-    if (empty($validation)) $validation=el( array($pre,  'validation'), $this->CI->config->item('FIELDS_prefix'), '');                     // By prefix
-    if (empty($validation)) $validation=el( array($field,'validation'), $this->CI->config->item('FIELDS_'.$this->CI->db->platform()), ''); // By DB Platform
-    if (empty($validation)) $validation=el( array($field,'validation'), $this->CI->config->item('FIELDS_default'), '');                    // Default
+	private function _get_schemaform_rules($field) {
+    // Default
+    $validation = el( array('FIELDS_default','validation'), $this->schemaform, '');
+    $validation = explode('|',$validation);
+    // Prefix
+    $pre_validation = el( array('FIELDS_prefix', get_prefix($field), 'validation'), $this->schemaform, '');
+    $pre_validation = explode('|',$pre_validation);
+    // Special
+    $special_validation = el( array('FIELDS_special',$field,'validation'), $this->schemaform,'');
+    $special_validation = explode('|',$special_validation);
+    // Merge
+    $validation = array_merge($validation,$pre_validation,$special_validation);
     $validation = array(
-      'rules'   => $validation,
+      'rules'   => implode('|',$validation),
       'params'  => ''
     );
     return $validation;
 	}
 
   
-  //   /**
-  //    * Geeft validation rules die voor globaal voor een veld zijn ingesteld in cfg_field_info
-  //    *
-  //    * @param string $field
-  //    * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
-  //    * @author Jan den Besten
-  //    */
-  // private function _get_global_cfg_validation($field) {
-  //     $global_validation = array(
-  //       'rules'    => $this->CI->cfg->get('CFG_field',"*.".$field,'str_validation_rules'),
-  //     'params'  => $this->CI->cfg->get('CFG_field',"*.".$field,'str_validation_parameters')
-  //     );
-  //     return $global_validation;
-  // }
-  
-  //   /**
-  //    * Geeft validation rules die voor een veld ingesteld zijn in cfg_field_info
-  //    *
-  //    * @param string $table
-  //    * @param string $field
-  //    * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
-  //    * @author Jan den Besten
-  //    */
-  // private function _get_cfg_validation($table,$field) {
-  //     $validation = array(
-  //       'rules'    => $this->CI->cfg->get('CFG_field',$table.".".$field,'str_validation_rules'),
-  //     'params'  => $this->CI->cfg->get('CFG_field',$table.".".$field,'str_validation_parameters')
-  //     );
-  //     return $validation;
-  // }
-  
+    /**
+     * Geeft validation rules die voor een veld ingesteld zijn in data settings van een tabel
+     *
+     * @param string $table
+     * @param string $field
+     * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
+     * @author Jan den Besten
+     */
+  private function _get_data_settings_rules($table,$field) {
+    $this->CI->data->table($table);
+    $validation = $this->CI->data->get_setting( array('field_info',$field,'validation') );
+    $validation = $this->split_rules_parameters($validation);
+    return $validation;
+  }
+
   /**
    * Geeft validation rules die standaard uit de veld informatie uit database gehaald kan worden.
    * Bijvoorbeeld een VARCHAR 255 geeft max_length[255]
@@ -205,47 +200,110 @@ class MY_Form_validation extends CI_Form_validation {
    * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
    * @author Jan den Besten
    */
-	private function _get_db_validation($table,$field) {
+	private function _get_db_rules($table,$field) {
 		$validation=array();
-		$info=$this->CI->db->field_data($table,$field);
-		if (isset($info['type']))
-		switch ($info['type']) {
-			case 'varchar':
-				if (isset($info['max_length'])) {
-					$validation['rules']='max_length[]';
-					$validation['params']=$info['max_length'];
-				}
-        break;
-			case 'decimal':
-				$validation['rules']='decimal';
-				$validation['params']='';
-        break;
+		$info=$this->CI->data->table($table)->field_data($field);
+		if (isset($info['type'])) {
+  		switch ($info['type']) {
+  			case 'varchar':
+  				if (isset($info['max_length'])) {
+  					$validation['rules']='max_length';
+  					$validation['params']=$info['max_length'];
+  				}
+          break;
+  			case 'decimal':
+  				$validation['rules']='decimal';
+  				$validation['params']='';
+          break;
+  		}
 		}
 		return $validation;
 	}
   
   
-  // /**
-  //  * Geeft validation rule 'is_option[]' als het gegeven veld opties heeft ingesteld
-  //  *
-  //  * @param string $table
-  //  * @param string $field
-  //  * @return string
-  //  * @author Jan den Besten
-  //  */
-  // private function _get_db_options_validation($table,$field) {
-  //   $validation=array();
-  //     $options=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
-  //   if ($options) {
-  //     $multiple=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'b_multi_options');
-  //     if ($multiple)
-  //       $validation['rules']='valid_options';
-  //     else
-  //       $validation['rules']='valid_option';
-  //     $validation['params']=str_replace('|',',',$options);
-  //   }
-  //   return $validation;
-  // }
+  /**
+   * Geeft validation rule 'is_option[]' als het gegeven veld opties heeft ingesteld
+   *
+   * @param string $table
+   * @param string $field
+   * @return string
+   * @author Jan den Besten
+   */
+  private function _get_db_options_rules($table,$field) {
+    $validation=array();
+    $this->CI->config->load('data/'.$table,true);
+    $options = $this->CI->config->get_item(array('data/'.$table,'options',$field));
+    if ($options) {
+      if (el('multiple',$options,false))
+        $validation['rules']='valid_options';
+      else
+        $validation['rules']='valid_option';
+      // options
+      $validation['params']=array();
+      if (isset($options['data'])) {
+        foreach ($options['data'] as $option) {
+          $validation['params'][] = el('value',$option,$option);
+        }
+        $validation['params'] = implode(',',$validation['params']);
+      }
+    }
+    return $validation;
+  }
+  
+  
+  /**
+   * Splits validatie regels in een string naar een assoc array waar de key de rule is en de value de paramater (als beschikbaar)
+   *
+   * @param string $validation 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function to_validation_array($validations) {
+    $vals        = explode('|',$validations);
+    $validations = array();
+    foreach ($vals as $rule) {
+      $param = '';
+			if (preg_match("/(.*?)\[(.*)\]/", $rule, $match)) {
+				$rule  = $match[1];
+				$param = $match[2];
+			}
+      $validations[$rule]=$param;
+    }
+    return $validations;
+  }
+  
+  /**
+   * Splits validatie regels naar een assoc array('rules'=>.., 'params'=>..)
+   *
+   * @param mixed $validation 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function split_rules_parameters($validations) {
+    if (is_string($validations)) {
+      $validations = $this->to_validation_array($validations);
+    }
+    if (!isset($validations)) {
+      return array( 'rules' => '', 'params' => '' );
+    }
+    if (isset($validations[0])) {
+      if (is_array($validations[0])) {
+        $validations = array_combine(array_values($validations),array_fill(0,count($validations),''));
+      }
+      else {
+        // Check if values are strings
+        $checked_validations = array();
+        foreach ($validations as $key => $value) {
+          $validation = $this->to_validation_array($value);
+          $checked_validations = array_merge($checked_validations,$validation);
+        }
+        $validations = $checked_validations;
+      }
+    }
+    $rules  = array_keys($validations);
+    $params = array_values($validations);
+    return array( 'rules' => implode('|',$rules), 'params' => implode('|',$params) );
+  }
   
   
   /**
@@ -262,42 +320,28 @@ class MY_Form_validation extends CI_Form_validation {
    * @return array
    * @author Jan den Besten
    */
+  public function combine_rules($validations,$as_array=FALSE) {
+    return $this->combine_validations($validations,$as_array=FALSE);
+  }
   public function combine_validations($validations,$as_array=FALSE) {
-    // trace_(array('start'=>$validations));
-  	$validation=array();
-    // Als een string meegegeven, maak er een validatiearray van
+  	$validation = array();
+    
+    // Splits de rules en de params als dat nog nodig is
     if (is_string($validations)) {
-      $vals=explode('|',$validations);
-      $validations=array();
-      foreach ($vals as $rule) {
-        $param='';
-  			if (preg_match("/(.*?)\[(.*)\]/", $rule, $match)) {
-  				$rule	= $match[1];
-  				$param	= $match[2];
-  			}
-        $validations[$rule]=$param;
-      }
+      $validations = $this->split_rules_parameters($validations);
     }
-
-    // Splits de rules en de params als dat nodig is
-    if ( !isset($validations[0]) or !is_array($validations[0])) {
-      $vals=$validations;
-      $validations=array();
-      $rules='';
-      $params='';
-      foreach ($vals as $rule => $param) {
-        $rules.=$rule.'|';
-        $params.=$param.'|';
-      }
-      $validations[]=array('rules'=>rtrim($rules,'|'),'params'=>rtrim($params,'|'));
+    // Maak er een array van arrays van
+    if ( !isset($validations[0])) {
+      $validations = array($validations);
     }
     
-    // trace_(['combine_validations',$validations]);
     // Maak er rule=>param paren van
   	foreach ($validations as $val) {
   		if (!empty($val) and !empty($val['rules'])) {
-  			$rules=explode('|',$val['rules']);
-  			$params=explode('|',$val['params']);
+  			$rules  = $val['rules'];
+  			$params = $val['params'];
+  			if (!is_array($rules))  $rules  = explode('|',$rules);
+  			if (!is_array($params)) $params = explode('|',$params);
   			foreach ($rules as $key => $rule) {
   				$param='';
   				if (isset($validation[$rule])) 	$param=$validation[$rule];
