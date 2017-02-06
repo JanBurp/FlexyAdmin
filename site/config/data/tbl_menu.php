@@ -2,6 +2,7 @@
 
 $config['table'] = 'tbl_menu';
 
+$config['field_info']['str_title']['validation'] = 'required';
 
 
 $config['options'] = array( 

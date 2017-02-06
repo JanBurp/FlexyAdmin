@@ -37,7 +37,7 @@ $config['FIELDS_prefix'] = array (
     'form-type'   => 'select',
     'grid'        => 'function_foreign_key',
     'form'        => 'dropdown',
-    'validation'	=> 'trim|integer',
+    'validation'	=> 'trim|integer|required',
     'default'     => 0,
   ),
   
@@ -276,7 +276,7 @@ $config['FIELDS_prefix'] = array (
     'grid-edit'   => true,
     'grid'        => 'function_boolean',
     'form'        => 'checkbox',
-    'validation'	=> ''
+    'validation'	=> 'valid_option[0,1]'
   ),
 	'is'					=> array(
     'type'        => 'boolean',
@@ -284,7 +284,7 @@ $config['FIELDS_prefix'] = array (
     'grid-edit'   => true,
     'grid'        => 'function_boolean',
     'form'        => 'checkbox',
-    'validation'	=> ''
+    'validation'	=> 'valid_option[0,1]'
 	),
 );
 
@@ -314,7 +314,7 @@ $config['FIELDS_special'] = array(
     'form-type'   => 'text',
     'grid'        => 'function_user',
     'form'        => 'function_user',
-    'validation'	=> 'trim|integer',
+    'validation'	=> 'trim|integer|required',
   ),
   // Aangepast door:
 	'user_changed' => array(
@@ -322,7 +322,8 @@ $config['FIELDS_special'] = array(
     'grid-type'   => 'abstract',
     'form-type'   => 'hidden',
     'readonly'    => true,
-    'grid'        => 'function_user'
+    'grid'        => 'function_user',
+    'validation'	=> 'trim|integer|required',
   ),
                       
 	'uri'				=> array(
@@ -331,7 +332,7 @@ $config['FIELDS_special'] = array(
     'readonly'    => true,
     'grid'        => '/%s',
     'form'        => 'hidden',
-    'validation'	=> 'trim',
+    'validation'	=> 'trim|required',
   ),
 	'api'				=> array(
     'type'        => 'string',
@@ -364,7 +365,7 @@ $config['FIELDS_special'] = array(
     'sortable'    => false,
     'grid'        => 'function_order',
     'form'        => 'hidden',
-    'validation'	=> 'trim',
+    'validation'	=> 'trim|integer|required',
     'default'     => 0,
   ),
 	'self_parent'	  => array(
@@ -449,6 +450,7 @@ $config['FIELDS_special'] = array(
     'form-type'  => 'media',
     'grid-type'  => 'media',
     'sortable'    => false,
+    'validation' => 'required|trim',
   ),
   'type' => array(
     'type'      => 'string',
@@ -461,6 +463,7 @@ $config['FIELDS_special'] = array(
     'form-type'   => 'text',
     'grid'        => '%s',
     'grid-edit'   => true,
+    'validation' => 'required|trim',
   ),
   'rawdate' => array(
     'type'      => 'date',
