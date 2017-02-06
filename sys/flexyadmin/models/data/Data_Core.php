@@ -389,7 +389,7 @@ Class Data_Core extends CI_Model {
       /**
        * Validation
        */
-      $settings_fields_info[$field]['validation'] = explode('|',$this->form_validation->get_validations( $table, $field ));
+      $settings_fields_info[$field]['validation'] = explode('|',$this->form_validation->get_rules( $table, $field ));
       
       /**
        * Media path
@@ -2045,8 +2045,11 @@ Class Data_Core extends CI_Model {
       $this->order_by( $abstract_fields );
     }
     $query = $this->get( $limit,$offset );
-    $options = $this->_make_options_result($query);
-    $query->free_result();
+    $options = array();
+    if ($query) {
+      $options = $this->_make_options_result($query);
+      $query->free_result();
+    }
     return $options;
   }
   

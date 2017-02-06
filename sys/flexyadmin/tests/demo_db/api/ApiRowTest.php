@@ -126,7 +126,6 @@ class ApiRowTest extends ApiTestModel {
           'info|insert_id' => array( 'assertGreaterThan' => 0 ),
         )
       ));
-      // trace_($results);
 
       // IDS
       $ids=array();
@@ -238,41 +237,41 @@ class ApiRowTest extends ApiTestModel {
  
 
   // public function testWrongData() {
- //
- //    foreach ($this->wrongData as $test) {
- //      $table=$test['table'];
- //
- //      // data
- //      $data=$test['insert'];
- //      $update = $test['update'];
- //
- //      // TEST INSERT DATA WRONG VALIDATION
- //      $results = $this->_testWithAuth(array(
- //        'model'   => 'row',
- //        'args'    => array(
- //          'POST' => array(
- //            'table'     => $table,
- //            'data'      => $data
- //          ),
- //        ),
- //        'asserts' => array(
- //          'data'      => array( 'hasKey' => 'id' ),
- //          'data|id'   => array( 'equals' => false ),
- //          'info'      => array( 'type'  => 'array'),
- //          'info'      => array( 'count' => 2),
- //          'info'      => array( 'hasKey' => 'validation'),
- //          'info|validation'      => array( 'equals' => false),
- //          // 'info'      => array( 'hasKey' => 'validation_errors'),
- //          // 'info|validation_errors'  => array( 'type' => 'array'),
- //          // 'info|validation_errors'  => array( 'countGreaterOrEqual' => 1),
- //        )
- //      ));
- //
- //
- //    }
- //
- //
- //  }
+  //
+  //   foreach ($this->wrongData as $test) {
+  //     $table=$test['table'];
+  //
+  //     // data
+  //     $data=$test['insert'];
+  //     $update = $test['update'];
+  //
+  //     // TEST INSERT DATA WRONG VALIDATION
+  //     $results = $this->_testWithAuth(array(
+  //       'model'   => 'row',
+  //       'args'    => array(
+  //         'POST' => array(
+  //           'table'     => $table,
+  //           'data'      => $data
+  //         ),
+  //       ),
+  //       'asserts' => array(
+  //         'data'      => array( 'hasKey' => 'id' ),
+  //         'data|id'   => array( 'equals' => false ),
+  //         'info'      => array( 'type'  => 'array'),
+  //         'info'      => array( 'count' => 2),
+  //         'info'      => array( 'hasKey' => 'validation'),
+  //         'info|validation'      => array( 'equals' => false),
+  //         // 'info'      => array( 'hasKey' => 'validation_errors'),
+  //         // 'info|validation_errors'  => array( 'type' => 'array'),
+  //         // 'info|validation_errors'  => array( 'countGreaterOrEqual' => 1),
+  //       )
+  //     ));
+  //
+  //
+  //   }
+  //
+  //
+  // }
 
 
   
