@@ -269,7 +269,7 @@ Class Data_Core extends CI_Model {
       $this->settings = $cached;
     }
     else {
-      // Haal de default & huidige settings op
+      // Default settings
       $this->config->load( 'data/data', true);
       $default = $this->config->item( 'data/data' );
       $default = array_merge($default,$this->settings); // Default aanpassen met eventueel al eerder ingesteld settings
@@ -1167,6 +1167,12 @@ Class Data_Core extends CI_Model {
       $info['schema'] = $schema;
       $field_info[$field] = $info;
     }
+    
+    // Overschrijf los ingestelde settings
+    if (isset($this->settings['field_info'])) {
+      $field_info = array_merge_recursive_distinct($field_info,$this->settings['field_info']);
+    }
+    
     return $field_info;
   }
   
@@ -1221,6 +1227,7 @@ Class Data_Core extends CI_Model {
     
     // Field info
     $form_set['field_info'] = $this->get_setting_field_info_extended($form_set['fields'],array(),true);
+    // trace_($form_set['field_info']);
     return $form_set;
   }
   

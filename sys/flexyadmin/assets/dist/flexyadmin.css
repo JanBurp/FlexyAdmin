@@ -5863,6 +5863,9 @@ select:-moz-focusring {
 .form-check-input {
   margin-left: 0; }
 
+.form-check-label {
+  padding-left: 0; }
+
 .form-group.has-danger {
   background-color: #ffd577 !important; }
 

@@ -67,6 +67,10 @@ select.form-control:not([size]):not([multiple]) {
   margin-left:0;
 }
 
+.form-check-label {
+  padding-left:0;
+}
+
 // Validation
 .form-group.has-danger {
   background-color:lighten($brand-warning,30%)!important;

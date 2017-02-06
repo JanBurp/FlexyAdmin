@@ -41,6 +41,7 @@ export default {
         colorpicker       : ['color','rgb'],
         mediapicker       : ['media','medias'],
         select            : ['select'],
+        radio             : ['radio'],
         textarea          : ['textarea'],
         wysiwyg           : ['wysiwyg'],
       };
@@ -350,7 +351,7 @@ export default {
     },
     
     updateField : function( field, value ) {
-      // console.log('updateField',field,value);
+      console.log('updateField',field,value);
       this.validationErrors = {};
       this.row[field] = value;
     },
@@ -367,7 +368,7 @@ export default {
       }
       this.updateField(field,value);
     },
-    
+
     // TinyMCE changed
     updateText : function(editor) {
       this.updateField(editor.id,editor.getContent());
@@ -447,6 +448,18 @@ export default {
                   <select class="form-control" :class="{'custom-select':!isMultiple(field)}" :id="field" :name="field" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
                     <option v-for="option in fields[field].options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{selectItem(option.name)}}</option>
                   </select>
+                </template>
+
+                <template v-if="isType('radio',field)">
+                  <!-- Radio -->
+                  <template v-for="option in fields[field].options.data">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" :type="isMultiple(field)?'checkbox':'radio'" :name="field" id="" :value="option.value" :checked="isSelectedOption(field,row[field],option.value)" v-on:input="updateField(field,option.value)">
+                        {{selectItem(option.name)}}
+                      </label>
+                    </div>
+                  </template>
                 </template>
               
                 <template v-if="isType('default',field)">
