@@ -21,12 +21,9 @@ class ApiAuthTest extends ApiTestModel {
     $this->assertArrayHasKey( 'success', $result );
     $this->assertEquals( true, $result['success'] );
     $this->assertEquals( 'admin', $result['user']['username'] );
-    // $this->assertEquals( 'info@flexyadmin.com', $result['user']['email'] );
     // Logout
-    // $result=$this->CI->auth->logout();
-    // $this->assertArrayHasKey( 'user', $result );
-    // $this->assertEquals( FALSE, $result['user'] );
-    // $this->assertArrayNotHasKey( 'data', $result );
+    $result = $this->CI->auth->logout();
+    $this->assertNull( $result );
   }
 
   public function testWrongLogin() {
@@ -61,10 +58,10 @@ class ApiAuthTest extends ApiTestModel {
       array( 'username'=> 'OR ""=""',                     'password' => 'OR ""=""'  ),
       array( 'username'=> '1; DROP TABLE cfg_users',      'password' => '1; DROP TABLE cfg_users' ),
       array( 'username'=> '1 or 1=1',                     'password' => '1 or 1=1' ),
-      // array( 'username'=> "1' or '1' = '1'))/*",          'password' => "1' or '1' = '1'))/*" ),
-      // array( 'username'=> "1' or '1' = '1')) LIMIT 1/*",  'password' => "1' or '1' = '1')) LIMIT 1/*" ),
-      // array( 'username'=> "1 AND 1=1",                    'password' =>  "1 AND 1=1" ),
-      // array( 'username'=> "1 ORDER BY 10--",              'password' =>  "1 ORDER BY 10--" )
+      array( 'username'=> "1' or '1' = '1'))/*",          'password' => "1' or '1' = '1'))/*" ),
+      array( 'username'=> "1' or '1' = '1')) LIMIT 1/*",  'password' => "1' or '1' = '1')) LIMIT 1/*" ),
+      array( 'username'=> "1 AND 1=1",                    'password' =>  "1 AND 1=1" ),
+      array( 'username'=> "1 ORDER BY 10--",              'password' =>  "1 ORDER BY 10--" )
     );
 
     // GET

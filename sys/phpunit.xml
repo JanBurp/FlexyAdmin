@@ -15,25 +15,26 @@
     <!-- All -->
     <testsuite name="all">
       <directory suffix="Test.php">flexyadmin/tests</directory>
-		</testsuite>
+    </testsuite>
     
     <!-- Latest / Busy -->
     <testsuite name="busy">
-      <!-- <file>flexyadmin/tests/demo_db/models/DataTest.php</file> -->
+      <directory suffix="Test.php">flexyadmin/tests/fast</directory>
+      <file>flexyadmin/tests/demo_db/libraries/FormValidationTest.php</file>
+      <file>flexyadmin/tests/demo_db/models/DataTest.php</file>
       <file>flexyadmin/tests/demo_db/models/Res_assetsTest.php</file>
-      <!-- <file>flexyadmin/tests/commit/CodeTest.php</file> -->
-      <!-- <directory suffix="Test.php">flexyadmin/tests/fast</directory> -->
+      <file>flexyadmin/tests/commit/CodeTest.php</file>
 		</testsuite>
     
     <!-- Real Unit tests, fast and no need for demo database -->
     <testsuite name="fast">
       <directory suffix="Test.php">flexyadmin/tests/fast</directory>
-		</testsuite>
+    </testsuite>
 
     <!-- API -->
     <testsuite name="api">
       <directory suffix="Test.php">flexyadmin/tests/demo_db/api</directory>
-		</testsuite>
+    </testsuite>
     
 	</testsuites>
   

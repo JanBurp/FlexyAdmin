@@ -815,7 +815,7 @@ class DataTest extends CITestCase {
     // Update and check again
     $result = $this->CI->data->where( 'str_username', 'test')
                              ->with( 'many_to_many' )
-                             ->validate()->update( array('rel_users__groups'=>2) );
+                             ->update( array('rel_users__groups'=>2) );
     $this->assertEquals( $result, $id );
     $row = $this->CI->data->where( 'str_username', 'test')
                           ->with( 'many_to_many' )

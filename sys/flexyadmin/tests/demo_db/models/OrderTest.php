@@ -213,17 +213,15 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
     // Set all - Reset
     $ids=array(1,2,3,5,4);
     $this->CI->order->set_all($this->table,$ids);
-    $result = $this->_result();
+    $result = $this->_result(true);
     $expected = array(
-      '1'=>array( 'id'=>'1', 'order'=>'0' ),
-      '2'=>array( 'id'=>'2', 'order'=>'1' ),
-      '3'=>array( 'id'=>'3', 'order'=>'2' ),
-      '5'=>array( 'id'=>'5', 'order'=>'3' ),
-      '4'=>array( 'id'=>'4', 'order'=>'4' ),
+      '1'=>array( 'id'=>'1', 'order'=>'0', 'self_parent' => 0 ),
+      '2'=>array( 'id'=>'2', 'order'=>'1', 'self_parent' => 0 ),
+      '3'=>array( 'id'=>'3', 'order'=>'2', 'self_parent' => 2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'3', 'self_parent' => 2 ),
+      '4'=>array( 'id'=>'4', 'order'=>'4', 'self_parent' => 0 ),
     ); 
     $this->assertEquals($expected, $result);
-
-
 
     // Set 1 => 4 (geen kinderen)
     $new = $this->CI->order->set($this->table,1,4);

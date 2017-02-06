@@ -49,6 +49,28 @@ class Test extends MY_Controller {
   }
 
 
+  public function validatons() {
+    if (!IS_LOCALHOST) return;
+    $this->load->library('form_validation');
+    
+    $tables = $this->data->list_tables();
+    $tables = filter_by($tables,'tbl');
+    foreach ($tables as $table) {
+      echo h($table);
+      $fields = $this->db->list_fields( $table );
+      // $fields = array_unset_keys($fields,array('id','order','uri','self_parent'));
+      foreach ($fields as $field) {
+        echo h($field,2);
+        $validations = $this->form_validation->get_rules($table,$field);
+        trace_($validations);
+      }
+    }
+    
+  }
+
+
+
+
   public function options() {
     if (!IS_LOCALHOST) return;
     
