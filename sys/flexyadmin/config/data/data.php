@@ -34,6 +34,7 @@ $config['fields']           = NULL;
  * - default            - defaultwaarde
  * - validation         - array met validation rules
  * - path               - als het een media veld is dan komt hier het assets pad
+ * - schema[]           - eventueel overrulen van schemaform
  */
 $config['field_info']       = NULL;
 

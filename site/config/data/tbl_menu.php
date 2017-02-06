@@ -2,7 +2,9 @@
 
 $config['table'] = 'tbl_menu';
 
-$config['field_info']['str_title']['validation'] = 'required';
+$config['field_info']['str_title']['validation']           = 'required';
+// $config['field_info']['str_module']['schema']['form-type'] = 'radio';
+// $config['field_info']['str_module']['options']['multiple'] = true;
 
 
 $config['options'] = array( 
