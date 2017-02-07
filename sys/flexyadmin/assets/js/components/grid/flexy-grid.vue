@@ -303,14 +303,19 @@ export default {
       return (typeof(this.dataInfo.num_pages)!=='undefined' &&  this.dataInfo.num_pages > 1);
     },
     
-    
     isPrimaryHeader : function(field) {
+      if (_.isUndefined(field.schema)) return false;
       var headerType = field.schema['grid-type'] || field.schema['form-type'];
       return headerType==='primary'
     },
     isNormalVisibleHeader : function(field) {
+      if (_.isUndefined(field.schema)) return false;
       var headerType = field.schema['grid-type'] || field.schema['form-type'];
       return headerType!=='hidden' && headerType!=='primary'
+    },
+    isSortableField : function(field) {
+      if (_.isUndefined(field.schema)) return false;
+      return field.schema.sortable;
     },
 
     isMediaThumbs : function() {
@@ -814,24 +819,23 @@ export default {
                 <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                 <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
                 <flexy-button @click.native="reverseSelection()" icon="dot-circle-o" class="btn-outline-info" />
-                
+
                 <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                   <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>
                   <div class="dropdown-menu">
-                    <a v-for="(field,key) in fields" v-if="field.schema.sortable" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(apiParts.order.indexOf(key)>=0)}">
+                    <a v-for="(field,key) in fields" v-if="isSortableField(field)" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(apiParts.order.indexOf(key)>=0)}">
                       <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
                       <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
                       {{field.name}}
                     </a>
                   </div>
                 </div>
-                
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
                 <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.name}}</span>
                   <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
                   <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
-                </a>  
+                </a>
               </th>
             </template>
           </tr>
