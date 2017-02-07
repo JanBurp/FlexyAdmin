@@ -19,14 +19,15 @@ class Get_image_list extends Api_Model {
   public function index() {
     if (!$this->logged_in()) return $this->_result_status401();
 
-    $images = array(
-      array( 'title'=>'Pictures',  'menu' => $this->_folder('pictures') ),
-    );
+    $images = $this->_folder('pictures');
+    // $images = array(
+    //   array( 'title'=>'Afbeeldingen',  'menu' => $this->_folder('pictures') ),
+    // );
     return json_encode($images);
   }
   
   private function _folder($path) {
-    $this->data->table('res_assets')->select('CONCAT_WS("/","_media/'.$path.'",`file`) AS link, alt AS title')->where('path',$path);
+    $this->data->table('res_assets')->select('CONCAT_WS("/","_media/'.$path.'",`file`) AS link, CONCAT(`alt`," (",`file`,")") AS title')->where('path',$path);
     $result = $this->data->cache()->get_result();
     return $this->_result_as_links($result);
   }
