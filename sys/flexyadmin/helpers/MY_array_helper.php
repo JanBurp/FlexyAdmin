@@ -1161,6 +1161,7 @@ function explode_attributes($s) {
  * @author Jan den Besten
  */
 function array_keep_keys($a,$keep) {
+  if (!is_array($a) or !is_array($keep)) return $a;
   foreach ($a as $key => $value) {
     if (!in_array($key,$keep)) unset($a[$key]);
   }
