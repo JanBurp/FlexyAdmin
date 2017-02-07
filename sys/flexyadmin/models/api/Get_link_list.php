@@ -22,8 +22,8 @@ class Get_link_list extends Api_Model {
     $site_links = $this->data->table('tbl_site')->select('str_title,url_url,email_email')->cache()->get_row();
     
     $links = array(
-      array( 'title'=>$site_links['str_title'],   'value' => $site_links['url_url'] ),
-      array( 'title'=>$site_links['email_email'], 'value' => 'mailto:'.$site_links['email_email'] ),
+      array( 'title'=>$site_links['str_title'].' ('.str_replace(array('http://','https://'),'',$site_links['url_url']).')',   'value' => $site_links['url_url'] ),
+      array( 'title'=>$site_links['email_email']. ' ('.$site_links['email_email'].')', 'value' => 'mailto:'.$site_links['email_email'] ),
       
       array( 'title'=>'Menu',        'menu' => $this->_menu() ),
       array( 'title'=>'Links',       'menu' => $this->_links() ),
@@ -39,7 +39,7 @@ class Get_link_list extends Api_Model {
   }
   
   private function _links() {
-    $this->data->table('tbl_links')->select('url_url AS link,str_title AS title');
+    $this->data->table('tbl_links')->select('url_url AS link, CONCAT(`str_title`," (",`url_url`,")") AS title');
     $result = $this->data->cache()->get_result();
     return $this->_result_as_links($result);
   }
