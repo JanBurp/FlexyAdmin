@@ -5883,9 +5883,6 @@ textarea {
 .mce-tinymce {
   border-radius: 0.25rem; }
 
-body.mce-fullscreen .mce-tinymce {
-  z-index: 9999999; }
-
 .form-control.datepicker-input {
   width: 7rem;
   margin-bottom: 0; }

@@ -56,7 +56,7 @@ var _flexy = {
   'tinymceOptions': '<?=array2json($tinymceOptions)?>',
 };
 </script>
-<script src='<?=admin_assets()?>js/tinymce/tinymce.min.js' type="text/javascript" charset="utf-8"></script>
+<script src='<?=admin_assets()?>js/tinymce/tinymce.js' type="text/javascript" charset="utf-8"></script>
 <script src="<?=admin_assets()?>dist/bundle.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
