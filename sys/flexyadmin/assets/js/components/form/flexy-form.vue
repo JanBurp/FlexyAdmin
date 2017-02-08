@@ -313,16 +313,15 @@ export default {
           if (this.isType('checkbox',field)) {
             data[field] = (data[field]?1:0);
           }
-          if (this.isType('select',field) && this.isMultiple(field)) {
-            data[field] = [];
-            for (var i = 0; i < this.row[field].length; i++) {
-              data[field].push(this.row[field][i].id);
+          if (typeof(data[field])==='object' && this.isMultiple(field)) {
+            var fieldData = [];
+            for (var i = 0; i < data[field].length; i++) {
+              if (!_.isUndefined(data[field][i])) fieldData.push( data[field][i].id );
             }
+            data[field] = fieldData;
           }
         }
       }
-      
-      console.log(data);
       
       return flexyState.api({
         url : 'row',
@@ -379,10 +378,18 @@ export default {
     },
     
     addToSelect : function( field, value ) {
-      console.log('addToSelect',field,value);
       if ( this.isMultiple(field) ) {
         var currentSelection = this.row[field];
-        currentSelection.push({'id':value});
+        // Als al bestaat, dan juist verwijderen
+        var exists = jdb.indexOfProperty(currentSelection,'id',value);
+        if (exists!==false) {
+          // Verwijderen
+          delete currentSelection[exists];
+        }
+        else {
+          // Toevoegen
+          currentSelection.push({'id':value});
+        }
         value = currentSelection;
       }
       this.updateField(field,value);
@@ -473,9 +480,9 @@ export default {
                 <template v-if="isType('radio',field)">
                   <!-- Radio -->
                   <template v-for="option in fields[field].options.data">
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" :type="isMultiple(field)?'checkbox':'radio'" :name="field" id="" :value="option.value" :checked="isSelectedOption(field,row[field],option.value)" v-on:input="updateField(field,option.value)">
+                    <div class="form-check form-check-inline form-subcheck">
+                      <label class="form-check-label" :title="selectItem(option.name)">
+                        <input class="form-check-input" :type="isMultiple(field)?'checkbox':'radio'" :name="field" id="" :value="option.value" :checked="isSelectedOption(field,row[field],option.value)" v-on:input="addToSelect(field,option.value)">
                         {{selectItem(option.name)}}
                       </label>
                     </div>

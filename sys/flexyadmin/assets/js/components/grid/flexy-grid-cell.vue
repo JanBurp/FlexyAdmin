@@ -27,12 +27,12 @@ export default {
         color     : ['color'],
         url       : ['url'],
         relation  : ['relation'],
-        select    : ['select'],
+        select    : ['select','radio'],
         abstract  : ['abstract'],
       };
       var defaultTypes = [];
       for(var type in types) {
-        defaultTypes = defaultTypes.concat(type);
+        defaultTypes = defaultTypes.concat(types[type]);
       }
       types.default = defaultTypes;
       return types;
@@ -101,6 +101,11 @@ export default {
     
     selectItem : function (value) {
       if (!value) return '';
+      if (value.substr(0,1)==='{' && value.substr(-1,1)==='}') {
+        value = JSON.parse(value);
+        var keys = Object.keys(value);
+        value = value[keys[0]];
+      }
       value = value.toString();
       return value.replace(/\|/g,'<span class="grid-cell-seperator">|</span>');
     },

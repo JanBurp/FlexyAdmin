@@ -5866,6 +5866,22 @@ select:-moz-focusring {
 .form-check-label {
   padding-left: 0; }
 
+.form-subcheck {
+  margin-left: 0 !important;
+  margin-right: 1%;
+  margin-bottom: .25rem;
+  padding: 0 .5rem .25rem;
+  border: solid 1px #696;
+  border-radius: 0.25rem;
+  background-color: #fff5dd;
+  width: 19%;
+  white-space: nowrap;
+  overflow: hidden; }
+  .form-subcheck .form-check-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+
 .form-group.has-danger {
   background-color: #ffd577 !important; }
 
