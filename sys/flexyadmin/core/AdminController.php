@@ -140,7 +140,7 @@ class AdminController extends BasicController {
 	public function view_admin( $view='', $data=array() ) {
     $this->_prepare_view_data();
     $this->view_data = array_merge($this->view_data,$data);
-    if ( !empty($view)) $this->view_data['content'] = $this->load->view('admin/'.$view,$data,true);
+    if ( !empty($view)) $this->view_data['content'] = $this->load->view('admin/'.$view,$this->view_data,true);
     $this->load->view('admin/admin',$this->view_data);
     return $this;
 	}
