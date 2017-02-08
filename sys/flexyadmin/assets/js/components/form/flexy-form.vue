@@ -23,9 +23,9 @@ export default {
     'title'   :String,
     'name'    :String,
     'primary' :Number,
-    'subform':{
-      type:Boolean,
-      default:false,
+    'formtype':{
+      type:String,
+      default:'normal', // normal|single|subform
     },
   },
   
@@ -260,7 +260,8 @@ export default {
     cancel : function() {
       var self=this;
       if (!this.isSaving) {
-        window.location.assign( self.returnUrl() );
+        // window.location.assign( self.returnUrl() );
+        self.$emit('formclose',self.row);
       }
     },
     
@@ -269,18 +270,20 @@ export default {
       if (!this.isSaving) {
         this.postForm().then(function (response) {
           if (!response.error) {
-            window.location.assign( self.returnUrl() );
+            console.log('submit',response);
+            // window.location.assign( self.returnUrl() );
+            self.$emit('formclose',self.row);
           }
         })
       }
     },
     
-    returnUrl : function() {
-      var url = 'admin/show/grid/' + this.name;
-      if (this.path && this.path!=='false')  url='admin/show/media/' + this.path;
-      console.log(this.path,url);
-      return url;
-    },
+    // returnUrl : function() {
+    //   var url = 'admin/show/grid/' + this.name;
+    //   if (this.path && this.path!=='false')  url='admin/show/media/' + this.path;
+    //   console.log(this.path,url);
+    //   return url;
+    // },
 
     add : function() {
       var self=this;
@@ -411,10 +414,10 @@ export default {
   <div class="card-header">
     <h1>{{title}}</h1>
     <div>
-      <flexy-button v-if="!subform" @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-info"/>
-      <flexy-button v-if="!subform" @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-warning"/>
-      <flexy-button v-if="!subform" @click.native="cancel()" icon="long-arrow-left" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
-      <flexy-button v-if="subform" @click.native="add()" :text="$lang.add" :disabled="isSaving" class="btn-outline-warning"/>
+      <flexy-button v-if="formtype!=='subform'" @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-info"/>
+      <flexy-button v-if="formtype==='normal'" @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-warning"/>
+      <flexy-button v-if="formtype==='normal'" @click.native="cancel()" icon="long-arrow-left" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
+      <flexy-button v-if="formtype==='subform'" @click.native="add()" :text="$lang.add" :disabled="isSaving" class="btn-outline-warning"/>
     </div>
   </div>
 
@@ -495,7 +498,7 @@ export default {
                 </template>
 
                 <div v-if="showInsertForm(field)">
-                  <flexy-form :title="label(field)" :name="subForm(field,'table')" :primary="-1" :subform="true" @added="subFormAdded(field,$event)"></flexy-form>
+                  <flexy-form :title="label(field)" :name="subForm(field,'table')" :primary="-1" formtype="subform" @added="subFormAdded(field,$event)"></flexy-form>
                 </div>
 
               </div>
