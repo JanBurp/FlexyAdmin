@@ -332,7 +332,7 @@ $config['FIELDS_special'] = array(
     'readonly'    => true,
     'grid'        => '/%s',
     'form'        => 'hidden',
-    'validation'	=> 'trim|required',
+    'validation'	=> 'trim',
   ),
 	'api'				=> array(
     'type'        => 'string',

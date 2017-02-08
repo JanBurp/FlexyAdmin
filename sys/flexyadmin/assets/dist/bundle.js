@@ -29021,7 +29021,11 @@ function VueFixer(vue){var vue2=!window.Vue||!window.Vue.partial;var mixin={comp
 //
 //
 //
+//
+//
+//
 exports.default={name:'VuePagination',props:{'total':Number,// total number of rows
+'maxtotal':Number,// total number of rows (without searching)
 'pages':Number,// pages number of pages
 'current':Number,// current page
 'limit':Number,// items per page
@@ -29081,12 +29085,21 @@ data:function data(){return{row:{},fields:{},fieldsets:{},validationErrors:{},is
 if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.form_set.field_info;self.fieldsets=response.data.settings.form_set.fieldsets;}// Data en die aanvullen met data
 self.row=response.data.data;// TinyMCE
 self.createWysiwyg();}}return response;});},createWysiwyg:function createWysiwyg(){var self=this;var init=_.extend(_flexy.tinymceOptions,{setup:function setup(ed){ed.on('NodeChange',function(e){self.updateText(ed);});ed.on('keyup',function(e){self.updateText(ed);});}});// Wait just a bit...
-window.setTimeout(function(){tinymce.init(init);},10);},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url='row?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},tabsClass:function tabsClass(){if(Object.keys(this.fieldsets).length<2)return'single-tab';return'';},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},selectItem:function selectItem(value){if(!value)return'';value=value.toString();return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');},hasInsertRights:function hasInsertRights(field){if(_.isUndefined(this.fields[field]))return false;if(_.isUndefined(this.fields[field].options))return false;if(_.isUndefined(this.fields[field].options.insert_rights))return false;return this.fields[field].options.insert_rights;},// Pas kleur van optie aan als het een kleurenveld is
+window.setTimeout(function(){tinymce.init(init);},10);},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url='row?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},tabsClass:function tabsClass(){if(Object.keys(this.fieldsets).length<2)return'single-tab';return'';},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},selectItem:function selectItem(value){if(!value)return'';value=value.toString();return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');},hasInsertRights:function hasInsertRights(field){if(_.isUndefined(this.fields[field]))return false;if(_.isUndefined(this.fields[field].options))return false;if(_.isUndefined(this.fields[field].options.insert_rights))return false;var rights=this.fields[field].options.insert_rights;return rights;},// Pas kleur van optie aan als het een kleurenveld is
 selectStyle:function selectStyle(field,option){var style='';if(field.substr(0,4)==='rgb_'){style="background-color:"+option+';color:'+_jdbTools2.default.complementColor(option)+';';}return style;},dateObject:function dateObject(value){if(value==='0000-00-00'){var date=new Date();}else{var year=value.substr(0,4);var month=value.substr(5,2);var day=value.substr(8,2);var date=new Date(year,month,day);}return date;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},toggleInsertForm:function toggleInsertForm(field){if(this.showInsertForm(field)){this.insertForm[field].show=false;}else{this.$set(this.insertForm,field,{show:true,field:field,table:this.fields[field].options.table});}console.log('toggleInsertForm',field,this.insertForm);},showInsertForm:function showInsertForm(field){var show=false;if(!_.isUndefined(this.insertForm[field]))show=this.insertForm[field].show;// console.log('showInsertForm',field,show);
 return show;},subForm:function subForm(field,property){console.log('subForm',field,property);if(_.isUndefined(this.insertForm[field]))return'';return this.insertForm[field][property];},subFormAdded:function subFormAdded(field,event){var self=this;self.insertForm[field].show=false;_flexyState2.default.api({// TODO: alleen opties van dit veld wellicht?
-url:'table?table='+self.name+'&as_options=true'}).then(function(response){if(!_.isUndefined(response.data)){console.log('reloaded',field,event);console.log(response.data.data);// Vervang de opties 
+url:'table?table='+self.name+'&as_options=true'}).then(function(response){if(!_.isUndefined(response.data)){// Vervang de opties 
 self.fields[field].options=response.data.data[field];// Selecteer zojuist toegevoegde item
-self.row[field]=event;}return response;});// self.reloadForm().then(function(){
+self.addToSelect(field,event);// if (self.isMultiple(field)) {
+//   jdb.vueLog(self.row[field]);
+//   jdb.vueLog(self.fields[field].options);
+//   console.log(event);
+//   // self.row[field] = event;
+// }
+// else {
+//   self.row[field] = event;
+// }
+}return response;});// self.reloadForm().then(function(){
 //   // Selecteer zojuist toegevoegde item
 //   console.log('reloaded',event);
 //   self.row[field] = event;
@@ -29094,7 +29107,7 @@ self.row[field]=event;}return response;});// self.reloadForm().then(function(){
 },cancel:function cancel(){var self=this;if(!this.isSaving){window.location.assign(self.returnUrl());}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){window.location.assign(self.returnUrl());}});}},returnUrl:function returnUrl(){var url='admin/show/grid/'+this.name;if(this.path&&this.path!=='false')url='admin/show/media/'+this.path;console.log(this.path,url);return url;},add:function add(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){self.$emit('added',response.data.data.id);}});}},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=_.clone(this.row);// Prepare data for ajax call
 for(var field in data){if(field.indexOf('.abstract')>0){delete data[field];}else{if(this.isType('checkbox',field)){data[field]=data[field]?1:0;}if(this.isType('select',field)&&this.isMultiple(field)){data[field]=[];for(var i=0;i<this.row[field].length;i++){data[field].push(this.row[field][i].id);}}}}console.log(data);return _flexyState2.default.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':data}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{// Validation error
 response.error=true;_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){// console.log('updateField',field,value);
-this.validationErrors={};this.row[field]=value;},updateSelect:function updateSelect(field,selected){if(!this.isMultiple(field)){var value=selected[0].value;}else{var value=[];for(var i=0;i<selected.length;i++){value.push({'id':selected[i].value});}}this.updateField(field,value);},// TinyMCE changed
+this.validationErrors={};this.row[field]=value;},updateSelect:function updateSelect(field,selected){var value=selected;if(!this.isMultiple(field)){value=selected[0].value;}else{value=[];for(var i=0;i<selected.length;i++){value.push({'id':selected[i].value});}}this.updateField(field,value);},addToSelect:function addToSelect(field,value){console.log('addToSelect',field,value);if(this.isMultiple(field)){var currentSelection=this.row[field];currentSelection.push({'id':value});value=currentSelection;}this.updateField(field,value);},// TinyMCE changed
 updateText:function updateText(editor){this.updateField(editor.id,editor.getContent());}}};
 
 /***/ },
@@ -29440,7 +29453,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader
 
 
 // module
-exports.push([module.i, "\n.colorpicker .form-control {width:6rem;margin-right:.5rem;float:left;\n}\n.colorpicker .form-picker {height:2.35rem;width:3rem;padding:0;margin-right:0;\n}\n", ""]);
+exports.push([module.i, "\n.colorpicker .form-control {width:6rem;margin-right:.5rem;float:left;\n}\n.colorpicker .form-picker {height:2.1rem;width:3rem;padding:0;margin-right:0;\n}\n", ""]);
 
 // exports
 
@@ -32338,6 +32351,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })], 1) : _vm._e(), _vm._v(" "), (_vm.needsPagination()) ? _c('flexy-pagination', {
     attrs: {
       "total": _vm.dataInfo.total_rows,
+      "maxtotal": _vm.dataInfo.count_all,
       "pages": _vm.dataInfo.num_pages,
       "current": _vm.dataInfo.page + 1,
       "limit": _vm.dataInfo.limit
@@ -32705,9 +32719,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('span', {
     staticClass: "fa fa-fast-forward"
-  })])]) : _vm._e()], 2), _vm._v(" "), _c('span', {
+  })])]) : _vm._e()], 2), _vm._v(" "), (_vm.total === _vm.maxtotal) ? _c('span', {
     staticClass: "pagination-info text-primary"
-  }, [_vm._v(_vm._s(_vm._f("replace")(_vm.$lang.grid_pagination, _vm.total, _vm.pages)))])])
+  }, [_vm._v(_vm._s(_vm._f("replace")(_vm.$lang.grid_pagination, _vm.total, _vm.pages)))]) : _vm._e(), _vm._v(" "), (_vm.total !== _vm.maxtotal) ? _c('span', {
+    staticClass: "pagination-info text-primary"
+  }, [_vm._v(_vm._s(_vm._f("replace")(_vm.$lang.grid_pagination_max, _vm.total, _vm.maxtotal, _vm.pages)))]) : _vm._e()])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()

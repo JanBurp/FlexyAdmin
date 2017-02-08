@@ -200,6 +200,7 @@ class Table extends Api_Model {
     
     // Info
     $this->info = $this->data->get_query_info();
+    $this->info['count_all'] = $this->data->count_all();
     
     return $items;
   }
