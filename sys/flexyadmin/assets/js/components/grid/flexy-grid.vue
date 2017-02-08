@@ -892,7 +892,7 @@ export default {
         <flexy-button @click.native="setMediaView('small')"  icon="th"         :class="{'btn-outline-primary':getMediaView()!=='small','btn-primary':getMediaView()==='small'}" border="true" />
         <flexy-button @click.native="setMediaView('thumbs')" icon="picture-o"  :class="{'btn-outline-primary':getMediaView()!=='thumbs','btn-primary':getMediaView()==='thumbs'}" border="true" />
       </div>
-      <flexy-pagination v-if="needsPagination()" :total="dataInfo.total_rows" :pages="dataInfo.num_pages" :current="dataInfo.page + 1" :limit="dataInfo.limit" @newpage="reloadPage({offset:$event})"></flexy-pagination>
+      <flexy-pagination v-if="needsPagination()" :total="dataInfo.total_rows" :maxtotal="dataInfo.count_all" :pages="dataInfo.num_pages" :current="dataInfo.page + 1" :limit="dataInfo.limit" @newpage="reloadPage({offset:$event})"></flexy-pagination>
       <div v-if="!needsPagination()" class="pagination-container">
         <span class="pagination-info text-primary">{{$lang.grid_total | replace(dataInfo.total_rows)}}</span>
       </div>
