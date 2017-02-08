@@ -71,6 +71,25 @@ select.form-control:not([size]):not([multiple]) {
   padding-left:0;
 }
 
+.form-subcheck {
+  margin-left:0!important;
+  margin-right:1%;
+  margin-bottom:.25rem;
+  padding:0 .5rem .25rem;
+  border:solid 1px $brand-primary;
+  border-radius:$border-radius;
+  background-color:lighten($brand-warning,50%);
+  width:19%;
+  white-space:nowrap;
+  overflow:hidden;
+  .form-check-label {
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+}
+
+
 // Validation
 .form-group.has-danger {
   background-color:lighten($brand-warning,30%)!important;
