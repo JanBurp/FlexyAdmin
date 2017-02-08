@@ -11,7 +11,10 @@
       <li v-if="current<pages-10 && pages>buttons" class="page-item"><a class="page-link" @click="jumpToPage(current+10)"><span class="fa fa-forward"></span></a></li>
       <li v-if="current<pages-1  && pages>buttons" class="page-item"><a class="page-link" @click="jumpToPage(pages-1)"><span class="fa fa-fast-forward"></span></a></li>
     </ul>
-    <span class="pagination-info text-primary">{{$lang.grid_pagination | replace(total,pages)}}</span>
+
+    <span v-if="total===maxtotal" class="pagination-info text-primary">{{$lang.grid_pagination | replace(total,pages)}}</span>
+    <span v-if="total!==maxtotal" class="pagination-info text-primary">{{$lang.grid_pagination_max | replace(total,maxtotal,pages)}}</span>
+
   </div>
 </template>
 
@@ -20,6 +23,7 @@ export default {
   name : 'VuePagination',
   props:{
     'total'   : Number,     // total number of rows
+    'maxtotal': Number,     // total number of rows (without searching)
     'pages'   : Number,     // pages number of pages
     'current' : Number,     // current page
     'limit'   : Number,     // items per page
