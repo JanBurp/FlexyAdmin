@@ -39,6 +39,7 @@ $lang['vue_upload_ready']            = ' is toegevoegd.';
 
 $lang['vue_grid_total']              = "{0} items";
 $lang['vue_grid_pagination']         = "{0} items / {1} pagina's";
+$lang['vue_grid_pagination_max']     = "{0} items (van {1}) / {2} pagina's";
 $lang['vue_grid_order_save_error']   = "<b>FOUT</b> tijdens bewaren van nieuwe volgorde. Volgorde is hersteld, probeer het nog eens.";
 $lang['vue_form_validation_error']   = "Niet alle velden zijn goed ingevuld!";
 $lang['vue_form_save_error']         = "<b>FOUT</b> tijdens bewaren. Probeer nog eens.";
