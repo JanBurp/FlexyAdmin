@@ -46,6 +46,6 @@ export default {
 
 <style>
   .colorpicker .form-control {width:6rem;margin-right:.5rem;float:left;}
-  .colorpicker .form-picker {height:2.35rem;width:3rem;padding:0;margin-right:0;}
+  .colorpicker .form-picker {height:2.1rem;width:3rem;padding:0;margin-right:0;}
 </style>
 

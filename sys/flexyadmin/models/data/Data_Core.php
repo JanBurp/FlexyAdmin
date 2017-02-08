@@ -1461,7 +1461,12 @@ Class Data_Core extends CI_Model {
               $other_table = $relation['other_table'];
               $result_name = $relation['result_name'];
               $this->data->table($other_table);
-              $options[$result_name] = array( 'table'=>$other_table, 'data'=>$this->data->get_result_as_options(), 'multiple'=>true );
+              $options[$result_name] = array(
+                'table'         =>$other_table,
+                'data'          =>$this->data->get_result_as_options(),
+                'multiple'      =>true,
+                'insert_rights' => $this->flexy_auth->has_rights($other_table),
+              );
               $this->data->table($this->settings['table']); // Weer terug naar huidige tabel
             }
           }

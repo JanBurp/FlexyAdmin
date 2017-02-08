@@ -166,7 +166,8 @@ export default {
       if ( _.isUndefined(this.fields[field]) ) return false;
       if ( _.isUndefined(this.fields[field].options) ) return false;
       if ( _.isUndefined(this.fields[field].options.insert_rights) ) return false;
-      return this.fields[field].options.insert_rights;
+      var rights = this.fields[field].options.insert_rights;
+      return rights;
     },
     
     // Pas kleur van optie aan als het een kleurenveld is
@@ -233,12 +234,19 @@ export default {
       })
       .then(function(response){
         if (!_.isUndefined(response.data)) {
-          console.log('reloaded',field,event);
-          console.log(response.data.data);
           // Vervang de opties 
           self.fields[field].options = response.data.data[field];
           // Selecteer zojuist toegevoegde item
-          self.row[field] = event;
+          self.addToSelect(field,event);
+          // if (self.isMultiple(field)) {
+          //   jdb.vueLog(self.row[field]);
+          //   jdb.vueLog(self.fields[field].options);
+          //   console.log(event);
+          //   // self.row[field] = event;
+          // }
+          // else {
+          //   self.row[field] = event;
+          // }
         }
         return response;
       });      
@@ -357,17 +365,29 @@ export default {
     },
     
     updateSelect : function( field, selected ) {
+      var value = selected;
       if ( !this.isMultiple(field) ) {
-        var value = selected[0].value;
+        value = selected[0].value;
       }
       else {
-        var value = [];
+        value = [];
         for (var i = 0; i < selected.length; i++) {
           value.push({'id':selected[i].value});
         }
       }
       this.updateField(field,value);
     },
+    
+    addToSelect : function( field, value ) {
+      console.log('addToSelect',field,value);
+      if ( this.isMultiple(field) ) {
+        var currentSelection = this.row[field];
+        currentSelection.push({'id':value});
+        value = currentSelection;
+      }
+      this.updateField(field,value);
+    },
+    
 
     // TinyMCE changed
     updateText : function(editor) {
