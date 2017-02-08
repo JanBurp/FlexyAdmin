@@ -34,8 +34,6 @@ class Plugin_stats extends Plugin {
 		if (isset($args[0])) $year=$args[0];
 		if (isset($args[1])) $month=$args[1];
 
-		$this->add_content(h(lang('statistics'),1));
-
 		$statTypes=array(	'total',
 											'this_year',
 											'this_month',

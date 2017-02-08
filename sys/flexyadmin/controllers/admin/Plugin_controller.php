@@ -75,7 +75,7 @@ class Plugin_controller extends AdminController {
 			}
 		}
 		// output
-		if (!$ajax) $this->view_admin('',array('title'=>$plugin,'content'=>$content));
+		if (!$ajax) $this->view_admin('plugins/plugin',array( 'title'=>lang($plugin),'content'=>$content));
 	}
 
 }
