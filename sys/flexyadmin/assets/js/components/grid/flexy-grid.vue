@@ -7,10 +7,11 @@ import flexyButton      from '../flexy-button.vue'
 
 import FlexyPagination  from '../flexy-pagination.vue'
 import FlexyGridCell    from './flexy-grid-cell.vue'
+import FlexyForm        from './../form/flexy-form.vue'
 
 export default {
   name: 'FlexyGrid',
-  components: {draggable,flexyButton,FlexyGridCell,FlexyPagination },
+  components: {draggable,flexyButton,FlexyGridCell,FlexyPagination,FlexyForm },
   props:{
     'title':String,
     'name':String,
@@ -61,6 +62,7 @@ export default {
   
   data : function() {
     return {
+      formID      : false,
       items       : [],
       fields      : [],
       searchable_fields : [],
@@ -433,9 +435,21 @@ export default {
     },
     
     editItem : function(id) {
-      var url = this.editUrl(id);
-      window.location.assign(url);
+      // var url = this.editUrl(id);
+      // window.location.assign(url);
+      this.formID = id;
     },
+    
+    updateItem : function(id,data) {
+      console.log('updateItem',id,data);
+      this.formID = false;
+      this.items = [];
+      this.reloadPage();
+      // var itemIndex = jdb.indexOfProperty(this.items,'id',id);
+      // console.log(itemIndex);
+      // jdb.vueLog(this.items);
+    },
+    
     
     removeItems : function(removeIds) {
       var self = this;
@@ -762,140 +776,148 @@ export default {
 </script>
 
 <template>
-  <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
-    <!-- MAIN HEADER -->
-    <div class="card-header">
-      <h1>{{title}}</h1>
-      <!-- FAST SEARCH -->
-      <form class="form-inline" @submit="startFinding($event)">
-        <div class="form-group" v-if="!extendedFind">
-          <input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_fast_search" @input="findChanged()">
-        </div>
-        <div class="btn-group">
-          <flexy-button @click.native.stop.prevent="startFinding($event)" icon="search" class="btn-default" />
-          <flexy-button @click.native.stop.prevent="stopFind()" icon="refresh" class="btn-default text-danger" v-if="findTerm!=='' || extendedFind" />
-          <flexy-button @click.native.stop.prevent="toggleExtendedFind()" :icon="{'chevron-up':extendedFind,'chevron-down':!extendedFind}" class="btn-outline-warning" :class="{'text-warning':extendedFind}" />
-        </div>
-      </form>
-    </div>
+  <div>
+    
+    <flexy-form v-if="formID!==false" :title="title" :name="name" :primary="formID" @formclose="updateItem(formID,$event)"></flexy-form>
+    
+    <div v-if="formID===false" class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
+      <!-- MAIN HEADER -->
+      <div class="card-header">
+        <h1>{{title}}</h1>
+        <!-- FAST SEARCH -->
+        <form class="form-inline" @submit="startFinding($event)">
+          <div class="form-group" v-if="!extendedFind">
+            <input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_fast_search" @input="findChanged()">
+          </div>
+          <div class="btn-group">
+            <flexy-button @click.native.stop.prevent="startFinding($event)" icon="search" class="btn-default" />
+            <flexy-button @click.native.stop.prevent="stopFind()" icon="refresh" class="btn-default text-danger" v-if="findTerm!=='' || extendedFind" />
+            <flexy-button @click.native.stop.prevent="toggleExtendedFind()" :icon="{'chevron-up':extendedFind,'chevron-down':!extendedFind}" class="btn-outline-warning" :class="{'text-warning':extendedFind}" />
+          </div>
+        </form>
+      </div>
 
-    <!-- EXTENDED SEARCH -->
-    <div class="card-header grid-extended-find" v-if="extendedFind">
-      <h4>{{$lang.grid_extended_search}}</h4>
-      <form v-for="(term,index) in extendedTerm" class="form-inline" @submit.stop.prevent="startFinding($event)" :index="index">
-        <div class="form-group grid-extended-search-and">
-          <select class="form-control form-control-sm custom-select" name="grid-extended-search-and[]" v-model="term.and">
-            <option value="OR" :selected="term.and=='OR'">{{$lang.grid_search_or}}</option>
-            <option value="AND" :selected="term.and=='AND'">{{$lang.grid_search_and}}</option>
-          </select>
-        </div>
-        <div class="form-group grid-extended-search-field">
-          <select class="form-control form-control-sm custom-select" name="grid-extended-search-field[]" v-model="term.field">
-            <option v-for="field in searchable_fields" :value="field" :selected="term.field===field">{{fields[field].name}}</option>
-          </select>
-        </div>
-        <div class="form-group grid-extended-search-equals">
-          <select class="form-control form-control-sm custom-select" name="grid-extended-search-equals[]" v-model="term.equals">
-            <option value="exist" :selected="term.equals==='exist'">{{$lang.grid_search_exist}}</option>
-            <option value="word" :selected="term.equals==='word'">{{$lang.grid_search_word}}</option>
-            <option value="exact" :selected="term.equals==='exact'">{{$lang.grid_search_exact}}</option>
-          </select>
-        </div>
-        <div class="form-group grid-extended-search-term">
-          <input type="text" class="form-control form-control-sm" v-model="term.term" :placeholder="$lang.grid_search" name="grid-extended-search-term[]">
-        </div>
-        <flexy-button @click.native.stop.prevent="extendedSearchRemove(index)" icon="remove" class="btn-outline-danger" />
-        <flexy-button @click.native.stop.prevent="extendedSearchAdd()" icon="plus" class="btn-outline-warning" />
-      </form>
-    </div>
+      <!-- EXTENDED SEARCH -->
+      <div class="card-header grid-extended-find" v-if="extendedFind">
+        <h4>{{$lang.grid_extended_search}}</h4>
+        <form v-for="(term,index) in extendedTerm" class="form-inline" @submit.stop.prevent="startFinding($event)" :index="index">
+          <div class="form-group grid-extended-search-and">
+            <select class="form-control form-control-sm custom-select" name="grid-extended-search-and[]" v-model="term.and">
+              <option value="OR" :selected="term.and=='OR'">{{$lang.grid_search_or}}</option>
+              <option value="AND" :selected="term.and=='AND'">{{$lang.grid_search_and}}</option>
+            </select>
+          </div>
+          <div class="form-group grid-extended-search-field">
+            <select class="form-control form-control-sm custom-select" name="grid-extended-search-field[]" v-model="term.field">
+              <option v-for="field in searchable_fields" :value="field" :selected="term.field===field">{{fields[field].name}}</option>
+            </select>
+          </div>
+          <div class="form-group grid-extended-search-equals">
+            <select class="form-control form-control-sm custom-select" name="grid-extended-search-equals[]" v-model="term.equals">
+              <option value="exist" :selected="term.equals==='exist'">{{$lang.grid_search_exist}}</option>
+              <option value="word" :selected="term.equals==='word'">{{$lang.grid_search_word}}</option>
+              <option value="exact" :selected="term.equals==='exact'">{{$lang.grid_search_exact}}</option>
+            </select>
+          </div>
+          <div class="form-group grid-extended-search-term">
+            <input type="text" class="form-control form-control-sm" v-model="term.term" :placeholder="$lang.grid_search" name="grid-extended-search-term[]">
+          </div>
+          <flexy-button @click.native.stop.prevent="extendedSearchRemove(index)" icon="remove" class="btn-outline-danger" />
+          <flexy-button @click.native.stop.prevent="extendedSearchAdd()" icon="plus" class="btn-outline-warning" />
+        </form>
+      </div>
 
-    <!-- GRID HEADERS -->
-    <div class="card-block table-responsive">
-      <table class="table table-bordered table-sm grid-data">
-        <thead>
-          <tr>
-            <template v-for="(field,key) in fields">
-              <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
-                <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
-                <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
-                <flexy-button @click.native="reverseSelection()" icon="dot-circle-o" class="btn-outline-info" />
+      <!-- GRID HEADERS -->
+      <div class="card-block table-responsive">
+        <table class="table table-bordered table-sm grid-data">
+          <thead>
+            <tr>
+              <template v-for="(field,key) in fields">
+                <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
+                  <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
+                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
+                  <flexy-button @click.native="reverseSelection()" icon="dot-circle-o" class="btn-outline-info" />
 
-                <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
-                  <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>
-                  <div class="dropdown-menu">
-                    <a v-for="(field,key) in fields" v-if="isSortableField(field)" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(apiParts.order.indexOf(key)>=0)}">
-                      <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
-                      <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
-                      {{field.name}}
-                    </a>
+                  <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
+                    <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>
+                    <div class="dropdown-menu">
+                      <a v-for="(field,key) in fields" v-if="isSortableField(field)" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(apiParts.order.indexOf(key)>=0)}">
+                        <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
+                        <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
+                        {{field.name}}
+                      </a>
+                    </div>
                   </div>
-                </div>
-              </th>
-              <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
-                <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.name}}</span>
-                  <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
-                  <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
-                </a>
-              </th>
-            </template>
-          </tr>
-        </thead>
+                </th>
+                <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
+                  <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.name}}</span>
+                    <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
+                    <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
+                  </a>
+                </th>
+              </template>
+            </tr>
+          </thead>
         
-        <!-- GRID BODY -->
-        <draggable v-if="hasData()" :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd">
+          <!-- GRID BODY -->
+          <draggable v-if="hasData()" :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd">
 
-          <!-- UPLOAD ROW -->
-          <tr v-if="gridType()==='media'" class="grid-upload" :class="{'dropping':dropUploadHover}">
-            <td colspan="100" class="grid-upload-dropbox">
-              <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
-              <span :class="{'show':uploadFiles.length>0}" class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span>
-              {{$lang.upload_choose}}
-              <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
-            </td>
-          </tr>
-          
-          <!-- ROW -->
-          <tr v-for="row in items" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
-            <template v-for="cell in row">
-              
-              <!-- PRIMARY CELL -->
-              <td v-if="cell.type=='primary'" class="action">
-                <flexy-button v-if="gridType()!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
-                <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger" />
-                <flexy-button @click.native="select(row.id.value)" :icon="{'circle-o':!isSelected(row.id.value),'circle':isSelected(row.id.value)}" class="btn-outline-info" />
-                <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
+            <!-- UPLOAD ROW -->
+            <tr v-if="gridType()==='media'" class="grid-upload" :class="{'dropping':dropUploadHover}">
+              <td colspan="100" class="grid-upload-dropbox">
+                <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
+                <span :class="{'show':uploadFiles.length>0}" class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span>
+                {{$lang.upload_choose}}
+                <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
               </td>
+            </tr>
+          
+            <!-- ROW -->
+            <tr v-for="row in items" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
+              <template v-for="cell in row">
               
-              <!-- CELL -->
-              <flexy-grid-cell v-else
-                @select="select(row.id.value)"
-                :focus="false"
-                :type="cell.type"
-                :name="cell.name"
-                :value="cell.value"
-                :level="rowLevel(row)"
-                :primary="{ table:dataName, id:row.id.value }"
-                :editable="isEditable(cell.name)"
-                :readonly="isReadonly(cell.name)"
-                :options="fields[cell.name]">
-              </flexy-grid-cell>
+                <!-- PRIMARY CELL -->
+                <td v-if="cell.type=='primary'" class="action">
+                  <flexy-button v-if="gridType()!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
+                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger" />
+                  <flexy-button @click.native="select(row.id.value)" :icon="{'circle-o':!isSelected(row.id.value),'circle':isSelected(row.id.value)}" class="btn-outline-info" />
+                  <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
+                </td>
               
-            </template>
-          </tr>
-        </draggable>
-      </table>
-    </div>
-    <!-- FOOTER -->
-    <div class="card-footer text-muted">
-      <div class="btn-group actions" v-if="gridType() === 'media'">
-        <flexy-button @click.native="setMediaView('list')"   icon="bars"       :class="{'btn-outline-primary':getMediaView()!=='list','btn-primary':getMediaView()==='list'}" border="true" />
-        <flexy-button @click.native="setMediaView('small')"  icon="th"         :class="{'btn-outline-primary':getMediaView()!=='small','btn-primary':getMediaView()==='small'}" border="true" />
-        <flexy-button @click.native="setMediaView('thumbs')" icon="picture-o"  :class="{'btn-outline-primary':getMediaView()!=='thumbs','btn-primary':getMediaView()==='thumbs'}" border="true" />
+                <!-- CELL -->
+                <flexy-grid-cell v-else
+                  @select="select(row.id.value)"
+                  :focus="false"
+                  :type="cell.type"
+                  :name="cell.name"
+                  :value="cell.value"
+                  :level="rowLevel(row)"
+                  :primary="{ table:dataName, id:row.id.value }"
+                  :editable="isEditable(cell.name)"
+                  :readonly="isReadonly(cell.name)"
+                  :options="fields[cell.name]">
+                </flexy-grid-cell>
+              
+              </template>
+            </tr>
+          </draggable>
+        </table>
       </div>
-      <flexy-pagination v-if="needsPagination()" :total="dataInfo.total_rows" :maxtotal="dataInfo.count_all" :pages="dataInfo.num_pages" :current="dataInfo.page + 1" :limit="dataInfo.limit" @newpage="reloadPage({offset:$event})"></flexy-pagination>
-      <div v-if="!needsPagination()" class="pagination-container">
-        <span class="pagination-info text-primary">{{$lang.grid_total | replace(dataInfo.total_rows)}}</span>
+      <!-- FOOTER -->
+      <div class="card-footer text-muted">
+        <div class="btn-group actions" v-if="gridType() === 'media'">
+          <flexy-button @click.native="setMediaView('list')"   icon="bars"       :class="{'btn-outline-primary':getMediaView()!=='list','btn-primary':getMediaView()==='list'}" border="true" />
+          <flexy-button @click.native="setMediaView('small')"  icon="th"         :class="{'btn-outline-primary':getMediaView()!=='small','btn-primary':getMediaView()==='small'}" border="true" />
+          <flexy-button @click.native="setMediaView('thumbs')" icon="picture-o"  :class="{'btn-outline-primary':getMediaView()!=='thumbs','btn-primary':getMediaView()==='thumbs'}" border="true" />
+        </div>
+        <flexy-pagination v-if="needsPagination()" :total="dataInfo.total_rows" :maxtotal="dataInfo.count_all" :pages="dataInfo.num_pages" :current="dataInfo.page + 1" :limit="dataInfo.limit" @newpage="reloadPage({offset:$event})"></flexy-pagination>
+        <div v-if="!needsPagination()" class="pagination-container">
+          <span class="pagination-info text-primary">{{$lang.grid_total | replace(dataInfo.total_rows)}}</span>
+        </div>
       </div>
+    
     </div>
+    
   </div>
+
 </template>
