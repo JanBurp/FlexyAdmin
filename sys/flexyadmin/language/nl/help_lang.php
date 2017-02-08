@@ -80,4 +80,8 @@ $lang['user_send_error']              = 'FOUT: Kon geen email sturen aan %s.';
 $lang['new_password']                 = 'Nieuw wachtwoord.';
 $lang['selected_users']               = 'Aan geselecteerde gebruikers.';
 
+
+// Plugins / Tools
+$lang['plugin_stats']                 = 'Statistieken';
+
 ?>
