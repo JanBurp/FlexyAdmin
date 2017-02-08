@@ -5493,6 +5493,19 @@ a > .fa, .btn > .fa {
   #main > .card:first-child {
     margin: 0; }
 
+#content-home .nav-item {
+  display: inline-block;
+  height: 3rem;
+  width: auto;
+  margin-right: 2rem; }
+  #content-home .nav-item .flexy-button {
+    float: left;
+    margin-right: 1rem; }
+  #content-home .nav-item .nav-title {
+    display: inline-block;
+    margin: 0;
+    padding-top: .5rem; }
+
 /* SIDEBAR MENU */
 #flexy-menu-side > ul {
   background-color: #f7f7f9;

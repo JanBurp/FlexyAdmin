@@ -2,6 +2,16 @@
 
 
 /**
+ * Home Wizards
+ */
+$config['home_menu'] = array(
+  'help'       => array( 'name'=>'watch_help',       'uri'=>'help/index',                    'icon'=>'question-circle',   "class"=>"info" ),
+  'statistics' => array( 'name'=>'watch_statistics', 'uri'=>'plugin/stats',                  'icon'=>'bar-chart',         "class"=>"warning" ),
+  'user'       => array( 'name'=>'edit_user',        'uri'=>'show/form/cfg_users/{user_id}', 'icon'=>'user',              "class"=>"danger" ),
+);
+
+
+/**
  * Menu
  */
 $config['header_menu'] = array(
@@ -21,7 +31,7 @@ $config['side_menu']['tools'] = array(
   'import'   => array( 'user_group'=>'super_admin', 'name'=>'db_import',          'uri'=>'db/import',   'icon'=>'cog', 'class'=>'text-muted' ),
   'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'db/backup',   'icon'=>'cog', 'class'=>'text-muted' ),
   'restore'  => array( 'user_group'=>'[b_backup]',  'name'=>'db_restore',         'uri'=>'db/restore',  'icon'=>'cog', 'class'=>'text-muted' ),
-  '-'        => array('type'=>'seperator'),
+  '-'        => array( 'type'=>'seperator' ),
   'search'   => array( 'user_group'=>'[b_tools]',   'name'=>'sr_search_replace',  'uri'=>'search',      'icon'=>'cog', 'class'=>'text-muted' ),
   'fill'     => array( 'user_group'=>'[b_tools]',   'name'=>'fill_fill',          'uri'=>'fill',        'icon'=>'cog', 'class'=>'text-muted' ),
 );
@@ -35,6 +45,7 @@ $config['side_menu']['cfg_tables'] = array(
   'cfg_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'cfg', 'icon'=>'cog',       'class'=>'text-muted' ),
   'log_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'log', 'icon'=>'bar-chart', 'class'=>'text-muted' ),
 );
+
 
 
 /**
