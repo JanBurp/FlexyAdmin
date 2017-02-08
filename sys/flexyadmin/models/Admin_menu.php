@@ -32,6 +32,14 @@ Class Admin_menu extends CI_Model {
   public function get_menus( $base_url, $current_uri ) {
     
     /**
+     * Home items
+     */
+    $homeMenu = new Menu();
+    $homeMenu->set('view_path','admin/menu-home');
+    $homeMenu->set_current($current_uri);
+    $homeMenu->add_items( $this->_process_items($base_url,$this->ui_config['home_menu']) );
+    
+    /**
      * Headermenu
      */
     $headerMenu = new Menu();
@@ -58,8 +66,9 @@ Class Admin_menu extends CI_Model {
     }
 
     return array(
-      'headermenu'=>$headerMenu->render(),
-      'sidemenu'=>$sideMenu->render()
+      'homemenu'   =>$homeMenu->render(),
+      'headermenu' =>$headerMenu->render(),
+      'sidemenu'   =>$sideMenu->render()
     );
   }
   
@@ -219,7 +228,7 @@ Class Admin_menu extends CI_Model {
         $lang = $this->user['username'];
         break;
       default:
-        $lang = lang($key);
+        $lang = $this->lang->line($key);
         break;
     }
     return $lang;

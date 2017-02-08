@@ -61,6 +61,24 @@
   >.card:first-child {margin:0}
 }
 
+#content-home {
+  .nav-item {
+    display:inline-block;
+    height:3rem;
+    width:auto;
+    margin-right:2rem;
+    .flexy-button {
+      float:left;
+      margin-right:1rem;
+    }
+    .nav-title {
+      display:inline-block;
+      margin:0;
+      padding-top:.5rem;
+    }
+  }
+}
+
 
 /* SIDEBAR MENU */
 #flexy-menu-side>ul {

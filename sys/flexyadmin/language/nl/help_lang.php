@@ -1,9 +1,13 @@
 <?php
 
-$lang['help']               = 'Help';
-$lang['logout']             = 'Loguit';
-$lang['settings']           = 'Instellingen';
-$lang['statistics']         = 'Statistieken';
+$lang['help']             = 'Help';
+$lang['logout']           = 'Loguit';
+$lang['settings']         = 'Instellingen';
+$lang['statistics']       = 'Statistieken';
+$lang['watch_help']       = 'Help lezen';
+$lang['watch_statistics'] = 'Statistieken bekijken';
+$lang['edit_user']        = 'Profiel aanpassen';
+
 
 $lang['file']								= "Bestand";
 
