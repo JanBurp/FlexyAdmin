@@ -29080,7 +29080,7 @@ type:Number,default:5}},methods:{/**
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 8);var _flexyThumb2=_interopRequireDefault(_flexyThumb);var _timepicker=__webpack_require__(/*! ./timepicker.vue */ 16);var _timepicker2=_interopRequireDefault(_timepicker);var _datetimepicker=__webpack_require__(/*! ./datetimepicker.vue */ 80);var _datetimepicker2=_interopRequireDefault(_datetimepicker);var _colorpicker=__webpack_require__(/*! ./colorpicker.vue */ 79);var _colorpicker2=_interopRequireDefault(_colorpicker);var _mediapicker=__webpack_require__(/*! ./mediapicker.vue */ 81);var _mediapicker2=_interopRequireDefault(_mediapicker);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 84);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 85);var _Tabs2=_interopRequireDefault(_Tabs);var _Datepicker=__webpack_require__(/*! ../../vue-strap-src/Datepicker.vue */ 17);var _Datepicker2=_interopRequireDefault(_Datepicker);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,flexyThumb:_flexyThumb2.default,timepicker:_timepicker2.default,datetimepicker:_datetimepicker2.default,colorpicker:_colorpicker2.default,mediapicker:_mediapicker2.default,tab:_Tab2.default,tabs:_Tabs2.default,datepicker:_Datepicker2.default},props:{'title':String,'name':String,'primary':Number,'subform':{type:Boolean,default:false}},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden','primary','uri','order'],checkbox:['checkbox'],datepicker:['date'],timepicker:['time'],datetimepicker:['datetime'],colorpicker:['color','rgb'],mediapicker:['media','medias'],select:['select'],radio:['radio'],textarea:['textarea'],wysiwyg:['wysiwyg']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(types[type]);}types.default=defaultTypes;return types;}},// Copy of props.data
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 8);var _flexyThumb2=_interopRequireDefault(_flexyThumb);var _timepicker=__webpack_require__(/*! ./timepicker.vue */ 16);var _timepicker2=_interopRequireDefault(_timepicker);var _datetimepicker=__webpack_require__(/*! ./datetimepicker.vue */ 80);var _datetimepicker2=_interopRequireDefault(_datetimepicker);var _colorpicker=__webpack_require__(/*! ./colorpicker.vue */ 79);var _colorpicker2=_interopRequireDefault(_colorpicker);var _mediapicker=__webpack_require__(/*! ./mediapicker.vue */ 81);var _mediapicker2=_interopRequireDefault(_mediapicker);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 84);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 85);var _Tabs2=_interopRequireDefault(_Tabs);var _Datepicker=__webpack_require__(/*! ../../vue-strap-src/Datepicker.vue */ 17);var _Datepicker2=_interopRequireDefault(_Datepicker);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,flexyThumb:_flexyThumb2.default,timepicker:_timepicker2.default,datetimepicker:_datetimepicker2.default,colorpicker:_colorpicker2.default,mediapicker:_mediapicker2.default,tab:_Tab2.default,tabs:_Tabs2.default,datepicker:_Datepicker2.default},props:{'title':String,'name':String,'primary':Number,'formtype':{type:String,default:'normal'}},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden','primary','uri','order'],checkbox:['checkbox'],datepicker:['date'],timepicker:['time'],datetimepicker:['datetime'],colorpicker:['color','rgb'],mediapicker:['media','medias'],select:['select'],radio:['radio'],textarea:['textarea'],wysiwyg:['wysiwyg']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(types[type]);}types.default=defaultTypes;return types;}},// Copy of props.data
 data:function data(){return{row:{},fields:{},fieldsets:{},validationErrors:{},isSaving:false,insertForm:{}};},created:function created(){this.reloadForm();},methods:{reloadForm:function reloadForm(apiParts){var self=this;return _flexyState2.default.api({url:self.apiUrl(apiParts)}).then(function(response){if(!_.isUndefined(response.data)){if(response.data.success){// Zijn er settings meegekomen?
 if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.form_set.field_info;self.fieldsets=response.data.settings.form_set.fieldsets;}// Data en die aanvullen met data
 self.row=response.data.data;// TinyMCE
@@ -29104,7 +29104,15 @@ self.addToSelect(field,event);// if (self.isMultiple(field)) {
 //   console.log('reloaded',event);
 //   self.row[field] = event;
 // });
-},cancel:function cancel(){var self=this;if(!this.isSaving){window.location.assign(self.returnUrl());}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){window.location.assign(self.returnUrl());}});}},returnUrl:function returnUrl(){var url='admin/show/grid/'+this.name;if(this.path&&this.path!=='false')url='admin/show/media/'+this.path;console.log(this.path,url);return url;},add:function add(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){self.$emit('added',response.data.data.id);}});}},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=_.clone(this.row);// Prepare data for ajax call
+},cancel:function cancel(){var self=this;if(!this.isSaving){// window.location.assign( self.returnUrl() );
+self.$emit('formclose',self.row);}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){console.log('submit',response);// window.location.assign( self.returnUrl() );
+self.$emit('formclose',self.row);}});}},// returnUrl : function() {
+//   var url = 'admin/show/grid/' + this.name;
+//   if (this.path && this.path!=='false')  url='admin/show/media/' + this.path;
+//   console.log(this.path,url);
+//   return url;
+// },
+add:function add(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){self.$emit('added',response.data.data.id);}});}},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=_.clone(this.row);// Prepare data for ajax call
 for(var field in data){if(field.indexOf('.abstract')>0){delete data[field];}else{if(this.isType('checkbox',field)){data[field]=data[field]?1:0;}if(_typeof(data[field])==='object'&&this.isMultiple(field)){var fieldData=[];for(var i=0;i<data[field].length;i++){if(!_.isUndefined(data[field][i]))fieldData.push(data[field][i].id);}data[field]=fieldData;}}}return _flexyState2.default.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':data}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{// Validation error
 response.error=true;_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){// console.log('updateField',field,value);
 this.validationErrors={};this.row[field]=value;},updateSelect:function updateSelect(field,selected){var value=selected;if(!this.isMultiple(field)){value=selected[0].value;}else{value=[];for(var i=0;i<selected.length;i++){value.push({'id':selected[i].value});}}this.updateField(field,value);},addToSelect:function addToSelect(field,value){if(this.isMultiple(field)){var currentSelection=this.row[field];// Als al bestaat, dan juist verwijderen
@@ -29167,7 +29175,7 @@ _flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return res
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _vuedraggable=__webpack_require__(/*! vuedraggable */ 18);var _vuedraggable2=_interopRequireDefault(_vuedraggable);var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyPagination=__webpack_require__(/*! ../flexy-pagination.vue */ 9);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGridCell=__webpack_require__(/*! ./flexy-grid-cell.vue */ 82);var _flexyGridCell2=_interopRequireDefault(_flexyGridCell);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyGrid',components:{draggable:_vuedraggable2.default,flexyButton:_flexyButton2.default,FlexyGridCell:_flexyGridCell2.default,FlexyPagination:_flexyPagination2.default},props:{'title':String,'name':String,'api':{type:[String,Boolean],default:false},'order':{type:String,default:''},'offset':{type:String,default:'0'},'limit':{type:String,default:''},'filter':{type:[String,Object],default:''},'type':{type:String,default:'table'}},/**
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _vuedraggable=__webpack_require__(/*! vuedraggable */ 18);var _vuedraggable2=_interopRequireDefault(_vuedraggable);var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyPagination=__webpack_require__(/*! ../flexy-pagination.vue */ 9);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGridCell=__webpack_require__(/*! ./flexy-grid-cell.vue */ 82);var _flexyGridCell2=_interopRequireDefault(_flexyGridCell);var _flexyForm=__webpack_require__(/*! ./../form/flexy-form.vue */ 26);var _flexyForm2=_interopRequireDefault(_flexyForm);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyGrid',components:{draggable:_vuedraggable2.default,flexyButton:_flexyButton2.default,FlexyGridCell:_flexyGridCell2.default,FlexyPagination:_flexyPagination2.default,FlexyForm:_flexyForm2.default},props:{'title':String,'name':String,'api':{type:[String,Boolean],default:false},'order':{type:String,default:''},'offset':{type:String,default:'0'},'limit':{type:String,default:''},'filter':{type:[String,Object],default:''},'type':{type:String,default:'table'}},/**
   * Maak items klaar voor tonen in het grid:
   * - Voeg informatie van een veld toe aan elke cell
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
@@ -29176,7 +29184,7 @@ _flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return res
 // }
 // else {
 this.reloadPage({offset:this.offset,limit:this.limit,order:this.order,filter:this.filter});// }
-},data:function data(){return{items:[],fields:[],searchable_fields:[],dataInfo:{},selected:[],apiParts:{order:this.order,filter:this.filter,offset:0,limit:this.limit,txt_abstract:true,as_grid:true},changeUrlApi:true,focus:{id:false,cell:false},draggable:{item:false,orderStart:0,oldItems:false,children:false,newPage:false,oldIndex:0,newIndex:0},findTerm:this.filter,extendedFind:true,extendedTermDefault:{field:'',term:'',and:'OR',equals:'exist'},extendedTerm:[],oldExtendedTerm:[],uploadFiles:[],dropUploadHover:false};},mounted:function mounted(){this.extendedFind=false;if(this.filter.substr(0,1)==='['||this.filter.substr(0,1)==='{'){this.extendedFind=true;this.extendedTerm=JSON.parse(this.filter);this.filterTerm='';}else{this.extendedTerm=[_.clone(this.extendedTermDefault)];}},computed:{dataName:function dataName(){var name=this.name;if(this.gridType()==='media'){name='media_'+name;}return name;},/**
+},data:function data(){return{formID:false,items:[],fields:[],searchable_fields:[],dataInfo:{},selected:[],apiParts:{order:this.order,filter:this.filter,offset:0,limit:this.limit,txt_abstract:true,as_grid:true},changeUrlApi:true,focus:{id:false,cell:false},draggable:{item:false,orderStart:0,oldItems:false,children:false,newPage:false,oldIndex:0,newIndex:0},findTerm:this.filter,extendedFind:true,extendedTermDefault:{field:'',term:'',and:'OR',equals:'exist'},extendedTerm:[],oldExtendedTerm:[],uploadFiles:[],dropUploadHover:false};},mounted:function mounted(){this.extendedFind=false;if(this.filter.substr(0,1)==='['||this.filter.substr(0,1)==='{'){this.extendedFind=true;this.extendedTerm=JSON.parse(this.filter);this.filterTerm='';}else{this.extendedTerm=[_.clone(this.extendedTermDefault)];}},computed:{dataName:function dataName(){var name=this.name;if(this.gridType()==='media'){name='media_'+name;}return name;},/**
      * Options for draggable
      */draggableOptions:function draggableOptions(){return{// group         : { name:'tree', pull:true},
 draggable:'tr',handle:'.draggable-handle',forceFallback:true};}},methods:{reloadPage:function reloadPage(apiParts){var self=this;_flexyState2.default.api({url:self.apiUrl(apiParts)}).then(function(response){if(!_.isUndefined(response.data)){if(response.data.success){// Stel url in van browser
@@ -29226,7 +29234,12 @@ if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,f
 //   if (this.focus.cell !== cell) hasFocus = false;
 //   return hasFocus;
 // },
-hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}this.emitAndResetSelectedMedia();},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.items.length;i++){ids.push(this.items[i].id.value);}this.selected=_.difference(ids,this.selected);this.emitAndResetSelectedMedia();},emitAndResetSelectedMedia:function emitAndResetSelectedMedia(){if(this.type==='mediapicker'){var selectedMedia=[];for(var i=0;i<this.selected.length;i++){for(var j=0;j<this.items.length;j++){var index=this.items[j]['id'].value;if(index===this.selected[i]){var media=this.items[j]['media_thumb'].value;selectedMedia.push(media);}}}this.$emit('grid-selected',selectedMedia);this.selected=[];}},newItem:function newItem(){if(this.gridType()==='media'){var event=new MouseEvent('click',{'view':window,'bubbles':true,'cancelable':true});document.getElementById('browsefiles').dispatchEvent(event);}else{this.editItem(-1);}},editItem:function editItem(id){var url=this.editUrl(id);window.location.assign(url);},removeItems:function removeItems(removeIds){var self=this;if(_.isUndefined(removeIds)){removeIds=this.selected;}else{removeIds=[removeIds];}// Only when there are items to remove
+hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}this.emitAndResetSelectedMedia();},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.items.length;i++){ids.push(this.items[i].id.value);}this.selected=_.difference(ids,this.selected);this.emitAndResetSelectedMedia();},emitAndResetSelectedMedia:function emitAndResetSelectedMedia(){if(this.type==='mediapicker'){var selectedMedia=[];for(var i=0;i<this.selected.length;i++){for(var j=0;j<this.items.length;j++){var index=this.items[j]['id'].value;if(index===this.selected[i]){var media=this.items[j]['media_thumb'].value;selectedMedia.push(media);}}}this.$emit('grid-selected',selectedMedia);this.selected=[];}},newItem:function newItem(){if(this.gridType()==='media'){var event=new MouseEvent('click',{'view':window,'bubbles':true,'cancelable':true});document.getElementById('browsefiles').dispatchEvent(event);}else{this.editItem(-1);}},editItem:function editItem(id){// var url = this.editUrl(id);
+// window.location.assign(url);
+this.formID=id;},updateItem:function updateItem(id,data){console.log('updateItem',id,data);this.formID=false;this.items=[];this.reloadPage();// var itemIndex = jdb.indexOfProperty(this.items,'id',id);
+// console.log(itemIndex);
+// jdb.vueLog(this.items);
+},removeItems:function removeItems(removeIds){var self=this;if(_.isUndefined(removeIds)){removeIds=this.selected;}else{removeIds=[removeIds];}// Only when there are items to remove
 if(removeIds.length>0){// Confirm
 var message=this.$lang['confirm_delete_one'];if(removeIds.length>1)message=this.$options.filters.replace(this.$lang['confirm_delete_multiple'],removeIds.length);_flexyState2.default.openModal({'title':'','body':message},function(event){if(event.state.type==='ok'){var data={table:self.name,where:removeIds};if(self.gridType()==='media')data.table='res_assets';return _flexyState2.default.api({url:'row',data:data}).then(function(response){var error=response.error||response.data.data===false;if(error){_flexyState2.default.addMessage(self.$lang.error_delete,'danger');}else{_flexyState2.default.addMessage(self.$options.filters.replace(self.$lang.deleted,removeIds.length));self.reloadPage();}return response;});}});}},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},isReadonly:function isReadonly(name){var readonly=false;if(!_.isUndefined(this.fields[name]))readonly=this.fields[name].schema['readonly'];return readonly;},editUrl:function editUrl(id){var url='';if(this.gridType()==='media'){url='admin/show/form/_media_/'+this.name+'/'+id;}else{url='admin/show/form/'+this.name+'/'+id;}return url;},startFinding:function startFinding(event){if(event)event.preventDefault();var self=this;var find='';if(!self.extendedFind){find=this.findTerm.replace(/'/g,'"');}else{var filled=true;for(var i=0;i<this.extendedTerm.length;i++){if(this.extendedTerm[i].field==='')filled=false;if(this.extendedTerm[i].term==='')filled=false;}if(this.extendedTerm.length<1)filled=false;if(!filled)return false;find=JSON.stringify(self.extendedTerm);}this.reloadPage({offset:0,filter:find});},findChanged:function findChanged(){if(this.findTerm==='')this.stopFind();this.oldExtendedTerm=[];},stopFind:function stopFind(){this.findTerm='';this.extendedFind=false;this.extendedTerm=[_.clone(this.extendedTermDefault)];this.reloadPage({offset:0,filter:''});},toggleExtendedFind:function toggleExtendedFind(){if(this.extendedFind){this.extendedFind=false;this.findTerm='';if(!_.isUndefined(this.extendedTerm[0])){this.findTerm=this.extendedTerm[0].term;this.oldExtendedTerm=this.extendedTerm;}}else{this.extendedFind=true;if(this.oldExtendedTerm.length>0){this.extendedTerm=this.oldExtendedTerm;}else{this.extendedTerm=[_.clone(this.extendedTermDefault)];this.extendedTerm[0].term=this.findTerm;this.extendedTerm[0].field=this.searchable_fields[0];}}this.startFinding();},extendedSearchAdd:function extendedSearchAdd(){this.extendedTerm.push(_.clone(this.extendedTermDefault));},extendedSearchRemove:function extendedSearchRemove(index){this.extendedTerm.splice(index,1);if(this.extendedTerm.length<1)this.extendedTerm=[_.clone(this.extendedTermDefault)];},dropUploadFiles:function dropUploadFiles(event){event.stopPropagation();event.preventDefault();var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},addUploadFiles:function addUploadFiles(event){var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},removeUploadFile:function removeUploadFile(index){this.uploadFiles.splice(index,1);},_addUploadFiles:function _addUploadFiles(files){for(var i=0;i<files.length;i++){this.uploadFiles.push(files.item(i));}if(files.length>0){this.startUpload();}},startUpload:function startUpload(){this.dropUploadHover=false;var self=this;for(var i=0;i<self.uploadFiles.length;i++){var file=self.uploadFiles[i];var formData=new FormData();formData.set('path',self.name);formData.set('file',self.uploadFiles[i]);formData.set('fileName',self.uploadFiles[i].name);_flexyState2.default.api({method:'POST',url:'media',data:formData,formData:true}).then(function(response){var fileName=response.data.args.fileName;var error=response.data.error;if(!error&&response.data.data===false)error=self.$lang.upload_error;if(error){_flexyState2.default.addMessage(error+' <b>`'+fileName+'`</b>','danger');}else{_flexyState2.default.addMessage(fileName+self.$lang.upload_ready);}// Uit de lijst halen
 var index=_jdbTools2.default.indexOfProperty(self.uploadFiles,'name',fileName);self.removeUploadFile(index);// Als alles uit de lijst is geuploade, reload
@@ -31813,7 +31826,18 @@ if (false) {
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
+  return _c('div', [(_vm.formID !== false) ? _c('flexy-form', {
+    attrs: {
+      "title": _vm.title,
+      "name": _vm.name,
+      "primary": _vm.formID
+    },
+    on: {
+      "formclose": function($event) {
+        _vm.updateItem(_vm.formID, $event)
+      }
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.formID === false) ? _c('div', {
     staticClass: "card grid",
     class: _vm.gridTypeClass(),
     on: {
@@ -32164,7 +32188,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         staticClass: "fa fa-caret-up"
       }) : _vm._e(), _vm._v(" "), (_vm.apiParts.order == '_' + key) ? _c('span', {
         staticClass: "fa fa-caret-down"
-      }) : _vm._e(), _vm._v("\n                    " + _vm._s(field.name) + "\n                  ")]) : _vm._e()
+      }) : _vm._e(), _vm._v("\n                      " + _vm._s(field.name) + "\n                    ")]) : _vm._e()
     }))], 1) : _vm._e()], 1) : _vm._e(), _vm._v(" "), (_vm.isNormalVisibleHeader(field)) ? _c('th', {
       staticClass: "text-primary",
       class: _vm.headerClass(field)
@@ -32216,7 +32240,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: {
       'show': _vm.uploadFiles.length > 0
     }
-  }), _vm._v("\n            " + _vm._s(_vm.$lang.upload_choose) + "\n            "), _c('input', {
+  }), _vm._v("\n              " + _vm._s(_vm.$lang.upload_choose) + "\n              "), _c('input', {
     attrs: {
       "id": "browsefiles",
       "type": "file",
@@ -32370,7 +32394,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "pagination-container"
   }, [_c('span', {
     staticClass: "pagination-info text-primary"
-  }, [_vm._v(_vm._s(_vm._f("replace")(_vm.$lang.grid_total, _vm.dataInfo.total_rows)))])]) : _vm._e()], 1)])
+  }, [_vm._v(_vm._s(_vm._f("replace")(_vm.$lang.grid_total, _vm.dataInfo.total_rows)))])]) : _vm._e()], 1)]) : _vm._e()], 1)
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
@@ -32872,7 +32896,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "card form"
   }, [_c('div', {
     staticClass: "card-header"
-  }, [_c('h1', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('div', [(!_vm.subform) ? _c('flexy-button', {
+  }, [_c('h1', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('div', [(_vm.formtype !== 'subform') ? _c('flexy-button', {
     staticClass: "btn-outline-info",
     attrs: {
       "icon": "long-arrow-down",
@@ -32884,7 +32908,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.save()
       }
     }
-  }) : _vm._e(), _vm._v(" "), (!_vm.subform) ? _c('flexy-button', {
+  }) : _vm._e(), _vm._v(" "), (_vm.formtype === 'normal') ? _c('flexy-button', {
     staticClass: "btn-outline-warning",
     attrs: {
       "icon": "level-down fa-rotate-90",
@@ -32896,7 +32920,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.submit()
       }
     }
-  }) : _vm._e(), _vm._v(" "), (!_vm.subform) ? _c('flexy-button', {
+  }) : _vm._e(), _vm._v(" "), (_vm.formtype === 'normal') ? _c('flexy-button', {
     staticClass: "btn-outline-danger",
     attrs: {
       "icon": "long-arrow-left",
@@ -32908,7 +32932,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.cancel()
       }
     }
-  }) : _vm._e(), _vm._v(" "), (_vm.subform) ? _c('flexy-button', {
+  }) : _vm._e(), _vm._v(" "), (_vm.formtype === 'subform') ? _c('flexy-button', {
     staticClass: "btn-outline-warning",
     attrs: {
       "text": _vm.$lang.add,
@@ -33110,7 +33134,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           "title": _vm.label(field),
           "name": _vm.subForm(field, 'table'),
           "primary": -1,
-          "subform": true
+          "formtype": "subform"
         },
         on: {
           "added": function($event) {
