@@ -39,18 +39,20 @@ window.VueStrapLang = function() { return LOCALES[_flexy.language]['strap_lang']
 Vue.use(Lang, {lang: _flexy.language, locales: LOCALES});
 
 
+
+/**
+   Global Vue registering
+ */
 Vue.mixin({
-  
   data : function() {
     return {
       state : flexyState.state,
     }
   },
-})
-
+});
 
 /**
- Main Vue Instance
+   Main Vue Instance
  */
 var vm = new Vue({
   el:'#main',
@@ -64,11 +66,9 @@ var vm = new Vue({
     FlexyForm,
     FlexyHelp
   },
-
   data : {
     state : flexyState.state,
   },
-  
 });
 
 

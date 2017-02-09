@@ -7,11 +7,11 @@ import flexyButton      from '../flexy-button.vue'
 
 import FlexyPagination  from '../flexy-pagination.vue'
 import FlexyGridCell    from './flexy-grid-cell.vue'
-import FlexyForm        from './../form/flexy-form.vue'
+// import FlexyForm        from './../form/flexy-form.vue' // https://vuejs.org/v2/guide/components.html#Circular-References-Between-Components
 
 export default {
   name: 'FlexyGrid',
-  components: {draggable,flexyButton,FlexyGridCell,FlexyPagination,FlexyForm },
+  components: {draggable,flexyButton,FlexyGridCell,FlexyPagination },
   props:{
     'title':String,
     'name':String,
@@ -41,13 +41,18 @@ export default {
     },
   },
   
+  // https://vuejs.org/v2/guide/components.html#Circular-References-Between-Components
+  beforeCreate: function () {
+    this.$options.components.FlexyForm = require('./../form/flexy-form.vue');
+  },
+  
  /**
   * Maak items klaar voor tonen in het grid:
   * - Voeg informatie van een veld toe aan elke cell
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
   */
   created : function() {
-    this.apiParts.formID = jdb.getUrlQueryPart('form');
+    if (this.type!=='mediapicker') this.apiParts.formID = jdb.getUrlQueryPart('form');
     if ( !this.apiParts.formID ) {
       this.apiParts.formID = false;
       this.reloadPage({
