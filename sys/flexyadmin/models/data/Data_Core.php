@@ -1112,8 +1112,8 @@ Class Data_Core extends CI_Model {
   
   /**
    * Geeft $settings['field_info'] Met alse extra:
+   * - Standaard informatie uit config schemaform voor het veld
    * - 'name'       - de ui name van het veld
-   * - 'schema'     - informatie uit config schemaform voor het veld, eventueel aangevuld
    * - ['options']  - Als het veld options heeft, wordt hier de informatie ingestopt
    * - ['path']     - Als het een media veld betreft
    *
@@ -1161,10 +1161,10 @@ Class Data_Core extends CI_Model {
       }
       // Schema: Cleanup old schema keys TODO: kan wellicht weg in de toekomst
       $schema=array_unset_keys($schema,array('grid','form','default','format' ));
-      // Extra
-      $info = array_merge($info,$extra);
-      // Stop in array
-      $info['schema'] = $schema;
+      // Combineer alles
+      $info = array_merge($info,$schema,$extra);
+      // // Stop in array
+      // $info['schema'] = $schema;
       $field_info[$field] = $info;
     }
     

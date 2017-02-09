@@ -130,9 +130,9 @@ export default {
     isType : function( type,field ) {
       if (_.isUndefined(this.fields[field])) return false;
       if (type==='default') {
-        return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type']) === -1;
+        return this.fieldTypes['default'].indexOf(this.fields[field]['form-type']) === -1;
       }
-      return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type']) >= 0;
+      return this.fieldTypes[type].indexOf(this.fields[field]['form-type']) >= 0;
     },
     
     isMultiple : function( field ) {
@@ -194,9 +194,21 @@ export default {
     },
     
     validationClass : function(field) {
-      var validation='';
-      if (this.validationErrors[field]) validation = 'has-danger';
-      return validation;
+      var validationClass='';
+      if ( this.validationErrors[field] ) validationClass = 'has-danger';
+      if ( this.isRequired(field) ) {
+        validationClass += ' required';
+      }
+      return validationClass.trim();
+    },
+    
+    isRequired : function(field) {
+      if ( _.isUndefined(this.fields[field].validation)) return false;
+      var validation = this.fields[field].validation;
+      if (validation.indexOf('required')>=0) {
+        return true;
+      }
+      return false;
     },
     
     toggleInsertForm : function(field) {
@@ -406,8 +418,8 @@ export default {
           <template v-if="!isType('hidden',field)">
           
             <div class="form-group row" :class="validationClass(field)">
-              <div v-if="validationErrors[field]" class="validation-error">{{validationErrors[field]}}</div>
-              <label class="col-md-3 form-control-label" :for="field">{{label(field)}}</label>
+              <div v-if="validationErrors[field]" class="validation-error"><span class="fa fa-exclamation-triangle"></span> {{validationErrors[field]}}</div>
+              <label class="col-md-3 form-control-label" :for="field">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-exclamation text-warning"></span> </label>
               <div :class="hasInsertRights(field) ? 'col-md-8' : 'col-md-9'">
 
                 <template v-if="isType('textarea',field)">

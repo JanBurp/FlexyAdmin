@@ -16,6 +16,8 @@ $lang['vue_confirm_delete_one']      = "Weet u zeker dat u het gekozen item wilt
 $lang['vue_confirm_delete_multiple'] = "Weet u zeker dat u {0} geselecteerde items wilt verwijderen?";
 $lang['vue_deleted']                 = "{0} item(s) verwijderd.";
 
+$lang['vue_confirm_save_default']    = "U heeft niets aangepast! Weet u zeker dat u dit item wilt invoeren?";
+
 
 $lang['vue_grid_search']             = "Zoeken";
 $lang['vue_grid_fast_search']        = "Snel zoeken";
