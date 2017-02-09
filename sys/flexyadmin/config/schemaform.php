@@ -14,15 +14,12 @@
  */
 $config['FIELDS_default'] = array(
   'type'       => 'string',
+  'grid-type'  => 'text',
   'form-type'  => 'text',
   'readonly'   => false,
   'sortable'   => true,
-  'format'     => 'string',
-  'grid'       => '%s',
-  'form'       => '',
   'validation' => '',
   'default'    => ''
-    
 );
 
 /**
@@ -35,8 +32,6 @@ $config['FIELDS_prefix'] = array (
 	'id'				=> array(
     'type'        => 'number',
     'form-type'   => 'select',
-    'grid'        => 'function_foreign_key',
-    'form'        => 'dropdown',
     'validation'	=> 'trim|integer|required',
     'default'     => 0,
   ),
@@ -45,8 +40,6 @@ $config['FIELDS_prefix'] = array (
 	'self'			=> array(
     'type'        => 'integer',
     'form-type'   => 'select',
-    'grid'        => 'function_self',
-    'form'        => 'function_self',
     'validation'	=> 'trim|integer',
     'default'     => 0,
   ),
@@ -55,61 +48,48 @@ $config['FIELDS_prefix'] = array (
     'type'        => 'integer',
     'form-type'   => 'select',
     'grid-type'   => 'relation',
-    'grid'        => 'function_join',
-    'form'        => 'function_join',
     'validation'	=> ''
   ),
 	'tbl'				=> array(
     'type'        => 'integer',
     'form-type'   => 'string',
     'grid-type'   => 'relation',
-    'grid'        => 'function_join',
-    'form'        => 'function_join',
     'validation'	=> ''
   ),
 
 	'field'			=> array(
     'type'        => 'string',
     'form-type'   => 'select',
-    'grid'        => '%s',
-    'form'        => 'function_dropdown_field',
     'validation'	=> 'trim',
   ),
 	'fields'		=> array(
     'type'        => 'string',
     'form-type'   => 'select',
-    'grid'        => '%s',
-    'form'        => 'function_dropdown_fields',
     'validation'	=> 'trim',
   ),							
   
   // Media/assets				
 	'media'			=> array(
     'type'        => 'string',
+    'grid-type'   => 'media',
     'form-type'   => 'media',
-    'grid'        => 'function_dropdown_media',
-    'form'        => 'function_dropdown_media',
     'validation'	=> 'trim'
   ),
 	'medias'		=> array(
     'type'        => 'string',
+    'grid-type'   => 'media',
     'form-type'   => 'media',
-    'grid'        => 'function_dropdown_medias',
-    'form'        => 'function_dropdown_media',
     'validation'	=> 'trim'
   ),
   
 	'list'			=> array(
     'type'        => 'string',
     'form-type'   => 'select',
-    'grid'        => '%s',
-    'form'        => 'function_dropdown_list',
     'validation'	=> 'trim'
   ),
 	'str'				=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
     'grid-edit'   => false,
     'form'        => ''
   ),
@@ -118,13 +98,11 @@ $config['FIELDS_prefix'] = array (
 	'stx'				=> array(
     'type'        => 'string',
     'form-type'   => 'textarea',
-    'grid'        => 'function_text',
     'form'        => 'textarea'
   ),
 	'md'				=> array(
     'type'        => 'string',
     'form-type'   => 'textarea',
-    'grid'        => 'function_text',
     'form'        => 'textarea'
   ),
   
@@ -132,8 +110,6 @@ $config['FIELDS_prefix'] = array (
 	'txt'				=> array(
     'type'        => 'string',
     'form-type'   => 'wysiwyg',
-    'grid'        => 'function_text',
-    'form'        => 'htmleditor',
     'validation'	=> ''
   ),
   
@@ -141,149 +117,111 @@ $config['FIELDS_prefix'] = array (
 	'pwd'				=> array(
     'type'        => 'string',
     'form-type'   => 'password',
-    'grid'        => '***',
     'sortable'    => false,
-    'form'        => 'password',
     'validation'  => 'trim|valid_password'
   ),
 	'gpw'				=> array(
     'type'        => 'string',
     'form-type'   => 'password',
-    'grid'        => '***',
     'sortable'    => false,
-    'form'        => 'password',
     'validation'  => 'trim|valid_password'
   ),
 	'url'				=> array(
     'type'        => 'string',
     'form-type'   => 'text',
     'grid-type'   => 'url',
-    'grid'        => '<a target="_blank" href="%s">%s</a>',
-    'form'        => '',
     'validation'	=> 'trim|prep_url'
   ),
 	'email'			=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '<a href="mailto:%s">%s</a>',
-    'form'        => '',
     'validation'	=> 'trim|valid_email'
   ),
 	'file'			=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'upload',
     'validation'	=> 'trim'
   ),
 	'mp3'				=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'upload',
     'validation'	=> 'trim'
   ),
 	'mov'				=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'upload',
     'validation'	=> 'trim'
   ),
 	'img'				=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '<img src="#IMG_MAP#/%s" alt="%s" /><p class="img_text">%s</p>',
-    'form'        => 'upload',
     'validation'	=> 'trim'
   ),
 	'dat'				=> array(
     'type'        => 'string',
     'form-type'   => 'date',
-    'grid'        => '%s',
-    'form'        => 'date',
     'validation'	=> ''
   ),
 	'date'			=> array(
     'type'        => 'string',
     'form-type'   => 'date',
-    'grid'        => '%s',
-    'form'        => 'date',
     'validation'	=> ''
   ),
 
 	'tme'				=> array(
     'type'        => 'string',
     'form-type'   => 'datetime',
-    'grid'        => '%s',
-    'form'        => 'datetime',
     'validation'	=> ''
   ),
 	'datetime'	=> array(
     'type'        => 'string',
     'form-type'   => 'datetime',
-    'grid'        => '%s',
-    'form'        => 'datetime',
     'validation'	=> ''
   ),
 	'dtm'				=> array(
     'type'        => 'string',
     'form-type'   => 'datetime',
-    'grid'        => '%s',
-    'form'        => 'datetime',
     'validation'	=> ''
   ),
 	'time'			=> array(
     'type'        => 'string',
     'form-type'   => 'time',
-    'grid'        => '%s',
-    'form'        => 'time',
     'validation'	=> ''
   ),
 	'int'				=> array(
     'type'        => 'integer',
     'form-type'   => 'number',
-    'grid'        => '%s',
-    'form'        => '',
     'validation'	=> 'trim|integer'
   ),
 	'dec'				=> array(
     'type'        => 'number',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => '',
     'validation'	=> 'trim|decimal'
   ),
 	'ip'				=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => '',
     'validation'	=> 'trim|valid_ip'
   ),
 	'rgb'				=> array(
     'type'        => 'string',
     'form-type'   => 'color',
-    'grid'        => '<div class="rgb" style="background-color:%s;" title="%s"><span class="hide">%s</span></div>',
-    'form'        => '',
     'validation'	=> 'trim|valid_rgb'
   ),
   
   // Booleans
 	'b'					=> array(
     'type'        => 'boolean',
+    'grid-type'   => 'checkbox',
     'form-type'   => 'checkbox',
     'grid-edit'   => true,
-    'grid'        => 'function_boolean',
-    'form'        => 'checkbox',
     'validation'	=> 'valid_option[0,1]'
   ),
 	'is'					=> array(
     'type'        => 'boolean',
+    'grid-type'   => 'checkbox',
     'form-type'   => 'checkbox',
     'grid-edit'   => true,
-    'grid'        => 'function_boolean',
-    'form'        => 'checkbox',
     'validation'	=> 'valid_option[0,1]'
 	),
 );
@@ -299,11 +237,10 @@ $config['FIELDS_special'] = array(
   // Primary key
 	'id'				=> array(
     'type'        => 'number',
+    'grid-type'   => 'primary',
     'form-type'   => 'primary',
     'readonly'    => true,
     'sortable'    => false,
-    'grid'        => 'function_primary_key',
-    'form'        => 'function_primary_key',
     'validation'	=> 'trim|integer|required',
     'default'     => -1,
   ),
@@ -312,8 +249,6 @@ $config['FIELDS_special'] = array(
 	'user'			=> array(
     'type'        => 'integer',
     'form-type'   => 'text',
-    'grid'        => 'function_user',
-    'form'        => 'function_user',
     'validation'	=> 'trim|integer|required',
   ),
   // Aangepast door:
@@ -322,59 +257,49 @@ $config['FIELDS_special'] = array(
     'grid-type'   => 'abstract',
     'form-type'   => 'hidden',
     'readonly'    => true,
-    'grid'        => 'function_user',
     'validation'	=> 'trim|integer|required',
   ),
                       
 	'uri'				=> array(
     'type'        => 'string',
+    'grid-type'   => 'hidden',
     'form-type'   => 'hidden',
     'readonly'    => true,
-    'grid'        => '/%s',
-    'form'        => 'hidden',
     'validation'	=> 'trim',
   ),
 	'api'				=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'function_dropdown_api',
     'validation'	=> 'trim',
   ),
 	'plugin'		=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'function_dropdown_plugin',
     'validation'	=> 'trim',
   ),
   'actions'   => array(
     'type'        => 'string',
     'form-type'   => 'text',
     'sortable'    => false,
-    'grid'        => 'function_actions',
-    'form'        => '',
     'validation'	=> '',
   ),
   
   // Order, used for example in menu tables
 	'order'			=> array(
     'type'        => 'number',
+    'grid-type'   => 'hidden',
     'form-type'   => 'hidden',
     'readonly'    => true,
     'sortable'    => false,
-    'grid'        => 'function_order',
-    'form'        => 'hidden',
     'validation'	=> 'trim|integer|required',
     'default'     => 0,
   ),
 	'self_parent'	  => array(
     'type'        => 'integer',
+    'grid-type'   => 'hidden',
     'form-type'   => 'select',
     'sortable'    => false,
     'grid-type'   => 'hidden',
-    'grid'        => 'function_self',
-    'form'        => 'function_self',
     'validation'	=> 'trim|integer',
     'default'     => 0,
   ),
@@ -382,50 +307,37 @@ $config['FIELDS_special'] = array(
 	'abstract'	=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => '',
     'validation'	=> '',
   ),
 	'table'			=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'dropdown',
     'validation'	=> 'trim',
   ),
 	'rights'			=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'function_dropdown_rights',
     'validation'	=> 'trim',
   ),
 	'path'			=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'dropdown',
     'validation'	=> 'trim',
   ),
 	'file'			=> array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'function_dropdown_allfiles',
     'validation'	=> 'trim',
   ),
 	'str_fieldset' => array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
-    'form'        => 'function_dropdown_fieldsets',
     'validation'	=> 'trim'
   ),
                       
   'last_login'    => array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => 'function_date("Y-m-d H:i:s",%s)',
   ),
   
   // Tijdstip van laatste aanpassing
@@ -461,7 +373,6 @@ $config['FIELDS_special'] = array(
   'alt'        => array(
     'type'        => 'string',
     'form-type'   => 'text',
-    'grid'        => '%s',
     'grid-edit'   => true,
     'validation' => 'required|trim',
   ),

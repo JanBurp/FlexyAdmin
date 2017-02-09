@@ -12,6 +12,11 @@
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
+  .required {
+    position:absolute;
+    right:0px;
+    top:.5rem;
+  }
 }
 .form-control {
   padding-bottom:.25rem;
@@ -92,15 +97,18 @@ select.form-control:not([size]):not([multiple]) {
 
 // Validation
 .form-group.has-danger {
-  background-color:lighten($brand-warning,30%)!important;
+  background-color:lighten($brand-danger,50%)!important;
+  border-radius:$border-radius!important;
 }
 
 .validation-error {
   display:inline-block;
   width:100%;
-  background-color:lighten($brand-warning,30%);
+  background-color:lighten($brand-danger,50%);
+  color:$brand-danger;
   font-weight:bold;
   padding:.25rem 1rem;
+  border-radius:$border-radius;
 }
 
 // FIELDS
