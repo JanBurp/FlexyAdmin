@@ -215,23 +215,21 @@ export default {
       for (var i = 0; i < data.length; i++) {
         var row = data[i];
         var id = row['id'];
-        // Add schema to each cell
+        // Add info to each cell
         if (addSchema===true) {
           for (var field in row) {
-            var schema = {
-              'type'      : 'string',
-              'grid-type' : 'text',
-              'readonly'  : false,
-            };
-            if ( this.fields[field] ) schema = this.fields[field].schema;
+            // Defaults
+            if ( _.isUndefined(this.fields[field]['type']) )      this.fields[field]['type'] = 'string';
+            if ( _.isUndefined(this.fields[field]['grid-type']) ) this.fields[field]['grid-type'] = 'text';
+            if ( _.isUndefined(this.fields[field]['readonly']) )  this.fields[field]['readonly'] = false;
             data[i][field] = {
-              'type'  : schema['grid-type'] || schema['form-type'],
+              'type'  : this.fields[field]['grid-type'] || this.fields[field]['form-type'],
               'value' : row[field]
             };
-            if ( schema.type==='number' && schema['form-type']==='select') {
+            if ( this.fields[field].type==='number' && this.fields[field]['form-type']==='select') {
               var jsonValue = JSON.parse(row[field].value);
               data[i][field] = {
-                'type'  : schema['grid-type'] || schema['form-type'],
+                'type'  : this.fields[field]['grid-type'] || this.fields[field]['form-type'],
                 'value' : Object.values(jsonValue)[0],
                 'id'    : Object.keys(jsonValue)[0],
               };
@@ -313,18 +311,15 @@ export default {
     },
     
     isPrimaryHeader : function(field) {
-      if (_.isUndefined(field.schema)) return false;
-      var headerType = field.schema['grid-type'] || field.schema['form-type'];
+      var headerType = field['grid-type'] || field['form-type'];
       return headerType==='primary'
     },
     isNormalVisibleHeader : function(field) {
-      if (_.isUndefined(field.schema)) return false;
-      var headerType = field.schema['grid-type'] || field.schema['form-type'];
+      var headerType = field['grid-type'] || field['form-type'];
       return headerType!=='hidden' && headerType!=='primary'
     },
     isSortableField : function(field) {
-      if (_.isUndefined(field.schema)) return false;
-      return field.schema.sortable;
+      return field.sortable;
     },
 
     isMediaThumbs : function() {
@@ -340,10 +335,8 @@ export default {
     },
 
     headerClass : function(field) {
-      var c = 'grid-header-type-'+field.schema['form-type'];
-      if (!_.isUndefined(field.schema['readonly'])) {
-        if (field.schema['readonly']) c+=' grid-header-muted';
-      }
+      var c = 'grid-header-type-'+field['form-type'];
+      if (field['readonly']) c+=' grid-header-muted';
       return c;
     },
     
@@ -506,13 +499,13 @@ export default {
     
     isEditable : function(name) {
       var editable = false;
-      if ( !_.isUndefined(this.fields[name]) ) editable = this.fields[name].schema['grid-edit'];
+      if ( !_.isUndefined(this.fields[name]) ) editable = this.fields[name]['grid-edit'];
       return editable;
     },
     
     isReadonly : function(name) {
       var readonly = false;
-      if ( !_.isUndefined(this.fields[name]) ) readonly = this.fields[name].schema['readonly'];
+      if ( !_.isUndefined(this.fields[name]) ) readonly = this.fields[name]['readonly'];
       return readonly;
     },
     
