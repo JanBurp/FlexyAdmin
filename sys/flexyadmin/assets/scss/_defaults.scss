@@ -63,6 +63,14 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
     .flexy-button.btn-outline-warning:not(:hover),
     .flexy-button.btn-outline-danger:not(:hover) {background-color:$body-bg;}
   }
+  
+  .card {
+    >.card-header {
+      padding:.25rem;
+      background-color:$body-bg;
+      color:$brand-primary;
+    }
+  }
 }
 
 
