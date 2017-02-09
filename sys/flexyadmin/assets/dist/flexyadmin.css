@@ -5409,6 +5409,10 @@ a > .fa, .btn > .fa {
     .card > .card-header .flexy-button.btn-outline-warning:not(:hover),
     .card > .card-header .flexy-button.btn-outline-danger:not(:hover) {
       background-color: #fff; }
+  .card .card > .card-header {
+    padding: .25rem;
+    background-color: #fff;
+    color: #696; }
 
 /* Responsive */
 @media (max-width: 767px) {
@@ -5495,16 +5499,14 @@ a > .fa, .btn > .fa {
 
 #content-home .nav-item {
   display: inline-block;
-  height: 3rem;
   width: auto;
   margin-right: 2rem; }
   #content-home .nav-item .flexy-button {
     float: left;
-    margin-right: 1rem; }
+    margin-right: .5rem; }
   #content-home .nav-item .nav-title {
     display: inline-block;
-    margin: 0;
-    padding-top: .5rem; }
+    margin: 0; }
 
 /* SIDEBAR MENU */
 #flexy-menu-side > ul {
