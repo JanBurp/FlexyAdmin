@@ -265,19 +265,22 @@ export default {
     
     submit : function() {
       var self=this;
-      if (!this.isSaving) {
-        this.postForm().then(function (response) {
-          if (!response.error) {
-            self.$emit('formclose',self.row);
-          }
-        })
+      if (!self.isSaving) {
+        var promise = self.postForm();
+        if (promise) {
+          promise.then(function (response) {
+            if (!response.error) {
+              self.$emit('formclose',self.row);
+            }
+          })
+        }
       }
     },
     
     add : function() {
       var self=this;
       if (!this.isSaving) {
-        this.postForm().then(function (response) {
+        self.postForm().then(function (response) {
           if (!response.error) {
             self.$emit('added',response.data.data.id);
           }
@@ -293,7 +296,6 @@ export default {
     
     postForm : function() {
       var self=this;
-      self.isSaving = true;
       var data = _.clone(this.row);
       
       // Prepare data for ajax call
@@ -315,6 +317,33 @@ export default {
         }
       }
       
+      // Controleer of data niet leeg is
+      var filled = false;
+      for (var field in data) {
+        if (typeof(data[field])==='object') {
+          if (data[field].length>0) filled=true;
+        }
+        else {
+          if (data[field] && data[field]!==this.fields[field]['default']) filled=true;
+        }
+      }
+      
+      // Als goed is ingevuld, ga dan door.
+      if (filled) {
+        return self._postForm(data);
+      }
+      
+      // Als niet goed is ingevuld, vraag het
+      flexyState.openModal( {'title':'','body':self.$lang.confirm_save_default}, function(event) {
+        if ( event.state.type==='ok') {
+          return self._postForm(data);
+        }
+      });
+      return false;
+    },
+    _postForm : function(data) {
+      var self = this;
+      self.isSaving = true;
       return flexyState.api({
         url : 'row',
         'data': {
