@@ -5,6 +5,7 @@ $lang['vue_api_error_401'] = 'Je hebt geen rechten voor dit item';
 $lang['vue_cancel']        = "Annuleer";
 $lang['vue_submit']        = "Invoeren";
 $lang['vue_add']           = "Toevoegen";
+$lang['vue_add_item']      = "Nieuw item in `{0}`";
 $lang['vue_ok']            = "Ok";
 $lang['vue_save']          = "Bewaar";
 $lang['vue_remove']        = "Verwijder";
@@ -14,6 +15,7 @@ $lang['vue_or_drag_files'] = "Of sleep bestanden hier";
 $lang['vue_confirm_delete_one']      = "Weet u zeker dat u het gekozen item wilt verwijderen?";
 $lang['vue_confirm_delete_multiple'] = "Weet u zeker dat u {0} geselecteerde items wilt verwijderen?";
 $lang['vue_deleted']                 = "{0} item(s) verwijderd.";
+
 
 $lang['vue_grid_search']             = "Zoeken";
 $lang['vue_grid_fast_search']        = "Snel zoeken";
