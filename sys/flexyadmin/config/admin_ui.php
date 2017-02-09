@@ -5,9 +5,9 @@
  * Home Wizards
  */
 $config['home_menu'] = array(
-  'help'       => array( 'name'=>'watch_help',       'uri'=>'help/index',                    'icon'=>'question-circle',   "class"=>"info" ),
-  'statistics' => array( 'name'=>'watch_statistics', 'uri'=>'plugin/stats',                  'icon'=>'bar-chart',         "class"=>"warning" ),
-  'user'       => array( 'name'=>'edit_user',        'uri'=>'show/form/cfg_users/{user_id}', 'icon'=>'user',              "class"=>"danger" ),
+  'help'       => array( 'name'=>'watch_help',       'uri'=>'help/index',                    'icon'=>'question-circle',   "class"=>"primary" ),
+  'statistics' => array( 'name'=>'watch_statistics', 'uri'=>'plugin/stats',                  'icon'=>'bar-chart',         "class"=>"primary" ),
+  'user'       => array( 'name'=>'edit_user',        'uri'=>'show/form/cfg_users/{user_id}', 'icon'=>'user',              "class"=>"primary" ),
 );
 
 
