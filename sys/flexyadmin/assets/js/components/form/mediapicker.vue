@@ -19,15 +19,7 @@ export default {
     
     draggableOptions : function() {
       return {
-        // group         : { name:'tree', pull:true},
-        // draggable     : 'div',
         forceFallback : true,
-        // handle        : '.draggable-handle',
-        // scroll        : true,
-        // scrollFn      : function(offsetX, offsetY, originalEvent) {
-        //   console.log(offsetY);
-        //
-        // },
       }
     },
     
@@ -62,7 +54,7 @@ export default {
       var currentMedia = _.trim(this.media,'|').split('|');
       var newMedia = _.clone(currentMedia);
       var item = media[0];
-      console.log(media,newMedia,newMedia.indexOf(item));
+      // console.log(media,newMedia,newMedia.indexOf(item));
       if (newMedia.indexOf(item)<0) {
         newMedia = media.concat(newMedia);
         newMedia = _.uniq(newMedia);
