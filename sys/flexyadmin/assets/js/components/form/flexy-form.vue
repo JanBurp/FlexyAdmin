@@ -22,7 +22,7 @@ export default {
   props:{
     'title'   :String,
     'name'    :String,
-    'primary' :Number,
+    'primary' :[Number,String],
     'formtype':{
       type:String,
       default:'normal', // normal|single|subform
