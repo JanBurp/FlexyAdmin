@@ -209,7 +209,7 @@ export default {
           table : this.fields[field].options.table,
         });
       }
-      console.log('toggleInsertForm',field,this.insertForm);
+      // console.log('toggleInsertForm',field,this.insertForm);
     },
     
     showInsertForm : function(field) {
@@ -220,7 +220,7 @@ export default {
     },
     
     subForm : function(field,property) {
-      console.log('subForm',field,property);
+      // console.log('subForm',field,property);
       if ( _.isUndefined(this.insertForm[field]) ) return '';
       return this.insertForm[field][property];
     },
@@ -238,29 +238,14 @@ export default {
           self.fields[field].options = response.data.data[field];
           // Selecteer zojuist toegevoegde item
           self.addToSelect(field,event);
-          // if (self.isMultiple(field)) {
-          //   jdb.vueLog(self.row[field]);
-          //   jdb.vueLog(self.fields[field].options);
-          //   console.log(event);
-          //   // self.row[field] = event;
-          // }
-          // else {
-          //   self.row[field] = event;
-          // }
         }
         return response;
       });      
-      // self.reloadForm().then(function(){
-      //   // Selecteer zojuist toegevoegde item
-      //   console.log('reloaded',event);
-      //   self.row[field] = event;
-      // });
     },
     
     cancel : function() {
       var self=this;
       if (!this.isSaving) {
-        // window.location.assign( self.returnUrl() );
         self.$emit('formclose',self.row);
       }
     },
@@ -270,21 +255,12 @@ export default {
       if (!this.isSaving) {
         this.postForm().then(function (response) {
           if (!response.error) {
-            console.log('submit',response);
-            // window.location.assign( self.returnUrl() );
             self.$emit('formclose',self.row);
           }
         })
       }
     },
     
-    // returnUrl : function() {
-    //   var url = 'admin/show/grid/' + this.name;
-    //   if (this.path && this.path!=='false')  url='admin/show/media/' + this.path;
-    //   console.log(this.path,url);
-    //   return url;
-    // },
-
     add : function() {
       var self=this;
       if (!this.isSaving) {
@@ -414,9 +390,9 @@ export default {
   <div class="card-header">
     <h1>{{title}}</h1>
     <div>
-      <flexy-button v-if="formtype!=='subform'" @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-info"/>
+      <flexy-button v-if="formtype!=='single'" @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
+      <flexy-button v-if="formtype!=='subform'" @click.native="save()"  icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-info"/>
       <flexy-button v-if="formtype==='normal'" @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-warning"/>
-      <flexy-button v-if="formtype==='normal'" @click.native="cancel()" icon="long-arrow-left" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
       <flexy-button v-if="formtype==='subform'" @click.native="add()" :text="$lang.add" :disabled="isSaving" class="btn-outline-warning"/>
     </div>
   </div>
@@ -498,13 +474,13 @@ export default {
                 </template>
 
                 <div v-if="showInsertForm(field)">
-                  <flexy-form :title="label(field)" :name="subForm(field,'table')" :primary="-1" formtype="subform" @added="subFormAdded(field,$event)"></flexy-form>
+                  <flexy-form :title="$lang.add_item | replace(label(field))" :name="subForm(field,'table')" :primary="-1" formtype="subform" @added="subFormAdded(field,$event)" @formclose="toggleInsertForm(field)"></flexy-form>
                 </div>
 
               </div>
               
               <div class="col-md-1" v-if="hasInsertRights(field)">
-                <flexy-button @click.native="toggleInsertForm(field)" icon="plus" class="btn-outline-warning" />
+                <flexy-button @click.native="toggleInsertForm(field)" :icon="{'plus':!showInsertForm(field),'chevron-up':showInsertForm(field)}" class="btn-outline-warning" />
               </div>
             </div>
             

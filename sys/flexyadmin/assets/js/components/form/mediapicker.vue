@@ -9,7 +9,7 @@ import flexyGrid        from '../grid/flexy-grid.vue'
 
 export default {
   name: 'MediaPicker',
-  components: {draggable,flexyButton,flexyThumb,flexyGrid},
+  components: { draggable,flexyButton,flexyThumb,flexyGrid },
   props:{
     'value'   : String,
     'name'    : String,

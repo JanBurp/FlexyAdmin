@@ -29093,33 +29093,13 @@ if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.fo
 self.row=response.data.data;// TinyMCE
 self.createWysiwyg();}}return response;});},createWysiwyg:function createWysiwyg(){var self=this;var init=_.extend(_flexy.tinymceOptions,{setup:function setup(ed){ed.on('NodeChange',function(e){self.updateText(ed);});ed.on('keyup',function(e){self.updateText(ed);});}});// Wait just a bit...
 window.setTimeout(function(){tinymce.init(init);},10);},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url='row?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},tabsClass:function tabsClass(){if(Object.keys(this.fieldsets).length<2)return'single-tab';return'';},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},selectItem:function selectItem(value){if(!value)return'';value=value.toString();return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');},hasInsertRights:function hasInsertRights(field){if(_.isUndefined(this.fields[field]))return false;if(_.isUndefined(this.fields[field].options))return false;if(_.isUndefined(this.fields[field].options.insert_rights))return false;var rights=this.fields[field].options.insert_rights;return rights;},// Pas kleur van optie aan als het een kleurenveld is
-selectStyle:function selectStyle(field,option){var style='';if(field.substr(0,4)==='rgb_'){style="background-color:"+option+';color:'+_jdbTools2.default.complementColor(option)+';';}return style;},dateObject:function dateObject(value){if(value==='0000-00-00'){var date=new Date();}else{var year=value.substr(0,4);var month=value.substr(5,2);var day=value.substr(8,2);var date=new Date(year,month,day);}return date;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},toggleInsertForm:function toggleInsertForm(field){if(this.showInsertForm(field)){this.insertForm[field].show=false;}else{this.$set(this.insertForm,field,{show:true,field:field,table:this.fields[field].options.table});}console.log('toggleInsertForm',field,this.insertForm);},showInsertForm:function showInsertForm(field){var show=false;if(!_.isUndefined(this.insertForm[field]))show=this.insertForm[field].show;// console.log('showInsertForm',field,show);
-return show;},subForm:function subForm(field,property){console.log('subForm',field,property);if(_.isUndefined(this.insertForm[field]))return'';return this.insertForm[field][property];},subFormAdded:function subFormAdded(field,event){var self=this;self.insertForm[field].show=false;_flexyState2.default.api({// TODO: alleen opties van dit veld wellicht?
+selectStyle:function selectStyle(field,option){var style='';if(field.substr(0,4)==='rgb_'){style="background-color:"+option+';color:'+_jdbTools2.default.complementColor(option)+';';}return style;},dateObject:function dateObject(value){if(value==='0000-00-00'){var date=new Date();}else{var year=value.substr(0,4);var month=value.substr(5,2);var day=value.substr(8,2);var date=new Date(year,month,day);}return date;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},toggleInsertForm:function toggleInsertForm(field){if(this.showInsertForm(field)){this.insertForm[field].show=false;}else{this.$set(this.insertForm,field,{show:true,field:field,table:this.fields[field].options.table});}// console.log('toggleInsertForm',field,this.insertForm);
+},showInsertForm:function showInsertForm(field){var show=false;if(!_.isUndefined(this.insertForm[field]))show=this.insertForm[field].show;// console.log('showInsertForm',field,show);
+return show;},subForm:function subForm(field,property){// console.log('subForm',field,property);
+if(_.isUndefined(this.insertForm[field]))return'';return this.insertForm[field][property];},subFormAdded:function subFormAdded(field,event){var self=this;self.insertForm[field].show=false;_flexyState2.default.api({// TODO: alleen opties van dit veld wellicht?
 url:'table?table='+self.name+'&as_options=true'}).then(function(response){if(!_.isUndefined(response.data)){// Vervang de opties 
 self.fields[field].options=response.data.data[field];// Selecteer zojuist toegevoegde item
-self.addToSelect(field,event);// if (self.isMultiple(field)) {
-//   jdb.vueLog(self.row[field]);
-//   jdb.vueLog(self.fields[field].options);
-//   console.log(event);
-//   // self.row[field] = event;
-// }
-// else {
-//   self.row[field] = event;
-// }
-}return response;});// self.reloadForm().then(function(){
-//   // Selecteer zojuist toegevoegde item
-//   console.log('reloaded',event);
-//   self.row[field] = event;
-// });
-},cancel:function cancel(){var self=this;if(!this.isSaving){// window.location.assign( self.returnUrl() );
-self.$emit('formclose',self.row);}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){console.log('submit',response);// window.location.assign( self.returnUrl() );
-self.$emit('formclose',self.row);}});}},// returnUrl : function() {
-//   var url = 'admin/show/grid/' + this.name;
-//   if (this.path && this.path!=='false')  url='admin/show/media/' + this.path;
-//   console.log(this.path,url);
-//   return url;
-// },
-add:function add(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){self.$emit('added',response.data.data.id);}});}},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=_.clone(this.row);// Prepare data for ajax call
+self.addToSelect(field,event);}return response;});},cancel:function cancel(){var self=this;if(!this.isSaving){self.$emit('formclose',self.row);}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){self.$emit('formclose',self.row);}});}},add:function add(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){self.$emit('added',response.data.data.id);}});}},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=_.clone(this.row);// Prepare data for ajax call
 for(var field in data){if(field.indexOf('.abstract')>0){delete data[field];}else{if(this.isType('checkbox',field)){data[field]=data[field]?1:0;}if(_typeof(data[field])==='object'&&this.isMultiple(field)){var fieldData=[];for(var i=0;i<data[field].length;i++){if(!_.isUndefined(data[field][i]))fieldData.push(data[field][i].id);}data[field]=fieldData;}}}return _flexyState2.default.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':data}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{// Validation error
 response.error=true;_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){// console.log('updateField',field,value);
 this.validationErrors={};this.row[field]=value;},updateSelect:function updateSelect(field,selected){var value=selected;if(!this.isMultiple(field)){value=selected[0].value;}else{value=[];for(var i=0;i<selected.length;i++){value.push({'id':selected[i].value});}}this.updateField(field,value);},addToSelect:function addToSelect(field,value){if(this.isMultiple(field)){var currentSelection=this.row[field];// Als al bestaat, dan juist verwijderen
@@ -32898,7 +32878,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "card form"
   }, [_c('div', {
     staticClass: "card-header"
-  }, [_c('h1', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('div', [(_vm.formtype !== 'subform') ? _c('flexy-button', {
+  }, [_c('h1', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('div', [(_vm.formtype !== 'single') ? _c('flexy-button', {
+    staticClass: "btn-outline-danger",
+    attrs: {
+      "icon": {
+        'long-arrow-left': _vm.formtype === 'normal',
+        '': _vm.formtype === 'subform'
+      },
+      "text": _vm.$lang.cancel,
+      "disabled": _vm.isSaving
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.cancel()
+      }
+    }
+  }) : _vm._e(), _vm._v(" "), (_vm.formtype !== 'subform') ? _c('flexy-button', {
     staticClass: "btn-outline-info",
     attrs: {
       "icon": "long-arrow-down",
@@ -32920,18 +32915,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     nativeOn: {
       "click": function($event) {
         _vm.submit()
-      }
-    }
-  }) : _vm._e(), _vm._v(" "), (_vm.formtype === 'normal') ? _c('flexy-button', {
-    staticClass: "btn-outline-danger",
-    attrs: {
-      "icon": "long-arrow-left",
-      "text": _vm.$lang.cancel,
-      "disabled": _vm.isSaving
-    },
-    nativeOn: {
-      "click": function($event) {
-        _vm.cancel()
       }
     }
   }) : _vm._e(), _vm._v(" "), (_vm.formtype === 'subform') ? _c('flexy-button', {
@@ -33133,7 +33116,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       })] : _vm._e(), _vm._v(" "), (_vm.showInsertForm(field)) ? _c('div', [_c('flexy-form', {
         attrs: {
-          "title": _vm.label(field),
+          "title": _vm._f("replace")(_vm.$lang.add_item, _vm.label(field)),
           "name": _vm.subForm(field, 'table'),
           "primary": -1,
           "formtype": "subform"
@@ -33141,6 +33124,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         on: {
           "added": function($event) {
             _vm.subFormAdded(field, $event)
+          },
+          "formclose": function($event) {
+            _vm.toggleInsertForm(field)
           }
         }
       })], 1) : _vm._e()], 2), _vm._v(" "), (_vm.hasInsertRights(field)) ? _c('div', {
@@ -33148,7 +33134,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }, [_c('flexy-button', {
         staticClass: "btn-outline-warning",
         attrs: {
-          "icon": "plus"
+          "icon": {
+            'plus': !_vm.showInsertForm(field),
+            'chevron-up': _vm.showInsertForm(field)
+          }
         },
         nativeOn: {
           "click": function($event) {
