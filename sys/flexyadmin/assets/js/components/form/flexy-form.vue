@@ -28,6 +28,7 @@ export default {
       default:'normal', // normal|single|subform
     },
   },
+    
   
   computed : {
     fieldTypes : function() {
