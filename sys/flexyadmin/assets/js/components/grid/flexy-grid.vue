@@ -47,22 +47,20 @@ export default {
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
   */
   created : function() {
-    // if (this.data) {
-    //   this.items = this.addInfo( this.data, true );
-    // }
-    // else {
+    this.apiParts.formID = jdb.getUrlQueryPart('form');
+    if ( !this.apiParts.formID ) {
+      this.apiParts.formID = false;
       this.reloadPage({
         offset : this.offset,
         limit  : this.limit,
         order  : this.order,
         filter : this.filter,
       });
-    // }
+    }
   },
   
   data : function() {
     return {
-      formID      : false,
       items       : [],
       fields      : [],
       searchable_fields : [],
@@ -75,6 +73,7 @@ export default {
         limit         : this.limit,
         txt_abstract  : true,
         as_grid       : true,
+        formID        : false,
       },
       changeUrlApi: true,
       focus       : {id:false,cell:false},
@@ -186,7 +185,9 @@ export default {
       if (this.changeUrlApi) {
         var parts = this.apiParts;
         var stateObj = parts;
-        history.pushState(stateObj, "", location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+jdb.encodeURL(parts.filter)+'"}');
+        var url = location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+jdb.encodeURL(parts.filter)+'"}';
+        if (this.apiParts.formID) url += '&form=' + this.apiParts.formID;
+        history.pushState(stateObj, "", url);
       }
     },
     
@@ -437,12 +438,12 @@ export default {
     editItem : function(id) {
       // var url = this.editUrl(id);
       // window.location.assign(url);
-      this.formID = id;
+      this.apiParts.formID = id;
+      this.newUrl();
     },
     
     updateItem : function(id,data) {
-      console.log('updateItem',id,data);
-      this.formID = false;
+      this.apiParts.formID = false;
       this.items = [];
       this.reloadPage();
       // var itemIndex = jdb.indexOfProperty(this.items,'id',id);
@@ -778,9 +779,9 @@ export default {
 <template>
   <div>
     
-    <flexy-form v-if="formID!==false" :title="title" :name="name" :primary="formID" @formclose="updateItem(formID,$event)"></flexy-form>
+    <flexy-form v-if="apiParts.formID!==false" :title="title" :name="name" :primary="apiParts.formID" @formclose="updateItem(apiParts.formID,$event)"></flexy-form>
     
-    <div v-if="formID===false" class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
+    <div v-if="apiParts.formID===false" class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
       <!-- MAIN HEADER -->
       <div class="card-header">
         <h1>{{title}}</h1>
