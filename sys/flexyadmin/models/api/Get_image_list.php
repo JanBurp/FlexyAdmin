@@ -19,10 +19,11 @@ class Get_image_list extends Api_Model {
   public function index() {
     if (!$this->logged_in()) return $this->_result_status401();
 
-    $images = $this->_folder('pictures');
-    // $images = array(
-    //   array( 'title'=>'Afbeeldingen',  'menu' => $this->_folder('pictures') ),
-    // );
+    // $images = $this->_folder('pictures');
+    $images = array(
+      array( 'title'=>'Afbeeldingen',  'menu' => $this->_folder('pictures') ),
+    );
+    header("Content-Type: application/json");
     return json_encode($images);
   }
   
