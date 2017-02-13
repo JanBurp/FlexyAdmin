@@ -272,9 +272,7 @@ class Row extends Api_Model {
     $this->data->table( $args['table'] );
     if ($data) {
       // Save
-      $this->data->set( $data );
-      $this->data->where( $args['where'] );
-      $id = $this->data->validate()->update();
+      $id = $this->data->validate()->update( $data, $args['where'] );
       $this->info = $this->data->get_query_info();
       return array('id'=>$id);
     }
