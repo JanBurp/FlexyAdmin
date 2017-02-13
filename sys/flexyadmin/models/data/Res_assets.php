@@ -132,7 +132,7 @@ Class Res_assets extends Data_Core {
    * @return $this
    * @author Jan den Besten
    */
-  public function set_folder($path) {
+  public function set_path($path) {
     $this->media_path = $path;
     return $this;
   }
