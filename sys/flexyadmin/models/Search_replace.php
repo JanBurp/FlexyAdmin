@@ -8,14 +8,27 @@
  
 class Search_replace extends CI_Model {
 
+  /**
+   * De tabellen waarin de vervangingen mogen plaatsvinden
+   */
    private $table_types = array('tbl','res');
+   
+   /**
+    * De tekstvelden waar de vervangingen mogen plaatsvinden
+    */
    private $field_types = array('txt');
+   
+   /**
+    * Media velden waar de vervangingen mogen plaatsvinden
+    */
    private $media_types = array('media','medias');
+
    private $langRegex = '';
+
 
    public function __construct() {
 		parent::__construct();
-		// This is for sites with uri's to different languages
+		// TODO: This is for sites with uri's to different languages
 		$languages=$this->config->item('languages');
 		if (count($languages)>1) {
 			$autoMenuCfg = $this->data->table('cfg_auto_menu')->get_result();
@@ -37,11 +50,12 @@ class Search_replace extends CI_Model {
    *
    * @param string $search 
    * @param string $replace 
-   * @param string $types 
+   * @param string $types Veldsoorten
+   * @param boolean $regex [FALSE]
    * @return void
    * @author Jan den Besten
    */
-  public function replace_all($search,$replace,$types='txt') {
+  public function replace_all($search,$replace,$types='txt',$regex=false) {
     if (!is_array($types)) $types=array($types);
 		$result=FALSE;
 		$tables=$this->data->list_tables();
@@ -53,7 +67,7 @@ class Search_replace extends CI_Model {
 					$pre=get_prefix($field);
 					// Only in set field types
 					if (in_array($pre,$types)) {
-						$result[$table] = $this->replace_in( $table, $field, $search, $replace);
+						$result[$table] = $this->replace_in( $search, $replace, $table, $field, $regex);
 					}
 				}
 			}
@@ -61,85 +75,39 @@ class Search_replace extends CI_Model {
     return $result;
   }
   
-  /**
-   * Vervangt in gegeven tabellen in gegeven velden
-   *
-   * @param string $search 
-   * @param string $replace 
-   * @param array $fields default='' als leeg dan in alle velden
-   * @param array $tables default='' als leeg dan in alle tabellen
-   * @return void
-   * @author Jan den Besten
-   */
-  public function replace_value($search,$replace,$fields='',$tables='') {
-    if (empty($tables)) $tables=$this->data->list_tables();
-		$result=FALSE;
-		foreach($tables as $table) {
-      if (empty($fields)) $fields=$this->db->list_fields($table);
-      if (is_string($fields)) $fields=explode('|',$fields);
-			foreach ($fields as $field) {
-				$res = $this->replace_value_in( $table, $field, $search, $replace);
-        if ($res) {
-          if (!$result) $result=array();
-          $result[]=$res;
-        }
-			}
-		}
-    return $result;
-  }
-  
-  
-  /**
-   * Vervangt waarde in bepaald veld van bepaalde tabel
-   *
-   * @param string $table 
-   * @param string $field 
-   * @param string $search 
-   * @param string $replace 
-   * @return array
-   * @author Jan den Besten
-   */
-  public function replace_value_in($table,$field,$search,$replace) {
-		$result=FALSE;
-    if ($this->db->field_exists($field,$table)) {
-  		$this->db->select("id,$field");
-  		$this->db->where($field,$search);
-  		$query=$this->db->get($table);
-  		foreach($query->result_array() as $row) {
-  			$id=$row["id"];
-        $this->data->table($table)->where('id',$id)->set($field,$replace)->update();
-  			$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
-  		}
-  		$query->free_result();
-    }
-		return $result;
-  }
-  
-  
-  
-  
-
+ 
   /**
    * Vervangt tekst in bepaald veld van bepaalde tabel
    *
    * @param string $table 
    * @param string $field 
    * @param string $search 
-   * @param string $replace 
+   * @param string $replace
+   * @param boolean $regex [FALSE]
    * @return array
    * @author Jan den Besten
    */
-  public function replace_in($table,$field,$search,$replace) {
+  public function replace_in($search,$replace,$table,$field,$regex=FALSE) {
 		$result=FALSE;
 		$this->db->select("id,$field");
 		$this->db->where("$field !=","");
 		$query=$this->db->get($table);
 		foreach($query->result_array() as $row) {
-			$id=$row["id"];
-			$txt=$row[$field];
-      $newtxt=str_replace($search,$replace,$txt);
+			$id  = $row["id"];
+			$txt = $row[$field];
+      if ($regex) {
+        $newtxt = preg_replace($search,$replace,$txt);
+      }
+      else {
+        $newtxt = str_replace($search,$replace,$txt);
+      }
+      // medias?
+      if (get_prefix($field)==='medias') {
+        $newtxt = trim($newtxt,'| ');
+      }
 			// Update in database if changed
-			if ($txt!=$newtxt) {
+      $changed = ($txt != $newtxt);
+			if ($changed) {
 				$this->data->table($table)->where('id',$id)->set($field,$newtxt)->update();
 				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
 			}
@@ -147,80 +115,6 @@ class Search_replace extends CI_Model {
 		$query->free_result();
 		return $result;
   }
-  
-  
-  
-  
-	
-  /**
-   * Vervangt alle links in alle teksten van de database (in alle content tabellen)
-   *
-   * @param string $search Te zoeken link
-   * @param string $replace Te vervangen in...
-   * @return array Resultaat
-   * @author Jan den Besten
-   */
-   public function links($search,$replace='') {
-		$result=FALSE;
-		$tables=$this->data->list_tables();
-		foreach($tables as $table) {
-			$type=get_prefix($table);
-			// Only in set table types
-			if (in_array($type,$this->table_types)) {
-				$fields=$this->db->list_fields($table);
-				foreach ($fields as $field) {
-					$pre=get_prefix($field);
-					// Only in set field types
-					if (in_array($pre,$this->field_types)) {
-						$result[$table] = $this->links_in( $table, $field, $search, $replace);
-					}
-				}
-			}
-		}
-		return $result;
-	}
-
-
-  /**
-   * Vervangt alle links in een bepaald veld van een bepaalde tabel
-   *
-   * @param string $table Tabel waar wordt vervangen
-   * @param string $field Veld waar wordt vervangen
-   * @param string $search Gezochte link
-   * @param string $replace Vervangen door..
-   * @return array Resultaat rij
-   * @author Jan den Besten
-   */
-	public function links_in($table,$field,$search,$replace='') {
-		$result=FALSE;
-		$this->db->select("id,$field");
-		$this->db->where("$field !=","");
-		$query=$this->db->get($table);
-		foreach($query->result_array() as $row) {
-			$id=$row["id"];
-			$txt=$row[$field];
-
-			if (empty($replace)) {
-				// remove
-				$pattern='/<a(.*?)href="('.$this->langRegex.')'.str_replace("/","\/",$search).'"(.*?)>(.*?)<\/a>/';
-				$newtxt=preg_replace($pattern,'$4',$txt);
-			}
-			else {
-				// replace
-				$pattern='/<a(.*?)href="('.$this->langRegex.')'.str_replace("/","\/",$search).'"(.*?)>(.*?)<\/a>/';
-				$newtxt=preg_replace($pattern,'<a$1href="$2'.$replace.'"$3>$4</a>',$txt);
-			}
-
-			// Update in database if changed
-			if ($txt!=$newtxt) {
-				$this->data->table($table)->where('id',$id)->set($field,$newtxt)->update();
-				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
-			}
-		}
-
-		$query->free_result();
-		return $result;
-	}
   
   
   /**
@@ -248,7 +142,7 @@ class Search_replace extends CI_Model {
 
 
   /**
-   * Vervangt alle bestandsnamen
+   * Vervangt alle bestandsnamen en afbeeldingen
    *
    * @param array $search Te zoeken bestandsnaam, of een array van meerdere te zoeken/vervangen bestanden
    * @param string $replace['']
@@ -256,105 +150,38 @@ class Search_replace extends CI_Model {
    * @author Jan den Besten
    */
   public function media($search,$replace='') {
-    $result=FALSE;
-		$tables=$this->data->list_tables();
-		foreach($tables as $table) {
-			$type=get_prefix($table);
-			// Only in set table types
-			if (in_array($type,$this->table_types)) {
-				$fields=$this->db->list_fields($table);
-				foreach ($fields as $field) {
-					$pre=get_prefix($field);
-					// Only in set field types
-					if (in_array($pre,$this->field_types) or in_array($pre,$this->media_types)) {
-						$result[$table] = $this->media_in( $table, $field, $search, $replace);
-					}
-				}
-			}
-		}
-		return $result;
+    $search = str_replace('.','\.',$search);
+    if (empty($replace)) {
+      $search = array( '/<img.*src=\".*'.$search.'\".*>/uU', '/'.$search.'/uU');
+    }
+    else {
+      $search  = array( '/<img(.*)src=\"(.*)'.$search.'\"(.*)>/uU', '/'.$search.'/uU' );
+      $replace = array( '<img$1src="$2'.$replace.'"$3>', $replace );
+    }
+    
+    return $this->replace_all($search,$replace, array_merge($this->field_types,$this->media_types), true );
   }
-
+  
   /**
-   * Vervangt bestandsnamen in specifieke tabel/veld
+   * Vervangt alle links in alle teksten van de database (in alle content tabellen)
    *
-   * @param string $table 
-   * @param string $field 
-   * @param string $search 
-   * @param string $replace['']
-   * @return array resultaat
+   * @param string $search Te zoeken link
+   * @param string $replace Te vervangen in...
+   * @return array Resultaat
    * @author Jan den Besten
    */
-  public function media_in($table,$field,$search,$replace='') {
-		$result=array();
-    $this->data->table($table);
-    $path = $this->data->get_setting(array('options',$field,$path));
-    if (!empty($path)) $path.='/';
-    
-    if (!is_array($search)) {
-      $search=array($search=>$replace);
+  public function links($search,$replace='') {
+    $search = str_replace(array('/','.'),array('\/','\.'),$search);
+    if (empty($replace)) {
+      $search = array( '/<a.*href=\".*'.$search.'.*\".*>(.*)<\/a>/uU', '/'.$search.'/uU');
+      $replace = array( '$1', '' );
     }
-    foreach ($search as $s => $r) {
-      unset($search[$s]);
-      $s=str_replace($path,'', remove_assets($s) );
-      if (!empty($r)) $r=str_replace($path,'', remove_assets($r) );
-      $search[$s]=$r;
+    else {
+      $search  = array( '/<a(.*)href=\"(.*)'.$search.'(.*)\"(.*)>/uU', '/'.$search.'/uU' );
+      $replace = array( '<a$1href="$2'.$replace.'$3"$4>', $replace );
     }
-    
-		$this->db->select("id,$field");
-    $this->db->where("$field !=","");
-		$query=$this->db->get($table);
-    
-		foreach($query->result_array() as $row) {
-			$id=$row["id"];
-			$data=$row[$field];
-      $newData=$data;
-      $fieldType=get_prefix($field);
-      
-      switch ($fieldType) {
-        case 'media':
-        case 'medias':
-          // strace_($search);
-          // strace_($newData);
-          $newData=str_replace(array_keys($search),array_values($search),$newData);
-          $newData=str_replace('||','|',$newData);
-          $newData=trim($newData,'|');
-          // strace_($newData);
-          break;
-        case 'txt':
-          foreach ($search as $s => $r) {
-            $s=assets().$path.$s;
-            $s=str_replace('/','\/',$s);
-            if (empty($r)) {
-              // remove
-              $regex='/<img(.*)?src=\"'.$s.'\"(.*)?\/\>/uiUsm';
-              // strace_(array('regex_s'=>$regex,'regex_r'=>''));
-              $newData = preg_replace($regex, '', $newData);
-            }
-            else {
-              // replace
-              $r=assets().$path.$r;
-              $regex='/<img(.*)?src=\"'.$s.'\"(.*)?\/\>/uiUsm';
-              $regex_r='<img$1src="'.$r.'"$3/>';
-              // strace_(array('regex_s'=>$regex,'regex_r'=>$regex_r));
-              $newData = preg_replace($regex, $regex_r, $newData);
-            }
-          }
-          break;
-      }
-
-			// Update in database if changed
-			if ($data!=$newData) {
-        // trace_('CHANGED');
-				$this->data->table($table)->where('id',$id)->set($field,$newData)->update();
-        // trace_($this->db->last_query());
-				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
-			}
-		}
-
-		$query->free_result();
-		return $result;
-  }
+    return $this->replace_all($search,$replace, $this->field_types, true );
+	}
 
 }
 

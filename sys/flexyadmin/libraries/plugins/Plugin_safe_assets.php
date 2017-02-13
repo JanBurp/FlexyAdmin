@@ -131,18 +131,18 @@ class Plugin_safe_assets extends Plugin {
   }
 
 
-  /**
-   * Plugin wordt ook aangeroepen als instellingen van een assets map wijzigen
-   *
-   * @return void
-   * @author Jan den Besten
-   */
-	function _after_update() {
-		$types=$this->newData['str_types'];
-		$map=$this->newData['path'];
-		if ($this->config('create_htaccess')) $this->_create_htaccess($map,$types);
-		return $this->newData;
-	}
+  //   /**
+  //    * Plugin wordt ook aangeroepen als instellingen van een assets map wijzigen
+  //    *
+  //    * @return void
+  //    * @author Jan den Besten
+  //    */
+  // function _after_update() {
+  //   $types=$this->newData['str_types'];
+  //   $map=$this->newData['path'];
+  //   if ($this->config('create_htaccess')) $this->_create_htaccess($map,$types);
+  //   return $this->newData;
+  // }
   
   /**
    * De kern van de plugin
