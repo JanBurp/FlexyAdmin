@@ -50,6 +50,20 @@ class Plugin_uri extends Plugin {
     }
     return $this->view('admin/plugins/plugin');
 	}
+  
+  
+  public function _after_update() {
+    $this->CI->create_uri->set_table($this->table);
+    $prefix = el(array('prefix',$this->table),$this->config,'');
+    $this->CI->create_uri->set_prefix($prefix);
+    $prefix_callback = el(array('prefix_callback',$this->table),$this->config,false);
+    if ($prefix_callback) $this->CI->create_uri->set_prefix_callback($prefix_callback);
+		$uri = $this->CI->create_uri->create( $this->newData );
+    // trace_(['plugin_uri',$this->table,$this->newData,$uri]);
+		$this->newData['uri']=$uri;
+		return $this->newData;
+	}
+  
 
 
 }
