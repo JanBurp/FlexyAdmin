@@ -68,10 +68,20 @@ class ReplaceTest extends CITestCase {
     $this->CI->data->find('mailto:info@flexyadmin.com');
     $found = $this->CI->data->get_result();
     $this->assertEquals(1, count($found));
-    
-    $this->CI->data->table('tbl_links')->update( array('url_url'=>'mailto:test@flexyadmin.com'), 7);
+
+    // Via API
+    $this->CI->flexy_auth->login( 'admin', 'admin' );
+    $this->CI->row->set_args(array(
+      'POST' => array(
+        'table' => 'tbl_links',
+        'data'  => array('url_url'=>'mailto:test@flexyadmin.com'),
+        'where' => 7
+      ),
+    ));
+    $result = $this->CI->row->index();
+    // $this->CI->data->table('tbl_links')->update( array('url_url'=>'mailto:test@flexyadmin.com'), 7);
     // $this->CI->SR->links('mailto:info@flexyadmin.com','mailto:test@flexyadmin.com');
-    
+
     // 2e situatie
     $this->CI->data->table('tbl_menu');
     $this->CI->data->find('mailto:info@flexyadmin.com');
@@ -84,9 +94,19 @@ class ReplaceTest extends CITestCase {
     $this->assertEquals(1, count($found));
     
     // 3e situatie - verwijderd
-    $this->CI->data->table('tbl_links')->delete( 7 );
+
+    // Via API
+    $this->CI->flexy_auth->login( 'admin', 'admin' );
+    $this->CI->row->set_args(array(
+      'POST' => array(
+        'table' => 'tbl_links',
+        'where' => 7
+      ),
+    ));
+    $result = $this->CI->row->index();
+    // $this->CI->data->table('tbl_links')->delete( 7 );
     // $this->CI->SR->links('mailto:test@flexyadmin.com','');
-    
+
     $this->CI->data->table('tbl_menu');
     $this->CI->data->find('mailto:info@flexyadmin.com');
     $found = $this->CI->data->get_result();

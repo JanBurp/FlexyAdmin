@@ -37,34 +37,6 @@ class BasicController extends MY_Controller {
 		$this->plugin_handler->init_plugins();
 	}
 
-	function _init_plugin($table,$oldData=NULL,$newData=NULL) {
-		$this->plugin_handler->set_data('old',$oldData);
-		$this->plugin_handler->set_data('new',$newData);
-		$this->plugin_handler->set_data('table',$table);
-	}
-
-	function _before_grid($table) {
-		$this->_init_plugin($table,NULL,NULL);
-		return $this->plugin_handler->call_plugins_before_grid_trigger();
-	}
-
-	function _after_delete($table,$oldData=NULL) {
-		$this->_init_plugin($table,$oldData,NULL);
-		return $this->plugin_handler->call_plugins_after_delete_trigger();
-	}
-	
-  function _before_form($table,$data) {
-		$this->_init_plugin($table,$data,NULL);
-		$data=$this->plugin_handler->call_plugins_before_form_trigger();
-    return $data;
-  }
-  
-	function _after_update($table,$oldData=NULL,$newData=NULL) {
-		$this->_init_plugin($table,$oldData,$newData);
-		$newData=$this->plugin_handler->call_plugins_after_update_trigger();
-		return $newData;
-	}
-
 }
 
 ?>
