@@ -837,22 +837,37 @@ class DataTest extends CITestCase {
     $this->CI->data->table('tbl_menu');
 
     // INSERT
-    $this->CI->data->set( array('str_title' => 'New Uri' ) );
-    $this->CI->data->insert();
-    $insert_id = $this->CI->data->insert_id();
+    $this->CI->flexy_auth->login( 'admin', 'admin' );
+    $this->CI->row->set_args(array(
+      'POST' => array(
+        'table' => 'tbl_menu',
+        'data'  => array('str_title' => 'New Uri' )
+      ),
+    ));
+    $result = $this->CI->row->index();
+    $insert_id = $result['info']['insert_id'];
     $this->assertGreaterThan( 0, $insert_id );
+    
     // Check of de uri is aangemaakt
     $row = $this->CI->data->get_row($insert_id);
     $this->assertEquals( 'New Uri', $row['str_title'] );
     $this->assertEquals( 'new_uri', $row['uri'] );
 
     // UPDATE
-    $this->CI->data->update( array('str_title' => 'Andere uri' ), $insert_id );
+    $this->CI->flexy_auth->login( 'admin', 'admin' );
+    $this->CI->row->set_args(array(
+      'POST' => array(
+        'table' => 'tbl_menu',
+        'where' => $insert_id,
+        'data'  => array('str_title' => 'Andere Uri' )
+      ),
+    ));
+    $result = $this->CI->row->index();
     // Check of de uri is aangemaakt
     $row = $this->CI->data->get_row($insert_id);
-    $this->assertEquals( 'Andere uri', $row['str_title'] );
+    $this->assertEquals( 'Andere Uri', $row['str_title'] );
     $this->assertEquals( 'andere_uri', $row['uri'] );
-    
+
     // Delete
     $this->CI->data->delete( $insert_id );
   }
