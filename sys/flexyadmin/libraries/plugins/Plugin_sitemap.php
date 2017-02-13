@@ -35,7 +35,7 @@ class Plugin_sitemap extends Plugin {
   		$url = trim($this->CI->data->get_field('url_url'),'/');
       
       $this->CI->data->table($menuTable);
-  		if ($this->CI->data->field_exists('self_parent')) $this->CI->data->path('uri');
+  		if ($this->CI->data->field_exists('self_parent')) $this->CI->data->tree('uri');
       if ($this->CI->data->field_exists('b_restricted')) $this->CI->data->where('b_restricted',false);
       if ($this->CI->data->field_exists('b_visible')) $this->CI->data->where('b_visible',true);
   		$menu = $this->CI->data->get_result();
