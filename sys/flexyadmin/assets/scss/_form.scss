@@ -118,7 +118,7 @@ textarea {
   max-height:30rem;
 }
 
-// tinyMCE overrides
+// tinyMCE overrides & extras
 .mce-tinymce {
   border-radius:$border-radius;
 }
@@ -126,6 +126,16 @@ body.mce-fullscreen .mce-tinymce{
 //  z-index:9999999;
 //  margin-top:$font-size-root*4!important;
 }
+.mce-indent-list-item-1 { padding-left:1.5rem!important; }
+.mce-indent-list-item-2 { padding-left:2.5rem!important; }
+.mce-indent-list-item-3 { padding-left:3.5rem!important; }
+.mce-i-jdb {
+  height:30px!important;
+  width:30px!important;
+}
+
+
+
 
 // DatePicker overrides
 .form-control.datepicker-input {

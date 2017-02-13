@@ -49,7 +49,7 @@ class Get_link_list extends Api_Model {
           $parents[$item['self_parent']] = $level;
         }
       }
-      $result[$key]['title'] = str_repeat("-",$level-1) . $item['title'];
+      $result[$key]['title'] = str_repeat(" ",$level-1) . $item['title'];
     }
     return $this->_result_as_links($result);
   }
