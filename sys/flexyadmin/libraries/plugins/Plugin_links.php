@@ -58,7 +58,7 @@ class Plugin_links extends Plugin {
 
 	private function _getFullParentUri($data) {
     $this->CI->data->table( $this->table );
-    $this->CI->data->path('uri');
+    $this->CI->data->tree('uri');
     $this->CI->data->where('id',$data['id']);
 		$full = $this->CI->data->get_row();
     return $full['uri'];

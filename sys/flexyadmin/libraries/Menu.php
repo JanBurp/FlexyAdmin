@@ -350,7 +350,7 @@ class Menu {
       $this->CI->data->select( $fields );
   		if ($foreign) $this->CI->data->with('many_to_one',$foreign);
   		if (in_array($this->settings['fields']['parent'],$fields)) {
-        $this->CI->data->path('full_uri','uri');
+        $this->CI->data->tree('full_uri','uri');
   		}
       $data=$this->CI->data->get_result();
   		return $this->set_menu_from_table_data($data,$foreign);
@@ -863,7 +863,7 @@ class Menu {
     $table = el('menu_table',$this->settings );
     if (empty($table)) $table=get_menu_table();
     $this->CI->data->table( $table );
-    $this->CI->data->path('full_uri','uri');
+    $this->CI->data->tree('full_uri','uri');
     // Zoek in simpel uri veld, of naar gehele pad?
     if (strpos($uri,'/')!==FALSE) {
       $this->CI->data->where_path( 'full_uri', $uri );

@@ -241,7 +241,7 @@ function find_module_uri($module,$full_uri=true,$table='') {
     if ($table) $CI->data->where('str_table',$table);
   	if ($full_uri) {
   		$CI->data->select('order,self_parent');
-  		$CI->data->path('uri');
+  		$CI->data->tree('uri');
   	}
   	if ( get_prefix($CI->config->item('module_field'))==='id' ) {
   		// Modules from foreign table

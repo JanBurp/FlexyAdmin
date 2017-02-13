@@ -68,7 +68,7 @@ class Ajax extends AjaxController {
 	private function _get_current_order($table) {
     $this->data->table( $table )
                 ->select('id,order,self_parent,uri')
-                ->path( 'uri' );
+                ->tree( 'uri' );
 		return $this->data->get_result();
 	}
   
