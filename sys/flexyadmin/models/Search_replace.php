@@ -108,7 +108,7 @@ class Search_replace extends CI_Model {
 			// Update in database if changed
       $changed = ($txt != $newtxt);
 			if ($changed) {
-				$this->data->table($table)->where('id',$id)->set($field,$newtxt)->update();
+				$this->data->table($table)->update( array($field=>$newtxt), $id );
 				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
 			}
 		}
@@ -173,12 +173,12 @@ class Search_replace extends CI_Model {
   public function links($search,$replace='') {
     $search = str_replace(array('/','.'),array('\/','\.'),$search);
     if (empty($replace)) {
-      $search = array( '/<a.*href=\".*'.$search.'.*\".*>(.*)<\/a>/uU', '/'.$search.'/uU');
-      $replace = array( '$1', '' );
+      $search = array( '/<a.*href=\".*'.$search.'.*\".*>(.*)<\/a>/uU');
+      $replace = array( '$1' );
     }
     else {
-      $search  = array( '/<a(.*)href=\"(.*)'.$search.'(.*)\"(.*)>/uU', '/'.$search.'/uU' );
-      $replace = array( '<a$1href="$2'.$replace.'$3"$4>', $replace );
+      $search  = array( '/<a(.*)href=\"(.*)'.$search.'(.*)\"(.*)>/uU' );
+      $replace = array( '<a$1href="$2'.$replace.'$3"$4>' );
     }
     return $this->replace_all($search,$replace, $this->field_types, true );
 	}
