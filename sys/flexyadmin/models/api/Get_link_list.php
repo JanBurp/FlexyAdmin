@@ -33,7 +33,7 @@ class Get_link_list extends Api_Model {
   }
   
   private function _menu() {
-    $this->data->table('tbl_menu')->select('uri,str_title AS title,order,self_parent')->path('uri');
+    $this->data->table('tbl_menu')->select('uri,str_title AS title,order,self_parent')->tree('uri');
     $result = $this->data->cache()->get_result();
     return $this->_result_as_links($result);
   }

@@ -27,7 +27,7 @@
  * 
  * ->select( $select = '*' )                      // Maak SELECT deel van de query (zoals in Query Builder)
  * ->select_abstract()                            // Maak SELECT deel van de query door alle abstract_fields te gebruiken (en als die niet zijn ingesteld zelf te genereren)
- * ->path( $path_field, $original_field = '' )    // Geeft een veld aan dat een geheel pad aan waarden moet bevatten in een tree table (bijvoorbeeld een menu)
+ * ->tree( $tree_field, $original_field = '' )    // Geeft een veld aan dat een geheel pad aan waarden moet bevatten in een tree table (bijvoorbeeld een menu)
  * 
  * ->with( $type='', $what=array() )              // Voeg relaties toe (many_to_one, many_to_many) en specificeer eventueel welke tabellen en hun velden. Zie bij ->with()
  * ->with_json( $type='', $what=array() )         // Idem, maar dan komt de data in één JSON veld
@@ -130,8 +130,8 @@ Class Data_Core extends CI_Model {
   /**
    * Een eventueel veld dat een compleet pad moet bevatten in een tree table
    */
-  protected $tm_path       = FALSE;
-  protected $tm_where_path = array();
+  protected $tm_tree       = FALSE;
+  protected $tm_where_tree = array();
   
   /**
    * Maximale lengte van txt velden.
@@ -859,8 +859,8 @@ Class Data_Core extends CI_Model {
     $this->tm_select_include_primary = TRUE;
     $this->tm_unselect               = FALSE;
     $this->tm_from                   = '';
-    $this->tm_path                   = FALSE;
-    $this->tm_where_path             = array();
+    $this->tm_tree                   = FALSE;
+    $this->tm_where_tree             = array();
     $this->tm_order_by               = array();
     $this->tm_limit                  = 0;
     $this->tm_offset                 = 0;
@@ -1411,7 +1411,7 @@ Class Data_Core extends CI_Model {
               $first_abstract_field = current($first_abstract_field);
               $this->select('id,self_parent,order,'.$first_abstract_field);
               if ($this->tm_where_primary_key) $this->where( $this->settings['primary_key'].'!=',$this->tm_where_primary_key);
-              $this->path( $first_abstract_field, '', ' / ' );
+              $this->tree( $first_abstract_field, '', ' / ' );
               $this->order_by( 'order,self_parent' );
               $field_options['data'] = $this->get_result();
               foreach ($field_options['data'] as $key => $option) {
@@ -1751,9 +1751,9 @@ Class Data_Core extends CI_Model {
     $with_data = array();
     
     // Pad fields
-    if ($this->tm_path) {
-      $paths=array();
-      $needed_path_fields = array_merge(array_keys($this->tm_path),array($this->settings['primary_key'],'self_parent'));
+    if ($this->tm_tree) {
+      $tree = array();
+      $needed_tree_fields = array_merge(array_keys($this->tm_tree),array($this->settings['primary_key'],'self_parent'));
     }
     
     // Eventuele defaults bewaren bij een niet bestaanden one_to_one
@@ -1855,13 +1855,13 @@ Class Data_Core extends CI_Model {
         }
       }
       
-      // path
-      if ($this->tm_path)  {
+      // tree
+      if ($this->tm_tree)  {
         // Remember current row with necessary fields
-        $paths[$id] = array_keep_keys($row,$needed_path_fields);
-        // Recursive create current path field
-        foreach ($this->tm_path as $field => $path_info) {
-          $row[$path_info['path_field']] = $this->_fill_path( $paths, $id, $path_info );
+        $tree[$id] = array_keep_keys($row,$needed_tree_fields);
+        // Recursive create current tree field
+        foreach ($this->tm_tree as $field => $tree_info) {
+          $row[$tree_info['tree_field']] = $this->_fill_tree( $tree, $id, $tree_info );
         }
       }
       
@@ -1891,13 +1891,13 @@ Class Data_Core extends CI_Model {
       $this->query_info['total_rows'] = $this->total_rows(true,true);
     }
     
-    // where paths?
-    if ( !empty($this->tm_where_path) and !empty($result) ) {
-      if (!$this->tm_path) {
-        throw new ErrorException( __CLASS__.'->where_path() You need to set ->path() when using ->where_path()' );
+    // where tree?
+    if ( !empty($this->tm_where_tree) and !empty($result) ) {
+      if (!$this->tm_tree) {
+        throw new ErrorException( __CLASS__.'->where_tree() You need to set ->tree() when using ->where_tree()' );
       }
-      foreach ($this->tm_where_path as $where_path) {
-        $result = find_row_by_value( $result, $where_path['value'], $where_path['field'] );
+      foreach ($this->tm_where_tree as $where_tree) {
+        $result = find_row_by_value( $result, $where_tree['value'], $where_tree['field'] );
       }
       $this->query_info['num_rows'] = count($result);
     }
@@ -1907,22 +1907,22 @@ Class Data_Core extends CI_Model {
   
   
   /**
-   * Vul een path veld recursief
+   * Vul een tree veld recursief
    *
    * @param array $result 
    * @param int $key
-   * @param array $path_info 
+   * @param array $tree_info 
    * @return string
    * @author Jan den Besten
    */
-  protected function _fill_path( &$result, $key, $path_info, $counter=0 ) {
+  protected function _fill_tree( &$result, $key, $tree_info, $counter=0 ) {
     $value = '';
     $parent = el( array($key,'self_parent'), $result, 0 );
     if ( $parent>0 and $counter<20) {
       // Counter voorkomt onneindige recursieve aanroep in het geval er een fout is ontstaan in de tabel.
-      $value .= $this->_fill_path( $result, $parent, $path_info, $counter+1) . $path_info['split'];
+      $value .= $this->_fill_tree( $result, $parent, $tree_info, $counter+1) . $tree_info['split'];
     }
-    $part = el( array($key,$path_info['original_field']), $result );
+    $part = el( array($key,$tree_info['original_field']), $result );
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
     if (is_null($part) and $key!==0) {
       $order = array();
@@ -1930,11 +1930,11 @@ Class Data_Core extends CI_Model {
         $split = $this->_split_order($order_by);
         $order[]='`'.$split['field'].'` '.$split['direction'];
       }
-      $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
+      $sql = 'SELECT `'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
       $query = $this->db->query($sql);
       if ($query) {
         $row = $query->unbuffered_row('array'); ;
-        $part = el( $path_info['original_field'],$row );
+        $part = el( $tree_info['original_field'],$row );
       }
     }
     $value .= $part;
@@ -2187,7 +2187,7 @@ Class Data_Core extends CI_Model {
     // Paths als menu tabel
     if ( $this->is_menu_table() ) {
       $title_field = $this->list_fields( 'str',1 );
-      $this->path( 'uri' );//->path( $title_field );
+      $this->tree( 'uri' );//->tree( $title_field );
     }
     
     // Where
@@ -2433,31 +2433,31 @@ Class Data_Core extends CI_Model {
    * 
    * Voorbeeld:
    * 
-   * ->path( 'uri' )
+   * ->tree( 'uri' )
    * 
    * Een andere optie is om het originele veld te behouden en een extra veld toe te voegen met het hele pad.
-   * In het voorbeeld hieronder zal het veld 'path' worden toegevoegd en dezefde waarden hebben als het veld 'uri' in het voorbeeld hierboven.
+   * In het voorbeeld hieronder zal het veld 'tree' worden toegevoegd en dezefde waarden hebben als het veld 'uri' in het voorbeeld hierboven.
    * 
-   * ->path( 'path', 'uri' );
+   * ->tree( 'tree', 'uri' );
    * 
    * NB Kan alleen gebruikt worden in combinate met ->get_result() en varianten.
    * NB2 In combinatie met een ->where() statement kan het zijn dat de resultaten niet compleet zijn omdat rijen kunnen ontbreken die een tak in een tree zijn.
    *
-   * @param string $path_field Het veld wat een pad moet worden
-   * @param string $original_field [''] Je kunt bij bij $path_field ook een andere naam geven voor het pad, en hier de naam van het originele veld.
+   * @param string $tree_field Het veld wat een pad moet worden
+   * @param string $original_field [''] Je kunt bij bij $tree_field ook een andere naam geven voor het pad, en hier de naam van het originele veld.
    * @param string $split ['/'] Eventueel kan een andere string worden meegegeven die tussen de diverse paden in komt.
    * @return $this
    * @author Jan den Besten
    */
-  public function path( $path_field, $original_field = '', $split = '/' ) {
+  public function tree( $tree_field, $original_field = '', $split = '/' ) {
     if ( !$this->field_exists('order') and !$this->field_exists('self_parent') ) {
       $this->reset();
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'() table is not a tree table. (tables whith the fields `order` and `self_parent`)' );
       return $this;
     }
-    if (empty($original_field)) $original_field = $path_field;
-    $this->tm_path[$original_field] = array(
-      'path_field'      => $path_field,
+    if (empty($original_field)) $original_field = $tree_field;
+    $this->tm_tree[$original_field] = array(
+      'tree_field'      => $tree_field,
       'original_field'  => $original_field,
       'split'           => $split
     );
@@ -2465,7 +2465,7 @@ Class Data_Core extends CI_Model {
   }
   
   /**
-   * Speciaal where method voor het zoeken in path velden. Kan alleen in combinatie met ->get_result() en ->path()
+   * Speciaal where method voor het zoeken in tree velden. Kan alleen in combinatie met ->get_result() en ->tree()
    * 
    * NB Dit gebeurt niet met de database, maar wordt aan het eind van een volledige result nog gefilterd:
    * - Het is daarom niet erg snel.
@@ -2477,8 +2477,8 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  public function where_path( $field, $value ) {
-    $this->tm_where_path[$field]=array(
+  public function where_tree( $field, $value ) {
+    $this->tm_where_tree[$field]=array(
       'field' => $field,
       'value' => $value,
     );

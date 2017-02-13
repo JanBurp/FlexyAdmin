@@ -142,7 +142,7 @@ class Plugin_automenu extends Plugin {
           // find language branch where to update
           $this->CI->data->table('res_menu_result');
           $this->CI->data->select('id,order,self_parent,uri');
-          $this->CI->data->path('full_uri','uri');
+          $this->CI->data->tree('full_uri','uri');
           $this->CI->data->where('int_id',$id);
           $this->CI->data->where('str_table',$this->table);
           $branches=$this->CI->data->get_result();
