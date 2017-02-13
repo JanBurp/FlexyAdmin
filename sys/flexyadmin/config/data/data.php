@@ -76,9 +76,15 @@ $config['max_rows']         = NULL;
 /**
  * Als een tabel een uri veld bevat kan deze automatisch worden aangepast na een update.
  * Hiermee kan dat aan of uit worden gezet.
- * Standaard staat deze optie aan (door _autoset)
+ * Standaard staat deze optie aan [TRUE] (door _autoset)
+ * 
+ * Er kunnen ook opties in een array meegegeven worden in plaats van een TRUE:
+ * - source         - Geef hier het veld aan dat gebruikt wordt als bron. Standaard is dat het eerste str veld wat gevonden kan worden. ['str_title']
+ * - prefix         - Geef hier een eventuele prefix aan waarmee de uri altijd moet beginnen. ['']
+ * - prefix_method  - Geef hier een eventuele prefix aan waarmee de uri altijd moet beginnen. [object->method]
  */
 $config['update_uris']      = NULL;
+
 
 
 /**
