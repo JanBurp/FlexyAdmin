@@ -60,8 +60,8 @@ class Create_uri extends CI_Model {
    * @return object $this
    * @author Jan den Besten
    */
-  public function set_source_field($source_field) {
-    $this->source_field=$source_field;
+  public function set_source_field($source_field='') {
+    $this->source_field = $source_field;
     return $this;
   }
   
@@ -85,7 +85,7 @@ class Create_uri extends CI_Model {
    * @return this
    * @author Jan den Besten
    */
-  public function set_prefix_callback($callback) {
+  public function set_prefix_callback($callback=FALSE) {
     $this->prefix_callback = $callback;
     return $this;
   }
@@ -95,53 +95,42 @@ class Create_uri extends CI_Model {
  	 * Maak uri vanuit meegegeven data (rij uit een tabel, of string)
  	 *
  	 * @param array $data 
- 	 * @param bool $overrule default=FALSE als TRUE dan wordt altijd een nieuwe uri gecreeerd
  	 * @return string
  	 * @author Jan den Besten
  	 */
-  public function create($data,$overrule=FALSE) {
+  public function create($data) {
     // init
     $this->table_data=$data;
-    $this->fields=array_keys($data);
+    $this->fields = array_keys($data);
     if (empty($this->source_field)) $this->set_source_field( $this->_find_source_field($data) );
- 		$replaceSpace=$this->config->item('PLUGIN_URI_REPLACE_CHAR');
+ 		$replaceSpace = $this->config->item('PLUGIN_URI_REPLACE_CHAR');
     
     // Need to create an uri?
- 		$uri=el('uri',$this->table_data,'');
+ 		$uri = el('uri',$this->table_data,'');
  		if (isset($this->table_data[$this->source_field]))
- 			$uri_source=$this->table_data[$this->source_field];
+ 			$uri_source = $this->table_data[$this->source_field];
  		else
- 			$uri_source=$this->table_data['id'];
+ 			$uri_source = $this->table_data['id'];
 
-    $createUri =  $this->data->table($this->table)->get_setting('update_uris');
-    
-    if (isset($this->table_data['b_freeze_uri']) and $this->table_data['b_freeze_uri']) $createUri=false;
-    if (empty($uri)) $createUri=true;
-    if ($overrule) $createUri=true;
-    
-    // If needs to create an uri
- 		if ($createUri) {
-      // Prefix
-      $prefix=$this->prefix;
-      if ($this->prefix_callback) {
-        $model=$this->prefix_callback['model'];
-        $method=$this->prefix_callback['method'];
-        $this->load->model($model,'prefix_model');
-        if (method_exists($this->prefix_model,$method)) {
-          $prefix=clean_string($this->prefix_model->$method($data));
-        }
+    // Prefix
+    if ($this->prefix_callback) {
+      $model=$this->prefix_callback['model'];
+      $method=$this->prefix_callback['method'];
+      $this->load->model($model,'prefix_model');
+      if (method_exists($this->prefix_model,$method)) {
+        $this->prefix = clean_string($this->prefix_model->$method($data));
       }
-      // Uri
-      $uri=$prefix.$this->cleanup($uri_source);
-      // Exists? add a number
- 			$postSpace=$replaceSpace.$replaceSpace;
- 			while ($this->_is_existing_uri($uri,$data) or $this->is_forbidden($uri)) {
- 				$currUri=remove_suffix($uri,$postSpace);
- 				$countUri=(int) get_suffix($uri,$postSpace);
- 				$uri=$currUri.$postSpace.($countUri+1);
- 			}
- 		}
- 		return $uri;
+    }
+    // Uri
+    $uri = $this->prefix.$this->cleanup($uri_source);
+    // Exists? add a number
+		$postSpace=$replaceSpace.$replaceSpace;
+		while ($this->_is_existing_uri($uri,$data) or $this->is_forbidden($uri)) {
+			$currUri=remove_suffix($uri,$postSpace);
+			$countUri=(int) get_suffix($uri,$postSpace);
+			$uri=$currUri.$postSpace.($countUri+1);
+		}
+    return $uri;
  	}
   
   /**
@@ -168,8 +157,7 @@ class Create_uri extends CI_Model {
    * @internal
    */
  	private function _find_source_field($data=false) {
-		$fields=$this->fields;
-    
+		$fields = $this->fields;
  		$uriField="";
  		/**
  		 * Auto uri field according to prefixes
@@ -246,19 +234,11 @@ class Create_uri extends CI_Model {
       return call_user_func(array($class, '_is_existing_uri'),$uri,$data);
     }
     else {
-      $this->data->table( $this->table );
-      // Normal function to test
-   		if ($this->data->field_exists('self_parent') and isset($this->table_data['self_parent'])) {
-   			$this->data->select('self_parent');
-   			$this->data->where('self_parent',$this->table_data['self_parent']);
-   		}
-   		$this->data->select("uri");
-   		$this->data->where( $this->table.".uri",$uri);
-   		if (isset($this->table_data['id'])) $this->data->where( $this->table.".id !=",$this->table_data['id']);
-   		$uris = $this->data->get_result();
-      
-   		if (empty($uris))
-   			return FALSE;
+      $sql = 'SELECT `uri` FROM `'.$this->table.'` WHERE `uri`="'.$uri.'"';
+   		if ( isset($this->table_data['id']))           $sql .= ' AND `id` != "'.$this->table_data['id'].'"';
+      $query = $this->db->query($sql);
+      if (!$query) return FALSE;
+      $uris = $query->result_array();
    		return current($uris);
     }
  	}

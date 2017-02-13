@@ -4053,6 +4053,33 @@ Class Data_Core extends CI_Model {
         $set["order"] = $this->_order->get_next_order( $this->settings['table'] );
       }
     }
+    
+    /**
+     * Uri veld vullen/aanpassen indien nodig en indien in set (dus alleen als de source voor de uri is aangepast)
+     */
+    if ( $this->settings['update_uris'] and in_array('uri',$this->settings['fields']) and !el('b_freeze_uri',$set,FALSE) ) {
+      // Bepaal source veld
+      $source = '';
+      if (isset($this->settings['update_uris']['source'])) {
+        $source = $this->settings['update_uris']['source'];
+      }
+      if ($source==='') {
+        $source = el(array('abstract_fields'),$this->settings,array());
+        $source = current($source);
+      }
+      // Ga verder als source veld bestaat in set
+      if (isset($set[$source])) {
+        $this->load->model('create_uri');
+        $this->create_uri->set_table( $this->settings['table'] );
+        $this->create_uri->set_source_field( $source );
+        if ( isset($this->settings['update_uris']['prefix']) ) $this->create_uri->set_prefix( $this->settings['update_uris']['prefix'] );
+        if ( isset($this->settings['update_uris']['prefix_method']) ) $this->create_uri->set_prefix_callback( $this->settings['update_uris']['prefix_method'] );
+        // Maak de uri
+        $set['uri'] = $this->create_uri->create( $set );
+        $set['uri'] = substr($set['uri'],0, $this->field_data('uri','max_length') );
+      }
+    }
+    
       
     /**
      * Valideer eventueel eerst de set
