@@ -327,50 +327,6 @@ Class Res_assets extends Data_Core {
     $this->load->model('search_replace');
     // $name = $path."/".$file;
     $this->search_replace->media($file,'');
-    // foreach ($fields as $fieldname) {
-    //   if (!empty($fieldname) and $fieldname!=='0') {
-    //     $table = get_prefix($fieldname,'.');
-    //     $fieldname = remove_prefix($fieldname,'.');
-    //     $currentData = $this->data->table($table)->select(PRIMARY_KEY)->select($fieldname)->get_result();
-    //         foreach ($currentData as $row) {
-    //           foreach ($row as $field=>$data) {
-    //         $data = trim($data);
-    //             if ( $field === PRIMARY_KEY )
-    //               $id = $data;
-    //             else {
-    //               $newdata = $data;
-    //               $pre = get_prefix($field);
-    //               switch ($pre) {
-    //                 case 'media':
-    //                   if ($data===$file) $newdata='';
-    //                   break;
-    //                 case 'medias':
-    //                   $arrData = explode('|',$data);
-    //                   foreach ($arrData as $key => $value) {
-    //                 if ($value===$file) unset($arrData[$key]);
-    //               }
-    //                   $newdata = implode('|',$arrData);
-    //                   break;
-    //                 case 'txt':
-    //                   $preg_name=str_replace("/","\/",$name);
-    //                   // remove all img tags with this media
-    //                   $newdata=preg_replace("/<img(.*)".$preg_name."(.*)>/","",$data);
-    //                   // remove all flash objects with this media
-    //                   $newdata=preg_replace("/<object(.*)".$preg_name."(.*)<\/object>/","",$newdata);
-    //                   break;
-    //               }
-    //           // if changed, put in db
-    //           if ($newdata!=$data) {
-    //             $this->data->table($table);
-    //             $this->data->set($field,$newdata);
-    //             $this->data->where(PRIMARY_KEY,$id);
-    //             $this->data->update();
-    //           }
-    //             }
-    //           }
-    //         }
-    //   }
-    // // }
   }
   
   

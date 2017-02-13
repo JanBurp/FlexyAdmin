@@ -4059,14 +4059,7 @@ Class Data_Core extends CI_Model {
      */
     if ( $this->settings['update_uris'] and in_array('uri',$this->settings['fields']) and !el('b_freeze_uri',$set,FALSE) ) {
       // Bepaal source veld
-      $source = '';
-      if (isset($this->settings['update_uris']['source'])) {
-        $source = $this->settings['update_uris']['source'];
-      }
-      if ($source==='') {
-        $source = el(array('abstract_fields'),$this->settings,array());
-        $source = current($source);
-      }
+      $source = $this->_get_uri_source_field();
       // Ga verder als source veld bestaat in set
       if (isset($set[$source])) {
         $this->load->model('create_uri');
@@ -4348,6 +4341,24 @@ Class Data_Core extends CI_Model {
     $this->reset();
 		return intval($id);
 	}
+  
+  /**
+   * Bepaal de source voor het uri veld
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function _get_uri_source_field() {
+    $source = '';
+    if (isset($this->settings['update_uris']['source'])) {
+      $source = $this->settings['update_uris']['source'];
+    }
+    if ($source==='') {
+      $source = el(array('abstract_fields'),$this->settings,array());
+      $source = current($source);
+    }
+    return $source;
+  }
   
   /**
    * Voeg user velden to aan set zodat kan worden bijgehouden wie wat heeft aangepast/aangemaakt.
