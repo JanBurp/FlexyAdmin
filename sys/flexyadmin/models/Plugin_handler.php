@@ -236,7 +236,7 @@ class Plugin_handler extends CI_Model {
 
 	public function call_plugins_after_update_trigger() {
 		$this->_set_additional_data();
-		// strace_($this->data);
+    // trace_($this->data);
 		if (isset($this->trigger_methods['after_update_method'])) {
 			foreach ($this->trigger_methods['after_update_method'] as $plugin => $method) {
 				if ($this->is_triggered($plugin)) {

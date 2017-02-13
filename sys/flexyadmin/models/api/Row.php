@@ -271,8 +271,11 @@ class Row extends Api_Model {
     $fields=array_keys($data);
     $this->data->table( $args['table'] );
     if ($data) {
+      // Call plugins
+      $current_data = $this->data->get_row( $args['where'] );
+      $data = $this->_after_update( $this->args['table'], $current_data, $data);
       // Save
-      $id = $this->data->validate()->update( $data, $args['where'] );
+      $id = $this->data->table($this->args['table'])->validate()->update( $data, $args['where'] );
       $this->info = $this->data->get_query_info();
       return array('id'=>$id);
     }
@@ -289,9 +292,16 @@ class Row extends Api_Model {
   private function _insert_row() {
     $args=$this->_clean_args(array('table','data'));
     $this->data->table( $args['table'] );
-    if (isset($args['where'])) $this->data->where( $args['where'] );
-    $id = $this->data->validate()->insert( $args['data'] );
-    $this->info=$this->data->get_query_info();
+    $data=$this->args['data'];
+    $id = false;
+    if ($data) {
+      // Call plugins
+      $old = $this->data->get_defaults();
+      $data = $this->_after_update( $this->args['table'], $old, $data);
+      // Insert
+      $id = $this->data->table($args['table'])->validate()->insert( $data );
+      $this->info=$this->data->get_query_info();
+    }
     return array('id'=>$id);
   }
 
@@ -305,17 +315,27 @@ class Row extends Api_Model {
   private function _delete_row() {
     $args=$this->_clean_args(array('table','where'));
     $this->data->table( $args['table'] );
+
+    $id = false;
     if (isset($args['where'])) {
-      if (is_array($args['where'])) {
-        $primary_key = $this->data->get_setting( 'primary_key' );
-        $this->data->where_in( $primary_key, $args['where'] ); 
+      
+      $primary_key = $this->data->get_setting( 'primary_key' );
+      if (!is_array($args['where'])) $args['where'] = array($args['where']);
+      
+      // Plugins
+      $id = current($args['where']);
+			$current_data = $this->data->get_row( $id );
+      if ( $this->_after_delete( $this->args['table'], $current_data) ) {
+        // Delete items
+        $id = $this->data->table( $this->args['table'] )->where_in( $primary_key, $args['where'] )->delete();  
       }
       else {
-        $this->data->where( $args['where'] ); 
+        // Mag niet verwijderen van een plugin
+        $id = false;
       }
+
     }
-    $id = $this->data->delete();
-    $this->info=$this->data->get_query_info();
+    $this->info = $this->data->get_query_info();
     return $id;
   }
 
