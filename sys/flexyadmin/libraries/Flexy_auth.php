@@ -413,7 +413,7 @@ class Flexy_auth extends Ion_auth {
 	 * @param string $email Emailadres van gebruiker
 	 * @param string $uri 
 	 * @param string $subject default='Forgotten Password Verification' Onderwerp van de te sturen email 
-	 * @return bool TRUE als proces is gelukt, FALS als gebruiker niet bekent is
+	 * @return bool TRUE als proces is gelukt, FALSE als gebruiker niet bekent is
 	 * @author Jan den Besten
 	 */
 	public function forgotten_password_send($email,$uri,$subject='Forgotten Password Verification') {
@@ -477,7 +477,7 @@ class Flexy_auth extends Ion_auth {
 	 */
   public function forgotten_password( $email ) {
     $user = $this->get_user_by_email( $email );
-    if ( !$user ) FALSE;
+    if ( !$user ) return FALSE;
     $mail_info = parent::forgotten_password( $user['username'] );
     $mail_info['forgotten_password_uri'] = $this->forgotten_password_uri;
     return $this->_mail( 'login_forgot_password', $user, $mail_info );

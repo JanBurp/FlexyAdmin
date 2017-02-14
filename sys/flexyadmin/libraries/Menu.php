@@ -866,7 +866,7 @@ class Menu {
     $this->CI->data->tree('full_uri','uri');
     // Zoek in simpel uri veld, of naar gehele pad?
     if (strpos($uri,'/')!==FALSE) {
-      $this->CI->data->where_path( 'full_uri', $uri );
+      $this->CI->data->where_tree( 'full_uri', $uri );
     }
     else {
       $this->CI->data->where( 'uri', $uri );
