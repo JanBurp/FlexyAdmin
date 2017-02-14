@@ -3,10 +3,22 @@
   position:absolute;
   left:50%;
   top:30%;
-  width:20rem;
+  width:25rem;
   box-shadow:0 0 1.25rem $gray-dark;
   transform: translate(-50%,-50%);
   h1 {text-transform:none;}
+  
+  #forgotten-password-link {
+    border-top:solid 1px $gray-light;
+    color:$gray-light;
+    cursor:pointer;
+    display:block;
+    margin-top:1rem;
+    padding-top:.5rem;
+  }
+  #forgotten-password-link:hover {
+    color:$brand-danger;
+  }
 }
 
 .progress {
