@@ -208,7 +208,7 @@ class Test extends MY_Controller {
     $menu = $this->data->table('tbl_menu')
                         ->unselect('txt_text')
                         ->tree('full_uri','uri')
-                        ->where_path( 'full_uri','een_pagina/een_pagina')
+                        ->where_tree( 'full_uri','een_pagina/een_pagina')
                         ->get_result();
     trace_($menu);
     trace_($this->data->get_query_info());
