@@ -33575,14 +33575,17 @@ module.exports = function(module) {
  * - Global Vue Settings (Mixins)
  * 
  * @author: Jan den Besten
- */var _=__webpack_require__(/*! lodash */ 21);// TinyMCE Global & Set extra
+ */var _=__webpack_require__(/*! lodash */ 21);if(!_.isUndefined(_flexy.auth_token)){var vm;(function(){// TinyMCE Global & Set extra
 _flexy.tinymceOptions=JSON.parse(_flexy.tinymceOptions);_flexy.tinymceOptions['link_list']='_api/get_link_list?_authorization='+_flexy.auth_token,_flexy.tinymceOptions['image_list']='_api/get_image_list?_authorization='+_flexy.auth_token,tinymce.init(_flexy.tinymceOptions);// Language settings
 var LOCALES={};// _flexy.language_keys = JSON.parse(_flexy.language_keys);
 LOCALES['lang']=_flexy.language;LOCALES[_flexy.language]=_flexy.language_keys;window.VueStrapLang=function(){return LOCALES[_flexy.language]['strap_lang'];};_vue2.default.use(_vueLang2.default,{lang:_flexy.language,locales:LOCALES});/**
-   Global Vue registering
- */_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};}});/**
-   Main Vue Instance
- */var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyButton:_flexyButton2.default,FlexyModal:_flexyModal2.default,FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,FlexyForm:_flexyForm2.default,FlexyHelp:_flexyHelp2.default},data:{state:_flexyState2.default.state}});
+     Global Vue registering
+   */_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};}});/**
+     Main Vue Instance
+   */vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyButton:_flexyButton2.default,FlexyModal:_flexyModal2.default,FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,FlexyForm:_flexyForm2.default,FlexyHelp:_flexyHelp2.default},data:{state:_flexyState2.default.state}});})();}// LOGIN
+else{/**
+     Login Vue Instance
+   */var vm=new _vue2.default({el:'#main',components:{},data:{message:_flexy.message,forgottenPasswordDialog:false},methods:{showForgottenPasswordDialog:function showForgottenPasswordDialog(show){this.message='';this.forgottenPasswordDialog=show;}}});}
 
 /***/ }
 /******/ ]);

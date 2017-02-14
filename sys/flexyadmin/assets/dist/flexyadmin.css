@@ -5433,11 +5433,20 @@ a > .fa, .btn > .fa {
   position: absolute;
   left: 50%;
   top: 30%;
-  width: 20rem;
+  width: 25rem;
   box-shadow: 0 0 1.25rem #292b2c;
   transform: translate(-50%, -50%); }
   #login-form h1 {
     text-transform: none; }
+  #login-form #forgotten-password-link {
+    border-top: solid 1px #636c72;
+    color: #636c72;
+    cursor: pointer;
+    display: block;
+    margin-top: 1rem;
+    padding-top: .5rem; }
+  #login-form #forgotten-password-link:hover {
+    color: #D00; }
 
 .progress {
   position: absolute;
