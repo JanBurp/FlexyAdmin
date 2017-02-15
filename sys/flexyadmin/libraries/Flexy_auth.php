@@ -46,8 +46,8 @@ class Flexy_auth extends Ion_auth {
   /**
    * Authentication token
    */
-  protected $auth_key   = '';  // See $config['sess_cookie_name']
-  protected $auth_token = '';
+  protected $auth_key              = '';  // See $config['sess_cookie_name']
+  protected $auth_token            = '';
   
   
   /**
@@ -64,7 +64,7 @@ class Flexy_auth extends Ion_auth {
     $this->tables = $this->config->item( 'tables', 'ion_auth');
     // Token secret, Expiration of auth_token: each day a new one, add 'unixday' to key
     if (empty($this->auth_key)) $this->auth_key = $this->config->item('sess_cookie_name');
-    $this->auth_key.= ceil((date('U') - (3*TIME_DAY)) / TIME_DAY);
+    // $this->auth_key.= ceil((date('U') - (3*TIME_DAY)) / TIME_DAY);
 	}
 
   
