@@ -2204,6 +2204,9 @@ Class Data_Core extends CI_Model {
           foreach ($grid_set['with'] as $type => $with) {
             $relations = $this->get_setting(array('relations',$type));
             foreach ($relations as $what => $with_info) {
+              // Verwijdern result_name uit velden, en voeg abstract velden van other_table toe
+              if ($key = array_search($with_info['result_name'],$fields)) unset($fields[$key]);
+              if ($key = array_search($with_info['other_table'],$fields)) unset($fields[$key]);
               $other_fields = $this->get_other_table_abstract_fields( $with_info['other_table'] );
               if ($other_fields) {
                 foreach ($other_fields as $other_field) {
@@ -2214,8 +2217,8 @@ Class Data_Core extends CI_Model {
           }
         }
         $find=array( 'terms'=>$find, 'fields'=>$fields, 'settings'=>array() );
-      $this->find( $find['terms'], $find['fields'], $find['settings'] );
-    }
+        $this->find( $find['terms'], $find['fields'], $find['settings'] );
+      }
       else {
         $search_with = array_keys($grid_set['with']);
         foreach ($find as $findItem) {
