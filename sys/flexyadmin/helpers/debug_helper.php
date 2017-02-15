@@ -188,6 +188,8 @@ function nice_sql($sql,$eol="\n") {
   $sql = substr_replace( $sql,$eol."ORDER",strrpos($sql,'ORDER'),'5');
   $sql = preg_replace("/(WHERE)\s/uis", $eol.$eol."$1 ", $sql,1);
   $sql = preg_replace("/(SET|LEFT|RIGHT|GROUP)\s/uis", $eol.$eol."$1 ", $sql);
+  $sql = preg_replace("/(\sOR)\s/uis", $eol."$1 ", $sql);
+  $sql = str_replace(" (", "$eol(", $sql);
   return $sql;
 }
 
