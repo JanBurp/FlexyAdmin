@@ -1394,7 +1394,7 @@ Class Data_Core extends CI_Model {
           // Anders geef gewoon de opties terug
           else {
             $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(0,0, $where_primary_key );
-            $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
+            // $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
             $this->data->table($this->settings['table']); // Terug naar huidige data table.
           }
           // Rechten om nieuwe aan te maken?
