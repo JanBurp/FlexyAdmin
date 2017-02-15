@@ -32,7 +32,7 @@ $config['FIELDS_prefix'] = array (
 	'id'				=> array(
     'type'        => 'number',
     'form-type'   => 'select',
-    'validation'	=> 'trim|integer|required',
+    'validation'	=> 'trim|integer',
     'default'     => 0,
   ),
   
