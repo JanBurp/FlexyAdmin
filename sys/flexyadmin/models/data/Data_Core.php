@@ -3261,13 +3261,13 @@ Class Data_Core extends CI_Model {
 
       // ITEM
       elseif (isset($item['term'])) {
-        // Alleen als veld bestaat
-        if (in_array($item['field'],$this->settings['fields'])) {
+        // Alleen als veld bestaat, of in relatie
+        // if (in_array($item['field'],$this->settings['fields'])) {
           $term = $item['term'];
           $item_settings = array_unset_keys($item,array('term','field','settings'));
           $item_settings = array_merge( $settings, el('settings',$item,array()), $item_settings );
           $this->_find_term( $term, $item['field'], $item_settings );
-        }
+        // }
       }
       
     }
