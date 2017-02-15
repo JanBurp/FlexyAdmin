@@ -3125,10 +3125,10 @@ Class Data_Core extends CI_Model {
             $other_table  = $this->settings['relations'][$type][$what]['other_table'];
             $as           = $this->settings['relations'][$type][$what]['result_name'];
             $other_fields = $with['fields'];
-            
-            
+
+
             if ($other_fields==='abstract') $other_fields = $this->get_other_table_abstract_fields( $other_table );
-            
+
             if (!is_array($other_fields)) $other_fields = explode(',',$other_fields);
             foreach ($other_fields as $other_field) {
               switch ($type) {
@@ -3167,8 +3167,6 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    // trace_([$terms,$fields]);
-
     // Splits terms
     if ( is_array($terms) ) $terms = implode(' ',$terms);
     $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
@@ -3263,10 +3261,13 @@ Class Data_Core extends CI_Model {
 
       // ITEM
       elseif (isset($item['term'])) {
-        $term = $item['term'];
-        $item_settings = array_unset_keys($item,array('term','field','settings'));
-        $item_settings = array_merge( $settings, el('settings',$item,array()), $item_settings );
-        $this->_find_term( $term, $item['field'], $item_settings );
+        // Alleen als veld bestaat
+        if (in_array($item['field'],$this->settings['fields'])) {
+          $term = $item['term'];
+          $item_settings = array_unset_keys($item,array('term','field','settings'));
+          $item_settings = array_merge( $settings, el('settings',$item,array()), $item_settings );
+          $this->_find_term( $term, $item['field'], $item_settings );
+        }
       }
       
     }
