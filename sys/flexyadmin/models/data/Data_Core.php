@@ -2240,16 +2240,24 @@ Class Data_Core extends CI_Model {
       $this->tm_jump_to_today = TRUE;
     }
 
-    // Prepare as grid result (foreign keys include abstract and foreign data in a json)
+    // Prepare as grid result, flatten (foreign keys include abstract and foreign data in a json)
     $result = $this->_get_result();
     if (isset($grid_set['with']['many_to_one'])) {
       foreach ($result as $id => $row) {
         foreach ($row as $field => $value) {
           if (in_array($field,$many_to_one_fields)) {
-            $abstract_field = $this->settings['relations']['many_to_one'][$field]['result_name'].'.abstract';
-            if (isset($row[$abstract_field])) {
-              $result[$id][$field] = '{"'.$value.'":"'.trim($row[$abstract_field],'|, ').'"}';
-              unset($result[$id][$abstract_field]);
+            $result_name = $this->settings['relations']['many_to_one'][$field]['result_name'];
+            if (!isset($row[$result_name])) {
+              $result_name .= '.abstract';
+            }
+            if (isset($row[$result_name])) {
+              $result_value = $row[$result_name];
+              if (is_array($result_value)) {
+                array_shift($result_value);
+                $result_value = implode(' | ',$result_value);
+              }
+              $result[$id][$field] = '{"'.$value.'":"'.trim($result_value,'|, ').'"}';
+              unset($result[$id][$result_name]);
             }
           }
         }
@@ -3920,7 +3928,7 @@ Class Data_Core extends CI_Model {
 	 *
 	 * @param array $set [NULL]
 	 * @param mixed $escape [NULL]
-	 * @return mixed FALSE als niet gelukt, anders de id van het aangepaste item
+	 * @return mixed FALSE als niet gelukt, anders de id van het nieuwe item
 	 * @author Jan den Besten
 	 */
   public function insert( $set = NULL, $escape = NULL ) {
