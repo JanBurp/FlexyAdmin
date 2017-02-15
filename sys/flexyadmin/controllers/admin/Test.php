@@ -30,6 +30,20 @@ class Test extends MY_Controller {
     $this->table->set_template($template);
 	}
   
+  public function index() {
+    if (!IS_LOCALHOST) return;
+    
+    $this->data->table( 'tbl_adressen' );
+    $this->data->with( 'one_to_many' );
+    $this->data->find( 'van' );
+    $query = $this->data->get()->result_array();
+    $info = $this->data->get_query_info();
+    
+    trace_($query);
+    
+  }
+  
+  
   public function settings() {
     if (!IS_LOCALHOST) return;
 
