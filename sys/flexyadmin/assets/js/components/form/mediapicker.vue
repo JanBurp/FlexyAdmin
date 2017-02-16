@@ -27,8 +27,9 @@ export default {
   
   data : function() {
     return {
-      media : this.value,
-      choose: false,
+      media   : this.value,
+      single  : (this.name.indexOf('_') === 5),
+      choose  : false,
     };
   },
   
@@ -51,14 +52,19 @@ export default {
     },
     
     addMedia : function(media) {
-      var currentMedia = _.trim(this.media,'|').split('|');
-      var newMedia = _.clone(currentMedia);
-      var item = media[0];
-      // console.log(media,newMedia,newMedia.indexOf(item));
-      if (newMedia.indexOf(item)<0) {
-        newMedia = media.concat(newMedia);
-        newMedia = _.uniq(newMedia);
-        this.changeMedia(newMedia);
+      if (this.single) {
+        this.changeMedia([media]);
+      }
+      else {
+        var currentMedia = _.trim(this.media,'|').split('|');
+        var newMedia = _.clone(currentMedia);
+        var item = media[0];
+        // console.log(media,newMedia,newMedia.indexOf(item));
+        if (newMedia.indexOf(item)<0) {
+          newMedia = media.concat(newMedia);
+          newMedia = _.uniq(newMedia);
+          this.changeMedia(newMedia);
+        }
       }
     },
     
