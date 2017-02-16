@@ -90,6 +90,11 @@ Class Data_Core extends CI_Model {
   protected $relation_tables = array();
   
   /**
+   * Onthoud eventueel array van result_name met bijbehorende velden van de andere tabel
+   */
+  protected $relation_result_fields = FALSE;
+  
+  /**
    * Set to TRUE if a query has been prepared
    */
   protected $tm_query_prepared = FALSE;
@@ -128,6 +133,11 @@ Class Data_Core extends CI_Model {
   protected $tm_has_condition = FALSE;
   
   /**
+   * Hier komen grid_set instellingen als het om een grid resultaat gaat
+   */
+  protected $tm_as_grid = FALSE;
+  
+  /**
    * Een eventueel veld dat een compleet pad moet bevatten in een tree table
    */
   protected $tm_tree       = FALSE;
@@ -157,19 +167,19 @@ Class Data_Core extends CI_Model {
   protected $tm_offset        = 0;
   protected $tm_jump_to_today = FALSE;
 
-
   /**
    * Welke relaties mee moeten worden genomen en op welke manier
    */
   protected $tm_with    = array();
   
   /**
-   * Wat er gezocht gaat woren
-   * - terms
-   * - with
-   * - settings
+   * Wat er gezocht gaat woren, de argumenten die meegegeven worden aan ->find()
+   * - terms (string, array van strings, of assoc array met multiple finds)
+   * - fields (array)
+   * - settings (array)
    */
-  protected $tm_find      = FALSE;
+  protected $tm_find             = FALSE;
+  private $forbidden_find_fields = array('id','order','self_parent','uri');
 
   /**
    * Set array voor insert/update
@@ -867,6 +877,7 @@ Class Data_Core extends CI_Model {
     $this->tm_jump_to_today          = FALSE;
     $this->tm_find                   = FALSE;
     $this->tm_has_condition          = FALSE;
+    $this->tm_as_grid                = FALSE;
     $this->with(FALSE);
     $this->db->reset_query();
     return $this;
@@ -1278,6 +1289,72 @@ Class Data_Core extends CI_Model {
     return $set;
   }
   
+  /**
+   * Maak een handige array van [result_name => ['type'=>'',fields'=>[other_table_fields],'other_table'=>'']] voor intern gebruik
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _set_relation_result_fields() {
+    $this->relation_result_fields = array();
+    foreach ($this->settings['relations'] as $type => $relations) {
+      foreach ($relations as $key => $relation) {
+        if (isset($relation['result_name']) and isset($relation['other_table'])) {
+          $this->relation_result_fields[ $relation['result_name'] ] = array(
+            'relation'    => $type,
+            'other_table' => $relation['other_table'],
+            'fields'      => $this->get_other_table_fields( $relation['other_table'] ),
+          );
+        }
+      }
+    }
+    return $this;
+  }
+  
+  /**
+   * Geeft de result_name informatie van een result_name
+   *
+   * @param string $result_name 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _get_relation_result($result_name,$with=NULL) {
+    if ( !$this->relation_result_fields ) $this->_set_relation_result_fields();
+    $result = el($result_name,$this->relation_result_fields);
+    if (isset($with)) {
+      if ($with) {
+        $relation = $result['relation'];
+        if (!isset($with[$relation])) $result = FALSE;
+      }
+      else {
+        $result = FALSE;
+      }
+    }
+    return $result;
+  }
+  
+  /**
+   * Test of string is een result_name van een (ingestelde) relatie
+   *
+   * @param string $name
+   * @return bool
+   * @author Jan den Besten
+   */
+  private function _is_result_name($name,$with=NULL) {
+    if ( !$this->relation_result_fields ) $this->_set_relation_result_fields();
+    $is_result_name = isset($this->relation_result_fields[$name]);
+    if (isset($with)) {
+      if ($with) {
+        $relation = $this->relation_result_fields[$name];
+        if (!isset($relation['relation'],$with)) $is_result_name = FALSE;
+      }
+      else {
+        $is_result_name = FALSE;
+      }
+    }
+    return $is_result_name;
+  }
+  
   
   /**
    * Geeft ingestelde relatie met gegeven key/waarde van die relaties setting (bv 'other_table' oid)
@@ -1584,7 +1661,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get( $limit=0, $offset=0, $reset = true ) {
-
+    
     $this->_prepare_query($limit,$offset);
     
     // get
@@ -1621,6 +1698,7 @@ Class Data_Core extends CI_Model {
         }
       }
     }
+
     
     // Query Info Complete
     if ($query) {
@@ -1658,11 +1736,11 @@ Class Data_Core extends CI_Model {
     // bouw select query op
     $this->_select();
     
-    // bouw find query op
-    if ($this->tm_find) $this->_find();
-    
     // bouw relatie queries
-    if ( !empty( $this->tm_with ) ) $this->_with( $this->tm_with );
+    $this->_with();
+    
+    // bouw find query op
+    $this->_find();
     
     // maak select concreet
     $this->db->select( $this->tm_select, FALSE );
@@ -1969,6 +2047,7 @@ Class Data_Core extends CI_Model {
       if ($this->tm_cache_result) $this->_cache_result($result);
       $query->free_result();
     }
+    
 
     $this->reset();
     return $result;
@@ -2151,14 +2230,12 @@ Class Data_Core extends CI_Model {
    *
    * @param mixed $limit [20] 
    * @param mixed $offset [FALSE] De start van het resultaat, als FALSE dan is jump_to_today aktief, anders niet.
-   * @param string $sort [''] Veld dat de volgorde van het resultaat bepaalt, als het DESC moet, dan beginnen met een '_'
-   * @param mixed $find [''] Een string waarde die gevonden moet worden, of een array met alle parameters van ->find()
-   * @param mixed $where [''] Een where statement zoals aan de eerste paramater van ->where() gegeven kan worden.
    * @return array
    * @author Jan den Besten
    */
-  public function get_grid( $limit = 20, $offset = FALSE, $sort = '', $find = '', $where = '' ) {
+  public function get_grid( $limit = 20, $offset = FALSE ) {
     $grid_set = $this->get_setting_grid_set();
+    $this->tm_as_grid = $grid_set;
     
     // Select
     $this->select( $grid_set['fields'] );
@@ -2172,65 +2249,10 @@ Class Data_Core extends CI_Model {
     }
     if (isset($grid_set['with']['many_to_one'])) $many_to_one_fields = array_keys($grid_set['with']['many_to_one']);
     
-    // Order_by
-    if (empty($sort)) {
-      if (!empty($this->tm_order_by)) {
-        $sort=$this->tm_order_by;
-        $this->tm_order_by = array();
-      }
-      else {
-        $sort = el('order_by',$grid_set,$this->settings['order_by']);
-      }
-    }
-    $this->order_by( $sort );
-    
-    // Paths als menu tabel
+    // Tree als menu tabel
     if ( $this->is_menu_table() ) {
       $title_field = $this->list_fields( 'str',1 );
       $this->tree( 'uri' );//->tree( $title_field );
-    }
-    
-    // Where
-    if ( $where ) {
-      $this->where( $where );
-    }
-    
-    // Find
-    if ( $find ) {
-      // Simple find
-      if ( !is_array($find) )  {
-        $fields = $grid_set['fields'];
-        if (isset($grid_set['with'])) {
-          foreach ($grid_set['with'] as $type => $with) {
-            $relations = $this->get_setting(array('relations',$type));
-            foreach ($relations as $what => $with_info) {
-              // Verwijdern result_name uit velden, en voeg abstract velden van other_table toe
-              if ($key = array_search($with_info['result_name'],$fields)) unset($fields[$key]);
-              if ($key = array_search($with_info['other_table'],$fields)) unset($fields[$key]);
-              $other_fields = $this->get_other_table_abstract_fields( $with_info['other_table'] );
-              if ($other_fields) {
-                foreach ($other_fields as $other_field) {
-                  $fields[] = '`'.$with_info['result_name'].'`.`'.$other_field.'`';
-                }
-              }
-            }
-          }
-        }
-        $find=array( 'terms'=>$find, 'fields'=>$fields, 'settings'=>array() );
-        $this->find( $find['terms'], $find['fields'], $find['settings'] );
-      }
-      else {
-        $search_with = array_keys($grid_set['with']);
-        foreach ($find as $findItem) {
-          $settings = array(
-            'and'   => $findItem['and'],
-            'exact' => $findItem['equals'] === 'exact',
-            'word'  => $findItem['equals'] === 'word',
-            'with'  => $search_with,
-          );
-          $this->find( $findItem['term'], $findItem['field'], $settings );
-        }
-      }
     }
     
     // Pagination
@@ -2791,8 +2813,8 @@ Class Data_Core extends CI_Model {
       return $this;
     }
     
-    $other_table = get_prefix($key,'.');
-    $key         = get_suffix($key,'.');
+    $other_table = trim(get_prefix($key,'.'),'` ');
+    $key         = trim(get_suffix($key,'.'),'` ');
     if (empty($other_table) or empty($key) or $key==$other_table) {
       $this->reset();
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): First argument of `..._exists` needs to be of this format: `table.field`.' );
@@ -2869,9 +2891,10 @@ Class Data_Core extends CI_Model {
    * Er zijn nog diverse instellingen om de zoekfunctie verder te verfijnen:
    * 
    * - 'and'         - ['OR'] Als er meerdere zoekopdrachten worden gegeven kun je hier aangeven of ze AND of OR moeten worden gekoppeld. Default is 'OR' (wat afwijkt van ->where(), maar voor zoeken logischer).
-   * - 'word'        - [FALSE] Geef aan of de zoekterm als geheel woord moet worden gevonden, of als een reeks karakters.
-   * - 'exact'       - [FALSE] Geef aan of de zoekterm exact in het gezochte veld moet voorkomen.
-   * 
+   * - 'equals'      - [like|exact|word] Default [like]. Hiermee kun je aangeven hoe precies er gezocht moet worden:
+   *                   - 'like'  - In het veld wordt op een willekeurige plaats de zoekterm te vinden zijn.
+   *                   - 'word'  - In het veld moet de zoekterm als afgezonderd geheeld (een woord) worden gezocht.
+   *                   - 'exact' - Het veld moet precies hetzelfde zijn als de zoekterm.
    * - 'with'        - [array('many_to_one','one_to_many','many_to_many')] Geef aan welke relaties mee moeten worden genomen.
    * - 'many_exists' - [TRUE] Net als where_exists()
    * 
@@ -2884,6 +2907,26 @@ Class Data_Core extends CI_Model {
    * - Automatisch wordt in alle 'many_to_many' en 'one_to_many' relaties gezocht (zoals bij like_exists())
    * - Je kunt specifieker instellen met $settings['with'] welke relaties mee moeten worden genomen met het zoeken
    * 
+   * Verfijnd zoeken
+   * ---------------
+   * 
+   * Je kunt ook verfijnder zoeken door een array mee te geven waarin de zoektermen, velden en settings gespecificeerd zijn.
+   * Daarmee kun je termen in specifieke velden zoeken.
+   * 
+   * Die array ziet er dan zo uit:
+   * 
+   * array(
+   *  array(
+   *    'term'    => '',       // Zoekterm (string, of array van strings)
+   *    'fields'  => array(),  // Array van velden waarin term gezocht moet worden. Ook result_name's van relaties kunnen meegegeven worden.
+   *    'and'     => 'AND|OR'
+   *    'equals'  => ['like'|'word'|'exact']
+   *  ),
+   *  ...
+   *  ...
+   * )
+   * 
+   * 
    * @param mixed $terms Zoekterm(en) als een string of array van strings. Letterlijk zoeken kan door termen tussen "" te zetten.
    * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden (behalve id,order,self_parent). Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
    * @param array $settings [array()] Extra instelingen.
@@ -2892,204 +2935,39 @@ Class Data_Core extends CI_Model {
    */
   public function find( $terms, $fields = array(), $settings = array() ) {
     if (empty($terms)) return $this;
-    
-    // settings
-    $defaults = array(
-      'and'             => 'OR',
-      'word'            => FALSE,
-      'exact'           => FALSE,
-      'with'            => array('many_to_one','one_to_many','many_to_many'),
-      'many_exists'     => TRUE,
-    );
-    $settings = array_merge( $defaults,$settings );
-    if (!is_string($settings['and']) or is_numeric($settings['and']) or empty($settings['and'])) {
-      if ($settings['and']==TRUE)  $settings['and'] = 'AND';
-      if ($settings['and']==FALSE) $settings['and'] = 'OR';
-    }
-    $settings['and'] = strtoupper( $settings['and'] );
-    
-    // In welke velden zoeken?
-    if ( is_string($fields) ) $fields = array($fields);
 
-    // Geen velden meegegeven, gebruik dan alle velden van deze tabel (zoals ingesteld).
-    if ( empty($fields) ) {
-      $fields = $this->settings['fields'];
-      // Inclusief die van de meegegeven relaties
-      if ($this->tm_with) {
-        foreach ($this->tm_with as $type => $with) {
-          foreach ($with as $what => $info) {
-            // // trace_([$type,$what,$info]);
-            // if (in_array($type,array('one_to_many','many_to_many'))) {
-              foreach ($info['fields'] as $field) {
-                $fields[]=$info['as'].'.'.$field;
-              }
-            // }
-          }
-        }
-      }
-    }
-    // Sommige velden hoeft zowiezo niet in gezocht te worden:
-    $forbidden_fields = array('id','order','self_parent');
-    foreach ($forbidden_fields as $forbidden_field) {
-      if ( $found_key=array_search($forbidden_field,$fields) ) {
-        unset($fields[$found_key]);
-      }
-    }
-    
-    // Splits terms
-    if ( is_array($terms) ) $terms = implode(' ',$terms);
-    $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
-    
-    // Bewaar zoekvraag per zoekterm
-    if ($this->tm_find===FALSE) $this->tm_find = array(
-      'search'=>array(),
-      'settings'=>$settings
-    );
-    $this->tm_find['settings'] = array_merge($this->tm_find['settings'],$settings);
-
-    if (empty($this->tm_find)) $this->tm_find['search']=array();
-    
-    foreach($terms as $term) {
-      $search=array();
-      if (el('and',$settings)==='OR')
-        $search['group'] = 'group_start';
-      else
-        $search['group'] = 'and_group_start';
-      foreach ($fields as $field) {
-        $search[] = array(
-          'field'       => $field,
-          'term'        => $term,
-          'and'         => el('and',$settings,'OR'),
-          'word'        => el('word',$settings,FALSE),
-          'exact'       => el('exact',$settings,FALSE),
-          'settings'    => array()
-        );
-      }
-      $this->tm_find['search'][] = $search;
-    }
-    
-    return $this;
-  }
-  
-  /**
-   * Hiermee kun je meerdere zoekopdrachten in één keer meegeven.
-   * Een uitgebreide versie van ->find() dus.
-   * 
-   * Je moet een array meegeven met per veld de te zoeken waarden en instellingen:
-   * 
-   * array(
-   * 
-   *    array(
-   *      'field' => veld waarin gezocht moet worden.
-   *      'term'  => te zoeken term, zie bij ->find() voor alle opties hier.
-   *      'and'   => ["OR"] Zie ->find() settings.
-   *      'word'  => [FALSE] (idem)
-   *      'exact' => [FALSE] (idem)
-   *    ),
-   * 
-   *    array(
-   *      'field' => ...
-   *      'term'  => ...
-   *      'and'   => ...
-   *      'word'  => ...
-   *      'exact' => ...
-   *    ),
-   * 
-   *    ...etc...
-   * 
-   * )
-   * 
-   * 
-   * groups
-   * ------
-   * 
-   * Je kunt het zoeken onderverdelen in groepen door meerdere aanroepen van find_multiple() te doen.
-   * Maar je kunt het ook in de $search array al meegeven door subarrays.
-   * De groepsnaam kan van alles zijn (heeft geen functie) als het maar uniek is.
-   * In de array moet dan de key 'group' bestaan met daarin de standaard CodeIgniter group methods met één afwijking: group_start is OR en or_group_start is vervangen door and_group_start.
-   * 
-   * Bijvoorbeeld:
-   * 
-   * array(
-   * 
-   *    array(
-   *      'group' => 'group_start',
-   *      array(
-   *        'field' => veld waarin gezocht moet worden.
-   *        'term'  => te zoeken term, zie bij ->find() voor alle opties hier.
-   *        'and'   => ["OR"] Zie ->find() settings.
-   *        'word'  => [FALSE] (idem)
-   *        'exact' => [FALSE] (idem)
-   *      )
-   *      array(
-   *        'field' => ...
-   *        'term'  => ...
-   *        'and'   => ...
-   *        'word'  => ...
-   *        'exact' => ...
-   *      ),
-   *      array(
-   *        'group' => 'or_group_start'   // geneste group
-   *        array(
-   *          'field' => ...
-   *          'term'  => ...
-   *          'and'   => ...
-   *          'word'  => ...
-   *          'exact' => ...
-   *        )
-   *        array(
-   *          'field' => ...
-   *          'term'  => ...
-   *          'and'   => ...
-   *          'word'  => ...
-   *          'exact' => ...
-   *        )
-   *      ),
-   *    ),
-   * 
-   *    array(
-   *      'field' => ...
-   *      'term'  => ...
-   *      'and'   => ...
-   *      'word'  => ...
-   *      'exact' => ...
-   *    ),
-   * 
-   *    ...etc...
-   * 
-   * )
-   * 
-   *
-   * @param array $search Hier geef je een array met alle zoektermen per veld.
-   * @param array $settings [array()] Extra instelingen, de meeste zitten al in $search, hier alleen 'with' en 'many_exists'. Zie verder bij ->find()
-   * @return $this
-   * @author Jan den Besten
-   */
-  public function find_multiple( $search, $settings = array() ) {
     $this->tm_find = array(
-      'search'   =>$search,
-      'settings' =>$settings
+      'terms'    => $terms,
+      'fields'   => $fields,
+      'settings' => $settings,
     );
+    
     return $this;
   }
-  
+    
 
   /**
-   * Bouw de query van een zoekterm op
+   * Bouw een gehele zoekquery op aan de hand van ingestelde ->tm_find
    *
-   * @param array $terms 
-   * @param arrat $fields 
-   * @param array $settings 
    * @return void
    * @author Jan den Besten
    */
-  private function _find_term( $terms, $fields = array(), $settings = array() ) {
-    // settings
+  private function _find() {
+    if (!$this->tm_find) return $this;
+    
+    $terms    = el('terms',$this->tm_find,'');
+    $fields   = el('fields',$this->tm_find,array());
+    $settings = el('settings',$this->tm_find,array());
+    
+    if (empty($terms)) return $this;
+    
+    // Settings
+    $with = el('with',$this->tm_as_grid );
+    if (empty($with)) $with = array('many_to_one','one_to_many','many_to_many');
     $defaults = array(
       'and'             => 'OR',
-      'word'            => FALSE,
-      'exact'           => FALSE,
-      'with'            => array('many_to_one','one_to_many','many_to_many'),
+      'equals'          => 'like',
+      'with'            => $with,
       'many_exists'     => TRUE,
     );
     $settings = array_merge( $defaults,$settings );
@@ -3098,186 +2976,228 @@ Class Data_Core extends CI_Model {
       if ($settings['and']==FALSE) $settings['and'] = 'OR';
     }
     $settings['and'] = strtoupper( $settings['and'] );
-    // trace_(['find',$terms,$fields,$settings]);
+
+    // De complete zoek array
+    $search = array();
     
-    // In welke velden zoeken?
-    if ( is_string($fields) ) $fields = array($fields);
-    
-    // Geen velden meegegeven, gebruik dan alle velden van deze tabel (zoals ingesteld).
-    if ( empty($fields) ) {
-      $fields = $this->settings['fields'];
+    // Is het een verfijnde zoekopdracht? Dan zijn we al klaar.
+    if (is_array($terms) and is_multi($terms)) {
+      $search = $this->_add_result_names_find($terms,$settings);
     }
-    
-    // Sommige velden nooit in zoeken:
-    $forbidden_fields = array('id','order','self_parent');
-    foreach ($forbidden_fields as $forbidden_field) {
-      if ( $found_key=array_search($forbidden_field,$fields) ) {
-        unset($fields[$found_key]);
-      }
+    // Zo niet, maak van de simpele zoekopdracht een verfijnde zoekopdracht
+    else {
+      $search = $this->_create_splitted_find($terms,$fields,$settings);
     }
+    $this->_create_complete_search( $search );
     
-    // Ook nog in relaties zoeken?
-    if ( isset($this->tm_with) and !empty($this->tm_with) ) {
-      foreach ($this->tm_with as $type => $tm_with) {
-        if ( in_array($type,$settings['with']) ) {
-          foreach ($tm_with as $what => $with) {
-
-            // Alleen relaties die in de velden staan
-            if ( !in_array($what,$fields) ) continue;
-
-            $other_table  = $this->settings['relations'][$type][$what]['other_table'];
-            $as           = $this->settings['relations'][$type][$what]['result_name'];
-            $other_fields = $with['fields'];
-
-
-            if ($other_fields==='abstract') $other_fields = $this->get_other_table_abstract_fields( $other_table );
-
-            if (!is_array($other_fields)) $other_fields = explode(',',$other_fields);
-            foreach ($other_fields as $other_field) {
-              switch ($type) {
-                case 'many_to_one':
-                  array_push( $fields, array(
-                    'relation' => 'many_to_one',
-                    'field'    => $as.'.'.$other_field,
-                  ));
-                  break;
-                case 'one_to_many':
-                  array_push( $fields, array(
-                    'relation' => 'one_to_many',
-                    'field'    => $other_table.'.'.$other_field,
-                  ));
-                  break;
-                case 'many_to_many':
-                  array_push( $fields, array(
-                    'relation' => 'many_to_many',
-                    'field'    => $other_table.'.'.$other_field,
-                  ));
-                  break;
+    return $this;
+  }
+  
+  private function _add_result_names_find($search,$settings) {
+    foreach ($search as $key => $find) {
+      $fields = $find['field'];
+      if (!is_array($fields)) $fields = array($fields);
+      // Inclusief result_name van de meegegeven relaties (word later omgezet in velden van die tabel)
+      if (is_array($settings['with'])) {
+        foreach ($settings['with'] as $type => $with) {
+          if (is_string($type)) $with = $type;
+          if ($type==='many_to_one') {
+            $relations = el(array('relations',$with), $this->settings, FALSE);
+            if ($relations) {
+              foreach ($relations as $what => $info) {
+                if (in_array($info['foreign_key'],$fields)) array_push($fields,$info['result_name']);
               }
             }
           }
         }
       }
+      $search[$key]['field'] = $fields;
+    };
+    return $search;
+  }
+  
+  /**
+   * Maak van een eenvoudig zoekopdracht een verfijnde zoekopdracht
+   *
+   * @param mixed $terms 
+   * @param array $fields 
+   * @param array $settings 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _create_splitted_find($terms,$fields,$settings) {
+    // Welke velden?
+    if ( is_string($fields) ) $fields = array($fields);
+    // Geen velden meegegeven, gebruik dan alle velden van deze tabel, of van de grid_set (zoals ingesteld).
+    if ( empty($fields) ) {
+      if ($this->tm_as_grid) $fields = el('fields',$this->tm_as_grid, array() );
+      if (empty($fields)) $fields = $this->settings['fields'];
     }
-    
-    // Plak tabelnaam voor elk veld, als dat nog niet zo is, en escape
-    foreach ( $fields as $key => $field ) {
-      if (is_array($field)) {
-        if (strpos($field['field'],'.')===FALSE) $fields[$key]['field'] = $this->db->protect_identifiers($this->settings['table'].'.'.$field['field']);
-      }
-      else {
-        if (strpos($field,'.')===FALSE) $fields[$key] = $this->db->protect_identifiers($this->settings['table'].'.'.$field);
-      }
-    }
-    
-    // Splits terms
-    if ( is_array($terms) ) $terms = implode(' ',$terms);
-    $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
-    
-    // Bouw 'query' op voor elke term
-    $tm_find=array();
-    
-    foreach ($terms as $terms) {
-      $terms = trim($terms,'"');
-      
-      // Start term query AND/OR?
-      if ($settings['and']==='AND') {
-        $this->db->group_start();
-      }
-      else {
-        $this->db->or_group_start();
-      }
-      
-      // Per veld:
-      foreach ($fields as $field) {
-        $relation=FALSE;
-        if (is_array($field)) {
-          $relation=$field['relation'];
-          $field=$field['field'];
+    // Inclusief result_name van de meegegeven relaties (word later omgezet in velden van die tabel)
+    if (is_array($settings['with'])) {
+      foreach ($settings['with'] as $type => $with) {
+        if (is_string($type)) $with = $type;
+        $relations = el(array('relations',$with), $this->settings, FALSE);
+        if ($relations) {
+          foreach ($relations as $what => $info) {
+            array_push($fields,$info['result_name']);
+          }
         }
-        if ( $settings['many_exists'] AND $relation==='many_to_many') {
-          // 'many_to_many' => ..._exists()
-          if ( $settings['exact'] ) {
-            $this->or_where_exists( $field, $terms );
+      }
+    }
+  
+    // Zet om naar (complete) zoekopdracht
+    if (!is_array($terms)) $terms=array($terms);
+    foreach($terms as $term) {
+      $search[] = array(
+        'term'        => $terms,
+        'field'       => $fields,
+        'and'         => $settings['and'],
+        'equals'      => $settings['equals'],
+        // ??
+        'with'        => $settings['with'],
+        'many_exists' => $settings['many_exists'],
+      );
+    }
+    return $search;
+  }
+  
+  /**
+   * Zet verfijnde zoekopdracht per term om naar SQL
+   *
+   * @param array $search 
+   * @return $this
+   * @author Jan den Besten
+   */
+  private function _create_complete_search( $search ) {
+    foreach ( $search as $item) {
+
+      // Splits termen als er meerdere door spaties zijn gescheiden (rekening houdend met quotes)
+      $terms = $item['term'];
+      if ( is_array($terms) ) $terms = implode(' ',$terms);
+      $terms = preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
+      
+      $fields = $item['field'];
+      if (!is_array($fields)) $fields = array($fields);
+      // Sommige velden hoeft nooit in gezocht te worden:
+      $fields = array_diff($fields,$this->forbidden_find_fields);
+      
+      // Verwijder niet bestaande velden, TODO: of vervang ze door de velden uit een relatietabel array('relation'=>'','fields'=>array())
+      foreach ($fields as $key => $field) {
+        if (!in_array($field,$this->settings['fields'])) {
+          if ( !$this->_is_result_name($field,$this->tm_with) ) {
+            unset($fields[$key]);
           }
           else {
-            $this->or_like_exists( $field, $terms, 'both' );
+            $fields[$key] = $this->_get_relation_result($field,$this->tm_with);
+            if ($fields[$key]) {
+              $fields[$key]['fields'] = array_diff($fields[$key]['fields'],$this->forbidden_find_fields);
+            }
+            else {
+              unset($fields[$key]);
+            }
+          }
+        }
+      }
+      
+      // Plak tabelnaam voor elk veld, als dat nog niet zo is, en escape
+      foreach ( $fields as $key => $field ) {
+        if (is_array($field)) {
+          foreach ($field['fields'] as $k=>$other_field) {
+            $fields[$key]['fields'][$k] = $this->_protect_field($other_field,$field['other_table']);
           }
         }
         else {
-          // Normal fields, or 'many_to_one'
-          if ( $settings['exact'] ) {
-            $this->or_where( $field, $terms, FALSE);
-          }
-          elseif ( $settings['word'] ) {
-            $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$terms.'[[:>:]]\'', NULL, FALSE);
-          }
-          else {
-            $this->db->or_like( $field, $terms, 'both', FALSE);
-          }
+          $fields[$key] = $this->_protect_field($field,$this->settings['table']);
         }
       }
       
-      // End of term query
-      $this->db->group_end();
+      // Zoek in alle termen
+      foreach ($terms as $term) {
+        // Begin van deze term
+        if ($item['and']==='AND') {
+          $this->db->group_start();
+        }
+        else {
+          $this->db->or_group_start();
+        }
+        // Zoek in de term
+        $this->_find_term( $term, $fields, $item['equals'], el('many_exists',$item,TRUE));
+        // Einde van deze term
+        $this->db->group_end();
+      }
+      
+    }
+  }
+  
+  private function _protect_field($field,$table='') {
+    if (strpos($field,'.')===FALSE and isset($table)) $field = $table.'.'.$field;
+    return $this->db->protect_identifiers($field);
+  }
+  
+  
+  /**
+   * Bouw de query van een zoekterm op
+   *
+   * @param array $term
+   * @param arrat $fields 
+   * @param array $settings 
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _find_term( $term, $fields = array(), $equals='like', $many_exists=TRUE ) {
+    // Schoon term wat op (geen quotes en spaties)
+    $term = trim($term,"\"' ");
+    
+    // Per veld:
+    foreach ($fields as $sub_fields) {
+      $relation = FALSE;
+      if (is_array($sub_fields)) {
+        $relation   = $sub_fields['relation'];
+        $sub_fields = $sub_fields['fields'];
+      }
+      else {
+        $sub_fields = array($sub_fields);
+      }
+      
+      foreach ($sub_fields as $field) {
+        
+        // many_to_many exists...
+        if ( $many_exists AND $relation==='many_to_many') {
+          switch ($equals) {
+            case 'exact':
+              $this->or_where_exists( $field, $term );
+              break;
+            case 'word':
+            case 'like':
+            default:
+              $this->or_like_exists( $field, $term, 'both' );
+              break;
+          }
+        }
+
+        // Normaal
+        else {
+          switch ($equals) {
+            case 'exact': 
+              $this->or_where( $field, $term, FALSE);
+              break;
+            case 'word':
+              $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
+              break;
+            case 'like':
+            default:
+              $this->db->or_like( $field, $term, 'both', FALSE);
+              break;
+          }
+        }
+      }
     }
     
     return $this;
   }
   
-  /**
-   * Bouw een gehele zoekquery op
-   *
-   * @return void
-   * @author Jan den Besten
-   */
-  private function _find( $search=NULL, $settings=NULL ) {
-    if (is_null($search))   $search = $this->tm_find['search'];
-    if (is_null($settings)) $settings = $this->tm_find['settings'];
-    
-    // Loop alle search termen langs
-    $this->db->group_start();
-    foreach ( $search as $key => $item) {
-      // GROUP
-      if ( isset($item['group']) and in_array(strtoupper($item['group']),array('GROUP_START','AND_GROUP_START','NOT_GROUP_START','AND_NOT_GROUP_START')) ) {
-        $group=strtolower($item['group']);
-        switch ($group) {
-          case 'group_start':
-            $group='or_group_start';
-            break;
-          case 'and_group_start':
-            $group='group_start';
-            break;
-          case 'not_group_start':
-            $group='or_not_group_start';
-            break;
-          case 'and_not_group_start':
-            $group='not_group_start';
-            break;
-        }
-        $this->db->$group();
-        $items = $item;
-        unset($items['group']);
-        $this->_find( $items, $settings );
-        $this->db->group_end();
-      }
-
-      // ITEM
-      elseif (isset($item['term'])) {
-        // Alleen als veld bestaat, of in relatie
-        // if (in_array($item['field'],$this->settings['fields'])) {
-          $term = $item['term'];
-          $item_settings = array_unset_keys($item,array('term','field','settings'));
-          $item_settings = array_merge( $settings, el('settings',$item,array()), $item_settings );
-          $this->_find_term( $term, $item['field'], $item_settings );
-        // }
-      }
-      
-    }
-    $this->db->group_end();
-    
-    return $this;
-  }
+  
 
 
 
@@ -3568,22 +3488,29 @@ Class Data_Core extends CI_Model {
   /**
    * Bouwt de query op voor relaties, roept voor elke soort relatie een eigen method aan.
    *
-   * @param string $with 
    * @return $this
    * @author Jan den Besten
    */
-  protected function _with( $with ) {
-    // trace_($with);
-    foreach ( $with as $type => $what ) {
-      $method = '_with_'.$type;
-      if ( method_exists( $this, $method ) ) {
-        $this->$method( $what );
-      }
-      else {
-        $this->reset();
-        throw new ErrorException( __CLASS__.'->'.__METHOD__.'() does not exists. The `'.$type.'` relation could not be included in the result.' );
+  protected function _with() {
+    // if ( empty($this->tm_with) and $this->tm_find) {
+    //   $this->with('many_to_one');
+    //   $this->with('one_to_many');
+    //   $this->with('many_to_many');
+    // }
+    
+    if (!empty($this->tm_with)) {
+      foreach ( $this->tm_with as $type => $what ) {
+        $method = '_with_'.$type;
+        if ( method_exists( $this, $method ) ) {
+          $this->$method( $what );
+        }
+        else {
+          $this->reset();
+          throw new ErrorException( __CLASS__.'->'.__METHOD__.'() does not exists. The `'.$type.'` relation could not be included in the result.' );
+        }
       }
     }
+    
     return $this;
   }
   

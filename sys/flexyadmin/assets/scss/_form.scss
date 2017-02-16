@@ -61,11 +61,12 @@ select.form-control:not([size]):not([multiple]) {
 //  height:auto;
 }
 .custom-select {
-  height: 2.13rem!important;
+  height: 2.1rem!important;
   padding-top:0.5rem;
 }
 .form-control-sm {
-  padding-top:.35rem;
+  padding-top:.25rem;
+  height: 1.55rem!important;
 }
 
 .form-check-input {

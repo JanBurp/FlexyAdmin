@@ -6,7 +6,7 @@ Changes 3.5.0
 - Models: Filemanager, Mediatable removed and replaced with Assets
 - DB: res_media_files removed and replaced with res_assets
 - data->path() renamed to data->tree()
-- 
+- Rewrite data->find()
 
 Changes 3.4.0
 =============
