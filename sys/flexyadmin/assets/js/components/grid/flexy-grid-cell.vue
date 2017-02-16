@@ -205,6 +205,7 @@ export default {
 
 <template>
   <td v-if="type!=='hidden'" :type="type" :name="name" :value="item" :class="cellClass()" :level="level" @keyup.esc="cancelEdit()">
+
     <span v-if="showTreeNode" class="fa fa-level-up fa-rotate-90 text-muted"></span>
 
     <template v-if="isType('relation',type)">
