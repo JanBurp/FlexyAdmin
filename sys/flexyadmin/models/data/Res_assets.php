@@ -719,7 +719,7 @@ Class Res_assets extends Data_Core {
    * [- user            = user id als dit veld bestaat]
    *
    * @param string $path Geef hier de directory waar je de bestanden van wilt.
-   * @param array $filter[]
+   * @param array $filter[] zoals eerste argument van ->find()
    * @param int $limit [0]
    * @param int $offset [0] 
    * @param bool $with_thumb [FALSE] 
@@ -831,8 +831,8 @@ Class Res_assets extends Data_Core {
         else {
           // find array of mulitple where's?
           $first = current($filter);
-          if ( isset($first['field']) or isset($first['group']) ) {
-            $this->find_multiple( $filter );
+          if ( isset($first['field']) ) {
+            $this->find( $filter );
           }
           else {
             foreach ($filter as $field=>$value) {
