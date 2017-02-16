@@ -219,9 +219,17 @@ export default {
         if (addSchema===true) {
           for (var field in row) {
             // Defaults
-            if ( _.isUndefined(this.fields[field]['type']) )      this.fields[field]['type'] = 'string';
-            if ( _.isUndefined(this.fields[field]['grid-type']) ) this.fields[field]['grid-type'] = 'text';
-            if ( _.isUndefined(this.fields[field]['readonly']) )  this.fields[field]['readonly'] = false;
+            if ( _.isUndefined(this.fields[field]) ) {
+              this.fields[field] = [];
+              this.fields[field]['type']      = 'string';
+              this.fields[field]['grid-type'] = 'text';
+              this.fields[field]['readonly']  = false;
+            }
+            else {
+              if ( _.isUndefined(this.fields[field]['type']) )      this.fields[field]['type'] = 'string';
+              if ( _.isUndefined(this.fields[field]['grid-type']) ) this.fields[field]['grid-type'] = 'text';
+              if ( _.isUndefined(this.fields[field]['readonly']) )  this.fields[field]['readonly'] = false;
+            }
             data[i][field] = {
               'type'  : this.fields[field]['grid-type'] || this.fields[field]['form-type'],
               'value' : row[field]
