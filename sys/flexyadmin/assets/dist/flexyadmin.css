@@ -5691,6 +5691,8 @@ a > .fa, .btn > .fa {
       float: left;
       width: 100%;
       color: #696; }
+  .grid td.grid-cell-full-show {
+    max-width: none; }
   .grid td.grid-cell-type-color {
     max-width: 0;
     min-width: 5rem; }
@@ -5887,13 +5889,14 @@ select:-moz-focusring {
   text-shadow: 0 0 0 #000 !important; }
 
 .custom-select {
-  height: 2.13rem !important;
+  height: 2.1rem !important;
   padding-top: 0.5rem; }
 
 .form-control-sm, .input-group-sm > .form-control,
 .input-group-sm > .input-group-addon,
 .input-group-sm > .input-group-btn > .btn {
-  padding-top: .35rem; }
+  padding-top: .25rem;
+  height: 1.55rem !important; }
 
 .form-check-input {
   margin-left: 0; }

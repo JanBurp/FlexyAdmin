@@ -177,7 +177,10 @@ class Table extends Api_Model {
       if (!isset($this->args['where'])) $this->args['where'] = '';
       // txt_abstract, options
       if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
-      $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'], $this->args['order'], $this->args['filter'], $this->args['where'] );
+      $this->data->order_by( $this->args['order'] );
+      $this->data->find( $this->args['filter'] );
+      if ($this->args['where']) $this->data->where( $this->args['where'] );
+      $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'] );
     }
     else {
       // Media?

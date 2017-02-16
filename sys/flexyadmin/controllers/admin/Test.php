@@ -33,12 +33,15 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $this->data->table( 'tbl_adressen' );
-    $this->data->with( 'one_to_many' );
-    $this->data->find( 'van' );
-    $query = $this->data->get()->result_array();
+    $query = $this->data->table( 'tbl_kinderen' )
+                        // ->with('many_to_many')
+                        ->find('straat','id_adressen')
+                        // ->get()->result_array();
+                        ->get_grid();
+                        // ->get_result();
     $info = $this->data->get_query_info();
-    
+
+    // trace_sql($this->data->last_query());
     trace_($query);
     
   }

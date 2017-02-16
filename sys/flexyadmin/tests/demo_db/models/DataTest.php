@@ -588,24 +588,25 @@ class DataTest extends CITestCase {
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 26, $info['num_rows'] );
-    
+
     // word boundaries
-    $this->CI->data->find('va',null,array('word'=>TRUE));
+    $this->CI->data->find('va',null,array('equals'=>'word'));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 0, $info['num_rows'] );
+    
     // specific fields
     $this->CI->data->find('va',array('str_middle_name'));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 26, $info['num_rows'] );
     // specific fields & word boundaries
-    $this->CI->data->find('van',array('str_middle_name'),array('word'=>TRUE));
+    $this->CI->data->find('van',array('str_middle_name'),array('equals'=>'word'));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 26, $info['num_rows'] );
     // specific fields & word boundaries
-    $this->CI->data->find('va',array('str_middle_name'),array('word'=>TRUE));
+    $this->CI->data->find('va',array('str_middle_name'),array('equals'=>'word'));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 0, $info['num_rows'] );
@@ -663,7 +664,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( 6, $info['num_rows'] );
     // Zoeken in many_to_one 'straat' word_boundaries
     $this->CI->data->with( 'many_to_one' );
-    $this->CI->data->find('straat',null,array('word'=>TRUE));
+    $this->CI->data->find('straat',null,array('equals'=>'word'));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 0, $info['num_rows'] );
@@ -679,7 +680,7 @@ class DataTest extends CITestCase {
     // Zoeken in many_to_many 'van' ->word_boundaries
     $this->CI->data->table( 'tbl_adressen' );
     $this->CI->data->with( 'one_to_many' );
-    $this->CI->data->find( 'van', null, array('word'=>TRUE));
+    $this->CI->data->find( 'van', null, array('equals'=>'word'));
     $query = $this->CI->data->get();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 26, $info['num_rows'] );
@@ -690,8 +691,7 @@ class DataTest extends CITestCase {
     $this->CI->data->find( 'straat' );
     $query = $this->CI->data->get();
     $info = $this->CI->data->get_query_info();
-    $this->assertEquals( 4, $info['num_rows'] );
-    // $this->assertEquals( 28, $info['num_rows'] );
+    $this->assertEquals( 22, $info['num_rows'] );
 
     // Zoeken in many_to_many 'straat' result
     $this->CI->data->table( 'tbl_groepen' );
@@ -909,23 +909,21 @@ class DataTest extends CITestCase {
     $this->assertEquals( '{"31":"Gym|vak"}', $first['id_groepen'] );
 
     // DESC
-    $result = $this->CI->data->get_grid( 0,0, '_str_first_name');
+    $result = $this->CI->data->order_by('_str_first_name')->get_grid();
     $first = current($result);
     $this->assertEquals( 'Evy', $first['str_first_name'] );
 
-    $result = $this->CI->data->get_grid( 0,0, 'str_last_name');
+    $result = $this->CI->data->order_by('str_last_name')->get_grid();
     $first = current($result);
     $this->assertEquals( 'Aalts', $first['str_last_name'] );
 
-    $result = $this->CI->data->get_grid( 0,0, '_str_last_name');
+    $result = $this->CI->data->order_by('_str_last_name')->get_grid();
     $first = current($result);
     $this->assertEquals( 'Evertsen', $first['str_last_name'] );
     
-    // $result = $this->CI->data->get_grid( 0,0, 'id_adressen');
-    // var_dump( $this->CI->data->last_query() );
+    // $result = $this->CI->data->order_by('id_adressen')->get_grid();
     // $first = current($result);
-    // var_dump($first);
-    // $this->assertEquals( 'Evy', $first['id_adressen'] );
+    // $this->assertEquals( 'Ada', $first['id_adressen'] );
   }
   
   
