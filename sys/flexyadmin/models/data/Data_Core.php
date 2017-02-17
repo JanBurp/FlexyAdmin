@@ -1143,7 +1143,7 @@ Class Data_Core extends CI_Model {
     $field_info = array_merge($fields,$field_info);
     // Alleen de meegegeven velden
     $field_info = array_keep_keys($field_info,$fields);
-    
+
     // Loop alle velden en vul informatie aan
     foreach ($field_info as $field => $info) {
       if (!is_array($info)) $info=array();
@@ -1179,7 +1179,11 @@ Class Data_Core extends CI_Model {
     
     // Overschrijf los ingestelde settings
     if (isset($this->settings['field_info'])) {
-      $field_info = array_merge_recursive_distinct($field_info,$this->settings['field_info']);
+      foreach ($field_info as $key => $info) {
+        if (isset($this->settings['field_info'][$key])) {
+          $field_info[$key] = array_merge_recursive_distinct($field_info[$key],$this->settings['field_info'][$key]);
+        }
+      }
     }
     
     return $field_info;
@@ -1273,6 +1277,9 @@ Class Data_Core extends CI_Model {
       if ($relations) {
         foreach ($relations as $what => $info) {
           $field = 'abstract';
+          if ($type==='one_to_one' and isset($info['other_table'])) {
+            $field = $this->get_other_table_abstract_fields($info['other_table']);
+          }
           $set['with'][$type][$what] = $field;
           // Vul ook de velden aan als relatie veld er nog niet instaat
           if (!in_array($what,$set['fields'])) {
@@ -1855,12 +1862,12 @@ Class Data_Core extends CI_Model {
         foreach ($row as $field => $value) {
           if (is_null($value)) {
             $other_table = get_prefix($field,'.');
-            if (!isset($one_to_one_defaults[$other_table])) {
+            if ($other_table and !isset($one_to_one_defaults[$other_table])) {
               $one_to_one_defaults[$other_table] = $this->data->table($other_table)->get_defaults();
               $this->data->table($this->settings['table']); // Terug naar huidige data table.
+              $value       = el(array($other_table,get_suffix($field,'.')),$one_to_one_defaults,'DEFAULT');
+              $row[$field] = $value;
             }
-            $value = el(array($other_table,get_suffix($field,'.')),$one_to_one_defaults,'DEFAULT');
-            $row[$field] = $value;
           }
         }
       }
@@ -2241,13 +2248,14 @@ Class Data_Core extends CI_Model {
     $this->select( $grid_set['fields'] );
     
     // Relations
+    $flatten_fields = array();
     foreach ($grid_set['with'] as $type => $relations) {
       foreach ($relations as $what => $fields) {
         $json = (in_array($type,array('one_to_many','many_to_many')));
         $this->with( $type, array( $what=>$fields), $json, FALSE );
       }
+      if ($type==='many_to_one') $flatten_fields = array_merge($flatten_fields, array_keys($grid_set['with'][$type]) );
     }
-    if (isset($grid_set['with']['many_to_one'])) $many_to_one_fields = array_keys($grid_set['with']['many_to_one']);
     
     // Tree als menu tabel
     if ( $this->is_menu_table() ) {
@@ -2265,12 +2273,13 @@ Class Data_Core extends CI_Model {
       $this->tm_jump_to_today = TRUE;
     }
 
-    // Prepare as grid result, flatten (foreign keys include abstract and foreign data in a json)
     $result = $this->_get_result();
+
+    // Prepare as grid result, flatten (foreign keys include abstract and foreign data in a json)
     if (isset($grid_set['with']['many_to_one'])) {
       foreach ($result as $id => $row) {
         foreach ($row as $field => $value) {
-          if (in_array($field,$many_to_one_fields)) {
+          if (in_array($field,$flatten_fields)) {
             $result_name = $this->settings['relations']['many_to_one'][$field]['result_name'];
             if (!isset($row[$result_name])) {
               $result_name .= '.abstract';
@@ -3406,14 +3415,14 @@ Class Data_Core extends CI_Model {
       if ($abstract) $fields='abstract';
       // bij 'many_to_many' is $what hetzelfde als de tabel, bij 'many_to_one' moet dat uit de relaties settings worden gehaald
       $table = $what;
-      if ($type==='many_to_one') $table = $this->settings['relations']['many_to_one'][$what]['other_table'];
+      if ($type==='many_to_one') $table = $this->settings['relations'][$type][$what]['other_table'];
       // fields moet een (lege) array of een string ('abstract') zijn.
       if (is_string($fields) and $fields!==$this->config->item('ABSTRACT_field_name')) {
         $fields = explode( ',',$fields );
       }
       // Als fields een lege array is, stop dan alle velden van die tabel erin
       if (is_array($fields) and empty($fields)) {
-        if ($type=='one_to_one')   $fields = $this->get_other_table_fields( $table );
+        if ($type=='one_to_one')   $fields = $this->get_other_table_fields( $this->settings['relations']['one_to_one'][$what]['other_table'] );
         if ($type=='many_to_one')  $fields = $this->get_other_table_fields( $table );
         if ($type=='one_to_many')  $fields = $this->get_other_table_fields( $this->settings['relations']['one_to_many'][$what]['other_table'] );
         if ($type=='many_to_many') $fields = $this->get_other_table_fields( $this->settings['relations']['many_to_many'][$what]['other_table'] );
@@ -3492,12 +3501,6 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _with() {
-    // if ( empty($this->tm_with) and $this->tm_find) {
-    //   $this->with('many_to_one');
-    //   $this->with('one_to_many');
-    //   $this->with('many_to_many');
-    // }
-    
     if (!empty($this->tm_with)) {
       foreach ( $this->tm_with as $type => $what ) {
         $method = '_with_'.$type;
@@ -3525,13 +3528,12 @@ Class Data_Core extends CI_Model {
     foreach ($what as $key => $info) {
       $fields      = $info['fields'];
       $json        = el('json',$info,false);
-      $foreign_key = $this->settings['relations']['one_to_one'][$key]['foreign_key'];
       $other_table = $this->settings['relations']['one_to_one'][$key]['other_table'];
       $as          = el('as',$info, $other_table);
       // Select fields
-      $this->_select_with_fields( 'one_to_one', $other_table, $as, $fields, $foreign_key, $json );
+      $this->_select_with_fields( 'one_to_one', $other_table, $as, $fields, $id, $json );
       // Join
-      $this->join( $other_table.' AS '.$as, $as.'.'.$foreign_key.' = '.$this->settings['table'].".".$id, 'left');
+      $this->join( $other_table.' AS '.$as, $as.'.'.$id.' = '.$this->settings['table'].".".$id, 'left');
     }
     return $this;
   }
@@ -3644,12 +3646,7 @@ Class Data_Core extends CI_Model {
     }
     elseif ( $fields === 'abstract' ) {
       $abstract_fields = $this->get_other_table_abstract_fields( $other_table );
-      // if ($type=='many_to_many') {
-      //   $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table.'.' );
-      // }
-      // else {
-        $abstract = $this->get_compiled_abstract_select( $as_table, $abstract_fields, $as_table.'.' );
-      // }
+      $abstract = $this->get_compiled_abstract_select( $as_table, $abstract_fields, $as_table.'.' );
     }
     
     //
@@ -3663,7 +3660,7 @@ Class Data_Core extends CI_Model {
       }
       else {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
-        if ($type!=='many_to_one' ) {
+        if ($type!=='many_to_one' and $type!=='one_to_one') {
           $other_primary_key = $this->get_other_table_setting( $other_table, 'primary_key', PRIMARY_KEY);
           $select = '`'.$as_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
         }
@@ -3729,7 +3726,7 @@ Class Data_Core extends CI_Model {
     $select = trim(trim($select),',');
     
     // Stop select in query, als het kan direct na foreign_key
-    if (isset($foreign_key) and isset($this->tm_select[$foreign_key])) {
+    if (isset($foreign_key) and isset($this->tm_select[$foreign_key]) and $type!=='one_to_one') {
       $this->tm_select = array_add_after( $this->tm_select, $foreign_key, array($as_table=>$select) );
     }
     else {
