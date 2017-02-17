@@ -1715,7 +1715,7 @@ Class Data_Core extends CI_Model {
       if ($this->tm_limit>1) {
         $this->query_info['limit']      = (int) $this->tm_limit;
         $this->query_info['offset']     = $this->tm_offset;
-        $this->query_info['page']       = $this->tm_offset / $this->tm_limit;
+        $this->query_info['page']       = (int) floor($this->tm_offset / $this->tm_limit);
         $this->query_info['total_rows'] = $this->total_rows( true );
         $this->query_info['num_pages']  = (int) ceil($this->query_info['total_rows'] / $this->tm_limit);
       }
