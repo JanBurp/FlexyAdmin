@@ -46,25 +46,14 @@ export default {
     this.$options.components.FlexyForm = require('./../form/flexy-form.vue');
   },
   
- /**
-  * Maak items klaar voor tonen in het grid:
-  * - Voeg informatie van een veld toe aan elke cell
-  * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
-  */
-  created : function() {
-    if (this.type!=='mediapicker') this.apiParts.formID = jdb.getUrlQueryPart('form');
-    if ( !this.apiParts.formID ) {
-      this.apiParts.formID = false;
-      this.reloadPage({
-        offset : this.offset,
-        limit  : this.limit,
-        order  : this.order,
-        filter : this.filter,
-      });
-    }
-  },
   
   mounted : function() {
+
+    this.calcLimit();
+
+    //
+    // Init Find
+    //
     this.extendedFind = false;
     if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
       this.extendedFind = true;
@@ -75,16 +64,25 @@ export default {
       this.extendedTerm = [_.clone(this.extendedTermDefault)];
     }
     
-    // var content = document.querySelector('#content');
-    // var body = document.querySelector('window');
-    // var width = content.offsetWidth - 20;
-    // var height = body.height;
-    // console.log(width,height );
+    //
+    // Load first page
+    // 
+    if (this.type!=='mediapicker') this.apiParts.formID = jdb.getUrlQueryPart('form');
+    if ( !this.apiParts.formID ) {
+      this.apiParts.formID = false;
+      this.reloadPage({
+        offset : this.offset,
+        limit  : this.grid_limit,
+        order  : this.order,
+        filter : this.filter,
+      });
+    }
   },
 
 
   data : function() {
     return {
+      grid_limit  : this.limit,
       items       : [],
       fields      : [],
       searchable_fields : [],
@@ -94,7 +92,7 @@ export default {
         order         : this.order,
         filter        : this.filter,
         offset        : 0,
-        limit         : this.limit,
+        limit         : this.grid_limit,
         txt_abstract  : true,
         as_grid       : true,
         formID        : false,
@@ -151,6 +149,38 @@ export default {
   },
   
   methods:{
+    
+    calcLimit : function( view ) {
+      if (_.isUndefined(view)) view = this.getMediaView();
+      var rowHeight = 37;
+      var padding = 10;
+      var thumb = { width: 264, height: 292 }
+      // Hoogte = Window hoogte - #header hoogte - grid header - grid footer - rowHeight
+      var height = window.innerHeight - document.querySelector('#header').offsetHeight - document.querySelector('#content .card.grid>.card-header').offsetHeight  - document.querySelector('#content .card.grid>.card-footer').offsetHeight - rowHeight;
+      // Breedte = #content breedte - 4 * padding
+      var width = document.querySelector('#content table').offsetWidth - (2*padding);
+      var max_items = 20;
+      switch (view) {
+        case 'small':
+          var thumb = { width: 136, height: 154 }
+        case 'thumbs':
+          var rows = Math.floor(width / thumb.width);
+          var columns = Math.floor(height / thumb.height);
+          // console.log('rows:',rows,'columns:',columns);
+          this.grid_limit = (rows * columns) - 1;
+          break;
+        case 'list':
+        default:
+          // Extra rij eraf voor upload item
+          if (this.gridType()==='media') height -= rowHeight;
+          // Alleen de hoogte is van belang
+          max_items = height / rowHeight;
+          var step = (max_items <= 10)?2:5;
+          this.grid_limit = Math.floor(max_items / step) * step;
+      }
+      // console.log('width:',width,'height:',height,'row:',rowHeight);
+      console.log('limit',this.grid_limit);
+    },
     
     reloadPage : function(apiParts) {
       var self = this;
@@ -346,6 +376,11 @@ export default {
     },
 
     setMediaView : function(view) {
+      this.calcLimit(view);
+      if (this.items.length !== this.grid_limit) {
+        this.apiParts.limit = this.grid_limit;
+        this.reloadPage();
+      }
       return flexyState.setMediaView(view);
     },
 
