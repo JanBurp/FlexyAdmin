@@ -34,9 +34,9 @@
     </div>
   </div>
   
-  <div id="content" class="row">
+  <div id="row" class="row">
     <div id="flexy-menu-side" class="col-sm-2"><?=$sidemenu?></div>
-    <div id="main" class="col-sm-10"><?=$content?></div>
+    <div id="content" class="col-sm-10"><?=$content?></div>
   </div>
   
   <div id="mask" v-show="state.progress>0">
