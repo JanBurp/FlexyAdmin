@@ -5707,7 +5707,6 @@ a > .fa, .btn > .fa {
     padding: .35rem .35rem; }
     .grid .card-footer .actions {
       float: left;
-      margin-top: .25rem;
       margin-right: 1rem; }
 
 .grid.grid-type-tree tbody td[level="1"][name="str_title"] {
