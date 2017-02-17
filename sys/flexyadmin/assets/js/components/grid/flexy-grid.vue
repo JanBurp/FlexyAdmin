@@ -49,7 +49,14 @@ export default {
   
   mounted : function() {
 
-    this.calcLimit();
+    var self = this;
+    self.calcLimit();
+    
+    // Bij resize
+    window.addEventListener('resize', function(event){
+      self.calcLimit();
+      self.reloadAfterResize( self.grid_limit, 0);
+    });
 
     //
     // Init Find
@@ -153,33 +160,52 @@ export default {
     calcLimit : function( view ) {
       if (_.isUndefined(view)) view = this.getMediaView();
       var rowHeight = 37;
-      var padding = 10;
-      var thumb = { width: 264, height: 292 }
+      var padding = 8;
       // Hoogte = Window hoogte - #header hoogte - grid header - grid footer - rowHeight
       var height = window.innerHeight - document.querySelector('#header').offsetHeight - document.querySelector('#content .card.grid>.card-header').offsetHeight  - document.querySelector('#content .card.grid>.card-footer').offsetHeight - rowHeight;
       // Breedte = #content breedte - 4 * padding
-      var width = document.querySelector('#content table').offsetWidth - (2*padding);
-      var max_items = 20;
+      var width = this.$el.offsetWidth - (2*padding);
+      var max_items = 10;
+      var rows = 1;
+      var thumb = { width: 264, height: 292 }
       switch (view) {
         case 'small':
-          var thumb = { width: 136, height: 154 }
+          thumb = { width: 136, height: 164 }
+          rows = 2;
         case 'thumbs':
-          var rows = Math.floor(width / thumb.width);
-          var columns = Math.floor(height / thumb.height);
-          // console.log('rows:',rows,'columns:',columns);
-          this.grid_limit = (rows * columns) - 1;
+          var columns = Math.floor(width / thumb.width);
+          if (this.type!=='mediapicker') {
+            rows = Math.floor(height / thumb.height);
+          }
+          // console.log('columns:',columns,'rows:',rows);
+          this.grid_limit = (columns * rows) - 1;
+          if (this.grid_limit<=1) this.grid_limit += columns;
           break;
         case 'list':
         default:
-          // Extra rij eraf voor upload item
-          if (this.gridType()==='media') height -= rowHeight;
-          // Alleen de hoogte is van belang
-          max_items = height / rowHeight;
-          var step = (max_items <= 10)?2:5;
-          this.grid_limit = Math.floor(max_items / step) * step;
+          if (this.type==='mediapicker') {
+            // Vaste instelling
+            this.grid_limit = 10;
+          }
+          else {
+            // Extra rij eraf voor upload item
+            if (this.gridType()==='media') height -= rowHeight;
+            // Alleen de hoogte is van belang
+            max_items = height / rowHeight;
+            var step = (max_items <= 10)?2:5;
+            this.grid_limit = Math.floor(max_items / step) * step;
+          }
       }
       // console.log('width:',width,'height:',height,'row:',rowHeight);
-      console.log('limit',this.grid_limit);
+      // console.log('limit',this.grid_limit);
+    },
+    
+    reloadAfterResize : function(limit,offset) {
+      this.apiParts.offset = offset;
+      this.apiParts.limit = limit;
+      
+      
+      this.reloadPage();
     },
     
     reloadPage : function(apiParts) {
@@ -377,10 +403,7 @@ export default {
 
     setMediaView : function(view) {
       this.calcLimit(view);
-      if (this.items.length !== this.grid_limit) {
-        this.apiParts.limit = this.grid_limit;
-        this.reloadPage();
-      }
+      this.reloadAfterResize( this.grid_limit, 0);
       return flexyState.setMediaView(view);
     },
 
@@ -389,41 +412,6 @@ export default {
       if (field['readonly']) c+=' grid-header-muted';
       return c;
     },
-    
-    // setFocus : function(id,cell) {
-    //   this.focus = {id:id,cell:cell};
-    // },
-    
-    // setFocusNext : function() {
-    //   if (this.focus.id===false) {
-    //     this.focus.id = this.items[Object.keys(this.items)[0]]['id'].value;
-    //   }
-    //   if (this.focus.cell===false) {
-    //     console.log(Object.keys(this.fields)[4]);
-    //     this.focus.cell = Object.keys(this.fields)[4];
-    //   }
-    //   console.log('setFocusNext',this.focus.id,this.focus.cell);
-    // },
-    
-    // key : function(event) {
-    //   console.log('key',event);
-    //   switch (event.key) {
-    //     case 'Tab':
-    //     case 'ArrowRight':
-    //       this.setFocusNext();
-    //       break;
-    //     case 'ArrowLeft':
-    //       this.setFocusPrev();
-    //       break;
-    //   }
-    // },
-    
-    // hasFocus : function(id,cell) {
-    //   var hasFocus = true;
-    //   if (this.focus.id !== id) hasFocus = false;
-    //   if (this.focus.cell !== cell) hasFocus = false;
-    //   return hasFocus;
-    // },
     
     hasSelection : function() {
       return this.selected.length>0;
