@@ -64,7 +64,25 @@ export default {
     }
   },
   
-  
+  mounted : function() {
+    this.extendedFind = false;
+    if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
+      this.extendedFind = true;
+      this.extendedTerm = JSON.parse(this.filter);
+      this.filterTerm = '';
+    }
+    else {
+      this.extendedTerm = [_.clone(this.extendedTermDefault)];
+    }
+    
+    // var content = document.querySelector('#content');
+    // var body = document.querySelector('window');
+    // var width = content.offsetWidth - 20;
+    // var height = body.height;
+    // console.log(width,height );
+  },
+
+
   data : function() {
     return {
       items       : [],
@@ -101,18 +119,7 @@ export default {
       dropUploadHover     : false,
     }
   },
-  
-  mounted : function() {
-    this.extendedFind = false;
-    if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
-      this.extendedFind = true;
-      this.extendedTerm = JSON.parse(this.filter);
-      this.filterTerm = '';
-    }
-    else {
-      this.extendedTerm = [_.clone(this.extendedTermDefault)];
-    }
-  },
+
   
   computed:{
     

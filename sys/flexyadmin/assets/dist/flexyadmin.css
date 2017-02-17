@@ -5500,17 +5500,17 @@ a > .fa, .btn > .fa {
     float: right; }
 
 /* CONTENT */
-#content {
+#row {
   margin: 0.75rem 0px 0px; }
 
 #flexy-menu-side {
   padding-left: 0; }
 
-#main {
+#content {
   padding: 0 .5rem .5rem; }
-  #main > .card {
+  #content > .card {
     margin-top: 1rem; }
-  #main > .card:first-child {
+  #content > .card:first-child {
     margin: 0; }
 
 #content-home .nav-item {
