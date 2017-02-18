@@ -157,12 +157,13 @@ export default {
       var padding = 8;
       var thumb = { width: 264, height: 292 }
       var small = { width: 136, height: 164 }
-      var height = window.innerHeight - document.querySelector('#header').offsetHeight - document.querySelector('#content .card.grid>.card-header').offsetHeight  - document.querySelector('#content .card.grid>.card-footer').offsetHeight - rowHeight;
+      var height = window.innerHeight - document.querySelector('#header').offsetHeight - document.querySelector('#content .card.grid>.card-header').offsetHeight  - document.querySelector('#content .card.grid>.card-footer').offsetHeight - rowHeight - 2*padding;
       // Defaults:
       var max_items = 10;
       var rows = 1;
 
       // Calc new limit
+      if (this.gridType()!=='media') view = 'list';
       switch (view) {
 
         case 'small':
@@ -191,8 +192,6 @@ export default {
       if (this.apiParts.offset > 0) {
         this.apiParts.offset = Math.floor( this.apiParts.offset / this.apiParts.limit) * this.apiParts.limit
       }
-      
-      // jdb.vueLog(this.apiParts);
     },
     
     reloadPageAfterResize() {
@@ -715,9 +714,9 @@ export default {
         this.draggable.oldIndex = oldIndex;
         this.draggable.newIndex = newIndex;
         
+        var items = _.cloneDeep(this.draggable.oldItems);
         var parent_id = 0; 
         if (this.gridType()==='tree') {
-          var items = _.cloneDeep(this.draggable.oldItems);
           var number_of_children = this.draggable.children.length || 0;
           // Pas parent van verplaatste item aan
           // Bijna altijd 0, behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
@@ -732,6 +731,10 @@ export default {
           items[oldIndex].self_parent.value = parent_id;
           // Verplaats item & children
           this.items = jdb.moveMultipleArrayItems( items, oldIndex, number_of_children + 1, newIndex);
+        }
+        else {
+          // Verplaats item
+          this.items = jdb.moveMultipleArrayItems( items, oldIndex, 1, newIndex);
         }
         
         // Update 'order'
