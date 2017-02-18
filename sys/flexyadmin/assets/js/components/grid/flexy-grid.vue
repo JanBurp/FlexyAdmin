@@ -55,7 +55,7 @@ export default {
     // Bij resize
     window.addEventListener('resize', function(event){
       self.calcLimit();
-      self.reloadAfterResize( self.grid_limit, 0);
+      self.reloadPageAfterResize();
     });
 
     //
@@ -79,7 +79,7 @@ export default {
       this.apiParts.formID = false;
       this.reloadPage({
         offset : this.offset,
-        limit  : this.grid_limit,
+        limit  : this.apiParts.limit,
         order  : this.order,
         filter : this.filter,
       });
@@ -89,7 +89,6 @@ export default {
 
   data : function() {
     return {
-      grid_limit  : this.limit,
       items       : [],
       fields      : [],
       searchable_fields : [],
@@ -99,7 +98,7 @@ export default {
         order         : this.order,
         filter        : this.filter,
         offset        : 0,
-        limit         : this.grid_limit,
+        limit         : this.limit,
         txt_abstract  : true,
         as_grid       : true,
         formID        : false,
@@ -141,15 +140,9 @@ export default {
      */
     draggableOptions : function() {
       return {
-        // group         : { name:'tree', pull:true},
         draggable     : 'tr',
         handle        : '.draggable-handle',
         forceFallback : true,
-        // scroll        : true,
-        // scrollFn      : function(offsetX, offsetY, originalEvent) {
-        //   console.log(offsetY);
-        //
-        // },
       }
     },
     
@@ -159,52 +152,50 @@ export default {
     
     calcLimit : function( view ) {
       if (_.isUndefined(view)) view = this.getMediaView();
+      // Sizes:
       var rowHeight = 37;
       var padding = 8;
-      // Hoogte = Window hoogte - #header hoogte - grid header - grid footer - rowHeight
+      var thumb = { width: 264, height: 292 }
+      var small = { width: 136, height: 164 }
       var height = window.innerHeight - document.querySelector('#header').offsetHeight - document.querySelector('#content .card.grid>.card-header').offsetHeight  - document.querySelector('#content .card.grid>.card-footer').offsetHeight - rowHeight;
-      // Breedte = #content breedte - 4 * padding
-      var width = this.$el.offsetWidth - (2*padding);
+      // Defaults:
       var max_items = 10;
       var rows = 1;
-      var thumb = { width: 264, height: 292 }
+
+      // Calc new limit
       switch (view) {
+
         case 'small':
-          thumb = { width: 136, height: 164 }
+          thumb = small;
           rows = 2;
         case 'thumbs':
+          if (this.type!=='mediapicker') rows = Math.floor(height / thumb.height);
+          var width = this.$el.offsetWidth - (2*padding);
           var columns = Math.floor(width / thumb.width);
-          if (this.type!=='mediapicker') {
-            rows = Math.floor(height / thumb.height);
-          }
-          // console.log('columns:',columns,'rows:',rows);
-          this.grid_limit = (columns * rows) - 1;
-          if (this.grid_limit<=1) this.grid_limit += columns;
+          this.apiParts.limit = (columns * rows) - 1;
+          if (this.apiParts.limit<=1) this.apiParts.limit += columns;
           break;
+
         case 'list':
         default:
-          if (this.type==='mediapicker') {
-            // Vaste instelling
-            this.grid_limit = 10;
-          }
-          else {
-            // Extra rij eraf voor upload item
-            if (this.gridType()==='media') height -= rowHeight;
-            // Alleen de hoogte is van belang
+          this.apiParts.limit = 10;
+          if (this.type!=='mediapicker') {
+            if (this.gridType()==='media') height -= rowHeight; // Extra rij eraf voor upload item
             max_items = height / rowHeight;
             var step = (max_items <= 10)?2:5;
-            this.grid_limit = Math.floor(max_items / step) * step;
+            this.apiParts.limit = Math.floor(max_items / step) * step;
           }
       }
-      // console.log('width:',width,'height:',height,'row:',rowHeight);
-      // console.log('limit',this.grid_limit);
+      
+      // Calc new offset
+      if (this.apiParts.offset > 0) {
+        this.apiParts.offset = Math.floor( this.apiParts.offset / this.apiParts.limit) * this.apiParts.limit
+      }
+      
+      // jdb.vueLog(this.apiParts);
     },
     
-    reloadAfterResize : function(limit,offset) {
-      this.apiParts.offset = offset;
-      this.apiParts.limit = limit;
-      
-      
+    reloadPageAfterResize() {
       this.reloadPage();
     },
     
@@ -403,7 +394,7 @@ export default {
 
     setMediaView : function(view) {
       this.calcLimit(view);
-      this.reloadAfterResize( this.grid_limit, 0);
+      this.reloadPageAfterResize();
       return flexyState.setMediaView(view);
     },
 
