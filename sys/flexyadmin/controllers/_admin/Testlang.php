@@ -53,7 +53,7 @@ class Testlang extends CI_Controller
     public function index ()
     {
         $this->load->helper('url');
-        redirect('admin/testlang/summary');
+        redirect( $this->config->item('API_home').'testlang/summary');
     }
 
     public function lang_text ($idiom = 'english')
@@ -66,7 +66,7 @@ class Testlang extends CI_Controller
         {
 
             $classname = ($language == $idiom) ? "btn btn-primary" : "btn btn-default";
-            $language = anchor("admin/testlang/lang_text/$language", $language, array('class' => $classname));
+            $language = anchor( $this->config->item('API_home')."testlang/lang_text/$language", $language, array('class' => $classname));
         }
         unset($language);
 
@@ -121,7 +121,7 @@ class Testlang extends CI_Controller
             $data['languages'][] = array(
                     'idiom' => $idiom,
                     'nb_error' => $nb_error,
-                    'link' => anchor("admin/testlang/lang_text/$idiom", $title, array('class' => 'list-group-item')),
+                    'link' => anchor($this->config->item('API_home')."testlang/lang_text/$idiom", $title, array('class' => 'list-group-item')),
                     );
         }
 

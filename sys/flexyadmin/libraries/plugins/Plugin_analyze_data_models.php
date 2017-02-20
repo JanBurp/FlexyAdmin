@@ -40,7 +40,7 @@
         $diff = $this->CI->input->get();
         if ($diff) {
           $this->add_message( p().$table.' config merged and saved'._p() );
-          $this->add_message( p().'<a class="button" href="admin/plugin/analyze_data_models">RETURN</a>'._p() );
+          $this->add_message( p().'<a class="button" href="'.$this->CI->config->item('API_plugin').'analyze_data_models">RETURN</a>'._p() );
           
           $config = array();
           $autoset  = $this->CI->data->_config( $table, false );

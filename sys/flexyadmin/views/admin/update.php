@@ -33,7 +33,7 @@
                   <td><?=$versions['current']?></td>
                   <td><?=$versions['latest']?></td>
                   <td>
-                    <a href="admin/update/<?=$name?>">
+                    <a href="_admin/update/<?=$name?>">
                       <?php if ($versions['update']): ?>
                         <span class="glyphicon glyphicon-ok btn btn-sm btn-success"></span>
                       <?php else: ?>
@@ -48,7 +48,7 @@
               <tr>
                 <th colspan="3">Update all?</th>
                 <th>
-                  <a href="admin/update/all">
+                  <a href="_admin/update/all">
                     <?php if (!$update_all): ?>
                       <span class="glyphicon glyphicon-refresh btn btn-sm btn-danger"></span>
                     <?php else: ?>
