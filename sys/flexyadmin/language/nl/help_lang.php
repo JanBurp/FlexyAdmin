@@ -72,8 +72,6 @@ $lang['mail_denied_subject']					= 'Account aanvraag afgewezen.';
 $lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
 $lang['mail_new_subject']				      = 'U krijgt inloggegevens.';
 
-$lang['active_users']				          = 'Stuur nieuw wachtwoord naar bestaande gebruikers';
-$lang['send_new_password']            = 'Stuur&nbsp;(nieuw)&nbsp;wachtwoord';
 $lang['user_send_password']           = 'Gebruiker "%s" heeft een nieuw wachtwoord opgestuurd gekregen.';
 $lang['user_send_password_error']     = 'FOUT: Kon geen email met nieuw wachtwoord sturen aan %s.';
 $lang['user_send_error']              = 'FOUT: Kon geen email sturen aan %s.';

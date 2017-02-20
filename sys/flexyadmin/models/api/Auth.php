@@ -174,38 +174,4 @@ class auth extends Api_Model {
     return null;
   }
   
-  
-  /**
-   * Send a new password to the given emailadress
-   *
-   * @return mixed
-   * @author Jan den Besten
-   */
-  public function send_new_password() {
-    $email = $this->args['email'];
-    $user  = $this->flexy_auth->get_user_by_email($email);
-    // No user found
-    if (!$user) {
-      $this->result['data']=FALSE;
-      $this->_set_error('NO USER FOUND');
-    }
-    else {
-      // User found
-      $send=$this->flexy_auth->send_new_password( $user );
-      // Error when sending
-      if (!$send) {
-        $this->result['data']=FALSE;
-        $this->_set_error('COULD NOT SEND EMAIL');
-      }
-      else {
-        $data=array(
-          'username' => $user['username'],
-          'email'    => $user['email_email']
-        );
-        $this->result['data']=$data;
-      }
-    }
-    return $this->_result_ok();
-  }
-  
 }

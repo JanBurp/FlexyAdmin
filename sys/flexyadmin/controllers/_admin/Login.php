@@ -63,7 +63,7 @@ class Login extends MY_Controller {
 		$email = $this->input->post("email",FALSE);
     $message = lang('login_error');
 		if ($email) {
-      $this->flexy_auth->set_forgotten_password_uri( $this->config->item('API_login'). 'forgot_complete');
+      $this->flexy_auth->set_forgotten_password_uri( $this->config->item('API_login').'forgot_complete');
       if ($this->flexy_auth->forgotten_password( $email )) {
         $message = lang('login_forgot_mail_send');
       }
