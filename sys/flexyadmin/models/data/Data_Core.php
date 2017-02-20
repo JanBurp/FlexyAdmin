@@ -3216,7 +3216,7 @@ Class Data_Core extends CI_Model {
    * 
    * NB Alleen de relaties die bekend zijn in settings['relations'] worden meegenomen.
    * 
-   * Voorbeelden zijn te vinden in /admin/test/relations (NB als de 'flexyadmin_test' is geselecteerd)
+   * Voorbeelden zijn te vinden in /_admin/test/relations (NB als de 'flexyadmin_test' is geselecteerd)
    * 
    * Reset alle relaties:
    * (wordt automatisch aangeroepen na iedere ->get() variant)

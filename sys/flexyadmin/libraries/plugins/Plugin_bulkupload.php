@@ -73,7 +73,7 @@ class Plugin_bulkupload extends Plugin {
 				$renameThis='';
 				if (!empty($path)) $renameThis=$this->_newName($path,$file,$rename);
         $grid->add_action(array(
-          'action_url' => 'admin/ajax/plugin/bulkupload/'.pathencode($path).'/'.$file.'/'.$renameThis,
+          'action_url' => $this->config->item('API_home').'ajax/plugin/bulkupload/'.pathencode($path).'/'.$file.'/'.$renameThis,
           'title'      => $file,
         ));
 			}

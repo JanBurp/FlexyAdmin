@@ -5,7 +5,7 @@
  * 
  * Eerste argument is de tabel, tweede argument is het veld wat moet verhuizen.
  *  
- *      .../admin/plugin/create_foreign/tbl_menu/str_link
+ *      .../_admin/plugin/create_foreign/tbl_menu/str_link
  * 
  * @author Jan den Besten
  */

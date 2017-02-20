@@ -16,12 +16,12 @@ class AdminController extends BasicController {
   private $view_data            = array();
   private $current_uri          = '';
   private $keep_uris            = array(
-    'admin/show/form/tbl_site',
-    'admin/show/form/cfg_users'
+    '_admin/show/form/tbl_site',
+    '_admin/show/form/cfg_users'
   );
   private $replace_uris         = array(
-    '#admin/plugin/stats/.*#'   => 'admin/plugin/stats/',
-    '#admin/show/form/(.*)/.*#' => 'admin/show/grid/$1',
+    '#_admin/plugin/stats/.*#'   => '_admin/plugin/stats/',
+    '#_admin/show/form/(.*)/.*#' => '_admin/show/grid/$1',
   );
   
   /**
@@ -108,7 +108,7 @@ class AdminController extends BasicController {
     $this->view_data['content'] = '';
 
     // API urls
-    $this->view_data['base_url'] = 'admin/';
+    $this->view_data['base_url'] = $this->config->item('API_home');
 
     // Language
     $this->view_data['language'] = $this->language;

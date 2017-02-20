@@ -6,7 +6,7 @@
  * Deze plugin verwijderd de meegegeven relatie tabel.
  * De kopeling wordt voor de 1e verwijzing die gevonden wordt behouden door in 'linkertabel' een foreignkey aan te maken (als die er nog niet is).
  * 
- *      .../admin/plugin/remove_relation_table/rel_menu__links
+ *      ../_admin/plugin/remove_relation_table/rel_menu__links
  * 
  * @author Jan den Besten
  */

@@ -15,7 +15,7 @@ class DebugTest extends CITestCase {
   private $excludedFiles = array(
     'sys/flexyadmin/models/Cronjob.php',
     'sys/flexyadmin/tests/commit/CodeTest.php',
-    'sys/flexyadmin/controllers/admin/Test.php',
+    'sys/flexyadmin/controllers/_admin/Test.php',
     'sys/flexyadmin/helpers/debug_helper.php'
   );
 
