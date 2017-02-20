@@ -11,8 +11,6 @@
 **/
 
 $config['USE_OLD_DB']             = defined('PHPUNIT_TEST')?TRUE:FALSE;
-
-
 $config['PROFILER']               = FALSE;
 
 $config['PHP_version']						= substr(phpversion(),0,1);
@@ -21,7 +19,10 @@ $config['IS_AJAX']								= IS_AJAX;
 $config['AJAX_MODULE']						= IS_AJAX;
 $config['IS_ADMIN']               = FALSE;
 if (isset($_SERVER['PATH_INFO']) and strpos($_SERVER['PATH_INFO'],'admin')!==false) $config['IS_ADMIN'] = TRUE;
+
 $config['LANGUAGES']							= array('nl','en','de','es','fr');
+$config['ADMIN_LANGUAGES']        = array('nl','en');
+
 $config['MENU_TABLES']						= array('res_menu_result','tbl_menu');
 
 // Directories
@@ -48,28 +49,12 @@ if (SAFE_INSTALL) {
 $config['THUMBSIZE']							= array(200,200);
 $config['IGNORE_MIME']						= FALSE;
 
-
-
-/*
-| UI settings
-*/
-
-$config['FORM_NICE_DROPDOWNS']		= TRUE;
-$config['MULTIPLE_UPLOAD']		    = TRUE;
-$config['PAGINATION']             = TRUE;
-$config['GRID_EDIT']              = TRUE;
-$config['GRID_WHERE']             = FALSE;
-$config['ADMIN_LANGUAGES']        = array('nl','en');
-
-
-
 /*
 |--------------------------------------------------------------------------
 | PLUGIN cfg
 |--------------------------------------------------------------------------
 |
 */
-
 $config['PLUGIN_ORDER']							= array('first'=>array('uri','links','striptags'),'last' =>array('automenu'));
 $config['PLUGIN_URI_REPLACE_CHAR']	= '_';
 $config['URI_HASH']                 = ':';  // possible other value: ~
@@ -110,48 +95,15 @@ $config['DEEP_FOREIGNS']  = array(
 | URI to FlexyAdmin controllers.
 |
 */
-$config['API_home']									= "/admin/";
-$config['API_user']									= "/admin/show/user/";
-$config['API_login']								= "/admin/login/";
-$config['API_logout']								= "/admin/logout/";
-
-$config['API_view_order']						= "/admin/show/order/";
-$config['API_view_grid']						= "/admin/show/grid/";
-$config['API_view_tree']						= "/admin/show/tree/";
-$config['API_view_form']						= "/admin/show/form/";
-
-$config['API_filemanager']					= "/admin/filemanager/";
-$config['API_filemanager_set_view']	= "/admin/filemanager/setview";
-$config['API_filemanager_view']			= "/admin/filemanager/show/";
-$config['API_filemanager_edit']			= "/admin/filemanager/edit/";
-$config['API_filemanager_delete']		= "/admin/filemanager/delete/";
-$config['API_filemanager_confirm']	= "/admin/filemanager/confirm/";
-$config['API_filemanager_upload']		= "/admin/filemanager/upload/";
-
-$config['API_popup_img']						= "/admin/popup/img/";
-
-$config['API_delete']								= "/admin/edit/delete/";
-$config['API_confirm']							= "/admin/edit/confirm/";
-
-$config['API_db']										= "/admin/db/";
-$config['API_db_backup']						= "/admin/db/backup/";
-$config['API_db_restore']						= "/admin/db/restore/";
-$config['API_db_export']						= "/admin/db/export/";
-$config['API_db_import']						= "/admin/db/import/";
-$config['API_db_sql']								= "/admin/db/sql/";
-
-$config['API_search']								= '/admin/search/';
-$config['API_fill']									= '/admin/fill/';
-$config['API_help']									= '/admin/help/';
-
-// $config['API_stats']								= '/admin/stats/show';
-$config['API_info']									= '/admin/info/';
-
-$config['AJAX']											= "/admin/ajax/";
+$config['API_home']									= "/_admin/";
+$config['API_login']                = "/_admin/login/";
+$config['API_logout']                = "/_admin/logout/";
+$config['API_plugin']                = "/_admin/plugin/";
+$config['API_db']                    = "/_admin/db/";
+$config['API_search']                = '/_admin/search/';
+$config['API_fill']                  = '/_admin/fill/';
 
 $config['FILES_view_types']					= array("list","thumbs");
-
-
 $config['FILES_thumb_path']					= "/thumb/";
 $config['FILES_big_path']						= "/big/";
 
@@ -294,11 +246,7 @@ $config['FIELDS_bool_fields']		  = array( "b", "is", "has" );
 $config['FIELDS_number_fields']		= array( 'id', 'int', 'dec','order','self' );
 
 
-require_once(APPPATH."config/schemaform.php");
-
-
 if (file_exists(SITEPATH."config/flexyadmin_config.php")) require_once(SITEPATH."config/flexyadmin_config.php");
-
 
 /* End of file flexyadmin_config.php */
 /* Location: ./system/application/config/flexyadmin_config.php */

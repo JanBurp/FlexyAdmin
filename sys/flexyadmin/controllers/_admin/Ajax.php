@@ -150,7 +150,7 @@ class Ajax extends AjaxController {
   
   
   /**
-   * AJAX plugin call (admin/ajax/plugin/...)
+   * AJAX plugin call (_admin/ajax/plugin/...)
    *
    * @return array ajax result
    * @author Jan den Besten

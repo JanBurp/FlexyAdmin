@@ -69,7 +69,7 @@
         <div class="col-md-12">
           <div class="page-header">
             <div class="pull-right"><a href="http://www.codeigniter.com" target="_blank"><img src="<?php echo base_url('sys/flexyadmin/assets/img/ci-logo.png'); ?>"></a></div>
-            <h1><?php echo anchor('admin/testlang/summary', "Translation Tester"); ?></h1>
+            <h1><?php echo anchor('_admin/testlang/summary', "Translation Tester"); ?></h1>
           </div>
         </div><!-- col -->
       </div><!-- row -->

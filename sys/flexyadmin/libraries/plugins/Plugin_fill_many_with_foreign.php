@@ -11,7 +11,7 @@
  * Stel bijvoorbeeld dat in _tbl_menu_ het veld _id_links _bestaat:
  * 
  * - Maak (met de plugin **add_relation_table**) een relatie tabel aan: _rel_menu__links_
- * - Roep met `.../admin/plugin/fill_many_with_foreign/rel_menu_links/tbl_menu.id_links` deze plugin aan.
+ * - Roep met `../_admin/plugin/fill_many_with_foreign/rel_menu_links/tbl_menu.id_links` deze plugin aan.
  * - _rel_menu_links_ is nu automatisch gevuld met verwijzingen die overeenkomen met de al bestaande foreign key verwijzingen van _tbl_menu.id_links_
  * - Nu kun je zonder problemen het veld _tbl_menu.id_links_ verwijderen.
  * 

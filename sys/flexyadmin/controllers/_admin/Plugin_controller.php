@@ -29,7 +29,7 @@ class Plugin_controller extends AdminController {
           $help = $this->documentation->get($this->config->item('SYS').'flexyadmin/libraries/plugins/'.ucfirst($name).'.php');
           $plugins[$name] = array(
             'name'   => str_replace('plugin_','',$name),
-            'uri'    => 'admin/plugin/'.str_replace('plugin_','',$name),
+            'uri'    => $this->config->item('API_plugin').str_replace('plugin_','',$name),
             'doc'    => $help,
           );
         }
@@ -48,7 +48,7 @@ class Plugin_controller extends AdminController {
   
 
   /**
-   * Calls the plugin, this is rerouted from admin/plugin/###
+   * Calls the plugin, this is rerouted from _admin/plugin/###
    *
    * @return void
    * @author Jan den Besten

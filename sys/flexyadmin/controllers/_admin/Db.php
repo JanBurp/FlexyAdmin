@@ -41,7 +41,7 @@ class Db extends AdminController {
 		$this->lang->load("update_delete");
 		$this->lang->load("form");
 
-		$form=new form($this->config->item('API_db_export'));
+		$form=new form( $this->config->item('API_db').'export'  );
 		$tablesWithRights=$this->flexy_auth->get_table_rights();
 		$options=array_combine($tablesWithRights,$tablesWithRights);
 		$valuesData=$options;
@@ -205,7 +205,7 @@ class Db extends AdminController {
 				$this->load->library('form');
 				$this->lang->load('help');
 				$this->lang->load('form');
-				$form=new form($this->config->item('API_db_restore'));
+				$form=new form($this->config->item('API_db').'restore');
 				$data=array( "userfile"	=> array("type"=>"file","label"=>lang('file')) );
 				$form->set_data($data,lang('db_restore'));
 				$this->_add_content($form->render());
@@ -261,7 +261,7 @@ class Db extends AdminController {
 		$this->load->library('form');
 		$this->lang->load('help');
 		$this->lang->load('form');
-		$form=new form($this->config->item('API_db_import'));
+		$form=new form($this->config->item('API_db').'import');
 		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt,sql)"),
 		 							"sql"				=> array("type"=>"textarea","label"=>"SQL"));
 		if ($this->flexy_auth->has_rights('cfg_configurations')) {
@@ -340,7 +340,7 @@ class Db extends AdminController {
 					}
           // show update form selections
 					$this->load->library('form');
-					$form=new form($this->config->item('API_db_import'));
+					$form=new form($this->config->item('API_db').'import');
           $data['update']=array('type'=>'hidden','value'=>'update');
           foreach ($updates as $key => $file) {
             $data[$file['rev']]=array('type'=>'checkbox','label'=>'update '.$file['rev'],'html'=>'<span class="help" title="'.safe_quotes($file['sql']).'">'.$file['info'].'</span>','value'=>$file['value'],'class'=>$file['class']);
@@ -356,7 +356,7 @@ class Db extends AdminController {
 					$this->load->library('form');
 					$this->lang->load('help');
 					$this->lang->load('form');
-					$form=new form($this->config->item('API_db_sql'));
+					$form=new form($this->config->item('API_db').'sql');
 					$data=array( "sql" => array("type"=>"textarea","value"=>$sql)  );
 					$form->set_data($data,"Are you sure to run this Query?");
 					$this->_add_content($form->render());
