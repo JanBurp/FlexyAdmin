@@ -22,7 +22,7 @@ For recent sites the update processes described below should work:
 UPDATE 3.5.x
 ============
 - Rewrite data->find()
-
+- Links naar file/... werken niet meer, moeten worden aangepast naar: _media/...
 
 
 UPDATE 3.4.x
