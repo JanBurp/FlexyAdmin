@@ -210,9 +210,11 @@ class Api_Model extends CI_Model {
     $this->result['success'] = true;
 
     // Add args
-    $this->result['args'] = $this->args;
-    if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
-    if (empty($this->result['args']['config'])) unset($this->result['args']['config']);
+    if (is_array($this->args)) {
+      $this->result['args'] = $this->args;
+      if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
+      if (empty($this->result['args']['config'])) unset($this->result['args']['config']);
+    }
 
     // cleanup result
     unset($this->result['status']);

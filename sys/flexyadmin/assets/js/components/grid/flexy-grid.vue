@@ -568,7 +568,20 @@ export default {
     },
     
     action: function(action) {
-      console.log('action',action);
+      return flexyState.api({
+        method: 'POST',
+        url : action.uri,
+      }).then(function(response){
+        var error = response.error;
+        if (!error && response.data.data===false) error = true;
+        if (error) {
+          flexyState.addMessage( response.data.error, 'danger');
+        }
+        else {
+          flexyState.addMessage( response.data.message );
+        }
+        return response;
+      });
     },
         
     rowLevel:function(row) {
