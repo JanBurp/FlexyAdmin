@@ -51,21 +51,18 @@ export default {
       return thumbs;
     },
     
-    addMedia : function(media) {
+    selection : function() {
+      var selection = _.trim(this.media,'|').split('|');
+      // console.log('mediapicker.selection():',selection);
+      return selection;
+    },
+    
+    selectMedia : function(media) {
       if (this.single) {
-        this.changeMedia([media]);
+        media.slice(0,0);
       }
-      else {
-        var currentMedia = _.trim(this.media,'|').split('|');
-        var newMedia = _.clone(currentMedia);
-        var item = media[0];
-        // console.log(media,newMedia,newMedia.indexOf(item));
-        if (newMedia.indexOf(item)<0) {
-          newMedia = media.concat(newMedia);
-          newMedia = _.uniq(newMedia);
-          this.changeMedia(newMedia);
-        }
-      }
+      media = _.uniq(media);
+      this.changeMedia(media);
     },
     
     removeMedia : function(index) {
@@ -86,8 +83,9 @@ export default {
     
     changeMedia : function(media) {
       if (typeof(media)!=='string') media = _.join(media,'|');
-      this.media = media;
+      this.media = media.trim('|');
       this.$emit('input',this.media);
+      // console.log('changeMedia',this.media);
     },
     
   },
@@ -110,7 +108,7 @@ export default {
     </div>
     
     <div class="mediapicker-choose" v-if="choose">
-      <flexy-grid type='mediapicker' api='table' name="pictures" :title="$lang.file_select" offset="0" limit="10" @grid-selected="addMedia($event)"></flexy-grid>
+      <flexy-grid type='mediapicker' api='table' name="pictures" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" @grid-selected="selectMedia($event)"></flexy-grid>
     </div>
     
   </div>
