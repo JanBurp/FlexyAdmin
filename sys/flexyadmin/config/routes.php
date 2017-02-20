@@ -25,7 +25,7 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except soms system uri's
  */
-$route['(?!__api|_rss|file|_media|_admin|_admin_assets|_cronjob|_unittest|_ajax|_api|_cli)(.*)'] = "";
+$route['(?!__api|_rss|_media|_admin|_admin_assets|_cronjob|_unittest|_ajax|_api|_cli)(.*)'] = "";
 
 /**
  * RSS feed(s)
@@ -62,12 +62,6 @@ $route['_media/download/(.*)/(.*)'] = "file/file/download/$1/$2";
 $route['_media/serve/(.*)/(.*)']    = "file/file/serve/$1/$2";
 $route['_media/thumb/(.*)/(.*)']    = "file/file/thumb/$1/$2";
 $route['_media/(.*)/(.*)']          = "file/file/serve/$1/$2";
-
-$route['file/serve/(.*)/(.*)']      = "file/file/serve/$1/$2";
-$route['file/thumb/(.*)/(.*)']      = "file/file/thumb/$1/$2";
-$route['file/download/(.*)/(.*)']   = "file/file/download/$1/$2";
-$route['file/(.*)/(.*)']            = "file/file/download/$1/$2";
-
 $route['_admin_assets/(.*)/(.*)']   = "file/file/admin_assets/$1/$2";
 
 
