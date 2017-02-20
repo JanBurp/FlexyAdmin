@@ -3772,6 +3772,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function order_by( $orderby, $direction = '', $escape = NULL ) {
+    if (empty($orderby)) return $this;
     // Zorg ervoor dat order_by een array is met direction erbij en verder volgens specs van Query Builder
     if (is_string($orderby)) $orderby = explode(',',$orderby);
     if (!empty($direction)) {
