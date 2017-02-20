@@ -12,6 +12,7 @@
 
   <link rel="stylesheet" href="<?=admin_assets()?>css/font-awesome.min.css" type="text/css" media="screen">
   <link rel="stylesheet" href="<?=admin_assets()?>dist/flexyadmin.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="<?=public_assets()?>css/admin.css" type="text/css" media="screen">
 </head>
 
 <body>
