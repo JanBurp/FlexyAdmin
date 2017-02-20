@@ -206,10 +206,11 @@ Class cfg_users extends Data_Core {
   public function get_grid( $limit = 20, $offset = FALSE ) {
     $result = parent::get_grid($limit,$offset);
     foreach ($result as $key => $user) {
-      $id = $user['id'];
+      $id   = $user['id'];
+      $email= $user['email_email'];
       $user = array_add_after($user,'id', array(
         'action_user_invite' => array(
-          'uri'   => '',
+          'uri'   => $user['b_active']?'user?action=new&email='.$email:'user?action=invite&email='.$email,
           'icon'  => 'envelope-o', 
           'text'  => $user['b_active']?lang('action_user_send_password'):lang('action_user_send_invite'),
         ))
