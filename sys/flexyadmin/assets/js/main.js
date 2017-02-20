@@ -9,7 +9,6 @@
 
 var _ = require('lodash');
 
-
 import Vue              from 'vue'
 import Lang             from 'vue-lang'
 
@@ -97,6 +96,4 @@ else {
     
   });
   
-  
 }
-
