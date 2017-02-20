@@ -1169,7 +1169,7 @@ class Form {
 				break;
 
 			case "password":
-				if (substr($this->action,0,12)=='/admin/show/') {
+				if (substr($this->action,0,13)=='/_admin/show/') {
 					$attr['value']='';
 					$field['control']=form_input($attr);
 				}

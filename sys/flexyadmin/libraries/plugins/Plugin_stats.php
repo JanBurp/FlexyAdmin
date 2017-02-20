@@ -67,7 +67,7 @@ class Plugin_stats extends Plugin {
 				unset($xmlYearFiles[$file]);
 			else {
 				$y=substr($file,0,4);
-				$years=add_string($years,anchor(site_url('admin/plugin/stats/'.$y),$y),'|');
+				$years=add_string($years,anchor(site_url($this->CI->config->item('API_home').'plugin/stats/'.$y),$y),'|');
 			}
 		}
 		if (!empty($years)) $this->add_content('<p>'.$years.'</p>');
@@ -177,7 +177,7 @@ class Plugin_stats extends Plugin {
 		switch ($type) {
 			case 'this_year':
 				foreach ($data as $key => $value) {
-					$data[$key]['month']=anchor(site_url('admin/plugin/stats/'.$this->Year.'/'.$value['month']),strftime('%b',mktime(0,0,0,$value['month'])));
+					$data[$key]['month']=anchor(site_url($this->CI->config->item('API_home').'plugin/stats/'.$this->Year.'/'.$value['month']),strftime('%b',mktime(0,0,0,$value['month'])));
 				}
 				$this->_add_graph($data,$type,$this->Year);
 				break;

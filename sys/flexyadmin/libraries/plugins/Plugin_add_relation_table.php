@@ -6,7 +6,7 @@
  * Deze plugin maakt een relatie tabel tussen de twee meegegeven tabellen.
  * Stel je wilt een relatie tabel tussen _tbl_menu_ en _tbl_links_ dan type je de volgende url in:
  * 
- *      .../admin/plugin/add_relation_table/tbl_menu/tbl_links
+ *      .../_admin/plugin/add_relation_table/tbl_menu/tbl_links
  * 
  * @author Jan den Besten
  */

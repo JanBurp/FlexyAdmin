@@ -25,7 +25,7 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except soms system uri's
  */
-$route['(?!__api|admin|_rss|file|_media|_admin|_admin_assets|_cronjob|_unittest|_ajax|_api|_cli)(.*)'] = "";
+$route['(?!__api|_rss|file|_media|_admin|_admin_assets|_cronjob|_unittest|_ajax|_api|_cli)(.*)'] = "";
 
 /**
  * RSS feed(s)
@@ -74,19 +74,19 @@ $route['_admin_assets/(.*)/(.*)']   = "file/file/admin_assets/$1/$2";
 /**
  * This routing reroutes plugin calls
  */
-$route['admin/plugin']      = "admin/plugin_controller";
-$route['admin/plugin/(.+)'] = "admin/plugin_controller/call/$1";
+$route['_admin/plugin']      = "_admin/plugin_controller";
+$route['_admin/plugin/(.+)'] = "_admin/plugin_controller/call/$1";
 
 /**
  * This routing reroutes help subpages
  */
-$route['admin/help/(.+)'] = "admin/help/index/$1";
+$route['_admin/help/(.+)'] = "_admin/help/index/$1";
 
 
 /**
  * Update actions
  */
-$route['admin/update/(.+)'] = "admin/update/index/$1";
+$route['_admin/update/(.+)'] = "_admin/update/index/$1";
 
 
 // Reserved routes
