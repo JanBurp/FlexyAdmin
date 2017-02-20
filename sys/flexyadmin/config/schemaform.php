@@ -36,6 +36,13 @@ $config['FIELDS_prefix'] = array (
     'default'     => 0,
   ),
   
+  // Actie
+	'action' => array(
+    'grid-type' => 'action',
+    'form-type' => 'hidden',
+    'readonly' => true,
+  ),
+  
   // Self key
 	'self'			=> array(
     'type'        => 'integer',
