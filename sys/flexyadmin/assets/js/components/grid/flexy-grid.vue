@@ -39,6 +39,10 @@ export default {
       type:String,
       default:'table',
     },
+    'selection':{
+      type:[Array,Boolean],
+      default:false,
+    }
   },
   
   // https://vuejs.org/v2/guide/components.html#Circular-References-Between-Components
@@ -85,15 +89,45 @@ export default {
       });
     }
   },
+  
+  beforeUpdate : function() {
+    //
+    // Selection
+    //
+    if (this.selection) {
+      // Pas selected aan
+      // console.log('flexy-grid.update',this.selection);
+      var selected = [];
+      for (var i = 0; i < this.selection.length; i++) {
+        var src = this.selection[i];
+        var key_item = false;
+        for (var j = 0; j < this.items.length; j++) {
+          var item = this.items[j];
+          if (item['media_thumb'].value === src) {
+            key_item = item['id'].value;
+          }
+        }
+        if (key_item) selected.push(key_item);
+      }
+      
+      // console.log( _.isEqual(selected,this.selected), selected, this.selected );
+      if ( !_.isEqual(selected,this.selected) ) {
+        this.selected = _.clone(selected);
+      }
+      // jdb.vueLog(this.items);
+      
+    }
+  },
 
 
   data : function() {
     return {
-      items       : [],
-      fields      : [],
+      items             : [],
+      fields            : [],
       searchable_fields : [],
-      dataInfo    : {},
-      selected    : [],
+      dataInfo          : {},
+      selected          : [],
+      mediaSelection    : this.selection, 
       apiParts    : {
         order         : this.order,
         filter        : this.filter,
@@ -415,11 +449,24 @@ export default {
       var index = this.selected.indexOf(id);
       if (index>-1) {
         this.selected.splice(index, 1);
+        if (this.mediaSelection) {
+          this.mediaSelection = _.uniq(this.mediaSelection);
+          for (var i = 0; i < this.items.length; i++) {
+            var item = this.items[i];
+            if (item['id'].value === id) {
+              var src = item['media_thumb'].value;
+              if ( !_.isUndefined(src) ) {
+                var key = this.mediaSelection.indexOf(src);
+                this.mediaSelection.splice(key,1);
+              }
+            }
+          }
+        }
       }
       else {
         this.selected.push(id);
       }
-      this.emitAndResetSelectedMedia();
+      this.emitSelectedMedia();
     },
     
     reverseSelection:function() {
@@ -428,12 +475,12 @@ export default {
         ids.push(this.items[i].id.value);
       }
       this.selected = _.difference(ids,this.selected);
-      this.emitAndResetSelectedMedia();
+      this.emitSelectedMedia();
     },
     
-    emitAndResetSelectedMedia : function() {
+    emitSelectedMedia : function() {
       if (this.type==='mediapicker') {
-        var selectedMedia = [];
+        var selectedMedia = this.mediaSelection;
         for (var i = 0; i < this.selected.length; i++) {
           for (var j = 0; j < this.items.length; j++) {
             var index = this.items[j]['id'].value;
@@ -443,8 +490,8 @@ export default {
             }
           }
         }
+        // console.log('emitSelectedMedia',selectedMedia);
         this.$emit('grid-selected',selectedMedia);
-        this.selected = [];
       }
     },
     
