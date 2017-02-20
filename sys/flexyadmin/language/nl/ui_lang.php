@@ -59,10 +59,13 @@ $lang['stx_description']  = "Omschrijving";
 $lang['stx_keywords']     = $lang['str_keywords'];
 
 // Fields in cfg_users
-$lang['rel_users__groups']= 'Gebruikers groep';
-$lang['gpw_password']     = 'Wachtwoord';
-$lang['ip_address']       = 'IP Adres';
-$lang['str_language']     = 'Taal';
+$lang['rel_users__groups']         = 'Gebruikers groep';
+$lang['gpw_password']              = 'Wachtwoord';
+$lang['ip_address']                = 'IP Adres';
+$lang['str_language']              = 'Taal';
+$lang['action_users']              = 'Stuur:';
+$lang['action_user_send_invite']   = 'Inloggegevens';
+$lang['action_user_send_password'] = 'Nieuw wachtwoord';
 
 // User fields
 $lang['tme_last_changed'] ='Laatste aanpassing';

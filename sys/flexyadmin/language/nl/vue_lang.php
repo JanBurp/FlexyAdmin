@@ -18,7 +18,6 @@ $lang['vue_deleted']                 = "{0} item(s) verwijderd.";
 
 $lang['vue_confirm_save_default']    = "U heeft niets aangepast! Weet u zeker dat u dit item wilt invoeren?";
 
-
 $lang['vue_grid_search']             = "Zoeken";
 $lang['vue_grid_fast_search']        = "Snel zoeken";
 $lang['vue_grid_extended_search']    = "Uitgebreid zoeken";
