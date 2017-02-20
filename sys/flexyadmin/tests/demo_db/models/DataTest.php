@@ -449,7 +449,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row?
     $row=current($result);
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id', 'str_username', 'rel_users__groups', 'email_email', 'str_language', 'b_active' ), $keys );
+    $this->assertEquals( array( 'id','action_user_invite', 'str_username', 'email_email', 'rel_users__groups', 'str_language', 'b_active' ), $keys );
 
     // Users resultaat zoals in admin
     $result = $this->CI->data->table( 'cfg_users' )->get_form();
@@ -458,7 +458,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( 6, $this->CI->data->num_fields() );
     // kloppen keys in row?
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id', 'str_username', 'rel_users__groups', 'email_email', 'str_language', 'b_active' ), $keys );
+    $this->assertEquals( array( 'id','action_user_invite', 'str_username', 'email_email', 'rel_users__groups', 'str_language', 'b_active' ), $keys );
   }
 
  

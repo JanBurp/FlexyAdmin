@@ -407,7 +407,7 @@ export default {
     
     isPrimaryHeader : function(field) {
       var headerType = field['grid-type'] || field['form-type'];
-      return headerType==='primary'
+      return (headerType==='primary')
     },
     isNormalVisibleHeader : function(field) {
       var headerType = field['grid-type'] || field['form-type'];
@@ -565,6 +565,10 @@ export default {
         });
         
       }
+    },
+    
+    action: function(action) {
+      console.log('action',action);
     },
         
     rowLevel:function(row) {
@@ -912,6 +916,7 @@ export default {
           <thead>
             <tr>
               <template v-for="(field,key) in fields">
+                
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                   <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                   <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
@@ -928,12 +933,14 @@ export default {
                     </div>
                   </div>
                 </th>
+                
                 <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
                   <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.name}}</span>
                     <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
                     <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
                   </a>
                 </th>
+                
               </template>
             </tr>
           </thead>
@@ -961,6 +968,11 @@ export default {
                   <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger" />
                   <flexy-button @click.native="select(row.id.value)" :icon="{'circle-o':!isSelected(row.id.value),'circle':isSelected(row.id.value)}" class="btn-outline-info" />
                   <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
+                </td>
+              
+                <!-- ACTION CELL -->
+                <td v-else-if="cell.type=='action'" class="action">
+                  <flexy-button :icon="cell.value.icon" class="btn-outline-warning" :text="cell.value.text" @click.native="action(cell.value)"/>
                 </td>
               
                 <!-- CELL -->

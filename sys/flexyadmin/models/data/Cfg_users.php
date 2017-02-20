@@ -195,4 +195,47 @@ Class cfg_users extends Data_Core {
   }
   
   
+  /**
+   * Voeg speciale acties toe om users uit te nodigen en/of wachtwoord op te sturen
+   *
+   * @param int $limit 
+   * @param int $offset 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function get_grid( $limit = 20, $offset = FALSE ) {
+    $result = parent::get_grid($limit,$offset);
+    foreach ($result as $key => $user) {
+      $id = $user['id'];
+      $user = array_add_after($user,'id', array(
+        'action_user_invite' => array(
+          'uri'   => '',
+          'icon'  => 'envelope-o', 
+          'text'  => $user['b_active']?lang('action_user_send_password'):lang('action_user_send_invite'),
+        ))
+      );
+      $result[$key] = $user;
+    }
+    
+    // Voeg het veld toe
+    $this->settings['grid_set']['fields'] = array_add_after($this->settings['grid_set']['fields'],'id','action_user_invite');
+    return $result;
+  }
+
+  /**
+   * Field info aanpassen in grid_set
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_grid_set() {
+    $grid_set = parent::get_setting_grid_set();
+    $grid_set['field_info']['action_user_invite'] = array(
+      'name'      => lang('action_users'),
+      'grid-type' => 'action',
+    );
+    return $grid_set;
+  }
+  
+  
 }
