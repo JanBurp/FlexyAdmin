@@ -1,11 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * Maakt van één tabel twee tabellen door een veld te verhuizen naar een foreign table gekoppeld met een foreignkey
+ * Maakt van een foreign table / foreign van een string veld.
  * 
- * Eerste argument is de tabel, tweede argument is het veld wat moet verhuizen.
- *  
- *      .../_admin/plugin/create_foreign/tbl_menu/str_link
+ * Eerste argument is de tabel, tweede argument is het veld wat moet veranderen in een foreign_key -> foreign_table.
+ * /create_foreign/tbl_menu/str_link
  * 
  * @author Jan den Besten
  */
@@ -22,7 +21,6 @@ class Plugin_create_foreign extends Plugin {
    */
    function _admin_api($args=false) {
 		if ($this->CI->flexy_auth->is_super_admin()) {
-			$this->add_content(h($this->name,1));
 			$goodArgs=false;
 			if ($args) {
 				if (isset($args[0])) $table=$args[0];
@@ -54,9 +52,6 @@ class Plugin_create_foreign extends Plugin {
             $this->add_content('<p>Connected: '.$fid.' => '.$value.'</p>');
           }
 				}
-			}
-			if (!$goodArgs) {
-				$this->add_content('<p>Which table and Field?</br></br>Give: /tbl_xxx/str_xxxx</p>');
 			}
       return $this->content;
 		}

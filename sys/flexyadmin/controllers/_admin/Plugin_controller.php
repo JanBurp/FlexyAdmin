@@ -11,6 +11,7 @@ class Plugin_controller extends AdminController {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('plugin_handler');
+    $this->load->library('documentation');
 	}
 
   /**
@@ -21,12 +22,12 @@ class Plugin_controller extends AdminController {
    */
 	public function index() {
     if ( $this->flexy_auth->is_super_admin() ) {
-      $this->load->library('documentation');
       $plugins = $this->plugin_handler->get_plugins();
+      ksort($plugins);
       foreach ($plugins as $name => $plugin) {
         $help='';
         if ($name!=='plugin_template' and $name!=='plugin' and isset($plugin['config']['admin_api_method'])) {
-          $help = $this->documentation->get($this->config->item('SYS').'flexyadmin/libraries/plugins/'.ucfirst($name).'.php');
+          $help = $this->documentation->get( $this->config->item('SYS').'flexyadmin/libraries/plugins/'.ucfirst($name).'.php', '<br>' );
           $plugins[$name] = array(
             'name'   => str_replace('plugin_','',$name),
             'uri'    => $this->config->item('API_plugin').str_replace('plugin_','',$name),
@@ -71,11 +72,17 @@ class Plugin_controller extends AdminController {
 			else {
 				// first arg is plugin name
 				$plugin  = 'plugin_'.array_shift($args);
-        $content = $this->plugin_handler->call_plugin_admin_api($plugin,$args);
+        $help    = $this->documentation->get( $this->config->item('SYS').'flexyadmin/libraries/plugins/'.ucfirst($plugin).'.php', '<br>' );
+        $content = $this->plugin_handler->call_plugin_admin_api($plugin,$args,$help);
+        if (empty($content)) {
+          $content = '<h2>'.$help['short'].'</h2>'.trim(trim($help['long']),'<br>');
+        }
+        $ui_name = lang($plugin);
+        if (substr($ui_name,0,1)==='[') $ui_name = ucfirst(str_replace(array('Plugin_','_'),array('',' '),$help['name']));
 			}
 		}
 		// output
-		if (!$ajax) $this->view_admin('plugins/plugin',array( 'title'=>lang($plugin),'content'=>$content));
+		if (!$ajax) $this->view_admin('plugins/plugin',array( 'title'=>$ui_name,'content'=>$content));
 	}
 
 }

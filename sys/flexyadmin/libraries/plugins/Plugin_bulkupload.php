@@ -1,14 +1,10 @@
 <?php require_once(APPPATH."core/AdminController.php");
 
 /**
- * Special Controller Class
+ * Bulkupload
  *
- * This Controller shows a grid or form
- *
- * @package FlexyAdmin V1
- * @author Jan den Besten
- * @version V1 0.1
- *
+ * Verplaats bestanden van speciale bulkupload map.
+ * Handig voor bestanden die te groot zijn om normaal te uploaden.
  */
 
 class Plugin_bulkupload extends Plugin {
@@ -19,7 +15,7 @@ class Plugin_bulkupload extends Plugin {
 	public function __construct() {
 		parent::__construct();
 		$this->CI->load->library('session');
-    $this->CI->load->model('mediatable');
+    // $this->CI->load->model('mediatable');
     $this->CI->load->model('actiongrid');
 		$this->resetRenameCount();
 	}
@@ -33,7 +29,7 @@ class Plugin_bulkupload extends Plugin {
 			$files=scan_map($bulkMap);
 			if (empty($files)) {
 				$this->add_message(p()."No files found in '".$bulkMap."'."._p());
-        return $this->view();
+        return;
 			}
 			asort($files);
 

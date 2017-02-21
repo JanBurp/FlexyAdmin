@@ -124,7 +124,7 @@ class Plugin_handler extends CI_Model {
 
 
 
-	public function call_plugin($plugin,$method,$args=NULL) {
+	public function call_plugin($plugin,$method,$args=NULL,$help='') {
 		$return = FALSE;
 		// Plugin exists?
 		if (isset($this->plugins[$plugin])) {
@@ -135,7 +135,7 @@ class Plugin_handler extends CI_Model {
   		// call
   		if (method_exists($plugin,$method)) {
         // strace_("Call Plugin: $plugin->$method");
-  			$return = $this->$plugin->$method($args);
+  			$return = $this->$plugin->$method($args,$help);
   		}
     }
 		return $return;
@@ -148,9 +148,9 @@ class Plugin_handler extends CI_Model {
 		return '';
 	}
 
-	public function call_plugin_admin_api($plugin,$args) {
+	public function call_plugin_admin_api($plugin,$args,$help='') {
 		if (isset($this->plugins[$plugin]['config']['admin_api_method'])) {
-			return $this->call_plugin($plugin,$this->plugins[$plugin]['config']['admin_api_method'],$args);
+			return $this->call_plugin($plugin,$this->plugins[$plugin]['config']['admin_api_method'],$args,$help);
 		}
 		return '';
 	}

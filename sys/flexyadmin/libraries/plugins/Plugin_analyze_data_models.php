@@ -1,7 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * Analyseert de database en kijkt of die overeenkomt met de settings van de data models
+ * Analyseert de database en kijkt of die overeenkomt met de settings van de data models.
+ * Geef als argument de tabel, of 'all' voor alle tabellen.
+ * /analyze_data_models/all of bijvoorbeeld /analyze_data_models/tbl_menu
  * 
  * @author: Jan den Besten
  */
@@ -14,9 +16,12 @@
 
 
 	public function _admin_api($args=NULL) {
-    
     if ($this->CI->flexy_auth->is_super_admin()) {
-      if (isset($args[0])) {
+
+      if (!isset($args[0])) return;
+      
+      $tables = args[0];
+      if ($tables!=='all') {
         $tables=array($args[0]);
       }
       else {

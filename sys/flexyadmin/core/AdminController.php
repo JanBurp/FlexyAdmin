@@ -13,13 +13,13 @@ require_once(APPPATH."core/BasicController.php");
  
 class AdminController extends BasicController {
 
-  private $view_data            = array();
-  private $current_uri          = '';
-  private $keep_uris            = array(
+  protected $view_data            = array();
+  private   $current_uri          = '';
+  private   $keep_uris            = array(
     '_admin/show/form/tbl_site',
     '_admin/show/form/cfg_users'
   );
-  private $replace_uris         = array(
+  private   $replace_uris         = array(
     '#_admin/plugin/stats/.*#'   => '_admin/plugin/stats/',
     '#_admin/show/form/(.*)/.*#' => '_admin/show/grid/$1',
   );

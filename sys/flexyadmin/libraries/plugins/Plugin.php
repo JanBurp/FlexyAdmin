@@ -12,7 +12,6 @@ class Plugin extends Parent_module_plugin {
 	
   /**
    * Eventuele output van de plugin komt hier.
-   * @deprecated
    */
 	protected $content;
   
@@ -128,6 +127,16 @@ class Plugin extends Parent_module_plugin {
    */
   protected function get_messages() {
     return $this->messages;
+  }
+  
+  /**
+   * Geeft alle berichten terug als HTML
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function show_messages() {
+    return implode('',$this->messages);
   }
 
   
