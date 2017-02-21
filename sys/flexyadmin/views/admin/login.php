@@ -18,7 +18,7 @@
 
 <div id="main">
   <div class="card" id="login-form">
-		<h1 v-if="message!==''" class="card-header bg-danger" style="padding-left:1.25rem;">{{message}}</h1>
+		<h1 v-cloak v-if="message!==''" class="card-header bg-danger" style="padding-left:1.25rem;">{{message}}</h1>
     <div class="card-block">
   		<form v-if="!forgottenPasswordDialog" action="<?=site_url("_admin/login/check")?>" method="post" class="">
         <div class="form-group row">
@@ -30,7 +30,7 @@
           <label for="password" class="col-2 col-form-label"><span class="fa fa-lock"></span></label>
         </div>
         <button type="submit" class="btn btn-warning col-12"><?=lang('login_submit')?></button>
-        <a @click="showForgottenPasswordDialog(true)" id="forgotten-password-link"><?=lang('login_forgot')?></a>
+        <a v-cloak @click="showForgottenPasswordDialog(true)" id="forgotten-password-link"><?=lang('login_forgot')?></a>
   		</form>
       
   		<form v-if="forgottenPasswordDialog" action="<?=site_url("_admin/login/forgot")?>" method="post">

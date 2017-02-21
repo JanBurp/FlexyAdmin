@@ -5421,6 +5421,9 @@ a > .fa, .btn > .fa {
     .card .card > .card-block .form-group {
       margin-bottom: .5rem; }
 
+[v-cloak] {
+  display: none; }
+
 /* Responsive */
 @media (max-width: 767px) {
   #header .navbar-nav li .fa {
