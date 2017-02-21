@@ -110,7 +110,7 @@ export default {
     },
     
     itemObject : function(item) {
-      if (typeof(item)!=='Object') {
+      if (typeof(item)==='string' && item.substr(0,1)==='{') {
         item = JSON.parse(item);
       }
       return item;
