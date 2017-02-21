@@ -3,17 +3,21 @@
 A Flexible and userfriendly CMS.
 (c) Jan den Besten - www.flexyadmin.com
 
-# Webpack
+# NPM Scripts
 
 First go to the `sys` folder before running these commands in terminal.
 
-### Run webpack
+### Develop
 
-`webpack --progress`
+`npm run develop`
 
-### Watch webpack with autoreload
+### Watch with autoreload
 
-`webpack --progress --watch`
+`npm run develop`
+
+### Production build
+
+`npm run build`
 
 
 # Git remote
