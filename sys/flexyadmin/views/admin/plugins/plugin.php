@@ -6,7 +6,6 @@
       <p><?=$message?></p>
       <?php endforeach ?>
     <?php endif ?>
-
     <?php if (isset($content)): ?><?=$content?><?php endif ?>
   </div>
 </div>

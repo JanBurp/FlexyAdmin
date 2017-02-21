@@ -1,6 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
+ * Maakt Data config en Model
+ * 
+ * Maakt van gegegeven tabel een data model en config bestand.
+ * /data_create/tbl_xxx of /data_create/reset/[tbl_xxx]
+ * 
  * @author Jan den Besten
  */
  

@@ -8,12 +8,14 @@
  */
 
 class Fill extends AdminController {
+  
+  private $content = '';
 
-	function __construct() {
+  public function __construct() {
 		parent::__construct();
 	}
 
-	function index() {
+  public function index() {
 		if ($this->flexy_auth->can_use_tools()) {
 			$this->lang->load('help');
 			$this->lang->load('form');
@@ -95,6 +97,7 @@ class Fill extends AdminController {
         $this->load->model( 'Data/Options_Tables');
         $this->load->model( 'Data/Options_Fields');
 				$form=new form($this->config->item('API_fill'));
+        $form->set_framework('bootstrap');
 				$tablesOptions=$this->Options_Tables->get_options();
 				$fieldsOptions=$this->Options_Fields->get_options();
 				if (empty($fields)) $fields=array();
@@ -110,18 +113,18 @@ class Fill extends AdminController {
 											"test"		=> array("type"=>'checkbox','value'=>1)
 											);
 				$form->set_data($data,lang('fill_fill'));
-				$this->_add_content($form->render());			
+				$this->content .= $form->render();
 			}
-			$this->_add_content(div('after_form').$htmlTest._div());	
+			$this->content .= div('after_form').$htmlTest._div();	
 		}
-		$this->view_admin();
+		$this->view_admin('plugins/plugin',array('title'=>'Fill','content'=>$this->content));
 	}
 
-	function myErrorHandler($errno, $errstr, $errfile, $errline) 	{
+  public function myErrorHandler($errno, $errstr, $errfile, $errline) 	{
 		static $WarnedAllready=FALSE;
     if ($errno==E_WARNING and strpos($errstr,'REG_BADRPT')) {
 			if (!$WarnedAllready) {
-				$this->_add_content(p('error').lang('bad_regex')._p());
+				$this->content .= p('error').lang('bad_regex')._p();
 				$WarnedAllready=TRUE;
 			}
 			return true;

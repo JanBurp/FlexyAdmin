@@ -9,8 +9,10 @@
  */
 
 class Db extends AdminController {
+  
+  private $content = '';
 
-  var $types = array(
+  private $types = array(
     'data'      => array('name'=>'All Tables & Data, except log & session Tables','data'=>'*,-cfg_sessions,-log_activity,-log_stats,-log_login_attempts','structure'=>''),
     'all'       => array('name'=>'All Tables & Data, except log & session Data','data'=>'*,-cfg_sessions,-log_activity,-log_stats,-log_login_attempts','structure'=>'cfg_sessions,log_activity,log_stats,log_login_attempts'),
     'complete'  => array('name'=>'All Tables & Data','data'=>'*','structure'=>''),
@@ -20,7 +22,7 @@ class Db extends AdminController {
     'select'    => array('name'=>'Select Tables to export','data'=>'','structure'=>'')
   );
 
-	function __construct() {
+  public function __construct() {
 		parent::__construct();
     $this->load->model('version');
     $this->load->dbutil();
@@ -31,17 +33,15 @@ class Db extends AdminController {
     }
 	}
 
-	function index() {
-		$this->view_admin();
-	}
-
-	function _export() {
+  private function _export() {
 		$this->load->library('form');
 		$this->lang->load('help');
 		$this->lang->load("update_delete");
 		$this->lang->load("form");
 
 		$form=new form( $this->config->item('API_db').'export'  );
+    $form->set_framework('bootstrap');
+    
 		$tablesWithRights=$this->flexy_auth->get_table_rights();
 		$options=array_combine($tablesWithRights,$tablesWithRights);
 		$valuesData=$options;
@@ -65,7 +65,7 @@ class Db extends AdminController {
     $this->view_admin('plugins/plugin',array('title'=>'DB Export','content'=>$form->render('db_export')));
 	}
 
-	function export() {
+  public function export() {
 		if ($this->flexy_auth->is_super_admin()) {
       $type=$this->input->post('type');
 			$ext="txt";
@@ -108,7 +108,6 @@ class Db extends AdminController {
 				force_download($name.'.'.$ext, $backup);
 			}
 		}
-		$this->view_admin();
 	}
 
   private function _set_tables($expressions) {
@@ -155,7 +154,7 @@ class Db extends AdminController {
     return array_keys($tables);
   }
 
-	function _clean_sql($sql) {
+  private function _clean_sql($sql) {
 		// Clean up comments
 		$sql=preg_replace("/#(.*?)\n/","",$sql);
 		// replace DROP TABLE (and CREATE TABLE) with TRUNCATE TABLE
@@ -164,7 +163,7 @@ class Db extends AdminController {
 		return $sql;
 	}
 	
-	function _filename() {
+  private function _filename() {
 		$name=$this->data->table('tbl_site')->get_field("url_url");
 		$name=str_replace(array('http://','www.'),'',$name);
 		$name=explode(".",$name);
@@ -172,7 +171,7 @@ class Db extends AdminController {
 		return $name;
 	}
 
-	function backup() {
+  public function backup() {
 		if ($this->flexy_auth->can_backup()) {
 			$this->load->dbutil();
 			$this->load->helper('download');
@@ -194,12 +193,11 @@ class Db extends AdminController {
 			$backup=$sql;
 			$filename='backup_'.$this->_filename().'_'.date("Y-m-d").'.txt';
 			force_download($filename, $backup);
-			$this->_add_content(h(1,"Backup"));
 		}
 		$this->view_admin();
 	}
 
-	function restore() {
+  public function restore() {
 		if ($this->flexy_auth->can_backup()) {
 			if (!isset($_FILES["userfile"])) {
 				$this->load->library('form');
@@ -208,7 +206,7 @@ class Db extends AdminController {
 				$form=new form($this->config->item('API_db').'restore');
 				$data=array( "userfile"	=> array("type"=>"file","label"=>lang('file')) );
 				$form->set_data($data,lang('db_restore'));
-				$this->_add_content($form->render());
+        $this->content .= $form->render();
 			}
 			else {
 				$sql=$this->_upload_sql();
@@ -217,11 +215,11 @@ class Db extends AdminController {
 				}
 			}
 		}
-		$this->view_admin(lang('db_restore'));
+		$this->view_admin('plugins/plugin',array('title'=>lang('db_restore'),'content'=>$this->content));
 	}
 	
 
-	function _upload_sql() {
+  public function _upload_sql() {
 		// upload (to list path, 'coz this exists!)
 		$sql=FALSE;
 		$config['upload_path'] = SITEPATH.'cache';
@@ -257,21 +255,22 @@ class Db extends AdminController {
 		return $sql;
 	}
 
-	function _import() {
+  private function _import() {
 		$this->load->library('form');
 		$this->lang->load('help');
 		$this->lang->load('form');
 		$form=new form($this->config->item('API_db').'import');
+    $form->set_framework('bootstrap');
 		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt,sql)"),
 		 							"sql"				=> array("type"=>"textarea","label"=>"SQL"));
 		if ($this->flexy_auth->has_rights('cfg_configurations')) {
 			$data['update']=array('label'=>'Update DB from r');
 		}
 		$form->set_data($data,"Choose File to upload and import");
-		$this->_add_content($form->render());
+    $this->content .= $form->render();
 	}
 
-	function import() {
+  public function import() {
 		if ($this->flexy_auth->is_super_admin()) {
       // What form is filled?
 			$sql=$this->input->post('sql');
@@ -297,7 +296,7 @@ class Db extends AdminController {
             $sql.="\n".$usql;
           }
           $this->_sql($sql,'Updating...','updated');
-          $this->_add_content(form_textarea('output',$sql));
+          $this->content .= form_textarea('output',$sql);
         }
 			}
 			else {
@@ -346,7 +345,7 @@ class Db extends AdminController {
             $data[$file['rev']]=array('type'=>'checkbox','label'=>'update '.$file['rev'],'html'=>'<span class="help" title="'.safe_quotes($file['sql']).'">'.$file['info'].'</span>','value'=>$file['value'],'class'=>$file['class']);
           }
 					$form->set_data($data,"Select the updates you wan't");
-					$this->_add_content($form->render());
+          $this->content .= $form->render();
         }
 				else {
 					if (!$sql) $sql=$this->_upload_sql();
@@ -359,14 +358,14 @@ class Db extends AdminController {
 					$form=new form($this->config->item('API_db').'sql');
 					$data=array( "sql" => array("type"=>"textarea","value"=>$sql)  );
 					$form->set_data($data,"Are you sure to run this Query?");
-					$this->_add_content($form->render());
+          $this->content .= $form->render();
 				}
 			}
 		}
-		$this->view_admin(lang('db_import'));					
+		$this->view_admin('plugins/plugin',array('title'=>lang('db_import'),'content'=>$this->content));				
 	}
 	
-	function _sql($sql,$title,$action) {
+  public function _sql($sql,$title,$action) {
 		$this->_add_content(h($title));
 		$safe=$this->dbutil->is_safe_sql($sql);
 		if ($safe)
@@ -390,7 +389,7 @@ class Db extends AdminController {
 		}
 	}
 	
-	function sql() {
+  public function sql() {
 		if ($this->flexy_auth->is_super_admin()) {
 			$sql=$this->input->post('sql');
 			$this->lang->load('help');

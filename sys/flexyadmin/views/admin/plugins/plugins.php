@@ -4,10 +4,10 @@
     <table class="table table-hover table-sm">
       <?php foreach ($plugins as $plugin): ?>
         <tr>
-          <td><a href="<?=site_url().$plugin['uri']?>"><b><?=strtoupper($plugin['name'])?></b></td>
+          <td><a href="<?=site_url().$plugin['uri']?>"><?=$plugin['name']?></td>
           <td>
             <?php if (is_array($plugin['doc'])): ?>
-              <b><?=$plugin['doc']['short']?></b> <?=$plugin['doc']['long']?>
+              <?=$plugin['doc']['short']?>
             <?php else: ?>
               <?=$plugin['doc']?>
             <?php endif ?>
