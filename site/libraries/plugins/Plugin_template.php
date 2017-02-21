@@ -74,7 +74,7 @@
 		*/
 	public function _admin_api($args=NULL) {
     $this->add_message('Use this template as a base for your plugins.');
-    return $this->view();
+    return $this->show_messages();
 	}
 
 
