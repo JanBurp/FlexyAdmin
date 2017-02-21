@@ -5955,6 +5955,9 @@ textarea {
   height: 30px !important;
   width: 30px !important; }
 
+.datepicker {
+  height: 1.8rem; }
+
 .form-control.datepicker-input {
   width: 7rem;
   margin-bottom: 0; }
