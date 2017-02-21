@@ -31,6 +31,7 @@ $config['FIELDS_prefix'] = array (
   // Foreign key
 	'id'				=> array(
     'type'        => 'number',
+    'grid-type'   => 'abstract',
     'form-type'   => 'select',
     'validation'	=> 'trim|integer',
     'default'     => 0,
