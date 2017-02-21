@@ -8,11 +8,7 @@
  * - Je kunt de logfile filteren op tijd: een dagdeel of een uur. Alleen entries in dat tijdsbestek worden getoond.
  * - Je kunt een filter term meegeven. Alleen log entries waar de term in voorkomt worden getoond.
  * 
- * ##Logging
- * 
  * Er wordt gebruik gemaakt van de logbestanden van CodeIgniter, die aangevuld zijn met FlexyAdmin en eventueel eigen entries.
- * Zie [CodeIgniter Error handling](http://ellislab.com/codeigniter/user-guide/general/errors.html) bij `log_message()`.
- * 
  * - Standaard worden logfiles in de map SITEPATH.cache geplaatst. Deze moet schrijfbaar zijn.
  * - Logging staat standaard uit en kun je aanzetten door:
  *    - in de index.php deze code te uncommenten: `define('ENVIRONMENT','testing');`
@@ -99,6 +95,7 @@ class Plugin_log extends Plugin {
 										"from"			=> array('label'=>'Timewindow','type'=>'dropdown','options'=>$fromOpts),
 										"search"		=> array('label'=>'Filter'));
 			$form=new form();
+      $form->set_framework('bootstrap');
 			$form->set_data($data,'Logfiles');
 
 			$file=$this->CI->input->post('logfiles');
@@ -120,7 +117,7 @@ class Plugin_log extends Plugin {
 			$this->add_message($form->render());
 			$this->add_message(div('after_form').h($file,1).'<pre>'.$currentLog.'<pre>'._div());
 		}
-		return $this->view('admin/plugins/plugin');
+		return $this->show_messages();
 	}
   
   

@@ -22,8 +22,6 @@ class Plugin_export extends Plugin {
   /**
    */
 	public function _admin_api($args=NULL) {
-		$this->add_content(h('Export',1));
-
 		// What are possible tables to export?
 		$tables=$this->config('tables');
 		if (empty($tables)) {
@@ -81,14 +79,14 @@ class Plugin_export extends Plugin {
 
 		$this->CI->load->library('form');
 		$form=new form($this->CI->uri->get());
-		$form->set_data($formData,"Export");
+    $form->set_framework('bootstrap');
+		$form->set_data($formData);
 		$form->set_buttons($formButtons);
 
 		// Is form validation ok?
 		if ($form->validation()) {
 			$table=$this->CI->input->post('table');
 			$type=$this->CI->input->post('type');
-
 			$this->export($table,$type);
 		}
 		else {

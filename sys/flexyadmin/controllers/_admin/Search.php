@@ -7,16 +7,17 @@
 
 class Search extends AdminController {
 
-  private $settings=FALSE;
-  private $regex_error=FALSE;
+  private $content     = '';
+  private $settings    = FALSE;
+  private $regex_error = FALSE;
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
     $this->load->config('search_replace',true);
     $this->settings=$this->config->item('search_replace');
 	}
 
-	function index() {
+	public function index() {
 		if ($this->flexy_auth->can_use_tools()) {
 			$this->lang->load('help');
 			$this->lang->load('form');
@@ -112,6 +113,7 @@ class Search extends AdminController {
 				// show form
 				$this->load->library('form');
 				$form=new form($this->config->item('API_search'));
+        $form->set_framework('bootstrap');
 				
 				// fields to search in
 				if (is_array($fields))
@@ -145,20 +147,21 @@ class Search extends AdminController {
         $data["fields"]  = array("label"=>lang('sr_fields'),"type"=>"dropdown","multiple"=>"mutliple","options"=>$fields,"value"=>$selection,'validation'=>'required');
         $data["test"]    = array("type"=>'checkbox','value'=>1);
 				$form->set_data($data,lang('sr_search_replace'));
-				$this->_add_content($form->render());			
+        
+        $this->content .= $form->render();
 			}
 			if (!empty($htmlTest)) {
 				if ($test) $class="after_form"; else $class="";
-        $this->_add_content(div($class).$htmlTest._div());  
+        $this->content .= div($class).$htmlTest._div();  
 			}
 		}
-		$this->view_admin();
+		$this->view_admin('plugins/plugin',array('title'=>'Search','content'=>$this->content));
 	}
 
 	private function myErrorHandler($errno, $errstr, $errfile, $errline) 	{
     if ($errno==E_WARNING and has_string('preg',$errstr)) {
 			if (!$this->regex_error) {
-        $this->_add_content(p('error').lang('bad_regex').' : '.$errstr._p());
+        $this->content .= p('error').lang('bad_regex').' : '.$errstr._p();
 				$this->regex_error=TRUE;
 			}
 			return true;
