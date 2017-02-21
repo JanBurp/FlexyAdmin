@@ -166,6 +166,8 @@ Class Data_Core extends CI_Model {
   protected $tm_limit         = 0;
   protected $tm_offset        = 0;
   protected $tm_jump_to_today = FALSE;
+  protected $tm_where_limit   = FALSE;
+  protected $tm_where_offset  = FALSE;
 
   /**
    * Welke relaties mee moeten worden genomen en op welke manier
@@ -874,6 +876,8 @@ Class Data_Core extends CI_Model {
     $this->tm_order_by               = array();
     $this->tm_limit                  = 0;
     $this->tm_offset                 = 0;
+    $this->tm_where_limit            = FALSE;
+    $this->tm_where_offset           = FALSE;
     $this->tm_jump_to_today          = FALSE;
     $this->tm_find                   = FALSE;
     $this->tm_has_condition          = FALSE;
@@ -1712,6 +1716,8 @@ Class Data_Core extends CI_Model {
       $this->query_info['from_cache'] = FALSE;
       $this->query_info['num_rows']   = $query->num_rows();
       $this->query_info['total_rows'] = $query->num_rows();
+      if ($this->tm_where_limit)  $this->tm_limit = $this->tm_where_limit;
+      if ($this->tm_where_offset) $this->tm_offset = $this->tm_where_offset;
       if ($this->tm_limit>1) {
         $this->query_info['limit']      = (int) $this->tm_limit;
         $this->query_info['offset']     = $this->tm_offset;
@@ -1742,6 +1748,8 @@ Class Data_Core extends CI_Model {
 
     // bouw select query op
     $this->_select();
+
+
     
     // bouw relatie queries
     $this->_with();
@@ -2055,7 +2063,6 @@ Class Data_Core extends CI_Model {
       if ($this->tm_cache_result) $this->_cache_result($result);
       $query->free_result();
     }
-    
 
     $this->reset();
     return $result;
@@ -2591,9 +2598,12 @@ Class Data_Core extends CI_Model {
         $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table);
         if (!empty($where)) $this->tm_from.= ' WHERE ('.$where.') ';
         $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
+        
         // Limit in subquery alleen als de volgorde géén invloed heeft op resultaat. (met limit is wel sneller)
         if ( $order_on_self AND !$has_where AND $this->tm_limit>0) {
           if ($this->tm_offset===FALSE) $this->tm_offset=0;
+          $this->tm_where_limit = $this->tm_limit;
+          $this->tm_where_offset = $this->tm_offset;
           $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
           $this->tm_limit = 0;
           $this->tm_offset = 0;
@@ -3614,12 +3624,8 @@ Class Data_Core extends CI_Model {
       // Select fields
       $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
       // Joins
-      // $this->join( $rel_table.' AS '.$what,    $this_table.'.'.$id.' = '.$what.".".$this_foreign_key,     'left');
-      // $this->join( $other_table,  $what.'.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
       $this->join( $rel_table.' AS '.$sub_as, $this_table.'.'.$id.' = '.$sub_as.".".$this_foreign_key, 'left');
       $this->join( $other_table.' AS '.$as,   $sub_as.'.'.$other_foreign_key.' = '.$as.".".$id, 'left');
-      // $this->join( $rel_table.' AS '.'_'.$as,    $this_table.'.'.$id.' = '.'_'.$as.".".$this_foreign_key,     'left');
-      // $this->join( $other_table.' AS '.$as,  $rel_table.'.'.$other_foreign_key.' = '.$as.".".$id,  'left');
     }
     return $this;
   }
