@@ -4,25 +4,20 @@
  * Maakt een relatie tabel
  *  
  * Deze plugin maakt een relatie tabel tussen de twee meegegeven tabellen.
- * Stel je wilt een relatie tabel tussen _tbl_menu_ en _tbl_links_ dan type je de volgende url in:
- * 
- *      .../_admin/plugin/add_relation_table/tbl_menu/tbl_links
+ * /add_relation_table/tbl_this/tbl_foreign
  * 
  * @author Jan den Besten
  */
- 
 class Plugin_add_relation_table extends Plugin {
 
 	public function __construct() {
 		parent::__construct();
 	}
-
 	
   /**
    */
-   function _admin_api($args=false) {
+  public function _admin_api($args=false,$help='') {
 		if ($this->CI->flexy_auth->is_super_admin()) {
-			$this->add_content(h($this->name,1));
 			$goodArgs=false;
 			if ($args) {
 				if (isset($args[0])) $table1=$args[0];
@@ -38,9 +33,6 @@ class Plugin_add_relation_table extends Plugin {
 					$this->CI->dbforge->create_table($relTable,TRUE);
 					$this->add_content(h("Created '$relTable' from '$table1' and '$table2'.",2));
 				}
-			}
-			if (!$goodArgs) {
-				$this->add_content('<p>Add relation table, for which table(s)?</br></br>Give: /tbl_xxx/tbl_xxx</p>');
 			}
       return $this->content;
 		}

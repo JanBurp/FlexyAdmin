@@ -95,13 +95,13 @@ $config['DEEP_FOREIGNS']  = array(
 | URI to FlexyAdmin controllers.
 |
 */
-$config['API_home']									= "/_admin/";
-$config['API_login']                = "/_admin/login/";
-$config['API_logout']                = "/_admin/logout/";
-$config['API_plugin']                = "/_admin/plugin/";
-$config['API_db']                    = "/_admin/db/";
-$config['API_search']                = '/_admin/search/';
-$config['API_fill']                  = '/_admin/fill/';
+$config['API_home']   = "_admin/";
+$config['API_login']  = "_admin/login/";
+$config['API_logout'] = "_admin/logout/";
+$config['API_plugin'] = "_admin/plugin/";
+$config['API_db']     = "_admin/db/";
+$config['API_search'] = '_admin/search/';
+$config['API_fill']   = '_admin/fill/';
 
 $config['FILES_view_types']					= array("list","thumbs");
 $config['FILES_thumb_path']					= "/thumb/";
