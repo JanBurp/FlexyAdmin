@@ -1957,6 +1957,7 @@ Class Data_Core extends CI_Model {
         $txt_row = array_keys($txt_row);
         foreach ($txt_row as $txt_field) {
           $row[$txt_field] = preg_replace( "/[\n\r]/"," ", strip_tags($row[$txt_field]));
+          $row[$txt_field] = str_replace( "&nbsp;"," ", $row[$txt_field]);
         }
       }
       
