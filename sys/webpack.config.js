@@ -4,16 +4,13 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var LiveReloadPlugin  = require('webpack-livereload-plugin');
 
 module.exports = [
-  
 {
   name    : 'js',
   entry   : "./flexyadmin/assets/js/main.js",
-  // devtool : '#eval-source-map',
   output  : {
     path              : __dirname + '/flexyadmin/assets/dist/',
     publicPath        : '/flexyadmin/assets/dist/',
     filename          : "bundle.js",
-    // sourceMapFilename : "bundle.js.map",
     devtoolLineToLine : true,
     pathinfo          : true,
   },
@@ -42,18 +39,15 @@ module.exports = [
       ]
   },
   plugins: [
-    // new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
-    new LiveReloadPlugin()
   ],
   
   resolve: {
     // alias: {'vue$': 'vue/dist/vue.js'},
     alias: {'vue$': 'vue/dist/vue.common.js'}
   }
-  
-},
+}];
 
-
+module.exports.push(
 {
   name: 'scss',
   entry: "./flexyadmin/assets/scss/flexyadmin.scss",
@@ -96,4 +90,30 @@ module.exports = [
     new LiveReloadPlugin()
   ]
 }
-];
+);
+
+
+
+if (process.env.NODE_ENV === 'watch') {
+  module.exports[0].plugins = (module.exports.plugins || []).concat([
+    
+    new LiveReloadPlugin()
+
+  ])
+}
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports[0].plugins = (module.exports.plugins || []).concat([
+    
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    }),
+    
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ])
+}
+
