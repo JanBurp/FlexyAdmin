@@ -23,6 +23,7 @@ import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
 
+
 if ( !_.isUndefined(_flexy.auth_token) ) {
 
   // TinyMCE Global & Set extra

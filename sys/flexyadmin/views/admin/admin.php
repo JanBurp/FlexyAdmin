@@ -27,7 +27,7 @@
       <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>"><span class="flexy-block btn btn-secondary">
         <span class="fa fa-home fa-lg"></span>
       </span></a>
-      <flexy-blocks href="<?=$base_url?>" text="<?=$str_title?>" class="hidden-md-down"/>
+      <flexy-blocks v-once href="<?=$base_url?>" text="<?=$str_title?>" class="hidden-md-down"/>
     </div>
     <div class="navbar-nav">
       <?=$headermenu?>
@@ -39,7 +39,7 @@
     <div id="content" class="col-sm-10"><?=$content?></div>
   </div>
   
-  <div id="mask" v-show="state.progress>0">
+  <div id="mask" v-cloak v-show="state.progress>0">
     <span class="spinner fa fa-spinner fa-pulse fa-fw"></span>
   </div>
   
