@@ -23,6 +23,12 @@ Class Admin_menu extends CI_Model {
     $this->user = $this->flexy_auth->get_user();
   }
   
+  private function _get_config_item($name) {
+    $item = $this->ui_config[$name];
+    if (isset($this->ui_config[$name.'_replace'])) $item = $this->ui_config[$name.'_replace'];
+    return $item;
+  }
+  
   /**
    * Speciale get om gegenereerd menu op te halen 
    *
@@ -37,7 +43,7 @@ Class Admin_menu extends CI_Model {
     $homeMenu = new Menu();
     $homeMenu->set('view_path','admin/menu-home');
     $homeMenu->set_current($current_uri);
-    $homeMenu->add_items( $this->_process_items($base_url,$this->ui_config['home_menu']) );
+    $homeMenu->add_items( $this->_process_items($base_url, $this->_get_config_item('home_menu') ) );
     
     /**
      * Headermenu
@@ -46,7 +52,7 @@ Class Admin_menu extends CI_Model {
     $headerMenu->set('view_path','admin/menu-horizontal');
     $headerMenu->set('framework','bootstrap');
     $headerMenu->set_current($current_uri);
-    $headerMenu->add_items( $this->_process_items($base_url,$this->ui_config['header_menu']) );
+    $headerMenu->add_items( $this->_process_items($base_url, $this->_get_config_item('header_menu') ) );
     
     /**
      * Side menu
@@ -56,7 +62,8 @@ Class Admin_menu extends CI_Model {
     $sideMenu->set('framework','bootstrap');
     $sideMenu->set_current($current_uri);
     $first=true;
-    foreach ($this->ui_config['side_menu'] as $group) {
+    $side = $this->_get_config_item('side_menu');
+    foreach ($side as $group) {
       $items = $this->_process_items($base_url,$group);
       if ($items) {
         if (!$first) $sideMenu->add_split();
