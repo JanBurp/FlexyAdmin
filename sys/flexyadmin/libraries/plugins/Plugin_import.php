@@ -1,13 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
-	* Import vanuit CSV
+	* Import vanuit CSV (beta)
 	* 
-	* Eerste regel bevat de veldnaam:
-	* - Kan een standaard veldnaam zijn
-	* - Bij een foreign_key wordt er een item in de foreign_table aangemaakt (als die niet bestaat)
-	* - Bij een rel_table idem
-	* - Bij txt_ velden kunnen meerdere kolommen worden samengevoegd
+	* Eerste regel in CSV bestand bevat de veldnaam:
+	* - Kan een standaard veldnaam zijn (bv str_title)
+	* - Bij een foreign_key wordt er een item in de foreign_table aangemaakt (als die niet bestaat): id_link.url_url bijvoorbeeld
+	* - Bij een rel_table idem, kan ook meerdere rel_table velden: rel_table.str_title, rel_table.url_url
+	* - Bij txt_ velden kunnen meerdere kolommen worden samengevoegd: txt_text:status, txt_text:opmerkingen
 	*
 	* @author Jan den Besten
 	*/
@@ -28,8 +28,9 @@
    }
 
 
-	public function _admin_api($args=NULL) {
+	public function _admin_api($args=NULL,$help) {
 		if (!$this->CI->flexy_auth->is_super_admin()) return;
+    $this->add_message('<b>'.$help['short'].'</b><br>'.$help['long'].'<hr>');
     
     // Tabel & Bestand kiezen
     $table = $this->CI->input->post('table');
@@ -56,6 +57,7 @@
       
       // Import Data
       $set_data = array();
+      $this->set_many_data = array();
       foreach ($data as $key=>$row) {
         $set = array();
         foreach ($row as $field => $value) {
@@ -65,13 +67,17 @@
             switch ($type) {
 
               case 'id' :
-                $value = $this->_add_foreign($field,$value);
-                $set[remove_suffix($field,'.')] = $value;
+                $result = $this->_add_foreign($field,$value);
+                $set[remove_suffix($field,'.')] = $result['id'];
+                if ($result['new'])
+                  $row[$field] = '<span class="text-danger">'.$result['id'].'</span> '.$row[$field];
+                else
+                  $row[$field] = '<span class="text-info">'.$result['id'].'</span> '.$row[$field];
                 break;
               
-              // case 'rel':
-              //   $this->_add_many_to_many($field,$value);
-              //   break;
+              case 'rel':
+                $this->_add_many_to_many($field,$value);
+                break;
 
               case 'txt':
                 $head = get_suffix($field,':');
@@ -89,23 +95,30 @@
             }
           }
         }
-        $id = '-';
+        $id = FALSE;
         if ($set) {
           // Check eerst of item al bestaat
           $this->CI->data->table($this->import_table)->where($set);
           $exists = $this->CI->data->get_row();
           if ($exists) {
             $id = $exists['id'];
+            $row = array_unshift_assoc($row,'id','<span class="text-info">'.$id.'</span>');
           }
           else {
             $this->CI->data->set($set);
             $id = $this->CI->data->insert();
+            $row = array_unshift_assoc($row,'id','<span class="text-danger">'.$id.'</span>');
           }
         }
-        $row = array_unshift_assoc($row,'id',$id);
-        $data[$key]=$row;
+        
+        if ($id) {
+          $data[$key]=$row;
+          $this->_update_many_to_many($id);
+        }
+        else {
+          unset($data[$key]);
+        }
       }
-      
       
       
       // Show Data
@@ -138,16 +151,24 @@
   
   
   /**
-   * Voeg foreign data toe en geef id terug.
-   * Checkt eerst of foreign data al bestaat, zoja, geeft ook de id terug.
+   * Voeg foreign data toe. Checkt eerst of foreign data al bestaat.
+   * 
+   * Resultaat is een array:
+   * array(
+   *  'id'  => id
+   *  'new' => TRUE/FALSE als het om een toegevoegd item gaat
+   * )
    *
    * @param string $field 
    * @param mixed $value 
-   * @return int $id
+   * @return array
    * @author Jan den Besten
    */
   private function _add_foreign($field,$value) {
-    $id = FALSE;
+    $result = array(
+      'id'  => FALSE,
+      'new' => FALSE,
+    );
     
     // Check de many_to_one relaties
     $foreign_field = get_suffix($field,'.');
@@ -167,11 +188,61 @@
       else {
         $this->CI->data->set($foreign_field,$value);
         $id = $this->CI->data->insert();
+        $result['new'] = TRUE;
       }
+      $result['id'] = $id;
     }
-    return $id;
+    return $result;
   }
+  
+  
+  private function _add_many_to_many($field,$value) {
+    // Check de many_to_many relaties
+    $foreign_field = get_suffix($field,'.');
+    $what          = remove_suffix($field,'.');
 
+    $this->CI->data->table( $this->import_table );
+    $relation = $this->CI->data->get_setting(array('relations','many_to_many',$what));
+    
+    // Als relatie bestaat, ga verder en bewaar set
+    if ($relation) {
+      if (!isset($this->set_many_data[$what])) $this->set_many_data[$what] = array();
+      $this->set_many_data[$what][$foreign_field] = $value;
+    }
+  }
+  
+  private function _update_many_to_many($id) {
+    $this->CI->data->table( $this->import_table );
+    $relations = $this->CI->data->get_setting(array('relations','many_to_many'));
+
+    foreach ($this->set_many_data as $what => $data) {
+      $relation = $relations[$what];
+
+      // Other data
+      $other_table = $relation['other_table'];
+      $this->CI->data->table($other_table)->where($data);
+      $exists = $this->CI->data->get_row();
+      if ($exists) {
+        $other_id = $exists['id'];
+      }
+      else {
+        $this->CI->data->set($data);
+        $other_id = $this->CI->data->insert();
+      }
+      
+      // Update relation
+      $other_id;
+      $this->CI->data->table( $relation['rel_table'] );
+      $this->CI->data->delete( array( $relation['this_key'] => $id) );
+
+      $this->CI->data->set( array(
+        $relation['this_key']  => $id,
+        $relation['other_key'] => $other_id,
+      ));
+      $this->CI->data->insert();
+      
+    }
+  }
 }
 
 ?>
