@@ -22,34 +22,24 @@ class Fill extends AdminController {
       $this->load->library('lorem');
       $lorem = new Lorem();
 		
-			$aantal=$this->input->post('aantal');
-			$addtable=$this->input->post('addtable');
-			$fields=get_fields_from_input( $this->input->post('fields'), $addtable );
-			$where=$this->input->post('where');
-      $fill=$this->input->post('fill');
-      $random=$this->input->post('random');
-			$test=$this->input->post('test');
+			$aantal          = $this->input->post('aantal');
+			$addtable        = $this->input->post('addtable');
+			$fields          = get_fields_from_input( $this->input->post('fields'), $addtable );
+			$where           = $this->input->post('where');
+      $fill            = $this->input->post('fill');
+      $random          = $this->input->post('random');
+      $many_to_many    = $this->input->post('many_to_many');
+			$test            = $this->input->post('test');
       
 			$htmlTest='';
 
 			// create rows in table
 			if ($aantal and $addtable) {
         $this->data->table($addtable);
-				$forbidden_fields=$this->config->item('FIELDS_special');
-				$forbidden_fields=array_keys($forbidden_fields);
-				$first_field=$this->data->list_fields();
-				$first_field=not_filter_by($first_field,$forbidden_fields);
-				$first_field=array_shift($first_field);
-        if (empty($first_field)) {
-          $first_field=$this->data->list_fields();
-          $first_field=$first_field[1];
-        }
+				$first_field = $this->data->list_fields('str',1);
 				for ($i=0; $i < $aantal; $i++) { 
 					$id='#';
-					if (!$test) {
-						$this->data->table($addtable)->set($first_field,'');
-						$id = $this->data->insert_id();
-					}
+					if (!$test) $id = $this->data->table($addtable)->set($first_field,random_string())->insert();
 					$htmlTest.="<li>+ $addtable [$id]</li>";
 				}
 			}
@@ -62,28 +52,36 @@ class Fill extends AdminController {
           if ($field=='id') unset($fields[$key]);
         }
       }
-
+      // Voeg many_to_many velden toe
+      if ($many_to_many) {
+        $relations = $this->data->table( $addtable )->get_setting(array('relations','many_to_many'));
+        if ($relations) {
+          foreach ($relations as $relation) {
+            array_push($fields,$addtable.'.rel_'.$relation['result_name']);
+          }
+        }
+      }
+      
 			// fill fields
 			if ($fields and $addtable) {
 				foreach($fields as $field) {
-					$table=get_prefix($field,'.');
-          $field=get_suffix($field,'.');
+					$table = get_prefix($field,'.');
+          $field = get_suffix($field,'.');
           // items
           $this->data->table($table)->select('id');
 					if (!empty($where)) $this->data->where($where);
 					$items = $this->data->get_result();
 					foreach ($items as $id => $item) {
-						$result=$fill;
+						$result = $fill;
             if ($random) {
-              $result=$this->db->random_field_value($field,array('table'=>$table));
+              $result = $this->data->table($table)->random_field_value( $field, $id );
             }
-						if (!$test) {
+            if (!$test and isset($result)) {
               $this->data->table($table)->where('id',$id);
-							if (!empty($where)) $this->data->where($where);
-							$this->data->set($field,$result);
-							$this->data->update();
-							// trace_($this->db->last_query());
-						}
+              if (!empty($where)) $this->data->where($where);
+              $this->data->set($field,$result);
+              $this->data->update();
+            }
 						$htmlTest.="<li>$field [$id] = '$result'</li>";
 					}
 				}		
@@ -109,6 +107,7 @@ class Fill extends AdminController {
 											"where"		=> array("label"=>lang('fill_where'),"value"=>$where),
                       "fill"    => array("label"=>lang('fill_with'),"value"=>$fill),
 											"random"	=> array("label"=>lang('fill_use_random'),"type"=>"checkbox","value"=>1),
+											"many_to_many"	=> array("label"=>'Many to Many',"type"=>"checkbox","value"=>1),
                       // ""        => array("type"=>"html","value"=>'alt[yes|no|..],[int(min,max)],[str([html|mix|lower|upper],len)]'),
 											"test"		=> array("type"=>'checkbox','value'=>1)
 											);
