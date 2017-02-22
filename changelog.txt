@@ -3,6 +3,7 @@ Changes 3.5.0
 
 - UI with Vue & Bootstrap
 - Models: Filemanager, Mediatable removed and replaced with Assets
+- DB: FlexyAdmin db-> extensions depricated, and standard not loaded.
 - Rewrite data->find()
 - data->path() renamed to data->tree()
 - URL: /admin changed to /_admin
