@@ -1655,6 +1655,168 @@ Class Data_Core extends CI_Model {
     }
     return $defaults;
   }
+  
+  
+  
+  /**
+   * Geeft random waarden voor een row, eventueel voor gespecificeerde velden
+   *
+   * @param array $fields
+   * @return array $result
+   * @author Jan den Besten
+   */
+  public function get_random( $fields=array() ) {
+    if (empty($fields)) $fields = $this->settings['fields'];
+    $result = array();
+    foreach ($fields as $field) {
+      if ($field!==$this->settings['primary_key']) $result[$field] = $this->random_field_value( $field );
+    }
+    return $result;
+  }
+
+  /**
+   * Geeft random waarde voor gegeven veld
+   *
+   * @param string $field
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function random_field_value($field,$id=FALSE) {
+    $value = NULL;
+    $type  = get_prefix($field,'_');
+    switch($type) {
+      case 'id' :
+        if ($field!==$this->settings['primary_key']) {
+          $relation = $this->get_setting(array('relations','many_to_one',$field));
+          if ($relation) {
+            $other_table = $relation['other_table'];
+            $sql = "SELECT `id` FROM `".$other_table."`";
+            $query = $this->db->query($sql);
+            if ($query) {
+              $results = $query->result_array();
+              $value = random_element($results);
+              $value = $value['id'];
+            }
+          }
+        }
+        break;
+      case 'rel':
+        if ($id) {
+          $field = remove_prefix($field);
+          $relation = $this->get_setting(array('relations','many_to_many',$field));
+          if ($relation) {
+            $other_table = $relation['other_table'];
+            $sql = "SELECT `id` FROM `".$other_table."`";
+            $query = $this->db->query($sql);
+            if ($query) {
+              $results = $query->result_array();
+              shuffle($results);
+              $max = count($results);
+              if ($max>4) $max = 4;
+              $results = array_slice($results,0,rand(1,$max));
+              $ids = array();
+              foreach ($results as $item) {
+                $ids[] = $item['id'];
+              }
+              // Remove
+              $sql = "DELETE FROM `".$relation['rel_table']."` WHERE `".$relation['this_key']."` = ".$id;
+              $this->db->query($sql);
+              // Add Random items
+              foreach ($ids as $other_id) {
+                $sql = "INSERT INTO `".$relation['rel_table']."` (`".$relation['this_key']."`, `".$relation['other_key']."`) VALUES ('".$id."', '".$other_id."')";
+                $this->db->query($sql);
+              }
+              $value = implode('|',$ids);
+            }
+          }
+        }
+        break;
+      case 'int':
+        $value = rand(0,100);
+        break;
+      case 'dec':
+        $value = rand(10,99).'.'.rand(10,99);
+        break;
+      case 'b':
+      case 'is':
+      case 'has':
+        $value = false;
+        if (rand(0,1)==1) $value = true;
+        break;
+      case 'txt':
+        $this->load->library('Lorem');
+        $value = $this->lorem->getContent(rand(50,500),'html');
+        break;
+      case 'stx':
+        $this->load->library('Lorem');
+        $value = $this->lorem->getContent(rand(10,50),'plain');
+        break;
+      case 'medias':
+      case 'media':
+        $files = $this->assets->get_files('pictures');
+        shuffle($files);
+        if ($type==='media') {
+          $value = current($files);
+          $value = $value['file'];
+        }
+        else {
+          $files = array_slice($files,0,rand(1,4));
+          foreach ($files as $file) {
+            $value[] = $file['file'];
+          }
+          $value = implode('|',$value);
+        }
+        break;
+      case 'url' :
+        $value='';
+        if (rand(1,4)>2) {
+          // Link from link table
+          if (!isset($links_table)) $links_table=$this->get_result('tbl_links');
+          $url=random_element($links_table);
+          $value=$url['url_url'];
+        }
+        break;
+      case 'email':
+        $value = strtolower(random_string('alpha',rand(2,8)).'@'.random_string('alpha',rand(2,8)).'.'.random_string('alpha',rand(2,3)));
+        break;
+      case 'date':
+      case 'dat':
+        $year = (int) date('Y');
+        $value = rand($year-5,$year+5).'-'.rand(1,12).'-'.rand(1,31);
+        break;
+      case 'tme':
+        $year = (int) date('Y');
+        $value = rand($year-5,$year+5).'-'.rand(1,12).'-'.rand(1,31). ' '.rand(0,23).':'.rand(0,59).':'.rand(0,59);
+        break;
+      case 'time':
+        $value = rand(0,23).':'.rand(0,59).':'.rand(0,59);
+        break;
+      case 'rgb':
+      case 'str':
+        $value='';
+        if ($field=='str_video') {
+          if (rand(1,4)>2) {
+            // Get youtube homepage, and all the youtube links from them
+            if (!isset($YouTubeHTML)) {
+              $YouTubeHTML = file_get_contents('https://www.youtube.com/');
+              if (preg_match_all("/href=\"\\/watch\\?v=(.*)\"/uiUsm", $YouTubeHTML,$matches)) {
+                $YouTubeCodes=$matches[1];
+              }
+            }
+            $value = random_element($YouTubeCodes);
+          }
+        }
+        else {
+          $value = str_replace(array('.',','),'',$this->lorem->getContent(rand(1,5),'plain'));
+        }
+        break;
+      default:
+        $value = random_string();
+        break;
+    }
+    return $value;
+  }
+  
 
   
   
