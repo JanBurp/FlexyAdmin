@@ -58,8 +58,11 @@ export default {
     
     // Bij resize
     window.addEventListener('resize', function(event){
-      self.calcLimit();
-      self.reloadPageAfterResize();
+      if (!self.isResizing) {
+        self.isResizing = true;
+        self.calcLimit();
+        self.reloadPageAfterResize();
+      }
     });
 
     //
@@ -253,6 +256,7 @@ export default {
             self.dataInfo = response.data.info;
           }
         }
+        self.isResizing = false;
         return response;
       });
     },
@@ -880,6 +884,7 @@ export default {
       <!-- MAIN HEADER -->
       <div class="card-header">
         <h1>{{title}}</h1>
+        
         <!-- FAST SEARCH -->
         <form class="form-inline" @submit="startFinding($event)">
           <div class="form-group" v-if="!extendedFind">
