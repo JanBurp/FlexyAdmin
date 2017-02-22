@@ -79690,12 +79690,12 @@ _flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return res
 exports.default={name:'FlexyGrid',components:{draggable:_vuedraggable2.default,flexyButton:_flexyButton2.default,FlexyGridCell:_flexyGridCell2.default,FlexyPagination:_flexyPagination2.default},props:{'title':String,'name':String,'api':{type:[String,Boolean],default:false},'order':{type:String,default:''},'offset':{type:String,default:'0'},'limit':{type:String,default:''},'filter':{type:[String,Object],default:''},'type':{type:String,default:'table'},'selection':{type:[Array,Boolean],default:false}},// https://vuejs.org/v2/guide/components.html#Circular-References-Between-Components
 beforeCreate:function beforeCreate(){this.$options.components.FlexyForm=__webpack_require__(/*! ./../form/flexy-form.vue */ 11);},mounted:function mounted(){var self=this;self.calcLimit();// Bij resize
 window.addEventListener('resize',function(event){if(!self.isResizing){self.isResizing=true;self.calcLimit();self.reloadPageAfterResize();}});//
-// Init Find
-//
-this.extendedFind=false;if(this.filter.substr(0,1)==='['||this.filter.substr(0,1)==='{'){this.extendedFind=true;this.extendedTerm=JSON.parse(this.filter);this.filterTerm='';}else{this.extendedTerm=[_.clone(this.extendedTermDefault)];}//
 // Load first page
 // 
-if(this.type!=='mediapicker')this.apiParts.formID=_jdbTools2.default.getUrlQueryPart('form');if(!this.apiParts.formID){this.apiParts.formID=false;this.reloadPage({offset:this.offset,limit:this.apiParts.limit,order:this.order,filter:this.filter});}},beforeUpdate:function beforeUpdate(){//
+if(this.type!=='mediapicker')this.apiParts.formID=_jdbTools2.default.getUrlQueryPart('form');if(!this.apiParts.formID){this.apiParts.formID=false;this.reloadPage({offset:this.offset,limit:this.apiParts.limit,order:this.order,filter:this.filter});}//
+// Init Find
+//
+this.extendedFind=false;if(this.filter.substr(0,1)==='['||this.filter.substr(0,1)==='{'){this.extendedFind=true;this.extendedTerm=JSON.parse(this.filter);this.filterTerm='';}else{this.extendedTerm=[_.clone(this.extendedTermDefault)];}},beforeUpdate:function beforeUpdate(){//
 // Selection
 //
 if(this.selection){// Pas selected aan
@@ -82424,15 +82424,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }) : _vm._e(), _vm._v(" "), _c('flexy-button', {
-    staticClass: "btn-outline-warning",
-    class: {
-      'text-warning': _vm.extendedFind
-    },
+    staticClass: "btn-outline-warning text-warning",
     attrs: {
-      "icon": {
-        'chevron-up': _vm.extendedFind,
-        'chevron-down': !_vm.extendedFind
-      }
+      "icon": "cog"
     },
     nativeOn: {
       "click": function($event) {
