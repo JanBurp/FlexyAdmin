@@ -354,6 +354,43 @@ class Flexy_auth extends Ion_auth {
   }
   
   
+  /**
+   * Maakt nieuwe gebruiker aan
+   *
+   * @param array $data (in ieder geval email_email & str_username)
+   * @param array $groups (eventueel mee te geven groepen, als ids)
+   * @return int $id
+   * @author Jan den Besten
+   */
+  public function insert_user($data,$groups=array()) {
+    // Check of noodzakelijk velden bestaan
+    if (!isset($data['email_email']) or !isset($data['str_username'])) return FALSE;
+    if ($groups and !is_array($groups)) $groups = array($groups);
+    // Voeg eventueel random password toe
+    if (!isset($data['gpw_password'])) $data['gpw_password'] = random_string('alnum',12);
+    // Additional data
+    $additional_data = array_unset_keys($data,array('str_username','gpw_password','email_email'));
+    // Insert
+    $id = parent::register( $data['str_username'], $data['gpw_password'], $data['email_email'], $additional_data, $groups);
+    // Log als gelukt
+    if ($id) $this->log_activity->database( $this->db->last_query(), 'cfg_users', $id );
+    return $id;
+  }
+  
+  /**
+   * Verwijderd gebruiker
+   *
+   * @param string $user_id 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function delete_user($user_id) {
+    $success = parent::delete_user($user_id);
+    // Log als gelukt
+    if ($success) $this->log_activity->database( $this->db->last_query(), 'cfg_users', $user_id );
+    return $success;
+  }
+  
   
   /**
    * Pas gebruikers(data) aan.
