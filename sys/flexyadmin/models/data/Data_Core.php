@@ -4861,6 +4861,19 @@ Class Data_Core extends CI_Model {
 	}
   
   /**
+   * Geeft database informatie over de tabel
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function table_status() {
+    $query  = $this->query("SHOW TABLE STATUS WHERE NAME = '".$this->settings['table']."'");
+    $status = current($query->result_array());
+    return array_change_key_case($status);
+  }
+  
+  
+  /**
    * Geeft terug of de tabel een menu-achtige tabel is (met de velden 'order','self_parent' en 'uri')
    *
    * @return bool

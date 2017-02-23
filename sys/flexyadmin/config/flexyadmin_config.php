@@ -10,7 +10,7 @@
  * @author			Jan den Besten
 **/
 
-$config['USE_OLD_DB']             = defined('PHPUNIT_TEST')?TRUE:FALSE;
+$config['USE_OLD_DB']             = FALSE;
 $config['PROFILER']               = FALSE;
 
 $config['PHP_version']						= substr(phpversion(),0,1);
