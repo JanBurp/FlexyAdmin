@@ -241,8 +241,9 @@ class MY_Form_validation extends CI_Form_validation {
       // options
       $validation['params']=array();
       if (isset($options['data'])) {
-        foreach ($options['data'] as $option) {
-          $validation['params'][] = el('value',$option,$option);
+        foreach ($options['data'] as $value => $option) {
+          if (isset($option['value'])) $value = $option['value'];
+          $validation['params'][] = $value;
         }
         $validation['params'] = implode(',',$validation['params']);
       }
