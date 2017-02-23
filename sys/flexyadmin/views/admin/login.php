@@ -33,7 +33,7 @@
         <a v-cloak @click="showForgottenPasswordDialog(true)" id="forgotten-password-link"><?=lang('login_forgot')?></a>
   		</form>
       
-  		<form v-if="forgottenPasswordDialog" action="<?=site_url("_admin/login/forgot")?>" method="post">
+  		<form v-cloak v-if="forgottenPasswordDialog" action="<?=site_url("_admin/login/forgot")?>" method="post">
         <div class="form-group row">
           <div class="col-10"><input type="text" class="form-control" id="email" name="email" placeholder="<?=lang('login_email')?>" value=""></div>
           <label for="email" class="col-2 col-form-label"><span class="fa fa-envelope"></span></label>
