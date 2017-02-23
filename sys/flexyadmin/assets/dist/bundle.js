@@ -736,7 +736,7 @@ this.state.progress=percent;this.debug&&console.log('state.progress',this.state.
    * Modal
    */openModal:function openModal(options,callback){if(!_.isUndefined(options))_.merge(this.state.modal,options);this.state.modal.show=true;this.state._modal.callback=callback;var buttonEL=document.querySelector('#flexyadmin-modal .modal-footer button:last-child');buttonEL.focus();},modalState:function modalState(state){this.state._modal.state=state;},closeModal:function closeModal(){this.state.modal.show=false;if(!_.isUndefined(this.state._modal.callback)){this.state._modal.callback.call(this,this.state._modal);}},/**
    * Messages
-   */addMessage:function addMessage(message,type){if(_.isUndefined(type))type='success';var self=this;self.state.messages.push({'text':message,'type':type});self.debug&&console.log('state.messages',self.state.messages);if(type!=='danger'){window.setTimeout(function(){self.state.messages.shift();self.debug&&console.log('state.messages',self.state.messages);},3000);}},removeMessage:function removeMessage(id){this.state.messages.splice(id,1);},/**
+   */addMessage:function addMessage(message,type){if(_.isUndefined(type))type='success';var self=this;var id=_jdbTools2.default.createUUID();self.state.messages.push({'id':id,'text':message,'type':type});self.debug&&console.log('state.messages',self.state.messages);if(type!=='danger'){window.setTimeout(function(){self.removeMessage(id);self.debug&&console.log('state.messages',self.state.messages);},3000);}},removeMessage:function removeMessage(id){var index=_jdbTools2.default.indexOfProperty(this.state.messages,'id',id);this.state.messages.splice(index,1);},/**
    * Media view
    */getMediaView:function getMediaView(){return this.state.media_view;},setMediaView:function setMediaView(view){var self=this;this.state.media_view=view;this.debug&&console.log('state.media_view',this.state.media_view);return self.api({url:'row','data':{'table':'cfg_users','where':'current','data':{'str_filemanager_view':self.state.media_view}}});},/**
    * API
@@ -81763,7 +81763,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "name": "slideUp",
       "tag": "div"
     }
-  }, _vm._l((_vm.state.messages), function(message, id) {
+  }, _vm._l((_vm.state.messages), function(message) {
     return _c('div', {
       key: message,
       staticClass: "alert",
@@ -81775,7 +81775,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       nativeOn: {
         "click": function($event) {
-          _vm.removeMessage(id)
+          _vm.removeMessage(message.id)
         }
       }
     }) : _vm._e(), _vm._v(" "), _c('div', {
