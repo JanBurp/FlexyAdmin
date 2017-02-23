@@ -23,6 +23,9 @@ UPDATE 3.5.x
 ============
 - Rewrite data->find()
 - Links naar file/... werken niet meer, moeten worden aangepast naar: _media/...
+- FlexyAdmin uitbreidingen op ->db-> zijn depricated, en standaard niet meer geladen.
+  - Zet je code om naar ->data->
+  - Of als het niet anders kan, stel in flexyadmin_config $config['USE_OLD_DB'] = TRUE;
 
 
 UPDATE 3.4.x

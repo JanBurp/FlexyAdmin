@@ -759,14 +759,16 @@ class DataTest extends CITestCase {
     $update_string = '_UPDATE '.random_string();
     $nr_others = rand(3,6);
     $other_ids  = array();
+    $this->CI->data->table('rel_crud__crud2');
     for ($i=0; $i < $nr_others; $i++) {
-      $other_ids[] = $this->CI->db->random_field_value( 'rel_crud__crud2.id_crud2', array() );
+      $other_ids[] = $this->CI->data->random_field_value( 'id_crud2' );
     }
     $set = array(
-      'str_insert' => $insert_string,
-      'str_update' => $update_string,
-      'rel_crud__crud2'  => $other_ids,
+      'str_insert'      => $insert_string,
+      'str_update'      => $update_string,
+      'rel_crud__crud2' => $other_ids,
     );
+    $this->CI->data->table( 'tbl_crud' );
     $this->CI->data->insert( $set );
     $insert_id = $this->CI->data->insert_id();
     // check of de data hetzelfde is
