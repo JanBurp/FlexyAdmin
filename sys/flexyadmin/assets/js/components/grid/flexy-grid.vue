@@ -58,23 +58,13 @@ export default {
     
     // Bij resize
     window.addEventListener('resize', function(event){
-      self.calcLimit();
-      self.reloadPageAfterResize();
+      if (!self.isResizing) {
+        self.isResizing = true;
+        self.calcLimit();
+        self.reloadPageAfterResize();
+      }
     });
 
-    //
-    // Init Find
-    //
-    this.extendedFind = false;
-    if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
-      this.extendedFind = true;
-      this.extendedTerm = JSON.parse(this.filter);
-      this.filterTerm = '';
-    }
-    else {
-      this.extendedTerm = [_.clone(this.extendedTermDefault)];
-    }
-    
     //
     // Load first page
     // 
@@ -87,6 +77,19 @@ export default {
         order  : this.order,
         filter : this.filter,
       });
+    }
+    
+    //
+    // Init Find
+    //
+    this.extendedFind = false;
+    if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
+      this.extendedFind = true;
+      this.extendedTerm = JSON.parse(this.filter);
+      this.filterTerm = '';
+    }
+    else {
+      this.extendedTerm = [_.clone(this.extendedTermDefault)];
     }
   },
   
@@ -253,6 +256,7 @@ export default {
             self.dataInfo = response.data.info;
           }
         }
+        self.isResizing = false;
         return response;
       });
     },
@@ -880,6 +884,7 @@ export default {
       <!-- MAIN HEADER -->
       <div class="card-header">
         <h1>{{title}}</h1>
+        
         <!-- FAST SEARCH -->
         <form class="form-inline" @submit="startFinding($event)">
           <div class="form-group" v-if="!extendedFind">
@@ -888,7 +893,7 @@ export default {
           <div class="btn-group">
             <flexy-button @click.native.stop.prevent="startFinding($event)" icon="search" class="btn-default" />
             <flexy-button @click.native.stop.prevent="stopFind()" icon="refresh" class="btn-default text-danger" v-if="findTerm!=='' || extendedFind" />
-            <flexy-button @click.native.stop.prevent="toggleExtendedFind()" :icon="{'chevron-up':extendedFind,'chevron-down':!extendedFind}" class="btn-outline-warning" :class="{'text-warning':extendedFind}" />
+            <flexy-button @click.native.stop.prevent="toggleExtendedFind()" icon="cog" class="btn-outline-warning text-warning" />
           </div>
         </form>
       </div>
