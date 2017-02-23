@@ -175,8 +175,8 @@ class MY_Email extends CI_Email {
       $this->bcc($mail['bcc']);
       $this->total_send_addresses += $this->_count_addresses($mail['bcc']);
     }
-		$this->subject($mail['subject']);
-		$this->message($mail['body']);
+    if (isset($mail['subject'])) $this->subject($mail['subject']);
+		if (isset($mail['body']))    $this->message($mail['body']);
     if (isset($mail['attachment'])) {
       if (!is_array($mail['attachment'])) $mail['attachment'] = array($mail['attachment']);
       foreach ($mail['attachment'] as $attachment) {
