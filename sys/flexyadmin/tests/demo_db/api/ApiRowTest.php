@@ -100,7 +100,7 @@ class ApiRowTest extends ApiTestModel {
       $table=$test['table'];
 
       // start situation
-      $status = $this->CI->db->table_status($table);
+      $status = $this->CI->data->table($table)->table_status();
       $auto_increment = $status['auto_increment'];
 
       // data
