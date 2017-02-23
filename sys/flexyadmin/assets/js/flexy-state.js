@@ -91,17 +91,19 @@ export default {
   addMessage : function(message,type) {
     if (_.isUndefined(type)) type='success';
     var self = this;
-    self.state.messages.push({'text':message,'type':type});
+    var id = jdb.createUUID();
+    self.state.messages.push({ 'id':id, 'text':message, 'type':type });
     self.debug && console.log('state.messages',self.state.messages); 
     if (type!=='danger') {
       window.setTimeout(function(){
-        self.state.messages.shift();
+        self.removeMessage(id);
         self.debug && console.log('state.messages',self.state.messages); 
       }, 3000);
     }
   },
   removeMessage : function(id) {
-    this.state.messages.splice(id,1);
+    var index = jdb.indexOfProperty( this.state.messages,'id',id);
+    this.state.messages.splice(index,1);
   },
   
   
