@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="<?=admin_assets()?>dist/flexyadmin.css" type="text/css" media="screen">
 </head>
 
-<body>
+<body class="<?=$class?>">
 
 <div id="main" class="container-fluid">
 

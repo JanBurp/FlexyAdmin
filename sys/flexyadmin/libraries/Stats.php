@@ -9,6 +9,24 @@
 
 class Stats {
 
+  private $excluded = array(
+    'sys',
+    'site',
+    '_media',
+    '_admin',
+    '_rss',
+    '_api/auth',
+    '_api/table',
+    '_api/table_order',
+    '_api/media',
+    '_api/row',
+    '_api/admin_nav',
+    '_api/image_list',
+    '_api/link_list',
+    '_api/plugin',
+    '_api/user',
+  );
+
 	private $table;
 
 	public function __construct() {
@@ -24,11 +42,20 @@ class Stats {
 
 	public function add_current_uri() {
 		global $URI;
-		$thisUri=$URI->uri_string();
-    $queryStr=el('QUERY_STRING',$_SERVER,'');
+		$thisUri = $URI->uri_string();
+    $queryStr = el('QUERY_STRING',$_SERVER,'');
     if (!empty($queryStr)) $thisUri.='?'.$queryStr;
-		$firstSegment=$URI->get(1);
-		if ( ! in_array($firstSegment,array(SITEPATH,'sys','admin','_admin','_api','_rss','_file','rss','_media','file')) && !IS_AJAX ) {
+    if (!has_string($this->excluded,$thisUri)) {
+      $removes = $URI->get_remove();
+      if (!empty($removes)) {
+  			foreach ($removes as $remove) {
+  				if (!empty($remove)) {
+  					$pos = strpos($thisUri,$remove);
+            if (substr($thisUri,$pos-1,1)=='/') $pos-=1;
+  					if ($pos>0) $thisUri=substr($thisUri,0,$pos);
+  				}
+  			}
+      }
 			$this->add_uri(trim($thisUri,'/'));
 		}
 	}
