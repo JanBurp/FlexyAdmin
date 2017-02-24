@@ -189,12 +189,14 @@ export default {
     
     calcLimit : function( view ) {
       if (_.isUndefined(view)) view = this.getMediaView();
+      var grid_header = document.querySelector('#content .card.grid>.card-header');
+      if (_.isUndefined(grid_header) || grid_header==null) return; 
       // Sizes:
       var rowHeight = 37;
       var padding = 8;
       var thumb = { width: 264, height: 292 }
       var small = { width: 136, height: 164 }
-      var height = window.innerHeight - document.querySelector('#header').offsetHeight - document.querySelector('#content .card.grid>.card-header').offsetHeight  - document.querySelector('#content .card.grid>.card-footer').offsetHeight - rowHeight - 2*padding;
+      var height = window.innerHeight - document.querySelector('#header').offsetHeight - grid_header.offsetHeight  - document.querySelector('#content .card.grid>.card-footer').offsetHeight - rowHeight - 2*padding;
       // Defaults:
       var max_items = 10;
       var rows = 1;
