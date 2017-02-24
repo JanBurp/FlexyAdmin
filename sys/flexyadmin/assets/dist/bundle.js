@@ -79439,7 +79439,7 @@ function VueFixer(vue){var vue2=!window.Vue||!window.Vue.partial;var mixin={comp
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {'use strict';Object.defineProperty(exports,"__esModule",{value:true});/**
  * Click outside directive
- */var HANDLER='_vue_clickoutside_handler';function bind(el,binding){unbind(el);var callback=binding.value;if(typeof callback!=='function'){if(process.env.NODE_ENV!=='production'){Vue.util.warn('ClickOutside only work with a function value, received: v-'+binding.name+'="'+binding.expression+'"');}}else{el[HANDLER]=function(e){if(!el.contains(e.target))callback(e);};document.addEventListener('click',el[HANDLER],false);}}function unbind(el){document.removeEventListener('click',el[HANDLER],false);delete el[HANDLER];}exports.default={bind:bind,unbind:unbind,update:function update(el,binding){if(binding.value!==binding.oldValue)bind(el,binding);}};
+ */var binded=[];function handler(e){binded.forEach(function(el){if(!el.node.contains(e.target))el.callback(e);});}function addListener(node,callback){if(!binded.length)document.addEventListener('click',handler,false);binded.push({node:node,callback:callback});}function removeListener(node,callback){binded=binded.filter(function(el){return el.node!==node?true:!callback?false:el.callback!==callback;});if(!binded.length)document.removeEventListener('click',handler,false);}exports.default={bind:function bind(el,binding){removeListener(el,binding.value);if(typeof binding.value!=='function'){if(process.env.NODE_ENV!=='production'){Vue.util.warn('ClickOutside only work with a function, received: v-'+binding.name+'="'+binding.expression+'"');}}else{addListener(el,binding.value);}},update:function update(el,binding){if(binding.value!==binding.oldValue){removeListener(el,binding.oldValue);addListener(el,binding.value);}},unbind:function unbind(el,binding){removeListener(el,binding.value);}};
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 5)))
 
 /***/ },
@@ -79608,12 +79608,12 @@ type:Number,default:5}},methods:{/**
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 6);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 9);var _flexyThumb2=_interopRequireDefault(_flexyThumb);var _timepicker=__webpack_require__(/*! ./timepicker.vue */ 18);var _timepicker2=_interopRequireDefault(_timepicker);var _datetimepicker=__webpack_require__(/*! ./datetimepicker.vue */ 83);var _datetimepicker2=_interopRequireDefault(_datetimepicker);var _colorpicker=__webpack_require__(/*! ./colorpicker.vue */ 82);var _colorpicker2=_interopRequireDefault(_colorpicker);var _mediapicker=__webpack_require__(/*! ./mediapicker.vue */ 84);var _mediapicker2=_interopRequireDefault(_mediapicker);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 87);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 88);var _Tabs2=_interopRequireDefault(_Tabs);var _Datepicker=__webpack_require__(/*! ../../vue-strap-src/Datepicker.vue */ 19);var _Datepicker2=_interopRequireDefault(_Datepicker);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,flexyThumb:_flexyThumb2.default,timepicker:_timepicker2.default,datetimepicker:_datetimepicker2.default,colorpicker:_colorpicker2.default,mediapicker:_mediapicker2.default,tab:_Tab2.default,tabs:_Tabs2.default,datepicker:_Datepicker2.default},props:{'title':String,'name':String,'primary':[Number,String],'formtype':{type:String,default:'normal'}},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden','primary','uri','order'],checkbox:['checkbox'],datepicker:['date'],timepicker:['time'],datetimepicker:['datetime'],colorpicker:['color','rgb'],mediapicker:['media','medias'],select:['select'],radio:['radio'],textarea:['textarea'],wysiwyg:['wysiwyg']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(types[type]);}types.default=defaultTypes;return types;}},// Copy of props.data
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 6);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 9);var _flexyThumb2=_interopRequireDefault(_flexyThumb);var _timepicker=__webpack_require__(/*! ./timepicker.vue */ 18);var _timepicker2=_interopRequireDefault(_timepicker);var _datetimepicker=__webpack_require__(/*! ./datetimepicker.vue */ 83);var _datetimepicker2=_interopRequireDefault(_datetimepicker);var _colorpicker=__webpack_require__(/*! ./colorpicker.vue */ 82);var _colorpicker2=_interopRequireDefault(_colorpicker);var _mediapicker=__webpack_require__(/*! ./mediapicker.vue */ 84);var _mediapicker2=_interopRequireDefault(_mediapicker);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 87);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 88);var _Tabs2=_interopRequireDefault(_Tabs);var _Select=__webpack_require__(/*! ../../vue-strap-src/components/Select.vue */ 120);var _Select2=_interopRequireDefault(_Select);var _Datepicker=__webpack_require__(/*! ../../vue-strap-src/Datepicker.vue */ 19);var _Datepicker2=_interopRequireDefault(_Datepicker);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,flexyThumb:_flexyThumb2.default,timepicker:_timepicker2.default,datetimepicker:_datetimepicker2.default,colorpicker:_colorpicker2.default,mediapicker:_mediapicker2.default,tab:_Tab2.default,tabs:_Tabs2.default,datepicker:_Datepicker2.default,vselect:_Select2.default},props:{'title':String,'name':String,'primary':[Number,String],'formtype':{type:String,default:'normal'}},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden','primary','uri','order'],checkbox:['checkbox'],datepicker:['date'],timepicker:['time'],datetimepicker:['datetime'],colorpicker:['color','rgb'],mediapicker:['media','medias'],select:['select'],radio:['radio'],textarea:['textarea'],wysiwyg:['wysiwyg']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(types[type]);}types.default=defaultTypes;return types;}},// Copy of props.data
 data:function data(){return{row:{},fields:{},fieldsets:{},validationErrors:{},isSaving:false,insertForm:{}};},created:function created(){this.reloadForm();},methods:{reloadForm:function reloadForm(apiParts){var self=this;return _flexyState2.default.api({url:self.apiUrl(apiParts)}).then(function(response){if(!_.isUndefined(response.data)){if(response.data.success){// Zijn er settings meegekomen?
 if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.form_set.field_info;self.fieldsets=response.data.settings.form_set.fieldsets;}// Data en die aanvullen met data
 self.row=response.data.data;// TinyMCE
 self.createWysiwyg();}}return response;});},createWysiwyg:function createWysiwyg(){var self=this;var init=_.extend(_flexy.tinymceOptions,{setup:function setup(ed){ed.on('NodeChange',function(e){self.updateText(ed);});ed.on('keyup',function(e){self.updateText(ed);});}});// Wait just a bit...
-window.setTimeout(function(){tinymce.init(init);},10);},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url='row?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},tabsClass:function tabsClass(){if(Object.keys(this.fieldsets).length<2)return'single-tab';return'';},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field]['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field]['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},selectItem:function selectItem(value){if(!value)return'';value=value.toString();return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');},hasInsertRights:function hasInsertRights(field){if(_.isUndefined(this.fields[field]))return false;if(_.isUndefined(this.fields[field].options))return false;if(_.isUndefined(this.fields[field].options.insert_rights))return false;var rights=this.fields[field].options.insert_rights;return rights;},// Pas kleur van optie aan als het een kleurenveld is
+window.setTimeout(function(){tinymce.init(init);},10);},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url='row?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},tabsClass:function tabsClass(){if(Object.keys(this.fieldsets).length<2)return'single-tab';return'';},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field]['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field]['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},selectItem:function selectItem(value){if(!value)return'';value=value.toString();return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');},selectValue:function selectValue(field){var value=[];var row=this.row[field];for(var i=0;i<row.length;i++){value.push(row[i].id);}return value;},hasInsertRights:function hasInsertRights(field){if(_.isUndefined(this.fields[field]))return false;if(_.isUndefined(this.fields[field].options))return false;if(_.isUndefined(this.fields[field].options.insert_rights))return false;var rights=this.fields[field].options.insert_rights;return rights;},// Pas kleur van optie aan als het een kleurenveld is
 selectStyle:function selectStyle(field,option){var style='';if(field.substr(0,4)==='rgb_'){style="background-color:"+option+';color:'+_jdbTools2.default.complementColor(option)+';';}return style;},dateObject:function dateObject(value){if(value==='0000-00-00'){var date=new Date();}else{var year=value.substr(0,4);var month=value.substr(5,2);var day=value.substr(8,2);var date=new Date(year,month,day);}return date;},validationClass:function validationClass(field){var validationClass='';if(this.validationErrors[field])validationClass='has-danger';if(this.isRequired(field)){validationClass+=' required';}return validationClass.trim();},isRequired:function isRequired(field){if(_.isUndefined(this.fields[field].validation))return false;var validation=this.fields[field].validation;if(validation.indexOf('required')>=0){return true;}return false;},toggleInsertForm:function toggleInsertForm(field){if(this.showInsertForm(field)){this.insertForm[field].show=false;}else{this.$set(this.insertForm,field,{show:true,field:field,table:this.fields[field].options.table});}// console.log('toggleInsertForm',field,this.insertForm);
 },showInsertForm:function showInsertForm(field){var show=false;if(!_.isUndefined(this.insertForm[field]))show=this.insertForm[field].show;// console.log('showInsertForm',field,show);
 return show;},subForm:function subForm(field,property){// console.log('subForm',field,property);
@@ -79626,7 +79626,7 @@ var filled=false;for(var field in data){if(_typeof(data[field])==='object'){if(d
 if(filled){return self._postForm(data);}// Als niet goed is ingevuld, vraag het
 _flexyState2.default.openModal({'title':'','body':self.$lang.confirm_save_default},function(event){if(event.state.type==='ok'){return self._postForm(data);}});return false;},_postForm:function _postForm(data){var self=this;self.isSaving=true;return _flexyState2.default.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':data}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{// Validation error
 response.error=true;_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){// console.log('updateField',field,value);
-this.validationErrors={};this.row[field]=value;},updateSelect:function updateSelect(field,selected){var value=selected;if(!this.isMultiple(field)){value=selected[0].value;}else{value=[];for(var i=0;i<selected.length;i++){value.push({'id':selected[i].value});}}this.updateField(field,value);},addToSelect:function addToSelect(field,value){if(this.isMultiple(field)){var currentSelection=this.row[field];// Als al bestaat, dan juist verwijderen
+this.validationErrors={};this.row[field]=value;},updateSelect:function updateSelect(field,selected){var value=selected;if(!this.isMultiple(field)){value=selected[0];}else{value=[];for(var i=0;i<selected.length;i++){value.push({'id':selected[i]});}}var needsUpdate=value.length!==this.row[field].length;if(!needsUpdate){for(var i=0;i<value.length;i++){var id=value[i].id;var exists=_jdbTools2.default.indexOfProperty(this.row[field],'id',id);if(exists<0)needsUpdate=true;}if(!needsUpdate){for(var i=0;i<this.row[field].length;i++){var id=this.row[field][i].id;var exists=_jdbTools2.default.indexOfProperty(value,'id',id);if(exists<0)needsUpdate=true;}}}if(needsUpdate)this.updateField(field,value);},addToSelect:function addToSelect(field,value){if(this.isMultiple(field)){var currentSelection=this.row[field];// Als al bestaat, dan juist verwijderen
 var exists=_jdbTools2.default.indexOfProperty(currentSelection,'id',value);if(exists!==false){// Verwijderen
 delete currentSelection[exists];}else{// Toevoegen
 currentSelection.push({'id':value});}value=currentSelection;}this.updateField(field,value);},// TinyMCE changed
@@ -79925,7 +79925,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/li
 
 
 // module
-exports.push([module.i, "\n.dropdown {position:absolute!important;margin-left:.35rem;\n}\n.flexy-button {cursor:pointer;width:2rem;height:1.55rem;padding:.15rem .5rem 1rem .4rem;text-align:center;\n}\n.flexy-button.no-border {border-color:transparent;\n}\n.flexy-button.btn-icon.dropdown-toggle {width:3.2rem;\n}\n.flexy-button.btn-icon .fa {width:1rem;margin:0;\n}\n.flexy-button.btn-text {width:auto!important;padding-right:.55rem;\n}\n.flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;\n}\n.flexy-button.btn-lg .fa {font-size:2rem;\n}\n.flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;\n}\n.flexy-button.btn-xlg .fa {font-size:3.5rem;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*  .dropdown {position:absolute!important;margin-left:.35rem;}*/\n.flexy-button {cursor:pointer;width:2rem;height:1.55rem;padding:.15rem .5rem 1rem .4rem;text-align:center;\n}\n.flexy-button.no-border {border-color:transparent;\n}\n.flexy-button.btn-icon.dropdown-toggle {width:3.2rem;\n}\n.flexy-button.btn-icon .fa {width:1rem;margin:0;\n}\n.flexy-button.btn-text {width:auto!important;padding-right:.55rem;\n}\n.flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;\n}\n.flexy-button.btn-lg .fa {font-size:2rem;\n}\n.flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;\n}\n.flexy-button.btn-xlg .fa {font-size:3.5rem;\n}\n  ", ""]);
 
 // exports
 
@@ -83578,30 +83578,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
             _vm.updateField(field, $event)
           }
         }
-      })] : _vm._e(), _vm._v(" "), (_vm.isType('select', field)) ? [_c('select', {
-        staticClass: "form-control",
-        class: {
-          'custom-select': !_vm.isMultiple(field)
-        },
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('select', field)) ? [_c('vselect', {
         attrs: {
-          "id": field,
+          "options": _vm.fields[field].options.data,
+          "value": _vm.selectValue(field),
+          "options-value": "value",
+          "options-label": "name",
           "name": field,
-          "multiple": _vm.isMultiple(field)
+          "multiple": _vm.isMultiple(field),
+          "search": ""
         },
         on: {
-          "input": function($event) {
-            _vm.updateSelect(field, $event.target.selectedOptions)
+          "selected": function($event) {
+            _vm.updateSelect(field, $event)
           }
         }
-      }, _vm._l((_vm.fields[field].options.data), function(option) {
-        return _c('option', {
-          style: (_vm.selectStyle(field, option.value)),
-          domProps: {
-            "value": option.value,
-            "selected": _vm.isSelectedOption(field, _vm.row[field], option.value)
-          }
-        }, [_vm._v(_vm._s(_vm.selectItem(option.name)))])
-      }))] : _vm._e(), _vm._v(" "), (_vm.isType('radio', field)) ? [_vm._l((_vm.fields[field].options.data), function(option) {
+      })] : _vm._e(), _vm._v(" "), (_vm.isType('radio', field)) ? [_vm._l((_vm.fields[field].options.data), function(option) {
         return [_c('div', {
           staticClass: "form-check form-check-inline form-subcheck"
         }, [_c('label', {
@@ -84105,6 +84097,345 @@ LOCALES['lang']=_flexy.language;LOCALES[_flexy.language]=_flexy.language_keys;wi
 else{/**
      Login Vue Instance
    */var vm=new _vue2.default({el:'#main',components:{},data:{message:_flexy.message,forgottenPasswordDialog:false},methods:{showForgottenPasswordDialog:function showForgottenPasswordDialog(show){this.message='';this.forgottenPasswordDialog=show;}}});}
+
+/***/ },
+/* 118 */
+/* unknown exports provided */
+/* all exports used */
+/*!******************************************************************************************************************************************!*\
+  !*** ./~/babel-loader/lib!./~/vue-loader/lib/selector.js?type=script&index=0!./flexyadmin/assets/js/vue-strap-src/components/Select.vue ***!
+  \******************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _utils=__webpack_require__(/*! ./utils/utils.js */ 50);var _ClickOutside=__webpack_require__(/*! ../directives/ClickOutside.js */ 51);var _ClickOutside2=_interopRequireDefault(_ClickOutside);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var timeout={};exports.default={name:'vselect',directives:{ClickOutside:_ClickOutside2.default},props:{clearButton:{type:Boolean,default:false},closeOnSelect:{type:Boolean,default:false},disabled:{type:Boolean,default:false},lang:{type:String,default:navigator.language},limit:{type:Number,default:1024},minSearch:{type:Number,default:0},multiple:{type:Boolean,default:false},name:{type:String,default:null},options:{type:Array,default:function _default(){return[];}},optionsLabel:{type:String,default:'label'},optionsValue:{type:String,default:'value'},parent:{default:true},placeholder:{type:String,default:null},readonly:{type:Boolean,default:null},required:{type:Boolean,default:null},search:{type:Boolean,default:false},searchText:{type:String,default:null},url:{type:String,default:null},value:null},data:function data(){return{list:[],loading:null,searchValue:null,show:false,notify:false,val:null,valid:null};},computed:{canSearch:function canSearch(){return this.minSearch?this.list.length>=this.minSearch:this.search;},classes:function classes(){return[{'show':this.show,'disabled':this.disabled},this.class,'dropdown'];},filteredOptions:function filteredOptions(){var self=this;var search=(self.searchValue||'').toLowerCase();return!search?self.list:self.list.filter(function(el){return el[self.optionsLabel].toLowerCase().search(search)>=0;});},hasParent:function hasParent(){return this.parent instanceof Array?this.parent.length:this.parent;},limitText:function limitText(){return this.text.limit.replace('{{limit}}',this.limit);},selected:function selected(){var _this=this;if(this.list.length===0){return'';}var values=this.values.map(function(val){return(_this.list.find(function(o){return o[_this.optionsValue]===val;})||{})[_this.optionsValue];}).filter(function(val){return val!==undefined;});this.$emit('selected',values);var labels=this.values.map(function(val){return(_this.list.find(function(o){return o[_this.optionsValue]===val;})||{})[_this.optionsLabel];}).filter(function(val){return val!==undefined;});labels.sort();return'<span class="selected-option">'+labels.join('</span><span class="selected-option">')+'</span>';},showPlaceholder:function showPlaceholder(){return this.values.length===0||!this.hasParent?this.placeholder||this.text.notSelected:null;},text:function text(){return(0,_utils.translations)(this.lang);},values:function values(){return this.val instanceof Array?this.val:~[null,undefined].indexOf(this.val)?[]:[this.val];},valOptions:function valOptions(){var _this2=this;return this.list.map(function(el){return el[_this2.optionsValue];});}},watch:{options:function options(_options){if(_options instanceof Array)this.setOptions(_options);},show:function show(val){if(val){this.$refs.sel.focus();this.$refs.search&&this.$refs.search.focus();}else{}},url:function url(){this.urlChanged();},valid:function valid(val,old){this.$emit('isvalid',val);this.$emit(!val?'invalid':'valid');if(val!==old&&this._parent)this._parent.validate();},value:function value(val,old){if(val!==old){this.val=val;}},val:function val(_val,old){var _this3=this;if(_val!==old){this.$emit('change',_val);this.$emit('input',_val);}if(_val instanceof Array&&_val.length>this.limit){this.val=_val.slice(0,this.limit);this.notify=true;if(timeout.limit)clearTimeout(timeout.limit);timeout.limit=setTimeout(function(){timeout.limit=false;_this3.notify=false;},1500);}this.valid=this.validate();}},created:function created(){this.setOptions(this.options);this.val=this.value;this._select=true;if(this.val===undefined||!this.parent){this.val=null;}if(!this.multiple&&this.val instanceof Array){this.val=this.val[0];}this.checkData();if(this.url)this.urlChanged();var parent=this.$parent;while(parent&&!parent._formGroup){parent=parent.$parent;}if(parent&&parent._formGroup){this._parent=parent;}},mounted:function mounted(){if(this._parent)this._parent.children.push(this);},beforeDestroy:function beforeDestroy(){if(this._parent){var index=this._parent.children.indexOf(this);this._parent.children.splice(index,1);}},methods:{blur:function blur(){this.show=false;},checkData:function checkData(){if(this.multiple){if(this.limit<1){this.limit=1;}if(!(this.val instanceof Array)){this.val=this.val===null||this.val===undefined?[]:[this.val];}var values=this.valOptions;this.val=this.val.filter(function(el){return~values.indexOf(el);});if(this.values.length>this.limit){this.val=this.val.slice(0,this.limit);}}else{if(!~this.valOptions.indexOf(this.val)){this.val=null;}}},clear:function clear(){if(this.disabled||this.readonly){return;}this.val=this.val instanceof Array?[]:null;this.toggle();},clearSearch:function clearSearch(){this.searchValue='';this.$refs.search.focus();},isSelected:function isSelected(v){return this.values.indexOf(v)>-1;},select:function select(v){if(this.val instanceof Array){if(~this.val.indexOf(v)){var index=this.val.indexOf(v);this.val.splice(index,1);}else{this.val.push(v);}if(this.closeOnSelect){this.toggle();}}else{this.val=v;this.toggle();}},setOptions:function setOptions(options){var _this4=this;this.list=options.map(function(el){if(el instanceof Object){return el;}var obj={};obj[_this4.optionsLabel]=el;obj[_this4.optionsValue]=el;return obj;});this.$emit('options',this.list);},toggle:function toggle(){this.show=!this.show;},urlChanged:function urlChanged(){var _this5=this;if(!this.url||!this.$http){return;}this.loading=true;this.$http.get(this.url).then(function(response){var data=response.data instanceof Array?response.data:[];try{data=JSON.parse(data);}catch(e){}_this5.setOptions(data);_this5.loading=false;_this5.checkData();},function(response){_this5.loading=false;});},validate:function validate(){return!this.required?true:this.val instanceof Array?this.val.length>0:this.val!==null;}}};
+
+/***/ },
+/* 119 */
+/* unknown exports provided */
+/* all exports used */
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-34d64911&scoped=true!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/components/Select.vue ***!
+  \********************************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\nbutton.form-control.dropdown-toggle[data-v-34d64911]{\n  height: auto;\n  padding-right: 24px;\n}\nbutton.form-control.dropdown-toggle[data-v-34d64911]:after{\n  content: ' ';\n  position: absolute;\n  right: 1rem;\n  top: 50%;\n  margin: -1px 0 0;\n  border-top: 4px dashed;\n  border-top: 4px solid \\9;\n  border-right: 4px solid transparent;\n  border-left: 4px solid transparent;\n}\n.bs-searchbox[data-v-34d64911] {\n  position: relative;\n/*  margin: 4px 8px;*/\n}\n.bs-searchbox .close[data-v-34d64911] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  z-index: 2;\n  display: block;\n  width: 34px;\n  height: 34px;\n  line-height: 34px;\n  text-align: center;\n}\n.bs-searchbox input[data-v-34d64911]:focus,\n.secret:focus + button[data-v-34d64911] {\n  outline: 0;\n  border-color: #66afe9 !important;\n  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);\n}\n.secret[data-v-34d64911] {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\nbutton>.close[data-v-34d64911] { margin-left: 5px;\n}\n.notify.out[data-v-34d64911] { position: relative;\n}\n.notify.in[data-v-34d64911],\n.notify>div[data-v-34d64911] {\n  position: absolute;\n  width: 96%;\n  margin: 0 2%;\n  min-height: 26px;\n  padding: 3px 5px;\n  background: #f5f5f5;\n  border: 1px solid #e3e3e3;\n  box-shadow: inset 0 1px 1px rgba(0,0,0,.05);\n  pointer-events: none;\n}\n.notify>div[data-v-34d64911] {\n  top: 5px;\n  z-index: 1;\n}\n.notify.in[data-v-34d64911] {\n  opacity: .9;\n  bottom: 5px;\n}\n.btn-group-justified .dropdown-toggle>span[data-v-34d64911]:not(.close) {\n  width: calc(100% - 18px);\n  display: inline-block;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  margin-bottom: -4px;\n}\n.btn-group-justified .dropdown-menu[data-v-34d64911] { width: 100%;\n}\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 120 */
+/* unknown exports provided */
+/* all exports used */
+/*!******************************************************************!*\
+  !*** ./flexyadmin/assets/js/vue-strap-src/components/Select.vue ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+var __vue_exports__, __vue_options__
+var __vue_styles__ = {}
+
+/* styles */
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-34d64911&scoped=true!vue-loader/lib/selector?type=styles&index=0!./Select.vue */ 122)
+
+/* script */
+__vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./Select.vue */ 118)
+
+/* template */
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-34d64911!vue-loader/lib/selector?type=template&index=0!./Select.vue */ 121)
+__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+if (
+  typeof __vue_exports__.default === "object" ||
+  typeof __vue_exports__.default === "function"
+) {
+if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+__vue_options__ = __vue_exports__ = __vue_exports__.default
+}
+if (typeof __vue_options__ === "function") {
+  __vue_options__ = __vue_options__.options
+}
+__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/vue-strap-src/components/Select.vue"
+__vue_options__.render = __vue_template__.render
+__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+__vue_options__._scopeId = "data-v-34d64911"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-34d64911", __vue_options__)
+  } else {
+    hotAPI.reload("data-v-34d64911", __vue_options__)
+  }
+})()}
+if (__vue_options__.functional) {console.error("[vue-loader] Select.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+module.exports = __vue_exports__
+
+
+/***/ },
+/* 121 */
+/* unknown exports provided */
+/* all exports used */
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-34d64911!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/vue-strap-src/components/Select.vue ***!
+  \**********************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    directives: [{
+      name: "click-outside",
+      rawName: "v-click-outside",
+      value: (_vm.blur),
+      expression: "blur"
+    }],
+    staticClass: "vselect",
+    class: _vm.classes
+  }, [_c('button', {
+    staticClass: "form-control dropdown-toggle",
+    attrs: {
+      "type": "button",
+      "disabled": _vm.disabled || !_vm.hasParent,
+      "readonly": _vm.readonly
+    },
+    on: {
+      "click": function($event) {
+        _vm.toggle()
+      },
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.show = false
+      }
+    }
+  }, [_c('span', {
+    staticClass: "btn-content",
+    domProps: {
+      "innerHTML": _vm._s(_vm.loading ? _vm.text.loading : _vm.showPlaceholder || _vm.selected)
+    }
+  }), _vm._v(" "), (_vm.clearButton && _vm.values.length) ? _c('span', {
+    staticClass: "close",
+    on: {
+      "click": function($event) {
+        _vm.clear()
+      }
+    }
+  }, [_vm._v("×")]) : _vm._e()]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.val),
+      expression: "val"
+    }, {
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.show),
+      expression: "show"
+    }],
+    ref: "sel",
+    staticClass: "secret",
+    attrs: {
+      "name": _vm.name,
+      "multiple": _vm.multiple,
+      "required": _vm.required,
+      "readonly": _vm.readonly,
+      "disabled": _vm.disabled
+    },
+    on: {
+      "change": function($event) {
+        _vm.val = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        })[0]
+      }
+    }
+  }, [(_vm.required) ? _c('option', {
+    attrs: {
+      "value": ""
+    }
+  }) : _vm._e(), _vm._v(" "), _vm._l((_vm.list), function(option) {
+    return _c('option', {
+      domProps: {
+        "value": option[_vm.optionsValue]
+      }
+    }, [_vm._v(_vm._s(option[_vm.optionsLabel]))])
+  })], 2), _vm._v(" "), _c('ul', {
+    staticClass: "dropdown-menu"
+  }, [(_vm.list.length) ? [(_vm.canSearch) ? _c('li', {
+    staticClass: "bs-searchbox"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.searchValue),
+      expression: "searchValue"
+    }],
+    ref: "search",
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "placeholder": _vm.searchText || _vm.text.search,
+      "autocomplete": "off"
+    },
+    domProps: {
+      "value": _vm._s(_vm.searchValue)
+    },
+    on: {
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.show = false
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.searchValue = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.searchValue),
+      expression: "searchValue"
+    }],
+    staticClass: "close",
+    on: {
+      "click": _vm.clearSearch
+    }
+  }, [_vm._v("×")])]) : _vm._e(), _vm._v(" "), (_vm.required && !_vm.clearButton) ? _c('li', [_c('a', {
+    on: {
+      "mousedown": function($event) {
+        $event.preventDefault();
+        _vm.clear() && _vm.blur()
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.placeholder || _vm.text.notSelected))])]) : _vm._e(), _vm._v(" "), _vm._l((_vm.filteredOptions), function(option) {
+    return _c('li', {
+      attrs: {
+        "id": option[_vm.optionsValue]
+      }
+    }, [_c('a', {
+      on: {
+        "mousedown": function($event) {
+          $event.preventDefault();
+          _vm.select(option[_vm.optionsValue])
+        }
+      }
+    }, [_c('span', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (_vm.isSelected(option[_vm.optionsValue])),
+        expression: "isSelected(option[optionsValue])"
+      }],
+      staticClass: "fa fa-check-square-o"
+    }), _vm._v(" "), _c('span', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (!_vm.isSelected(option[_vm.optionsValue])),
+        expression: "!isSelected(option[optionsValue])"
+      }],
+      staticClass: "fa fa-square-o"
+    }), _vm._v(" "), _c('span', {
+      domProps: {
+        "innerHTML": _vm._s(option[_vm.optionsLabel])
+      }
+    })])])
+  })] : _vm._e(), _vm._v(" "), _vm._t("default"), _vm._v(" "), (_vm.notify && !_vm.closeOnSelect) ? _c('transition', {
+    attrs: {
+      "name": "fadein"
+    }
+  }, [_c('div', {
+    staticClass: "notify in"
+  }, [_vm._v(_vm._s(_vm.limitText))])]) : _vm._e()], 2), _vm._v(" "), (_vm.notify && _vm.closeOnSelect) ? _c('transition', {
+    attrs: {
+      "name": "fadein"
+    }
+  }, [_c('div', {
+    staticClass: "notify out"
+  }, [_c('div', [_vm._v(_vm._s(_vm.limitText))])])]) : _vm._e()], 1)
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-34d64911", module.exports)
+  }
+}
+
+/***/ },
+/* 122 */
+/* unknown exports provided */
+/* all exports used */
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-34d64911&scoped=true!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/vue-strap-src/components/Select.vue ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-34d64911&scoped=true!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./Select.vue */ 119);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-34d64911&scoped=true!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Select.vue", function() {
+			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-34d64911&scoped=true!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Select.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }
 /******/ ]);
