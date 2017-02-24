@@ -96,19 +96,21 @@ class AdminController extends BasicController {
    * @author Jan den Besten
    */
   private function _prepare_view_data() {
-    
     // tbl_site
     $this->view_data = $this->data->table('tbl_site')->select('str_title,url_url')->cache()->get_row();
     $this->view_data['url_url'] = str_replace('http://','',$this->view_data['url_url']);
     
     // User data
     $this->view_data['user'] = array_keep_keys($this->flexy_auth->get_user(),array('username','email','str_filemanager_view','auth_token'));
-
+    
     // Basic content
     $this->view_data['content'] = '';
 
     // API urls
     $this->view_data['base_url'] = $this->config->item('API_home');
+    
+    // Body class
+    $this->view_data['class'] = 'uri-'.trim(str_replace('/','__',str_replace($this->config->item('API_home'),'',$this->current_uri)),'_');
 
     // Language
     $this->view_data['language'] = $this->language;

@@ -6022,4 +6022,24 @@ textarea {
       .mediapicker .mediapicker-choose > .card > .card-header {
         border-radius: 0; }
 
+body.uri-plugin__stats #content .card-block {
+  padding: 0px; }
+  body.uri-plugin__stats #content .card-block p {
+    margin: .5rem 1rem; }
+  body.uri-plugin__stats #content .card-block .card {
+    border-radius: 0;
+    border: none; }
+    body.uri-plugin__stats #content .card-block .card .card-header {
+      border-radius: 0;
+      font-size: 1.25rem; }
+    body.uri-plugin__stats #content .card-block .card table {
+      border: none; }
+      body.uri-plugin__stats #content .card-block .card table td.bar {
+        border: none; }
+      body.uri-plugin__stats #content .card-block .card table td.graph {
+        text-align: center; }
+      body.uri-plugin__stats #content .card-block .card table .vertical-text {
+        display: block;
+        text-align: center; }
+
 /*# sourceMappingURL=flexyadmin.css.map*/

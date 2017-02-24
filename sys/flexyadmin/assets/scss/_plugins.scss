@@ -1,0 +1,28 @@
+// plugin_stats
+
+body.uri-plugin__stats {
+  #content {
+    .card-block {
+      padding:0px;
+      p {margin:.5rem 1rem;}
+      .card {
+        border-radius:0;
+        border:none;
+        .card-header {
+          border-radius:0;
+          font-size:$font-size-h2;
+        }
+        table {
+          border:none;
+          td.bar {border:none;}
+          td.graph {text-align:center;}
+          .vertical-text {
+            display:block;
+            text-align:center;
+//            transform: rotate(90deg);
+          }
+        }
+      }
+    }
+  }
+}
