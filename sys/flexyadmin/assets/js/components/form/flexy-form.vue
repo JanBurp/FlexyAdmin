@@ -14,11 +14,12 @@ import mediapicker      from './mediapicker.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
+import vselect           from '../../vue-strap-src/components/Select.vue'
 import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,tab,tabs,datepicker},
+  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,tab,tabs,datepicker,vselect},
   props:{
     'title'   :String,
     'name'    :String,
@@ -161,6 +162,15 @@ export default {
       if (!value) return '';
       value = value.toString();
       return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');
+    },
+    
+    selectValue: function(field) {
+      var value = [];
+      var row = this.row[field];
+      for (var i = 0; i < row.length; i++) {
+        value.push( row[i].id );
+      }
+      return value;
     },
     
     hasInsertRights : function(field) {
@@ -387,15 +397,30 @@ export default {
     updateSelect : function( field, selected ) {
       var value = selected;
       if ( !this.isMultiple(field) ) {
-        value = selected[0].value;
+        value = selected[0];
       }
       else {
         value = [];
         for (var i = 0; i < selected.length; i++) {
-          value.push({'id':selected[i].value});
+          value.push({'id':selected[i]});
         }
       }
-      this.updateField(field,value);
+      var needsUpdate = (value.length !== this.row[field].length);
+      if (!needsUpdate) {
+        for (var i = 0; i < value.length; i++) {
+          var id = value[i].id;
+          var exists = jdb.indexOfProperty(this.row[field],'id',id);
+          if ( exists<0 ) needsUpdate = true;
+        }
+        if (!needsUpdate) {
+          for (var i = 0; i < this.row[field].length; i++) {
+            var id = this.row[field][i].id;
+            var exists = jdb.indexOfProperty(value,'id',id);
+            if ( exists<0 ) needsUpdate = true;
+          }
+        }
+      }
+      if (needsUpdate) this.updateField(field,value);
     },
     
     addToSelect : function( field, value ) {
@@ -493,9 +518,10 @@ export default {
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
-                  <select class="form-control" :class="{'custom-select':!isMultiple(field)}" :id="field" :name="field" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
+                  <vselect :options="fields[field].options.data" :value="selectValue(field)" options-value="value" options-label="name" :name="field" :multiple="isMultiple(field)" search @selected="updateSelect(field,$event)"></vselect>
+                  <!-- <select class="form-control" :class="{'custom-select':!isMultiple(field)}" :id="field" :name="field" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
                     <option v-for="option in fields[field].options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{selectItem(option.name)}}</option>
-                  </select>
+                  </select> -->
                 </template>
 
                 <template v-if="isType('radio',field)">
