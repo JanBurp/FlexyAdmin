@@ -33,12 +33,12 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $query = $this->data->table( 'res_assets' )
-                        ->get_files('pictures',array(),2,2);
+    $query = $this->data->table( 'tbl_kinderen' )
+                        // ->get_files('pictures',array(),2,2);
                         // ->get_result();
+                        ->get_grid();
     $info = $this->data->get_query_info();
-
-    // trace_sql($this->data->last_query());
+    trace_sql($this->data->last_query());
     trace_($query);
     
   }
