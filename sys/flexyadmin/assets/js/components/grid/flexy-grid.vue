@@ -60,8 +60,7 @@ export default {
     window.addEventListener('resize', function(event){
       if (!self.isResizing) {
         self.isResizing = true;
-        self.calcLimit();
-        self.reloadPageAfterResize();
+        if (self.calcLimit()) self.reloadPageAfterResize();
       }
     });
 
@@ -188,9 +187,15 @@ export default {
   methods:{
     
     calcLimit : function( view ) {
-      if (_.isUndefined(view)) view = this.getMediaView();
+      // Hoeft niet als een form wordt getoond.
+      if (this.apiParts.formID) return false;
+      // En ook niet als er geen grid_header is
       var grid_header = document.querySelector('#content .card.grid>.card-header');
-      if (_.isUndefined(grid_header) || grid_header==null) return; 
+      if (_.isUndefined(grid_header) || grid_header==null) return false; 
+      
+      // Bepaal view
+      if (_.isUndefined(view)) view = this.getMediaView();
+      
       // Sizes:
       var rowHeight = 37;
       var padding = 8;
@@ -202,6 +207,7 @@ export default {
       var rows = 1;
 
       // Calc new limit
+      var new_limit = this.apiParts.limit;
       if (this.gridType()!=='media') view = 'list';
       switch (view) {
 
@@ -212,25 +218,32 @@ export default {
           if (this.type!=='mediapicker') rows = Math.floor(height / thumb.height);
           var width = this.$el.offsetWidth - (2*padding);
           var columns = Math.floor(width / thumb.width);
-          this.apiParts.limit = (columns * rows) - 1;
-          if (this.apiParts.limit<=1) this.apiParts.limit += columns;
+          new_limit = (columns * rows) - 1;
+          if (new_limit<=1) new_limit += columns;
           break;
 
         case 'list':
         default:
-          this.apiParts.limit = 10;
+          new_limit = 10;
           if (this.type!=='mediapicker') {
             if (this.gridType()==='media') height -= rowHeight; // Extra rij eraf voor upload item
             max_items = height / rowHeight;
             var step = (max_items <= 10)?2:5;
-            this.apiParts.limit = Math.floor(max_items / step) * step;
+            new_limit = Math.floor(max_items / step) * step;
           }
       }
       
       // Calc new offset
+      var new_offset = this.apiParts.offset;
       if (this.apiParts.offset > 0) {
         this.apiParts.offset = Math.floor( this.apiParts.offset / this.apiParts.limit) * this.apiParts.limit
       }
+      
+      // Reload needed?
+      var changed = (new_limit!==this.apiParts.limit || new_offset!==this.apiParts.offset);
+      this.apiParts.limit = new_limit;
+      this.apiParts.offset = new_offset;
+      return changed;
     },
     
     reloadPageAfterResize() {
