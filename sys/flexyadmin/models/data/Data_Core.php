@@ -654,7 +654,7 @@ Class Data_Core extends CI_Model {
         $rel_table = 'rel_'.remove_prefix($this->settings['table']).'__'.remove_prefix($other_table);
         $this_key  = $this->settings['primary_key'].'_'.remove_prefix($this->settings['table']);
         $other_key = $this->settings['primary_key'].'_'.remove_prefix($other_table);
-        $name      = $rel_table;
+        $name      = $other_table;
         if (in_array($name,$names)) {
           echo( 'Double many_to_many relations, name conflict ');
         }
@@ -1286,17 +1286,20 @@ Class Data_Core extends CI_Model {
           }
           $set['with'][$type][$what] = $field;
           // Vul ook de velden aan als relatie veld er nog niet instaat
-          if (!in_array($what,$set['fields'])) {
-            $set['fields'][] = $what;
+          $relation_field = $what;
+          if ($type==='many_to_many') $relation_field = $info['result_name'];
+          if (!in_array($relation_field,$set['fields'])) {
+            $set['fields'][] = $relation_field;
             if ($set_type==='form_set') {
               $first_fieldset = array_keys($set['fieldsets']);
               $first_fieldset = current($first_fieldset);
-              $set['fieldsets'][$first_fieldset][] = $what;
+              $set['fieldsets'][$first_fieldset][] = $relation_field;
             }
           }
         }
       }
     }
+    // trace_($set);
     return $set;
   }
   
@@ -2904,6 +2907,7 @@ Class Data_Core extends CI_Model {
 
   /**
    * where_exists zoekt in many_to_many data en toont data waarbinnen de zoekcriteria voldoet maar met de complete many_to_many subdata.
+   * In tegenstelling tot where() waar bij zoeken in 'many_to_many' alleen de subdate worden meegegeven die aan de zoekcriteria voldoen.
    * 
    * many_to_many
    * ------------
@@ -3782,7 +3786,8 @@ Class Data_Core extends CI_Model {
       $this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
       $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
       $as                = $this->settings['relations']['many_to_many'][$what]['result_name'];
-      $sub_as            = '_'.$as.'_';
+      // $sub_as            = '_'.$as.'_';
+      $sub_as            = $rel_table;
       // Select fields
       $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
       // Joins

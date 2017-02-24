@@ -214,7 +214,7 @@ class DataTest extends CITestCase {
     // $this->assertInternalType( 'array', $current['name']);
     // $this->assertInternalType( 'string', $current['value']);
     // tbl_groepen.tbl_adressen
-    $options = $this->CI->data->get_options('rel_groepen__adressen');
+    $options = $this->CI->data->get_options('tbl_adressen');
     $this->assertInternalType( 'array', $options );
     $this->assertArrayHasKey( 'table', $options );
     $this->assertEquals( 'tbl_adressen', $options['table'] );
@@ -438,7 +438,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row?
     $row=current($result);
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id', 'str_username', 'gpw_password', 'email_email', 'ip_address', 'salt', 'activation_code', 'forgotten_password_code', 'forgotten_password_time', 'remember_code', 'created_on', 'last_login', 'b_active', 'str_language', 'str_filemanager_view', 'rel_users__groups' ), $keys );
+    $this->assertEquals( array( 'id', 'str_username', 'gpw_password', 'email_email', 'ip_address', 'salt', 'activation_code', 'forgotten_password_code', 'forgotten_password_time', 'remember_code', 'created_on', 'last_login', 'b_active', 'str_language', 'str_filemanager_view', 'cfg_user_groups' ), $keys );
 
 
     // Users resultaat zoals in admin
@@ -449,7 +449,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row?
     $row=current($result);
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id','action_user_invite', 'str_username', 'email_email', 'rel_users__groups', 'str_language', 'b_active' ), $keys );
+    $this->assertEquals( array( 'id','action_user_invite', 'str_username', 'email_email', 'cfg_user_groups', 'str_language', 'b_active' ), $keys );
 
     // Users resultaat zoals in admin
     $result = $this->CI->data->table( 'cfg_users' )->get_form();
@@ -458,7 +458,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( 6, $this->CI->data->num_fields() );
     // kloppen keys in row?
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id','action_user_invite', 'str_username', 'email_email', 'rel_users__groups', 'str_language', 'b_active' ), $keys );
+    $this->assertEquals( array( 'id','action_user_invite', 'str_username', 'email_email', 'cfg_user_groups', 'str_language', 'b_active' ), $keys );
   }
 
  
@@ -477,14 +477,14 @@ class DataTest extends CITestCase {
     $this->assertEquals( 4, count($row) );
     // kloppen keys in row?
     $keys = array_keys($row);
-    $this->assertEquals( array('id','str_title','rel_groepen__adressen.id','rel_groepen__adressen.abstract'), $keys );
+    $this->assertEquals( array('id','str_title','tbl_adressen.id','tbl_adressen.abstract'), $keys );
     // klopt abstract?
-    $this->assertInternalType( 'string', $row['rel_groepen__adressen.abstract'] );
+    $this->assertInternalType( 'string', $row['tbl_adressen.abstract'] );
 
     // tbl_groepen - full
     $query = $this->CI->data->select('str_title')
-                                  ->with( 'many_to_many', array('rel_groepen__adressen'=>'str_address') )
-                                  ->get();
+                            ->with( 'many_to_many', array('rel_groepen__adressen'=>'str_address') )
+                            ->get();
     $this->assertEquals( 46, $query->num_rows() );
     $this->assertEquals( 4, $query->num_fields() );
     // data, klopt num_rows & num_fields?
@@ -494,8 +494,8 @@ class DataTest extends CITestCase {
     $this->assertEquals( 4, count($row) );
     // kloppen keys in row?
     $keys = array_keys($row);
-    $this->assertEquals( array('id','str_title','rel_groepen__adressen.id','rel_groepen__adressen.str_address'), $keys );
-    $this->assertInternalType( 'string', $row['rel_groepen__adressen.str_address'] );
+    $this->assertEquals( array('id','str_title','tbl_adressen.id','tbl_adressen.str_address'), $keys );
+    $this->assertInternalType( 'string', $row['tbl_adressen.str_address'] );
 
     // tbl_groepen - grouped
     $query = $this->CI->data->select('str_title')
@@ -510,8 +510,8 @@ class DataTest extends CITestCase {
     $this->assertEquals( 3, count($row) );
     // kloppen keys in row?
     $keys = array_keys($row);
-    $this->assertEquals( array('id','str_title','rel_groepen__adressen.json'), $keys );
-    $this->assertInternalType( 'string', $row['rel_groepen__adressen.json'] );
+    $this->assertEquals( array('id','str_title','tbl_adressen.json'), $keys );
+    $this->assertInternalType( 'string', $row['tbl_adressen.json'] );
 
     // tbl_groepen ->get_result()
     $array = $this->CI->data->select('str_title')->with( 'many_to_many', array('rel_groepen__adressen'=>'str_address') )->get_result();
@@ -521,25 +521,25 @@ class DataTest extends CITestCase {
     $this->assertEquals( 3, count($row) );
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
-    $this->assertEquals( array('id','str_title','rel_groepen__adressen'), $keys );
-    $this->assertInternalType( 'array', $row['rel_groepen__adressen'] );
-    $this->assertGreaterThan( 1, count($row['rel_groepen__adressen']) );
+    $this->assertEquals( array('id','str_title','tbl_adressen'), $keys );
+    $this->assertInternalType( 'array', $row['tbl_adressen'] );
+    $this->assertGreaterThan( 1, count($row['tbl_adressen']) );
 
     // tbl_groepen ->where()->get_result()
     $array = $this->CI->data->select('str_title')
-                                  ->with( 'many_to_many', array('rel_groepen__adressen'=>array('str_address')) )
-                                  ->where( 'rel_groepen__adressen.str_address', 'Schooolstraat 1')
-                                  ->get_result();
+                            ->with( 'many_to_many', array('rel_groepen__adressen'=>array('str_address')) )
+                            ->where( 'tbl_adressen.str_address', 'Schooolstraat 1')
+                            ->get_result();
     // data, klopt num_rows & num_fields?
     $this->assertLessThan( 8, count($array) );
     $row = current($array);
     $this->assertEquals( 3, count($row) );
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
-    $this->assertEquals( array('id','str_title','rel_groepen__adressen'), $keys );
-    $this->assertInternalType( 'array', $row['rel_groepen__adressen'] );
-    $this->assertEquals( 1, count($row['rel_groepen__adressen']) );
-    $sub=current($row['rel_groepen__adressen']);
+    $this->assertEquals( array('id','str_title','tbl_adressen'), $keys );
+    $this->assertInternalType( 'array', $row['tbl_adressen'] );
+    $this->assertEquals( 1, count($row['tbl_adressen']) );
+    $sub=current($row['tbl_adressen']);
     $this->assertEquals( 'Schooolstraat 1', $sub['str_address'] );
 
     // tbl_groepen ->where_exists()->get_result()
@@ -553,12 +553,12 @@ class DataTest extends CITestCase {
     $this->assertEquals( 3, count($row) );
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
-    $this->assertEquals( array('id','str_title','rel_groepen__adressen'), $keys );
-    $this->assertInternalType( 'array', $row['rel_groepen__adressen'] );
-    $this->assertGreaterThan( 1, count($row['rel_groepen__adressen']) );
-    $found = find_row_by_value( $row['rel_groepen__adressen'], 'Schooolstraat 1', 'str_address');
+    $this->assertEquals( array('id','str_title','tbl_adressen'), $keys );
+    $this->assertInternalType( 'array', $row['tbl_adressen'] );
+    $this->assertGreaterThan( 1, count($row['tbl_adressen']) );
+    $found = find_row_by_value( $row['tbl_adressen'], 'Schooolstraat 1', 'str_address');
     $this->assertGreaterThanOrEqual( 1, count($found) );
-    $this->assertLessThan( count($row['rel_groepen__adressen']), count($found) );
+    $this->assertLessThan( count($row['tbl_adressen']), count($found) );
   }
   
   public function test_order() {
@@ -764,9 +764,9 @@ class DataTest extends CITestCase {
       $other_ids[] = $this->CI->data->random_field_value( 'id_crud2' );
     }
     $set = array(
-      'str_insert'      => $insert_string,
-      'str_update'      => $update_string,
-      'rel_crud__crud2' => $other_ids,
+      'str_insert' => $insert_string,
+      'str_update' => $update_string,
+      'tbl_crud2'  => $other_ids,
     );
     $this->CI->data->table( 'tbl_crud' );
     $this->CI->data->insert( $set );
@@ -779,8 +779,8 @@ class DataTest extends CITestCase {
     $this->assertInternalType( 'array', $row );
     $this->assertEquals( $insert_id, $row['id'] );
     $this->assertEquals( $insert_string, $row['str_insert'] );
-    $this->assertInternalType( 'array', $row['rel_crud__crud2'] );
-    $this->assertLessThanOrEqual( $nr_others, count($row['rel_crud__crud2']) );
+    $this->assertInternalType( 'array', $row['tbl_crud2'] );
+    $this->assertLessThanOrEqual( $nr_others, count($row['tbl_crud2']) );
 
     // DELETE
     $this->CI->data->like( 'str_update', 'UPDATE', 'both');
@@ -799,31 +799,31 @@ class DataTest extends CITestCase {
     $row = $this->CI->data->where( 'str_username', 'test')
                           ->with( 'many_to_many' )
                           ->get_row();
-    $this->assertInternalType( 'array', $row['rel_users__groups'] );
-    $this->assertEquals( 2, current($row['rel_users__groups'])['id'] );
+    $this->assertInternalType( 'array', $row['cfg_user_groups'] );
+    $this->assertEquals( 2, current($row['cfg_user_groups'])['id'] );
     $id = $row['id'];
     // Update and check again
     $result = $this->CI->data->where( 'str_username', 'test')
                              ->with( 'many_to_many' )
-                             ->set(array('rel_users__groups'=>3))
+                             ->set(array('cfg_user_groups'=>3))
                              ->update();
     $this->assertEquals( $result, $id );
     // trace_($this->CI->data->get_query_info());
     $row = $this->CI->data->where( 'str_username', 'test')
                           ->with( 'many_to_many' )
                           ->get_row();
-    $this->assertEquals( 3, current($row['rel_users__groups'])['id'] );
-    $this->assertInternalType( 'array', $row['rel_users__groups'] );
+    $this->assertEquals( 3, current($row['cfg_user_groups'])['id'] );
+    $this->assertInternalType( 'array', $row['cfg_user_groups'] );
     // Update and check again
     $result = $this->CI->data->where( 'str_username', 'test')
                              ->with( 'many_to_many' )
-                             ->update( array('rel_users__groups'=>2) );
+                             ->update( array('cfg_user_groups'=>2) );
     $this->assertEquals( $result, $id );
     $row = $this->CI->data->where( 'str_username', 'test')
                           ->with( 'many_to_many' )
                           ->get_row();
-    $this->assertEquals( 2, current($row['rel_users__groups'])['id'] );
-    $this->assertInternalType( 'array', $row['rel_users__groups'] );
+    $this->assertEquals( 2, current($row['cfg_user_groups'])['id'] );
+    $this->assertInternalType( 'array', $row['cfg_user_groups'] );
 
     // Test aanpassen wachtwoord, een leeg wachtwoord mag niet in de set blijven staan
     $this->CI->data->table('cfg_users');
