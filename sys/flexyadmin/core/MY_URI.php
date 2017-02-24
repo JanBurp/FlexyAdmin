@@ -91,6 +91,16 @@ class MY_URI extends CI_URI {
     $this->remove[]=$remove;
     return $this;
   }
+  
+  /**
+   * Geeft alle remove uri-parts
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_remove() {
+    return $this->remove;
+  }
 	
   /**
    * Zet de standaard remove part van pagination in
