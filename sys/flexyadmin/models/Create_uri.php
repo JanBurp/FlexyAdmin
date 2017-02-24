@@ -123,6 +123,7 @@ class Create_uri extends CI_Model {
     }
     // Uri
     $uri = $this->prefix.$this->cleanup($uri_source);
+    $uri = ltrim($uri,'_');
     // Exists? add a number
 		$postSpace=$replaceSpace.$replaceSpace;
 		while ($this->_is_existing_uri($uri,$data) or $this->is_forbidden($uri)) {
