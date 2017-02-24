@@ -64,6 +64,12 @@ $config['FIELDS_prefix'] = array (
     'grid-type'   => 'relation',
     'validation'	=> ''
   ),
+	'cfg'				=> array(
+    'type'        => 'integer',
+    'form-type'   => 'string',
+    'grid-type'   => 'relation',
+    'validation'	=> ''
+  ),
 
 	'field'			=> array(
     'type'        => 'string',
