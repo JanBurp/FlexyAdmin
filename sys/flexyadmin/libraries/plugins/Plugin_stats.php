@@ -61,16 +61,19 @@ class Plugin_stats extends Plugin {
 		$xmlYearFiles=read_map(SITEPATH.'stats','xml',FALSE,FALSE);
 		ksort($xmlYearFiles);
 		
-		$years='';
+		$years = array();
 		foreach ($xmlYearFiles as $file => $info) {
 			if (strlen($file)>8)
 				unset($xmlYearFiles[$file]);
 			else {
 				$y=substr($file,0,4);
-				$years=add_string($years,anchor(site_url($this->CI->config->item('API_home').'plugin/stats/'.$y),$y),'|');
+				$years[] = '<a class="btn btn-sm btn-warning" href="'.(site_url($this->CI->config->item('API_home').'plugin/stats/'.$y)).'">'.$y.'</a>';
 			}
 		}
-		if (!empty($years)) $this->add_content('<p>'.$years.'</p>');
+    if (count($years)>1) {
+      $years = implode(' ',$years);
+      $this->add_content('<p>'.$years.'</p>');		  
+    }
 
 		$this->url = $this->CI->data->table('tbl_site')->get_field('url_url');
 		$this->logTable=$this->CI->config->item('LOG_table_prefix')."_".$this->CI->config->item('LOG_stats');
@@ -155,7 +158,7 @@ class Plugin_stats extends Plugin {
 			$renderGraph=$graph->render("html","","grid graph stats");
 			$data=$this->CI->load->view("admin/graph",$renderGraph,true);
   		$this->add_content($data);
-  		$this->add_content(br());
+      // $this->add_content(br());
 		}
 	}
 	
@@ -167,7 +170,7 @@ class Plugin_stats extends Plugin {
       $renderGrid=$grid->render("html","","grid home");
       $data["stats"]=$this->CI->load->view("admin/grid",$renderGrid,true);
       $this->add_content($data["stats"]);
-      $this->add_content(br());
+      // $this->add_content(br());
 		}
 	}
 
@@ -177,7 +180,7 @@ class Plugin_stats extends Plugin {
 		switch ($type) {
 			case 'this_year':
 				foreach ($data as $key => $value) {
-					$data[$key]['month']=anchor(site_url($this->CI->config->item('API_home').'plugin/stats/'.$this->Year.'/'.$value['month']),strftime('%b',mktime(0,0,0,$value['month'])));
+					$data[$key]['month'] = '<a class="btn btn-sm btn-warning" href="'.site_url($this->CI->config->item('API_home').'plugin/stats/'.$this->Year.'/'.$value['month']).'">'.strftime('%b',mktime(0,0,0,$value['month'])).'</a>';
 				}
 				$this->_add_graph($data,$type,$this->Year);
 				break;
