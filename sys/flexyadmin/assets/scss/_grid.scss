@@ -120,11 +120,12 @@
    
    // Header sort (for media)
    #dropdown-sort {
+     position:absolute;
      .dropdown-menu {min-width:4rem;}
      .dropdown-item {padding:.1rem 1rem .1rem .35rem;padding-left:2rem;}
      .dropdown-item.selected {padding-left:.35rem;}
    }
-   #dropdown-sort:hover, #dropdown-sort.dropdown.open {
+   #dropdown-sort.dropdown.open {
      .dropdown-menu {display:block;}
    }
    

@@ -5670,14 +5670,16 @@ a > .fa, .btn > .fa {
       position: relative;
       float: right;
       margin-top: 1px; }
-  .grid #dropdown-sort .dropdown-menu {
-    min-width: 4rem; }
-  .grid #dropdown-sort .dropdown-item {
-    padding: .1rem 1rem .1rem .35rem;
-    padding-left: 2rem; }
-  .grid #dropdown-sort .dropdown-item.selected {
-    padding-left: .35rem; }
-  .grid #dropdown-sort:hover .dropdown-menu, .grid #dropdown-sort.dropdown.open .dropdown-menu {
+  .grid #dropdown-sort {
+    position: absolute; }
+    .grid #dropdown-sort .dropdown-menu {
+      min-width: 4rem; }
+    .grid #dropdown-sort .dropdown-item {
+      padding: .1rem 1rem .1rem .35rem;
+      padding-left: 2rem; }
+    .grid #dropdown-sort .dropdown-item.selected {
+      padding-left: .35rem; }
+  .grid #dropdown-sort.dropdown.open .dropdown-menu {
     display: block; }
   .grid th.grid-header-type-primary {
     width: 2rem;
@@ -6026,18 +6028,35 @@ textarea {
   position: relative !important;
   margin-left: 0; }
   .vselect button.dropdown-toggle {
-    padding: .25rem .25rem 0 .25rem; }
-  .vselect .selected-option {
-    display: block;
-    float: left;
-    padding: .25rem;
-    margin: 0 .25rem .25rem 0;
-    border: solid 1px #696;
-    border-radius: 0.25rem; }
+    min-height: 2rem;
+    padding: .25rem .5rem 0 .5rem;
+    text-align: left; }
   .vselect ul.dropdown-menu {
+    border-color: #636c72 !important;
+    padding: 0;
     width: 100%; }
     .vselect ul.dropdown-menu li {
       padding: .2rem .5rem; }
+    .vselect ul.dropdown-menu li:hover {
+      background-color: #D90; }
+    .vselect ul.dropdown-menu li.search-item {
+      input: focus; }
+    .vselect ul.dropdown-menu li.insert-item {
+      border-top: solid 1px #636c72; }
+    .vselect ul.dropdown-menu li.insert-item:hover, .vselect ul.dropdown-menu li.search-item:hover {
+      background-color: transparent; }
+
+.vselect.multiple .selected-option {
+  display: block;
+  float: left;
+  padding: .15rem .35rem;
+  margin: 0 .25rem .25rem 0;
+  border: solid 1px #eceeef;
+  border-radius: 0.25rem; }
+
+.vselect.multiple .selected-option:hover {
+  border-color: #696;
+  background-color: #ffe5aa; }
 
 body.uri-plugin__stats #content .card-block {
   padding: 0px; }
