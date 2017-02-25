@@ -76,9 +76,9 @@
 #content-home {
   .nav-item {
     display:inline-block;
-//    height:3rem;
     width:auto;
     margin-right:2rem;
+    margin-bottom:1rem;
     .flexy-button {
       float:left;
       margin-right:.5rem;
@@ -86,7 +86,6 @@
     .nav-title {
       display:inline-block;
       margin:0;
-//      padding-top:.5rem;
     }
   }
 }
