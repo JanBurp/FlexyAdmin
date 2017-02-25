@@ -5,40 +5,41 @@
       <span v-if="clearButton&&values.length" class="close" @click="clear()">&times;</span>
     </button>
     <select ref="sel" v-model="val" v-show="show" :name="name" class="secret" :multiple="multiple" :required="required" :readonly="readonly" :disabled="disabled">
-      <option v-if="required" value=""></option>
       <option v-for="option in list" :value="option[optionsValue]">{{ option[optionsLabel] }}</option>
     </select>
     <ul class="dropdown-menu">
       <template v-if="list.length">
-        <li v-if="canSearch" class="bs-searchbox">
+        <li v-if="canSearch" class="search-item">
           <input type="text" :placeholder="searchText||text.search" class="form-control" autocomplete="off" ref="search" v-model="searchValue" @keyup.esc="show = false" />
-          <span v-show="searchValue" class="close" @click="clearSearch">&times;</span>
         </li>
-        <li v-if="required&&!clearButton"><a @mousedown.prevent="clear() && blur()">{{ placeholder || text.notSelected }}</a></li>
         <li v-for="option in filteredOptions" :id="option[optionsValue]">
           <a @mousedown.prevent="select(option[optionsValue])">
-            <span class="fa fa-check-square-o" v-show="isSelected(option[optionsValue])"></span>
-            <span class="fa fa-square-o" v-show="!isSelected(option[optionsValue])"></span>
+            <flexy-button icon="check-square-o" v-show="isSelected(option[optionsValue])" class="btn-outline-default"/>
+            <flexy-button icon="square-o" v-show="!isSelected(option[optionsValue])" class="btn-outline-default"/>
             <span v-html="option[optionsLabel]"></span>
           </a>
         </li>
+        <li v-if="insert" class="insert-item">
+          <flexy-button @click.native="clickInsert()" icon="plus" class="btn-outline-warning" />{{insertText}}
+        </li>
       </template>
-      <slot></slot>
       <transition v-if="notify && !closeOnSelect" name="fadein"><div class="notify in">{{limitText}}</div></transition>
     </ul>
     <transition v-if="notify && closeOnSelect" name="fadein"><div class="notify out"><div>{{limitText}}</div></div></transition>
-    <!-- <pre>Options: {{list}}</pre> -->
   </div>
 </template>
 
 <script>
 
-import {translations} from './utils/utils.js'
-import ClickOutside from '../directives/ClickOutside.js'
+import {translations}   from './utils/utils.js'
+import ClickOutside     from '../directives/ClickOutside.js'
+import flexyButton      from '../../components/flexy-button.vue'
+
 
 var timeout = {}
 export default {
   name : 'vselect',
+  components: {flexyButton},
   directives: {
     ClickOutside
   },
@@ -47,8 +48,8 @@ export default {
     closeOnSelect: {type: Boolean, default: false},
     disabled:  {type: Boolean, default: false},
     lang:  {type: String, default: navigator.language},
-    limit: {type: Number, default: 1024},
-    minSearch: {type: Number, default: 0},
+    limit: {type: Number, default: 8},
+    minSearch: {type: Number, default: 8},
     multiple:  {type: Boolean, default: false},
     name:  {type: String, default: null},
     options: {type: Array, default () { return [] }},
@@ -58,6 +59,8 @@ export default {
     placeholder: {type: String, default: null},
     readonly:  {type: Boolean, default: null},
     required:  {type: Boolean, default: null},
+    insert : {type:Boolean,default:false},
+    insertText : {type:String,default:''},
     search:  {type: Boolean, default: false},
     searchText:  {type: String, default: null},
     url: {type: String, default: null},
@@ -75,8 +78,16 @@ export default {
     }
   },
   computed: {
-    canSearch () { return this.minSearch ? this.list.length >= this.minSearch : this.search },
-    classes () {return [{ 'show': this.show, 'disabled': this.disabled}, this.class, 'dropdown'] },
+    canSearch () { return (this.list.length > this.minSearch) },
+    classes () { return [
+      {
+        'show': this.show,
+        'disabled': this.disabled,
+        'multiple': this.multiple,
+      },
+      this.class,
+      'dropdown'
+    ]},
     filteredOptions () {
       var self = this;
       var search = (self.searchValue || '').toLowerCase()
@@ -87,11 +98,11 @@ export default {
     hasParent () { return this.parent instanceof Array ? this.parent.length : this.parent },
     limitText () { return this.text.limit.replace('{{limit}}', this.limit) },
     selected () {
+      var values = this.values.map(val => (this.list.find(o => o[this.optionsValue] === val) || {})[this.optionsValue]).filter(val => val !== undefined);
+      this.$emit('selected', values);
       if (this.list.length === 0) {
         return '';
       }
-      var values = this.values.map(val => (this.list.find(o => o[this.optionsValue] === val) || {})[this.optionsValue]).filter(val => val !== undefined);
-      this.$emit('selected', values);
       var labels = this.values.map(val => (this.list.find(o => o[this.optionsValue] === val) || {})[this.optionsLabel]).filter(val => val !== undefined);
       labels.sort();
       return '<span class="selected-option">' + labels.join('</span><span class="selected-option">') + '</span>';
@@ -124,20 +135,19 @@ export default {
       if (val !== old) { this.val = val }
     },
     val (val, old) {
-      if (val !== old) {
-        this.$emit('change', val)
-        this.$emit('input', val)
+      if (val !== old && old!==null) {
+        this.$emit('change', val);
       }
-      if (val instanceof Array && val.length > this.limit) {
-        this.val = val.slice(0, this.limit)
-        this.notify = true
-        if (timeout.limit) clearTimeout(timeout.limit)
-        timeout.limit = setTimeout(() => {
-          timeout.limit = false
-          this.notify = false
-        }, 1500)
-      }
-      this.valid = this.validate()
+      // if (val instanceof Array && val.length > this.limit) {
+      //   this.val = val.slice(0, this.limit)
+      //   this.notify = true
+      //   if (timeout.limit) clearTimeout(timeout.limit)
+      //   timeout.limit = setTimeout(() => {
+      //     timeout.limit = false
+      //     this.notify = false
+      //   }, 1500)
+      // }
+      // this.valid = this.validate()
     }
   },
   
@@ -242,7 +252,11 @@ export default {
     },
     validate () {
       return !this.required ? true : this.val instanceof Array ? this.val.length > 0 : this.val !== null
-    }
+    },
+    clickInsert: function() {
+      this.show = false;
+      this.$emit('insert', true);
+    },
   },
 
 }

@@ -81,9 +81,9 @@ export default {
 </template>
 
 <style>
-/*  .dropdown {position:absolute!important;margin-left:.35rem;}*/
   .flexy-button {cursor:pointer;width:2rem;height:1.55rem;padding:.15rem .5rem 1rem .4rem;text-align:center;}
   .flexy-button.no-border {border-color:transparent;}
+  .flexy-button.btn-outline-default {background-color:transparent;}
   .flexy-button.btn-icon.dropdown-toggle {width:3.2rem;}
   .flexy-button.btn-icon .fa {width:1rem;margin:0;}
   .flexy-button.btn-text {width:auto!important;padding-right:.55rem;}
