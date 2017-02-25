@@ -5519,7 +5519,8 @@ a > .fa, .btn > .fa {
 #content-home .nav-item {
   display: inline-block;
   width: auto;
-  margin-right: 2rem; }
+  margin-right: 2rem;
+  margin-bottom: 1rem; }
   #content-home .nav-item .flexy-button {
     float: left;
     margin-right: .5rem; }
@@ -5612,7 +5613,8 @@ a > .fa, .btn > .fa {
   .grid #grid-find {
     padding-top: .4rem;
     padding-bottom: 0.1rem;
-    margin-right: 1px; }
+    margin-right: .25rem;
+    border-color: #fff; }
   .grid .card-header.grid-extended-find {
     background-color: #eceeef !important;
     color: #696 !important; }
