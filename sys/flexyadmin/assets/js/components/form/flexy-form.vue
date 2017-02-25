@@ -165,6 +165,9 @@ export default {
     },
     
     selectValue: function(field) {
+      if ( !this.isMultiple(field) ) {
+        return this.row[field];
+      }
       var value = [];
       var row = this.row[field];
       for (var i = 0; i < row.length; i++) {
@@ -178,7 +181,7 @@ export default {
       if ( _.isUndefined(this.fields[field].options) ) return false;
       if ( _.isUndefined(this.fields[field].options.insert_rights) ) return false;
       var rights = this.fields[field].options.insert_rights;
-      return rights;
+      return (rights>=2);
     },
     
     // Pas kleur van optie aan als het een kleurenveld is
@@ -389,7 +392,7 @@ export default {
     },
     
     updateField : function( field, value ) {
-      // console.log('updateField',field,value);
+      console.log('updateField',field,value);
       this.validationErrors = {};
       this.row[field] = value;
     },
@@ -397,13 +400,18 @@ export default {
     updateSelect : function( field, selected ) {
       var value = selected;
       if ( !this.isMultiple(field) ) {
-        value = selected[0];
-      }
-      else {
-        value = [];
-        for (var i = 0; i < selected.length; i++) {
-          value.push({'id':selected[i]});
+        if (value.length>0) {
+          value = value[0];
         }
+        if (value !== this.row[field]) {
+          this.updateField(field,value);
+        }
+        return;
+      }
+      // Mulitple
+      value = [];
+      for (var i = 0; i < selected.length; i++) {
+        value.push({'id':selected[i]});
       }
       var needsUpdate = (value.length !== this.row[field].length);
       if (!needsUpdate) {
@@ -474,7 +482,7 @@ export default {
             <div class="form-group row" :class="validationClass(field)">
               <div v-if="validationErrors[field]" class="validation-error"><span class="fa fa-exclamation-triangle"></span> {{validationErrors[field]}}</div>
               <label class="col-md-3 form-control-label" :for="field">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-exclamation text-warning"></span> </label>
-              <div :class="hasInsertRights(field) ? 'col-md-8' : 'col-md-9'">
+              <div class="col-md-9">
 
                 <template v-if="isType('textarea',field)">
                   <!-- Textarea -->
@@ -518,10 +526,16 @@ export default {
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
-                  <vselect :options="fields[field].options.data" :value="selectValue(field)" options-value="value" options-label="name" :name="field" :multiple="isMultiple(field)" search @selected="updateSelect(field,$event)"></vselect>
-                  <!-- <select class="form-control" :class="{'custom-select':!isMultiple(field)}" :id="field" :name="field" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
-                    <option v-for="option in fields[field].options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{selectItem(option.name)}}</option>
-                  </select> -->
+                  <vselect :name="field" 
+                    :options="fields[field].options.data" options-value="value" options-label="name" 
+                    :value="selectValue(field)" 
+                    :multiple="isMultiple(field)"
+                    @change="updateSelect(field,$event)"
+                    :insert="hasInsertRights(field)"
+                    :insertText="$lang.add_item | replace(label(field))"
+                    @insert="toggleInsertForm(field)"
+                    >
+                  </vselect>
                 </template>
 
                 <template v-if="isType('radio',field)">
@@ -547,9 +561,9 @@ export default {
 
               </div>
               
-              <div class="col-md-1" v-if="hasInsertRights(field)">
+              <!-- <div class="col-md-1" v-if="hasInsertRights(field)">
                 <flexy-button @click.native="toggleInsertForm(field)" :icon="{'plus':!showInsertForm(field),'chevron-up':showInsertForm(field)}" class="btn-outline-warning" />
-              </div>
+              </div> -->
             </div>
             
           </template>
