@@ -222,24 +222,36 @@ body.mce-fullscreen .mce-tinymce{
   margin-left:0;
   
   button.dropdown-toggle {
-    padding:.25rem .25rem 0 .25rem;
-  }
-  .selected-option {
-    display:block;
-    float:left;
-    padding:.25rem;
-    margin:0 .25rem .25rem 0;
-    border:solid 1px $brand-primary;
-    border-radius:$border-radius;
+    min-height:2rem;
+    padding:.25rem .5rem 0 .5rem;
+    text-align:left;
   }
   
   ul.dropdown-menu {
+    border-color:$gray-light!important;
+    padding:0;
     width:100%;
-    li {
-      padding:.2rem .5rem;
-    }
+    li {padding:.2rem .5rem;}
+    li:hover {background-color:$brand-warning};
+    li.search-item { input:focus; }
+    li.insert-item {border-top:solid 1px $gray-light;}
+    li.insert-item:hover,li.search-item:hover {background-color:transparent;}
   }
   
+}
+.vselect.multiple {
+  .selected-option {
+    display:block;
+    float:left;
+    padding:.15rem .35rem;
+    margin:0 .25rem .25rem 0;
+    border:solid 1px $gray-lighter;
+    border-radius:$border-radius;
+  }
+  .selected-option:hover {
+    border-color:$brand-primary;
+    background-color:lighten($brand-warning,40%);
+  }
 }
 
 
