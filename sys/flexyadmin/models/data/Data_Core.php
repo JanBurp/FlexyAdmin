@@ -65,18 +65,19 @@ Class Data_Core extends CI_Model {
    * Noodzakelijk instellingen die automatisch worden ingesteld als ze niet bekend zijn.
    */
   protected $autoset = array(
-    'table'           => '',
-    'fields'          => array(),
-    'abstract_fields' => array(),
-    'abstract_filter' => '',
-    'relations'       => array(),
-    'field_info'      => array(),
-    'options'         => array(),
-    'order_by'        => '',
-    'max_rows'        => 0,
-    'update_uris'     => true,
-    'grid_set'        => array(),
-    'form_set'        => array(),
+    'table'              => '',
+    'fields'             => array(),
+    'abstract_fields'    => array(),
+    'abstract_filter'    => '',
+    'abstract_delimiter' => ' | ',
+    'relations'          => array(),
+    'field_info'         => array(),
+    'options'            => array(),
+    'order_by'           => '',
+    'max_rows'           => 0,
+    'update_uris'        => true,
+    'grid_set'           => array(),
+    'form_set'           => array(),
   );
   
   /**
@@ -571,6 +572,17 @@ Class Data_Core extends CI_Model {
   }
   
 
+  /**
+   * Autoset abstract_delimiter
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function _autoset_abstract_delimiter() {
+    return ' | ';
+  }
+
+
 
   /**
    * Autoset abstract_filter
@@ -762,8 +774,11 @@ Class Data_Core extends CI_Model {
     }
     // Laad anders de config van die tabel/model
     else {
-      $this->config->load( 'data/'.$table, true);
-      $settings = $this->config->item( 'data/'.$table );
+      $current_table = $this->settings['table'];
+      $settings = $this->data->table($table)->get_settings();
+      $this->data->table( $current_table );
+      // $this->config->load( 'data/'.$table, true);
+      // $settings = $this->config->item( 'data/'.$table );
     }
     return $settings;
   }
@@ -987,7 +1002,8 @@ Class Data_Core extends CI_Model {
       }
     }
     // Maak de SQL
-		$sql = "REPLACE( CONCAT_WS('|',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`), '||','' )  AS `" . $abstract_field_name . "`";
+    $delimiter = $this->get_other_table_setting($table,'abstract_delimiter');
+		$sql = "REPLACE( CONCAT_WS('".$delimiter."',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`), '".$delimiter.$delimiter."','' )  AS `" . $abstract_field_name . "`";
     return $sql;
 	}
   
@@ -1729,7 +1745,7 @@ Class Data_Core extends CI_Model {
                 $sql = "INSERT INTO `".$relation['rel_table']."` (`".$relation['this_key']."`, `".$relation['other_key']."`) VALUES ('".$id."', '".$other_id."')";
                 $this->db->query($sql);
               }
-              $value = implode('|',$ids);
+              $value = implode($this->settings['abstract_delimiter'],$ids);
             }
           }
         }
@@ -2461,9 +2477,9 @@ Class Data_Core extends CI_Model {
               $result_value = $row[$result_name];
               if (is_array($result_value)) {
                 array_shift($result_value);
-                $result_value = implode(' | ',$result_value);
+                $result_value = implode($this->settings['abstract_delimiter'],$result_value);
               }
-              $result[$id][$field] = '{"'.$value.'":"'.trim($result_value,'|, ').'"}';
+              $result[$id][$field] = '{"'.$value.'":"'.trim(trim($result_value,$this->settings['abstract_delimiter'])).'"}';
               unset($result[$id][$result_name]);
             }
           }
@@ -4462,7 +4478,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   private function _check_other_ids($other_ids) {
-    if (is_string($other_ids)) $other_ids=preg_split('/[|,]/',$other_ids);
+    if (is_string($other_ids)) $other_ids=preg_split('/[|,'.$this->settings['abstract_delimiter'].']/',$other_ids);
     if (is_null($other_ids)) $other_ids = array();
     if (!is_array($other_ids)) $other_ids=array($other_ids);
 		foreach ( $other_ids as $okey => $other_id ) {

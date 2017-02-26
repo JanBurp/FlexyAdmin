@@ -91,7 +91,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( array('str_title','str_module'), $abstract_fields );
     // ->get_compiled_abstract_select()
     $abstract_fields_sql  = $this->CI->data->get_compiled_abstract_select();
-    $this->assertEquals( "REPLACE( CONCAT_WS('|',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`), '||','' )  AS `abstract`", $abstract_fields_sql );
+    $this->assertEquals( "REPLACE( CONCAT_WS(' | ',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`), ' |  | ','' )  AS `abstract`", $abstract_fields_sql );
     // ->select_abstract()
     $query = $this->CI->data->select_abstract()->get();
     $this->assertEquals( 5, $query->num_rows() );
@@ -907,8 +907,8 @@ class DataTest extends CITestCase {
     // order_by & abstract test
     $first = current($page1);
     $this->assertEquals( 'Aafje', $first['str_first_name'] );
-    $this->assertEquals( '{"4":"Rekenpark 42|1234IJ"}', $first['id_adressen'] );
-    $this->assertEquals( '{"31":"Gym|vak"}', $first['id_groepen'] );
+    $this->assertEquals( '{"4":"Rekenpark 42 | 1234IJ"}', $first['id_adressen'] );
+    $this->assertEquals( '{"31":"Gym | vak"}', $first['id_groepen'] );
 
     // DESC
     $result = $this->CI->data->order_by('_str_first_name')->get_grid();
