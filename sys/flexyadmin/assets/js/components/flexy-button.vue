@@ -74,7 +74,7 @@ export default {
 </script>
 
 <template>
-  <button v-once @click="openDropdown" type="button" class="flexy-button" :class="buttonClass">
+  <button @click="openDropdown" type="button" class="flexy-button" :class="buttonClass">
     <span v-if="iconComputed!==''" :class="iconClass" :disabled="buttonClass.indexOf('disabled')"></span>
     <span v-if="text!==''" class="flexy-button-text">{{text}}</span>
   </button>

@@ -81932,8 +81932,6 @@ if (false) {
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('button', {
     staticClass: "flexy-button",
     class: _vm.buttonClass,
@@ -81951,7 +81949,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }) : _vm._e(), _vm._v(" "), (_vm.text !== '') ? _c('span', {
     staticClass: "flexy-button-text"
   }, [_vm._v(_vm._s(_vm.text))]) : _vm._e()])
-}]}
+},staticRenderFns: []}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
@@ -82740,9 +82738,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }) : _vm._e(), _vm._v(" "), _c('flexy-button', {
-    staticClass: "btn-outline-warning text-warning",
+    staticClass: "btn-default text-primary",
     attrs: {
-      "icon": "cog"
+      "icon": {
+        'chevron-down': _vm.extendedFind,
+        'chevron-up': !_vm.extendedFind
+      }
     },
     nativeOn: {
       "click": function($event) {
