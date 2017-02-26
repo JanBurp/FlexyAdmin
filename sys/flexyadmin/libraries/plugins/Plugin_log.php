@@ -95,7 +95,6 @@ class Plugin_log extends Plugin {
 										"from"			=> array('label'=>'Timewindow','type'=>'dropdown','options'=>$fromOpts),
 										"search"		=> array('label'=>'Filter'));
 			$form=new form();
-      $form->set_framework('bootstrap');
 			$form->set_data($data,'Logfiles');
 
 			$file=$this->CI->input->post('logfiles');

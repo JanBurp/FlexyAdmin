@@ -142,7 +142,6 @@
 
   		$this->CI->load->library('form');
   		$form=new form($this->CI->uri->get());
-      $form->set_framework('bootstrap');
   		$form->set_data($formData);
 			$this->add_message( $form->render() );
     }

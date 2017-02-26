@@ -18,7 +18,7 @@ $config['LOCAL']									= IS_LOCALHOST;
 $config['IS_AJAX']								= IS_AJAX;
 $config['AJAX_MODULE']						= IS_AJAX;
 $config['IS_ADMIN']               = FALSE;
-if (isset($_SERVER['PATH_INFO']) and strpos($_SERVER['PATH_INFO'],'admin')!==false) $config['IS_ADMIN'] = TRUE;
+if (isset($_SERVER['PATH_INFO']) and strpos($_SERVER['PATH_INFO'],'_admin')!==false) $config['IS_ADMIN'] = TRUE;
 
 $config['LANGUAGES']							= array('nl','en','de','es','fr');
 $config['ADMIN_LANGUAGES']        = array('nl','en');

@@ -95,7 +95,6 @@ class Fill extends AdminController {
         $this->load->model( 'Data/Options_Tables');
         $this->load->model( 'Data/Options_Fields');
 				$form=new form($this->config->item('API_fill'));
-        $form->set_framework('bootstrap');
 				$tablesOptions=$this->Options_Tables->get_options();
 				$fieldsOptions=$this->Options_Fields->get_options();
 				if (empty($fields)) $fields=array();
