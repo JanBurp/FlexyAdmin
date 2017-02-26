@@ -149,6 +149,7 @@ class Form {
    * @author Jan den Besten
    */
 	public function init($action="",$form_id='') {
+    $this->set_framework();
     $this->set_form_id($form_id);
 		$this->set_action($action);
 		$this->set_caption();
@@ -197,7 +198,8 @@ class Form {
    * @author Jan den Besten
    */
   public function set_framework($style="default") {
-    $this->framework=$style;
+    if ($this->CI->config->item('IS_ADMIN')) $style = 'bootstrap';
+    $this->framework = $style;
     return $this;
   }
   
@@ -1193,7 +1195,7 @@ class Form {
     // trace_($field);
     
 		if ($field["type"]=="hidden") return $field['control'];
-    $field['horizontal_bootstrap']=($this->framework=='bootstrap' and has_string('form-horizontal',$form_class));
+    $field['horizontal_bootstrap'] = ($this->framework=='bootstrap');
     $attributes=implode_attributes(el('attributes',$field,array()));
     $rendered_field=$this->CI->load->view($this->view_path.'/field',array('field'=>$field,'styles'=>$this->styles[$this->framework],'attributes'=>$attributes),true);
 		return $rendered_field;

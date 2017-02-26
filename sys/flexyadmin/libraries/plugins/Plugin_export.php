@@ -79,7 +79,6 @@ class Plugin_export extends Plugin {
 
 		$this->CI->load->library('form');
 		$form=new form($this->CI->uri->get());
-    $form->set_framework('bootstrap');
 		$form->set_data($formData);
 		$form->set_buttons($formButtons);
 

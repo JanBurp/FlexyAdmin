@@ -767,8 +767,6 @@ Class Data_Core extends CI_Model {
   protected function get_other_table_settings( $table ) {
     $settings = NULL;
     // Probeer eerst of het table model bestaat
-    // $settings = $this->data_core->table( $table )->get_settings();
-    // $this->data_core->table($this->settings['table']); // Terug naar huidige data table.
     if ( method_exists( $table, 'get_setting' ) ) {
       $settings = $this->$table->get_settings();
     }
