@@ -82741,8 +82741,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "btn-default text-primary",
     attrs: {
       "icon": {
-        'chevron-down': _vm.extendedFind,
-        'chevron-up': !_vm.extendedFind
+        'chevron-down': !_vm.extendedFind,
+        'chevron-up': _vm.extendedFind
       }
     },
     nativeOn: {
