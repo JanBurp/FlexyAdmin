@@ -113,7 +113,6 @@ class Search extends AdminController {
 				// show form
 				$this->load->library('form');
 				$form=new form($this->config->item('API_search'));
-        $form->set_framework('bootstrap');
 				
 				// fields to search in
 				if (is_array($fields))

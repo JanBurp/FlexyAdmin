@@ -40,7 +40,6 @@ class Db extends AdminController {
 		$this->lang->load("form");
 
 		$form=new form( $this->config->item('API_db').'export'  );
-    $form->set_framework('bootstrap');
     
 		$tablesWithRights=$this->flexy_auth->get_table_rights();
 		$options=array_combine($tablesWithRights,$tablesWithRights);
@@ -260,7 +259,6 @@ class Db extends AdminController {
 		$this->lang->load('help');
 		$this->lang->load('form');
 		$form=new form($this->config->item('API_db').'import');
-    $form->set_framework('bootstrap');
 		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt,sql)"),
 		 							"sql"				=> array("type"=>"textarea","label"=>"SQL"));
 		if ($this->flexy_auth->has_rights('cfg_configurations')) {
