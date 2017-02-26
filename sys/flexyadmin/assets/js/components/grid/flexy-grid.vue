@@ -908,7 +908,7 @@ export default {
           <div class="btn-group">
             <flexy-button @click.native.stop.prevent="startFinding($event)" icon="search" class="btn-default" />
             <flexy-button @click.native.stop.prevent="stopFind()" icon="refresh" class="btn-default text-danger" v-if="findTerm!=='' || extendedFind" />
-            <flexy-button @click.native.stop.prevent="toggleExtendedFind()" icon="cog" class="btn-outline-warning text-warning" />
+            <flexy-button @click.native.stop.prevent="toggleExtendedFind()" :icon="{'chevron-down':extendedFind,'chevron-up':!extendedFind}" class="btn-default text-primary" />
           </div>
         </form>
       </div>
