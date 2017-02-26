@@ -181,7 +181,7 @@ export default {
       if ( _.isUndefined(this.fields[field].options) ) return false;
       if ( _.isUndefined(this.fields[field].options.insert_rights) ) return false;
       var rights = this.fields[field].options.insert_rights;
-      return (rights>=2);
+      return (rights===true || rights>=2);
     },
     
     // Pas kleur van optie aan als het een kleurenveld is
