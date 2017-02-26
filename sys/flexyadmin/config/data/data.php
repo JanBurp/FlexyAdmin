@@ -95,6 +95,11 @@ $config['update_uris']      = NULL;
  */
 $config['abstract_fields']  = NULL;
 
+/**
+ * Karakter(s) die de diverse abstract_fields van elkaar scheiden.
+ */
+$config['abstract_delimiter']  = ' | ';
+
 
 /**
  * Een where SQL die wordt gebruikt om een abstract resultaat te filteren indien nodig.
