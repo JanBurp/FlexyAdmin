@@ -982,13 +982,15 @@ Class Data_Core extends CI_Model {
 	 *
 	 * @param string $table [''] als leeg dan wordt de table uit de settings gehaald
 	 * @param array  $abstract_fields [''] als leeg dan worden de abstract_fields uit de 'settings' gehaald
-	 * @param string $abstract_prefix [''] een eventuele prefix string die voor de veldnaam 'abstract' wordt geplakt
+	 * @param string $as_table [''] een eventuele prefix string die voor de veldnaam 'abstract' wordt geplakt
 	 * @return string
 	 * @author Jan den Besten
 	 */
-  public function get_compiled_abstract_select( $table='', $abstract_fields='', $abstract_prefix = '' ) {
-    $abstract_field_name = $abstract_prefix . $this->config->item('ABSTRACT_field_name');
+  public function get_compiled_abstract_select( $table='', $abstract_fields='', $as_table = '' ) {
+    $abstract_field_name = $this->config->item('ABSTRACT_field_name');
+    if ($as_table) $abstract_field_name = $as_table.'.'.$abstract_field_name;
 		if (empty($table)) $table = $this->settings['table'];
+    if (empty($as_table)) $as_table = $table;
 		if (empty($abstract_fields)) $abstract_fields = $this->get_abstract_fields();
     $deep_foreigns = $this->config->item('DEEP_FOREIGNS');
     if ($deep_foreigns )  {
@@ -1001,7 +1003,7 @@ Class Data_Core extends CI_Model {
     }
     // Maak de SQL
     $delimiter = $this->get_other_table_setting($table,'abstract_delimiter');
-		$sql = "REPLACE( CONCAT_WS('".$delimiter."',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`), '".$delimiter.$delimiter."','' )  AS `" . $abstract_field_name . "`";
+		$sql = "REPLACE( CONCAT_WS('".$delimiter."',`".$as_table.'`.`' . implode( "`,`".$as_table.'`.`' ,$abstract_fields ) . "`), '".$delimiter.$delimiter."','' )  AS `" . $abstract_field_name . "`";
     return $sql;
 	}
   
@@ -3834,7 +3836,7 @@ Class Data_Core extends CI_Model {
     }
     elseif ( $fields === 'abstract' ) {
       $abstract_fields = $this->get_other_table_abstract_fields( $other_table );
-      $abstract = $this->get_compiled_abstract_select( $as_table, $abstract_fields, $as_table.'.' );
+      $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table );
     }
     
     //
