@@ -92,6 +92,7 @@ Class Tbl_links extends Data_Core {
    * @author Jan den Besten
    */
   public function get_message() {
+    $this->lang->load('ui');
     $good = array();
     $false = array();
     $message_type = '';
@@ -103,12 +104,19 @@ Class Tbl_links extends Data_Core {
         $false[] = '<span class="text-danger"><span class="fa fa-square-o"></span>&nbsp;<a class="text-danger" href="'.$link['url_url'].'" target="_blank">'.$link['url_url'].'</a></span>';
       }
     }
-    $message = count($this->checked_links) . ' gecontroleerd. '.count($good).' in orde.';
+    if (count($this->checked_links)>1) {
+      $message = langp('link_check_checked',count($this->checked_links)) . '<br>';
+    }
+    else {
+      $message = langp('link_check_checked_one') . '<br>';
+    }
     if (count($false)>0) {
       $message_type = 'danger';
-      $message .= ' <span class="text-danger">'.count($false).' niet in orde.';
+      $message .= '<span class="text-danger">'.langp('link_check_checked_false',count($false));
       $message .= '<hr>';
       $message .= implode('<br>',$false).'<br>';
+    }
+    if (count($good)>0) {
       $message .= implode('<br>',$good).'<br>';
     }
     return array(
