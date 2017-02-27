@@ -48,6 +48,7 @@ export default {
       item      : this.value,
       oldItem   : this.value,
       isEditing : false,
+      showAll   : false,
     }
   },
   
@@ -60,6 +61,7 @@ export default {
       if (this.readonly) c.push('text-muted');
       if (this.focus) c.push('has-focus');
       if (this.isEditing) c.push('is-editing');
+      if (this.showAll) c.push('show-all');
       return c;
     },
     
@@ -98,6 +100,10 @@ export default {
       return items;
     },
     
+    showAllItemsToggle : function() {
+      this.showAll = !this.showAll;
+    },
+    
     selectItem : function (value) {
       if (!value) return '';
       if (value.substr(0,1)==='{' && value.substr(-1,1)==='}') {
@@ -106,7 +112,7 @@ export default {
         value = value[keys[0]];
       }
       value = value.toString();
-      return value.replace(/\|/g,'<span class="grid-cell-seperator">|</span>');
+      return value;
     },
     
     itemObject : function(item) {
@@ -209,9 +215,9 @@ export default {
     <span v-if="showTreeNode" class="fa fa-level-up fa-rotate-90 text-muted"></span>
 
     <template v-if="isType('relation',type)">
-      <template v-for="item in relationItems(item)">
+      <div v-for="item in relationItems(item)" @click="showAllItemsToggle()">
         <span class="grid-relation-item" v-if="item!==''" v-html="selectItem(item)"></span>
-      </template>
+      </div>
     </template>
 
     <template v-if="isType('abstract',type)">
