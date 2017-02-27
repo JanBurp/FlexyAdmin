@@ -155,10 +155,14 @@
    td.grid-cell-type-checkbox {text-align:center;}
    td.grid-cell-editable {cursor:pointer;}
    
-   .grid-cell-seperator {
-     color:$gray-lighter;
-     margin:0 .25rem;
+   td.grid-cell-type-relation {
+     div {display:inline;}
    }
+   td.grid-cell-type-relation.show-all {
+     div {display:block;}
+   }
+   
+   
    
    // FOOTER
    .card-footer {
