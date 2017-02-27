@@ -49,9 +49,9 @@ class Api_Model extends CI_Model {
    */
   protected $cors = FALSE;
 
-
-  private $error='';
-  private $message='';
+  private $error        = '';
+  private $message      = '';
+  private $message_type = '';
   
   
   /**
@@ -220,6 +220,7 @@ class Api_Model extends CI_Model {
     unset($this->result['status']);
     unset($this->result['error']);
     unset($this->result['message']);
+    unset($this->result['message_type']);
 
     // Set error/succes 
     if ($this->error) {
@@ -228,7 +229,10 @@ class Api_Model extends CI_Model {
     }
     
     // Add message
-    if ($this->message) $this->result['message']=$this->message;
+    if ($this->message) {
+      $this->result['message'] = $this->message;
+      if (!empty($this->message_type)) $this->result['message_type'] = $this->message_type;
+    }
     
     // Add format
     // if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
@@ -282,6 +286,18 @@ class Api_Model extends CI_Model {
    */
   protected function _set_message($message) {
     $this->message = $message;
+    return $this;
+  }
+
+  /**
+   * Sets message type
+   *
+   * @param string $type 
+   * @return this
+   * @author Jan den Besten
+   */
+  protected function _set_message_type($type) {
+    $this->message_type = $type;
     return $this;
   }
 

@@ -126,6 +126,7 @@ export default {
     return {
       items             : [],
       fields            : [],
+      actions           : [],
       searchable_fields : [],
       dataInfo          : {},
       selected          : [],
@@ -262,8 +263,13 @@ export default {
             self.newUrl();
             // Zijn er settings meegekomen?
             if ( !_.isUndefined(response.data.settings) ) {
+              // Fields
               self.fields = response.data.settings.grid_set.field_info;
               self.searchable_fields = response.data.settings.grid_set.searchable_fields;
+              // Actions?
+              if (!_.isUndefined(response.data.settings.grid_set.actions)) {
+                self.actions = response.data.settings.grid_set.actions;
+              }
             }
             // Data en die aanvullen met data
             var data = response.data.data;
@@ -586,6 +592,26 @@ export default {
       }
     },
     
+    // Grid action
+    startAction : function(url) {
+      var self = this;
+      flexyState.api({
+        url       : url,
+      })
+      .then(function(response){
+        var error = response.error;
+        if (!error && response.data.data===false) error = true;
+        if (error) {
+          flexyState.addMessage( response.data.error, 'danger');
+        }
+        else {
+          flexyState.addMessage( response.data.message, response.data.message_type || 'success' );
+        }
+        return response;
+      });
+    },
+    
+    // Row action
     action: function(action) {
       return flexyState.api({
         method: 'POST',
@@ -597,7 +623,7 @@ export default {
           flexyState.addMessage( response.data.error, 'danger');
         }
         else {
-          flexyState.addMessage( response.data.message );
+          flexyState.addMessage( response.data.message, response.data.message_type || 'success' );
         }
         return response;
       });
@@ -899,6 +925,13 @@ export default {
       <!-- MAIN HEADER -->
       <div class="card-header">
         <h1>{{title}}</h1>
+
+        <!-- ACTIONS ?-->
+        <div v-once v-if="actions.length>0" class="grid-actions">
+          <div v-for="action in actions" class="grid-action">
+            <flexy-button @click.native="startAction(action.url)" :icon="action.icon" :text="action.name" class="btn-default text-primary" :class="action.class" />
+          </div>
+        </div>
         
         <!-- FAST SEARCH -->
         <form class="form-inline" @submit="startFinding($event)">

@@ -25,6 +25,7 @@ class Stats {
     '_api/link_list',
     '_api/plugin',
     '_api/user',
+    '_api/link_checker',
   );
 
 	private $table;
