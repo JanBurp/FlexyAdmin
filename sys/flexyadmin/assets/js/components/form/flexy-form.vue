@@ -158,6 +158,10 @@ export default {
       return selected;
     },
     
+    selectOption(field,option) {
+      this.row[field] = option;
+    },
+    
     selectItem : function (value) {
       if (!value) return '';
       value = value.toString();
@@ -541,10 +545,17 @@ export default {
                 <template v-if="isType('radio',field)">
                   <!-- Radio -->
                   <template v-for="option in fields[field].options.data">
-                    <div class="form-check form-check-inline form-subcheck">
+                    <div class="form-check form-check-inline form-subcheck" :class="{'checked':isSelectedOption(field,row[field],option.value)}" @click="selectOption(field,option.value)">
                       <label class="form-check-label" :title="selectItem(option.name)">
-                        <input class="form-check-input" :type="isMultiple(field)?'checkbox':'radio'" :name="field" id="" :value="option.value" :checked="isSelectedOption(field,row[field],option.value)" v-on:input="addToSelect(field,option.value)">
-                        {{selectItem(option.name)}}
+                      <flexy-button :icon="{'check-square-o':isSelectedOption(field,row[field],option.value),'square-o':!isSelectedOption(field,row[field],option.value)}" class="btn-outline-default"/>
+                      <input  class="form-check-input"
+                              :value="option.value"
+                              :name="field"
+                              :type="isMultiple(field)?'checkbox':'radio'"
+                              :checked="isSelectedOption(field,row[field],option.value)"
+                              v-on:input="addToSelect(field,option.value)"
+                              >
+                      {{selectItem(option.name)}}
                       </label>
                     </div>
                   </template>
