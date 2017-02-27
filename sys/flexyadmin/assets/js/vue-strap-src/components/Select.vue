@@ -14,8 +14,7 @@
         </li>
         <li v-for="option in filteredOptions" :id="option[optionsValue]">
           <a @mousedown.prevent="select(option[optionsValue])">
-            <flexy-button icon="check-square-o" v-show="isSelected(option[optionsValue])" class="btn-outline-default"/>
-            <flexy-button icon="square-o" v-show="!isSelected(option[optionsValue])" class="btn-outline-default"/>
+            <flexy-button :icon="{'check-square-o':isSelected(option[optionsValue]),'square-o':!isSelected(option[optionsValue])}" class="btn-outline-default"/>
             <span v-html="option[optionsLabel]"></span>
           </a>
         </li>
