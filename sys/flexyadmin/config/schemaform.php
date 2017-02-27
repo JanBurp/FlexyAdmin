@@ -144,7 +144,7 @@ $config['FIELDS_prefix'] = array (
     'type'        => 'string',
     'form-type'   => 'text',
     'grid-type'   => 'url',
-    'validation'	=> 'trim|prep_url'
+    'validation'	=> 'trim|prep_url_mail'
   ),
 	'email'			=> array(
     'type'        => 'string',

@@ -123,8 +123,26 @@ class MY_Form_validation extends CI_Form_validation {
       $this->set_rules($field, $label, $validation);
 		}
     // Run validation
-    $result=$this->run();
+    $result = $this->run();
 		return $result;
+  }
+  
+
+  /**
+   * Geeft gevalideerde data terug
+   *
+   * @param array $fields [] Eventueel mee te geven welke velden
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_validated_data($fields=array()) {
+    $_field_data = $this->_field_data;
+    if (!empty($fields)) $_field_data = array_keep_keys($_field_data,$fields);
+    $data = array();
+    foreach ($_field_data as $field => $field_data) {
+      $data[$field] = el('postdata',$field_data, el($field,$this->validation_data) );
+    }
+    return $data;
   }
   
   
@@ -393,12 +411,15 @@ class MY_Form_validation extends CI_Form_validation {
    * @author Jan den Besten
    */
   public function prep_url_mail($str,$field) {
-    $str=str_replace(array('http://','https://','mailto:'),'',$str);
+    $protocol = get_prefix($str,':');
+    $str = trim(str_replace(array('http://','https://','mailto:'),'',$str));
+    if (empty($str)) return '';
     if (filter_var($str, FILTER_VALIDATE_EMAIL)) {
-      $str='mailto:'.$str;
+      $str = 'mailto:'.$str;
     }
     else {
-      $str=prep_url($str,$field);
+      if (empty($protocol)) $protocol = 'http';
+  		$str = $protocol.'://'.$str;
     }
     return $str;
   }

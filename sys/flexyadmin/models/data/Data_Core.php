@@ -4183,14 +4183,18 @@ Class Data_Core extends CI_Model {
      * Valideer eventueel eerst de set
      */
     if ( $this->validation ) {
+      // Niet gevalideerd, dus we kunnen geen update doen, FALSE als return
       if ( ! $this->form_validation->validate_data( $set, $this->settings['table'] ) ) {
         $this->query_info = array(
           'validation'        => FALSE,
           'validation_errors' => $this->form_validation->get_error_messages()
         );
-        // Niet gevalideerd, dus we kunnen geen update doen, dus FALSE
         $this->reset();
         return FALSE;
+      }
+      // Goed gevalideerd, maar wellicht is de data geprepped
+      else {
+        $set = array_merge( $set, $this->form_validation->get_validated_data( array_keys($set)) );
       }
     }
     
