@@ -5711,8 +5711,10 @@ a > .fa, .btn > .fa {
     cursor: pointer; }
   .grid td.grid-cell-type-relation div {
     display: inline; }
-  .grid td.grid-cell-type-relation.show-all div {
-    display: block; }
+  .grid td.grid-cell-type-relation.show-all {
+    max-width: none; }
+    .grid td.grid-cell-type-relation.show-all div {
+      display: block; }
   .grid .card-footer {
     padding: .35rem .35rem; }
     .grid .card-footer .actions {
