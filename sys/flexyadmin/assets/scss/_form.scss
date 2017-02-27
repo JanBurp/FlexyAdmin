@@ -78,13 +78,10 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .form-subcheck {
-  margin-left:0!important;
-  margin-right:1%;
-  margin-bottom:.25rem;
+  margin:.25rem 1% 0 0!important;
   padding:0 .5rem .25rem;
-  border:solid 1px $brand-primary;
+  border:solid 1px $gray-light;
   border-radius:$border-radius;
-  background-color:$brand-warning-light;
   width:19%;
   white-space:nowrap;
   overflow:hidden;
@@ -92,8 +89,16 @@ select.form-control:not([size]):not([multiple]) {
     max-width:100%;
     overflow:hidden;
     text-overflow:ellipsis;
+    margin-top:.2rem;
+    line-height:1rem;
   }
+  input {display:none;}
 }
+.form-subcheck:hover {
+  border-color:$brand-primary;
+  background-color:$body-bg;
+}
+
 
 
 // Validation
