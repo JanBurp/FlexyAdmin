@@ -52,9 +52,10 @@
 @import "../../../node_modules/bootstrap/scss/utilities";
 
 
-
-
 /* FLEXYADMIN */
+
+$brand-warning-light : lighten($brand-warning,40%);
+
 
 @import "_defaults";
 @import "_layout";

@@ -1310,13 +1310,13 @@ mark,
 .table-info,
 .table-info > th,
 .table-info > td {
-  background-color: #fff5dd; }
+  background-color: #ffe5aa; }
 
 .table-hover .table-info:hover {
-  background-color: #ffedc4; }
+  background-color: #ffdd91; }
   .table-hover .table-info:hover > td,
   .table-hover .table-info:hover > th {
-    background-color: #ffedc4; }
+    background-color: #ffdd91; }
 
 .table-warning,
 .table-warning > th,
@@ -3045,11 +3045,11 @@ input[type="button"].btn-block {
     color: #2b542c; }
 
 .alert-info {
-  background-color: #fff5dd;
-  border-color: #ffeab9;
+  background-color: #ffe5aa;
+  border-color: #ffda86;
   color: #31708f; }
   .alert-info hr {
-    border-top-color: #ffe2a0; }
+    border-top-color: #ffd26d; }
   .alert-info .alert-link {
     color: #245269; }
 
@@ -3190,7 +3190,7 @@ button.list-group-item-success {
 
 .list-group-item-info {
   color: #31708f;
-  background-color: #fff5dd; }
+  background-color: #ffe5aa; }
 
 a.list-group-item-info,
 button.list-group-item-info {
@@ -3202,7 +3202,7 @@ button.list-group-item-info {
   button.list-group-item-info:focus,
   button.list-group-item-info:hover {
     color: #31708f;
-    background-color: #ffedc4; }
+    background-color: #ffdd91; }
   a.list-group-item-info.active,
   button.list-group-item-info.active {
     color: #fff;
@@ -5889,7 +5889,7 @@ a > .fa, .btn > .fa {
 
 .card.form .form-group.row:hover {
   border-radius: 0.25rem;
-  background-color: #fff5dd; }
+  background-color: #ffe5aa; }
 
 select:-moz-focusring {
   color: transparent !important;
@@ -5918,7 +5918,7 @@ select:-moz-focusring {
   padding: 0 .5rem .25rem;
   border: solid 1px #696;
   border-radius: 0.25rem;
-  background-color: #fff5dd;
+  background-color: #ffe5aa;
   width: 19%;
   white-space: nowrap;
   overflow: hidden; }
@@ -6041,12 +6041,13 @@ textarea {
     .vselect ul.dropdown-menu li {
       padding: .2rem .5rem; }
     .vselect ul.dropdown-menu li:hover {
-      background-color: #D90; }
+      background-color: #ffe5aa; }
     .vselect ul.dropdown-menu li.search-item {
       input: focus; }
     .vselect ul.dropdown-menu li.insert-item {
       border-top: solid 1px #636c72; }
-    .vselect ul.dropdown-menu li.insert-item:hover, .vselect ul.dropdown-menu li.search-item:hover {
+    .vselect ul.dropdown-menu li.insert-item:hover,
+    .vselect ul.dropdown-menu li.search-item:hover {
       background-color: transparent; }
 
 .vselect.multiple .selected-option {
