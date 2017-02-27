@@ -374,7 +374,11 @@ export default {
           if ( _.isUndefined(response.data.info) || response.data.info.validation!==false) {
             flexyState.addMessage('Item saved');
             // Update data (if prepped)
-            self.row = response.data.data;
+            for (var field in response.data.data) {
+              if (!_.isUndefined(self.row[field])) {
+                self.row[field] = response.data.data[field];
+              }
+            }
           }
           else {
             // Validation error
@@ -395,7 +399,7 @@ export default {
     },
     
     updateField : function( field, value ) {
-      console.log('updateField',field,value);
+      // console.log('updateField',field,value);
       this.validationErrors = {};
       this.row[field] = value;
     },
