@@ -5707,9 +5707,10 @@ a > .fa, .btn > .fa {
     text-align: center; }
   .grid td.grid-cell-editable {
     cursor: pointer; }
-  .grid .grid-cell-seperator {
-    color: #eceeef;
-    margin: 0 .25rem; }
+  .grid td.grid-cell-type-relation div {
+    display: inline; }
+  .grid td.grid-cell-type-relation.show-all div {
+    display: block; }
   .grid .card-footer {
     padding: .35rem .35rem; }
     .grid .card-footer .actions {
