@@ -47,7 +47,7 @@
 .card.form {
   .form-group.row:hover {
     border-radius:$border-radius;
-    background-color:lighten($brand-warning,50%);
+    background-color:$brand-warning-light;
   }
 }
 
@@ -84,7 +84,7 @@ select.form-control:not([size]):not([multiple]) {
   padding:0 .5rem .25rem;
   border:solid 1px $brand-primary;
   border-radius:$border-radius;
-  background-color:lighten($brand-warning,50%);
+  background-color:$brand-warning-light;
   width:19%;
   white-space:nowrap;
   overflow:hidden;
@@ -232,10 +232,11 @@ body.mce-fullscreen .mce-tinymce{
     padding:0;
     width:100%;
     li {padding:.2rem .5rem;}
-    li:hover {background-color:$brand-warning};
+    li:hover {background-color:$brand-warning-light};
     li.search-item { input:focus; }
     li.insert-item {border-top:solid 1px $gray-light;}
-    li.insert-item:hover,li.search-item:hover {background-color:transparent;}
+    li.insert-item:hover,
+    li.search-item:hover {background-color:transparent;}
   }
   
 }
@@ -250,7 +251,7 @@ body.mce-fullscreen .mce-tinymce{
   }
   .selected-option:hover {
     border-color:$brand-primary;
-    background-color:lighten($brand-warning,40%);
+    background-color:$brand-warning-light;
   }
 }
 
