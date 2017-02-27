@@ -5912,20 +5912,25 @@ select:-moz-focusring {
   padding-left: 0; }
 
 .form-subcheck {
-  margin-left: 0 !important;
-  margin-right: 1%;
-  margin-bottom: .25rem;
+  margin: 0.25rem 1% 0 0 !important;
   padding: 0 .5rem .25rem;
-  border: solid 1px #696;
+  border: solid 1px #636c72;
   border-radius: 0.25rem;
-  background-color: #ffe5aa;
   width: 19%;
   white-space: nowrap;
   overflow: hidden; }
   .form-subcheck .form-check-label {
     max-width: 100%;
     overflow: hidden;
-    text-overflow: ellipsis; }
+    text-overflow: ellipsis;
+    margin-top: .2rem;
+    line-height: 1rem; }
+  .form-subcheck input {
+    display: none; }
+
+.form-subcheck:hover {
+  border-color: #696;
+  background-color: #fff; }
 
 .form-group.has-danger {
   background-color: #ffdddd !important;

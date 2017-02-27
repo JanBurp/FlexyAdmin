@@ -79613,7 +79613,7 @@ data:function data(){return{row:{},fields:{},fieldsets:{},validationErrors:{},is
 if(!_.isUndefined(response.data.settings)){self.fields=response.data.settings.form_set.field_info;self.fieldsets=response.data.settings.form_set.fieldsets;}// Data en die aanvullen met data
 self.row=response.data.data;// TinyMCE
 self.createWysiwyg();}}return response;});},createWysiwyg:function createWysiwyg(){var self=this;var init=_.extend(_flexy.tinymceOptions,{setup:function setup(ed){ed.on('NodeChange',function(e){self.updateText(ed);});ed.on('keyup',function(e){self.updateText(ed);});}});// Wait just a bit...
-window.setTimeout(function(){tinymce.init(init);},10);},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url='row?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},tabsClass:function tabsClass(){if(Object.keys(this.fieldsets).length<2)return'single-tab';return'';},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field]['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field]['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},selectItem:function selectItem(value){if(!value)return'';value=value.toString();return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');},selectValue:function selectValue(field){if(!this.isMultiple(field)){return this.row[field];}var value=[];var row=this.row[field];for(var i=0;i<row.length;i++){value.push(row[i].id);}return value;},hasInsertRights:function hasInsertRights(field){if(_.isUndefined(this.fields[field]))return false;if(_.isUndefined(this.fields[field].options))return false;if(_.isUndefined(this.fields[field].options.insert_rights))return false;var rights=this.fields[field].options.insert_rights;return rights===true||rights>=2;},// Pas kleur van optie aan als het een kleurenveld is
+window.setTimeout(function(){tinymce.init(init);},10);},apiUrl:function apiUrl(parts){parts=_.extend(this.apiParts,parts);this.apiParts=parts;var url='row?table='+this.name+'&where='+this.primary+'&as_form=true&settings=form_set';return url;},label:function label(field){if(_.isUndefined(this.fields[field]))return field;return this.fields[field].name;},tabsClass:function tabsClass(){if(Object.keys(this.fieldsets).length<2)return'single-tab';return'';},isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field]['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field]['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(_.isUndefined(this.fields[field]))return false;if(this.fields[field].options.multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option||value===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},selectOption:function selectOption(field,option){this.row[field]=option;},selectItem:function selectItem(value){if(!value)return'';value=value.toString();return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');},selectValue:function selectValue(field){if(!this.isMultiple(field)){return this.row[field];}var value=[];var row=this.row[field];for(var i=0;i<row.length;i++){value.push(row[i].id);}return value;},hasInsertRights:function hasInsertRights(field){if(_.isUndefined(this.fields[field]))return false;if(_.isUndefined(this.fields[field].options))return false;if(_.isUndefined(this.fields[field].options.insert_rights))return false;var rights=this.fields[field].options.insert_rights;return rights===true||rights>=2;},// Pas kleur van optie aan als het een kleurenveld is
 selectStyle:function selectStyle(field,option){var style='';if(field.substr(0,4)==='rgb_'){style="background-color:"+option+';color:'+_jdbTools2.default.complementColor(option)+';';}return style;},dateObject:function dateObject(value){if(value==='0000-00-00'){var date=new Date();}else{var year=value.substr(0,4);var month=value.substr(5,2);var day=value.substr(8,2);var date=new Date(year,month,day);}return date;},validationClass:function validationClass(field){var validationClass='';if(this.validationErrors[field])validationClass='has-danger';if(this.isRequired(field)){validationClass+=' required';}return validationClass.trim();},isRequired:function isRequired(field){if(_.isUndefined(this.fields[field].validation))return false;var validation=this.fields[field].validation;if(validation.indexOf('required')>=0){return true;}return false;},toggleInsertForm:function toggleInsertForm(field){if(this.showInsertForm(field)){this.insertForm[field].show=false;}else{this.$set(this.insertForm,field,{show:true,field:field,table:this.fields[field].options.table});}// console.log('toggleInsertForm',field,this.insertForm);
 },showInsertForm:function showInsertForm(field){var show=false;if(!_.isUndefined(this.insertForm[field]))show=this.insertForm[field].show;// console.log('showInsertForm',field,show);
 return show;},subForm:function subForm(field,property){// console.log('subForm',field,property);
@@ -79881,7 +79881,6 @@ exports.default={directives:{ClickOutside:_ClickOutside2.default},props:{disable
 
 "use strict";
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _utils=__webpack_require__(/*! ./utils/utils.js */ 18);var _ClickOutside=__webpack_require__(/*! ../directives/ClickOutside.js */ 19);var _ClickOutside2=_interopRequireDefault(_ClickOutside);var _flexyButton=__webpack_require__(/*! ../../components/flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}var timeout={};//
-//
 //
 //
 //
@@ -82570,26 +82569,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_c('flexy-button', {
-      directives: [{
-        name: "show",
-        rawName: "v-show",
-        value: (_vm.isSelected(option[_vm.optionsValue])),
-        expression: "isSelected(option[optionsValue])"
-      }],
       staticClass: "btn-outline-default",
       attrs: {
-        "icon": "check-square-o"
-      }
-    }), _vm._v(" "), _c('flexy-button', {
-      directives: [{
-        name: "show",
-        rawName: "v-show",
-        value: (!_vm.isSelected(option[_vm.optionsValue])),
-        expression: "!isSelected(option[optionsValue])"
-      }],
-      staticClass: "btn-outline-default",
-      attrs: {
-        "icon": "square-o"
+        "icon": {
+          'check-square-o': _vm.isSelected(option[_vm.optionsValue]),
+          'square-o': !_vm.isSelected(option[_vm.optionsValue])
+        }
       }
     }), _vm._v(" "), _c('span', {
       domProps: {
@@ -83922,18 +83907,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       })] : _vm._e(), _vm._v(" "), (_vm.isType('radio', field)) ? [_vm._l((_vm.fields[field].options.data), function(option) {
         return [_c('div', {
-          staticClass: "form-check form-check-inline form-subcheck"
+          staticClass: "form-check form-check-inline form-subcheck",
+          class: {
+            'checked': _vm.isSelectedOption(field, _vm.row[field], option.value)
+          },
+          on: {
+            "click": function($event) {
+              _vm.selectOption(field, option.value)
+            }
+          }
         }, [_c('label', {
           staticClass: "form-check-label",
           attrs: {
             "title": _vm.selectItem(option.name)
           }
-        }, [_c('input', {
+        }, [_c('flexy-button', {
+          staticClass: "btn-outline-default",
+          attrs: {
+            "icon": {
+              'check-square-o': _vm.isSelectedOption(field, _vm.row[field], option.value),
+              'square-o': !_vm.isSelectedOption(field, _vm.row[field], option.value)
+            }
+          }
+        }), _vm._v(" "), _c('input', {
           staticClass: "form-check-input",
           attrs: {
-            "type": _vm.isMultiple(field) ? 'checkbox' : 'radio',
             "name": field,
-            "id": ""
+            "type": _vm.isMultiple(field) ? 'checkbox' : 'radio'
           },
           domProps: {
             "value": option.value,
@@ -83944,7 +83944,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
               _vm.addToSelect(field, option.value)
             }
           }
-        }), _vm._v("\n                        " + _vm._s(_vm.selectItem(option.name)) + "\n                      ")])])]
+        }), _vm._v("\n                      " + _vm._s(_vm.selectItem(option.name)) + "\n                      ")], 1)])]
       })] : _vm._e(), _vm._v(" "), (_vm.isType('default', field)) ? [_c('input', {
         staticClass: "form-control",
         attrs: {
