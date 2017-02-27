@@ -34,6 +34,8 @@ $lang['db_import']					= 'Importeer Database';
 $lang['db_backup']					= 'Maak backup';
 $lang['db_restore']					= 'Zet backup terug';
 
+$lang['plugins']					  = 'Plugins';
+
 $lang['sr_search_replace']	= 'Zoeken/Vervangen';
 $lang['sr_settings']				= 'Instellingen';
 $lang['sr_search']					= 'Zoek';
