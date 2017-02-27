@@ -2,7 +2,7 @@
 .grid {
   
   // Table cells Focus/Editing
-  td.has-focus {background-color:lighten($brand-warning,40%);}
+  td.has-focus {background-color:$brand-warning-light}
 /*  td.is-editing {padding:2px;box-shadow:0px 0px 1px $brand-danger inset;}*/
   
   // Relation item
@@ -12,7 +12,7 @@
     padding:.15rem .35rem;
     margin-right:.25rem;
   }
-  .grid-relation-item:hover {border-color:$brand-primary;background-color:lighten($brand-warning,40%);};
+  .grid-relation-item:hover {border-color:$brand-primary;background-color:$brand-warning-light};
   
   // Thumb
   .color-thumb-sm {
