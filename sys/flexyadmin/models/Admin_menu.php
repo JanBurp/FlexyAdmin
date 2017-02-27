@@ -206,6 +206,13 @@ Class Admin_menu extends CI_Model {
       else $item=false;
     }
     reset($menuItems);
+    if (count($menuItems)==1) {
+      $item = current($menuItems);
+      if ($item=='' or $item=='seperator' or $item=='split') {
+        $menuItems = array();
+      }
+    }
+    reset($menuItems);
     return $menuItems;
   }
   

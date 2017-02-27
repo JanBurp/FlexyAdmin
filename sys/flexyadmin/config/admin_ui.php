@@ -34,6 +34,8 @@ $config['side_menu']['tools'] = array(
   '-'        => array( 'type'=>'seperator' ),
   'search'   => array( 'user_group'=>'[b_tools]',   'name'=>'sr_search_replace',  'uri'=>'search',      'icon'=>'search', 'class'=>'text-muted' ),
   'fill'     => array( 'user_group'=>'[b_tools]',   'name'=>'fill_fill',          'uri'=>'fill',        'icon'=>'arrow-circle-o-down', 'class'=>'text-muted' ),
+  '--'       => array( 'type'=>'seperator' ),
+  'plugins'  => array( 'user_group'=>'super_admin',  'name'=>'plugins',           'uri'=>'plugin',      'icon'=>'cog',    'class'=>'text-muted' ),
 );
 $config['side_menu']['rel_tables'] = array(
   'rel_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'rel', 'icon'=>'link' ),
