@@ -71,6 +71,10 @@ $lang['action_user_send_password'] = 'Nieuw wachtwoord';
 $lang['tme_last_changed'] ='Laatste aanpassing';
 $lang['user_changed']     ='Aangepast door';
 
+// Tbl_links
+$lang['link_checker'] = 'Controleer links';
+$lang['link_check']   = 'Controleer';
+
 
 // MEDIA GRID fields
 $lang['filename']         = 'Bestand';

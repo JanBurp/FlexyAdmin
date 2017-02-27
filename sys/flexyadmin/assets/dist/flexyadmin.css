@@ -5610,6 +5610,8 @@ a > .fa, .btn > .fa {
     text-align: center;
     text-transform: uppercase;
     border-radius: 0.25rem; }
+  .grid .grid-actions .grid-action {
+    margin: 0 1rem; }
   .grid #grid-find {
     padding-top: .4rem;
     padding-bottom: 0.1rem;
