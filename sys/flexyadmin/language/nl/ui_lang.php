@@ -72,8 +72,12 @@ $lang['tme_last_changed'] ='Laatste aanpassing';
 $lang['user_changed']     ='Aangepast door';
 
 // Tbl_links
-$lang['link_checker'] = 'Controleer links';
-$lang['link_check']   = 'Controleer';
+$lang['link_checker']             = 'Controleer links';
+$lang['link_check']               = 'Controleer';
+$lang['link_check_checked']       = '%s links gecontroleerd.';
+$lang['link_check_checked_one']   = 'Eén link gecontroleerd.';
+$lang['link_check_checked_ok']    = '%s link(s) in orde.';
+$lang['link_check_checked_false'] = '%s link(s) nu niet in orde.';
 
 
 // MEDIA GRID fields
