@@ -373,11 +373,8 @@ export default {
         if (!response.error) {
           if ( _.isUndefined(response.data.info) || response.data.info.validation!==false) {
             flexyState.addMessage('Item saved');
-            console.log(response.data.data.id,self.row);
-            // if (self.isNewItem()) {
-            //   // self.row['id'] = response.data.data.id;
+            // Update data (if prepped)
             self.row = response.data.data;
-            // }
           }
           else {
             // Validation error
