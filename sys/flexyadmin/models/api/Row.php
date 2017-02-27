@@ -277,7 +277,10 @@ class Row extends Api_Model {
       // Save
       $id = $this->data->table($this->args['table'])->validate()->update( $data, $args['where'] );
       $this->info = $this->data->get_query_info();
-      return array('id'=>$id);
+      // Get data back
+      $this->data->table( $args['table'] );
+      $new_data = $this->data->get_row( $args['where'] );
+      return $new_data;
     }
     return false;
   }
@@ -300,7 +303,11 @@ class Row extends Api_Model {
       $data = $this->_after_update( $this->args['table'], $old, $data);
       // Insert
       $id = $this->data->table($args['table'])->validate()->insert( $data );
-      $this->info=$this->data->get_query_info();
+      $this->info = $this->data->get_query_info();
+      // Get data back
+      $this->data->table( $args['table'] );
+      $new_data = $this->data->get_row( $id );
+      return $new_data;
     }
     return array('id'=>$id);
   }
