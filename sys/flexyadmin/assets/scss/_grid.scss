@@ -164,9 +164,9 @@
      div {display:inline;}
    }
    td.grid-cell-type-relation.show-all {
+     max-width:none;
      div {display:block;}
    }
-   
    
    
    // FOOTER
@@ -174,7 +174,6 @@
      padding:.35rem .35rem;
      .actions {
        float:left;
-//       margin-top:.25rem;
        margin-right:1rem;
      }
    }
