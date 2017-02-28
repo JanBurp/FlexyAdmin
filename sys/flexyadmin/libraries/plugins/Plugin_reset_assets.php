@@ -33,10 +33,12 @@ class Plugin_reset_assets extends Plugin {
     
     $this->CI->load->model('assets');
     $paths = $this->CI->assets->refresh('',($arg==='reset'),($arg==='remove'));
+    $this->add_message('<ul>');
     foreach ($paths as $path) {
-      $this->add_message($path.' Refreshed.');
+      $this->add_message('<li>`'.$path.'` refreshed.</li>');
     }
-    return $this->view();
+    $this->add_message('</ul>');
+    return $this->show_messages();
 	}
 
 	
