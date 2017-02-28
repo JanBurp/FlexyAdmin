@@ -376,43 +376,45 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_field_info( $table='', $fields=array() ) {
+    $this->config->load('schemaform',true);
+    $schemaform = $this->config->item('schemaform');
     $this->load->library('form_validation');
     if (empty($table)) $table = $this->settings['table'];
     if (empty($fields)) $fields = $this->settings['fields'];
 
-    $fields_info = array();
-    $settings_fields_info = array();
+    $field_info = array();
     foreach ($fields as $field) {
-      $field_info = array();
+      $info = array();
       
       /**
        * Default, eerst uit schemaform, dan uit database
        */
-      $schemaform = $this->config->item('FIELDS_special');
-      $field_info['default'] = el(array($field,'default'),$schemaform);
-      // Uit database
-      if ( !isset($field_info['default'])) {
-        $field_info['default'] = $this->field_data( $field, 'default' );
+      $info['default'] = el(array('FIELDS_special',$field,'default'),$schemaform);
+      if ( !isset($info['default']) ) {
+        $pre = get_prefix($field);
+        $info['default'] = el(array('FIELDS_prefix',$pre,'default'),$schemaform);
       }
       
-      $fields_info[$field] = $field_info;
-      // Combineer, met oa de default waarde
-      $settings_fields_info[$field] = array('default'=>$field_info['default']);
+      // Uit database
+      if ( !isset($info['default'])) {
+        $info['default'] = $this->field_data( $field, 'default' );
+      }
       
       /**
        * Validation
        */
-      $settings_fields_info[$field]['validation'] = explode('|',$this->form_validation->get_rules( $table, $field ));
+      $info['validation'] = explode('|',$this->form_validation->get_rules( $table, $field ));
       
       /**
        * Media path
        */
       if (in_array(get_prefix($field),array('media','medias'))) {
-        $settings_fields_info[$field]['path'] = 'pictures';
+        $info['path'] = 'pictures';
       }
       
+      $field_info[$field] = $info;
     }
-    return $settings_fields_info;
+    return $field_info;
   }
   
   /**
@@ -1628,9 +1630,12 @@ Class Data_Core extends CI_Model {
     else {
       $fields = $this->settings['fields'];
     }
-    
+
 		foreach ($fields as $field) {
-      $defaults[$field] = $this->field_data( $field, 'default' );
+      // Default from field_info/schemaform
+      $defaults[$field] = $this->get_setting( array('field_info',$field,'default') );
+      // Default from database?
+      if (is_null($defaults[$field])) $defaults[$field] = $this->field_data( $field, 'default' );
 		}
     $defaults[$this->settings['primary_key']] = -1;
     
@@ -2514,7 +2519,6 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
     return $this->get_row( $where, 'form' );
   }
   
