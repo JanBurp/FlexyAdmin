@@ -219,6 +219,7 @@
       tr:hover {
         border-color:$brand-primary;
         box-shadow:0 0 .1rem $gray;
+        td.action {display:block;}
       }
       tr.is-selected {
         background-color:$gray-lighter;
@@ -232,7 +233,18 @@
         background-color:transparent;
         input {text-align:center;}
       }
-      td.action {display:none;}
+      
+      td.action {
+        display:none;
+        position:relative;
+        text-align:center;
+        background-color:rgba(255,255,255,.8);
+        padding:.25rem;
+        z-index:999;
+        .flexy-button {display:none;}
+        .flexy-button.action-remove, .flexy-button.action-select {display:inline;margin-top:-.25rem;}
+      }
+      
       td[name="media_thumb"] {
         width:100%;
         height:100%;

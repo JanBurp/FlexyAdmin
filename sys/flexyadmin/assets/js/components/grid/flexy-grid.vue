@@ -989,7 +989,7 @@ export default {
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                   <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                   <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
-                  <flexy-button @click.native="reverseSelection()" icon="dot-circle-o" class="btn-outline-info" />
+                  <flexy-button @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
 
                   <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                     <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>
@@ -1033,10 +1033,10 @@ export default {
               
                 <!-- PRIMARY CELL -->
                 <td v-if="cell.type=='primary'" class="action">
-                  <flexy-button v-if="gridType()!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
-                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger" />
-                  <flexy-button @click.native="select(row.id.value)" :icon="{'circle-o':!isSelected(row.id.value),'circle':isSelected(row.id.value)}" class="btn-outline-info" />
-                  <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
+                  <flexy-button v-if="gridType()!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning action-edit" />
+                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger action-remove" />
+                  <flexy-button @click.native="select(row.id.value)" :icon="{'square-o':!isSelected(row.id.value),'check-square-o':isSelected(row.id.value)}" class="btn-outline-info action-select" />
+                  <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info action-drag" :class="{'active':isDragging(row.id.value)}" />
                 </td>
               
                 <!-- ACTION CELL -->
