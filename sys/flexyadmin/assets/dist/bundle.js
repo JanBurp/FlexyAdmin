@@ -82952,7 +82952,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }) : _vm._e(), _vm._v(" "), _c('flexy-button', {
       staticClass: "btn-outline-info",
       attrs: {
-        "icon": "dot-circle-o"
+        "icon": "check-square-o"
       },
       nativeOn: {
         "click": function($event) {
@@ -83071,7 +83071,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       return [(cell.type == 'primary') ? _c('td', {
         staticClass: "action"
       }, [(_vm.gridType() !== 'media') ? _c('flexy-button', {
-        staticClass: "btn-outline-warning",
+        staticClass: "btn-outline-warning action-edit",
         attrs: {
           "icon": "pencil"
         },
@@ -83081,7 +83081,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           }
         }
       }) : _vm._e(), _vm._v(" "), (_vm.type !== 'mediapicker') ? _c('flexy-button', {
-        staticClass: "btn-outline-danger",
+        staticClass: "btn-outline-danger action-remove",
         attrs: {
           "icon": "remove"
         },
@@ -83091,11 +83091,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           }
         }
       }) : _vm._e(), _vm._v(" "), _c('flexy-button', {
-        staticClass: "btn-outline-info",
+        staticClass: "btn-outline-info action-select",
         attrs: {
           "icon": {
-            'circle-o': !_vm.isSelected(row.id.value),
-            'circle': _vm.isSelected(row.id.value)
+            'square-o': !_vm.isSelected(row.id.value),
+            'check-square-o': _vm.isSelected(row.id.value)
           }
         },
         nativeOn: {
@@ -83104,7 +83104,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           }
         }
       }), _vm._v(" "), (_vm.gridType() === 'tree' || _vm.gridType() === 'ordered') ? _c('flexy-button', {
-        staticClass: "draggable-handle btn-outline-info",
+        staticClass: "draggable-handle btn-outline-info action-drag",
         class: {
           'active': _vm.isDragging(row.id.value)
         },
