@@ -33,9 +33,10 @@ export default {
     range : function(len) {
       var range = [];
       for (var i = 0; i <= len; i++) {
+        var value = this.precedingZero(i);
         range.push({
-          value : i,
-          text  : this.precedingZero(i),
+          value : value,
+          text  : value,
         });
       }
       return range;
@@ -48,10 +49,12 @@ export default {
     },
     
     changeHours : function(hours) {
+      hours = _.toNumber(hours);
       this.changeTime( this.precedingZero(hours) + ':' + this.minutes() );
     },
 
     changeMinutes : function(minutes) {
+      minutes = _.toNumber(minutes);
       this.changeTime( this.hours() + ':' + this.precedingZero(minutes) )
     },
     
