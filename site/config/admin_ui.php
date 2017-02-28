@@ -9,7 +9,7 @@ $config['side_menu']['tables'] = array(
   'tbl_menu'  => array( 'type'=>'table' ),
   'tbl_links' => array( 'type'=>'table' ),
   '-' => array( 'type'=>'seperator' ),
-  'tables'    => array( 'type'=>'tables', 'pre'=>'tbl', 'user_group'=>'super_admin', 'icon'=>'' ),
+  'tables'    => array( 'type'=>'tables', 'pre'=>'tbl', 'icon'=>'' ),
 );
 
 $config['side_menu']['media'] = array(
