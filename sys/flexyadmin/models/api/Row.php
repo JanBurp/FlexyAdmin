@@ -178,37 +178,35 @@ class Row extends Api_Model {
    * @author Jan den Besten
    */
   public function index() {
-    // Check rechten
-    if ($this->args['table']==='res_assets' AND isset($this->args['path'])) {
-      if ( !$this->_has_rights('media_'.$this->args['path']) ) {
-        return $this->_result_status401();
-      }
-    }
-    else {
-      if ( !$this->_has_rights( $this->args['table'], el('where',$this->args)) ) {
-        return $this->_result_status401();
-      }
-    }
     
     // Media?
-    if (substr($this->args['table'],0,6)==='media_') {
-      $this->args['path']=substr($this->args['table'],6);
-      $this->args['table']='res_assets';
+    $is_media = (isset($this->args['path']) and $this->args['table']==='res_assets');
+    if (substr($this->args['table'],6)==='media_') {
+      $is_media = true;
+      $this->args['path']  = substr($this->args['table'],6);
+      $this->args['table'] = 'res_assets';
     }
     
-    // DEFAULTS
-    $fields=FALSE;
+    // Check rechten
+    $rights = FALSE;
+    if ($is_media) {
+      $rights = $this->_has_rights('media_'.$this->args['path'], el('where',$this->args));
+    }
+    else {
+      $rights = $this->_has_rights( $this->args['table'], el('where',$this->args));
+    }
+    if ( !$rights ) return $this->_result_status401();
     
     if ( !$this->has_args() ) {
       return $this->_result_wrong_args();
     }
     
+    // DEFAULTS
+    $fields=FALSE;
+    
     // GET
     if ($this->args['type']=='GET') {
       $this->result['data']=$this->_get_row();
-      // if (el('schemaform',$this->args,false)==true) {
-      //   $this->result['schemaform'] = $this->data->schemaform( $this->result['data'],el('table',$this->args) );
-      // }
       return $this->_result_ok();
     }
 
@@ -217,19 +215,21 @@ class Row extends Api_Model {
       
       // INSERT
       if (isset($this->args['data']) and (!isset($this->args['where']) or $this->args['where']===-1) ) {
-        if (!$this->_has_rights($this->args['table'])>=RIGHTS_ADD) return $this->_result_norights();
+        if ( $rights < RIGHTS_ADD ) return $this->_result_norights();
         $this->result['data']=$this->_insert_row();
         return $this->_result_ok();
       }
+      
       // UPDATE
       if (isset($this->args['data']) and isset($this->args['where']) and $this->args['where']!==-1) {
-        if (!$this->_has_rights($this->args['table'],$this->args['where'])>=RIGHTS_EDIT) return $this->_result_norights();
+        if ( $rights < RIGHTS_EDIT ) return $this->_result_norights();
         $this->result['data']=$this->_update_row();
         return $this->_result_ok();
       }
+      
       // DELETE
       if (!isset($this->args['data']) and isset($this->args['where'])) {
-        if (!$this->_has_rights($this->args['table'])>=RIGHTS_DELETE) return $this->_result_norights();
+        if ( $rights < RIGHTS_DELETE ) return $this->_result_norights();
         $this->result['data']=$this->_delete_row();
         return $this->_result_ok();
       }
