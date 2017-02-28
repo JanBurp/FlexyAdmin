@@ -9,13 +9,6 @@
 
 
 /**
- * Set some values
- */
-$config['current_date']     = date('Y-m-d');
-$config['current_datetime'] = date('Y-m-d H:i:s');
-$config['current_time']     = date('H:i:s');
-
-/**
  * Default field
  */
 $config['FIELDS_default'] = array(
@@ -181,32 +174,32 @@ $config['FIELDS_prefix'] = array (
     'type'        => 'string',
     'form-type'   => 'date',
     'validation'	=> '',
-    'default'     => $config['current_date'],
+    'default'     => '0000-00-00',
   ),
 	'date'			=> array(
     'type'        => 'string',
     'form-type'   => 'date',
     'validation'	=> '',
-    'default'     => $config['current_date'],
+    'default'     => '0000-00-00',
   ),
 
 	'tme'				=> array(
     'type'        => 'string',
     'form-type'   => 'datetime',
     'validation'	=> '',
-    'default'     => $config['current_datetime'],
+    'default'     => '0000-00-00 00:00',
   ),
 	'datetime'	=> array(
     'type'        => 'string',
     'form-type'   => 'datetime',
     'validation'	=> '',
-    'default'     => $config['current_datetime'],
+    'default'     => '0000-00-00 00:00',
   ),
 	'time'			=> array(
     'type'        => 'string',
     'form-type'   => 'time',
     'validation'	=> '',
-    'default'     => $config['current_time'],
+    'default'     => '00:00',
   ),
 
 	'int'				=> array(
