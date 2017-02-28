@@ -571,7 +571,10 @@ export default {
               table : self.name,
               where : removeIds,
             };
-            if (self.gridType()==='media') data.table = 'res_assets';
+            if (self.gridType()==='media') {
+              data.table = 'res_assets';
+              data.path = self.name;
+            }
             return flexyState.api({
               url   : 'row',
               data  : data,
