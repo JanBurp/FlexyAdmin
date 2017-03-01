@@ -94,9 +94,9 @@ class ApiAuthTest extends ApiTestModel {
       $result=$this->CI->auth->login();
       $this->assertArrayHasKey( 'success', $result );
       $this->assertEquals( true, $result['success'] );
-      $this->assertArrayHasKey( 'args', $result );
-      $this->assertEquals( $user['username'], $result['args']['username'] );
-      $this->assertEquals( '***', $result['args']['password'] );
+      // $this->assertArrayHasKey( 'args', $result );
+      // $this->assertEquals( $user['username'], $result['args']['username'] );
+      // $this->assertEquals( '***', $result['args']['password'] );
       $this->assertArrayHasKey( 'data', $result );
       $this->assertEquals( $user['username'], $result['user']['username'] );
     }

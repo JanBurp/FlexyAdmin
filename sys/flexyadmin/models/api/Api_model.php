@@ -217,6 +217,7 @@ class Api_Model extends CI_Model {
     }
 
     // cleanup result
+    unset($this->result['args']);
     unset($this->result['status']);
     unset($this->result['error']);
     unset($this->result['message']);
@@ -234,9 +235,6 @@ class Api_Model extends CI_Model {
       if (!empty($this->message_type)) $this->result['message_type'] = $this->message_type;
     }
     
-    // Add format
-    // if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
-    
     // Add info
     if (isset($this->info) and $this->info) $this->result['info']=$this->info;
     
@@ -246,9 +244,7 @@ class Api_Model extends CI_Model {
     if ($user) {
       $this->result['user'] = array(
         'username'    => el('str_username',$user,el('username',$user)),
-        'auth_token'  => $user['auth_token'],
-        // 'group_id'    => $user['group_id'],
-        // 'group_name'  => $user['group_name'],
+        // 'auth_token'  => $user['auth_token'],
       );
     }
     
