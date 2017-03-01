@@ -47,7 +47,7 @@ Class Data_Core extends CI_Model {
   /**
    * Set off while developing
    */
-  private $settings_caching = FALSE;
+  private $settings_caching = TRUE;
 
   /**
    * Testing this
@@ -238,6 +238,7 @@ Class Data_Core extends CI_Model {
 
 	public function __construct( $table='' ) {
 		parent::__construct();
+    $this->settings_caching = $this->config->item('CACHE_DATA_SETTINGS');
     $this->load->model('log_activity');
     $this->lang->load('data');
     $this->load->driver('cache', array('adapter' => 'file'));
