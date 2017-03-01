@@ -1,7 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * Vervang alle urls van YouTube/Vimeo videos door hun code
+ * Vervang alle urls van YouTube/Vimeo videos door hun code in de volgende velden:
+ * - str_video
+ * - str_youtube
+ * - str_vimeo
+ * 
+ * Geef /table
  *
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
@@ -27,10 +32,8 @@ class Plugin_video_code extends Plugin {
         }
         $this->add_message("<p>All video urls in <b>$this->table</b> are translated to video codes.</p>");
 			}
-			else
-				$this->add_message('Which table?');
 		}
-    return $this->view('admin/plugins/plugin');
+    return $this->show_messages();
 	}
 
 
