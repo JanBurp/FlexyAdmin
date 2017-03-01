@@ -9,7 +9,7 @@
  * @author Jan den Besten
  */
  
-class Plugin_create_foreign extends Plugin {
+class Plugin_db_create_foreign extends Plugin {
 
 	public function __construct() {
 		parent::__construct();

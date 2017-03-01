@@ -11,7 +11,7 @@
  * @author Jan den Besten
  */
  
-class Plugin_flatten_table extends Plugin {
+class Plugin_db_flatten_table extends Plugin {
 
 	public function __construct() {
 		parent::__construct();

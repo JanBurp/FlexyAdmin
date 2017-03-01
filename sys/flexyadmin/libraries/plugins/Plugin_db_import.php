@@ -11,7 +11,7 @@
 	*
 	* @author Jan den Besten
 	*/
- class Plugin_import extends Plugin {
+ class Plugin_db_import extends Plugin {
    
    private $import_table;
    
