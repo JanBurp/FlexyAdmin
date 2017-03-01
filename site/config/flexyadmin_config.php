@@ -1,16 +1,14 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/*
- *--------------------------------------------------------------------------
- * URI Plugin: Replace spaces with character
- *--------------------------------------------------------------------------
- *
- * Character to replace a space with when creating URI's.
- * Default: '_'.
- * Other nice options: '-' or ''.
- *
+
+/**
+ * Cache de settings van Data models.
+ * Maakt alles sneller.
+ * Tijdens development is het soms handiger om uit te zetten.
+ * Zeker als je veel aan de database of de data settings aanpast (config/data/...)
  */
-// $config['PLUGIN_URI_REPLACE_CHAR']  = '_';
+$config['CACHE_DATA_SETTINGS'] = FALSE;
+
 
 
 
