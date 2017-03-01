@@ -10,6 +10,8 @@
  * @author			Jan den Besten
 **/
 
+
+$config['CACHE_DATA_SETTINGS']    = TRUE;
 $config['USE_OLD_DB']             = FALSE;
 $config['PROFILER']               = FALSE;
 
@@ -60,16 +62,6 @@ $config['PLUGIN_URI_REPLACE_CHAR']	= '_';
 $config['URI_HASH']                 = ':';  // possible other value: ~
 $config['PLUGIN_URI_ARGS_CHAR']     = $config['URI_HASH'];
 $config['FORBIDDEN_URIS']           = array("site","sys","admin","rss","file",'offset','_cronjob','_unittest');
-
-  
-/*
-|--------------------------------------------------------------------------
-| Custom form validation rules (in MY_Form_validation)
-|--------------------------------------------------------------------------
-|
-*/
-
-$config['CUSTOM_VALIDATION_RULES']            = 'valid_rgb|valid_google_analytics|valid_password|valid_regex|valid_model_method';
 
 
 /*
@@ -189,6 +181,7 @@ $config['CFG_field_name']							= "field_field";
 */
 
 $config['UI_required_label_extra']		= "<span class=\"required\"> !</span>";
+
 
 /*
 |--------------------------------------------------------------------------
