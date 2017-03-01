@@ -5502,6 +5502,10 @@ a > .fa, .btn > .fa {
   #messages .message-button {
     float: right; }
 
+/* MODAL */
+#flexyadmin-modal .modal-dialog {
+  margin-top: 5rem; }
+
 /* CONTENT */
 #row {
   margin: 0.75rem 0px 0px; }
