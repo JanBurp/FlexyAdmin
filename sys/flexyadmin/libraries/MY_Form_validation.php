@@ -410,7 +410,7 @@ class MY_Form_validation extends CI_Form_validation {
    * @return string
    * @author Jan den Besten
    */
-  public function prep_url_mail($str,$field) {
+  public function prep_url_mail($str,$field='') {
     $protocol = get_prefix($str,':');
     $str = trim(str_replace(array('http://','https://','mailto:'),'',$str));
     if (empty($str)) return '';
@@ -419,7 +419,7 @@ class MY_Form_validation extends CI_Form_validation {
     }
     else {
       if (empty($protocol)) $protocol = 'http';
-  		$str = $protocol.'://'.$str;
+  		$str = $protocol.'://'.trim(str_replace('//','/',$str),'/');
     }
     return $str;
   }
