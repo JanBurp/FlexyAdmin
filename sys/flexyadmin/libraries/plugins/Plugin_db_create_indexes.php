@@ -17,7 +17,7 @@
  *
  * @author Jan den Besten
  */
-class Plugin_create_indexes extends Plugin {
+class Plugin_db_create_indexes extends Plugin {
 
 	public function __construct() {
 		parent::__construct();
