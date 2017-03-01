@@ -7,7 +7,7 @@
  * 
  * @author: Jan den Besten
  */
- class Plugin_analyze_data_models extends Plugin {
+ class Plugin_db_analyze_data_models extends Plugin {
    
    public function __construct() {
      parent::__construct();

@@ -13,7 +13,7 @@
  *
  * @author Jan den Besten
  */
-class Plugin_export extends Plugin {
+class Plugin_db_export extends Plugin {
 
 	public function __construct() {
 		parent::__construct();

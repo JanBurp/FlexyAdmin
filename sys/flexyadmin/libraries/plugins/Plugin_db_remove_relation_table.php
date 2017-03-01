@@ -11,7 +11,7 @@
  * @author Jan den Besten
  */
  
-class Plugin_remove_relation_table extends Plugin {
+class Plugin_db_remove_relation_table extends Plugin {
 
 	public function __construct() {
 		parent::__construct();
@@ -41,7 +41,7 @@ class Plugin_remove_relation_table extends Plugin {
           // Maak foreign key aan als die er nog niet is
           if ( ! $this->CI->db->field_exists($foreign_key_join,$table)) {
             $this->CI->dbforge->add_column($table, array($foreign_key_join=>array('type'=>'INT')));
-            $this->add_content("<p><strong>Created '$table.$foreign_key_join'</strong></p>");
+            $this->add_message("<p><strong>Created '$table.$foreign_key_join'</strong></p>");
           }
           
           // Pak de huidige data, en voer die in bij de foreign keys
@@ -52,20 +52,20 @@ class Plugin_remove_relation_table extends Plugin {
             $this->CI->data->where(PRIMARY_KEY,$id_table);
             $this->CI->data->set($foreign_key_join,$row[$foreign_key_join]);
             $this->CI->data->update();
-            $this->add_content("<p>Updated item: ".$table."[".$id_table."]</p>");
+            $this->add_message("<p>Updated item: ".$table."[".$id_table."]</p>");
           }
           
           // DELETE rel_table
           $this->CI->dbforge->drop_table($rel_table,true);
-          $this->add_content("<p><strong>DELETED '$rel_table'</strong></p>");
+          $this->add_message("<p><strong>DELETED '$rel_table'</strong></p>");
           
 				}
 			}
 			if (!$goodArgs) {
-				$this->add_content('<p>Remove relation table, which (existing) relation table?</br></br>Give: /rel_xxx__xxx</p>');
+				$this->add_message('<p>Remove relation table, which (existing) relation table?</br></br>Give: /rel_xxx__xxx</p>');
 			}
 		}
-    return $this->view('admin/plugins/plugin');
+    return $this->show_messages();
 	}
 
 }
