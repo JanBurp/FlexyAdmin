@@ -1,7 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * FlexyAdmin Plugin
+ * Zorgt ervoor dat links in `tbl_links` goed foruleerd zijn.
+ * 
+ * Zorgt ervoor dat alle links goed geformuleerd zijn:
+ * - Altijd met een protocol ervoor (http://, https:// of mailto:)
+ * - Altijd enkele / tussen parts
+ * - Aan het einde nooit een /
  *
  * @author Jan den Besten
  * @internal
@@ -12,7 +17,35 @@ class Plugin_links extends Plugin {
 	public function __construct() {
 		parent::__construct();
 		$this->CI->load->model('search_replace');
+		$this->CI->load->library('form_validation');
 	}
+  
+  public function _admin_api($args,$help) {
+		if (!$this->CI->flexy_auth->is_super_admin()) return;
+    $this->add_message($help['long'].'<hr>');
+    // Prep urls
+    $links = $this->CI->data->table('tbl_links')->select('str_title,url_url')->get_result();
+    $this->add_message('<ul>');
+    foreach ($links as $id => $link) {
+      $this->add_message('<li>');
+      $old_link = $link['url_url'];
+      $new_link = $this->CI->form_validation->prep_url_mail($old_link);
+      $show_link = '<a class="text-primary" href="'.$new_link.'" target="_blank">'.$new_link.'</a>';
+      if ($old_link!==$new_link) {
+        $this->add_message('<span class="text-danger">'.$old_link.' <span class="text-warning">=></span> '.$show_link);
+        $this->CI->data->table('tbl_links')
+                      ->set('url_url',$new_link)
+                      ->where('url_url',$old_link)
+                      ->update();
+      }
+      else {
+        $this->add_message('<span class="text-primary">'.$show_link.'</span>');
+      }
+      $this->add_message('</li>');
+    }
+    $this->add_message('</ul>');
+    return $this->show_messages();
+  }
 	
 	public function _after_update() {
 		$this->_update_links_in_text();
