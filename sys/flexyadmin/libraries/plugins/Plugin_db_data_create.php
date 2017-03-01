@@ -9,7 +9,7 @@
  * @author Jan den Besten
  */
  
-class Plugin_data_create extends Plugin {
+class Plugin_db_data_create extends Plugin {
 
 	public function __construct() {
 		parent::__construct();
