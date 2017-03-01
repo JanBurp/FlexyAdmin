@@ -181,8 +181,9 @@ Class Data_Core extends CI_Model {
    * - fields (array)
    * - settings (array)
    */
-  protected $tm_find             = FALSE;
-  private $forbidden_find_fields = array('id','order','self_parent','uri');
+  protected $tm_find                      = FALSE;
+  private $forbidden_find_fields          = array('id','order','self_parent','uri');
+  private $forbidden_find_relation_fields = array('user_changed','tme_last_changed');
 
   /**
    * Set array voor insert/update
@@ -2468,7 +2469,7 @@ Class Data_Core extends CI_Model {
     }
 
     $result = $this->_get_result();
-
+    
     // Prepare as grid result, flatten (foreign keys include abstract and foreign data in a json)
     if (isset($grid_set['with']['many_to_one'])) {
       foreach ($result as $id => $row) {
@@ -3298,6 +3299,7 @@ Class Data_Core extends CI_Model {
             $fields[$key] = $this->_get_relation_result($field,$this->tm_with);
             if ($fields[$key]) {
               $fields[$key]['fields'] = array_diff($fields[$key]['fields'],$this->forbidden_find_fields);
+              $fields[$key]['fields'] = array_diff($fields[$key]['fields'],$this->forbidden_find_relation_fields);
             }
             else {
               unset($fields[$key]);
