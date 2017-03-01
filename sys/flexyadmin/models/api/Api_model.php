@@ -470,7 +470,13 @@ class Api_Model extends CI_Model {
   
 	protected function _after_update($table,$oldData=NULL,$newData=NULL) {
 		$this->_init_plugin($table,$oldData,$newData);
-		$newData=$this->plugin_handler->call_plugins_after_update_trigger();
+		$newData = $this->plugin_handler->call_plugins_after_update_trigger();
+    $messages = $this->plugin_handler->get_plugins_messages();
+    if ($messages) {
+      if (is_array($messages)) $messages = implode($messages);
+      $this->message = $messages;
+      $this->message_type = 'popup';
+    }
 		return $newData;
 	}
   

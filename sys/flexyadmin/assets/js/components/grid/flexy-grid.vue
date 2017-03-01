@@ -565,7 +565,7 @@ export default {
         var message = this.$lang['confirm_delete_one'];
         if (removeIds.length>1) message = this.$options.filters.replace( this.$lang['confirm_delete_multiple'], removeIds.length );
         
-        flexyState.openModal( {'title':'','body':message}, function(event) {
+        flexyState.openModal( {'title':'','body':message,'size':'modal-sm'}, function(event) {
           if ( event.state.type==='ok') {
             var data = {
               table : self.name,
