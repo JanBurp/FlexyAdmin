@@ -29,6 +29,8 @@ $lang['file_list_list'] 		= '<p>Laat bestanden zien als lijst met extra informat
 
 $lang['stats_menu']					= 'Site Statistieken';
 
+$lang['new_links_found']    = '%s nieuwe links toegevoegd:';
+
 $lang['db_export']					= 'Exporteer Database';
 $lang['db_import']					= 'Importeer Database';
 $lang['db_backup']					= 'Maak backup';
