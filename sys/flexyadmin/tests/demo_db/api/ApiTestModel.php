@@ -231,8 +231,8 @@ class ApiTestModel extends CITestCase {
             $this->assertArrayNotHasKey( 'error', $result );
 
             // args
-            $this->assertArrayHasKey( 'args', $result );
-            $this->assertInternalType( 'array', $result['args'] );
+            // $this->assertArrayHasKey( 'args', $result );
+            // $this->assertInternalType( 'array', $result['args'] );
           
             // data
             $this->assertArrayHasKey( 'data', $result );
