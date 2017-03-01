@@ -18,10 +18,18 @@ export default {
       callback  : undefined,
       state     : undefined,
     },
-    modal       : {
+    modal        : {
       show    : false,
-      title   : 'Title',
-      body    : 'Message',
+      size    : '',
+      title   : '',
+      body    : '',
+      buttons : [],
+    },
+    modal_default: {
+      show    : false,
+      size    : '',
+      title   : '',
+      body    : '',
       buttons : [
         {
           type   : 'cancel',
@@ -69,11 +77,12 @@ export default {
    * Modal
    */
   openModal : function(options,callback) {
-    if (!_.isUndefined(options)) _.merge(this.state.modal,options);
+    if (!_.isUndefined(options)) _.merge( this.state.modal, this.state.modal_default, options);
+    if (!_.isUndefined(options.buttons)) this.state.modal.buttons = options.buttons;
     this.state.modal.show = true;
     this.state._modal.callback = callback;
-    var buttonEL = document.querySelector('#flexyadmin-modal .modal-footer button:last-child');
-    buttonEL.focus();
+    // var buttonEL = document.querySelector('#flexyadmin-modal .modal-footer button:last-child');
+    // buttonEL.focus();
   },
   modalState : function(state) {
     this.state._modal.state = state;
@@ -91,14 +100,27 @@ export default {
   addMessage : function(message,type) {
     if (_.isUndefined(type)) type='success';
     var self = this;
-    var id = jdb.createUUID();
-    self.state.messages.push({ 'id':id, 'text':message, 'type':type });
-    self.debug && console.log('state.messages',self.state.messages); 
-    if (type!=='danger') {
-      window.setTimeout(function(){
-        self.removeMessage(id);
-        self.debug && console.log('state.messages',self.state.messages); 
-      }, 3000);
+    if (type==='popup') {
+      self.openModal({
+        body    : message,
+        buttons : [{
+          type   : 'ok',
+          title  : _flexy.language_keys.ok,
+          class  : 'btn-outline-danger',
+          close  : true,
+        }],
+      });
+    }
+    else {
+      var id = jdb.createUUID();
+      self.state.messages.push({ 'id':id, 'text':message, 'type':type });
+      self.debug && console.log('state.messages',self.state.messages); 
+      if (type!=='danger') {
+        window.setTimeout(function(){
+          self.removeMessage(id);
+          self.debug && console.log('state.messages',self.state.messages); 
+        }, 3000);
+      }
     }
   },
   removeMessage : function(id) {
@@ -190,6 +212,9 @@ export default {
       }
       if (!_.isUndefined(response.data.error)) {
         self.addMessage(response.data.error,'danger');
+      }
+      if (!_.isUndefined(response.data.message)) {
+        self.addMessage(response.data.message,response.data.message_type || 'success');
       }
       return response;
     })

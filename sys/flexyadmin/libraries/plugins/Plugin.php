@@ -125,7 +125,7 @@ class Plugin extends Parent_module_plugin {
    * @return array
    * @author Jan den Besten
    */
-  protected function get_messages() {
+  public function get_messages() {
     return $this->messages;
   }
   
@@ -135,8 +135,8 @@ class Plugin extends Parent_module_plugin {
    * @return string
    * @author Jan den Besten
    */
-  protected function show_messages() {
-    return implode('',$this->messages);
+  public function show_messages() {
+    return implode($this->messages);
   }
 
   
