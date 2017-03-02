@@ -52,6 +52,10 @@
 }
 
 // Sizes
+textarea {
+  height:400px;
+}
+
 select:-moz-focusring {
   color: transparent!important;
   text-shadow: 0 0 0 #000!important;
@@ -140,6 +144,10 @@ body.mce-fullscreen .mce-tinymce{
   width:30px!important;
 }
 
+.mce-menu-item {
+  max-width:500px!important;
+  overflow:hidden;
+}
 
 
 
