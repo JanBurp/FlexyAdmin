@@ -399,7 +399,6 @@ export default {
     },
     
     updateField : function( field, value ) {
-      // console.log('updateField',field,value);
       this.validationErrors = {};
       this.row[field] = value;
     },
@@ -439,6 +438,7 @@ export default {
     },
     
     addToSelect : function( field, value ) {
+      console.log('addToSelect',field,value);
       if ( this.isMultiple(field) ) {
         var currentSelection = this.row[field];
         // Als al bestaat, dan juist verwijderen
