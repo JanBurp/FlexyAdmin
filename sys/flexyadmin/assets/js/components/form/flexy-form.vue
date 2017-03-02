@@ -108,7 +108,7 @@ export default {
       // Wait just a bit...
       window.setTimeout(function(){
         tinymce.init(init);
-      }, 10 );
+      }, 100 );
     },
     
     apiUrl : function(parts) {

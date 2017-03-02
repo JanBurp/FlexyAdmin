@@ -323,11 +323,12 @@ tinymce.PluginManager.add('flexy_link', function(editor) {
 					linkList,
 					function(item) {
             // > JdB 13 februari 2017
-            var text = item.text.trim();
+            var text  = item.text.trim();
             var level = item.text.length - text.length;
             if (level>0) {
               item.classes = item.classes + ' indent-list-item indent-list-item-'+level;
             }
+            item.tooltip = text;
             // > JdB
 						item.value = editor.convertURL(item.value || item.url, 'href');
 					},

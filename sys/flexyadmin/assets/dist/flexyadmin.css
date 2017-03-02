@@ -5911,6 +5911,9 @@ a > .fa, .btn > .fa {
   border-radius: 0.25rem;
   background-color: #ffe5aa; }
 
+textarea {
+  height: 400px; }
+
 select:-moz-focusring {
   color: transparent !important;
   text-shadow: 0 0 0 #000 !important; }
@@ -5984,6 +5987,10 @@ textarea {
 .mce-i-jdb {
   height: 30px !important;
   width: 30px !important; }
+
+.mce-menu-item {
+  max-width: 500px !important;
+  overflow: hidden; }
 
 .datepicker {
   height: 1.8rem; }
