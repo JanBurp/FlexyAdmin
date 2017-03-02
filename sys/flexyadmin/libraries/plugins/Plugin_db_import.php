@@ -8,6 +8,7 @@
 	* - Bij een foreign_key wordt er een item in de foreign_table aangemaakt (als die niet bestaat): id_link.url_url bijvoorbeeld
 	* - Bij een rel_table idem, kan ook meerdere rel_table velden: rel_table.str_title, rel_table.url_url
 	* - Bij txt_ velden kunnen meerdere kolommen worden samengevoegd: txt_text:status, txt_text:opmerkingen
+	* - Bij stx_ velden kunnen meerdere kolommen worden samengevoegd: stx_notes:status, stx_notes:opmerkingen
 	*
 	* @author Jan den Besten
 	*/
@@ -89,7 +90,18 @@
                 $set[$field] .= $value;
                 break;
 
+              case 'stx':
+                $head = get_suffix($field,':');
+                $field = get_prefix($field,':');
+                if ($head) {
+                  $value = $head.': '.$value."\n";
+                }
+                if (!isset($set[$field])) $set[$field]='';
+                $set[$field] .= $value;
+                break;
+
               case 'str':
+              default:
                 $set[$field] = $value;
                 break;
             }
