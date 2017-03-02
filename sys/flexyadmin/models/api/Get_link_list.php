@@ -36,6 +36,7 @@ class Get_link_list extends Api_Model {
   
   private function _menu() {
     $this->data->table('tbl_menu')->select('uri,str_title AS title,order,self_parent')->tree('uri');
+    $this->data->where('uri !=""');
     $result = $this->data->cache()->get_result();
     $parents = array();
     $level = 0;
@@ -55,7 +56,8 @@ class Get_link_list extends Api_Model {
   }
   
   private function _links() {
-    $this->data->table('tbl_links')->select('url_url AS link, CONCAT(`str_title`," (",`url_url`,")") AS title');
+    $this->data->table('tbl_links')->select('url_url AS link, CONCAT(`str_title`," - ",REPLACE(REPLACE(`url_url`,"https://",""),"http://","")) AS title');
+    $this->data->where('url_url !=""')->like('url_url','http','after');
     $result = $this->data->cache()->get_result();
     return $this->_result_as_links($result);
   }
