@@ -1229,6 +1229,7 @@ Class Data_Core extends CI_Model {
 
     $searchable_fields = array_combine($grid_set['fields'],$grid_set['fields']);
     $searchable_fields = array_unset_keys($searchable_fields,array('id','order','self_parent','uri'));
+    $searchable_fields = not_filter_by_key($searchable_fields,array('b','action'));
     $grid_set['searchable_fields'] = array_values($searchable_fields);
     return $grid_set;
   }
@@ -1379,7 +1380,7 @@ Class Data_Core extends CI_Model {
     $is_result_name = isset($this->relation_result_fields[$name]);
     if (isset($with)) {
       if ($with) {
-        $relation = $this->relation_result_fields[$name];
+        $relation = el($name,$this->relation_result_fields);
         if (!isset($relation['relation'],$with)) $is_result_name = FALSE;
       }
       else {
