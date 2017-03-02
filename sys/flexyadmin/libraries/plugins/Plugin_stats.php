@@ -128,13 +128,13 @@ class Plugin_stats extends Plugin {
 			if ($oldMonth<1) { $oldMonth=12; $oldYear--; }
 		} while ($notReady);
 		
-		// Delete data from DB older than current month
-    $this->CI->data->table($this->logTable);
-    $this->CI->data->where('tme_date_time <',date('Y-m',unixdate_add_days(time(),-$this->keep)));
-    $this->CI->data->delete();
+		// Delete data from DB older than current months
+    $delete_from_unix_date = time() - ($this->keep * 24 * 60 * 60);
+    $delete_from_date = date('Y-m',$delete_from_unix_date);
+    $sql = "DELETE FROM `".$this->logTable."` WHERE `tme_date_time` < '".$delete_from_date."' ";
+    $query = $this->CI->db->query($sql);
     
     // $this->_download_links($year,$month);
-    
     return $this->content;
 	}
 
