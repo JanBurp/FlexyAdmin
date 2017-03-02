@@ -566,7 +566,7 @@ export default {
               
                 <template v-if="isType('default',field)">
                   <!-- Default -->
-                  <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
+                  <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="" @keyup.enter="submit">
                 </template>
 
                 <div v-if="showInsertForm(field)">
