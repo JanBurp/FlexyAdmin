@@ -134,19 +134,7 @@ export default {
       if (val !== old) { this.val = val }
     },
     val (val, old) {
-      if (val !== old && old!==null) {
-        this.$emit('change', val);
-      }
-      // if (val instanceof Array && val.length > this.limit) {
-      //   this.val = val.slice(0, this.limit)
-      //   this.notify = true
-      //   if (timeout.limit) clearTimeout(timeout.limit)
-      //   timeout.limit = setTimeout(() => {
-      //     timeout.limit = false
-      //     this.notify = false
-      //   }, 1500)
-      // }
-      // this.valid = this.validate()
+      this.$emit('change', val);
     }
   },
   
