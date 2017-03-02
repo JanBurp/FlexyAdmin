@@ -581,18 +581,23 @@ function filter_by_prefix( $a, $prefix ) {
 
 
 /**
- * Geeft alle elemeten uit de associatieve array die NIET de meegegeven (prefix van de) key hebben.
+ * Geeft alle elemeten uit de associatieve array die NIET de meegegeven (prefix van de) key(s) hebben.
  *
  * @param string $a 
- * @param string $preKey 
+ * @param mixed $keys string of arrat van strings
  * @return array
  * @author Jan den Besten
  */
-function not_filter_by_key($a,$preKey) {
+function not_filter_by_key($a,$keys) {
 	$arr=array();
-	$len=strlen($preKey);
-	foreach ($a as $key => $value) {
-		if (substr($key,0,$len)!==$preKey) $arr[$key]=$value;
+  if (!is_array($keys)) $keys = array($keys);
+	foreach ($a as $arrkey => $value) {
+    $found = false;
+    foreach ($keys as $key) {
+      $len = strlen($key);
+      if (substr($arrkey,0,$len)===$key) $found = true;
+    }
+    if (!$found) $arr[$arrkey] = $value;
 	}
 	return $arr;
 }
