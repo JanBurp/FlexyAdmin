@@ -83490,6 +83490,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         on: {
           "input": function($event) {
             _vm.updateField(field, $event.target.value)
+          },
+          "keyup": function($event) {
+            if (_vm._k($event.keyCode, "enter", 13)) { return; }
+            _vm.submit($event)
           }
         }
       })] : _vm._e(), _vm._v(" "), (_vm.showInsertForm(field)) ? _c('div', [_c('flexy-form', {
