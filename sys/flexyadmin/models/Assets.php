@@ -3,6 +3,8 @@
 /**
  * Wrapper around data/Res_assets (Data)
  * 
+ * Kijk voor help bij /data/Res_assets
+ * 
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
  */
