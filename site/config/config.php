@@ -307,7 +307,7 @@ $config['simulate_cronjobs'] = FALSE;
  */
 
 if (!isset($config['base_url'])) {
-  if (!isset($config['base_url']) and !is_cli()) {
+  if (!isset($config['base_url']) and !is_cli() and !IS_AJAX) {
   	// If not set automatic: comment this die() statement and set $config['base_url'] manually
   	die("<h3 style=\"color:#F00;\">FlexyAdmin could not set the 'base_url' automatic.</h3><p>See at line #".__LINE__." in '".__FILE__."'.</p>");
   	// $config['base_url']	= "http://www.flexyadmin.com/";
