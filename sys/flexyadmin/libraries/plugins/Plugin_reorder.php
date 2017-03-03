@@ -1,7 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * Deze plugin ververst de volgorde van een tabel met 'order'
+ * Ververs de volgorde van een tabel
+ * 
+ * Deze plugin ververst de volgorde van een tabel.
+ * De tabel moet in ieder geval het veld 'order' bevatten.
+ * En eventueel ook het veld 'self_parent'
+ * 
+ * Geef /tbl_...
  *
  * @author Jan den Besten
  */
@@ -18,10 +24,7 @@ class Plugin_reorder extends Plugin {
       $this->CI->load->model('order');
       $this->CI->order->reset($table,0,TRUE);
     }
-    else {
-      $this->add_message('use: /table');
-    }
-    return $this->view();
+    return $this->show_messages();
   }
 
 }
