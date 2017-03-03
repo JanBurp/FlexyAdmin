@@ -2233,7 +2233,7 @@ Class Data_Core extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  private function _get_result( $limit=0, $offset=0 ) {
+  protected function _get_result( $limit=0, $offset=0 ) {
     // First check if there is a cached result
     if ($this->tm_cache_result) {
       $this->_prepare_query($limit,$offset);
