@@ -119,27 +119,16 @@ class order extends CI_Model {
    *
    * @param string $table 
    * @param int $from default=0, eventueel kan alles worden opgeschoven
-   * @param int $old default=FALSE
    * @return int Aantal geresette items
    * @author Jan den Besten
    */
-	public function reset($table,$from=0,$old=FALSE) {
-    if ($old) {
-      if ($this->is_a_tree($table)) {
-        $this->db->order_as_tree();
-        $this->db->select('self_parent');
-      }
-      $this->db->select('order');
-  		$result=$this->db->get_result($table);
+	public function reset($table,$from=0) {
+    $this->data->table($table);
+    if ($this->is_a_tree($table)) {
+      $this->data->order_by('order')->select('self_parent');
     }
-    else {
-      $this->data->table($table);
-      if ($this->is_a_tree($table)) {
-        $this->data->order_by('order')->select('self_parent');
-      }
-      $this->data->select('order');
-  		$result=$this->data->get_result();
-    }
+    $this->data->select('order');
+		$result=$this->data->get_result();
 		$ids=array_keys($result);
 		$this->set_all($table,$ids,$from);
     return count($ids);
