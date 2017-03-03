@@ -4274,7 +4274,7 @@ Class Data_Core extends CI_Model {
     /**
      * Ga door als de set niet leeg is
      */
-    if (!empty($set) or $to_many or $to_one) {
+    if (!empty($set) or isset($to_many) or isset($to_one)) {
       
       /**
        * User fields toevoegen aan set?
