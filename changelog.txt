@@ -1,18 +1,7 @@
-Changes 3.5.0
+Changes 3.4.x
 =============
 
-- UI with Vue & Bootstrap
-- Models: Filemanager, Mediatable removed and replaced with Assets
-- DB: FlexyAdmin db-> extensions depricated, and standard not loaded.
-- Rewrite data->find()
-- data->path() renamed to data->tree()
-- URL: /admin changed to /_admin
-- URL: /file/... changed to /_media/...
-- DB: res_media_files removed and replaced with res_assets
-
-Changes 3.4.0
-=============
-
+- Update to CI 3.1.3
 - Safe folder structure
 - Ready for PHP7
 - Tested with SSL Cerfiticates
