@@ -27,7 +27,7 @@ class Plugin_sitemap extends Plugin {
 
 
 	function _create_sitemap() {
-		$menuTable=get_menu_table();
+		$menuTable='tbl_menu';
     
     if ($menuTable) {
   		// create Sitemap

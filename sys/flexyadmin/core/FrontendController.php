@@ -177,18 +177,10 @@ class FrontEndController extends MY_Controller {
    		 * Set home uri (top from tbl_menu) if content comes from database
    		 */
       if ( $this->config->item('menu_autoset_home')) {
-   			$menuTable = get_menu_table();
-   			if ( ! empty($menuTable)) {
-          $this->data->table( $menuTable );
-   				if ( $this->data->field_exists( 'uri') ) {
-   					$this->data->select('uri');
-   					$top = $this->data->get_row();
-   					$this->uri->set_home( $top['uri'] );
-   				}
-   				else {
-   					$this->uri->set_home('');
-   				}
-   			}
+        $this->data->table( 'tbl_menu' );
+				$this->data->select('uri');
+				$top = $this->data->get_row();
+				$this->uri->set_home( $top['uri'] );
    		}
    		elseif ($this->config->item('menu_homepage_uri')) {
    			$this->uri->set_home($this->config->item('menu_homepage_uri'));
