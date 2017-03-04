@@ -399,6 +399,7 @@ export default {
     },
     
     updateField : function( field, value ) {
+      console.log('updateField',field,value);
       this.validationErrors = {};
       this.row[field] = value;
     },
@@ -406,7 +407,7 @@ export default {
     updateSelect : function( field, selected ) {
       var value = selected;
       if ( !this.isMultiple(field) ) {
-        if (value.length>0) {
+        if (typeof(value)=='Array') {
           value = value[0];
         }
         if (value !== this.row[field]) {
