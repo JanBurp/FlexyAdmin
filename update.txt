@@ -21,6 +21,8 @@ For recent sites the update processes described below should work:
 
 UPDATE 3.5.x
 ============
+- Vervang map sys
+- Run update script: `admin/update/....` (oa SQL update 3.5.0)
 - Rewrite data->find()
 - Links naar file/... werken niet meer, moeten worden aangepast naar: _media/...
 - FlexyAdmin uitbreidingen op ->db-> zijn depricated, en standaard niet meer geladen.
