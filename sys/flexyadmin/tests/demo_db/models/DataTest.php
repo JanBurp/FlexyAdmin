@@ -26,7 +26,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $this->CI->data->list_fields() );
     // ->get()
     $query = $this->CI->data->get();
-    $this->assertEquals( 5, $query->num_rows() );
+    $this->assertEquals( 6, $query->num_rows() );
     $this->assertEquals( 11, $query->num_fields() );
 
     // tbl_links
@@ -94,7 +94,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( "REPLACE( CONCAT_WS(' | ',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`), ' |  | ','' )  AS `abstract`", $abstract_fields_sql );
     // ->select_abstract()
     $query = $this->CI->data->select_abstract()->get();
-    $this->assertEquals( 5, $query->num_rows() );
+    $this->assertEquals( 6, $query->num_rows() );
     $this->assertEquals( 2, $query->num_fields() );
 
     // tbl_links
@@ -148,7 +148,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( 'self_parent', $options['field'] );
     $this->assertArrayNotHasKey( 'multiple', $options );
     $this->assertArrayHasKey( 'data', $options );
-    $this->assertEquals( 6, count($options['data']) );
+    $this->assertEquals( 7, count($options['data']) );
     $current = current($options['data']);
     $this->assertArrayHasKey( 'name', $current);
     $this->assertArrayHasKey( 'value', $current);
@@ -566,7 +566,7 @@ class DataTest extends CITestCase {
 
     $this->CI->data->order_by('uri');
     $first = $this->CI->data->select('id,uri,str_title,str_module')->get_row();
-    $this->assertEquals( 'contact', $first['uri'] );
+    $this->assertEquals( 'blog', $first['uri'] );
 
     $this->CI->data->order_by('uri','DESC');
     $first = $this->CI->data->select('id,uri,str_title,str_module')->get_row();
