@@ -22,6 +22,7 @@ For recent sites the update processes described below should work:
 UPDATE 3.5.x
 ============
 - Vervang map sys
+- Vervang site/Controller.php
 - Run update script: `admin/update/....` (oa SQL update 3.5.0)
 - Rewrite data->find()
 - Links naar file/... werken niet meer, moeten worden aangepast naar: _media/...
