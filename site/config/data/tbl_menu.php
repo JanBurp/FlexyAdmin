@@ -1,11 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-$config['table'] = 'tbl_menu';
+$config['table']      = 'tbl_menu';
+$config['result_key'] = 'full_uri';
 
-$config['field_info']['str_title']['validation']           = 'required';
-// $config['field_info']['str_module']['schema']['form-type'] = 'radio';
-// $config['field_info']['str_module']['options']['multiple'] = true;
-
+$config['field_info']['str_title']['validation'] = 'required';
 
 $config['options'] = array( 
 	'self_parent'  => array( 'special' => 'self_parent' ), 
@@ -34,3 +32,20 @@ $config['form_set'] = array(
     'Extra'    => array('str_module','stx_description','str_keywords'),
   ),
 );
+
+
+/**
+ * Stel hier in of er een samengesteld menu moet komen, er zijn verschillende opties:
+ * - Extra items aan het menu toevoegen
+ * - Extra items vanuit een andere tabel toevoegen
+ * - Splitsen op taal
+ */
+// $config['merged_menu'] = array(
+//
+//   'items' => array()
+//
+//
+//   ),
+//
+//
+// );
