@@ -261,7 +261,7 @@ class Db extends AdminController {
 		$form=new form($this->config->item('API_db').'import');
 		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt,sql)"),
 		 							"sql"				=> array("type"=>"textarea","label"=>"SQL"));
-		if ($this->flexy_auth->has_rights('cfg_configurations')) {
+		if ($this->flexy_auth->has_rights('cfg_version')) {
 			$data['update']=array('label'=>'Update DB from r');
 		}
 		$form->set_data($data,"Choose File to upload and import");
