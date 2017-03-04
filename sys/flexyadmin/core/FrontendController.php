@@ -123,9 +123,9 @@ class FrontEndController extends MY_Controller {
 		/**
 		 * Set global site info from tbl_site (if it doesn't exist, put some standard info)
 		 */
-    if ($this->data->table_exists("tbl_site")) {
+    if ( $this->data->table_exists("tbl_site") ) {
 			$stdFields=array("str_title","str_author","url_url","email_email","stx_description","stx_keywords");
-      $this->site = $this->data->table('tbl_site')->get_row();
+      $this->site = $this->data->table('tbl_site')->cache()->get_row();
 			unset($this->site['id']);
 			// rename standard fields
 			foreach ($stdFields as $f) {
