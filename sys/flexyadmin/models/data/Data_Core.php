@@ -2045,14 +2045,13 @@ Class Data_Core extends CI_Model {
     while ( $row = $query->unbuffered_row('array') ) {
     // foreach ( $query->result_array() as $row) {
 
-      // keys
+      // primary_key
       if ($this->tm_select_include_primary) {
         $id = $row[$this->settings['primary_key']];
       }
       else {
         $id++;
       }
-      $result_key = el($key,$row,$id);
       
       // defaults bij niet bestaande one_to_one
       if ($one_to_one and in_array(NULL,$row)) {
@@ -2068,6 +2067,19 @@ Class Data_Core extends CI_Model {
           }
         }
       }
+      
+      // tree
+      if ($this->tm_tree)  {
+        // Remember current row with necessary fields
+        $tree[$id] = array_keep_keys($row,$needed_tree_fields);
+        // Recursive create current tree field
+        foreach ($this->tm_tree as $field => $tree_info) {
+          $row[$tree_info['tree_field']] = $this->_fill_tree( $tree, $id, $tree_info );
+        }
+      }
+      
+      // result_key
+      $result_key = el($key,$row,$id);
       
       // Voeg relatie data aan row
       if ($this->tm_with) {
@@ -2136,17 +2148,7 @@ Class Data_Core extends CI_Model {
           }
         }
       }
-      
-      // tree
-      if ($this->tm_tree)  {
-        // Remember current row with necessary fields
-        $tree[$id] = array_keep_keys($row,$needed_tree_fields);
-        // Recursive create current tree field
-        foreach ($this->tm_tree as $field => $tree_info) {
-          $row[$tree_info['tree_field']] = $this->_fill_tree( $tree, $id, $tree_info );
-        }
-      }
-      
+            
       // tm_txt_abstract
       if ($this->tm_txt_abstract>0) {
         $txt_row = $row;
