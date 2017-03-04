@@ -15,7 +15,7 @@ class AuthTest extends CITestCase {
         'backup'    => true,
         'tools'     => true,
         'items'     => array(
-          'cfg_configurations'    => 15,
+          'cfg_version'           => 15,
           'cfg_email'             => 15,
           'cfg_sessions'          => 15,
           'cfg_user_groups'       => 15,
@@ -48,7 +48,7 @@ class AuthTest extends CITestCase {
         'backup'    => false,
         'tools'     => false,
         'items'     => array(
-          'cfg_configurations'    => 0,
+          'cfg_version'           => 0,
           'cfg_email'             => 0,
           'cfg_sessions'          => 0,
           'cfg_user_groups'       => 0,
@@ -81,7 +81,7 @@ class AuthTest extends CITestCase {
         'backup'    => true,
         'tools'     => true,
         'items'     => array(
-          'cfg_configurations'    => 0,
+          'cfg_version'           => 0,
           'cfg_email'             => 0,
           'cfg_sessions'          => 0,
           'cfg_user_groups'       => 0,
