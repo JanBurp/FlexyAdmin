@@ -9,7 +9,7 @@
 
 Class Admin_menu extends CI_Model {
   
-  private $hidden_tables = array('tbl_site');
+  private $hidden_tables = array('tbl_site','cfg_sessions');
   private $ui_config     = array();
   private $user          = false;
 
