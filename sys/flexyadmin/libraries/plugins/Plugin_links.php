@@ -54,7 +54,7 @@ class Plugin_links extends Plugin {
 	
 	public function _after_delete() {
 		$linkTable='tbl_links';
-		$menuTable=get_menu_table();
+		$menuTable='tbl_menu';
 		if ($this->table==$linkTable or $this->table==$menuTable) {
 			$this->newData=array();
 			$this->_update_links_in_text();
