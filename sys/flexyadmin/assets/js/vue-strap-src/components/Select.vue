@@ -33,6 +33,7 @@
 import {translations}   from './utils/utils.js'
 import ClickOutside     from '../directives/ClickOutside.js'
 import flexyButton      from '../../components/flexy-button.vue'
+import jdb              from '../../jdb-tools.js'
 
 
 var timeout = {}
@@ -134,7 +135,8 @@ export default {
       if (val !== old) { this.val = val }
     },
     val (val, old) {
-      this.$emit('change', val);
+      // Alleen emit als waarde bestaat en één van options is
+      if (!_.isUndefined(val)) this.$emit('change', val);
     }
   },
   
