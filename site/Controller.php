@@ -191,7 +191,7 @@ class Main extends FrontEndController {
         $newUri=$page['list_redirect'];
       }
       else {
-        $this->data->table( get_menu_table() );
+        $this->data->table('tbl_menu');
   			$this->data->select('uri');
   			$this->data->where('self_parent',$page['id']);
   			if (isset($page['b_visible'])) $this->data->where('b_visible','1');

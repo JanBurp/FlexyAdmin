@@ -126,7 +126,7 @@ class Menu {
 
   var $settings = array(
     'current'         => '',
-    'menu_table'      => '',
+    'menu_table'      => 'tbl_menu',
     'fields'          => array(
       'uri'         => 'uri',
       'url'         => '',
@@ -306,12 +306,11 @@ class Menu {
   /**
    * Stelt menu tabel in
    *
-   * @param string $table[''] Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu of res_menu_result)
+   * @param string $table[''] Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu)
    * @return object this
    * @author Jan den Besten
    */
-	public function set_menu_table($table='') {
-		if (empty($table)) $table=get_menu_table();
+	public function set_menu_table($table='tbl_menu') {
 		$this->settings['menu_table']=$table;
 		return $this;
 	}
@@ -320,40 +319,17 @@ class Menu {
    * Zet menu tabel en laad menu in vanuit die tabel en creert het menu
    *
    * @param string $table default='' Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu of res_menu_result)
-   * @param string $foreign default=false Eventuele foreign data die meegenomen moet worden in resultaat (zie bij db->add_foreign())
    * @return array het menu als de interne menu array
    * @author Jan den Besten
    */
-	public function set_menu_from_table($table="",$foreign=false) {
+	public function set_menu_from_table($table='') {
     if (!empty($table) or empty($this->settings['menu_table'])) $this->set('menu_table',$table);
     $table=$this->settings['menu_table'];
     
     if ($table) {
-      
       $this->CI->data->table( $table );
-      $fields = $this->CI->data->list_fields();
-      
-  		// select fields
-  		foreach ($fields as $key=>$f) {
-  			if (!in_array($f,$this->settings['fields']) and !isset($this->settings['fields']['extra'][$f])) unset($fields[$key]);
-  		}
-  		if (is_array($foreign)) {
-  			foreach ($foreign as $t => $ff) {
-  				$fields[]='id_'.remove_prefix($t);
-  				foreach ($ff as $f) {
-  					$fields[]=$t.'.'.$f;
-  				}
-  			}
-  		}
-      
-  		// get data from table
-      $this->CI->data->select( $fields );
-  		if ($foreign) $this->CI->data->with('many_to_one',$foreign);
-  		if (in_array($this->settings['fields']['parent'],$fields)) {
-        $this->CI->data->tree('full_uri','uri');
-  		}
-      $data=$this->CI->data->get_result();
-  		return $this->set_menu_from_table_data($data,$foreign);
+      $data=$this->CI->data->get_menu_result();
+  		return $this->set_menu_from_table_data($data);
     }
     
     return array();
@@ -373,11 +349,10 @@ class Menu {
 	 * Maakt menu van array uit database resultaat
 	 *
 	 * @param array $items database resultaat
-	 * @param string $foreign default=false TODO
 	 * @return array het menu als de interne menu array
 	 * @author Jan den Besten
 	 */
-	public function set_menu_from_table_data($items="",$foreign=false) {
+	public function set_menu_from_table_data($items="") {
     
 		$counter=1;
 		$menu=array();
@@ -851,39 +826,13 @@ class Menu {
    * Als je het menu aanmaakt vanuit een menu tabel dan kun je dit gebruiken om niet nogmaals de database aan te spreken als je een item uit die menu tabel wilt. Dat kun je dan hiermee doen.
    *
    * @param string $uri[''] Uri van te verkrijgen item, als leeg dan wordt current uri gebruikt
-   * @param string $foreigns default=FALSE Moeten foreign tabels ook meegenomen worden
-   * @param string $many default=FALSE Idem voor Many relaties
    * @return array database item
    * @author Jan den Besten
    */
-	public function get_item($uri='',$foreigns=false,$many=false) {
-		$item=array('uri'=>'');
+	public function get_item($uri='') {
+    $table = el('menu_table',$this->settings,'tbl_menu');
     if (empty($uri)) $uri=$this->settings['current'];
-    
-    $table = el('menu_table',$this->settings );
-    if (empty($table)) $table=get_menu_table();
-    $this->CI->data->table( $table );
-    $this->CI->data->tree('full_uri','uri');
-    // Zoek in simpel uri veld, of naar gehele pad?
-    if (strpos($uri,'/')!==FALSE) {
-      $this->CI->data->where_tree( 'full_uri', $uri );
-    }
-    else {
-      $this->CI->data->where( 'uri', $uri );
-      if ($this->CI->data->field_exists('self_parent')) $this->CI->data->where( 'self_parent', 0 );
-    }
-    // Relaties?
-    if ($foreigns) $this->data->with('many_to_one');
-    if ($many)     $this->data->with('many_to_many');
-    // Resultaat
-    $items=$this->CI->data->get_result();
-    if ($items) {
-      $item=current($items);
-    }
-    else {
-      $item=FALSE;
-    }
-		return $item;
+    return $this->CI->data->table( $table )->get_menu_item($uri);
 	}
 	
   
