@@ -25,7 +25,7 @@ class RSS_feed extends CI_Model {
    * @author Jan den Besten
    */
   public function index() {
-    return $this->data->table( get_menu_table() )
+    return $this->data->table( 'tbl_menu' )
                       ->select('uri,str_title')
                       ->get_result( 10 );
   }
