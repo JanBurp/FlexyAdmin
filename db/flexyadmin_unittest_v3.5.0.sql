@@ -7,7 +7,7 @@
 #
 # Host: localhost (MySQL 5.6.33)
 # Database: flexyadmin_test
-# Generation Time: 2017-02-06 14:33:20 +0000
+# Generation Time: 2017-03-04 01:18:15 +0000
 # ************************************************************
 
 
@@ -18,29 +18,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
-# Dump of table cfg_configurations
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `cfg_configurations`;
-
-CREATE TABLE `cfg_configurations` (
-  `id` int(2) NOT NULL AUTO_INCREMENT,
-  `txt_help` text,
-  `str_revision` varchar(10) NOT NULL DEFAULT '3067',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-LOCK TABLES `cfg_configurations` WRITE;
-/*!40000 ALTER TABLE `cfg_configurations` DISABLE KEYS */;
-
-INSERT INTO `cfg_configurations` (`id`, `txt_help`, `str_revision`)
-VALUES
-	(1,'','3.5.0');
-
-/*!40000 ALTER TABLE `cfg_configurations` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 # Dump of table cfg_email
@@ -161,6 +138,28 @@ VALUES
 	(3,'test','$2y$08$OfDssFUdFL3mqwzlg4mFJeDrmwCRrzc.9sEQj0uVbM7MRxTpX/pZC','test@flexyadmin.com','',NULL,NULL,NULL,0,NULL,0,1485895335,1,'nl','small');
 
 /*!40000 ALTER TABLE `cfg_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table cfg_version
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `cfg_version`;
+
+CREATE TABLE `cfg_version` (
+  `id` int(2) NOT NULL AUTO_INCREMENT,
+  `str_version` varchar(10) NOT NULL DEFAULT '3.5.0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `cfg_version` WRITE;
+/*!40000 ALTER TABLE `cfg_version` DISABLE KEYS */;
+
+INSERT INTO `cfg_version` (`id`, `str_version`)
+VALUES
+	(1,'3.5.0');
+
+/*!40000 ALTER TABLE `cfg_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 

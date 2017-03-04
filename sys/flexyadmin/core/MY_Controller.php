@@ -124,7 +124,7 @@ class MY_Controller extends CI_Controller {
 	}
 
 	private function _check_if_flexy_database_exists() {
-		return ($this->data->table_exists('cfg_configurations') and $this->data->table_exists('cfg_sessions'));
+		return ($this->data->table_exists('cfg_version') and $this->data->table_exists('cfg_sessions'));
 	}
 
 	private function _init_flexy_admin($isAdmin=false) {
