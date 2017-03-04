@@ -2390,8 +2390,9 @@ Class Data_Core extends CI_Model {
    * @return this
    * @author Jan den Besten
    */
-  private function _cache_result($result) {
-    $this->cache->save( $this->tm_cache_name, $result, TIME_YEAR );
+  protected function _cache_result($result,$name='') {
+    if (empty($name)) $name = $this->tm_cache_name;
+    $this->cache->save( $name, $result, TIME_YEAR );
     return $this;
   }
   
@@ -2401,8 +2402,9 @@ Class Data_Core extends CI_Model {
    * @return mixed
    * @author Jan den Besten
    */
-  private function _get_cached_result() {
-    $cached = $this->cache->get( $this->tm_cache_name );
+  protected function _get_cached_result($name='') {
+    if (empty($name)) $name = $this->tm_cache_name;
+    $cached = $this->cache->get( $name );
     if ($cached) $this->query_info['from_cache'] = TRUE;
     return $cached;
   }
