@@ -43,12 +43,7 @@ class Plugin_uri extends Plugin {
         $this->add_message("All uri's in <b>$this->table</b> are (re)set.</p><p>Just change one in this table to make sure all other plugins did there work.");
 			}
 		}
-		else {
-      $this->CI->load->library('documentation');
-      $help=$this->CI->documentation->get( $this->CI->config->item('SYS').'/flexyadmin/libraries/plugins/Plugin_uri.php');
-			$this->add_message( $help['html_long'] );
-    }
-    return $this->view('admin/plugins/plugin');
+    return $this->show_messages();
 	}
   
   
