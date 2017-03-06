@@ -600,10 +600,11 @@ class Flexy_auth extends Ion_auth {
    *
    * @param mixed $user user array of id
    * @param array $data[null] 
+   * @param array $template ['login_new_account'] 
    * @return bool
    * @author Jan den Besten
    */
-  public function send_new_account( $user, $data=array() ) {
+  public function send_new_account( $user, $data=array(), $template='login_new_account' ) {
     return $this->send_new_password($user,$data,'login_new_account');
   }
 
