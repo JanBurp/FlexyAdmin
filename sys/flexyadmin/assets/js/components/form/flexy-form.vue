@@ -89,10 +89,10 @@ export default {
             }
             // Data en die aanvullen met data
             self.row = response.data.data;
-            // TinyMCE
-            self.createWysiwyg();
           }
         }
+        // TinyMCE
+        self.createWysiwyg();
         return response;
       });
     },
@@ -106,9 +106,11 @@ export default {
         }
       });
       // Wait just a bit...
-      window.setTimeout(function(){
+      var timer = window.setInterval(function(){
         tinymce.init(init);
-      }, 100 );
+        var exists = document.querySelector('.mce-tinymce');
+        if (!_.isUndefined(exists)) clearInterval(timer);
+      }, 10 );
     },
     
     apiUrl : function(parts) {
@@ -399,7 +401,7 @@ export default {
     },
     
     updateField : function( field, value ) {
-      console.log('updateField',field,value);
+      // console.log('updateField',field,value);
       this.validationErrors = {};
       this.row[field] = value;
     },
@@ -439,7 +441,7 @@ export default {
     },
     
     addToSelect : function( field, value ) {
-      console.log('addToSelect',field,value);
+      // console.log('addToSelect',field,value);
       if ( this.isMultiple(field) ) {
         var currentSelection = this.row[field];
         // Als al bestaat, dan juist verwijderen
