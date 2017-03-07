@@ -7,7 +7,7 @@
  * @copyright: (c) Jan den Besten
  */
 
-Class Res_assets extends Data_Core {
+Class Core_res_assets extends Data_Core {
   
   // Some methods use the global set path
   private $media_path = '';

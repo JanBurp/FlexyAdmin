@@ -29,7 +29,7 @@ class MY_Controller extends CI_Controller {
     $this->load->helper('language');
     
     /**
-     * Load Data Model
+     * Load Data Model & Core tables
      */
     $this->load->model( 'data/Data_Core','data_core' );
     $this->load->model( 'data/Data','data' );
