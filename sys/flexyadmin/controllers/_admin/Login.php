@@ -55,7 +55,7 @@ class Login extends MY_Controller {
       $message = $this->flexy_auth->errors();
 			$this->session->set_userdata('message', $message);
 		}
-		redirect( $this->config->item('API_home') );
+		redirect( $this->config->item('API_home'),'refresh' );
 	}
   
   
@@ -69,7 +69,7 @@ class Login extends MY_Controller {
       }
 		}
 		$this->session->set_userdata('message', $message);
-		redirect( $this->config->item('API_home') );
+		redirect( $this->config->item('API_home'),'refresh' );
 	}
   
   
@@ -82,7 +82,7 @@ class Login extends MY_Controller {
       }
 		}
 		$this->session->set_userdata('message', $message);
-		redirect( $this->config->item('API_home') );
+		redirect( $this->config->item('API_home'),'refresh' );
 	}
   
   

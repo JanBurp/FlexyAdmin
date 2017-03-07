@@ -38,11 +38,11 @@ class AdminController extends BasicController {
     // $this->load->library("menu");
 
 		if ( ! $this->flexy_auth->logged_in() ) {
-			redirect($this->config->item('API_login'));
+      redirect($this->config->item('API_login'),'refresh');
 		}
 		if ( ! $this->flexy_auth->allowed_to_use_cms() ) {
 			$this->flexy_auth->logout();
-			redirect(site_url());
+			redirect(site_url(),'refresh');
 		}
     
     // Uri voor current menu item
