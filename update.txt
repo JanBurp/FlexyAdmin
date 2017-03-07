@@ -25,6 +25,7 @@ UPDATE 3.5.x
 - Vervang site/Controller.php
 - Run update script: `admin/update/....` (oa SQL update 3.5.0)
 - Rewrite data->find()
+- Als je plugin_automenu met res_menu_result gebruikte zul je dat op een andere manier moeten doen. Dat kan met site/config/menu.php
 - Links naar file/... werken niet meer, moeten worden aangepast naar: _media/...
 - FlexyAdmin uitbreidingen op ->db-> zijn depricated, en standaard niet meer geladen.
   - Zet je code om naar ->data->
