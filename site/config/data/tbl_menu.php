@@ -32,20 +32,3 @@ $config['form_set'] = array(
     'Extra'    => array('str_module','stx_description','str_keywords'),
   ),
 );
-
-
-/**
- * Stel hier in of er een samengesteld menu moet komen, er zijn verschillende opties:
- * - Extra items aan het menu toevoegen
- * - Extra items vanuit een andere tabel toevoegen
- * - Splitsen op taal
- */
-// $config['merged_menu'] = array(
-//
-//   'items' => array()
-//
-//
-//   ),
-//
-//
-// );

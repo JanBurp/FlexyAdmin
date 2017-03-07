@@ -309,7 +309,6 @@ Class Data_Core extends CI_Model {
       }
       if ($this->settings_caching) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
-    // if ($table==='tbl_themas')  trace_($this->settings);
     return $this->settings;
   }
   
@@ -1505,9 +1504,10 @@ Class Data_Core extends CI_Model {
           }
           // Anders geef gewoon de opties terug
           else {
+            $current_table = $this->settings['table'];
             $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(0,0, $where_primary_key );
             // $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
-            $this->data->table($this->settings['table']); // Terug naar huidige data table.
+            $this->data->table($current_table); // Terug naar huidige data table.
           }
           // Rechten om nieuwe aan te maken?
           if ($this->flexy_auth->has_rights($other_table)) {
@@ -1536,10 +1536,12 @@ Class Data_Core extends CI_Model {
         
         // model (external)
         if ( isset($field_options['model']) ) {
+          $current_table = $this->settings['table'];
           $model = 'Options_'.ucfirst($field_options['model']);
           $this->load->model( 'data/'.$model );
           $field_options['table'] = $this->settings['table'];
           $field_options['data'] = $this->$model->get_options( $field_options );
+          $this->data->table($current_table);
         }
       }
       $options[$field] = $field_options;
