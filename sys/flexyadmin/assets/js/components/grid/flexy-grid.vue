@@ -310,7 +310,7 @@ export default {
     },
     
     hasData : function() {
-      return this.items.length>0;
+      return (this.items.length>0 || this.gridType()==='media');
     },
     
     /*
