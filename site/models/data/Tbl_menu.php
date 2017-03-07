@@ -27,8 +27,10 @@ Class tbl_menu extends Data_Core {
     $menu_result = $this->_get_cached_result( $cache_name );
     if (!$menu_result) {
       $this->tree('full_uri','uri');
-      $menu_result = $this->get_result();
+      $result_key = $this->settings['result_key'];
+      $menu_result = $this->set_result_key('full_uri')->get_result();
       $this->_cache_result($menu_result,$cache_name);
+      $this->set_result_key($result_key);
     }
     return $menu_result;
   }
