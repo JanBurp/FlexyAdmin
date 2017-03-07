@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Wrapper around data/Res_assets (Data)
+ * Wrapper around data/Core_res_assets
  * 
  * Kijk voor help bij /data/Res_assets
  * 
@@ -14,11 +14,13 @@ Class Assets extends CI_Model {
   private $table = 'res_assets';
   
   public function __construct() {
-    $this->load->model('data/data');
+    $this->load->model('data/Data');
+    $this->load->model('data/Data_core');
+    $this->load->model('data/Core_res_assets');
   }
   
   /**
-   * All Res_assets methods
+   * All Core_res_assets methods
    *
    * @return mixed
    * @author Jan den Besten
