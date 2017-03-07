@@ -10,6 +10,8 @@ Changes 3.5.0
 - URL: /file/... changed to /_media/...
 - DB: res_media_files removed and replaced with res_assets
 - DB: removed almast all cfg_ tables
+- DB: removed res_menu_result
+- Removed plugin_auto_menu (total rewrite, see site/config/menu.php for new options)
 
 Changes 3.4.x
 =============
