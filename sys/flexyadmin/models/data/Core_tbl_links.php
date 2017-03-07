@@ -7,7 +7,7 @@
  * @copyright: (c) Jan den Besten
  */
 
-Class Tbl_links extends Data_Core {
+Class Core_tbl_links extends Data_Core {
   
   private $checked_links = array();
 

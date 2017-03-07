@@ -13,6 +13,7 @@ class Plugin_uri extends Plugin {
 
   public function __construct() {
     parent::__construct();
+    $this->CI->load->model('create_uri');
   }
 
 	public function _admin_api($args=NULL) {
