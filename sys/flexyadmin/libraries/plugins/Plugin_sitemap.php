@@ -20,69 +20,61 @@ class Plugin_sitemap extends Plugin {
 	}
 	
 	function _admin_api($args=NULL) {
-		$this->add_content('<h1>Sitemap</h1>');
 		$this->_create_sitemap();
-    return $this->content;
+    return $this->show_messages();
 	}
 
 
 	function _create_sitemap() {
-		$menuTable='tbl_menu';
+		// create Sitemap
+    $this->CI->data->table('tbl_site');
+		$url = trim($this->CI->data->get_field('url_url'),'/');
     
-    if ($menuTable) {
-  		// create Sitemap
-      $this->CI->data->table('tbl_site');
-  		$url = trim($this->CI->data->get_field('url_url'),'/');
-      
-      $this->CI->data->table($menuTable);
-  		if ($this->CI->data->field_exists('self_parent')) $this->CI->data->tree('uri');
-      if ($this->CI->data->field_exists('b_restricted')) $this->CI->data->where('b_restricted',false);
-      if ($this->CI->data->field_exists('b_visible')) $this->CI->data->where('b_visible',true);
-  		$menu = $this->CI->data->get_result();
+    $this->CI->data->table('tbl_menu');
+		$menu = $this->CI->data->get_menu_result();
 
-  		$urlset=array();
-  		$pageCount=count($menu);
-      $maxlines=5000-($pageCount*10);
-      if ($maxlines<=3) $maxlines=3;
-      $first=true;
-  		foreach ($menu as $id => $item) {
-  			$set=array();
-        // loc
-  			$set['loc']=$url.'/'.htmlentities($item['uri']);
-        // priority
-        $level=substr_count($item['uri'],'/');
-        $priority=(.8-$level*0.16);
-        if ($priority<.16) $priority=.16;
-        if ($first) $priority=1;
-        $set['priority']=str_replace(',','.',sprintf('%1.2f',$priority));
-        $first=false;
-        // title & content
-        if (isset($item['str_title'])) $set['title']=$item['str_title'];
-  			if (isset($item['txt_text'])) {
-          $set['content']=preg_replace('/\s\s+/si',' ',htmlentities(replace_linefeeds(strip_nonascii(strip_tags(str_replace(array('<br />','&nbsp;'),' ',$item['txt_text'])))),ENT_QUOTES));
-    			// prevent very big sitemap.xml
-          if ($maxlines==0)
-            unset($set['content']);
-          else
-    			  $set['content']=max_length($set['content'],$maxlines);
-  			}
-  			$urlset[]=$set;
-  		}
-  		$sitemap['urlset']=$urlset;
-		
-  		// create XML and save it
-  		$XML=array2XML($sitemap,array('urlset','url'),array('urlset'=>array('xmlns'=>"http://www.sitemaps.org/schemas/sitemap/0.9", 'xmlns:xsi'=>"http://www.w3.org/2001/XMLSchema-instance", 'xsi:schemaLocation'=>"http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" )));
-  		$err=write_file('sitemap.xml', $XML);
-		
-  		if ($err) {
-  			$this->add_content('<p>sitemap.xml created</p>');
-  			$this->_create_robots();
-  		}
-  		else {
-  			$this->add_content('<p>Could not create sitemap.xml, probably problem with rights: '.$err.'</p>');
-      }
+		$urlset     = array();
+		$pageCount  = count($menu);
+    $maxlines = 5000-($pageCount*10);
+    if ($maxlines<=3) $maxlines=3;
+    $first = true;
+		foreach ($menu as $id => $item) {
+			$set = array();
+      // loc
+      $uri = el('full_uri',$item,el('uri',$item));
+			$set['loc'] = $url.'/'.htmlentities($uri);
+      // priority
+      $level    = substr_count($uri,'/'); 
+      $priority = (.8-$level*0.16);
+      if ($priority<.16) $priority=.16;
+      if ($first) $priority=1;
+      $set['priority'] = str_replace(',','.',sprintf('%1.2f',$priority));
+      $first           = false;
+      // title & content
+      if (isset($item['str_title'])) $set['title'] = $item['str_title'];
+			if (isset($item['txt_text'])) {
+        $set['content'] = preg_replace('/\s\s+/si',' ',htmlentities(replace_linefeeds(strip_nonascii(strip_tags(str_replace(array('<br />','&nbsp;'),' ',$item['txt_text'])))),ENT_QUOTES));
+  			// prevent very big sitemap.xml
+        if ($maxlines==0)
+          unset($set['content']);
+        else
+  			  $set['content']=max_length($set['content'],$maxlines);
+			}
+			$urlset[] = $set;
+		}
+		$sitemap['urlset'] = $urlset;
+	
+		// create XML and save it
+		$XML=array2XML($sitemap,array('urlset','url'),array('urlset'=>array('xmlns'=>"http://www.sitemaps.org/schemas/sitemap/0.9", 'xmlns:xsi'=>"http://www.w3.org/2001/XMLSchema-instance", 'xsi:schemaLocation'=>"http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" )));
+		$err=write_file('sitemap.xml', $XML);
+	
+		if ($err) {
+			$this->add_message('<p>sitemap.xml created</p>');
+			$this->_create_robots();
+		}
+		else {
+			$this->add_message('<p>Could not create sitemap.xml, probably problem with rights: '.$err.'</p>');
     }
-
 	}
 	
 	function _create_robots() {
@@ -100,9 +92,9 @@ class Plugin_sitemap extends Plugin {
 		// write file
 		$err=write_file('robots.txt', $robots);
 		if ($err)
-			$this->add_content('<p>robots.txt created</p>');
+			$this->add_message('<p>robots.txt created</p>');
 		else
-			$this->add_content('<p>could not create robots.txt: '.$err.'</p>');
+			$this->add_message('<p>could not create robots.txt: '.$err.'</p>');
 	}
 	
 }

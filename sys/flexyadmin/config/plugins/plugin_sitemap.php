@@ -10,7 +10,7 @@
 */
 
 $config['admin_api_method'] = '_admin_api';
-$config['logout_method'] = '_admin_logout';
+$config['logout_method']    = '_admin_logout';
 
 
 
