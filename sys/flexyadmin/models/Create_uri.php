@@ -103,6 +103,7 @@ class Create_uri extends CI_Model {
     $this->table_data=$data;
     $this->fields = array_keys($data);
     if (empty($this->source_field)) $this->set_source_field( $this->_find_source_field($data) );
+    if (empty($this->source_field)) return FALSE;
  		$replaceSpace = $this->config->item('PLUGIN_URI_REPLACE_CHAR');
     
     // Need to create an uri?
@@ -175,17 +176,19 @@ class Create_uri extends CI_Model {
 			$field=next($fields);
 			$loop=(empty($uriField) and $field!==FALSE);
 		}
- 		/**
- 		 * If still nothing set... just get the first field (after id,order and uri)
- 		 */
- 		if (empty($uriField)) {
- 			unset($fields["id"]);
- 			unset($fields["uri"]);
- 			unset($fields["order"]);
- 			unset($fields["self_parent"]);
- 			reset($fields);
- 			$uriField=current($fields);
- 		}
+     // /**
+     //  * If still nothing set... just get the first field (after id,order and uri)
+     //  */
+     // if (empty($uriField)) {
+     //   unset($fields["id"]);
+     //   unset($fields["uri"]);
+     //   unset($fields["order"]);
+     //   unset($fields["self_parent"]);
+     //   unset($fields["b_visible"]);
+     //   reset($fields);
+     //   $uriField=current($fields);
+     // }
+     // trace_($uriField);
  		return $uriField;
  	}
 	
