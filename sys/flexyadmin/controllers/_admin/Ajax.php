@@ -37,10 +37,8 @@ class Ajax extends AjaxController {
 			if ($this->flexy_auth->has_rights($table)>=RIGHTS_EDIT) {
 				if ($ids) {
 					$this->load->model("order");
-					$this->load->model('queu');
 					$this->order->set_all($table,$ids);
           $this->_after_update($table);
-					$this->queu->run_calls();
 					delete_all_cache();
 				}
 				else {
@@ -98,8 +96,6 @@ class Ajax extends AjaxController {
         
  				if ($this->flexy_auth->has_rights($table,$id)>=RIGHTS_EDIT) {
 
-					if ($plugins) $this->load->model('queu');
-
           // Get olddata
           $oldData = $this->data->table($table)->where( PRIMARY_KEY, $id )->get_row();
 					$newData=$oldData;
@@ -120,7 +116,6 @@ class Ajax extends AjaxController {
               $validation_errors = $this->data->get_query_info('validation_errors');
             }
             
-  					if ($plugins) $this->queu->run_calls();
   					delete_all_cache();
           }
 				}

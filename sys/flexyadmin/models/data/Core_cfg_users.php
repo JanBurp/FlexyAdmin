@@ -7,7 +7,7 @@
  * @copyright: (c) Jan den Besten
  */
 
-Class cfg_users extends Data_Core {
+Class Core_cfg_users extends Data_Core {
 
   private $allowed_to_edit_users;
   private $groups;

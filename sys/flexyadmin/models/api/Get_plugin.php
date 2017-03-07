@@ -18,7 +18,6 @@ class get_plugin extends Api_Model {
 	public function __construct($name='') {
 		parent::__construct();
     $this->load->model('plugin_handler');
-    $this->load->model('queu');
     $this->plugin_handler->init_plugins();
     return $this;
 	}

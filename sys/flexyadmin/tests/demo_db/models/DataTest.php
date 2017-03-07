@@ -69,6 +69,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( 'media', $grid_set['field_info']['medias_fotos']['form-type'] );
     $this->assertEquals( 'pictures', $grid_set['field_info']['medias_fotos']['path'] );
     
+    
     // formset
     $form_set = $this->CI->data->get_setting('form_set');
     $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $form_set['fields'] );
@@ -449,7 +450,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row?
     $row=current($result);
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id','action_user_invite', 'str_username', 'email_email', 'cfg_user_groups', 'str_language', 'b_active' ), $keys );
+    $this->assertEquals( array( 'id','action_user_invite','str_username', 'email_email', 'cfg_user_groups', 'str_language', 'b_active' ), $keys );
 
     // Users resultaat zoals in admin
     $result = $this->CI->data->table( 'cfg_users' )->get_form();
@@ -458,7 +459,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( 6, $this->CI->data->num_fields() );
     // kloppen keys in row?
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id','action_user_invite', 'str_username', 'email_email', 'cfg_user_groups', 'str_language', 'b_active' ), $keys );
+    $this->assertEquals( array( 'id','action_user_invite','str_username', 'email_email', 'cfg_user_groups', 'str_language', 'b_active' ), $keys );
   }
 
  
