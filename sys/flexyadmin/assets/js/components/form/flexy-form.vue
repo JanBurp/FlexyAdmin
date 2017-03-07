@@ -167,17 +167,18 @@ export default {
     selectItem : function (value) {
       if (!value) return '';
       value = value.toString();
-      return value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');
+      value = value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');
+      return value;
     },
     
     selectValue: function(field) {
-      if ( !this.isMultiple(field) ) {
-        return this.row[field];
-      }
-      var value = [];
-      var row = this.row[field];
-      for (var i = 0; i < row.length; i++) {
-        value.push( row[i].id );
+      var value = this.row[field];
+      if ( this.isMultiple(field) ) {
+        value = [];
+        var row = this.row[field];
+        for (var i = 0; i < row.length; i++) {
+          value.push( row[i].id );
+        }
       }
       return value;
     },
