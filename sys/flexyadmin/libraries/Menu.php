@@ -247,9 +247,9 @@ class Menu {
       return $this->$method($value);
     }
     if (is_array($value))
-      $this->settings[$name]=array_merge($this->settings[$name],$value);
+      $this->settings[$name] = array_merge( el($name,$this->settings,array()), $value);
     else
-      $this->settings[$name]=$value;
+      $this->settings[$name] = $value;
     return $this;
   }
 
@@ -353,35 +353,43 @@ class Menu {
 	 * @author Jan den Besten
 	 */
 	public function set_menu_from_table_data($items="") {
-    
 		$counter=1;
 		$menu=array();
 		
-		$boolFields=$this->settings['fields'];
-		$boolFields=filter_by_key($boolFields,'b_');
+		$boolFields = $this->settings['fields'];
+		$boolFields = filter_by_key($boolFields,'b_');
 
 		foreach($items as $item) {
 			if (!isset($item[$this->settings['fields']["visible"]]) or ($item[$this->settings['fields']["visible"]]) ) {
-				$thisItem=array();
-				$thisItem["id"]=$item[PRIMARY_KEY];
-				$uri=$item[$this->settings['fields']["uri"]];
-				$thisItem["uri"]=$uri;
-				if (isset($item['full_uri']))	$thisItem["full_uri"]=$item['full_uri'];
-				
+				$thisItem                                           = array();
+
+        // id & uri
+				$thisItem["id"]           = el(PRIMARY_KEY,$item);
+				$uri                      = $item[$this->settings['fields']["uri"]];
+				$thisItem["uri"]          = $uri;
+        $thisItem["full_uri"]     = isset($item["full_uri"])?$item["full_uri"]:$uri;
+
+        // name
 				if (empty($thisItem['name'])) {
 					if (isset($item[$this->settings['fields']["title"]])) {
-					  $thisItem['name']=$item[$this->settings['fields']["title"]];
+					  $thisItem['name'] = $item[$this->settings['fields']["title"]];
 					}
 					else {
-					  $thisItem['name']=$uri;
+					  $thisItem['name'] = $uri;
 					}
 				}
+
+        // class
         $thisItem['class']='';
 				if (isset($item[$this->settings['fields']["class"]])) 	    $thisItem["class"]=str_replace(array('|',',','.','/'),array(' ',' ','_','_'),$item[$this->settings['fields']["class"]]);
 				if (isset($item[$this->settings['fields']["bool_class"]]) and ($item[$this->settings['fields']["bool_class"]]))	$thisItem["class"].=' '.$this->settings['fields']["bool_class"];
-				if (isset($item[$this->settings['fields']["parent"]])) 	    $parent=$item[$this->settings['fields']["parent"]]; else $parent="";
 				if (isset($item[$this->settings['fields']["clickable"]]) && !$item[$this->settings['fields']["clickable"]]) $thisItem["uri"]='';
         
+        // parent
+        $parent = remove_suffix($thisItem['full_uri'],'/');
+        if ($parent==$thisItem['full_uri']) $parent = '';
+        // if (isset($item[$this->settings['fields']["parent"]]))       $parent=$item[$this->settings['fields']["parent"]]; else $parent="";
+
 				// classbooleans
 				if (!empty($boolFields)) {
 					foreach ($boolFields as $boolField) {
@@ -396,24 +404,25 @@ class Menu {
 						}
 					}
 				}
+        
 				$menu[$parent][$uri]=$thisItem;
 			}
 		}
-		
+    
 		// Set submenus on right place in array
-		$item=end($menu);
+		$item = end($menu);
 		while ($item) {
-			$id=key($menu);
+			$full_uri = key($menu);
 			foreach($item as $name=>$value) {
-				$sub_id=$value["id"];
-				if (isset($menu[$sub_id])) {
-					$menu[$id][$name]["sub"]=$menu[$sub_id];
-					unset($menu[$sub_id]);
+				$sub_uri = $value["full_uri"];
+				if (isset($menu[$sub_uri])) {
+					$menu[$full_uri][$name]["sub"] = $menu[$sub_uri];
+					unset($menu[$sub_uri]);
 				}
 			}
 			$item=prev($menu);
 		}
-		
+    
 		// set first
 		reset($menu);
 		$menu=current($menu);
@@ -726,7 +735,7 @@ class Menu {
 		if (!isset($menu)) $menu=$this->menu;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
-
+    
     $styles=$this->styles[$this->settings['framework']];
     
     $html='';

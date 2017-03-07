@@ -45,16 +45,39 @@ Class Data extends CI_Model {
       return $this;
     }
     $this->table = $table;
-    // Load model; test if table has own data model
+    
+    // Als model nog niet is geladen, dan gaan we dat nu doen
     if (!isset($this->models[$table])) {
-      if ( !empty($table) and (file_exists(APPPATH.'models/data/'. ucfirst($table) .'.php') or file_exists(SITEPATH.'models/data/'. ucfirst($table) .'.php')) ) {
-        $this->load->model('data/'.$table);
-        $this->models[$table] = $this->$table;
+      
+      // Controleer eerst of eigen model bestaat
+      $model_name   = ucfirst($table);
+      $model_exists = file_exists(SITEPATH.'models/data/'.$model_name.'.php');
+      
+      // Eerst eventueel Core_model laden, als eigen model niet bestaat, neemt die de naam over.
+      $core_model = 'Core_'.strtolower($table);
+      if ( file_exists(APPPATH.'models/data/'.$core_model.'.php') ) {
+        if ($model_exists) {
+          $this->load->model('data/'.$core_model);
+        }
+        else {
+          $this->load->model('data/'.$core_model, $model_name);
+          $this->models[$table] = $this->$model_name;
+        }
       }
-      else {
+      
+      // Dan eventueel eigen model
+      if ( $model_exists ) {
+        $this->load->model('data/'.$model_name);
+        $this->models[$table] = $this->$model_name;
+      }
+      
+      // Als nog steeds niet bestaat, dan gewoon als data_model
+      if (!isset($this->models[$table])) {
         $this->models[$table] = new Data_core; // Elk model een eigen object, zodat maar één keer de settings ingesteld worden per aanroep.
       }
+      
     }
+    
     // Set table
     call_user_func_array( array($this->models[$table],'table'), array($table) );
     return $this;

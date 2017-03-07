@@ -56,7 +56,6 @@ class Plugin_controller extends AdminController {
    * @author Jan den Besten
    */
 	public function call() {
-    $this->load->model('queu');
 
 		$args=func_get_args();
 		$ajax=false;
