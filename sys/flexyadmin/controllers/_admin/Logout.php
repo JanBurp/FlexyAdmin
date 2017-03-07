@@ -20,9 +20,9 @@ class Logout extends AdminController {
 		if (!$logoutMessages) {
 			$this->flexy_auth->logout();
 			if ($this->config->item('logout_to_site'))
-				redirect('');
+				redirect('','refresh');
 			else
-				redirect($this->homePage);
+				redirect($this->homePage,'refresh');
 		}
 		else {
 			$this->_add_content(h('Logout',1));
