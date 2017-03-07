@@ -33,7 +33,7 @@ class Plugin_uri extends Plugin {
           // if (!isset($field)) $field=$this->_get_uri_field();
 					$uri=$data['uri'];
 					$newUri=$this->CI->create_uri->create($data,el(1,$args,false)); // reset
-					if ($uri!=$newUri) {
+					if ($uri!==$newUri) {
             $this->CI->data->table($this->table);
 						$this->CI->data->set('uri',$newUri);
 						$this->CI->data->where('id',$id);
@@ -54,8 +54,7 @@ class Plugin_uri extends Plugin {
     $prefix_callback = el(array('prefix_callback',$this->table),$this->config,false);
     if ($prefix_callback) $this->CI->create_uri->set_prefix_callback($prefix_callback);
 		$uri = $this->CI->create_uri->create( $this->newData );
-    // trace_(['plugin_uri',$this->table,$this->newData,$uri]);
-		$this->newData['uri']=$uri;
+    if ($uri) $this->newData['uri']=$uri;
 		return $this->newData;
 	}
   
