@@ -127,8 +127,9 @@ Class cfg_users extends Data_Core {
   
   
   /**
-   * Zorg ervoor dat alleen users teruggegeven kunnen worden die dezelfde rechten hebben of meer.
-   * En dat alleen administrators de user_group kunnen inzien.
+   * Zorg ervoor:
+   * - Dat alleen users teruggegeven kunnen worden die dezelfde rechten hebben of meer.
+   * - Dat alleen administrators de user_group kunnen inzien.
    *
    * @param string $limit[0] 
    * @param string $offset[0] 
@@ -236,6 +237,26 @@ Class cfg_users extends Data_Core {
       'grid-type' => 'action',
     );
     return $grid_set;
+  }
+
+
+  /**
+   * Zorgt ervoor cfg_user_groups één waarde is (behalve als $config['multiple_groups'] = TRUE)
+   *
+   * @param mixed $where 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_form( $where = '' ) {
+    $row = parent::get_form($where);
+    if ( !el('multiple_groups',$this->settings,FALSE) ) {
+      if (isset($row['cfg_user_groups']) and count($row['cfg_user_groups'])<=1) {
+        $group = current($row['cfg_user_groups']);
+        $group = $group['id'];
+        $row['cfg_user_groups'] = $group;
+      }
+    }
+    return $row;
   }
   
   
