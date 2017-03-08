@@ -90,9 +90,15 @@ Class Core_tbl_menu extends Data_Core {
     // Voeg menu samen
     foreach ($this->_menu_config as $menu_item) {
       switch ($menu_item['type']) {
+
         case 'item':
           $this->_add_menu_item($menu_item);
           break;
+
+        case 'items':
+          $this->_add_menu_items($menu_item);
+          break;
+
         case 'table':
           $this->_add_menu_table($menu_item);
           break;
@@ -105,6 +111,7 @@ Class Core_tbl_menu extends Data_Core {
       $this->_menu[$key]['order'] = $order++;
     }
     
+    // trace_($this->_menu);
     return $this->_menu;
   }
   
@@ -159,8 +166,8 @@ Class Core_tbl_menu extends Data_Core {
    * @return void
    * @author Jan den Besten
    */
-  private function _add_menu_item($item) {
-    $place = $this->_determine_menu_item_place($item);
+  private function _add_menu_item($item,$place=FALSE) {
+    if (!$place) $place = $this->_determine_menu_item_place($item);
 
     if ($place['pre_uri']) {
       $item['full_uri'] = $place['pre_uri'].'/'.$item['uri'];
@@ -175,6 +182,22 @@ Class Core_tbl_menu extends Data_Core {
     else
       $this->_menu = $menu_item;
   }
+  
+  
+  /**
+   * Voeg meerdere items toe aan menu
+   *
+   * @param array $item 
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _add_menu_items($item) {
+    $place = $this->_determine_menu_item_place($item);
+    foreach ($item['items'] as $sub_item) {
+      $this->_add_menu_item($sub_item,$place);
+    }
+  }
+
   
   /**
    * Voeg hele tabel toe aan het menu
