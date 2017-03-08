@@ -274,12 +274,17 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   public function get_user( $user_id=NULL, $field='' ) {
-    if (is_null($user_id) and is_array($this->current_user))
+    $user = FALSE;
+    if (is_null($user_id) and is_array($this->current_user)) {
       $user = $this->current_user;
-    else
+    }
+    else {
       $user = $this->user( $user_id )->row_array();
+      if ($user) {
+        $user = $this->_create_nice_user($user);
+      }
+    }
     if ($user) {
-      $user = $this->_create_nice_user($user);
       if (!empty($field)) return el($field,$user);
       return $user;
     }

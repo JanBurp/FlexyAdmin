@@ -26,7 +26,7 @@
    * @deprecated
    */
 	public function by_module($module) {
-		$this->db->where('str_module',$module);
+    if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) $this->db->where('str_module',$module);
 		return $this->_get_form();
 	}
 
@@ -38,7 +38,7 @@
    * @author Jan den Besten
    */
 	public function by_name($title) {
-		$this->db->where('LOWER(`str_name`) = LOWER("'.$title.'")');
+    if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) $this->db->where('LOWER(`str_name`) = LOWER("'.$title.'")');
 		return $this->_get_form();
 	}
 
@@ -51,7 +51,7 @@
    * @author Jan den Besten
    */
 	public function by_title($title) {
-		$this->db->where('LOWER(`str_title_'.$this->site['language'].'`) = LOWER("'.$title.'")');
+    if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) $this->db->where('LOWER(`str_title_'.$this->site['language'].'`) = LOWER("'.$title.'")');
 		return $this->_get_form();
 	}
 
@@ -63,7 +63,7 @@
    * @author Jan den Besten
    */
 	public function by_id($id) {
-		$this->db->where('id',$id);
+    if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) $this->db->where('id',$id);
 		return $this->_get_form();
 	}
 	
