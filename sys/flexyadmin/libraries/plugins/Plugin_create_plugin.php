@@ -94,7 +94,7 @@ class Plugin_create_plugin extends Plugin {
       $addon=str_replace('.php','',$addon);
       $redirect=site_url($this->wizard->get_next_step_uri($addon));
       // trace_($redirect);
-      redirect($redirect);
+      redirect($redirect,'refresh');
     }
     else {
       $out.=$form->render();
@@ -194,7 +194,7 @@ class Plugin_create_plugin extends Plugin {
       $this->CI->session->set_userdata('zipname',$data['zipname']);
       $redirect=site_url($this->wizard->get_next_step_uri($addon));
       // trace_($redirect);
-      redirect($redirect);
+      redirect($redirect,'refresh');
     }
     else {
       $out.=$form->render();
