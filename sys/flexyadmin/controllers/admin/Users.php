@@ -111,7 +111,7 @@ class Users extends AdminController {
         if (isset($message)) $this->message->add(langp($message,$user['username'].'('.$user['email'].','.$user['extra_email_string'].')'));
       }
 		}
-    redirect(api_uri('API_view_grid','cfg_users'));
+    redirect(api_uri('API_view_grid','cfg_users'),'refresh');
   }
 	
   

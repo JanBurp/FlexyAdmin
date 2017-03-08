@@ -214,7 +214,7 @@ class Show extends AdminController {
               if ($offset>0) {
           			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$last_order,'search'=>$search));
                 $uri=$this->grid_set->open_uri();
-                redirect($uri);
+                redirect($uri,'refresh');
               }
             }
             else {
@@ -468,7 +468,7 @@ class Show extends AdminController {
 				if (!empty($info)) $redirectUri.='/info/'.$info;
 				if ( $id!==FALSE ) $redirectUri=str_replace('?search=','/current/'.$id.'?search=',$redirectUri);
 
-				redirect($redirectUri);
+				redirect($redirectUri,'refresh');
 			}
 
 			/**

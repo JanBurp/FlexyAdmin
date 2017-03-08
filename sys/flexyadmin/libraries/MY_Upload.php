@@ -262,7 +262,7 @@ class MY_Upload extends CI_Upload {
 					// TODO: database model maken voor dit soort dingen
 					switch ($fieldPre) {
 						case 'user':
-							$this->_CI->db->set( 'user', $this->_CI->flexy_auth->get_user()['id']);
+							$this->_CI->db->set( 'user', $this->_CI->flexy_auth->get_user(NULL,'id'));
 							break;
 						case 'media':
 						case 'medias':
