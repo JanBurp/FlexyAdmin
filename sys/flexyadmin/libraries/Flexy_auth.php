@@ -223,7 +223,7 @@ class Flexy_auth extends Ion_auth {
   private function _create_nice_user($user) {
     // Alleen zinvolle velden
     if (!is_array($user)) return FALSE;
-    $user = array_keep_keys( $user, array( 'id','str_username', 'email_email', 'str_language','str_filemanager_view','b_active') );
+    $user = array_keep_keys( $user, array( 'id', 'str_username','username', 'email_email','email', 'str_language','str_filemanager_view', 'b_active','auth_token') );
     // Voeg groepen toe
     $groups = $this->get_users_groups($user['id'])->result_array();
     $user['groups']=array();
