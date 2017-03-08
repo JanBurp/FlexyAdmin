@@ -24,7 +24,7 @@ Class Core_cfg_users extends Data_Core {
     
     // Kijk of de gebruiker andere gebruikers mag aanpassen
     $this->allowed_to_edit_users = $this->flexy_auth->allowed_to_edit_users();
-    $this->groups = $this->flexy_auth->get_user()['groups'];
+    $this->groups = $this->flexy_auth->get_user(NULL,'groups');
     if ($this->groups) {
       $group_ids = array_keys($this->groups);
       $all_groups = $this->flexy_auth->groups()->result_array();
