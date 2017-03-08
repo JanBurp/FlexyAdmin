@@ -80,8 +80,8 @@ class ui extends CI_Model {
 			elseif (isset($this->language)) {
         $lang=$this->language;
       }
-      elseif ($this->uri->is_admin() and isset($this->flexy_auth->get_user()['str_language'])) {
-        $lang=$this->flexy_auth->get_user()['str_language'];
+      elseif ($this->uri->is_admin() and $this->flexy_auth->get_user(NULL,'str_language')) {
+        $lang=$this->flexy_auth->get_user(NULL,'str_language');
       }
       else {  
         $lang=$this->config->item('language');

@@ -35,7 +35,8 @@ class Version extends CI_Model {
     }
 
     // revision (commit count)
-    exec('git rev-list --all --count',$output);
+    $output = '';
+    if (IS_LOCALHOST) exec('git rev-list --all --count',$output);
     if (!empty($output)) {
       $this->revision = current($output);
       if ($this->revision<3000) $this->revision = '?';

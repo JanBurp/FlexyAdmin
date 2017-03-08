@@ -72,7 +72,7 @@ class Plugin_safe_assets extends Plugin {
     ksort($files);
 
     foreach ($files as $file => $permissions) {
-      $current_permissions = fileperms($file);
+      $current_permissions = @fileperms($file);
       if ($current_permissions!=$permissions) {
         $out.='<li>Permissions of <strong>'.$file.'</strong> should be '.substr(decoct($permissions),-3,3).' (are now '.substr(decoct($current_permissions),-3,3).')';
       }
