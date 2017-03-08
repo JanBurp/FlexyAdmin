@@ -28,12 +28,12 @@ class Plugin_uri extends Plugin {
 				// reset all uris of this table
 				$allData = $this->CI->data->table($this->table)->get_result();
 				foreach ($allData as $id => $data) {
-					$this->id=$id;
-					$this->oldData=$data;
-					$this->newData=$data;
+					$this->id      = $id;
+					$this->oldData = $data;
+					$this->newData = $data;
           // if (!isset($field)) $field=$this->_get_uri_field();
-					$uri=$data['uri'];
-					$newUri=$this->CI->create_uri->create($data,el(1,$args,false)); // reset
+					$uri    = $data['uri'];
+					$newUri = $this->CI->create_uri->create($data,el(1,$args,false)); // reset
 					if ($uri!==$newUri) {
             $this->CI->data->table($this->table);
 						$this->CI->data->set('uri',$newUri);
