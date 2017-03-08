@@ -21,7 +21,7 @@ class get_help extends Api_Model {
 		parent::__construct();
     $this->load->model('ui');
     $this->load->helper('markdown');
-    $this->lang=$this->flexy_auth->get_user()['str_language'];
+    $this->lang=$this->flexy_auth->get_user(NULL,'str_language');
     return $this;
 	}
   

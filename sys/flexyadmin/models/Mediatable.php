@@ -604,7 +604,7 @@ class Mediatable extends CI_Model {
     $info = $this->get_info($map.'/'.$file);
     if (!isset($info['user'])) return true;
     
-    if ( $this->flexy_auth->get_user()['id'] == $info['user']) return true;
+    if ( $this->flexy_auth->get_user(NULL,'id') == $info['user']) return true;
     return false;
   }
   
