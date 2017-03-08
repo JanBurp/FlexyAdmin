@@ -14,7 +14,7 @@ class Plugin_last_changed extends Plugin {
   }
   
 	function _after_update() {
-    $this->newData['user_changed']=$this->CI->flexy_auth->get_user()['id'];
+    $this->newData['user_changed']=$this->CI->flexy_auth->get_user(NULL,'id');
 		return $this->newData;
 	}
 	
