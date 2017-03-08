@@ -273,11 +273,14 @@ class Flexy_auth extends Ion_auth {
    * @return array
    * @author Jan den Besten
    */
-  public function get_user( $user_id=NULL ) {
-    if (is_null($user_id) and is_array($this->current_user)) return $this->current_user;
-    $user = $this->user( $user_id )->row_array();
+  public function get_user( $user_id=NULL, $field='' ) {
+    if (is_null($user_id) and is_array($this->current_user))
+      $user = $this->current_user;
+    else
+      $user = $this->user( $user_id )->row_array();
     if ($user) {
       $user = $this->_create_nice_user($user);
+      if (!empty($field)) return el($field,$user);
       return $user;
     }
     return FALSE;
@@ -290,7 +293,7 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   public function get_rights( $user_id=NULL ) {
-    return $this->get_user($user_id)['rights'];
+    return $this->get_user($user_id,'rights');
   }
 
   
@@ -809,8 +812,10 @@ class Flexy_auth extends Ion_auth {
       $group_id = el('id',$group_id,false);
     }
     $yes = FALSE;
-    foreach ($this->current_user['groups'] as $id => $group) {
-      if ($id<=$group_id) $yes=TRUE;
+    if (is_array($this->current_user['groups'])) {
+      foreach ($this->current_user['groups'] as $id => $group) {
+        if ($id<=$group_id) $yes=TRUE;
+      }
     }
     return $yes;
   }
