@@ -1,5 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+// require_once(APPPATH.'models/data/Data_core.php');
+
 /**
  * Wrapper around data/Core_res_assets
  * 
@@ -15,7 +17,7 @@ Class Assets extends CI_Model {
   
   public function __construct() {
     $this->load->model('data/Data');
-    $this->load->model('data/Data_core');
+    $this->load->model('data/Data_Core');
     $this->load->model('data/Core_res_assets');
   }
   
