@@ -364,26 +364,26 @@ class Db extends AdminController {
 	}
 	
   public function _sql($sql,$title,$action) {
-		$this->_add_content(h($title));
+		$this->content .= h($title);
 		$safe=$this->dbutil->is_safe_sql($sql);
 		if ($safe)
-			$this->_add_content(p()."Checking safety ... ok"._p());
+			$this->content .= p()."Checking safety ... ok"._p();
 		else {
 			if ($this->flexy_auth->is_super_admin()) {
 				$safe=TRUE;
-				$this->_add_content(p()."Checking safety ... Risky SQL, but Super Admin Rights."._p());
+				$this->content .= p()."Checking safety ... Risky SQL, but Super Admin Rights."._p();
 			}
 			else
-				$this->_add_content(p()."Checking safety ... Unsafe SQL. Import aborted."._p());
+				$this->content .= p()."Checking safety ... Unsafe SQL. Import aborted."._p();
 		}
 		if ($safe) {
       $result=$this->dbutil->import($sql);
       if (isset($result['errors'])) {
         foreach ($result['errors'] as $error) {
-          $this->_add_content(p('error').$error._p());
+          $this->content .= p('error').$error._p();
         }
       }
-			$this->_add_content(p().$action.br(2)._p());//.$comments);
+			$this->content .= p().$action.br(2)._p();//.$comments);
 		}
 	}
 	
