@@ -1005,7 +1005,7 @@ Class Data_Core extends CI_Model {
       }
       else {
         $this->load->library('flexy_auth');
-        $this->user_id = $this->flexy_auth->get_user()['id'];
+        $this->user_id = $this->flexy_auth->get_user(NULL,'id');
       }
     }
     return $this;

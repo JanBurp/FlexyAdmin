@@ -12,7 +12,7 @@ class Help extends AdminController {
 	}
 
 	public function index($page='') {
-		$lang=$this->flexy_auth->get_user()['str_language'];
+		$lang=$this->flexy_auth->get_user(NULL,'str_language');
     
     $this->load->helper('markdown');
     
