@@ -40,11 +40,11 @@ class AdminController extends BasicController {
     $this->js['multiple_upload'] = $multiple_upload;
     
 		if ( ! $this->flexy_auth->logged_in() ) {
-			redirect($this->config->item('API_login'));
+			redirect($this->config->item('API_login'),'refresh');
 		}
 		if ( ! $this->flexy_auth->allowed_to_use_cms() ) {
 			$this->flexy_auth->logout();
-			redirect(site_url());
+			redirect(site_url(),'refresh');
 		}
 		$this->currentTable="";
 		$this->currentId="";
@@ -329,7 +329,7 @@ class AdminController extends BasicController {
 										"help"		=> $this->helpTexts,
 										"local"		=> $this->config->item('LOCAL'),
 										"site"		=> rtrim($siteInfo["url_url"],'/'),
-										"user"		=> ucwords($this->flexy_auth->get_user()['username']),
+										"user"		=> ucwords($this->flexy_auth->get_user(NULL,'username')),
                     "version" => $this->version->get_version(),
                     "build"   => $this->version->get_build(),
 									);

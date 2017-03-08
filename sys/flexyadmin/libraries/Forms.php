@@ -298,7 +298,7 @@ class Forms extends Module {
         if ($result) {
           if ($this->settings('prevend_double_submit',false)) {
             $this->CI->session->set_flashdata($this->form_id.'__thanks', $this->_view_thanks($result) );
-            redirect($formAction, 'location');
+            redirect($formAction,'refresh');
           }
           $html.=$this->_view_thanks($result);
         }
