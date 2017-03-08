@@ -14,18 +14,32 @@
 Class Core_tbl_menu extends Data_Core {
   
   /**
-   * Hier komt het menu is
+   * Bewaar het menu
    */
-  private $_menu         = array();
-  private $_menu_config  = NULL;
-  private $_menu_caching = TRUE;
+  private $_menu                = array();
   
+  
+  /**
+   * Instellingen voor menu
+   */
+  private $_menu_caching        = TRUE;
+  private $_menu_config         = NULL;
+  private $_menu_config_default = array(
+                                    array(
+                                      'type'  => 'table',
+                                      'table' => 'tbl_menu',
+                                    ),
+                                  );
+
   
   public function __construct() {
     parent::__construct();
     $this->config->load('menu',true);
-    $this->_menu_config  = $this->config->get_item(array('menu','menu'));
     $this->_menu_caching = $this->config->get_item(array('menu','caching'));
+    $this->_menu_config  = $this->config->get_item(array('menu','menu'));
+    if (empty($this->_menu_config)) {
+      $this->_menu_config = $this->_menu_config_default;
+    }
   }
   
   
@@ -72,38 +86,25 @@ Class Core_tbl_menu extends Data_Core {
    */
   private function _create_menu_result() {
     if (!empty($this->_menu)) return $this->_menu;
-    
-    // Gewoon menu
-    if ( !$this->_menu_config ) {
-      $this->tree('full_uri','uri');
-      $this->_menu = $this->get_result();
+
+    // Voeg menu samen
+    foreach ($this->_menu_config as $menu_item) {
+      switch ($menu_item['type']) {
+        case 'item':
+          $this->_add_menu_item($menu_item);
+          break;
+        case 'table':
+          $this->_add_menu_table($menu_item);
+          break;
+      }
     }
     
-    // Merged menu
-    else {
-      foreach ($this->_menu_config as $menu_item) {
-
-        switch ($menu_item['type']) {
-
-          case 'item':
-            $this->_add_menu_item($menu_item);
-            break;
-
-          case 'table':
-            $this->_add_menu_table($menu_item);
-            break;
-
-        }
-
-      }
-      
-      // Reorder merged menu
-      $order = 0;
-      foreach ($this->_menu as $key => $item) {
-        $this->_menu[$key]['order'] = $order++;
-      }
-      
+    // Reorder merged menu
+    $order = 0;
+    foreach ($this->_menu as $key => $item) {
+      $this->_menu[$key]['order'] = $order++;
     }
+    
     return $this->_menu;
   }
   
