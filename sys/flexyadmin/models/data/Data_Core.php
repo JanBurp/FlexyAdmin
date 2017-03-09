@@ -1635,6 +1635,10 @@ Class Data_Core extends CI_Model {
     else {
       $fields = $this->settings['fields'];
     }
+    
+    if ($this->tm_select) {
+      $fields = array_intersect($fields,$this->tm_select);
+    }
 
 		foreach ($fields as $field) {
       // Default from field_info/schemaform
