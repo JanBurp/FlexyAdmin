@@ -820,7 +820,6 @@ class Form {
 		// fieldsets with fields
 		$nr=1;
     $fieldsets=array();
-    
 		foreach ($this->fieldsets as $title) {
       $fieldsets[$nr]=array(
         'title'  => ($title=='fieldset'?$this->caption:trim($title)),
@@ -857,7 +856,6 @@ class Form {
       'method'    => 'POST',
       'fieldsets' => $fieldsets
     );
-    // trace_($form);
     $render=$this->CI->load->view($this->view_path.'/form',$form,true);
 
 		// prepare javascript for conditional field showing
