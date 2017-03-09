@@ -105,6 +105,12 @@ if (process.env.NODE_ENV === 'watch') {
 if (process.env.NODE_ENV === 'production') {
   module.exports[0].plugins = (module.exports.plugins || []).concat([
     
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+    }),
+    
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
