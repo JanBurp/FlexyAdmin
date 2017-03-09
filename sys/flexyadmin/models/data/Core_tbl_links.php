@@ -42,7 +42,7 @@ Class Core_tbl_links extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  private function _menu_link_list() {
+  protected function _menu_link_list() {
     $this->data->table('tbl_menu')->select('uri,str_title AS title,order,self_parent')->tree('uri');
     $this->data->where('uri !=""');
     $result = $this->data->cache()->get_result();
@@ -69,7 +69,7 @@ Class Core_tbl_links extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  private function _links_link_list() {
+  protected function _links_link_list() {
     $this->data->table('tbl_links')->select('url_url AS link, CONCAT(`str_title`," - ",REPLACE(REPLACE(`url_url`,"https://",""),"http://","")) AS title');
     $this->data->where('url_url !=""')->like('url_url','http','after');
     $result = $this->data->cache()->get_result();
@@ -82,7 +82,7 @@ Class Core_tbl_links extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  private function _downloads_link_list() {
+  protected function _downloads_link_list() {
     $this->data->table('res_assets')->select('CONCAT_WS("/","_media/download",`path`,`file`) AS link, alt AS title')->where('path','downloads');
     $result = $this->data->cache()->get_result();
     return $this->_result_as_link_list($result);
@@ -95,7 +95,7 @@ Class Core_tbl_links extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  private function _result_as_link_list($result) {
+  protected function _result_as_link_list($result) {
     $links = array();
     foreach ($result as $id => $item) {
       $links[] = array(

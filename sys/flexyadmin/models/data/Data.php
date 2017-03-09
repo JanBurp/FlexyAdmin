@@ -48,7 +48,7 @@ Class Data extends CI_Model {
     
     // Als model nog niet is geladen, dan gaan we dat nu doen
     if (!isset($this->models[$table])) {
-      
+
       // Controleer eerst of eigen model bestaat
       $model_name   = ucfirst($table);
       $model_exists = file_exists(SITEPATH.'models/data/'.$model_name.'.php');
