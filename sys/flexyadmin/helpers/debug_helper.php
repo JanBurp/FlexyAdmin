@@ -185,7 +185,7 @@ function nice_sql($sql,$eol="\n") {
   $sql = preg_replace("/(SELECT)\s/uis", "$1$eol", $sql,1);
   $sql = str_replace("`, ", "`, $eol", $sql);
   $sql = preg_replace("/(FROM)\s/uis", "$eol$eol$1 ", $sql,1);
-  if ($order_place = strrpos($sql,'ORDER')!==FALSE) {
+  if ($order_place = strrpos($sql,$eol.'ORDER')!==FALSE) {
     $sql = substr_replace( $sql,$eol."ORDER",$order_place,'5');
   }
   $sql = preg_replace("/(WHERE)\s/uis", $eol.$eol."$1 ", $sql,1);
