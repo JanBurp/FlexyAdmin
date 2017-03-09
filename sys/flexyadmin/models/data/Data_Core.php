@@ -1195,8 +1195,6 @@ Class Data_Core extends CI_Model {
       }
       // Combineer alles
       $info = array_merge($info,$schema,$extra);
-      // // Stop in array
-      // $info['schema'] = $schema;
       $field_info[$field] = $info;
     }
     
@@ -1210,6 +1208,39 @@ Class Data_Core extends CI_Model {
     }
     
     return $field_info;
+  }
+  
+  /**
+   * Geeft form_fields terug, klaar voor gebruik in een formulier
+   *
+   * @param array $fields 
+   * @param array $extra 
+   * @param bool $include_options 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_field_info_as_formfields($fields=array(),$extra=array(),$include_options=TRUE) {
+    $field_info = $this->get_setting_field_info_extended($fields,$extra,$include_options);
+    $form_fields = array();
+    foreach ($field_info as $field => $info) {
+      $form_fields[$field] = array(
+        'label'      => $info['name'],
+        'validation' => is_array($info['validation'])?implode('|',$info['validation']):$info['validation'],
+        'type'       => $info['form-type'],
+      );
+      
+      if ($form_fields[$field]['type']=='primary') $form_fields[$field]['type']='hidden';
+      
+      if (isset($info['options'])) {
+        $options = el('data',$info['options']);
+        if ($options) {
+          $options = array_column($options,'name','value');
+          $form_fields[$field]['options']  = $options;
+          $form_fields[$field]['multiple'] = el('multiple',$info['options'],FALSE)?'multiple':'';
+        }
+      }
+    }
+    return $form_fields;
   }
   
   /**
