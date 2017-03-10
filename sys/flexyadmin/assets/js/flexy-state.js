@@ -163,7 +163,7 @@ export default {
   api : function(options) {
     var self = this;
     self.showProgress();
-
+    
     var method = 'GET';
     if (options.url==='row' && !_.isUndefined(options.data.where)) method = 'POST';
     
@@ -198,6 +198,12 @@ export default {
     var request = _.extend( defaultRequest, options );
     // Standard URL for request
     request.url = '_api/' + request.url;
+    // request.data._authorization = _flexy.auth_token;
+    if (request.method==='POST') {
+      request.data._authorization = _flexy.auth_token;
+    } else {
+      request.url += '&_authorization='+_flexy.auth_token;
+    }
     
     self.debug && console.log('api > ',request);
     return Axios.request( request ).then(function (response) {
