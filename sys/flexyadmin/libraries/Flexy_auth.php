@@ -125,7 +125,7 @@ class Flexy_auth extends Ion_auth {
     $this->auth_token = $this->input->get_request_header('Authorization', TRUE);
     // Van GET
     if (empty($this->auth_token) or $this->auth_token==='undefined') {
-      $this->auth_token = $this->input->get('_authorization', TRUE);
+      $this->auth_token = $this->input->post_get('_authorization', TRUE);
     }
       
     if (!empty($this->auth_token) and $this->auth_token!=='undefined') {
