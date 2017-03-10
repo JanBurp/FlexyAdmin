@@ -253,10 +253,10 @@ class Api_Model extends CI_Model {
       $this->result['cors'] = $this->cors;
     }
     
-    if (DEBUGGING) {
-      $this->result['server'] = $_SERVER;
-      $this->result['headers'] = $this->input->request_headers();
-    }
+    // if (DEBUGGING) {
+    //   $this->result['server'] = $_SERVER;
+    //   $this->result['headers'] = $this->input->request_headers();
+    // }
     
     return $this->result;
   }
