@@ -62,22 +62,24 @@ class Plugin_safe_assets extends Plugin {
       SITEPATH.'stats/.htaccess'          => 0100644,
     );
     $media = $this->CI->assets->get_assets_folders();
-    $media[]=$this->CI->config->item('ASSETS').'_thumbcache';
+    $media[] = SITEPATH.'assets/_thumbcache';
     foreach ($media as $folder) {
       $files[$folder] = 0040776;              // 0776
-      $files[$folder.'/.htaccess'] = 0100644; // 0664
+      // $files[$folder.'/.htaccess'] = 0100644; // 0664
     }
     ksort($files);
 
     foreach ($files as $file => $permissions) {
       $current_permissions = @fileperms($file);
       if ($current_permissions!=$permissions) {
-        $out.='<li>Permissions of <strong>'.$file.'</strong> should be '.substr(decoct($permissions),-3,3).' (are now '.substr(decoct($current_permissions),-3,3).')';
+        $out .= '<li>Permissions of <strong>'.$file.'</strong> should be '.substr(decoct($permissions),-3,3).' (are now '.substr(decoct($current_permissions),-3,3).')';
       }
     }
+    
     if (!empty($out)) {
-      $out=h('SAFETY ERROR: Check file permissions!',1,array('class'=>'error')).'<ul>'.$out.'</ul>';
+      $out = br().br().h('SAFETY ERROR: Check file permissions!',1,array('class'=>'text-danger')).'<ul>'.$out.'</ul>';
     }
+    
     return $out;
 	}
 
