@@ -3886,7 +3886,11 @@ Class Data_Core extends CI_Model {
     elseif ( $fields === 'abstract' ) {
       $abstract_fields = $this->get_other_table_abstract_fields( $other_table );
       $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table );
-      $abstract_order = $this->db->protect_identifiers(  $this->get_other_table_setting($other_table,'order_by') );
+      $other_table_order = $this->get_other_table_setting($other_table,'order_by');
+      if (!is_array($other_table_order)) $other_table_order = explode(',',$other_table_order);
+      $other_table_order = current($other_table_order);
+      $abstract_order = $this->db->protect_identifiers(  $as_table.'.'.$other_table_order );
+      $abstract_order = str_replace(array('`ASC`','`DESC`'),array('ASC','DESC'),$abstract_order);
     }
     
     //
