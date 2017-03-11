@@ -3886,6 +3886,8 @@ Class Data_Core extends CI_Model {
     elseif ( $fields === 'abstract' ) {
       $abstract_fields = $this->get_other_table_abstract_fields( $other_table );
       $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table );
+      // $abstract_order = $this->db->protect_identifiers(  $this->get_other_table_setting($other_table,'order_by') );
+      $abstract_order = $abstract;
     }
     
     //
@@ -3895,7 +3897,7 @@ Class Data_Core extends CI_Model {
       $select = $abstract;
       if ($json) {
         $abstract = remove_suffix($abstract,' AS ');
-        $select = 'GROUP_CONCAT( DISTINCT "{",'.$abstract.',"}" ORDER BY '.$abstract.' SEPARATOR ", ") `'.$as_table.'`';
+        $select = 'GROUP_CONCAT( DISTINCT "{",'.$abstract.',"}" ORDER BY '.$abstract_order.' SEPARATOR ", ") `'.$as_table.'`';
       }
       else {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
