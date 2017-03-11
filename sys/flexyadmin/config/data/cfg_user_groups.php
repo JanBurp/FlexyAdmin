@@ -4,7 +4,7 @@
 
 $config['table']           = 'cfg_user_groups';
 $config['fields']          = array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show');
-$config['order_by']        = 'cfg_user_groups.id';
+$config['order_by']        = 'id';
 $config['abstract_fields'] = array('description');
 
 $config['grid_set'] = array( 
