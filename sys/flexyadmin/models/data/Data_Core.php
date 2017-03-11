@@ -3886,8 +3886,7 @@ Class Data_Core extends CI_Model {
     elseif ( $fields === 'abstract' ) {
       $abstract_fields = $this->get_other_table_abstract_fields( $other_table );
       $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table );
-      // $abstract_order = $this->db->protect_identifiers(  $this->get_other_table_setting($other_table,'order_by') );
-      $abstract_order = $abstract;
+      $abstract_order = $this->db->protect_identifiers(  $this->get_other_table_setting($other_table,'order_by') );
     }
     
     //
@@ -3897,6 +3896,7 @@ Class Data_Core extends CI_Model {
       $select = $abstract;
       if ($json) {
         $abstract = remove_suffix($abstract,' AS ');
+        if (!isset($abstract_order)) $abstract_order = $abstract;
         $select = 'GROUP_CONCAT( DISTINCT "{",'.$abstract.',"}" ORDER BY '.$abstract_order.' SEPARATOR ", ") `'.$as_table.'`';
       }
       else {
