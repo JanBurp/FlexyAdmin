@@ -59,7 +59,6 @@ class Plugin_safe_assets extends Plugin {
       SITEPATH.'config/database.php'      => 0100440,
       SITEPATH.'cache'                    => 0040774,
       SITEPATH.'stats'                    => 0040774,
-      SITEPATH.'stats/.htaccess'          => 0100644,
     );
     $media = $this->CI->assets->get_assets_folders();
     $media[] = SITEPATH.'assets/_thumbcache';
