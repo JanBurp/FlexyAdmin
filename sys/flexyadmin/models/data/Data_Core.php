@@ -1327,6 +1327,7 @@ Class Data_Core extends CI_Model {
       else {
         $complete_relations = $this->get_setting(array('relations',$type));
         $relations = array_keep_keys($complete_relations,$relations);
+        $set['with'][$type] = $relations;
       }
       // Loop alle relaties langs en complementeer die
       if ($relations) {
@@ -1350,7 +1351,6 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    // trace_($set);
     return $set;
   }
   
@@ -3239,7 +3239,6 @@ Class Data_Core extends CI_Model {
       $search = $this->_create_splitted_find($terms,$fields,$settings);
     }
     $this->_create_complete_search( $search );
-    
     return $this;
   }
   
@@ -3286,8 +3285,10 @@ Class Data_Core extends CI_Model {
     // Inclusief result_name van de meegegeven relaties (word later omgezet in velden van die tabel)
     if (is_array($settings['with'])) {
       foreach ($settings['with'] as $type => $with) {
-        if (is_string($type)) $with = $type;
-        $relations = el(array('relations',$with), $this->settings, FALSE);
+        $relation_type = $with;
+        if (is_string($type)) $relation_type = $type;
+        $relations = el(array('relations',$relation_type), $this->settings, FALSE);
+        if (is_array($with)) $relations = array_keep_keys($relations,array_keys($with));
         if ($relations) {
           foreach ($relations as $what => $info) {
             array_push($fields,$info['result_name']);
