@@ -105,11 +105,15 @@ export default {
           ed.on('keyup', function(e){ self.updateText(ed); });
         }
       });
+      tinyMCE.remove();
+
       // Wait just a bit...
       var timer = window.setInterval(function(){
         tinymce.init(init);
         var exists = document.querySelector('.mce-tinymce');
-        if (!_.isUndefined(exists)) clearInterval(timer);
+        if ( !_.isUndefined(exists) && exists!==null ) {
+          clearInterval(timer)
+        };
       }, 10 );
     },
     
@@ -279,6 +283,7 @@ export default {
     cancel : function() {
       var self=this;
       if (!this.isSaving) {
+        tinyMCE.remove();
         self.$emit('formclose',self.row);
       }
     },
@@ -290,6 +295,7 @@ export default {
         if (promise) {
           promise.then(function (response) {
             if (!response.error) {
+              tinyMCE.remove();
               self.$emit('formclose',self.row);
             }
           })
