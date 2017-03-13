@@ -93,23 +93,27 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
 	public function login($identity, $password, $remember=false) {
-		if (parent::login($identity, $password, $remember)) {
-      // Token aanmaken en toevoegen aan sessie
-      if (empty($this->auth_token)) {
-        $token = array(
-          'username' => $identity,
-          'password' => $password,
-        );
-        $this->auth_token = JWT::encode( $token, $this->auth_key );
+    if (!empty($identity) and !empty($password)) {
+  		if (parent::login($identity, $password, $remember)) {
+        // Token aanmaken en toevoegen aan sessie
+        if (empty($this->auth_token)) {
+          $token = array(
+            'username' => $identity,
+            'password' => $password,
+          );
+          $this->auth_token = JWT::encode( $token, $this->auth_key );
+        }
+        $currentSession = $this->session->userdata();
+        $currentSession['auth_token'] = $this->auth_token;
+        $this->session->set_userdata($currentSession);
+        if (!$this->current_user) $this->_set_current_user();
+        $this->load->model('log_activity');
+  			return TRUE;
+  		}
+      else {
+        $this->log_activity->auth();
       }
-      $currentSession = $this->session->userdata();
-      $currentSession['auth_token'] = $this->auth_token;
-      $this->session->set_userdata($currentSession);
-      if (!$this->current_user) $this->_set_current_user();
-      $this->load->model('log_activity');
-      $this->log_activity->auth();
-			return TRUE;
-		}
+    }
 		return FALSE;
 	}
   
