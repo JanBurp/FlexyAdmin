@@ -198,11 +198,18 @@ export default {
     var request = _.extend( defaultRequest, options );
     // Standard URL for request
     request.url = '_api/' + request.url;
+    // Default data
+    if (_.isUndefined(request.data)) request.data = {};
+
     // request.data._authorization = _flexy.auth_token;
     if (request.method==='POST') {
       request.data._authorization = _flexy.auth_token;
     } else {
-      request.url += '&_authorization='+_flexy.auth_token;
+      if (request.url.indexOf('?')>0)
+        request.url += '&';
+      else
+        request.url += '?';
+      request.url += '_authorization='+_flexy.auth_token;
     }
     
     self.debug && console.log('api > ',request);
