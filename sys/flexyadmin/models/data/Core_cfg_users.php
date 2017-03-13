@@ -143,9 +143,25 @@ Class Core_cfg_users extends Data_Core {
       // Als geen rechten om users aan te passen dan geen id_user_group tonen/aanpassen
       if ( !$this->allowed_to_edit_users ) {
         if (isset($this->tm_with['many_to_many']['rel_users__groups'])) {
+          // unselect
           $result_name = $this->settings['relations']['many_to_many']['rel_users__groups']['result_name'];
-          unset($this->tm_with['many_to_many']['rel_users__groups']);
           $this->unselect($result_name);
+          // niet in with
+          unset($this->tm_with['many_to_many']['rel_users__groups']);
+          if (empty($this->tm_with['many_to_many'])) unset($this->tm_with['many_to_many']);
+          if (empty($this->tm_with)) $this->tm_with = FALSE;
+          // Ook niet in formset
+          $this->settings['form_set']['with'] = $this->tm_with;
+          if (isset($this->settings['form_set']['fields'])) {
+            $key = array_search($result_name,$this->settings['form_set']['fields']);
+            unset($this->settings['form_set']['fields'][$key]);
+          }
+          if (isset($this->settings['form_set']['fieldsets'])) {
+            foreach ($this->settings['form_set']['fieldsets'] as $set => $fields) {
+              $key = array_search($result_name,$this->settings['form_set']['fieldsets'][$set]);
+              unset($this->settings['form_set']['fieldsets'][$set][$key]);
+            }
+          }
         }
       };
 
