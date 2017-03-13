@@ -620,15 +620,6 @@ export default {
         method: 'POST',
         url : action.uri,
       }).then(function(response){
-        // Messages en errors worden al getoond door flexyState.api
-        // var error = response.error;
-        // if (!error && response.data.data===false) error = true;
-        // if (error) {
-        //   flexyState.addMessage( response.data.error, 'danger');
-        // }
-        // else {
-        //   flexyState.addMessage( response.data.message, response.data.message_type || 'success' );
-        // }
         return response;
       });
     },
