@@ -20,6 +20,7 @@ Class Admin_menu extends CI_Model {
     $this->load->library('menu');
     $this->load->helper('language');
     $this->lang->load('help');
+    $this->lang->load('ui');
     $this->user = $this->flexy_auth->get_user();
   }
   
