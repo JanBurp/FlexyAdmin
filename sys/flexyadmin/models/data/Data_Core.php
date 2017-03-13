@@ -1974,7 +1974,7 @@ Class Data_Core extends CI_Model {
 
     // bouw select query op
     $this->_select();
-    
+        
     // bouw relatie queries
     $this->_with();
     
@@ -2654,7 +2654,6 @@ Class Data_Core extends CI_Model {
     }
     // Eventuele unselect verwijderen
     if ($this->tm_unselect) {
-      xdebug_break();
       foreach ($this->tm_unselect as $key => $field) {
         if ( $found=array_search($field,$this->tm_select) ) {
           unset($this->tm_select[$found]);
