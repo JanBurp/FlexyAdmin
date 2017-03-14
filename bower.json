@@ -1,6 +1,6 @@
 {
-  "name": "FlexyAdmin",
-  "version": "3.0.3",
+  "name": "flexyadmin",
+  "version": "3.5",
   "description": "www.flexyadmin.com",
   "moduleType": [
     "node"
