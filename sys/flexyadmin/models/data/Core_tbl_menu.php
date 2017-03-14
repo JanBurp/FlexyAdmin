@@ -219,6 +219,7 @@ Class Core_tbl_menu extends Data_Core {
     else {
       $this->data->set_result_key('uri');
     }
+    
     // get data
     if (isset($item['where']))    $this->data->where($item['where']);
     if (isset($item['order_by'])) $this->data->order_by($item['order_by']);
@@ -227,15 +228,14 @@ Class Core_tbl_menu extends Data_Core {
     $this->data->set_result_key($result_key);
     $this->data->table('tbl_menu');
     
-    
     $place = $this->_determine_menu_item_place($item);
     if ($place['pre_uri']) {
       foreach ($items as $key => $row) {
         unset($items[$key]);
+        if (isset($item['item'])) $row = array_merge($row,$item['item']);
         $full_uri         = $place['pre_uri'].'/'.el('full_uri',$row, el('uri',$row));
         $row['full_uri']  = $full_uri;
         $row['_table']    = $table;
-        
         $items[$full_uri] = $row;
       }
     }
