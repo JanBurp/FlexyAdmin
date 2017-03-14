@@ -17,6 +17,11 @@ In the examples below, replace `<dir>` with the folder you'd like to have FlexyA
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>`
   
   
+### Shallow repository a branch ###
+
+`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 -b <branch> <dir>`
+  
+  
 # Update
 
 Local URL: /admin/update
