@@ -5425,6 +5425,18 @@ a > .fa, .btn > .fa {
   display: none; }
 
 /* Responsive */
+@media (max-height: 800px) {
+  #flexyadmin-modal .modal-body {
+    max-height: 400px !important; } }
+
+@media (max-height: 600px) {
+  #flexyadmin-modal .modal-body {
+    max-height: 300px !important; } }
+
+@media (max-height: 400px) {
+  #flexyadmin-modal .modal-body {
+    max-height: 200px !important; } }
+
 @media (max-width: 767px) {
   #header .navbar-nav li .fa {
     margin: 0; }
@@ -5503,8 +5515,9 @@ a > .fa, .btn > .fa {
     float: right; }
 
 /* MODAL */
-#flexyadmin-modal .modal-dialog {
-  margin-top: 5rem; }
+#flexyadmin-modal .modal-body {
+  max-height: 600px;
+  overflow: auto; }
 
 /* CONTENT */
 #row {

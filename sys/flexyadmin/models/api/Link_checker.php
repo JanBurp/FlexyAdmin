@@ -34,8 +34,8 @@ class Link_checker extends Api_Model {
     $this->result['data'] = $this->data->check_links();
     
     $message = $this->data->get_message();
-    $this->_set_message( $message['text'] );
-    $this->_set_message_type( $message['type'] );
+    $this->_set_message( $message );
+    $this->_set_message_type( 'popup' );
     
     return $this->_result_ok();
   }
