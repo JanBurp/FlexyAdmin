@@ -63,10 +63,12 @@
 
 /* MODAL */
 #flexyadmin-modal {
-  .modal-dialog {
-    margin-top:5rem;
+  .modal-body {
+    max-height:600px;
+    overflow:auto;
   }
 }
+
 
 
 /* CONTENT */

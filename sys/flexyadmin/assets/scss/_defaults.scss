@@ -89,6 +89,31 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 
 /* Responsive */
 
+@media(max-height:800px) {
+  #flexyadmin-modal {
+    .modal-body {
+      max-height:400px!important;
+    }
+  }
+}
+
+@media (max-height:600px) {
+  #flexyadmin-modal {
+    .modal-body {
+      max-height:300px!important;
+    }
+  }
+}
+
+@media (max-height:400px) {
+  #flexyadmin-modal {
+    .modal-body {
+      max-height:200px!important;
+    }
+  }
+}
+
+
 // header nav icons only
 @include media-breakpoint-down(sm) {
   #header .navbar-nav li {
@@ -96,3 +121,4 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
    .nav-title {display:none;}
   }
 }
+

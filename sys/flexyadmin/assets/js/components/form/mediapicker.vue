@@ -83,9 +83,8 @@ export default {
     
     changeMedia : function(media) {
       if (typeof(media)!=='string') media = _.join(media,'|');
-      this.media = media.trim('|');
+      this.media = _.trim(media,'|');
       this.$emit('input',this.media);
-      // console.log('changeMedia',this.media);
     },
     
   },

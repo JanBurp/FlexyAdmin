@@ -217,7 +217,7 @@ class Api_Model extends CI_Model {
     }
 
     // cleanup result
-    unset($this->result['args']);
+    // unset($this->result['args']);
     unset($this->result['status']);
     unset($this->result['error']);
     unset($this->result['message']);

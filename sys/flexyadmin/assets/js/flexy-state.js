@@ -103,6 +103,7 @@ export default {
     if (type==='popup') {
       self.openModal({
         body    : message,
+        size    : 'modal-lg',
         buttons : [{
           type   : 'ok',
           title  : _flexy.language_keys.ok,
