@@ -13,7 +13,7 @@ class Help extends AdminController {
 	}
 
 	public function index($page='') {
-		$lang = $this->flexy_auth->get_user()['str_language'];
+		$lang = $this->flexy_auth->get_user(null,'str_language');
     
     // Lees alle help bestanden in en zet ze om naar HTML
     $map=APPPATH.'views/help';
@@ -21,7 +21,7 @@ class Help extends AdminController {
     ksort($helpFiles);
     
     $help_items = array();
-    // $current_uri = $this->uri->uri_string();
+    
     foreach ($helpFiles as $file => $item) {
       $title=str_replace('_',' ',get_suffix(str_replace('.html','',$item['name']),'__'));
       if (!empty($title)) {
