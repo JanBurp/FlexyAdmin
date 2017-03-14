@@ -5525,6 +5525,9 @@ a > .fa, .btn > .fa {
   border-bottom: solid 1px #eceeef; }
   #header .nav {
     padding-top: .1rem; }
+  #header .navbar-brand {
+    max-width: 50%;
+    overflow: hidden; }
 
 /* MESSAGES */
 #messages {
