@@ -188,7 +188,6 @@ Class Core_tbl_links extends Data_Core {
     $this->lang->load('ui');
     $good = array();
     $false = array();
-    $message_type = '';
     foreach ($this->checked_links as $id => $link) {
       if ($link['checked']) {
         $good[] = '<span class="text-primary"><span class="fa fa-check-square-o"></span>&nbsp;<a href="'.$link['url_url'].'" target="_blank">'.$link['url_url'].'</a></span>';
@@ -198,13 +197,12 @@ Class Core_tbl_links extends Data_Core {
       }
     }
     if (count($this->checked_links)>1) {
-      $message = langp('link_check_checked',count($this->checked_links)) . '<br>';
+      $message = h(langp('link_check_checked',count($this->checked_links)));
     }
     else {
-      $message = langp('link_check_checked_one') . '<br>';
+      $message = h(langp('link_check_checked_one'));
     }
     if (count($false)>0) {
-      $message_type = 'danger';
       $message .= '<span class="text-danger">'.langp('link_check_checked_false',count($false));
       $message .= '<hr>';
       $message .= implode('<br>',$false).'<br>';
@@ -212,10 +210,7 @@ Class Core_tbl_links extends Data_Core {
     if (count($good)>0) {
       $message .= implode('<br>',$good).'<br>';
     }
-    return array(
-      'text' => $message,
-      'type' => $message_type
-    );
+    return $message;
   }
   
   
