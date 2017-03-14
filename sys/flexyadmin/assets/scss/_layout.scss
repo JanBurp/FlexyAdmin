@@ -42,6 +42,10 @@
   background-color:$gray-lightest;
   border-bottom:solid 1px $gray-lighter;
   .nav {padding-top:.1rem;}
+  .navbar-brand {
+    max-width:50%;
+    overflow:hidden;
+  }
 }
 
 /* MESSAGES */
