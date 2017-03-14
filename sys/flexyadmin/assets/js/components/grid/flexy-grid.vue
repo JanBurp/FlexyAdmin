@@ -602,14 +602,6 @@ export default {
         url       : url,
       })
       .then(function(response){
-        var error = response.error;
-        if (!error && response.data.data===false) error = true;
-        if (error) {
-          flexyState.addMessage( response.data.error, 'danger');
-        }
-        else {
-          flexyState.addMessage( response.data.message, response.data.message_type || 'success' );
-        }
         return response;
       });
     },
