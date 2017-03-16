@@ -12,7 +12,7 @@ export default {
   debug: false,
   state: {
     progress    : 0,
-    help        : true,
+    help        : false,
     messages    : [],
     media_view  : _flexy.media_view,
     _modal      : {

@@ -729,7 +729,7 @@ module.exports = __vue_exports__
  * Simple State management for:
  * - progress bar
  * - messages
- */exports.default={name:'FlexyState',debug:false,state:{progress:0,help:true,messages:[],media_view:_flexy.media_view,_modal:{callback:undefined,state:undefined},modal:{show:false,size:'',title:'',body:'',buttons:[]},modal_default:{show:false,size:'',title:'',body:'',buttons:[{type:'cancel',title:_flexy.language_keys.cancel,class:'btn-outline-primary',close:true},{type:'ok',title:_flexy.language_keys.ok,class:'btn-outline-danger',close:true}]}},getState:function getState(item){return this.state[item];},/**
+ */exports.default={name:'FlexyState',debug:false,state:{progress:0,help:false,messages:[],media_view:_flexy.media_view,_modal:{callback:undefined,state:undefined},modal:{show:false,size:'',title:'',body:'',buttons:[]},modal_default:{show:false,size:'',title:'',body:'',buttons:[{type:'cancel',title:_flexy.language_keys.cancel,class:'btn-outline-primary',close:true},{type:'ok',title:_flexy.language_keys.ok,class:'btn-outline-danger',close:true}]}},getState:function getState(item){return this.state[item];},/**
    * PROGRESS
    */showProgress:function showProgress(){this.state.progress=10;this.debug&&console.log('state.progress',this.state.progress);},hideProgress:function hideProgress(){var self=this;self.state.progress=100;window.setTimeout(function(){self.state.progress=0;self.debug&&console.log('state.progress',self.state.progress);},250);},setProgress:function setProgress(value,max){var percent=Math.round(value*100/max);if(percent<10)percent=10;// Start met minimaal 10%
 this.state.progress=percent;this.debug&&console.log('state.progress',this.state.progress);},/**
@@ -84455,7 +84455,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.visibleItem = key
         }
       }
-    }, [_vm._v(_vm._s(item.title))]), _vm._v(" "), _c('div', {
+    }, [_c('span', {
+      staticClass: "fa",
+      class: {
+        'fa-chevron-down': _vm.visibleItem == key, 'fa-chevron-right': _vm.visibleItem != key
+      }
+    }), _vm._v(_vm._s(item.title))]), _vm._v(" "), _c('div', {
       directives: [{
         name: "show",
         rawName: "v-show",
