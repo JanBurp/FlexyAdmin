@@ -12,6 +12,7 @@ export default {
   debug: false,
   state: {
     progress    : 0,
+    help        : true,
     messages    : [],
     media_view  : _flexy.media_view,
     _modal      : {
@@ -71,6 +72,13 @@ export default {
     if (percent<10) percent=10; // Start met minimaal 10%
     this.state.progress = percent;
     this.debug && console.log('state.progress',this.state.progress); 
+  },
+  
+  /**
+   * Help
+   */
+  helpIsOn : function() {
+    return this.state.help;
   },
   
   /**
