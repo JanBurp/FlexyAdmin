@@ -5587,19 +5587,36 @@ a > .fa, .btn > .fa {
   margin-bottom: 1rem;
   border-radius: .25rem; }
 
-/* HELP */
-.flexy-help .nav-link {
-  cursor: pointer; }
+.flexy-accordion .card {
+  border: none;
+  border-bottom: solid 1px #696;
+  border-radius: 0 !important; }
+  .flexy-accordion .card .card-header {
+    background-color: #fff;
+    color: #696;
+    border-radius: 0 !important;
+    cursor: pointer; }
+  .flexy-accordion .card .card-header:hover {
+    background-color: #eceeef; }
+  .flexy-accordion .card .card-block {
+    border-radius: 0 !important; }
 
-.flexy-help h2 {
-  color: #696; }
+.flexy-accordion .card.active .card-header {
+  background-color: #696;
+  color: #fff; }
 
-.flexy-help h3 {
-  margin-top: 2rem;
-  color: #696; }
+#main.help {
+  width: 70%; }
 
-.flexy-help h3::before {
-  content: '- '; }
+#help {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30%;
+  min-height: 100%;
+  background-color: #fff;
+  border-left: solid 2px #696;
+  box-shadow: 0px 0px 10px #000; }
 
 /* MASK */
 #mask {
