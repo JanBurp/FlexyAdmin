@@ -41,7 +41,7 @@
     </div>
   </div>
   
-  <div id="help" v-show="state.help"><?=$help?></div>
+  <div id="help" v-cloak v-show="state.help"><?=$help?></div>
   
 </div>
 
