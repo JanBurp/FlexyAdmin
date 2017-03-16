@@ -16,34 +16,35 @@
 
 <body class="<?=$class?>">
 
-<div id="main" class="container-fluid">
-
-  <progress class="progress" v-show="state.progress > 0" :value="state.progress" max="100"></progress>
-  <flexy-messages v-show="state.messages.length > 0" :messages="state.messages"></flexy-messages>
-  <flexy-modal :options="state.modal"></flexy-modal>
-  
-  <div id="header" class="navbar navbar-fixed-top flex-row d-flex justify-content-between">
-    <div class="navbar-brand navbar-collapse">
-      <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>"><span class="flexy-block btn btn-secondary">
-        <span class="fa fa-home fa-lg"></span>
-      </span></a>
-      <flexy-blocks v-once href="<?=$base_url?>" text="<?=$str_title?>" class="hidden-md-down"/>
+<div id="main" :class="{'help':state.help}">
+  <div class="container-fluid">
+    <progress class="progress" v-show="state.progress > 0" :value="state.progress" max="100"></progress>
+    <flexy-messages v-show="state.messages.length > 0" :messages="state.messages"></flexy-messages>
+    <flexy-modal :options="state.modal"></flexy-modal>
+    <div id="header" class="navbar navbar-fixed-top flex-row d-flex justify-content-between">
+      <div class="navbar-brand navbar-collapse">
+        <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>"><span class="flexy-block btn btn-secondary">
+          <span class="fa fa-home fa-lg"></span>
+        </span></a>
+        <flexy-blocks v-once href="<?=$base_url?>" text="<?=$str_title?>" class="hidden-md-down"/>
+      </div>
+      <div class="navbar-nav">
+        <?=$headermenu?>
+      </div>
     </div>
-    <div class="navbar-nav">
-      <?=$headermenu?>
+    <div id="row" class="row">
+      <div id="flexy-menu-side" class="col-sm-2"><?=$sidemenu?></div>
+      <div id="content" class="col-sm-10"><?=$content?></div>
+    </div>
+    <div id="mask" v-cloak v-show="state.progress>0">
+      <span class="spinner fa fa-spinner fa-pulse fa-fw"></span>
     </div>
   </div>
   
-  <div id="row" class="row">
-    <div id="flexy-menu-side" class="col-sm-2"><?=$sidemenu?></div>
-    <div id="content" class="col-sm-10"><?=$content?></div>
-  </div>
-  
-  <div id="mask" v-cloak v-show="state.progress>0">
-    <span class="spinner fa fa-spinner fa-pulse fa-fw"></span>
-  </div>
+  <div id="help" v-show="state.help"><?=$help?></div>
   
 </div>
+
 
 
 

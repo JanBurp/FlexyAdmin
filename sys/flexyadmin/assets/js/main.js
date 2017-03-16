@@ -14,7 +14,7 @@ import Lang             from 'vue-lang'
 
 import flexyState       from './flexy-state.js'
 import FlexyMessages    from './components/flexy-messages.vue'
-import FlexyHelp        from './components/flexy-help.vue'
+import FlexyAccordion   from './components/flexy-accordion.vue'
 
 import FlexyBlocks      from './components/flexy-blocks.vue'
 import FlexyButton      from './components/flexy-button.vue'
@@ -22,6 +22,7 @@ import FlexyModal       from './components/flexy-modal.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
+
 
 // Import TinyMCE
 import tinymce from 'tinymce/tinymce';
@@ -68,7 +69,7 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
       FlexyPagination,
       FlexyGrid,
       FlexyForm,
-      FlexyHelp
+      FlexyAccordion
     },
     data : {
       state : flexyState.state,

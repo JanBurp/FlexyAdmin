@@ -54,6 +54,8 @@ Class Admin_menu extends CI_Model {
     $headerMenu->set('framework','bootstrap');
     $headerMenu->set_current($current_uri);
     $headerMenu->add_items( $this->_process_items($base_url, $this->_get_config_item('header_menu') ) );
+    // Headermenu Help
+    $headerMenu->menu['_admin/help']['html'] = '@click.stop.prevent="state.help = !state.help" :class="{\'active\':state.help}"';
     
     /**
      * Side menu
