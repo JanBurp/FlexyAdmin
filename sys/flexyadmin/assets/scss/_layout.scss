@@ -123,12 +123,21 @@
       color:$brand-primary;
       border-radius:0!important;
       cursor:pointer;
+      .fa {width:2rem;}
     }
     .card-header:hover {
       background-color:$gray-lighter;
     }
     .card-block {
       border-radius:0!important;
+      h1 {
+        color:$brand-primary;
+        margin-left:-.5rem;
+      }
+      li {
+        margin-left:-1rem;
+        padding-left:0;
+      }
     }
   }
   .card.active {
@@ -137,12 +146,14 @@
       color:$body-bg;
     }
   }
+  img {max-width:100%;}
 }
 
 #main.help {
   width:70%;
 }
 #help {
+//  display:none;
   position:absolute;
   top:0;
   right:0;
