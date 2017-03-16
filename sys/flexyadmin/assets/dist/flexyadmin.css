@@ -5421,38 +5421,6 @@ a > .fa, .btn > .fa {
     .card .card > .card-block .form-group {
       margin-bottom: .5rem; }
 
-.card.help > .card-header {
-  display: none; }
-
-.card.help > .card-block {
-  padding: 0; }
-  .card.help > .card-block .flexy-help-menu {
-    padding-right: 0; }
-    .card.help > .card-block .flexy-help-menu .nav-link {
-      border-radius: 0;
-      padding: .25rem .5rem; }
-  .card.help > .card-block .flexy-help-content {
-    padding-left: 0; }
-    .card.help > .card-block .flexy-help-content .card {
-      height: 100%;
-      border-top: none;
-      border-right: none;
-      border-bottom: none;
-      border-radius: 0; }
-      .card.help > .card-block .flexy-help-content .card .card-header {
-        padding: .25rem .5rem .35rem;
-        border-bottom: 0;
-        border-radius: 0; }
-      .card.help > .card-block .flexy-help-content .card .card-block h1 {
-        background-color: #696;
-        color: #fff;
-        padding: .25rem; }
-      .card.help > .card-block .flexy-help-content .card .card-block h2 {
-        border-bottom: solid 1px #696; }
-      .card.help > .card-block .flexy-help-content .card .card-block img {
-        border: solid 1px #D90;
-        border-radius: 0.25rem; }
-
 [v-cloak] {
   display: none; }
 
@@ -5596,14 +5564,25 @@ a > .fa, .btn > .fa {
     color: #696;
     border-radius: 0 !important;
     cursor: pointer; }
+    .flexy-accordion .card .card-header .fa {
+      width: 2rem; }
   .flexy-accordion .card .card-header:hover {
     background-color: #eceeef; }
   .flexy-accordion .card .card-block {
     border-radius: 0 !important; }
+    .flexy-accordion .card .card-block h1 {
+      color: #696;
+      margin-left: -.5rem; }
+    .flexy-accordion .card .card-block li {
+      margin-left: -1rem;
+      padding-left: 0; }
 
 .flexy-accordion .card.active .card-header {
   background-color: #696;
   color: #fff; }
+
+.flexy-accordion img {
+  max-width: 100%; }
 
 #main.help {
   width: 70%; }
