@@ -32,10 +32,10 @@ class AdminController extends BasicController {
 
 	public function __construct() {
 		parent::__construct(true);
+    $this->load->helper('markdown');
     $this->load->library('flexy_auth');
     $this->load->model('version');
     $this->load->model("admin_menu");
-    // $this->load->library("menu");
 
 		if ( ! $this->flexy_auth->logged_in() ) {
       redirect($this->config->item('API_login'),'refresh');
@@ -58,22 +58,7 @@ class AdminController extends BasicController {
 
 	}
   
-  // public function _show_message() {
-  //     if (!IS_AJAX) {
-  //       $this->message->show();
-  //       $this->message->reset();
-  //       $this->message->reset_errors();
-  //     }
-  // }
-
-  // public function _show_trace() {
-  //   $trace=$this->session->userdata('trace');
-  //   if (!empty($trace)) {
-  //     $this->load->view('admin/trace',array('trace'=>$trace));
-  //   }
-  //   $this->session->unset_userdata('trace');
-  // }
-
+  
   /**
    * Verzamel alle languge keys en geef deze terug
    *
@@ -87,6 +72,43 @@ class AdminController extends BasicController {
     $lang_keys = $this->lang->language;
     $lang_keys = filter_by_key($lang_keys,'vue_','');
     return $lang_keys;
+  }
+  
+  private function _collect_help() {
+    // Lees alle help bestanden in en zet ze om naar HTML
+		$lang = $this->flexy_auth->get_user(null,'str_language');
+    $map=APPPATH.'views/help';
+    $helpFiles=read_map($map);
+    ksort($helpFiles);
+    
+    $help_items = array();
+    foreach ($helpFiles as $file => $item) {
+      $title = str_replace('_',' ',get_suffix(str_replace('.html','',$item['name']),'__'));
+      if (!empty($title)) {
+        $html = file_get_contents($item['path']);
+        $matches=array();
+        if (preg_match_all("/\[(.*)\]/uiUsm", $html,$matches)) {
+          foreach ($matches[1] as $match) {
+            $help=$this->lang->ui_help($match);
+            if ($help) {
+              $help=h( $this->lang->ui(remove_prefix($match,'.')),2 ).$help;
+              $html=str_replace('['.$match.']',$help,$html);
+            }
+          }
+        }
+        $html = Markdown($html);
+        $html = str_replace('sys/flexyadmin/assets/',$this->config->item('ADMINASSETS'),$html);
+        
+        $uri = remove_prefix(remove_suffix($file,'.'),'__');
+        $help_items[$uri] = array(
+          'uri'     => $uri,
+          'title'   => $title,
+          'content' => $html,
+        );
+      }
+    }
+		$help = $this->load->view( 'admin/vue/help', array('items'=>$help_items), true );
+    return $help;
   }
 
   /**
@@ -102,6 +124,9 @@ class AdminController extends BasicController {
     
     // User data
     $this->view_data['user'] = array_keep_keys($this->flexy_auth->get_user(),array('username','email','str_filemanager_view','auth_token'));
+    
+    // Help
+    $this->view_data['help'] = $this->_collect_help();
     
     // Basic content
     $this->view_data['content'] = '';
@@ -130,6 +155,7 @@ class AdminController extends BasicController {
     $this->view_data['tinymceOptions'] = $this->config->get_item(array('admin_ui','wysiwyg'));
     $this->view_data['tinymceOptions']['language'] = $this->flexy_auth->get_user()['str_language'];
   }
+  
   
   /**
    * Laad de admin pagina zien

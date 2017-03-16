@@ -19,7 +19,7 @@ $config['header_menu'] = array(
   'settings'   => array( 'name'=>'settings',   'uri'=>'show/form/tbl_site/1',          'icon'=>'cog'),
   'user'       => array( 'name'=>'{username}', 'uri'=>'show/form/cfg_users/{user_id}', 'icon'=>'user') ,
   'logout'     => array( 'name'=>'logout',     'uri'=>'logout',                        'icon'=>'power-off' ),
-  'help'       => array( 'name'=>'help',       'uri'=>'help/index',                    'icon'=>'question-circle' ),
+  'help'       => array( 'name'=>'help',       'uri'=>'help',                          'icon'=>'question-circle' ), // Hier komt extra code bij
 );
 
 $config['side_menu']           = array();
