@@ -49,7 +49,7 @@ class Get_image_list extends Api_Model {
     $this->data->table('res_assets')->select('CONCAT_WS("/","_media/'.$path.'",`file`) AS link, CONCAT(`alt`," (",`file`,")") AS title')->where('path',$path);
     if ($filter) $this->data->where($filter);
     if ($order) $this->data->order_by($order);
-    $result = $this->data->get_result();
+    $result = $this->data->cache()->get_result();
     return $this->_result_as_links($result);
   }
   
