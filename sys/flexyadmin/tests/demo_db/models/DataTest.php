@@ -65,21 +65,20 @@ class DataTest extends CITestCase {
     $grid_set = $this->CI->data->get_setting('grid_set');
     $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module'), $grid_set['fields'] );
     $this->assertEquals( array(), $grid_set['with'] );
-    $this->assertEquals( 'select', $grid_set['field_info']['str_module']['form-type'] );
-    $this->assertEquals( 'media', $grid_set['field_info']['medias_fotos']['form-type'] );
+    $this->assertEquals( 'select', $grid_set['field_info']['str_module']['type'] );
+    $this->assertEquals( 'media', $grid_set['field_info']['medias_fotos']['type'] );
     $this->assertEquals( 'pictures', $grid_set['field_info']['medias_fotos']['path'] );
-    
     
     // formset
     $form_set = $this->CI->data->get_setting('form_set');
     $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $form_set['fields'] );
     $this->assertEquals( array(), $form_set['with'] );
-    $this->assertEquals( 'select', $form_set['field_info']['str_module']['form-type'] );
-    $this->assertEquals( 'media', $form_set['field_info']['medias_fotos']['form-type'] );
-    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['options']);
-    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['options']['data']);
-    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['options']);
-    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['options']['data']);
+    $this->assertEquals( 'select', $form_set['field_info']['str_module']['type'] );
+    $this->assertEquals( 'media', $form_set['field_info']['medias_fotos']['type'] );
+    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['_options']);
+    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['_options']['data']);
+    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['_options']);
+    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['_options']['data']);
     $this->assertEquals( 'pictures', $grid_set['field_info']['medias_fotos']['path'] );
   }
 

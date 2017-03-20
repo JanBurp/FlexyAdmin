@@ -1154,7 +1154,7 @@ Class Data_Core extends CI_Model {
   /**
    * Geeft $settings['field_info'] Met alse extra:
    * - Standaard informatie uit config schemaform voor het veld
-   * - 'name'       - de ui name van het veld
+   * - 'label'      - de ui name van het veld
    * - ['options']  - Als het veld options heeft, wordt hier de informatie ingestopt
    * - ['path']     - Als het een media veld betreft
    *
@@ -1173,12 +1173,13 @@ Class Data_Core extends CI_Model {
     $field_info = array_merge($fields,$field_info);
     // Alleen de meegegeven velden
     $field_info = array_keep_keys($field_info,$fields);
-
+    
     // Loop alle velden en vul informatie aan
     foreach ($field_info as $field => $info) {
       if (!is_array($info)) $info=array();
       // UI name
-      $info['name'] = $this->lang->ui($field);
+      $info['label'] = $this->lang->ui($field);
+      
       // Schema: default
       $schema = $schemaform['FIELDS_default'];
       // Schema: from prefix
@@ -1186,22 +1187,36 @@ Class Data_Core extends CI_Model {
       $schema       = array_merge($schema, el(array('FIELDS_prefix',$fieldPrefix),$schemaform,array()) );
       // Schema: from fieldname
       $schema       = array_merge($schema, el(array('FIELDS_special',$field),$schemaform,array()) );
+      // Grid-type?
+      if (!isset($schema['grid-type'])) $schema['grid-type'] = $schema['type'];
+      
+      // Combineer
+      $info = array_merge($info,$schema,$extra);
+      
+      // Validation als string
+      $info['validation'] = is_array($info['validation']) ? implode('|',$info['validation']) : $info['validation'];
+      
       // Options
       $options = $this->get_options($field,array('many_to_many','one_to_many'));
       if ($options) {
-        $schema['form-type'] = 'select';
+        $info['type'] = 'select';
         if ($fieldPrefix==='media' or $fieldPrefix==='medias') {
-          $info['path']        = $options['path'];
-          $schema['form-type'] = 'media';
+          $info['path'] = $options['path'];
+          $info['type'] = 'media';
           unset($options['path']);
         }
+        $options = array_keep_keys($options,array('table','data','multiple','api','insert_rights'));
+        $info['_options'] = $options;
         if ($include_options) {
-          $options=array_keep_keys($options,array('table','data','multiple','api','insert_rights'));
-          $info['options'] = $options;
+          $select_options = el('data',$options);
+          if ($select_options) {
+            $select_options = array_column($select_options,'name','value');
+            $info['options']  = $select_options;
+            $info['multiple'] = el('multiple',$options,FALSE)?'multiple':'';
+          }
         }
       }
-      // Combineer alles
-      $info = array_merge($info,$schema,$extra);
+
       $field_info[$field] = $info;
     }
     
@@ -1213,42 +1228,40 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
     return $field_info;
   }
   
-  /**
-   * Geeft form_fields terug, klaar voor gebruik in een formulier
-   *
-   * @param array $fields 
-   * @param array $extra 
-   * @param bool $include_options 
-   * @return array
-   * @author Jan den Besten
-   */
-  public function get_field_info_as_formfields($fields=array(),$extra=array(),$include_options=TRUE) {
-    $field_info = $this->get_setting_field_info_extended($fields,$extra,$include_options);
-    $form_fields = array();
-    foreach ($field_info as $field => $info) {
-      $form_fields[$field] = array(
-        'label'      => $info['name'],
-        'validation' => is_array($info['validation'])?implode('|',$info['validation']):$info['validation'],
-        'type'       => $info['form-type'],
-      );
-      
-      if ($form_fields[$field]['type']=='primary') $form_fields[$field]['type']='hidden';
-      
-      if (isset($info['options'])) {
-        $options = el('data',$info['options']);
-        if ($options) {
-          $options = array_column($options,'name','value');
-          $form_fields[$field]['options']  = $options;
-          $form_fields[$field]['multiple'] = el('multiple',$info['options'],FALSE)?'multiple':'';
-        }
-      }
-    }
-    return $form_fields;
-  }
+  // /**
+  //  * Geeft form_fields terug, klaar voor gebruik in een formulier
+  //  *
+  //  * @param array $fields
+  //  * @param array $extra
+  //  * @param bool $include_options
+  //  * @return array
+  //  * @author Jan den Besten
+  //  */
+  // public function get_field_info_as_formfields($fields=array(),$extra=array(),$include_options=TRUE) {
+  //   $field_info = $this->get_setting_field_info_extended($fields,$extra,$include_options);
+  //   $form_fields = array();
+  //   foreach ($field_info as $field => $info) {
+  //     // $form_fields[$field] = array(
+  //     //   'label'      => $info['label'],
+  //     //   'validation' => is_array($info['validation'])?implode('|',$info['validation']):$info['validation'],
+  //     //   'type'       => $info['type'],
+  //     // );
+  //
+  //     if (isset($info['options'])) {
+  //       $options = el('data',$info['options']);
+  //       if ($options) {
+  //         $options = array_column($options,'name','value');
+  //         $form_fields[$field]['options']  = $options;
+  //         $form_fields[$field]['multiple'] = el('multiple',$info['options'],FALSE)?'multiple':'';
+  //       }
+  //     }
+  //   }
+  //   return $form_fields;
+  // }
   
   /**
    * Geeft de grid_set settings, met als extra:
@@ -1302,7 +1315,6 @@ Class Data_Core extends CI_Model {
     
     // Field info
     $form_set['field_info'] = $this->get_setting_field_info_extended($form_set['fields'],array(),true);
-    // trace_($form_set['field_info']);
     return $form_set;
   }
   
@@ -4957,7 +4969,7 @@ Class Data_Core extends CI_Model {
 				$type           = sizeof($matches) > 1 ? $matches[1] : NULL;
 				$max_length     = sizeof($matches) > 3 ? $matches[3] : NULL;
         $info=array(
-  				'name'        => $field->Field,
+  				'label'       => $field->Field,
   				'type'        => $type,
   				'default'     => $field->Default,
   				'max_length'  => $max_length,
@@ -4967,7 +4979,7 @@ Class Data_Core extends CI_Model {
         if ( strpos($info['type'],'int')!==FALSE ) {
           $info['default'] = (int) $info['default'];
         }
-        $this->field_data[$info['name']] = $info;
+        $this->field_data[$info['label']] = $info;
 			}
 			$query->free_result();
 		}
