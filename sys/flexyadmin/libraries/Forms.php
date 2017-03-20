@@ -236,7 +236,7 @@ class Forms extends Module {
     if ($formButtons) $form->set_buttons($formButtons);
     
 		// Validate, and test filled form
-    $this->validated=$form->validation($this->form_id);
+    $this->validated = $form->validation($this->form_id);
     $this->spam=false;
   
     $result = true;
