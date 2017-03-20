@@ -1317,40 +1317,43 @@ Class Data_Core extends CI_Model {
     }
     
     // Relaties
-    foreach ($set['with'] as $type => $relations) {
-      // Vul aan als alleen maar de types zijn ingesteld
-      if (is_numeric($type)) {
-        unset($set['with'][$type]);
-        $type = $relations;
-        $relations = $this->get_setting(array('relations',$type));
-      }
-      else {
-        $complete_relations = $this->get_setting(array('relations',$type));
-        $relations = array_keep_keys($complete_relations,$relations);
-        $set['with'][$type] = $relations;
-      }
-      // Loop alle relaties langs en complementeer die
-      if ($relations) {
-        foreach ($relations as $what => $info) {
-          $field = 'abstract';
-          if ($type==='one_to_one' and isset($info['other_table'])) {
-            $field = $this->get_other_table_abstract_fields($info['other_table']);
-          }
-          $set['with'][$type][$what] = $field;
-          // Vul ook de velden aan als relatie veld er nog niet instaat
-          $relation_field = $what;
-          if ($type==='many_to_many') $relation_field = $info['result_name'];
-          if (!in_array($relation_field,$set['fields'])) {
-            $set['fields'][] = $relation_field;
-            if ($set_type==='form_set') {
-              $first_fieldset = array_keys($set['fieldsets']);
-              $first_fieldset = current($first_fieldset);
-              $set['fieldsets'][$first_fieldset][] = $relation_field;
+    if ( $set['with']!==FALSE ) {
+      foreach ($set['with'] as $type => $relations) {
+        // Vul aan als alleen maar de types zijn ingesteld
+        if (is_numeric($type)) {
+          unset($set['with'][$type]);
+          $type = $relations;
+          $relations = $this->get_setting(array('relations',$type));
+        }
+        else {
+          $complete_relations = $this->get_setting(array('relations',$type));
+          $relations = array_keep_keys($complete_relations,$relations);
+          $set['with'][$type] = $relations;
+        }
+        // Loop alle relaties langs en complementeer die
+        if ($relations) {
+          foreach ($relations as $what => $info) {
+            $field = 'abstract';
+            if ($type==='one_to_one' and isset($info['other_table'])) {
+              $field = $this->get_other_table_abstract_fields($info['other_table']);
+            }
+            $set['with'][$type][$what] = $field;
+            // Vul ook de velden aan als relatie veld er nog niet instaat
+            $relation_field = $what;
+            if ($type==='many_to_many') $relation_field = $info['result_name'];
+            if (!in_array($relation_field,$set['fields'])) {
+              $set['fields'][] = $relation_field;
+              if ($set_type==='form_set') {
+                $first_fieldset = array_keys($set['fieldsets']);
+                $first_fieldset = current($first_fieldset);
+                $set['fieldsets'][$first_fieldset][] = $relation_field;
+              }
             }
           }
         }
       }
     }
+    
     return $set;
   }
   
