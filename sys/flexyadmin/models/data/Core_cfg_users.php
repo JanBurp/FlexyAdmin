@@ -180,10 +180,8 @@ Class Core_cfg_users extends Data_Core {
    * @author Jan den Besten
    */
   protected function _select() {
-    parent::_select();
-    if (isset($this->tm_select['gpw_password'])) {
-      $this->tm_select['gpw_password'] = 'SPACE(0) AS `gpw_password`';
-    }
+    $this->select_hidden_password('gpw_password');
+    return parent::_select();
     return $this;
   }
   

@@ -151,6 +151,13 @@ Class Data_Core extends CI_Model {
   protected $tm_txt_abstract = 0;
   
   /**
+   * Maak wachtwoord velden onzichtbaar: lege strings.
+   * Kan handig zijn als je een formulier met wachtwoord wilt laten zien om eventueel aan te kunnen passen.
+   * Kan TRUE zijn, of array van wachtwoord velden.
+   */
+  protected $tm_hidden_passwords = FALSE;
+  
+  /**
    * Of de result_array in het geval van ->select_abstract() plat moet worden. Zie bij ->select_abstract()
    */
   protected $tm_flat_abstracts = FALSE;
@@ -2564,7 +2571,10 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    return $this->get_row( $where, 'form' );
+    $result = $this->get_row( $where, 'form' );
+    // trace_sql($this->last_query());
+    // trace_($result);
+    return $result;
   }
   
 
@@ -2665,13 +2675,23 @@ Class Data_Core extends CI_Model {
     }
     // Maak de SELECT query
     foreach ( $this->tm_select as $key => $field ) {
+      $prefix = get_prefix($field);
       // Zorg ervoor dat alle velden geprefixed worden door de eigen tabelnaam om dubbelingen te voorkomen
       if (in_array($field,$this->settings['fields'])) {
         $this->tm_select[$key] = '`'.$this->settings['table'].'`.`'.$field.'`';
       }
       // tm_txt_abstract?
-      if ( $this->tm_txt_abstract and get_prefix($field)=='txt' ) {
+      if ( $this->tm_txt_abstract and $prefix=='txt' ) {
         $this->tm_select[$key] = 'SUBSTRING(`'.$this->settings['table'].'`.`'.$field.'`,1,'.$this->tm_txt_abstract.') AS `'.$field.'`';
+      }
+      // Onzichtbare wachtwoorden
+      if ( $this->tm_hidden_passwords and in_array($prefix,array('gpw','pwd'))) {
+        if (is_array($this->tm_hidden_passwords) and in_array($field,$this->tm_hidden_passwords)) {
+          $this->tm_select[$key] = 'SPACE(0) AS `'.$field.'`';
+        }
+        else {
+          $this->tm_hidden_passwords;
+        }
       }
     }
     return $this;
@@ -2702,6 +2722,24 @@ Class Data_Core extends CI_Model {
   public function select_txt_abstract( $txt_abstract = TRUE ) {
     if ( $txt_abstract===TRUE or strtolower($txt_abstract)==='true') $txt_abstract = 100;
     $this->tm_txt_abstract = $txt_abstract;
+    return $this;
+  }
+  
+  /**
+   * Verander alle wachtwoord velden (pwd_.. en gpw_..) in onzichtbare velden: het resultaat is een lege string.
+   *
+   * @param mixed $hidden_passwords [boolean of string van wachtwoord veld of array van wachtwoord velden]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function select_hidden_password( $hidden_passwords = TRUE ) {
+    if (is_string($hidden_passwords)) $hidden_passwords = array($hidden_passwords);
+    if (is_array($this->tm_hidden_passwords) and is_array($hidden_passwords)) {
+      $this->tm_hidden_passwords = array_merge($this->tm_hidden_passwords,$hidden_passwords);
+    }
+    else {
+      $this->tm_hidden_passwords = $hidden_passwords;
+    }
     return $this;
   }
   
