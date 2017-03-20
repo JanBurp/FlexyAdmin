@@ -1,11 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Schemaform settings for basic field(type)s
+ * Field info settings for basic field(type)s
  *
  * @author			Jan den Besten
  */
-
 
 /**
  * Default field

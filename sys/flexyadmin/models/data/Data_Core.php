@@ -384,8 +384,8 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_field_info( $table='', $fields=array() ) {
-    $this->config->load('schemaform',true);
-    $schemaform = $this->config->item('schemaform');
+    $this->config->load('field_info',true);
+    $field_info_config = $this->config->item('field_info');
     $this->load->library('form_validation');
     if (empty($table)) $table = $this->settings['table'];
     if (empty($fields)) $fields = $this->settings['fields'];
@@ -395,12 +395,12 @@ Class Data_Core extends CI_Model {
       $info = array();
       
       /**
-       * Default, eerst uit schemaform, dan uit database
+       * Default, eerst uit field_info_config, dan uit database
        */
-      $info['default'] = el(array('FIELDS_special',$field,'default'),$schemaform);
+      $info['default'] = el(array('FIELDS_special',$field,'default'),$field_info_config);
       if ( !isset($info['default']) ) {
         $pre = get_prefix($field);
-        $info['default'] = el(array('FIELDS_prefix',$pre,'default'),$schemaform);
+        $info['default'] = el(array('FIELDS_prefix',$pre,'default'),$field_info_config);
       }
       
       // Uit database
@@ -1153,7 +1153,7 @@ Class Data_Core extends CI_Model {
   
   /**
    * Geeft $settings['field_info'] Met alse extra:
-   * - Standaard informatie uit config schemaform voor het veld
+   * - Standaard informatie uit config field_info_config voor het veld
    * - 'label'      - de ui name van het veld
    * - ['options']  - Als het veld options heeft, wordt hier de informatie ingestopt
    * - ['path']     - Als het een media veld betreft
@@ -1162,8 +1162,8 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_setting_field_info_extended($fields=array(),$extra=array(),$include_options=FALSE) {
-    $this->config->load('schemaform',true);
-    $schemaform = $this->config->item('schemaform');
+    $this->config->load('field_info',true);
+    $field_info_config = $this->config->item('field_info');
     
     // Standaard velden, of meegegeven (met mogelijk extra) velden
     if (!$fields) $fields = $this->settings['fields'];
@@ -1181,12 +1181,12 @@ Class Data_Core extends CI_Model {
       $info['label'] = $this->lang->ui($field);
       
       // Schema: default
-      $schema = $schemaform['FIELDS_default'];
+      $schema = $field_info_config['FIELDS_default'];
       // Schema: from prefix
       $fieldPrefix  = get_prefix($field);
-      $schema       = array_merge($schema, el(array('FIELDS_prefix',$fieldPrefix),$schemaform,array()) );
+      $schema       = array_merge($schema, el(array('FIELDS_prefix',$fieldPrefix),$field_info_config,array()) );
       // Schema: from fieldname
-      $schema       = array_merge($schema, el(array('FIELDS_special',$field),$schemaform,array()) );
+      $schema       = array_merge($schema, el(array('FIELDS_special',$field),$field_info_config,array()) );
       // Grid-type?
       if (!isset($schema['grid-type'])) $schema['grid-type'] = $schema['type'];
       
@@ -1694,7 +1694,7 @@ Class Data_Core extends CI_Model {
     }
 
 		foreach ($fields as $field) {
-      // Default from field_info/schemaform
+      // Default from field_info/field_info_config
       $defaults[$field] = $this->get_setting( array('field_info',$field,'default') );
       // Default from database?
       if (is_null($defaults[$field])) $defaults[$field] = $this->field_data( $field, 'default' );

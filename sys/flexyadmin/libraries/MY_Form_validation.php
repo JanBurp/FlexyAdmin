@@ -9,15 +9,15 @@
 
 class MY_Form_validation extends CI_Form_validation {
   
-  private $schemaform = array();
+  private $field_info = array();
    
   public function __construct() {
     parent::__construct();
     $this->CI = @get_instance();
     $this->CI->load->helper('email');
     $this->CI->lang->load('regex_validation');
-    $this->CI->config->load('schemaform',true);
-    $this->schemaform = $this->CI->config->get_item('schemaform');
+    $this->CI->config->load('field_info',true);
+    $this->field_info = $this->CI->config->get_item('field_info');
   }
   
   /**
@@ -158,7 +158,7 @@ class MY_Form_validation extends CI_Form_validation {
    * @author Jan den Besten
    */
   public function get_rules($table,$field,$validation=array(),$as_array=FALSE) {
-    $validation[]=$this->_get_schemaform_rules($field);
+    $validation[]=$this->_get_field_info_rules($field);
     $validation[]=$this->_get_data_settings_rules($table,$field);
     $validation[]=$this->_get_db_rules($table,$field);
     $validation[]=$this->_get_db_options_rules($table,$field);
@@ -168,21 +168,21 @@ class MY_Form_validation extends CI_Form_validation {
   }
 
   /**
-   * Geeft validation rules die in schemaform.php ingesteld zijn voor een veld
+   * Geeft validation rules die in field_info.php ingesteld zijn voor een veld
    *
    * @param string $field 
    * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
    * @author Jan den Besten
    */
-	private function _get_schemaform_rules($field) {
+	private function _get_field_info_rules($field) {
     // Default
-    $validation = el( array('FIELDS_default','validation'), $this->schemaform, '');
+    $validation = el( array('FIELDS_default','validation'), $this->field_info, '');
     $validation = explode('|',$validation);
     // Prefix
-    $pre_validation = el( array('FIELDS_prefix', get_prefix($field), 'validation'), $this->schemaform, '');
+    $pre_validation = el( array('FIELDS_prefix', get_prefix($field), 'validation'), $this->field_info, '');
     $pre_validation = explode('|',$pre_validation);
     // Special
-    $special_validation = el( array('FIELDS_special',$field,'validation'), $this->schemaform,'');
+    $special_validation = el( array('FIELDS_special',$field,'validation'), $this->field_info,'');
     $special_validation = explode('|',$special_validation);
     // Merge
     $validation = array_merge($validation,$pre_validation,$special_validation);
