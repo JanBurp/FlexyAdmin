@@ -31,10 +31,13 @@ $config['fields']           = NULL;
 
 /**
  * Per veld mogelijk meer informatie:
+ * - type               - form input type
+ * - grid-type          - grid cell type
  * - default            - defaultwaarde
+ * - readonly           - of het aangepast mag worden
+ * - sortable           - of het in een grid een sorteerbare kolom word
  * - validation         - array met validation rules
  * - path               - als het een media veld is dan komt hier het assets pad
- * - schema[]           - eventueel overrulen van schemaform
  */
 $config['field_info']       = NULL;
 

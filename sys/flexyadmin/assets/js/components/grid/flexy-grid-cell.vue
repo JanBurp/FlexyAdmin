@@ -10,9 +10,9 @@ export default {
   components: {flexyThumb,flexyButton},
   props:['type','name','primary','value','level','editable','readonly','options','focus'],
   
-  // created : function() {
-  //   console.log(this.options);
-  // },
+  created : function() {
+    console.log(this.name,this.type);
+  },
 
   computed:{
     
