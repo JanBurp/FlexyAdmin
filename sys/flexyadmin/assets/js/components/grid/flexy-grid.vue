@@ -333,23 +333,23 @@ export default {
             // Defaults
             if ( _.isUndefined(this.fields[field]) ) {
               this.fields[field] = [];
-              this.fields[field]['type']      = 'string';
-              this.fields[field]['grid-type'] = 'text';
+              this.fields[field]['type']      = 'input';
+              this.fields[field]['grid-type'] = 'input';
               this.fields[field]['readonly']  = false;
             }
             else {
-              if ( _.isUndefined(this.fields[field]['type']) )      this.fields[field]['type'] = 'string';
-              if ( _.isUndefined(this.fields[field]['grid-type']) ) this.fields[field]['grid-type'] = 'text';
+              if ( _.isUndefined(this.fields[field]['type']) )      this.fields[field]['type'] = 'input';
+              if ( _.isUndefined(this.fields[field]['grid-type']) ) this.fields[field]['grid-type'] = 'input';
               if ( _.isUndefined(this.fields[field]['readonly']) )  this.fields[field]['readonly'] = false;
             }
             data[i][field] = {
-              'type'  : this.fields[field]['grid-type'] || this.fields[field]['form-type'],
+              'type'  : this.fields[field]['grid-type'] || this.fields[field]['type'],
               'value' : row[field]
             };
-            if ( this.fields[field].type==='number' && this.fields[field]['form-type']==='select') {
+            if ( this.fields[field].type==='number' && this.fields[field]['type']==='select') {
               var jsonValue = JSON.parse(row[field].value);
               data[i][field] = {
-                'type'  : this.fields[field]['grid-type'] || this.fields[field]['form-type'],
+                'type'  : this.fields[field]['grid-type'] || this.fields[field]['type'],
                 'value' : Object.values(jsonValue)[0],
                 'id'    : Object.keys(jsonValue)[0],
               };
@@ -431,12 +431,12 @@ export default {
     },
     
     isPrimaryHeader : function(field) {
-      var headerType = field['grid-type'] || field['form-type'];
-      return (headerType==='primary')
+      var headerType = field['grid-type'] || field['type'];
+      return (headerType==='primary');
     },
     isNormalVisibleHeader : function(field) {
-      var headerType = field['grid-type'] || field['form-type'];
-      return headerType!=='hidden' && headerType!=='primary'
+      var headerType = field['grid-type'] || field['type'];
+      return (headerType!=='hidden' && headerType!=='primary');
     },
     isSortableField : function(field) {
       return field.sortable;
@@ -457,7 +457,7 @@ export default {
     },
 
     headerClass : function(field) {
-      var c = 'grid-header-type-'+field['form-type'];
+      var c = 'grid-header-type-'+field['type'];
       if (field['readonly']) c+=' grid-header-muted';
       return c;
     },
@@ -945,7 +945,7 @@ export default {
           </div>
           <div class="form-group grid-extended-search-field">
             <select class="form-control form-control-sm custom-select" name="grid-extended-search-field[]" v-model="term.field">
-              <option v-for="field in searchable_fields" :value="field" :selected="term.field===field">{{fields[field].name}}</option>
+              <option v-for="field in searchable_fields" :value="field" :selected="term.field===field">{{fields[field].label}}</option>
             </select>
           </div>
           <div class="form-group grid-extended-search-equals">
@@ -981,14 +981,14 @@ export default {
                       <a v-for="(field,key) in fields" v-if="isSortableField(field)" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(apiParts.order.indexOf(key)>=0)}">
                         <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
                         <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
-                        {{field.name}}
+                        {{field.label}}
                       </a>
                     </div>
                   </div>
                 </th>
                 
                 <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
-                  <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.name}}</span>
+                  <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.label}}</span>
                     <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
                     <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
                   </a>

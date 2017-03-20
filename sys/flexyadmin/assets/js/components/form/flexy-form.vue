@@ -126,7 +126,7 @@ export default {
     
     label : function(field) {
       if (_.isUndefined(this.fields[field])) return field;
-      return this.fields[field].name;
+      return this.fields[field].label;
     },
     
     tabsClass : function() {
@@ -137,15 +137,15 @@ export default {
     isType : function( type,field ) {
       if (_.isUndefined(this.fields[field])) return false;
       if (type==='default') {
-        return this.fieldTypes['default'].indexOf(this.fields[field]['form-type']) === -1;
+        return this.fieldTypes['default'].indexOf(this.fields[field]['type']) === -1;
       }
-      return this.fieldTypes[type].indexOf(this.fields[field]['form-type']) >= 0;
+      return this.fieldTypes[type].indexOf(this.fields[field]['type']) >= 0;
     },
     
     isMultiple : function( field ) {
       var multiple = false;
       if (_.isUndefined(this.fields[field])) return false;
-      if (this.fields[field].options.multiple) multiple='multiple';
+      if (this.fields[field]._options.multiple) multiple='multiple';
       if (flexyState.debug) console.log('isMultiple',field,multiple);
       return multiple;
     },
@@ -189,9 +189,9 @@ export default {
     
     hasInsertRights : function(field) {
       if ( _.isUndefined(this.fields[field]) ) return false;
-      if ( _.isUndefined(this.fields[field].options) ) return false;
-      if ( _.isUndefined(this.fields[field].options.insert_rights) ) return false;
-      var rights = this.fields[field].options.insert_rights;
+      if ( _.isUndefined(this.fields[field]._options) ) return false;
+      if ( _.isUndefined(this.fields[field]._options.insert_rights) ) return false;
+      var rights = this.fields[field]._options.insert_rights;
       return (rights===true || rights>=2);
     },
     
@@ -243,7 +243,7 @@ export default {
         this.$set(this.insertForm,field,{
           show  : true,
           field : field,
-          table : this.fields[field].options.table,
+          table : this.fields[field]._options.table,
         });
       }
       // console.log('toggleInsertForm',field,this.insertForm);
@@ -272,7 +272,7 @@ export default {
       .then(function(response){
         if (!_.isUndefined(response.data)) {
           // Vervang de opties 
-          self.fields[field].options = response.data.data[field];
+          self.fields[field]._options = response.data.data[field];
           // Selecteer zojuist toegevoegde item
           self.addToSelect(field,event);
         }
@@ -544,7 +544,7 @@ export default {
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <vselect :name="field" 
-                    :options="fields[field].options.data" options-value="value" options-label="name" 
+                    :options="fields[field]._options.data" options-value="value" options-label="name" 
                     :value="selectValue(field)" 
                     :multiple="isMultiple(field)"
                     @change="updateSelect(field,$event)"
@@ -557,7 +557,7 @@ export default {
 
                 <template v-if="isType('radio',field)">
                   <!-- Radio -->
-                  <template v-for="option in fields[field].options.data">
+                  <template v-for="option in fields[field]._options.data">
                     <div class="form-check form-check-inline form-subcheck" :class="{'checked':isSelectedOption(field,row[field],option.value)}" @click="selectOption(field,option.value)">
                       <label class="form-check-label" :title="selectItem(option.name)">
                       <flexy-button :icon="{'check-square-o':isSelectedOption(field,row[field],option.value),'square-o':!isSelectedOption(field,row[field],option.value)}" class="btn-outline-default"/>
