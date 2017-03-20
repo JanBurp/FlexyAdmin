@@ -5733,7 +5733,7 @@ a > .fa, .btn > .fa {
       padding-left: .35rem; }
   .grid #dropdown-sort.dropdown.open .dropdown-menu {
     display: block; }
-  .grid th.grid-header-type-primary {
+  .grid th.grid-header-type-hidden.text-primary {
     width: 2rem;
     white-space: nowrap; }
   .grid th.grid-header-muted {
