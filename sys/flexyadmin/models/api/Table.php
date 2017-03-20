@@ -106,7 +106,6 @@ class Table extends Api_Model {
     'as_options'   => false,
     'txt_abstract' => 0,
     'settings'     => false,
-    'schemaform'   => false,
   );
   
 	public function __construct() {
