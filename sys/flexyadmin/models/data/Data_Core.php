@@ -1225,6 +1225,8 @@ Class Data_Core extends CI_Model {
       foreach ($field_info as $key => $info) {
         if (isset($this->settings['field_info'][$key])) {
           $field_info[$key] = array_merge_recursive_distinct($field_info[$key],$this->settings['field_info'][$key]);
+          // Validation als string
+          $field_info[$key]['validation'] = is_array($field_info[$key]['validation']) ? implode('|',$field_info[$key]['validation']) : $field_info[$key]['validation'];
         }
       }
     }

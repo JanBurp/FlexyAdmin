@@ -571,15 +571,6 @@ class Form {
         }
 			}
 
-			// set extra validation rules for passwords if new (required)
-      if ($field['type']=='password' and !isset($field['matches'])) {
-        $id=el(array('id','value'),$data,-1);
-        if ($id<0) {
-          // if new 'user' password is required
-          $field['validation']='required|'.$field['validation'];
-        }
-      }
-      
       // captcha
 			if ($field['type']=='captcha') {
         $this->CI->load->helper('captcha');
@@ -910,7 +901,7 @@ class Form {
     $attr["class"] = $class;
     $attr["value"] = $field["value"];
     if (isset($field['placeholder'])) $attr['placeholder']=$field['placeholder'];
-    if (isset($field['readonly'])) $attr['readonly']=$field['readonly'];
+    if (el('readonly',$field)) $attr['readonly'] = 'readonly';
     if (isset($field['disabled'])) $attr['disabled']=$field['disabled'];
 
     // Status / Validation error
