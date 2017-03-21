@@ -249,7 +249,6 @@ class Row extends Api_Model {
     $args=$this->_clean_args(array('table','where','select'));
     $this->data->table( $args['table'] );
     if (!isset($args['where'])) $args['where']=null;
-    xdebug_break();
     if (isset($args['select'])) $this->data->select($args['select']);
     if (el('as_form',$this->args,false)) {
       $values = $this->data->get_form( $args['where'] );
