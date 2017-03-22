@@ -4,6 +4,7 @@
 $lang['tbl_site']         = 'Instellingen';
 $lang['tbl_menu']         = "Pagina's";
 $lang['tbl_links']        = "Links";
+$lang['cfg_email']        = "Email templates";
 
 // Standaard Mappen
 $lang['media_pictures']   = "Afbeeldingen";
