@@ -117,7 +117,7 @@ class AdminController extends BasicController {
    * @return void
    * @author Jan den Besten
    */
-  private function _prepare_view_data() {
+  protected function _prepare_view_data() {
     // tbl_site
     $this->view_data = $this->data->table('tbl_site')->select('str_title,url_url')->cache()->get_row();
     $this->view_data['url_url'] = str_replace('http://','',$this->view_data['url_url']);
