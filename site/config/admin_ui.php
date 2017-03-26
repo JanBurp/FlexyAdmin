@@ -24,16 +24,16 @@ $config['side_menu']['media'] = array(
  * TinyMCE settings
  */
 $config['wysiwyg'] = array(
-  'plugins'                   => 'fullscreen,paste,textpattern,wordcount,table,flexy_image,imagetools,flexy_link,autolink,charmap,media,code,visualblocks,preview',
+  'plugins'                   => 'fullscreen,paste,textpattern,wordcount,table,flexy_image,imagetools,flexy_link,autolink,charmap,media,code,visualblocks,preview,flexy_test',
   'max-height'                 => 400,
   'autoresize_max_height'     => 500,
   'paste_as_text'             => true,
   'paste_word_valid_elements' => 'b,strong,i,em,a',
   'link_title'                => false,
   'image_dimensions'          => false,
-  // 'menubar'                => "edit format table",
+  // 'menubar'                   => "edit format table tools",
   'menubar'                   => false,
-  'toolbar1'                  => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | flexy_link unlink | charmap flexy_image media | visualblocks preview fullscreen | code',
+  'toolbar1'                  => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | flexy_link unlink | charmap flexy_image media | visualblocks preview fullscreen | code | flexy_test',
 );
 
 
