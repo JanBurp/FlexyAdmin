@@ -100,14 +100,20 @@ class File extends CI_Controller {
    * @author Jan den Besten
    */
 	public function download($path='',$file='')	{
-    // trace_([$path,$file]);
 		if (!empty($path) and !empty($file)) {
 			$fullpath=SITEPATH.'assets/'.$path.'/'.$file;
 			if (file_exists($fullpath)) {
-        $data=file_get_contents($fullpath);
-		    $name=$file;
-        $this->load->helper('download');
-        force_download($name, $data);
+        $type = strtolower(get_suffix($file,'.'));
+        if ( in_array($type,$this->config->item('FILE_types_img')) or in_array($type,$this->config->item('FILE_types_pdf')) ) {
+          $this->output->set_content_type($type);
+          $this->output->set_output(file_get_contents($fullpath));
+        }
+        else {
+          $data=file_get_contents($fullpath);
+          $name=$file;
+          $this->load->helper('download');
+          force_download($name, $data);
+        }
 			}
 		}
 	}
