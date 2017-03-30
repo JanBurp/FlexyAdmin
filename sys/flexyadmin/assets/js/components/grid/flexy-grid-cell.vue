@@ -11,7 +11,7 @@ export default {
   props:['type','name','primary','value','level','editable','readonly','options','focus'],
   
   created : function() {
-    console.log(this.name,this.type);
+    // console.log('grid-cell',this.name,this.type);
   },
 
   computed:{
