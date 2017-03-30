@@ -24,7 +24,7 @@ $config['side_menu']['media'] = array(
  * TinyMCE settings
  */
 $config['wysiwyg'] = array(
-  'plugins'                   => 'fullscreen,paste,textpattern,wordcount,table,flexy_image,imagetools,flexy_link,autolink,charmap,media,code,visualblocks,preview,flexy_test',
+  'plugins'                   => 'fullscreen,paste,textpattern,wordcount,table,flexy_image,imagetools,flexy_link,autolink,charmap,media,code,visualblocks,preview',
   'max-height'                 => 400,
   'autoresize_max_height'     => 500,
   'paste_as_text'             => true,
@@ -33,7 +33,7 @@ $config['wysiwyg'] = array(
   'image_dimensions'          => false,
   // 'menubar'                   => "edit format table tools",
   'menubar'                   => false,
-  'toolbar1'                  => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | flexy_link unlink | charmap flexy_image media | visualblocks preview fullscreen | code | flexy_test',
+  'toolbar1'                  => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | flexy_link unlink | charmap flexy_image media | visualblocks preview fullscreen | code',
 );
 
 
