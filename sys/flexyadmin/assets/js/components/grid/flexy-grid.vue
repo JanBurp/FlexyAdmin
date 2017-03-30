@@ -42,7 +42,11 @@ export default {
     'selection':{
       type:[Array,Boolean],
       default:false,
-    }
+    },
+    'multiple':{
+      type:Boolean,
+      default:true,
+    },
   },
   
   // https://vuejs.org/v2/guide/components.html#Circular-References-Between-Components
@@ -471,7 +475,11 @@ export default {
     },
     
     select: function(id) {
+      if (this.multiple===false) {
+        this.selected = [];
+      }
       var index = this.selected.indexOf(id);
+      // console.log('select',id,this.selected,index);
       if (index>-1) {
         this.selected.splice(index, 1);
         if (this.mediaSelection) {
@@ -491,6 +499,7 @@ export default {
       else {
         this.selected.push(id);
       }
+      // console.log(this.selected);
       this.emitSelectedMedia();
     },
     
@@ -973,7 +982,7 @@ export default {
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                   <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                   <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
-                  <flexy-button @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
+                  <flexy-button v-if="multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
 
                   <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                     <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>

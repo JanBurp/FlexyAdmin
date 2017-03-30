@@ -12,14 +12,18 @@ class Editor extends AdminController {
     parent::__construct();
 	}
 
-	public function index() {
+	public function image() {
     $this->_prepare_view_data();
     $this->view_data = array_merge($this->view_data);
-    $this->load->view('admin/editor',$this->view_data);
+    $selection = $this->input->get('selected');
+    if ($selection && $selection!=="false") {
+      if (!is_array($selection)) $selection=array($selection);
+      // $this->view_data['selection'] = $selection;
+    }
+    $this->load->view('admin/editor_image',$this->view_data);
     return $this;
 	}
-
-
+  
 
 }
 
