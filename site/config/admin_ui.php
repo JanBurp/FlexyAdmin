@@ -31,7 +31,7 @@ $config['wysiwyg'] = array(
   'paste_word_valid_elements' => 'b,strong,i,em,a',
   'link_title'                => false,
   'image_dimensions'          => false,
-  // 'menubar'                => "edit format table",
+  // 'menubar'                   => "edit format table tools",
   'menubar'                   => false,
   'toolbar1'                  => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | flexy_link unlink | charmap flexy_image media | visualblocks preview fullscreen | code',
 );
