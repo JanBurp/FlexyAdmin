@@ -818,30 +818,27 @@ Class Core_res_assets extends Data_Core {
    */
   private function _get_files( $path, $filter=array(), $limit=0, $offset=0 ) {
     // Alleen de bestanden die bestaan
-    $this->group_start();
-      $this->where( 'b_exists', TRUE );
-      // Bestanden van bepaalde map
-      $this->where( 'path', $path );
-      // Standaard filters
-      // $filter = array_rename_keys($filter,array('type'=>'str_type'));
-      if ($filter) {
-        if (!is_array($filter)) {
-          $this->find($filter);
+    $this->where( 'b_exists', TRUE );
+    // Bestanden van bepaalde map
+    $this->where( 'path', $path );
+    // Standaard filters
+    if ($filter) {
+      if (!is_array($filter)) {
+        $this->find($filter,array(),array('and'=>'AND'));
+      }
+      else {
+        // find array of mulitple where's?
+        $first = current($filter);
+        if ( isset($first['field']) ) {
+          $this->find( $filter, array(),array('and'=>'AND') );
         }
         else {
-          // find array of mulitple where's?
-          $first = current($filter);
-          if ( isset($first['field']) ) {
-            $this->find( $filter );
-          }
-          else {
-            foreach ($filter as $field=>$value) {
-              $this->where( $field, $value);
-            }
+          foreach ($filter as $field=>$value) {
+            $this->where( $field, $value);
           }
         }
       }
-    $this->group_end();
+    }
     $query = $this->get( $limit, $offset, FALSE );
     return $query;
   }
