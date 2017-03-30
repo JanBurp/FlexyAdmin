@@ -27,6 +27,10 @@
     limit  = "10"
     order  = ""
     filter = ""
+    <?php if (isset($selection)): ?>
+    :selection = "<?=htmlentities(array2json($selection),ENT_QUOTES, 'UTF-8')?>"
+    <?php endif ?>
+    :multiple = "false"
   ></flexy-grid>
 
 </div>
