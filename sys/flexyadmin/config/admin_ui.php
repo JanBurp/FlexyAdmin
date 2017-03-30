@@ -53,13 +53,14 @@ $config['side_menu']['cfg_tables'] = array(
  * TinyMCE settings
  */
 $config['wysiwyg'] = array(
-  'selector'   => 'textarea.wysiwyg',
-  'plugins'    => 'fullscreen,table,image,link,code',
-  'height'     => 300,
+  'selector'      => 'textarea.wysiwyg',
+  'plugins'       => 'lists,fullscreen,table,image,link,code',
+  'height'        => 300,
+  'block_formats' => 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3',
   // 'menubar'    => "edit format table",
-  'menubar'    => false,
+  'menubar'       => false,
   // 'toolbar'    => false,
-  'toolbar1'   => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link unlink | charmap image | code fullscreen',
+  'toolbar1'      => 'cut copy paste | undo redo | bold italic | bullist numlist |alignleft aligncenter alignright | link unlink | charmap image | code fullscreen',
 );
 
 
