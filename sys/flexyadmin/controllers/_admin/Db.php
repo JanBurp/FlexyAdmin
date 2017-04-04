@@ -385,17 +385,18 @@ class Db extends AdminController {
       }
 			$this->content .= p().$action.br(2)._p();//.$comments);
 		}
+    
 	}
 	
   public function sql() {
 		if ($this->flexy_auth->is_super_admin()) {
-			$sql=$this->input->post('sql');
+			$sql = $this->input->post('sql');
 			$this->lang->load('help');
 			if ($sql) {
 				$this->_sql($sql,"Import","Importing ...");
 			}
 		}
-		$this->view_admin(lang('db_import'));				
+		$this->view_admin('plugins/plugin',array('title'=>lang('db_import'),'content'=>$this->content));				
 	}
 	
 }
