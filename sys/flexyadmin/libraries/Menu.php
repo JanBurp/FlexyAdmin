@@ -369,6 +369,11 @@ class Menu {
 				$thisItem["uri"]          = $uri;
         $thisItem["full_uri"]     = isset($item["full_uri"])?$item["full_uri"]:$uri;
 
+        // Redirect URL?
+        if ( el('url_redirect',$item,false) ) {
+          $thisItem["uri"]          = $item['url_redirect'];
+        }
+
         // name
 				if (empty($thisItem['name'])) {
 					if (isset($item[$this->settings['fields']["title"]])) {
