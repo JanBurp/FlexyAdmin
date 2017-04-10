@@ -21,9 +21,20 @@ export default {
   name: 'FlexyForm',
   components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,tab,tabs,datepicker,vselect},
   props:{
+    'action'  :{
+      type: String,
+      default: '',
+    },
     'title'   :String,
     'name'    :String,
-    'primary' :[Number,String],
+    'primary' :{
+      type: [Number,String],
+      default: -1,
+    },
+    'fields' : {
+      type: [Boolean,Array,Object],
+      default: false,
+    },
     'formtype':{
       type:String,
       default:'normal', // normal|single|subform
@@ -60,7 +71,7 @@ export default {
   data : function() {
     return {
       row : {},
-      fields : {},
+      form_groups : {},
       fieldsets: {},
       validationErrors : {},
       isSaving : false,
@@ -69,7 +80,32 @@ export default {
   },
   
   created : function() {
-    this.reloadForm();
+    // Api form
+    if ( this.fields===false ) {
+      this.reloadForm();
+    }
+    // Normal form
+    else {
+      // Fields
+      var fields = Object.keys(this.fields);
+      // Fieldsests
+      var fieldset = this.title;
+      this.fieldsets = { fieldset : fields };
+      this.form_groups = this.fields;
+      for (var field in this.fields) {
+        // value
+        var value = '';
+        if (!_.isUndefined(this.fields[field].value)) {
+          value = this.fields[field].value;
+        }
+        this.row[field] = value;
+        // validation error
+        if (!_.isUndefined(this.fields[field].validation_error)) {
+          this.$set( this.validationErrors, field, this.fields[field].validation_error );
+        }
+      }
+      this.createWysiwyg();
+    }
   },
   
   methods:{
@@ -84,7 +120,7 @@ export default {
           if (response.data.success) {
             // Zijn er settings meegekomen?
             if ( !_.isUndefined(response.data.settings) ) {
-              self.fields = response.data.settings.form_set.field_info;
+              self.form_groups = response.data.settings.form_set.field_info;
               self.fieldsets = response.data.settings.form_set.fieldsets;
             }
             // Data en die aanvullen met data
@@ -125,8 +161,8 @@ export default {
     },
     
     label : function(field) {
-      if (_.isUndefined(this.fields[field])) return field;
-      return this.fields[field].label;
+      if (_.isUndefined(this.form_groups[field])) return field;
+      return this.form_groups[field].label;
     },
     
     tabsClass : function() {
@@ -135,17 +171,18 @@ export default {
     },
         
     isType : function( type,field ) {
-      if (_.isUndefined(this.fields[field])) return false;
+      if (_.isUndefined(this.form_groups[field])) return false;
       if (type==='default') {
-        return this.fieldTypes['default'].indexOf(this.fields[field]['type']) === -1;
+        return this.fieldTypes['default'].indexOf(this.form_groups[field]['type']) === -1;
       }
-      return this.fieldTypes[type].indexOf(this.fields[field]['type']) >= 0;
+      return this.fieldTypes[type].indexOf(this.form_groups[field]['type']) >= 0;
     },
     
     isMultiple : function( field ) {
       var multiple = false;
-      if (_.isUndefined(this.fields[field])) return false;
-      if (this.fields[field]._options.multiple) multiple='multiple';
+      if (_.isUndefined(this.form_groups[field])) return false;
+      if (_.isUndefined(this.form_groups[field]._options)) return false;
+      if (this.form_groups[field]._options.multiple || this.form_groups[field].multiple) multiple='multiple';
       if (flexyState.debug) console.log('isMultiple',field,multiple);
       return multiple;
     },
@@ -153,7 +190,12 @@ export default {
     isSelectedOption : function(field,value,option) {
       var selected = '';
       if (typeof(value)!=='object') {
-        if (parseInt(value)===option || value===option) selected='selected';
+        if (typeof(value)==='string') {
+          if (value.indexOf(option)>=0) selected='selected';
+        }
+        else {
+          if (parseInt(value)===option || value===option) selected='selected';
+        }
       }
       else {
         for(var item in value) {
@@ -166,6 +208,7 @@ export default {
     
     selectOption(field,option) {
       this.row[field] = option;
+      console.log('selectOption',field,option);
     },
     
     selectItem : function (value) {
@@ -180,18 +223,28 @@ export default {
       if ( this.isMultiple(field) ) {
         value = [];
         var row = this.row[field];
-        for (var i = 0; i < row.length; i++) {
-          value.push( row[i].id );
+        if (typeof(row)==='string') {
+          value = row.split('|');
+        }
+        else {
+          for (var i = 0; i < row.length; i++) {
+            if ( _.isUndefined(row[i].id) ) {
+              value.push( row[i] );
+            }
+            else {
+              value.push( row[i].id );
+            }
+          }
         }
       }
       return value;
     },
     
     hasInsertRights : function(field) {
-      if ( _.isUndefined(this.fields[field]) ) return false;
-      if ( _.isUndefined(this.fields[field]._options) ) return false;
-      if ( _.isUndefined(this.fields[field]._options.insert_rights) ) return false;
-      var rights = this.fields[field]._options.insert_rights;
+      if ( _.isUndefined(this.form_groups[field]) ) return false;
+      if ( _.isUndefined(this.form_groups[field]._options) ) return false;
+      if ( _.isUndefined(this.form_groups[field]._options.insert_rights) ) return false;
+      var rights = this.form_groups[field]._options.insert_rights;
       return (rights===true || rights>=2);
     },
     
@@ -226,13 +279,45 @@ export default {
       return validationClass.trim();
     },
     
+    validationError : function(field) {
+      var error = false;
+      if (!_.isUndefined(this.validationErrors[field])) error = this.validationErrors[field];
+      return error;
+    },
+        
     isRequired : function(field) {
-      if ( _.isUndefined(this.fields[field].validation)) return false;
-      var validation = this.fields[field].validation;
+      if ( _.isUndefined(this.form_groups[field].validation)) return false;
+      var validation = this.form_groups[field].validation;
       if (validation.indexOf('required')>=0) {
         return true;
       }
       return false;
+    },
+    
+    showFormGroup : function(field) {
+      var show = true;
+      if (!_.isUndefined(this.form_groups[field].dynamic) && !_.isUndefined(this.form_groups[field].dynamic.show) ) {
+        var func = this.form_groups[field].dynamic.show;
+        func = this._replace_field_in_func(func);
+        show = eval(func);
+      }
+      return show;
+    },
+    
+    _replace_field_in_func : function(func) {
+      var expression = func.trim().split(/\s/g);
+      expression[0] = "this.row['" + expression[0].trim() + "']";
+      func = expression.join(' ');
+      return func;
+    },
+    
+    valueFromApi : function(field) {
+      var value = this.row[field];
+      if (!_.isUndefined(this.form_groups[field].value_eval)) {
+        var value_eval = this.form_groups[field].value_eval;
+        console.log(field,value_eval);
+      }
+      return value;
     },
     
     toggleInsertForm : function(field) {
@@ -243,7 +328,7 @@ export default {
         this.$set(this.insertForm,field,{
           show  : true,
           field : field,
-          table : this.fields[field]._options.table,
+          table : this.form_groups[field]._options.table,
         });
       }
       // console.log('toggleInsertForm',field,this.insertForm);
@@ -272,7 +357,7 @@ export default {
       .then(function(response){
         if (!_.isUndefined(response.data)) {
           // Vervang de opties 
-          self.fields[field]._options = response.data.data[field];
+          self.form_groups[field]._options = response.data.data[field];
           // Selecteer zojuist toegevoegde item
           self.addToSelect(field,event);
         }
@@ -324,19 +409,28 @@ export default {
       var self=this;
       var data = _.clone(this.row);
       
-      // Prepare data for ajax call
+      // Prepare data
       for (var field in data) {
         if (field.indexOf('.abstract')>0) {
           delete(data[field]);
         }
         else {
+          // Checkbox
           if (this.isType('checkbox',field)) {
             data[field] = (data[field]?1:0);
           }
+          // Multiple
           if (typeof(data[field])==='object' && this.isMultiple(field)) {
             var fieldData = [];
             for (var i = 0; i < data[field].length; i++) {
-              if (!_.isUndefined(data[field][i])) fieldData.push( data[field][i].id );
+              if ( !_.isUndefined(data[field][i]) ) {
+                if ( !_.isUndefined(data[field][i].id) ) {
+                  fieldData.push( data[field][i].id );
+                }
+                else {
+                 fieldData.push( data[field][i] ); 
+                }
+              }
             }
             data[field] = fieldData;
           }
@@ -350,7 +444,7 @@ export default {
           if (data[field].length>0) filled=true;
         }
         else {
-          if (data[field] && data[field]!==this.fields[field]['default']) filled=true;
+          if (data[field] && data[field]!==this.form_groups[field]['default']) filled=true;
         }
       }
       
@@ -367,7 +461,17 @@ export default {
       });
       return false;
     },
+    
     _postForm : function(data) {
+      this.validationErrors = {};
+      
+      // Normale form?
+      if (this.action !=='' ) {
+        jdb.submitWithPost(this.action, data );
+        return null;
+      }
+      
+      // Ajax post naar API
       var self = this;
       self.isSaving = true;
       return flexyState.api({
@@ -408,9 +512,41 @@ export default {
     },
     
     updateField : function( field, value ) {
-      // console.log('updateField',field,value);
-      this.validationErrors = {};
-      this.row[field] = value;
+      // this.validationErrors = {};
+      if (this.row[field]!==value) {
+        this.row[field] = value;
+        this.dynamicWatch(field,value);
+      }
+    },
+    
+    dynamicWatch : function(field,value) {
+      var self = this;
+      if ( !_.isUndefined(self.fields[field]) && !_.isUndefined(self.fields[field].dynamic) && !_.isUndefined(self.fields[field].dynamic.watch)) {
+        var api = self.fields[field].dynamic.watch.api;
+        var update = self.fields[field].dynamic.watch.update;
+        if ( !_.isUndefined(api) && !_.isUndefined(update)) {
+          // Load dynamic data
+          return flexyState.api({
+            url : api + '&where='+value,
+          }).then(function(response){
+            if (!_.isUndefined(response.data.data)) {
+              var data = response.data.data
+              // Update dynamic data
+              for(var update_field in update) {
+                if (!_.isUndefined(self.row[update_field])) {
+                  var data_field = update[update_field];
+                  self.$delete( self.row, update_field );
+                  self.$set( self.row, update_field, data[data_field] );
+                  // update wysiwyg
+                  if (self.isType('wysiwyg',update_field)) {
+                    tinymce.activeEditor.setContent(self.row[update_field]);
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
     },
     
     updateSelect : function( field, selected ) {
@@ -448,18 +584,32 @@ export default {
     },
     
     addToSelect : function( field, value ) {
-      // console.log('addToSelect',field,value);
       if ( this.isMultiple(field) ) {
         var currentSelection = this.row[field];
-        // Als al bestaat, dan juist verwijderen
-        var exists = jdb.indexOfProperty(currentSelection,'id',value);
-        if (exists!==false) {
-          // Verwijderen
-          delete currentSelection[exists];
+        if ( typeof(currentSelection)==='string' ) {
+          // Als bestaat: verwijderen
+          var exists = currentSelection.indexOf(value);
+          if (exists>=0) {
+            currentSelection = currentSelection.replace(value,'');
+          }
+          else {
+            currentSelection += '|'+value;
+          }
+          currentSelection = currentSelection.replace(/\|+/, '|');
+          currentSelection = _.trim(currentSelection,'|');
+          value = currentSelection;
         }
         else {
-          // Toevoegen
-          currentSelection.push({'id':value});
+          // Als al bestaat, dan juist verwijderen
+          var exists = jdb.indexOfProperty(currentSelection,'id',value);
+          if (exists!==false) {
+            // Verwijderen
+            delete currentSelection[exists];
+          }
+          else {
+            // Toevoegen
+            currentSelection.push({'id':value});
+          }
         }
         value = currentSelection;
       }
@@ -483,7 +633,8 @@ export default {
     <h1>{{title}}</h1>
     <div>
       <flexy-button v-if="formtype!=='single'" @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
-      <flexy-button v-if="formtype!=='subform'" @click.native="save()"  icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-warning"/>
+      <flexy-button v-if="formtype!=='subform' && action===''" @click.native="save()"  icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-warning"/>
+      <flexy-button v-if="action !==''" @click.native="save()" :text="$lang.submit" :disabled="isSaving" class="btn-outline-info"/>
       <flexy-button v-if="formtype==='normal'" @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-info"/>
       <flexy-button v-if="formtype==='subform'" @click.native="add()" :text="$lang.add" :disabled="isSaving" class="btn-outline-warning"/>
     </div>
@@ -496,9 +647,9 @@ export default {
         <template v-for="field in fieldset">
           <template v-if="!isType('hidden',field)">
           
-            <div class="form-group row" :class="validationClass(field)">
-              <div v-if="validationErrors[field]" class="validation-error"><span class="fa fa-exclamation-triangle"></span> {{validationErrors[field]}}</div>
-              <label class="col-md-3 form-control-label" :for="field">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-exclamation text-warning"></span> </label>
+            <div class="form-group row" :class="validationClass(field)" v-show="showFormGroup(field)">
+              <div v-if="validationError(field)!==false" class="validation-error"><span class="fa fa-exclamation-triangle"></span> {{validationError(field)}}</div>
+              <label class="col-md-3 form-control-label" :for="field">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-sm fa-asterisk text-warning"></span> </label>
               <div class="col-md-9">
 
                 <template v-if="isType('textarea',field)">
@@ -538,13 +689,13 @@ export default {
 
                 <template v-if="isType('mediapicker',field)">
                   <!-- Mediapiacker -->
-                  <mediapicker :id="field" :name="field" :value="row[field]" :path="fields[field].path" v-on:input="updateField(field,$event)"></mediapicker>
+                  <mediapicker :id="field" :name="field" :value="row[field]" :path="form_groups[field].path" v-on:input="updateField(field,$event)"></mediapicker>
                 </template>
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <vselect :name="field" 
-                    :options="fields[field]._options.data" options-value="value" options-label="name" 
+                    :options="form_groups[field]._options.data" options-value="value" options-label="name" 
                     :value="selectValue(field)" 
                     :multiple="isMultiple(field)"
                     @change="updateSelect(field,$event)"
@@ -557,8 +708,8 @@ export default {
 
                 <template v-if="isType('radio',field)">
                   <!-- Radio -->
-                  <template v-for="option in fields[field]._options.data">
-                    <div class="form-check form-check-inline form-subcheck" :class="{'checked':isSelectedOption(field,row[field],option.value)}" @click="selectOption(field,option.value)">
+                  <template v-for="option in form_groups[field]._options.data">
+                    <div class="form-check form-check-inline form-subcheck" :class="{'checked':isSelectedOption(field,row[field],option.value)}" @click="addToSelect(field,option.value)">
                       <label class="form-check-label" :title="selectItem(option.name)">
                       <flexy-button :icon="{'check-square-o':isSelectedOption(field,row[field],option.value),'square-o':!isSelectedOption(field,row[field],option.value)}" class="btn-outline-default"/>
                       <input  class="form-check-input"
@@ -566,7 +717,7 @@ export default {
                               :name="field"
                               :type="isMultiple(field)?'checkbox':'radio'"
                               :checked="isSelectedOption(field,row[field],option.value)"
-                              v-on:input="addToSelect(field,option.value)"
+                              
                               >
                       {{selectItem(option.name)}}
                       </label>
