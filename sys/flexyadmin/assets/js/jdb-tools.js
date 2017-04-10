@@ -117,6 +117,32 @@ export default {
     return encodeURIComponent(_.escape(string));
   },
   
+  /**
+   * Post een vueform als normale form
+   * https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit#133997
+   */
+  submitWithPost : function(action, params, method) {
+    method = method || "post"; // Set method to post by default, if not specified.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", action);
+    // fields
+    var addField = function( key, value ){
+      var hiddenField = document.createElement("input");
+      hiddenField.setAttribute("type", "hidden");
+      hiddenField.setAttribute("name", key);
+      hiddenField.setAttribute("value", value );
+      form.appendChild(hiddenField);
+    }; 
+    for(var key in params) {
+      if( params.hasOwnProperty(key) ) {
+        addField( key, params[key] ); 
+      }
+    }
+    document.body.appendChild(form);
+    form.submit();
+  },
+  
   
   /**
    * jdb.complementColor()

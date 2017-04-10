@@ -5416,7 +5416,6 @@ a > .fa, .btn > .fa {
       font-size: 1.25rem;
       padding-top: .125rem; }
   .card .card > .card-block {
-    overflow: hidden;
     padding: .25rem .5rem; }
     .card .card > .card-block .form-group {
       margin-bottom: .5rem; }
@@ -5931,8 +5930,9 @@ a > .fa, .btn > .fa {
   white-space: nowrap; }
   .form-control-label .required {
     position: absolute;
-    right: 0px;
-    top: .5rem; }
+    font-size: .5rem;
+    top: .5rem;
+    margin-left: .25rem; }
 
 .form-control {
   padding-bottom: .25rem; }

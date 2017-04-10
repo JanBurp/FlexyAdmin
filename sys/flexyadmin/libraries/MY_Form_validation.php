@@ -634,6 +634,14 @@ class MY_Form_validation extends CI_Form_validation {
      }
      return FALSE;
    }
+   
+   //
+   // public function valid_or_empty_password($password) {
+   //   $password = trim($password);
+   //   if (empty($password)) return TRUE;
+   //   return $this->valid_password($password);
+   // }
+   
 
 
    /**
