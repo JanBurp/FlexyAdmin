@@ -33,8 +33,14 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $result = $this->data->table( 'cfg_users' )->get_grid();
-    trace_($result);
+    $query = $this->data->table('tbl_tegels')
+                        ->where('id_tegel_type',POLL)
+                        ->with('many_to_many')
+                        ->get_result();
+    //                     ->get_grid();
+    // $info = $this->data->get_query_info();
+    trace_sql($this->data->last_query());
+    trace_($query);
     
   }
   
