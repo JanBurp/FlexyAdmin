@@ -14,8 +14,10 @@
   white-space:nowrap;
   .required {
     position:absolute;
-    right:0px;
+    font-size:.5rem;
+//    right:0px;
     top:.5rem;
+    margin-left:.25rem;
   }
 }
 .form-control {
