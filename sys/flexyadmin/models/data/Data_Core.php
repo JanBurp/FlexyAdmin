@@ -1772,6 +1772,18 @@ Class Data_Core extends CI_Model {
   public function random_field_value($field,$id=FALSE) {
     $value = NULL;
     $type  = get_prefix($field,'_');
+
+    // Option?
+    $options = $this->get_options($field);
+    if ($options) {
+      $value = random_element($options['data'])['value'];
+      if (el('multiple',$options) and rand(0,1)>.7) {
+        $value.='|'.random_element($options['data'])['value'];
+      }
+      return $value;
+    }
+
+    // Normaal random
     switch($type) {
       case 'id' :
         if ($field!==$this->settings['primary_key']) {
