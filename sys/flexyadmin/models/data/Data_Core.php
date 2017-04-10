@@ -306,6 +306,9 @@ Class Data_Core extends CI_Model {
         if ($load) {
           $this->config->load( 'data/'.$table, true);
           $settings = $this->config->item( 'data/'.$table );
+          // Options even apart zodat iig ook de autoset option werkt
+          $options = el('options',$settings,array());
+          unset($settings['options']);
           // Merge met default samen tot settings
           if ( $settings ) {
             $this->settings = array_merge( $default, $settings );
@@ -313,7 +316,11 @@ Class Data_Core extends CI_Model {
         }
         // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
         $this->_autoset( );
+        // En options er weer bij...
+        $this->settings['options'] = array_merge($this->settings['options'],$options);
       }
+
+      // Cache 
       if ($this->settings_caching) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
     return $this->settings;
@@ -1772,6 +1779,18 @@ Class Data_Core extends CI_Model {
   public function random_field_value($field,$id=FALSE) {
     $value = NULL;
     $type  = get_prefix($field,'_');
+
+    // Option?
+    $options = $this->get_options($field);
+    if ($options) {
+      $value = random_element($options['data'])['value'];
+      if (el('multiple',$options) and rand(0,1)>.7) {
+        $value.='|'.random_element($options['data'])['value'];
+      }
+      return $value;
+    }
+
+    // Normaal random
     switch($type) {
       case 'id' :
         if ($field!==$this->settings['primary_key']) {
