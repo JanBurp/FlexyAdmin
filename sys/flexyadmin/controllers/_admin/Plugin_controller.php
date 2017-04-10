@@ -78,7 +78,9 @@ class Plugin_controller extends AdminController {
         if (empty($content)) {
           $content = '<h2>'.$help['short'].'</h2>'.trim(trim($help['long']),'<br>');
         }
-        $ui_name = lang($plugin);
+        // title
+        $ui_name = el(array($plugin,'config','title'),$this->plugin_handler->plugins);
+        if (empty($ui_name)) $ui_name = lang($plugin);
         if (substr($ui_name,0,1)==='[') $ui_name = ucfirst(str_replace(array('Plugin_','_'),array('',' '),$help['name']));
         if (empty($ui_name)) $ui_name = ucfirst(str_replace(array('plugin_','_'),array('',' '),$plugin));
 			}
