@@ -104,6 +104,9 @@ select.form-control:not([size]):not([multiple]) {
   border-color:$brand-primary;
   background-color:$body-bg;
 }
+.form-subcheck.checked {
+  background-color: $gray-lighter;
+}
 
 
 
