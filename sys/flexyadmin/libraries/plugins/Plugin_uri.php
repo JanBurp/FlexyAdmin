@@ -19,21 +19,17 @@ class Plugin_uri extends Plugin {
 	public function _admin_api($args=NULL) {
 		if (isset($args[0])) {
 			$this->table=$args[0];
+			$reset = el(1,$args,false);
 			if ($this->CI->db->table_exists($this->table) and $this->CI->db->field_exists('uri',$this->table)) {
+
         $this->CI->create_uri->set_table($this->table);
-        $prefix=el(array('prefix',$this->table),$this->config,'');
-        $this->CI->create_uri->set_prefix($prefix);
-        $prefix_callback=el(array('prefix_callback',$this->table),$this->config,false);
-        if ($prefix_callback) $this->CI->create_uri->set_prefix_callback($prefix_callback);
+
 				// reset all uris of this table
 				$allData = $this->CI->data->table($this->table)->get_result();
+
 				foreach ($allData as $id => $data) {
-					$this->id      = $id;
-					$this->oldData = $data;
-					$this->newData = $data;
-          // if (!isset($field)) $field=$this->_get_uri_field();
 					$uri    = $data['uri'];
-					$newUri = $this->CI->create_uri->create($data,el(1,$args,false)); // reset
+					$newUri = $this->CI->create_uri->create($data,$reset);
 					if ($uri!==$newUri) {
             $this->CI->data->table($this->table);
 						$this->CI->data->set('uri',$newUri);
@@ -50,10 +46,6 @@ class Plugin_uri extends Plugin {
   
   public function _after_update() {
     $this->CI->create_uri->set_table($this->table);
-    $prefix = el(array('prefix',$this->table),$this->config,'');
-    $this->CI->create_uri->set_prefix($prefix);
-    $prefix_callback = el(array('prefix_callback',$this->table),$this->config,false);
-    if ($prefix_callback) $this->CI->create_uri->set_prefix_callback($prefix_callback);
 		$uri = $this->CI->create_uri->create( $this->newData );
     if ($uri) $this->newData['uri']=$uri;
 		return $this->newData;
