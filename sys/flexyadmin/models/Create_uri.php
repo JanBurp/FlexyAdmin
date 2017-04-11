@@ -111,12 +111,18 @@ class Create_uri extends CI_Model {
     $uri = $this->prefix.$this->cleanup($uri_source);
     $uri = ltrim($uri,'_');
 
-    // Exists? add a number
+    // Exists? Add prefix(uri) or a number
 		$postSpace = $this->replaceSpace.$this->replaceSpace;
 		while ($this->_is_existing_uri($uri,$data) or $this->is_forbidden($uri)) {
-			$currUri = remove_suffix($uri,$postSpace);
-			$countUri = (int) get_suffix($uri,$postSpace);
-			$uri = $currUri.$postSpace.($countUri+1);
+      $parentUri = $this->_get_parent_uri($data);
+      if ($parentUri) {
+        $uri = $parentUri.$postSpace.$uri;
+      }
+      else {
+        $currUri = remove_suffix($uri,$postSpace);
+        $countUri = (int) get_suffix($uri,$postSpace);
+        $uri = $currUri.$postSpace.($countUri+1);
+      }
 		}
     return $uri;
  	}
@@ -212,13 +218,25 @@ class Create_uri extends CI_Model {
     }
     else {
       $sql = 'SELECT `uri` FROM `'.$this->table.'` WHERE `uri`="'.$uri.'"';
-   		if ( isset($this->table_data['id'])) $sql .= ' AND `id` != "'.$this->table_data['id'].'"';
+      if ( isset($this->table_data['id']))          $sql .= ' AND `id` != "'.$this->table_data['id'].'"';
       $query = $this->db->query($sql);
       if (!$query) return FALSE;
       $uris = $query->result_array();
-   		return current($uris);
+      $existing = current($uris);
+   		return $existing;
     }
  	}
+
+  private function _get_parent_uri($data) {
+    if (!isset($data['self_parent']) or $data['self_parent']==0) return false;
+    $sql = 'SELECT `uri` FROM `'.$this->table.'` WHERE `id`="'.$data['self_parent'].'"';
+    $query = $this->db->query($sql);
+    if (!$query) return FALSE;
+    $uris = $query->result_array();
+    $uri = current($uris);
+    // trace_(['_get_parent_uri',$uri['uri'],$sql]);
+    return $uri['uri'];
+  }
 
 
   /**
