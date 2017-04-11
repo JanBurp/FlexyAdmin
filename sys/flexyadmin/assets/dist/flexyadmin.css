@@ -5999,6 +5999,9 @@ select:-moz-focusring {
   border-color: #696;
   background-color: #fff; }
 
+.form-subcheck.checked {
+  background-color: #eceeef; }
+
 .form-group.has-danger {
   background-color: #ffdddd !important;
   border-radius: 0.25rem !important; }
