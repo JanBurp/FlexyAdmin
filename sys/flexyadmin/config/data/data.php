@@ -82,12 +82,16 @@ $config['max_rows']         = NULL;
  * Standaard staat deze optie aan [TRUE] (door _autoset)
  * 
  * Er kunnen ook opties in een array meegegeven worden in plaats van een TRUE:
- * - source         - Geef hier het veld aan dat gebruikt wordt als bron. Standaard is dat het eerste str veld wat gevonden kan worden. ['str_title']
- * - prefix         - Geef hier een eventuele prefix aan waarmee de uri altijd moet beginnen. ['']
- * - prefix_method  - Geef hier een eventuele prefix aan waarmee de uri altijd moet beginnen. [object->method]
+ * - source           - Geef hier het veld aan dat gebruikt wordt als bron. Standaard is dat het eerste str veld wat gevonden kan worden. ['str_title']
+ * - prefix           - Geef hier een eventuele prefix aan waarmee de uri altijd moet beginnen. ['']
+ * - prefix_callback  - Geef hier een eventuele prefix callback method aan die de prefix bepaald. [object->method]
+ * - freeze					  - Geef hier (in een array) eventuele items aan waarvan de uri niet mag worden aangepast. Bijvoorbeeld:
+ * 	'uri' => 'freeze',
+ * 	'uri' => array('freeze','keep','always_the_same'),
+ * 	'id'	=> 2,
+ * 	'id'	=> array(2,5,6),
  */
 $config['update_uris']      = NULL;
-
 
 
 /**
