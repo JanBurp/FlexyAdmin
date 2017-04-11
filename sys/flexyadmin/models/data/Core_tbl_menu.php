@@ -122,39 +122,50 @@ Class Core_tbl_menu extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  private function _determine_menu_item_place($item) {
+  private function _determine_menu_item_places($item) {
     $place = el('place',$item,FALSE);
+
     // Standaard aan het einde
     if (empty($place) or $place===FALSE) {
       $keys = array_keys($this->_menu);
       end($keys);
-      $key = current($keys);
+      $found_uris = current($keys);
     }
     else {
+    
       // place = [field => value]
       if (is_array($place)) {
         $place_field = key($place);
         $place_value = $place[$place_field];
-        $keys = array_column( $this->_menu, $place_field,'full_uri' );
-        $key = array_search($place_value,$keys);
+        $key = find_row_by_value($this->_menu,$place_value,$place_field);
+        $found_uris = array_keys($key);
       }
+    
       // place =  uri
       else {
         $keys = filter_by_key( $this->_menu, $place );
         end($keys);
-        $key = key($keys);
+        $found_uris = key($keys);
       }
+    
+    }
+
+
+    if (!is_array($found_uris)) $found_uris = array($found_uris);
+
+
+    $result = array();
+    foreach ($found_uris as $key => $found_uri) {
+      $pre_uri = '';
+      if (isset($this->_menu[$found_uri]) and $place) {
+        $pre_uri = el('full_uri',$this->_menu[$found_uri], el('uri',$this->_menu[$found_uri],'') );
+      }
+      $result[] = array(
+        'key'     => $found_uri,
+        'pre_uri' => $pre_uri,
+      );
     }
     
-    $pre_uri = '';
-    if (isset($this->_menu[$key]) and $place) {
-      $pre_uri = el('full_uri',$this->_menu[$key], el('uri',$this->_menu[$key],'') );
-    }
-    
-    $result = array(
-      'key'     => $key,
-      'pre_uri' => $pre_uri,
-    );
     return $result;
   }
   
@@ -166,21 +177,24 @@ Class Core_tbl_menu extends Data_Core {
    * @return void
    * @author Jan den Besten
    */
-  private function _add_menu_item($item,$place=FALSE) {
-    if (!$place) $place = $this->_determine_menu_item_place($item);
+  private function _add_menu_item($item,$places=FALSE) {
+    if (!$places) $places = $this->_determine_menu_item_places($item);
+    if (!is_array($places)) $places = array($places);
 
-    if ($place['pre_uri']) {
-      $item['full_uri'] = $place['pre_uri'].'/'.$item['uri'];
-      $menu_item = array( $item['full_uri'] => $item );
+    foreach ($places as $place) {
+      if ($place['pre_uri']) {
+        $item['full_uri'] = $place['pre_uri'].'/'.$item['uri'];
+        $menu_item = array( $item['full_uri'] => $item );
+      }
+      else {
+        $menu_item = array( $item['uri'] => $item );
+      }
+      
+      if ($place['key'])
+        $this->_menu = array_add_after( $this->_menu, $place['key'], $menu_item );
+      else
+        $this->_menu = $menu_item;
     }
-    else {
-      $menu_item = array( $item['uri'] => $item );
-    }
-    
-    if ($place['key'])
-      $this->_menu = array_add_after( $this->_menu, $place['key'], $menu_item );
-    else
-      $this->_menu = $menu_item;
   }
   
   
@@ -192,9 +206,9 @@ Class Core_tbl_menu extends Data_Core {
    * @author Jan den Besten
    */
   private function _add_menu_items($item) {
-    $place = $this->_determine_menu_item_place($item);
+    $places = $this->_determine_menu_item_places($item);
     foreach ($item['items'] as $sub_item) {
-      $this->_add_menu_item($sub_item,$place);
+      $this->_add_menu_item($sub_item,$places);
     }
   }
 
@@ -223,28 +237,33 @@ Class Core_tbl_menu extends Data_Core {
     // get data
     if (isset($item['where']))    $this->data->where($item['where']);
     if (isset($item['order_by'])) $this->data->order_by($item['order_by']);
-    $items = $this->data->get_result( el('limit',$item,0), el('offset',$item,0) );
+    $data_items = $this->data->get_result( el('limit',$item,0), el('offset',$item,0) );
+    
     // restore
     $this->data->set_result_key($result_key);
     $this->data->table('tbl_menu');
     
-    $place = $this->_determine_menu_item_place($item);
-    if ($place['pre_uri']) {
-      foreach ($items as $key => $row) {
-        unset($items[$key]);
-        if (isset($item['item'])) $row = array_merge($row,$item['item']);
-        $full_uri         = $place['pre_uri'].'/'.el('full_uri',$row, el('uri',$row));
-        $row['full_uri']  = $full_uri;
-        $row['_table']    = $table;
-        $items[$full_uri] = $row;
+    // Add
+    $places = $this->_determine_menu_item_places($item);
+    foreach ($places as $place) {
+      $items = $data_items;
+      if ($place['pre_uri']) {
+        foreach ($items as $key => $row) {
+          unset($items[$key]);
+          if (isset($item['item'])) $row = array_merge($row,$item['item']);
+          $full_uri         = $place['pre_uri'].'/'.el('full_uri',$row, el('uri',$row));
+          $row['full_uri']  = $full_uri;
+          $row['_table']    = $table;
+          $items[$full_uri] = $row;
+        }
       }
-    }
 
-    if ($place['key']) {
-      $this->_menu = array_add_after( $this->_menu, $place['key'], $items );
+      if ($place['key']) {
+        $this->_menu = array_add_after( $this->_menu, $place['key'], $items );
+      }
+      else
+        $this->_menu = $items;
     }
-    else
-      $this->_menu = $items;
   }
   
   
