@@ -25,7 +25,10 @@ class Plugin_uri extends Plugin {
         $this->CI->create_uri->set_table($this->table);
 
 				// reset all uris of this table
-				$allData = $this->CI->data->table($this->table)->get_result();
+				$this->CI->data->table($this->table);
+				$order = 'order';
+				if ($this->CI->data->field_exists('self_parent')) $order = 'self_parent,order';
+				$allData = $this->CI->data->order_by($order)->get_result();
 
 				foreach ($allData as $id => $data) {
 					$uri    = $data['uri'];
