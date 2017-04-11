@@ -73,7 +73,7 @@ export default {
 
 
   .media-thumb-sm {
-    height:1.75rem;
+    height:1.7rem;
     border-radius:2px;
   }
   .media-thumb-lg {
