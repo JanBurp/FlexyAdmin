@@ -65,10 +65,13 @@ class Create_uri extends CI_Model {
   public function set_table($table) {
     $this->table = $table;
     $this->table_settings = $this->data->table($table)->get_settings();
-    $this->source_field = el( array('update_uris','source'), $this->table_settings, '' );
-    $this->prefix = el( array('update_uris','prefix'), $this->table_settings, '' );
-    $this->prefix_callback = el( array('update_uris','prefix_callback'), $this->table_settings, '' );
-    $this->freeze = el( array('update_uris','freeze'), $this->table_settings, '' );
+    $update_uris = el( 'update_uris', $this->table_settings, FALSE );
+    if (is_array($update_uris)) {
+      $this->source_field = el( 'source', $update_uris, '' );
+      $this->prefix = el( 'prefix', $update_uris, '' );
+      $this->prefix_callback = el( 'prefix_callback', $update_uris, false );
+      $this->freeze = el( 'freeze', $update_uris, '' );
+    }
     return $this;
   }
   
@@ -101,9 +104,11 @@ class Create_uri extends CI_Model {
     if ($this->prefix_callback) {
       $model = $this->prefix_callback['model'];
       $method = $this->prefix_callback['method'];
-      $this->load->model($model,'prefix_model');
-      if (method_exists($this->prefix_model,$method)) {
-        $this->prefix = clean_string($this->prefix_model->$method($data));
+      if (!empty($model)) {
+        $this->load->model($model,'prefix_model');
+        if (method_exists($this->prefix_model,$method)) {
+          $this->prefix = clean_string($this->prefix_model->$method($data));
+        }
       }
     }
 
