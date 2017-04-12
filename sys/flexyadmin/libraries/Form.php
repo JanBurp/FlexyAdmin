@@ -93,40 +93,44 @@ class Form {
   
   private $styles=array(
     'default'   => array(
-      'form'                  => '',
-      'fieldset'              => 'flexyFormFieldset',
-      'fieldset_buttons'      => 'flexyFormButtons',
-      'fieldset_info'         => true,
-      'field_container'       => 'flexyFormField',
-      'field_html'            => 'flexyFormHtml',
-      'field_container_info'  => true,
-      'label'                 => '',
-      'field'                 => '',
-      'field_info'            => true,
-      'button'                => 'button',
-      'validation_error_class'=> 'error',
-      'status_default'        => '',
-      'status_success'        => 'has-success',
-      'status_warning'        => 'has-warning',
-      'status_error'          => 'has-error',
+      'form'                     => '',
+      'fieldset'                 => 'flexyFormFieldset',
+      'fieldset_buttons'         => 'flexyFormButtons',
+      'fieldset_info'            => true,
+      'field_container'          => 'flexyFormField',
+      'field_html'               => 'flexyFormHtml',
+      'field_container_info'     => true,
+      'label'                    => '',
+      'field'                    => '',
+      'field_info'               => true,
+      'radio_option_class'       => 'radioOption',
+      'radio_option_label_class' => 'optionLabel',
+      'button'                   => 'button',
+      'validation_error_class'   => 'error',
+      'status_default'           => '',
+      'status_success'           => 'has-success',
+      'status_warning'           => 'has-warning',
+      'status_error'             => 'has-error',
     ),
     'bootstrap' => array(
-      'form'                  => '',
-      'fieldset'              => '',
-      'fieldset_buttons'      => '',
-      'fieldset_info'         => false,
-      'field_html'            => '',
-      'field_container'       => 'form-group',
-      'field_container_info'  => false,
-      'label'                 => 'control-label',
-      'field'                 => 'form-control',
-      'field_info'            => false,
-      'button'                => 'btn btn-primary',
-      'validation_error_class'=> 'alert alert-danger',
-      'status_default'        => '',
-      'status_success'        => 'has-success',
-      'status_warning'        => 'has-warning',
-      'status_error'          => 'has-error',
+      'form'                     => '',
+      'fieldset'                 => '',
+      'fieldset_buttons'         => '',
+      'fieldset_info'            => false,
+      'field_html'               => '',
+      'field_container'          => 'form-group',
+      'field_container_info'     => false,
+      'label'                    => 'control-label',
+      'field'                    => 'form-control',
+      'field_info'               => false,
+      'radio_option_class'       => '',
+      'radio_option_label_class' => 'radio-inline',
+      'button'                   => 'btn btn-primary',
+      'validation_error_class'   => 'alert alert-danger',
+      'status_default'           => '',
+      'status_success'           => 'has-success',
+      'status_warning'           => 'has-warning',
+      'status_error'             => 'has-error',
     ),
     
   );
@@ -956,15 +960,21 @@ class Form {
 				$options=$field['options'];
 				$value=$field['value'];
         $field['control']='';
+        $field['container_class'] .= ' radio';
 				foreach ($options as $option => $optLabel) {
 					$attr['value']=$option;
 					if ($value==$option) $attr['checked']='checked'; else $attr['checked']='';
 					$attr['id']=str_replace('.','_',$name.'__'.$option);
-          $for=$attr['id'];
+          $for = $attr['id'];
           $labelAttr=$attr;
-          $labelAttr['class'].=' optionLabel';
+          $labelAttr['class'] .= ' '.$this->styles[$this->framework]['radio_option_class'];
           unset($labelAttr['id']);
-          $field['control'].=div('radioOption '.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div();
+          if ($this->framework==='bootstrap') {
+            $field['control'] .= '<label><input type="radio" name="'.$field['name'].'">'.$optLabel.'</label>';
+          }
+          else {
+            $field['control'].=div($this->styles[$this->framework]['radio_option_label_class'].' option-'.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div(); 
+          }
 				}
 				break;
 
