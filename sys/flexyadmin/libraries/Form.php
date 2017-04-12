@@ -970,7 +970,7 @@ class Form {
           $labelAttr['class'] .= ' '.$this->styles[$this->framework]['radio_option_class'];
           unset($labelAttr['id']);
           if ($this->framework==='bootstrap') {
-            $field['control'] .= '<label><input type="radio" name="'.$field['name'].'">'.$optLabel.'</label>';
+            $field['control'] .= '<label><input type="radio" name="'.$field['name'].'" '.$attr['checked'].'>'.$optLabel.'</label>';
           }
           else {
             $field['control'].=div($this->styles[$this->framework]['radio_option_label_class'].' option-'.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div(); 
