@@ -26,7 +26,8 @@ class Plugin_uri extends Plugin {
 
 				// reset all uris of this table
 				$this->CI->data->table($this->table);
-				$order = 'order';
+				$order = 'id';
+				if ($this->CI->data->field_exists('order')) $order = 'order';
 				if ($this->CI->data->field_exists('self_parent')) $order = 'self_parent,order';
 				$allData = $this->CI->data->order_by($order)->get_result();
 
