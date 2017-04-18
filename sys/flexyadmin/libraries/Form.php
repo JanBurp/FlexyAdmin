@@ -125,7 +125,7 @@ class Form {
       'field_info'               => false,
       'radio_option_class'       => '',
       'radio_option_label_class' => 'radio-inline',
-      'button'                   => 'btn btn-primary',
+      'button'                   => 'btn btn-primary col-lg-offset-2 col-sm-offset-3',
       'validation_error_class'   => 'alert alert-danger',
       'status_default'           => '',
       'status_success'           => 'has-success',
