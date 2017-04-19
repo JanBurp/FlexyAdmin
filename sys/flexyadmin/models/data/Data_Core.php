@@ -2529,11 +2529,13 @@ Class Data_Core extends CI_Model {
     // Relations
     $flatten_fields = array();
     foreach ($grid_set['with'] as $type => $relations) {
-      foreach ($relations as $what => $fields) {
-        $json = (in_array($type,array('one_to_many','many_to_many')));
-        $this->with( $type, array( $what=>$fields), $json, FALSE );
+      if ($relations) {
+        foreach ($relations as $what => $fields) {
+          $json = (in_array($type,array('one_to_many','many_to_many')));
+          $this->with( $type, array( $what=>$fields), $json, FALSE );
+        }
+        if ($type==='many_to_one') $flatten_fields = array_merge($flatten_fields, array_keys($grid_set['with'][$type]) );
       }
-      if ($type==='many_to_one') $flatten_fields = array_merge($flatten_fields, array_keys($grid_set['with'][$type]) );
     }
     
     // Tree als menu tabel
