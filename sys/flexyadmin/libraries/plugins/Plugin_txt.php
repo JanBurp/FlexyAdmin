@@ -64,10 +64,10 @@ class Plugin_txt extends Plugin {
       foreach ($links as $key => $link) {
         $this->add_message( '<li><a href="'.$link['prep_url'].'" target="_blank">'.$link['title'].' - '.$link['prep_url'].'</li>' );
 
-        $this->CI->data->set(array(
+        $this->CI->data->insert_new_link(array(
           'str_title' => $link['title'],
           'url_url'   => $link['prep_url'],
-        ))->insert();
+        ), $this->newData);
 
       }
       $this->add_message( '</li>' );
