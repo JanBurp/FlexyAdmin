@@ -27,11 +27,22 @@ class MY_Lang extends CI_Lang {
     // check if a language table is set
     $config = &get_config();
     if ( isset($config['language_table']) and !empty($config['language_table']) ) {
-      $this->lang_table= $config['language_table'];
+      $this->lang_table = $config['language_table'];
+
     }
     $this->set();
     log_message('debug', 'MY Language Class Initialized');
 	}
+
+  private function _load_lang_table() {
+    $CI=&get_instance();
+    $sql = 'SELECT * FROM `'.$this->lang_table.'`';
+    $query = $CI->db->query($sql);
+    $this->lang_data = array();
+    foreach ($query->result_array() as $row) {
+      $this->lang_data[$row['key']] = $row;
+    }
+  }
 
 
   /**
@@ -302,7 +313,7 @@ class MY_Lang extends CI_Lang {
     if ( substr($line,0,3)!=='db_' AND !empty($this->lang_table) AND !empty($this->idiom) ) {
       // Only when db is ready
       if (!$this->lang_data) {
-        $this->lang_data = $CI->data->table($this->lang_table)->set_result_key('key')->get_result();
+        $this->_load_lang_table();
       }
       if ($this->lang_data) {
         $value = el( array($line,'lang_'.$this->idiom), $this->lang_data, FALSE );
