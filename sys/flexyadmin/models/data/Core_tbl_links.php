@@ -225,6 +225,15 @@ Class Core_tbl_links extends Data_Core {
     $headers = (is_array($headers)) ? implode( "\n ", $headers) : $headers;
     return (bool)preg_match('#^HTTP/.*\s+[(200|301|302)]+\s#i', $headers);
   }
+
+
+  /**
+   * Voeg niewe link toe
+   */
+  public function insert_new_link( $set, $extra=false ) {
+    return $this->set($set)->insert();
+  }
+
   
   
 }
