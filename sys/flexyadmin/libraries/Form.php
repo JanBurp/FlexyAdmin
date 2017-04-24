@@ -999,7 +999,7 @@ class Form {
 				$value=$attr["value"];
         $button=el("button",$field);
 				if (isset($field["path"])) 	$extra.=" path=\"".$field["path"]."\"";
-				if (isset($field["multiple"]) or is_array($value)) {
+				if (el('multiple',$field)!='' or is_array($value)) {
 					$extra.=" multiple=\"multipe\" ";
 					$name.="[]";
 					if (is_array($value)) {
