@@ -3,7 +3,9 @@ var path              = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var LiveReloadPlugin  = require('webpack-livereload-plugin');
 
-module.exports = [
+module.exports = [];
+
+module.exports.push(
 {
   name    : 'js',
   entry   : "./flexyadmin/assets/js/main.js",
@@ -20,19 +22,19 @@ module.exports = [
         {
           enforce : 'pre',
           test    : /.vue$/,
-          loader  : 'eslint',
+          loader  : 'eslint-loader',
           exclude : /node_modules/
         },
         // vue loader
         {
           test    : /\.vue$/,
-          loader  : 'vue',
+          loader  : 'vue-loader',
           options : {}
         },
         // babel
         {
           test    : /\.js$/,
-          loader  : 'babel',
+          loader  : 'babel-loader',
           exclude : /node_modules/
         }
         
@@ -45,7 +47,7 @@ module.exports = [
     // alias: {'vue$': 'vue/dist/vue.js'},
     alias: {'vue$': 'vue/dist/vue.common.js'}
   }
-}];
+});
 
 module.exports.push(
 {
@@ -61,19 +63,19 @@ module.exports.push(
         // sass,css
         {
           test: /\.scss$/,
-          // loaders: ['css?sourceMap','sass?sourceMap']
-          loader: ExtractTextPlugin.extract({
-            loader: "css-loader?sourceMap!sass-loader?sourceMap"
-          })
+          use : [
+            "css-loader",
+            "sass-loader",
+          ],
         }
         // fonts
         // {
         //   test: /\.(eot|svg|ttf|woff|woff2)$/,
-        //   loader: 'file?name=[name].[ext]'
+        //   use: 'file?name=[name].[ext]'
         // }
         // {
         //   test: /\.(png|jpg|gif|svg)$/,
-        //   loader: 'file',
+        //   use: 'file',
         //   options: {
         //     name: '[name].[ext]'
         //   }
@@ -89,9 +91,7 @@ module.exports.push(
     }),
     new LiveReloadPlugin()
   ]
-}
-);
-
+});
 
 
 if (process.env.NODE_ENV === 'watch') {
