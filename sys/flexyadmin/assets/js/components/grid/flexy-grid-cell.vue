@@ -226,7 +226,7 @@ export default {
 
     <template v-if="isType('media',type)">
       <template v-if="item !==''">
-        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :src="img.src" :alt="img.alt">
+        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :src="img.src" :alt="img.alt" />
       </template>
     </template>
 
