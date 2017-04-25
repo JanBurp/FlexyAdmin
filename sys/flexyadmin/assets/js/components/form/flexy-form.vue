@@ -654,12 +654,12 @@ export default {
 
                 <template v-if="isType('textarea',field)">
                   <!-- Textarea -->
-                  <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
+                  <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></textarea>
                 </template>
               
                 <template v-if="isType('wysiwyg',field)">
                   <!-- WYSIWYG -->
-                  <textarea class="form-control wysiwyg" :id="field" :name="field" :value="row[field]">
+                  <textarea class="form-control wysiwyg" :id="field" :name="field" :value="row[field]"></textarea>
                 </template>
 
                 <template v-if="isType('checkbox',field)">
@@ -679,7 +679,7 @@ export default {
 
                 <template v-if="isType('datetimepicker',field)">
                   <!-- Datetimepicker -->
-                  <datetimepicker :id="field" :name="field" :value="row[field]" @input="updateField(field,$event)"></datepicker>
+                  <datetimepicker :id="field" :name="field" :value="row[field]" @input="updateField(field,$event)"></datetimepicker>
                 </template>
 
                 <template v-if="isType('colorpicker',field)">

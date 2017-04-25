@@ -21,5 +21,5 @@ export default {
       <h2 @click="visibleItem=key" class="card-header"><span class="fa" :class="{'fa-chevron-down':visibleItem==key,'fa-chevron-right':visibleItem!=key}"></span>{{item.title}}</h2>
       <div v-show="visibleItem==key" class="card-block"v-html="item.content"></div>
     </div>
-  </flexy-accordion>
+  </div>
 </template>
