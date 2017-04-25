@@ -985,7 +985,7 @@ export default {
                   <flexy-button v-if="multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
 
                   <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
-                    <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>
+                    <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort" />
                     <div class="dropdown-menu">
                       <a v-for="(field,key) in fields" v-if="isSortableField(field)" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(apiParts.order.indexOf(key)>=0)}">
                         <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
@@ -1034,7 +1034,7 @@ export default {
               
                 <!-- ACTION CELL -->
                 <td v-else-if="cell.type=='action'" class="action">
-                  <flexy-button :icon="cell.value.icon" class="btn-outline-warning" :text="cell.value.text" @click.native="action(cell.value)"/>
+                  <flexy-button :icon="cell.value.icon" class="btn-outline-warning" :text="cell.value.text" @click.native="action(cell.value)" />
                 </td>
               
                 <!-- CELL -->
