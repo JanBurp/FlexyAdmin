@@ -205,8 +205,29 @@ export default {
       }
       return selected;
     },
+
+    fieldOptions: function(field) {
+      var options = _.clone(this.form_groups[field]._options.data);
+      if ( !_.isUndefined(this.form_groups[field]['dynamic']) && !_.isUndefined(this.form_groups[field]['dynamic']['options']) ) {
+        var filter_field = this.form_groups[field]['dynamic']['options']['filter_by'];
+        var filter = this.row[filter_field];
+        if (filter) {
+          var index = jdb.indexOfProperty(options,'value',filter);
+          var options_object = _.clone(options[index]['name']);
+          options = [];
+          for (var opt in options_object) {
+            options.push( {'name':opt,'value':opt} );
+          }
+        }
+        else {
+          options = [];
+        }
+        // console.log(filter_field,filter,index,options);
+      }
+      return options;
+    },
     
-    selectOption(field,option) {
+    selectOption: function(field,option) {
       this.row[field] = option;
       console.log('selectOption',field,option);
     },
@@ -695,7 +716,7 @@ export default {
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <vselect :name="field" 
-                    :options="form_groups[field]._options.data" options-value="value" options-label="name" 
+                    :options="fieldOptions(field)" options-value="value" options-label="name" 
                     :value="selectValue(field)" 
                     :multiple="isMultiple(field)"
                     @change="updateSelect(field,$event)"
@@ -708,7 +729,7 @@ export default {
 
                 <template v-if="isType('radio',field)">
                   <!-- Radio -->
-                  <template v-for="option in form_groups[field]._options.data">
+                  <template v-for="option in fieldOptions(field)">
                     <div class="form-check form-check-inline form-subcheck" :class="{'checked':isSelectedOption(field,row[field],option.value)}" @click="addToSelect(field,option.value)">
                       <label class="form-check-label" :title="selectItem(option.name)">
                       <flexy-button :icon="{'check-square-o':isSelectedOption(field,row[field],option.value),'square-o':!isSelectedOption(field,row[field],option.value)}" class="btn-outline-default"/>
