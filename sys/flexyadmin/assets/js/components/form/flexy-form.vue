@@ -547,6 +547,19 @@ export default {
         var update = self.fields[field].dynamic.watch.update;
         if ( !_.isUndefined(api) && !_.isUndefined(update)) {
           // Load dynamic data
+          if ( _.isObject(value)) {
+            // Array van select omzetten
+            var valueArray = [];
+            for (var index in value) {
+              if (!_.isUndefined(value[index].id)) {
+                valueArray.push(value[index].id);
+              }
+              else {
+                valueArray.push(value[index]);
+              }
+            }
+            value = valueArray;
+          }
           return flexyState.api({
             url : api + '&where='+value,
           }).then(function(response){
