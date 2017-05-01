@@ -1089,48 +1089,6 @@ class Form {
         }
 				break;
 				
-			// #BUSY Form->Subfields
-      // case "subfields":
-      //   $out.=icon('new');
-      //   $out.=div('sub');
-      //   foreach ($field['value'] as $id => $subfields) {
-      //     $first=true;
-      //     foreach ($subfields as $subfieldName => $subfieldValue) {
-      //       $preSub=get_prefix($subfieldName);
-      //       $subAttr['name']=$name.'___'.$subfieldName.'[]';
-      //       $subAttr['value']=$subfieldValue;
-      //       switch ($preSub) {
-      //         case 'id':
-      //           if ($subfieldName=='id') {
-      //             $out.=form_hidden($subAttr['name'],$subAttr['value']);
-      //           }
-      //           break;
-      //         default:
-      //           $labelClass=array();
-      //           if ($first) {
-      //             $labelClass=array('class'=>'first');
-      //             $out.=icon('delete');
-      //             $first=FALSE;
-      //           }
-      //           $out.=form_label($this->CI->lang->ui($subfieldName),$subAttr['name'],$labelClass);
-      //           if ($preSub=='txt') {
-      //             $this->hasHtmlField=true;
-      //             $subAttr["rows"]=5;
-      //             $subAttr["cols"]=60;
-      //             $subAttr['class']='htmleditor';
-      //             $out.=form_textarea($subAttr);
-      //           }
-      //           else {
-      //             $out.=form_input($subAttr);
-      //           }
-      //           break;
-      //       }
-      //     }
-      //     $out.=br(2);
-      //   }
-      //   $out.=_div();
-      //   break;
-
 			case "file":
 				$attr["class"].=" browse";
 				$field['control']=form_upload($attr);
@@ -1190,8 +1148,6 @@ class Form {
         }
 				$field['control']=form_input($attr);
 		endswitch;
-    
-    // trace_($field);
     
 		if ($field["type"]=="hidden") return $field['control'];
     $field['horizontal_bootstrap'] = ($this->framework=='bootstrap');
