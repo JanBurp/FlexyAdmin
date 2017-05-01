@@ -2,6 +2,7 @@
 	"description" : "Auto update & install CodeIgniter and others",
 	"require": {
     "benedmunds/CodeIgniter-Ion-Auth":"*",
-    "firebase/php-jwt":"*"
+    "firebase/php-jwt":"*",
+		"spipu/html2pdf": "^4.6"
 	}
 }
