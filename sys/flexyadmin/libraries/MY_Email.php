@@ -1,5 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+require_once dirname(__FILE__).'/../../vendor/spipu/html2pdf/html2pdf.class.php';
+
 /** \ingroup libraries
  * Uitbreiding op [CI_Email](http://codeigniter.com/user_guide/libraries/email.html)
  *
@@ -409,12 +411,11 @@ class MY_Email extends CI_Email {
     // Create PDF and attach
     if ($this->send_with_pdf) {
       $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
-      if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;
-      // Create PDF from HTML
-      $this->CI->load->library('html2pdf/html2pdf');
+      if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;  
       $html2pdf = new HTML2PDF('P', 'A4', 'en');
+      $html2pdf->setTestTdInOnePage(false);
       $html2pdf->writeHTML($this->body);
-      $file=SITEPATH.'cache/'.$pdf_name;
+      $file = __DIR__.'/../../'.SITEPATH.'cache/'.$pdf_name;
       $html2pdf->Output($file,'F');
       $this->attach($file);
     }
