@@ -103,7 +103,7 @@ class Content {
     $res=$match[0];
     if (isset($match[2])) {
       $res='<a'.preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[1]);
-      $url=str_replace($this->CI->config->item('base_url'),'',$match[2]);
+      $url = preg_replace('#^'.$this->CI->config->item('base_url').'#', '', $match[2]);
       $target='';
       if (isset($match[3]) and (preg_match("/target=\"([^\"]*)\"/us", $match[3],$target_match)) ) {
         $target=$target_match[1];
