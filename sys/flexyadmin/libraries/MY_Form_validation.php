@@ -565,19 +565,25 @@ class MY_Form_validation extends CI_Form_validation {
     * Use standard php date formats (ie. Y-m-d) for this.
     *
     * @param    string $str
-    * @param    mixed $format default=FALSE
+    * @param    mixed $format default='Y-m-d' (MySQL ready)
     * @return    bool / obj
     */
   function valid_date($str, $format=FALSE) {
-    $pattern = '/^(?<day>0?[1-9]|[12][0-9]|3[01])[- \/.](?<month>0?[1-9]|1[012])[- \/.](?<year>(19|20)[0-9]{2})$/';
-    if( preg_match($pattern, $str, $match) && checkdate($match['month'], $match['day'], $match['year']) ) {
-      if ( $format ) {
-        // prep date
-        return date($format, mktime(0, 0, 0, $match['month'], $match['day'], $match['year']));
+    $result = FALSE;
+    $pattern = '/^(0?[1-9]|[12][0-9]|3[01])[- \/.](0?[1-9]|1[012])[- \/.]((19|20)[0-9]{2})$/';
+    if( preg_match($pattern, $str, $match) ) {
+      $day    = $match[1];
+      $month  = $match[2];
+      $year   = $match[3];
+      if ($format===FALSE) $format='Y-m-d';
+      if (checkdate($month, $day, $year) ) {
+        if ($format)
+          $result = date($format, mktime(0, 0, 0, $month, $day, $year));
+        else
+          $result = $str;
       }
-      return TRUE;
     }
-    return FALSE;        
+    return $result;        
   }  
   
  /**
