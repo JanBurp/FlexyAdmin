@@ -560,8 +560,17 @@ export default {
             }
             value = valueArray;
           }
+          // Formdata meegeven?
+          var formdata = {};
+          if (!_.isUndefined(self.fields[field].dynamic.watch.data)) {
+            for(var i in self.fields[field].dynamic.watch.data) {
+              var key = self.fields[field].dynamic.watch.data[i];
+              formdata[key] = this.row[key];
+            }
+          }
+          // Doe de api call
           return flexyState.api({
-            url : api + '&where='+value,
+            url : api + '&where=' + value + '&formdata=' + JSON.stringify(formdata),
           }).then(function(response){
             if (!_.isUndefined(response.data.data)) {
               var data = response.data.data
