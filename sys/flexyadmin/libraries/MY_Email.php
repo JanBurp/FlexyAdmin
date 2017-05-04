@@ -538,8 +538,8 @@ class MY_Email extends CI_Email {
 		$body=str_replace('href="undefined/','href="'.base_url(),$body);
 		$body=preg_replace('/href=\"(?!https?:\/\/).*?/','href="'.base_url(),$body);
 		$body=str_replace('##MAIL##','href="mailto:',$body);
-    // good paths to local images
-    $body=preg_replace('/src=\"(?!https?:\/\/).*?/','src="'.base_url(),$body);
+    // good paths to local images // LET OP: MockSMTP maakt soms een dubbele punt ergens van :-(
+    $body=preg_replace('/src=\"(?!https?:\/\/).*?/iu','src="'.base_url(),$body);
     // good paths to url() in styles
     $body = preg_replace('/(url\([\'|"])/uU', '$1'.base_url(), $body);
     return $body;
