@@ -558,7 +558,12 @@ class Flexy_auth extends Ion_auth {
    */
   private function _create_new_password( $user_id ) {
     $sql = 'SELECT `salt` FROM `cfg_users` WHERE `id` = "'.$user_id.'"';
-    $salt = $this->db->query($sql)->row_object()->salt;
+    $query = $this->db->query($sql);
+    if ($query) {
+      $row = $query->row_object();
+    }
+    if (!isset($row)) return false;
+    $salt = $row->salt;
     $password = $this->salt();
     $hashed_password = $this->hash_password( $password, $salt);
     return array(
@@ -583,6 +588,11 @@ class Flexy_auth extends Ion_auth {
     if (!isset($data['password'])) {
       // Create random password and save it to user
       $password_info = $this->_create_new_password($user['user_id']);
+      if ($password_info===false) {
+        $this->trigger_events(array('post_change_password', 'post_change_password_unsuccessful'));
+        $this->set_error('password_change_unsuccessful');
+        return FALSE;
+      }
   		$set = array(
   		   'gpw_password'  => $password_info['password'], // Hash gebeurt in data
   		   'remember_code' => NULL,
