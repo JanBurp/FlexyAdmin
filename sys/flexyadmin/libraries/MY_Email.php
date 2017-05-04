@@ -533,13 +533,15 @@ class MY_Email extends CI_Email {
    * @author Jan den Besten
    */
   public function prepare_body($body) {
-    // good paths to local images
-    $body=preg_replace('/src=\"(?!https?:\/\/).*?/','src="'.base_url(),$body);
     // good internal links
 		$body=str_replace('href="mailto:','##MAIL##',$body);
 		$body=str_replace('href="undefined/','href="'.base_url(),$body);
 		$body=preg_replace('/href=\"(?!https?:\/\/).*?/','href="'.base_url(),$body);
 		$body=str_replace('##MAIL##','href="mailto:',$body);
+    // good paths to local images
+    $body=preg_replace('/src=\"(?!https?:\/\/).*?/','src="'.base_url(),$body);
+    // good paths to url() in styles
+    $body = preg_replace('/(url\([\'|"])/uU', '$1'.base_url(), $body);
     return $body;
   }
   
@@ -574,11 +576,12 @@ class MY_Email extends CI_Email {
         $class=get_suffix($tag,'.');
         $tag=remove_suffix($tag,'.');
         if ($class==$tag) $class='';
-        // trace_([$tag,$class]);
-        if ($class)
+        if ($class) {
           $body = preg_replace("/<".$tag."(|\s[^>]*)(class=\"".$class."\")(|\s[^>]*)>/uiU", "<".$tag." class=\"".$class."\" style=\"".$style."\"$1$2>", $body);
-        else
+        }
+        else {
           $body = preg_replace("/<".$tag."(|\s[^>]*)>/uiU", "<".$tag." style=\"".$style."\"$1$2>", $body);
+        }
         
       }
     }
