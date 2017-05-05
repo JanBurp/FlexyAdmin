@@ -565,12 +565,37 @@ class MY_Form_validation extends CI_Form_validation {
     * Use standard php date formats (ie. Y-m-d) for this.
     *
     * @param    string $str
-    * @param    mixed $format default='Y-m-d' (MySQL ready)
+    * @param    mixed $format default='d-m-Y'
     * @return    bool / obj
     */
   function valid_date($str, $format=FALSE) {
     $result = FALSE;
     $pattern = '/^(0?[1-9]|[12][0-9]|3[01])[- \/.](0?[1-9]|1[012])[- \/.]((19|20)[0-9]{2})$/';
+    if( preg_match($pattern, $str, $match) ) {
+      $day    = $match[1];
+      $month  = $match[2];
+      $year   = $match[3];
+      if ($format===FALSE) $format='d-m-Y';
+      if (checkdate($month, $day, $year) ) {
+        if ($format)
+          $result = date($format, mktime(0, 0, 0, $month, $day, $year));
+        else
+          $result = $str;
+      }
+    }
+    return $result;        
+  }
+
+  /**
+    * Check if given date is yyyy-mm-dd
+    *
+    * @param    string $str
+    * @param    mixed $format default='Y-m-d'
+    * @return    bool / obj
+    */
+  function valid_mysql_date($str, $format=FALSE) {
+    $result = FALSE;
+    $pattern = '/^((19|20)[0-9]{2})[- \/.](0?[1-9]|1[012])[- \/.](0?[1-9]|[12][0-9]|3[01])$/';
     if( preg_match($pattern, $str, $match) ) {
       $day    = $match[1];
       $month  = $match[2];
@@ -584,7 +609,8 @@ class MY_Form_validation extends CI_Form_validation {
       }
     }
     return $result;        
-  }  
+  }
+
   
  /**
   * Form validation rule voor str_google_analytics. Controleert of een goede code, en als het een javascript is, haal de code eruit.
