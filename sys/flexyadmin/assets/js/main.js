@@ -103,3 +103,10 @@ else {
   });
   
 }
+
+// runtime bug, just testing;
+// window.setTimeout(function(){
+//   console.log('start bug');
+//   var bug = bugger;
+// }, 500);
+

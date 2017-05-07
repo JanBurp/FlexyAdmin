@@ -97,7 +97,11 @@ module.exports.push(
 if (process.env.NODE_ENV === 'watch') {
   module.exports[0].plugins = (module.exports.plugins || []).concat([
     
-    new LiveReloadPlugin()
+    new LiveReloadPlugin(),
+
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true
+    })
 
   ])
 }
