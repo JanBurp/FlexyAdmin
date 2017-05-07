@@ -213,16 +213,22 @@ export default {
         var filter = this.row[filter_field];
         if (filter) {
           var index = jdb.indexOfProperty(options,'value',filter);
-          var options_object = _.clone(options[index]['name']);
-          options = [];
-          for (var opt in options_object) {
-            options.push( {'name':opt,'value':opt} );
+          if (!_.isUndefined(options[index])) {
+            var options_object = _.clone(options[index]['name']);
+            options = [];
+            for (var opt in options_object) {
+              options.push( {'name':opt,'value':opt} );
+            }         
+          }
+          else {
+            options = [];
           }
         }
         else {
           options = [];
         }
-        // console.log(filter_field,filter,index,options);
+        // console.log(filter_field,filter,index);
+        // jdb.vueLog(options);
       }
       return options;
     },
