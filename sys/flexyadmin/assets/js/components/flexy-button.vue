@@ -6,10 +6,6 @@ export default {
       type: [String,Object],
       default:''
     },
-    'class':{
-      type: String,
-      default:''
-    },
     'size': {
       type: String,
       default:''
@@ -40,14 +36,14 @@ export default {
       return iconComputed;
     },
     
-    buttonClass : function() {
-      var buttonClass='btn';
-      if (this.iconComputed!=='')   buttonClass += ' btn-icon';
-      if (this.text!=='')           buttonClass += ' btn-text';
-      if (this.dropdown!=='')       buttonClass += ' dropdown-toggle';
-      if (!this.border)             buttonClass += ' no-border';
-      if (this.size)                buttonClass += ' btn-'+this.size;
-      return buttonClass;
+    computedClass : function() {
+      var computedClass='btn';
+      if (this.iconComputed!=='')   computedClass += ' btn-icon';
+      if (this.text!=='')           computedClass += ' btn-text';
+      if (this.dropdown!=='')       computedClass += ' dropdown-toggle';
+      if (!this.border)             computedClass += ' no-border';
+      if (this.size)                computedClass += ' btn-'+this.size;
+      return computedClass;
     },
 
     iconClass : function() {
@@ -74,8 +70,8 @@ export default {
 </script>
 
 <template>
-  <button @click="openDropdown" type="button" class="flexy-button" :class="buttonClass">
-    <span v-if="iconComputed!==''" :class="iconClass" :disabled="buttonClass.indexOf('disabled')"></span>
+  <button @click="openDropdown" type="button" class="flexy-button" :class="computedClass">
+    <span v-if="iconComputed!==''" :class="iconClass" :disabled="computedClass.indexOf('disabled')"></span>
     <span v-if="text!==''" class="flexy-button-text">{{text}}</span>
   </button>
 </template>
