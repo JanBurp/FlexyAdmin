@@ -86422,7 +86422,7 @@ Object.defineProperty(exports,"__esModule",{value:true});exports.default={name:'
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};exports.default={name:'flexyButton',props:{'icon':{type:[String,Object],default:''},'class':{type:String,default:''},'size':{type:String,default:''},'text':{type:String,default:''},'dropdown':{type:String,default:''},'border':{type:[String,Boolean],default:false}},computed:{iconComputed:function iconComputed(){var iconComputed=this.icon;if(_typeof(this.icon)==='object'){for(var icon in this.icon){if(this.icon[icon])iconComputed=icon;}}return iconComputed;},buttonClass:function buttonClass(){var buttonClass='btn';if(this.iconComputed!=='')buttonClass+=' btn-icon';if(this.text!=='')buttonClass+=' btn-text';if(this.dropdown!=='')buttonClass+=' dropdown-toggle';if(!this.border)buttonClass+=' no-border';if(this.size)buttonClass+=' btn-'+this.size;return buttonClass;},iconClass:function iconClass(){var iconClass='';if(this.iconComputed!==''){iconClass='fa fa-'+this.iconComputed;}return iconClass;}},methods:{openDropdown:function openDropdown(){if(this.dropdown!==''){document.getElementById(this.dropdown).classList.toggle('open');}}}};
+Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};exports.default={name:'flexyButton',props:{'icon':{type:[String,Object],default:''},'size':{type:String,default:''},'text':{type:String,default:''},'dropdown':{type:String,default:''},'border':{type:[String,Boolean],default:false}},computed:{iconComputed:function iconComputed(){var iconComputed=this.icon;if(_typeof(this.icon)==='object'){for(var icon in this.icon){if(this.icon[icon])iconComputed=icon;}}return iconComputed;},computedClass:function computedClass(){var computedClass='btn';if(this.iconComputed!=='')computedClass+=' btn-icon';if(this.text!=='')computedClass+=' btn-text';if(this.dropdown!=='')computedClass+=' dropdown-toggle';if(!this.border)computedClass+=' no-border';if(this.size)computedClass+=' btn-'+this.size;return computedClass;},iconClass:function iconClass(){var iconClass='';if(this.iconComputed!==''){iconClass='fa fa-'+this.iconComputed;}return iconClass;}},methods:{openDropdown:function openDropdown(){if(this.dropdown!==''){document.getElementById(this.dropdown).classList.toggle('open');}}}};
 
 /***/ }),
 /* 56 */
@@ -91195,7 +91195,7 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('button', {
     staticClass: "flexy-button",
-    class: _vm.buttonClass,
+    class: _vm.computedClass,
     attrs: {
       "type": "button"
     },
@@ -91205,7 +91205,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [(_vm.iconComputed !== '') ? _c('span', {
     class: _vm.iconClass,
     attrs: {
-      "disabled": _vm.buttonClass.indexOf('disabled')
+      "disabled": _vm.computedClass.indexOf('disabled')
     }
   }) : _vm._e(), _vm._v(" "), (_vm.text !== '') ? _c('span', {
     staticClass: "flexy-button-text"
