@@ -208,6 +208,8 @@
       flex-wrap:wrap;
       
       tr {
+        display: block;
+        float:left;
         position:relative;
         width:15rem;
         height:16.75rem;
@@ -236,29 +238,35 @@
       
       td.action {
         display:none;
-        position:relative;
+        position:absolute;
         text-align:center;
         background-color:rgba(255,255,255,.8);
+        width: 100%;
         padding:.25rem;
+
         z-index:999;
         .flexy-button {display:none;}
         .flexy-button.action-remove, .flexy-button.action-select {display:inline;margin-top:-.25rem;}
       }
       
       td[name="media_thumb"] {
+        display:block;
+        position: absolute;
         width:100%;
         height:100%;
-      }
-      td[name="media_thumb"] .flexy-thumb {
-        position:absolute;
-        width:auto;
-        max-width:14rem;
-        height:auto;
-        max-height:16rem;
-        bottom: 2.25rem; left:50%;
-        transform: translate(-50%,0);
+        .flexy-thumb {
+          display: block;
+          position: absolute;
+          width:auto;
+          max-width:14rem;
+          height:auto;
+          max-height:16rem;
+          bottom: 2.25rem; left:50%;
+          transform: translate(-50%,0);
+        }
       }
       td[name="alt"] {
+        display: block;
         position:absolute;
         bottom:.35rem;
         width:100%;
