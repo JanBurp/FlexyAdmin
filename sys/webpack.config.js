@@ -63,23 +63,8 @@ module.exports.push(
         // sass,css
         {
           test: /\.scss$/,
-          use : [
-            "css-loader",
-            "sass-loader",
-          ],
+          loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
         }
-        // fonts
-        // {
-        //   test: /\.(eot|svg|ttf|woff|woff2)$/,
-        //   use: 'file?name=[name].[ext]'
-        // }
-        // {
-        //   test: /\.(png|jpg|gif|svg)$/,
-        //   use: 'file',
-        //   options: {
-        //     name: '[name].[ext]'
-        //   }
-        // }
       ]
   },
   devtool: "source-map",
