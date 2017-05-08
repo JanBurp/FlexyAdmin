@@ -1,1 +1,103 @@
-
+TODO Jan:
+- 1: fotos  probleem, niet in tekst (meerder word slideshow) @done(2017-05-08)
+- 2: Registratie: + knop achter kinderen? @done(2017-05-08)
+- 3: footer & disclaimer full-page @done(2017-05-08)
+- 4: hoofdmenu-items geen tekst! -> altijd subitem @done(2017-05-08)
+- 5: lege dossiers wat te zien?
+- 6: Bug: uploaden bij thumb weergave (en in andere browsers?)
+- 7: Afbreken teksten... soms midden in een woord. ??
+- Bug: soms in sidebar terwijl dat niet moet...
+- Nieuwsbrieven/Specials versturen (2 dagen): @busy
+	- BUG: _api/posts werkt online niet... misschien hoofdletters oid? @done(2017-05-08)
+	- Niuewsbrief snippets van een periode (met inleiding) kunnen sturen
+		- Inleiding als aparte post?
+	- styling (basic)
+		- splits bij koppen @done(2017-05-03)
+		- andere post moet andere kop krijgen @done(2017-05-03)
+		- kleuren
+	- PDF testen
+	- Unsubmit footer in verzonden emails
+- Unsubmit pagina: @priority
+	- van organisatie & profiel
+		- afmeld mailtje bij organisatie
+	- link waarin alles al in zit:
+- WOWW berichten: (3 dagen)
+	- Posts:
+		- random kleur (maand is keuze van kleur))
+		- voorbeeld WoWW kunnen emailen (bestaat deels al, zie tbl_posts)
+		- Met extra vinkje in database?
+	- Outbox (1 dag)
+	- Berichten verzamelen
+	- Berichten klaarzetten
+	- Niet dezelfde items binnen bepaalde tijd in een nieuwsbrief (3 maanden?)
+- Opschonen database?
+- Wensen voor later:
+	- Slideshow (meerdere afbeeldingen op pagina & posts)
+	- Dossier: post vastzetten
+- Diversen:
+	mei / juni:
+		- 14 juni deadline facturen
+	Email outbox (Jan):
+		- Gedistribueert emails verzenden
+		- Alle mails klaarzetten in een outbox, die met een cronjob om de minuut legen (met maximaal aantal emails). Prioriteit geven aan contact & profiel aanpassingen.
+		- Hoeveel adressen, en bereken hoe lang het duurt voordat ze allemaal verzonden zijn binnen huidige account
+		- Dit standaard inbouwen in MY_Email
+		- Via SMTP (authenticated!) @done(2017-03-13)
+	Online:
+		- woww.nu verwijzen naar juiste pagina
+		- Upgraden naar Professional 1 pakket ? Kan ook nog later mocht het drukker worden...
+	Workflows:
+		- Aanmelden bedrijf: @done(2017-02-23)
+			- Email adres (& captcha) @done(2017-03-09)
+			- Soor organisatie @done(2017-03-09)
+		- Profiel:
+			- Profiel aanmaken/aanpassen:
+				- Email, NAW @done(2017-03-09)
+				- Kinderen @done(2017-03-30)
+				- Wachtwoord aanpassen @done(2017-03-30)
+				- Bedankt mail
+		- Special sturen
+			- Selecteer post(s)
+			- Pas post eventueel aan
+			- Selecteer geaddresseerden:
+				- profielen (op thema)
+				- bedrijven (op thema)
+			- Omzetten naar PDF (als bijlage)
+			- Sturen als HTML & PDF
+	Wensen (algemeen):
+		Nieuwsbrief:
+			- Kleur aanpassen aan (gekozen) logo
+			- Altijd een afmeld link onderaan de email
+			- Automatisch op bepaalde leeftijdsmomenten van kind (ook voor geboorte)
+			- Automatisch op vaste momenten met inhoud toegespitst op leeftijd kinderen (en eventueel categorieen)
+			- Specials (handmatig): nieuws, attachments (pdf). Te sturen naar selectie (op leeftijd?)
+		Inhoud:
+			- Koppelen aan leeftijdscategorie kind
+			- Diverse thema's categorien.
+		Profiel: @done(2017-03-30)
+			- Ouders @done(2017-03-09)
+			- Kinderen (geb datum, of uitgerekende datum) @done(2017-03-09)
+			- Taal (wordt in volgende versie gebruikt) @done(2017-03-09)
+			- Lijst van 'favoriete' artikelen (wat is ontvangen en wat aktief toegevoegd) @done(2017-03-09)
+			- Statistieken: wat heeft iemand bekekend (info voor platform zelf) @done(2017-03-09)
+		Diversen:
+			- Link checker (omdat links wellicht kunnen wijzigen) @done(2017-03-02)
+			- Captcha @done(2017-02-23)
+			- Meertalig profiel @done(2017-03-02)
+			- WYSIWYG editen, of iig makkelijk vinden van artikelen @done(2017-03-02)
+			- Polls, of kleine survey (handjevol vragen) (op website als ingelogd, en in nieuwsbrief) @done(2017-03-30)
+			- Favoriete artikelen (per profiel), ook interessant om te weten welke artikelen veel worden bewaard
+	Toekomst: http://voorwerkendeouders.nl/ overzetten naar BV Familie:
+		- Omzetten database (script, want laatste moment omzetten)
+		- Ook alle profielen! (zoveel mogelijk hetzelfde blijven)
+		- Betaalmodule??
+		- Overleg met Dirk?
+			- Welke inhoud komt waar vandaan
+				- Pagina's (menu)
+				- Blogs
+					- Comments
+				- Snippets
+				- Slider
+			- Profielen / Users?
+				- Nieuwsbrief
+		- Wat kost dit extra? Laten weten aan Marjet
