@@ -181,12 +181,12 @@ class Row extends Api_Model {
     
     // Media?
     $is_media = (isset($this->args['path']) and $this->args['table']==='res_assets');
-    if (substr($this->args['table'],6)==='media_') {
+    if (substr($this->args['table'],0,6)==='media_') {
       $is_media = true;
       $this->args['path']  = substr($this->args['table'],6);
       $this->args['table'] = 'res_assets';
     }
-    
+
     // Check rechten
     $rights = FALSE;
     if ($is_media) {
