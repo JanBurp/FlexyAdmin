@@ -519,7 +519,13 @@ function max_length($txt,$len=100,$type='LINES',$closetags=false,$strip_tags='')
 			$lines=explode('. ',$txt);
       $out='';
       foreach ($lines as $line) {
-        $out.=$line.'. ';
+        if (substr($line,-4)==='</p>') {
+          $line = substr($line,0,strlen($line)-4).'.</p>';
+          $out.=$line;
+        }
+        else {
+          $out.=$line.'. ';
+        }
         if (strlen($out)>$len) break;
       }
       $out=trim($out);
