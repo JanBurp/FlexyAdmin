@@ -4,7 +4,8 @@ TODO Jan:
 - 3: footer & disclaimer full-page @done(2017-05-08)
 - 4: hoofdmenu-items geen tekst! -> altijd subitem @done(2017-05-08)
 - 5: lege dossiers wat te zien?
-- 6: Bug: uploaden bij thumb weergave (en in andere browsers?)
+- 6: Bug: uploaden bij thumb weergave (en in andere browsers?) @done(2017-05-08)
+- CMS: styling headers
 - 7: Afbreken teksten... soms midden in een woord. ??
 - Bug: soms in sidebar terwijl dat niet moet...
 - Nieuwsbrieven/Specials versturen (2 dagen): @busy
