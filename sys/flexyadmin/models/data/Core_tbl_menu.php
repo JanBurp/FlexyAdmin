@@ -102,6 +102,10 @@ Class Core_tbl_menu extends Data_Core {
         case 'table':
           $this->_add_menu_table($menu_item);
           break;
+
+        case 'model':
+          $this->_add_menu_from_model($menu_item);
+          break;
       }
     }
     
@@ -266,6 +270,42 @@ Class Core_tbl_menu extends Data_Core {
     }
   }
   
+/**
+   * Voeg menu items toe dmv extern model
+   *
+   * @param array $item 
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _add_menu_from_model($item) {
+    $method = get_suffix($item['model'],'.');
+    $model = get_prefix($item['model'],'.');;
+    $this->load->model($model);
+    $data_items = $this->$model->$method($item);
+    
+    // Add
+    $this->data->table('tbl_menu');
+    $places = $this->_determine_menu_item_places($item);
+    foreach ($places as $place) {
+      $items = $data_items;
+      if ($place['pre_uri']) {
+        foreach ($items as $key => $row) {
+          unset($items[$key]);
+          if (isset($item['item'])) $row = array_merge($row,$item['item']);
+          $full_uri         = $place['pre_uri'].'/'.el('full_uri',$row, el('uri',$row));
+          $row['full_uri']  = $full_uri;
+          $items[$full_uri] = $row;
+        }
+      }
+
+      if ($place['key']) {
+        $this->_menu = array_add_after( $this->_menu, $place['key'], $items );
+      }
+      else
+        $this->_menu = $items;
+    }
+  }
+
   
 
 }
