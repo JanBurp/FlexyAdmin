@@ -744,9 +744,10 @@ export default {
       for (var i = 0; i < self.uploadFiles.length; i++) {
         var file = self.uploadFiles[i];
         var formData = new FormData();
-        formData.set( 'path', self.name );
-        formData.set( 'file', self.uploadFiles[i] );
-        formData.set( 'fileName', self.uploadFiles[i].name );
+        console.log(file,formData);
+        formData.append( 'path', self.name );
+        formData.append( 'file', self.uploadFiles[i] );
+        formData.append( 'fileName', self.uploadFiles[i].name );
         flexyState.api({
           method    : 'POST',
           url       : 'media',
