@@ -57,6 +57,7 @@ $config['wysiwyg'] = array(
   'plugins'       => 'lists,fullscreen,table,image,link,code',
   'height'        => 300,
   'block_formats' => 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3',
+  'content_style' => 'h1,h2 {margin:0px} p {margin-top:0px}',
   // 'menubar'    => "edit format table",
   'menubar'       => false,
   // 'toolbar'    => false,
