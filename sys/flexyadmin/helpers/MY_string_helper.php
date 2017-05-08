@@ -459,11 +459,11 @@ function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><ital
 		foreach ($matches[0] as $match) {
 			$intro.=$match;
 		}
-		$intro=str_replace('&nbsp;',' ',strip_tags($intro,$strip_tags));
+		$intro=strip_tags($intro,$strip_tags);
 	}
 	// no intro class found, pick an intro by length
 	if ($intro=='') {
-		$intro=max_length(str_replace('&nbsp;',' ',strip_tags($txt,$strip_tags)),$len,$type,true,$strip_tags);
+		$intro=max_length(strip_tags($txt,$strip_tags),$len,$type,true,$strip_tags);
 	}
 	// make sure all tags are closed
   if ($intro!=$txt) $intro.=$ellipses;
