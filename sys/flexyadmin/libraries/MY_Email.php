@@ -79,6 +79,7 @@ class MY_Email extends CI_Email {
     
     if (empty( $this->_to ))   $this->_to = el('To',$this->_headers, 'unknown' );
     if (!is_array($this->_to)) $this->_to = array($this->_to);
+    if (is_multi($this->_to))  $this->_to = array_keys($this->_to);
 
     $this->CI->load->model('log_activity');
     if ($send) {
@@ -104,6 +105,9 @@ class MY_Email extends CI_Email {
    */
   public function to($to) {
     $this->add_to($to);
+    if (is_array($to) and is_multi($to)) {
+      $to = array_keys($to);
+    }
     return parent::to($to);
   }
   
@@ -269,7 +273,9 @@ class MY_Email extends CI_Email {
   private function add_to( $to ) {
     if (!is_array($to)) $to=explode(',',$to);
     $this->_to = array_merge( $this->_to,$to );
-    $this->_to = array_unique( $this->_to );
+    if (!is_multi($this->_to)) {
+      $this->_to = array_unique( $this->_to );
+    }
     return $this;
   }
   
@@ -398,15 +404,12 @@ class MY_Email extends CI_Email {
     $this->_set_default_parse_data();
     // Parse subject & body
     $this->CI->load->library('parser');
-    $this->subject = $this->CI->parser->parse_string($this->subject,$this->_parse_data,true);
-    $this->body = $this->CI->parser->parse_string($this->body,$this->_parse_data,true);
+    $subject = $this->CI->parser->parse_string($this->subject,$this->_parse_data,true);
+    $body = $this->CI->parser->parse_string($this->body,$this->_parse_data,true);
 
     // Prepare body (styling and links)
-    $this->body = $this->prepare_body($this->body);
+    $body = $this->prepare_body($body);
 
-    // Set subject & Body
-    $this->subject( $this->subject );
-    $this->message( $this->body );
        
     // Create PDF and attach
     if ($this->send_with_pdf) {
@@ -422,12 +425,32 @@ class MY_Email extends CI_Email {
 
     // Eén mail verzenden
     if ( !$this->split_send ) {
+      // Set subject & Body
+      $this->subject( $subject );
+      $this->message( $body );
       return $this->send($auto_clear);
     }
     
     // Losse mails
     $to_all = $this->_to;
-    foreach ($to_all as $to) {
+    foreach ($to_all as $address) {
+      if (is_array($address)) {
+        if (isset($address['name'])) {
+          $to = $address['name'];
+        }
+        else {
+          $to = $address['email'];
+        }
+        // personal parse
+        $parse_data = array_merge($this->_parse_data,$address);
+        $personal_subject = $this->CI->parser->parse_string($subject,$parse_data,true);
+        $personal_body = $this->CI->parser->parse_string($body,$parse_data,true);
+        $this->subject($personal_subject);
+        $this->message($personal_body);
+      }
+      else {
+        $to = $address;
+      }
       $this->to($to);
       if ($this->send(false)) {
         $total_send++;
