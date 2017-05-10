@@ -365,7 +365,8 @@ class Forms extends Module {
    * @author Jan den Besten
    */
   private function get_action() {
-    $action=$this->CI->uri->get();
+    $action = el('action',$this->settings,'');
+    if (empty($action)) $action = $this->CI->uri->get();
     if (isset($this->settings['action_query'])) $action.=$this->settings('action_query');
     return $action;
   }
