@@ -120,7 +120,7 @@ class Search extends AdminController {
 				else
 					$selection=array('');
 				$selection=array_combine($selection,$selection);
-        $this->load->model( 'Data/Options_Fields');
+        $this->load->model( 'data/Options_Fields');
 				$fields=$this->Options_Fields->get_options();
 				unset($fields['']);
 				foreach ($fields as $key => $value) {
