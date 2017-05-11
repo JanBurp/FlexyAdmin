@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * Zorgt ervoor dat links in `tbl_links` goed foruleerd zijn.
+ * Zorgt ervoor dat links in `tbl_links` goed formuleerd zijn.
  * 
  * Zorgt ervoor dat alle links goed geformuleerd zijn:
  * - Altijd met een protocol ervoor (http://, https:// of mailto:)
