@@ -30,7 +30,7 @@ class Plugin_txt extends Plugin {
             'field'     => $field,
             'title'     => $matches[3][$key],
             'url'       => $url,
-            'prep_url'  => $this->CI->form_validation->prep_url_mail($url),
+            'prep_url'  => trim($url),
             'href'      => $matches[1][$key]
           );
         }
@@ -47,7 +47,10 @@ class Plugin_txt extends Plugin {
           $this->newData[$link['field']] = str_replace( $link['href'], 'href="'.$link['prep_url'].'"', $this->newData[$link['field']]);
           $prepped++;
         }
-        // Een nieuwe?
+        // Een nieuwe? Alleen als niet lokaal en niet bestaand.
+        if (substr($link['url'],0,4)!=='http') {
+          unset($links[$key]);
+        }
         if ($this->CI->data->select('str_title,url_url')->where('url_url',$link['prep_url'])->get_row()) {
           unset($links[$key]);
         }
