@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once dirname(__FILE__).'/../../vendor/spipu/html2pdf/html2pdf.class.php';
+require_once dirname(__FILE__).'/../../vendor/mpdf/mpdf/mpdf.php';
 
 /** \ingroup libraries
  * Uitbreiding op [CI_Email](http://codeigniter.com/user_guide/libraries/email.html)
@@ -56,6 +56,7 @@ class MY_Email extends CI_Email {
    * Send with with/as pdf 
    */
   private $send_with_pdf = false;
+  private $pdf_body = '';
 
 
   /**
@@ -178,6 +179,7 @@ class MY_Email extends CI_Email {
     $this->_parse_data = array();
     $this->split_send = false;
     $this->send_with_pdf = false;
+    $this->pdf_body = '';
     return parent::clear($clear_attachments);
 	}
   
@@ -335,11 +337,13 @@ class MY_Email extends CI_Email {
    * Stuur pdf mee van gehele email in de bijlage
    *
    * @param string $pdf Default=TRUE. Kan ook de naam van de pdf bevatten
+   * @param string $pdf_body ['']. Eventueel alternatieve pdf body.
    * @return void
    * @author Jan den Besten
    */
-  public function send_with_pdf($pdf=true) {
+  public function send_with_pdf($pdf=true, $pdf_body = '') {
     $this->send_with_pdf = $pdf;
+    if (!empty($pdf_body)) $this->pdf_body = $pdf_body;
     return $this;
   }
 
@@ -415,12 +419,30 @@ class MY_Email extends CI_Email {
     if ($this->send_with_pdf) {
       $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
       if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;  
-      $html2pdf = new HTML2PDF('P', 'A4', 'en');
-      $html2pdf->setTestTdInOnePage(false);
-      $html2pdf->writeHTML($this->body);
+
+      // $html2pdf = new HTML2PDF('P', 'A4', 'en', true, 'UTF-8', array(20,20,60,20));
+      // $html2pdf->setTestTdInOnePage(false);
+      // $pdf_body = $this->pdf_body;
+      // if (empty($pdf_body)) $pdf_body = $this->body;
+      // $pdf_body = $this->prepare_body($pdf_body);
+      // $pdf_body = preg_replace('/font-family:(.*);/uiU', '', $pdf_body);
+      // $html2pdf->writeHTML($pdf_body);
+      // $file = __DIR__.'/../../'.SITEPATH.'cache/'.$pdf_name;
+      // $html2pdf->Output($file,'F');
+      // $this->attach($file);
+
+
+      $mpdf = new mPDF();
+      // $mpdf->setTestTdInOnePage(false);
+      $pdf_body = $this->pdf_body;
+      if (empty($pdf_body)) $pdf_body = $this->body;
+      $pdf_body = $this->prepare_body($pdf_body);
+      $pdf_body = preg_replace('/font-family:(.*);/uiU', '', $pdf_body);
+      $mpdf->writeHTML($pdf_body);
       $file = __DIR__.'/../../'.SITEPATH.'cache/'.$pdf_name;
-      $html2pdf->Output($file,'F');
+      $mpdf->Output($file,'F');
       $this->attach($file);
+
     }
 
     // Eén mail verzenden
