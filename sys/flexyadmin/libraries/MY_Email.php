@@ -420,24 +420,11 @@ class MY_Email extends CI_Email {
       $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
       if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;  
 
-      // $html2pdf = new HTML2PDF('P', 'A4', 'en', true, 'UTF-8', array(20,20,60,20));
-      // $html2pdf->setTestTdInOnePage(false);
-      // $pdf_body = $this->pdf_body;
-      // if (empty($pdf_body)) $pdf_body = $this->body;
-      // $pdf_body = $this->prepare_body($pdf_body);
-      // $pdf_body = preg_replace('/font-family:(.*);/uiU', '', $pdf_body);
-      // $html2pdf->writeHTML($pdf_body);
-      // $file = __DIR__.'/../../'.SITEPATH.'cache/'.$pdf_name;
-      // $html2pdf->Output($file,'F');
-      // $this->attach($file);
-
-
-      $mpdf = new mPDF();
-      // $mpdf->setTestTdInOnePage(false);
+      $mpdf = new mPDF('utf-8', array(130,257));
       $pdf_body = $this->pdf_body;
       if (empty($pdf_body)) $pdf_body = $this->body;
       $pdf_body = $this->prepare_body($pdf_body);
-      $pdf_body = preg_replace('/font-family:(.*);/uiU', '', $pdf_body);
+      // $pdf_body = preg_replace('/font-family:(.*);/uiU', '', $pdf_body);
       $mpdf->writeHTML($pdf_body);
       $file = __DIR__.'/../../'.SITEPATH.'cache/'.$pdf_name;
       $mpdf->Output($file,'F');
