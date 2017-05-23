@@ -274,6 +274,11 @@ $this->fontdata = array(
 	"unbatang" => array(/* Korean */
 		'R' => "UnBatang_0613.ttf",
 	),
+
+	"uniform" => array(
+    'R' => "Uniform.ttf",
+  ),
+
 );
 
 
@@ -310,3 +315,7 @@ $this->serif_fonts = array('dejavuserifcondensed', 'serif', 'dejavuserif', 'free
 $this->mono_fonts = array('dejavusansmono', 'mono', 'monospace', 'freemono', 'liberationmono', 'courier', 'ocrb', 'ocr-b', 'lucidaconsole',
 	'couriernew', 'monotypecorsiva'
 );
+
+
+
+
