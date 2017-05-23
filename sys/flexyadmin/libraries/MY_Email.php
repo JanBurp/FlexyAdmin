@@ -419,17 +419,14 @@ class MY_Email extends CI_Email {
     if ($this->send_with_pdf) {
       $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
       if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;  
-
       $mpdf = new mPDF('utf-8', array(130,257));
       $pdf_body = $this->pdf_body;
       if (empty($pdf_body)) $pdf_body = $this->body;
       $pdf_body = $this->prepare_body($pdf_body);
-      // $pdf_body = preg_replace('/font-family:(.*);/uiU', '', $pdf_body);
       $mpdf->writeHTML($pdf_body);
       $file = __DIR__.'/../../'.SITEPATH.'cache/'.$pdf_name;
       $mpdf->Output($file,'F');
       $this->attach($file);
-
     }
 
     // Eén mail verzenden
@@ -524,11 +521,13 @@ class MY_Email extends CI_Email {
       $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
       if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;
       // Create PDF from HTML
-      $this->CI->load->library('html2pdf/html2pdf');
-      $html2pdf = new HTML2PDF('P', 'A4', 'en');
-      $html2pdf->writeHTML($this->body);
-      $file=SITEPATH.'cache/'.$pdf_name;
-      $html2pdf->Output($file,'F');
+      $mpdf = new mPDF('utf-8', array(130,257));
+      $pdf_body = $this->pdf_body;
+      if (empty($pdf_body)) $pdf_body = $this->body;
+      $pdf_body = $this->prepare_body($pdf_body);
+      $mpdf->writeHTML($pdf_body);
+      $file = __DIR__.'/../../'.SITEPATH.'cache/'.$pdf_name;
+      $mpdf->Output($file,'F');
       $this->attach($file);
     }
 
