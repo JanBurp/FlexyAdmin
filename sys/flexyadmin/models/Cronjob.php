@@ -8,52 +8,57 @@
 
 class Cronjob extends CI_Model {
 	
-	public function __construct()	{
-		parent::__construct();
+	public function __construct()  {
+    parent::__construct();
+    $this->load->model('log_activity');
     $lang=$this->config->item('language');
-		$lang=$lang."_".strtoupper($lang);
-		setlocale(LC_ALL, $lang);
+    $lang=$lang."_".strtoupper($lang);
+    setlocale(LC_ALL, $lang);
     ini_set('max_execution_time', 600); // 10 minuten mag het script erover doen.
-	}
+  }
 
-	public function go()	{
-    if ($this->db->table_exists('log_cronjobs')) {
+	public function go() {
+    if ($this->data->table_exists('log_cronjobs')) {
       
-      $this->jobs=$this->config->item('cronjobs');
+      $this->jobs = $this->config->item('cronjobs');
       
       // Eerst alle informatie verzamelen
       $this->data->table('log_cronjobs');
       foreach ($this->jobs as $key=>$job) {
         $last = $this->data->where('str_job',$job['name'])->get_field('tme_last_run');
-        if ($last===false)
-          $job['last'] = 0;
+        if ($last)
+          $job['last'] = mysql_to_unix($last);
         else
-          $job['last'] = human_to_unix($last);
+          $job['last'] = 0;
         $job['next'] = $this->_calc_next( $job['every'], $job['last'] );
         // Moet de job gebeuren?
         $job['run']  = ( time()>=$job['next'] );
+        // $job['run']  = true;
         $this->jobs[$key] = $job;
       }
       
       
       // Run de jobs die moeten runnen
       foreach ($this->jobs as $key => $job) {
-        if ($this->jobs[$key]['run']) {
-          // Run
-          $name = $job['name'];
-          $this->load->library($name);
-          $job['result'] = $this->$name->index($job);
-          // $job['result'] = true;
 
+        if ($this->jobs[$key]['run']) {
+          
           // log in db
-          $job['at']=time();
-          if ( $job['result'] ) {
-            $this->db->set( array( 'str_job'=>$job['name'], 'tme_last_run'=>unix_to_mysql($job['at'])) );
-            if (empty($job['last']))
-              $this->db->insert('log_cronjobs');
-            else
-              $this->db->where('str_job',$job['name'])->update('log_cronjobs');
-          }
+          $job['at'] = time();
+          // Nieuw?
+          $job_exists = $this->data->table('log_cronjobs')->where('str_job',$job['name'])->get_row();
+          // Log
+          $this->data->set( array( 'str_job'=>$job['name'], 'tme_last_run'=>unix_to_mysql($job['at'])) );
+          if ( !$job_exists )
+            $this->data->insert();
+          else
+            $this->data->where('str_job',$job['name'])->update();
+
+          // Run
+          $name = ucfirst($job['name']);
+          $this->load->model($name);
+          $job['result'] = $this->$name->index($job);
+
           // log
           if (is_string($job['result']))
             log_message('error', 'FlexyAdmin CRONJOB '.$job['name'].' ERROR: '.$job['result']);
@@ -64,24 +69,30 @@ class Cronjob extends CI_Model {
           log_message('info', 'FlexyAdmin CRONJOB '.$job['name'].' dit not run');
         }
         
-        $this->jobs[$key] = $job;
+        $this->jobs[$key] = array_merge($this->jobs[$key],$job);
       }
       
       
       // echo results
       foreach ($this->jobs as $job) {
-        if (isset($job['at']))
-          trace_( [ 'job  '=>$job['name'], 'every' => $job['every'], 'nu   '=>unix_to_normal(time()), 'last '=>unix_to_normal($job['last']), 'next '=>unix_to_normal($job['next']), 'run  '=>$job['run'], 'at    '=>unix_to_normal($job['at']), 'result'=>$job['result'] ]);
-        else
-          trace_( [ 'job  '=>$job['name'], 'every' => $job['every'], 'nu   '=>unix_to_normal(time()), 'last '=>unix_to_normal($job['last']), 'next '=>unix_to_normal($job['next']), 'run  '=>$job['run'] ]);
+        $job['nu'] = unix_to_normal(time());
+        $job['last'] = unix_to_normal($job['last']);
+        $job['next'] = unix_to_normal($job['next']);
+        if (isset($job['at'])) {
+          $job['at'] = unix_to_normal($job['at']);
+        }
+
+        // Log informatie
+        trace_($job);
+        $this->log_activity->add( 'cronjob', array2json($job,false), $this->jobs[$key]['name'] );
       }
       
 
     }
-	}
+  }
   
   
-  /**
+   /**
    * Berekent het tijdstip waarop het volgende moment valt, met dit als input
    * 
    * - 5                  // iedere 5 minuten (marge van 59 seconden)
@@ -117,6 +128,7 @@ class Cronjob extends CI_Model {
       $hour = (int) $time[0];
       $min  = (int) $time[1];
 
+      // if ($daylight_saving) $hour -= TIME_HOUR;
 
       switch ($type) {
         
