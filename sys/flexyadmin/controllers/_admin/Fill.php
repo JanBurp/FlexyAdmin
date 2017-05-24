@@ -36,7 +36,7 @@ class Fill extends AdminController {
 			// create rows in table
 			if ($aantal and $addtable) {
         $this->data->table($addtable);
-				$first_field = $this->data->list_fields('str',1);
+				$first_field = remove_prefix(current($fields),'.');
 				for ($i=0; $i < $aantal; $i++) { 
 					$id='#';
 					if (!$test) $id = $this->data->table($addtable)->set($first_field,random_string())->insert();
