@@ -2507,7 +2507,7 @@ Class Data_Core extends CI_Model {
         case 'log':
         case 'cfg':
           if (substr($table,0,8)==='cfg_user') {
-            $cache_filter = array( $cache_filter.'cfg_user', $cache_filter.'rel_users__groups' )
+            $cache_filter = array( $cache_filter.'cfg_user', $cache_filter.'rel_users__groups' );
           }
           else {
             $cache_filter .= $table;
