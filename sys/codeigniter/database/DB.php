@@ -101,12 +101,12 @@ function &DB($params = '', $query_builder_override = NULL)
 			show_error('You have specified an invalid database connection group ('.$active_group.') in your config/database.php file.');
 		}
 
-    // JDB if phpunit choose other group
-    if (IS_LOCALHOST and defined('PHPUNIT_TEST')) {
-      $active_group = "phpunit";
-    }
-    // end JDB
-
+		// JDB if phpunit choose other group
+		if (IS_LOCALHOST and defined('PHPUNIT_TEST')) {
+		  $active_group = "phpunit";
+		}
+		// end JDB
+		
 		$params = $db[$active_group];
 	}
 	elseif (is_string($params))

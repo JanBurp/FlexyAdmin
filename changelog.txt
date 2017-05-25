@@ -1,6 +1,7 @@
 Changes 3.5.0
 =============
 
+- Update to CI 3.1.4
 - UI with Vue & Bootstrap
 - Models: Filemanager, Mediatable removed and replaced with Assets
 - DB: FlexyAdmin db-> extensions depricated, and standard not loaded.
@@ -12,6 +13,7 @@ Changes 3.5.0
 - DB: removed almast all cfg_ tables
 - DB: removed res_menu_result
 - Removed plugin_auto_menu (total rewrite, see site/config/menu.php for new options)
+- Cronjob uses models (method index) instead of libraries
 
 Changes 3.4.x
 =============
