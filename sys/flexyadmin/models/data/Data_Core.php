@@ -2501,11 +2501,12 @@ Class Data_Core extends CI_Model {
     if (!empty($table)) {
       $table_type = get_prefix($table,'_');
       switch ($table_type) {
-        // Bij log_ en res_ tables hoeft alleen de cache van de tabel zelf te worden verwijderd
+        // Bij log_ en res_ en rel_ tables hoeft alleen de cache van de tabel zelf te worden verwijderd
         // Idem bij cfg_ tables, behalve bij cfg_users & cfg_user_groups & rel_users__groups -> die gaan samen
         case 'res':
         case 'log':
         case 'cfg':
+        case 'rel':
           if (substr($table,0,8)==='cfg_user') {
             $cache_filter = array( $cache_filter.'cfg_user', $cache_filter.'rel_users__groups' );
           }
@@ -2515,7 +2516,6 @@ Class Data_Core extends CI_Model {
           break;
         // Anders alle inhoud tables
         case 'tbl':
-        case 'rel':
           $cache_filter = array( $cache_filter.'rel_', $cache_filter.'tbl_' );
           break;
         // Default: alles
