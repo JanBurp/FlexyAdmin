@@ -2490,16 +2490,45 @@ Class Data_Core extends CI_Model {
   }
   
   /**
-   * Verwijder alle result caches
+   * Verwijder result caches (van meegegeven table)
    *
+   * @param string $table [''] 
    * @return void
    * @author Jan den Besten
    */
-  public function clear_cache() {
+  public function clear_cache($table='') {
+    $cache_filter = 'data_result_';
+    if (!empty($table)) {
+      $table_type = get_prefix($table,'_');
+      switch ($table_type) {
+        // Bij log_ en res_ tables hoeft alleen de cache van de tabel zelf te worden verwijderd
+        // Idem bij cfg_ tables, behalve bij cfg_users & cfg_user_groups -> die gaan samen
+        case 'res':
+        case 'log':
+        case 'cfg':
+          if (substr($table,0,8)==='cfg_user') {
+            $cache_filter .= 'cfg_user';
+          }
+          else {
+            $cache_filter .= $table;
+          }
+          break;
+        // Anders alle inhoud tables
+        case 'tbl':
+        case 'rel':
+          $cache_filter = array( $cache_filter.'rel_', $cache_filter.'tbl_' );
+          break;
+        // Default: alles
+      }
+    }
+    if (!is_array($cache_filter)) $cache_filter = array($cache_filter);
+    // Remove cachefiles
     $cached_results = $this->cache->cache_info();
     foreach ($cached_results as $cache) {
-      if ( substr($cache['name'],0,12)==='data_result_' ) {
-        $this->cache->delete($cache['name']);
+      foreach ($cache_filter as $filter) {
+        if ( substr($cache['name'],0,strlen($filter))===$filter ) {
+          $this->cache->delete($cache['name']);
+        }
       }
     }
     return $this;
@@ -4288,7 +4317,7 @@ Class Data_Core extends CI_Model {
     if ($limit) $this->limit( $limit );
 		$set = $this->tm_set;
     $id = NULL;
-    $this->clear_cache();
+    $this->clear_cache($this->settings['table']);
     
     /**
      * Als een UPDATE check of er wel een WHERE is om te voorkomen dat een hele tabel wordt overschreven.
@@ -4634,7 +4663,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	public function delete( $where = '', $limit = NULL, $reset_data = TRUE ) {
-    $this->clear_cache();
+    $this->clear_cache($this->settings['table']);
     
     /**
      * Is het een ordered tabel?
