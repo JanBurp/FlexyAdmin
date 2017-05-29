@@ -1399,6 +1399,7 @@ Class Data_Core extends CI_Model {
           $this->relation_result_fields[ $relation['result_name'] ] = array(
             'relation'    => $type,
             'other_table' => $relation['other_table'],
+            'result_name' => $relation['result_name'],
             'fields'      => $this->get_other_table_fields( $relation['other_table'] ),
           );
         }
@@ -3459,7 +3460,7 @@ Class Data_Core extends CI_Model {
       foreach ( $fields as $key => $field ) {
         if (is_array($field)) {
           foreach ($field['fields'] as $k=>$other_field) {
-            $fields[$key]['fields'][$k] = $this->_protect_field($other_field,$field['other_table']);
+            $fields[$key]['fields'][$k] = $this->_protect_field($other_field,$field['result_name']);
           }
         }
         else {
