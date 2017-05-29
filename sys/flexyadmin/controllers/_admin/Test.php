@@ -33,11 +33,11 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $query = $this->data->table('tbl_tegels')
-                        ->where('id_tegel_type',POLL)
-                        ->with('many_to_many')
+    $query = $this->data->table('tbl_kinderen')
+                        // ->with('many_to_one')
+                        // ->find('va')
                         ->get_result();
-    //                     ->get_grid();
+                        // ->get_grid();
     // $info = $this->data->get_query_info();
     trace_sql($this->data->last_query());
     trace_($query);
