@@ -161,7 +161,7 @@ class Menu {
       'first'   => 'first',
       'last'    => 'last',
       'has_sub' => 'dropdown-menu',
-      'is_sub'  => 'sub'
+      'is_sub'  => 'dropdown'
     )
     
     
