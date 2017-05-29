@@ -110,7 +110,7 @@ class Table extends Api_Model {
   
 	public function __construct() {
 		parent::__construct();
-    	}
+  }
   
   /**
    * Gets the data and information and returns it
@@ -157,7 +157,7 @@ class Table extends Api_Model {
    */
   private function _get_data() {
     $this->data->table( $this->args['table'] );
-    
+
     // Filter?
     $this->args['filter'] = el( 'filter', $this->args, '' );
     if (!empty($this->args['filter'])) {
@@ -186,6 +186,7 @@ class Table extends Api_Model {
       if ( $this->args['table'] === 'res_assets' AND isset($this->args['path']) ) {
         $this->data->order_by( $this->args['order'] );
         $items = $this->data->get_files( $this->args['path'], $this->args['filter'], $this->args['limit'], $this->args['offset'], TRUE );
+        // trace_sql($this->data->last_query());
       }
       else {
         // Geen grid & geen media - where, txt_abstract, options
