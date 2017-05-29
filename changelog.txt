@@ -1,6 +1,7 @@
 Changes 3.5.0
 =============
 
+- data settings has new 'cache_group'
 - Update to CI 3.1.4
 - UI with Vue & Bootstrap
 - Models: Filemanager, Mediatable removed and replaced with Assets
