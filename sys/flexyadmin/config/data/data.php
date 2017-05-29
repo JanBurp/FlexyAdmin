@@ -8,6 +8,11 @@
  */
 $config['table']            = NULL;
 
+/**
+ * De tabellen die tegelijk met deze tabel verwijderd moeten worden uit de cache als één van die tabellen een update heeft gekregen.
+ */
+$config['cache_group']			= NULL;
+
 
 /**
  * Primary key, standaard 'id'
