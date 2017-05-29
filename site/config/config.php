@@ -18,13 +18,9 @@ $config['testmode'] = false;
  * Styling framework
  *--------------------------------------------------------------------------
  *
- * Set the default frontend framework. This setting affects menu, form and the standard template, possible options:
- * - default - the basic and light flexyadmin template
- * - bootstrap - use bootstrap as a start
- * 
- * Als je gulp gebruikt (in het geval van Bootstrap moet dat, of je moet site.php aanpassen) dan moet je in .gulpfile.js ook het framework nog instellen.
+ * Set the default frontend framework.
  */
-// $config['framework']='bootstrap';
+$config['framework']='bootstrap';
 
 
 /**

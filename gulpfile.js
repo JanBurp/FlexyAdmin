@@ -22,21 +22,13 @@
  * - gulp install // zie hierboven
  * 
  * Instellingen:
- * - framework : Kies hier 'default' of 'bootstrap', je frontend framework
- * - files     : Als je meer css/less of js bestanden gebruikt dan de standaard installatie, voeg ze dan hier toe (bij je gekozen framework)
+ * - files     : Als je meer css/less of js bestanden gebruikt dan de standaard installatie, voeg ze dan hier toe
  * 
  * Gevorderden:
  * - Je kunt bower gebruiken om eigen plugins toe te voegen en eenvoudig te update door bv: bower install jquery --save
  * - Pas dan de gulp task 'install' ook aan zodat je deze plugins ook automatisch op de goede plaats zet
  * - Voeg je eigen plugins natuurlijk ook toe bij 'files'.
  */
-
-/**
- * Frontend framework [default|bootstrap]
- * Pas dit ook aan in site/config/config.php
- */
-var framework = 'default';
-// var framework = 'bootstrap';
 
 
 /**
@@ -52,62 +44,30 @@ var assets    = 'public/assets';
 
 
 /**
- * Bestanden die per framework moeten worden verwerkt.
- * Pas dit aan (bij je framework). Bij default staat overal commentaar achter voor uitleg.
+ * Bestanden die moeten worden verwerkt.
  */
 var files = {
 
-  /**
-   * default bestanden
-   */
-  'default' : {
-    'js'      : assets+'/js',                             // JS map (string)
-    'jshint'  : assets+'/js/site.js',                     // JS bestanden die gecontroleerd moeten worden op fouten (string of array)
-    'jsmin'   : [                                         // JS bestanden die samengevoegd en gemimificeerd moeten worden (string of array)
-      assets+'/js/jquery.min.js',
-      assets+'/js/site.js',
-    ],
-    'jsdest'  : 'scripts.min.js',                         // gemimificeerd JS bestand (string)
-    'watchjs' : assets+'/js/site.js',                     // check deze JS bestanden op veranderingen (string of array)
-    'css'     : assets+'/css',                            // CSS map (string)
-    'less'    : assets+'/less-default/*.less',            // LESS bestanden die gecompileerd moeten worden (string of array)
-    'cssmin'  : [                                         // all CSS bestanden die samengevoegd en gemimificeerd moeten worden (string of array)
-      assets+'/css/normalize.css',
-      assets+'/css/font-awesome.min.css',
-      assets+'/css/text.css',
-      assets+'/css/layout.css'
-    ],
-    'cssdest' : 'styles.min.css',                         // gemimificeerd css bestand (string)
-    'watchcss': [                                         // check deze LESS (en/of CSS) bestanden op veranderingen (string of array)
-      assets+'/less-default/*.less'
-    ],
-  },
-
-  /**
-   * bootstrap bestanden
-   */
-  'bootstrap' : {
-    'js'      : assets+'/js',
-    'jshint'  : assets+'/js/site.js',
-    'jsmin'   : [
-      assets+'/js/jquery.min.js',
-      assets+'/js/bootstrap.min.js',
-      assets+'/js/site.js',
-    ],
-    'jsdest'  : 'scripts.min.js',
-    'watchjs' : assets+'/js/site.js',
-    'less'    : assets+'/less-bootstrap/bootstrap.less',
-    'css'     : assets+'/css',
-    'cssmin'  : [
-      assets+'/css/bootstrap.css',
-      assets+'/css/font-awesome.min.css'
-    ],
-    'cssdest' : 'styles.min.css',
-    'watchcss': [
-      assets+'/less-bootstrap/*'
-    ]
-  },
-
+  'js'      : assets+'/js',
+  'jshint'  : assets+'/js/site.js',
+  'jsmin'   : [
+    assets+'/js/jquery.min.js',
+    assets+'/js/bootstrap.min.js',
+    assets+'/js/site.js',
+  ],
+  'jsdest'  : 'scripts.min.js',
+  'watchjs' : assets+'/js/site.js',
+  
+  'less'    : assets+'/less-bootstrap/bootstrap.less',
+  'css'     : assets+'/css',
+  'cssmin'  : [
+    assets+'/css/bootstrap.css',
+    assets+'/css/font-awesome.min.css'
+  ],
+  'cssdest' : 'styles.min.css',
+  'watchcss': [
+    assets+'/less-bootstrap/*'
+  ]
 
 };
 
@@ -119,7 +79,7 @@ var files = {
 /**
  * Notify options
  */
-var title   = ' ['+framework+']';
+var title   = '';
 var message = '<%= file.relative %>';
 var icon    = 'sys/flexyadmin/assets/img/work.png';
 var dir     = __dirname.replace('/Users/','');
@@ -173,7 +133,7 @@ gulp.task('message',function(){
 });
 
 /**
- * Verplaats door bower geinstalleerde/geupdate frameworks/plugins naar juiste plaats
+ * Verplaats door bower geinstalleerde/geupdate plugins naar juiste plaats
  */
 gulp.task('install', function() {
 
@@ -216,7 +176,7 @@ gulp.task('install', function() {
  * JS Hint, check js file(s) for bugs and if a bug found: stop.
  */
 gulp.task('jshint',function(){
-  return gulp.src( files[framework]['jshint'] )
+  return gulp.src( files['jshint'] )
         .pipe(plumber({ errorHandler: onError }))
         .pipe(jshint())
         // Use gulp-notify as jshint reporter
@@ -238,13 +198,13 @@ gulp.task('jshint',function(){
  * Unglify & combine JS files
  */
 gulp.task('jsmin',['jshint'],function(){
-  return gulp.src( files[framework]['jsmin'] )
+  return gulp.src( files['jsmin'] )
         .pipe(sourcemaps.init({loadMaps:true}))
-          .pipe(concat(files[framework]['jsdest']))
+          .pipe(concat(files['jsdest']))
           .pipe(uglify())
           .pipe(flatten())
         .pipe(sourcemaps.write('maps'))
-        .pipe(gulp.dest( files[framework]['js']))
+        .pipe(gulp.dest( files['js']))
         .pipe(notify({
           title:  'JS contact & uglify ' + title,
           message: message
@@ -255,12 +215,12 @@ gulp.task('jsmin',['jshint'],function(){
  * compile & minify LESS files
  */
 gulp.task('less',function(){
-  return gulp.src( files[framework]['less'] )
+  return gulp.src( files['less'] )
         .pipe(plumber({ errorHandler: onError }))
         .pipe(sourcemaps.init())
         .pipe(less({compress:true}))
         .pipe(sourcemaps.write('maps'))
-        .pipe(gulp.dest( files[framework]['css'] ))
+        .pipe(gulp.dest( files['css'] ))
         .pipe(notify({
           title:   'LESS' + title,
           message: message
@@ -271,13 +231,13 @@ gulp.task('less',function(){
  * Concat CSS files
  */
 gulp.task('cssmin',['less'],function(){
-  return gulp.src( files[framework]['cssmin'] )
+  return gulp.src( files['cssmin'] )
         .pipe(sourcemaps.init({loadMaps: true}))
         // .pipe(pixrem())
         .pipe(cssnano())
-        .pipe(concat(files[framework]['cssdest']))
+        .pipe(concat(files['cssdest']))
         .pipe(sourcemaps.write('maps'))
-        .pipe(gulp.dest( files[framework]['css']) )
+        .pipe(gulp.dest( files['css']) )
         .pipe(notify({
           title:   'CSS concat & minify' + title,
           message: message
@@ -290,16 +250,16 @@ gulp.task('default', ['jshint','jsmin','less','cssmin'] );
 gulp.task('watch', function() {
 
   // watch for JS changes
-  gulp.watch( files[framework]['watchjs'], { interval: watch_interval }, ['jshint','jsmin','message'] );
+  gulp.watch( files['watchjs'], { interval: watch_interval }, ['jshint','jsmin','message'] );
  
   // watch for LESS/CSS changes
-  gulp.watch( files[framework]['watchcss'], { interval: watch_interval }, ['less','cssmin','message'] );
+  gulp.watch( files['watchcss'], { interval: watch_interval }, ['less','cssmin','message'] );
   
   // Watch any resulting file changed
   livereload.listen();
   gulp.watch( [
-    files[framework]['css'] + '/' + files[framework]['cssdest'],
-    files[framework]['js']  + '/' + files[framework]['jsdest'],
+    files['css'] + '/' + files['cssdest'],
+    files['js']  + '/' + files['jsdest'],
   ], { interval: watch_interval } ).on('change', livereload.changed);
   
 });
