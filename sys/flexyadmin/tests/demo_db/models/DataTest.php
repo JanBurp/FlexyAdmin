@@ -257,6 +257,13 @@ class DataTest extends CITestCase {
           'json'    =>  false,
           'flat'    =>  false
         ),
+        'user_changed' => array(
+          'table'  => 'cfg_users',
+          'fields' => array('id','str_username','email_email','str_language','str_filemanager_view','b_active'),
+          'json'   => false,
+          'as'     => '_user_changed',
+          'flat'   => false,
+        ),
       )
     );
     $this->CI->data->with( 'many_to_one' );
@@ -434,11 +441,11 @@ class DataTest extends CITestCase {
                              ->get_result();
     // data, klopt num_rows & num_fields?
     $this->assertEquals( 3, $this->CI->data->num_rows() );
-    $this->assertEquals( 16, $this->CI->data->num_fields() );
+    $this->assertEquals( 7, $this->CI->data->num_fields() );
     // kloppen keys in row?
     $row=current($result);
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id', 'str_username', 'gpw_password', 'email_email', 'ip_address', 'salt', 'activation_code', 'forgotten_password_code', 'forgotten_password_time', 'remember_code', 'created_on', 'last_login', 'b_active', 'str_language', 'str_filemanager_view', 'cfg_user_groups' ), $keys );
+    $this->assertEquals( array( 'id', 'str_username', 'email_email', 'str_language', 'str_filemanager_view', 'b_active', 'cfg_user_groups' ), $keys );
 
 
     // Users resultaat zoals in admin
@@ -640,7 +647,7 @@ class DataTest extends CITestCase {
 
     // Zoeken in many_to_one 'va'
     $this->CI->data->with( 'many_to_one' );
-    $this->CI->data->find('va');
+    $this->CI->data->find( 'va' );
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 49, $info['num_rows'] );
