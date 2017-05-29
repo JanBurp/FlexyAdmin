@@ -3,6 +3,7 @@
 /* --- Settings for data model 'cfg_users' --- Created @ Thu 28 April 2016, 17:02 */
 
 $config['table']           = 'cfg_users';
+$config['cache_group']     = array('cfg_users','cfg_user_groups','rel_users__groups');
 $config['fields']          = array( 'id','str_username', 'email_email', 'str_language','str_filemanager_view','b_active');
 $config['order_by']        = 'str_username,id';
 $config['abstract_fields'] = array('str_username');

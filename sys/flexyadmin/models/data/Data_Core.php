@@ -78,6 +78,7 @@ Class Data_Core extends CI_Model {
     'update_uris'        => true,
     'grid_set'           => array(),
     'form_set'           => array(),
+    'cache_group'        => array(),
   );
   
   /**
@@ -323,6 +324,7 @@ Class Data_Core extends CI_Model {
       // Cache 
       if ($this->settings_caching) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
+    // trace_([$this->settings['table']=>$this->settings['cache_group']]);
     return $this->settings;
   }
   
@@ -365,6 +367,36 @@ Class Data_Core extends CI_Model {
   protected function _autoset_table( $object=NULL ) {
     if ( $object===NULL) $object = $this;
     return get_class( $object );
+  }
+
+
+  /**
+   * Autoset cache_group
+   * 
+   * Standaard wordt dit de tabel zelf en de relatie tabellen.
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _autoset_cache_group() {
+    $cache_group = array();
+    // Eigen tabel
+    array_unshift($cache_group, $this->settings['table']);
+    // Relatie tabellen
+    if (!empty($this->settings['relations'])) {
+      foreach ($this->settings['relations'] as $type => $relations) {
+        foreach ($relations as $key => $relation) {
+          if (isset($relation['other_table'])) {
+            if (in_array(get_prefix($relation['other_table']),array('tbl','rel'))) array_unshift($cache_group, $relation['other_table']);
+          }
+          if (isset($relation['rel_table']))   array_unshift($cache_group, $relation['rel_table']);
+        }
+      }
+    }
+    // Menu tabellen
+    $this->load->model('data/Core_tbl_menu');
+    $menu_tables = $this->Core_tbl_menu->get_menu_tables();
+    if (in_array($this->settings['table'],$menu_tables)) $cache_group = array_merge($cache_group,$menu_tables);
+    return array_unique($cache_group);
   }
 
 
@@ -2499,34 +2531,10 @@ Class Data_Core extends CI_Model {
    */
   public function clear_cache($table='') {
     $cache_filter = 'data_result_';
-    if (!empty($table)) {
-      $table_type = get_prefix($table,'_');
-      switch ($table_type) {
-        // Bij log_ en res_ en rel_ tables hoeft alleen de cache van de tabel zelf te worden verwijderd
-        // Idem bij cfg_ tables, behalve bij cfg_users & cfg_user_groups & rel_users__groups -> die gaan samen
-        case 'res':
-        case 'log':
-        case 'cfg':
-        case 'rel':
-          if (substr($table,0,8)==='cfg_user') {
-            $cache_filter = array( $cache_filter.'cfg_user', $cache_filter.'rel_users__groups' );
-          }
-          else {
-            $cache_filter .= $table;
-          }
-          break;
-        // Anders alle inhoud tables
-        case 'tbl':
-          $cache_filter = array( $cache_filter.'rel_', $cache_filter.'tbl_' );
-          break;
-        // Default: alles
-      }
-    }
-    if (!is_array($cache_filter)) $cache_filter = array($cache_filter);
-    // Remove cachefiles
     $cached_results = $this->cache->cache_info();
     foreach ($cached_results as $cache) {
-      foreach ($cache_filter as $filter) {
+      foreach ($this->settings['cache_group'] as $filter) {
+        $filter = $cache_filter.$filter;
         if ( substr($cache['name'],0,strlen($filter))===$filter ) {
           $this->cache->delete($cache['name']);
         }
