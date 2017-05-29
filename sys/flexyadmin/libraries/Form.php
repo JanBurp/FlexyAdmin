@@ -88,7 +88,7 @@ class Form {
 	private $buttons;
   private $validation_error = false;
   // private $validation_error_class = 'error';
-  private $framework = 'default';
+  private $framework = 'bootstrap';
   private $view_path='admin/form';
   
   private $styles=array(
@@ -201,7 +201,7 @@ class Form {
    * @return void
    * @author Jan den Besten
    */
-  public function set_framework($style="default") {
+  public function set_framework($style="bootstrap") {
     if ($this->CI->config->item('IS_ADMIN')) $style = 'bootstrap';
     $this->framework = $style;
     return $this;
