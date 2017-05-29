@@ -139,7 +139,7 @@ class Menu {
       'extra'       => '',
     ),
     'multilang_title' => FALSE,
-    'framework'       => 'default',             // 'default', 'bootstrap'
+    'framework'       => 'bootstrap',             // 'default', 'bootstrap'
     'attributes'      => array('class'=>''),
     'full_uris'       => false,
     'ordered_titles'  => '',   // NUMBERS geeft 1,2,3,4 etc., ALFA geeft A,B,C,D etc, ROMAN geeft I,II,III,IV etc.
