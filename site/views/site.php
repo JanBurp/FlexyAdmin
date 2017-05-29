@@ -27,14 +27,8 @@
 <?php if ($use_minimized): ?>
   <link href="<?=$publicassets;?>css/styles.min.css?<?=$int_version?>" rel="stylesheet" type="text/css">
 <?php else: ?>
-  <?php if ($framework=='default'): ?>
-  <link href="<?=$publicassets;?>css/normalize.css" rel="stylesheet" type="text/css">
-  <link href="<?=$publicassets;?>css/font-awesome.min.css" rel="stylesheet" type="text/css">
-  <link href="<?=$publicassets;?>css/text.css?<?=$int_version?>" rel="stylesheet" type="text/css">
-  <link href="<?=$publicassets;?>css/layout.css?<?=$int_version?>" rel="stylesheet" type="text/css">
-  <?php elseif ($framework=='bootstrap'): ?>
   <link href="<?=$publicassets;?>css/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <?php endif ?>
+  <link href="<?=$publicassets;?>css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <link href="<?=$publicassets;?>css/style.css?<?=$int_version?>" rel="stylesheet" type="text/css">
 <?php endif ?>
   <!--[if lte IE 8]><style type="text/css" media="screen">@import url(<?=$publicassets;?>css/ie8.css);</style><![endif]-->
@@ -44,26 +38,32 @@
 <body class="<?=$class?>">
 
 <!-- start of container -->
-<div id="container" class="container">
+<div class="container main-container">
 
   <!-- header -->
-  <div id="header" class="page-header">
-		<h1 id="title"><a href="./"><?=ascii_to_entities($str_title)?></a></h1>
+  <div class="page-header">
+		<h1><a href="./"><?=ascii_to_entities($str_title)?></a></h1>
   </div>
   
   <!-- main navigation -->
-  <div id="menu" class="navbar navbar-default">
-    <div class="container">
-      <span class="fa fa-bars mobile-only"></span>
-      <?=$menu?>
+  <div class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <div class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+          <span class="fa fa-bars"></span>
+        </div>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <?=$menu?>
+      </div>
     </div>
   </div>
 
   <!-- content -->
-	<div id="content"><?=$content;?></div>
+	<div class="content"><?=$content;?></div>
 
   <!-- footer -->
-  <footer id="footer" class="navbar navbar-default">
+  <footer class="footer navbar navbar-default">
     <div class="container">
       <p class="navbar-text">a flexyadmin site</p>
     </div>
@@ -77,7 +77,7 @@
   <script src="<?=$publicassets?>js/scripts.min.js?<?=$int_version?>" type="text/javascript" charset="utf-8"></script>
 <?php else: ?>
   <script src="<?=$publicassets?>js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-  <?php if ($framework=='bootstrap'): ?><script src="<?=$publicassets?>js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script><?php endif ?>
+  <script src="<?=$publicassets?>js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="<?=$publicassets?>js/site.js?<?=$int_version?>" type="text/javascript" charset="utf-8"></script>
 <?php endif ?>
 

@@ -1,0 +1,43 @@
+/* Site specifieke variabelen */
+@body : #DEA;
+
+/* Algemene zaken */
+img {max-width:100%;}
+.error {color:@brand-warning;}
+
+/* Layout */
+
+body {background-color:@body;}
+
+
+
+.main-container {
+  background:@body-bg;
+  margin:1rem auto 4rem;
+  border-radius:@border-radius-large;
+
+  .navbar {
+  	.navbar-toggle {
+  		border:none;
+  		float:left;
+  		color:@navbar-default-color;
+  	}
+  	.navbar-toggle:hover {
+  		background-color: transparent;
+  	}
+  }
+
+	.content {
+		padding-bottom:4rem;
+	}
+}
+
+/* Formulieren */
+
+.form-group {
+	.alert {margin-right:1rem;}
+}
+
+/* Hack voor dropdown in menu */
+li a.dropdown-toggle.disabled {margin-right: 30px;}
+li .dropdown-caret {position:absolute!important; top:0px;right:0px;}
