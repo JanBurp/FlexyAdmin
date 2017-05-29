@@ -3341,7 +3341,7 @@ Class Data_Core extends CI_Model {
 
     // De complete zoek array
     $search = array();
-    
+
     // Is het een verfijnde zoekopdracht? Dan zijn we al klaar.
     if (is_array($terms) and is_multi($terms)) {
       $search = $this->_add_result_names_find($terms,$settings);
@@ -3433,6 +3433,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   private function _create_complete_search( $search ) {
+    $this->db->group_start();
     foreach ( $search as $item) {
 
       // Splits termen als er meerdere door spaties zijn gescheiden (rekening houdend met quotes)
@@ -3492,6 +3493,7 @@ Class Data_Core extends CI_Model {
       }
       
     }
+    $this->db->group_end();
   }
   
   private function _protect_field($field,$table='') {
