@@ -41,6 +41,20 @@ Class Core_tbl_menu extends Data_Core {
       $this->_menu_config = $this->_menu_config_default;
     }
   }
+
+
+  /**
+   * Geeft alle tabellen die gebruikt worden voor het menu
+   *
+   * @return     array  The menu tables.
+   */
+  public function get_menu_tables() {
+    $tables = array();
+    foreach ($this->_menu_config as $key => $item) {
+      if (isset($item['table'])) array_unshift($tables,$item['table']);
+    }
+    return $tables;
+  }
   
   
   /**
