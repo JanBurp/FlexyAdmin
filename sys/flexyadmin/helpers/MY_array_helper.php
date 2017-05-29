@@ -186,7 +186,7 @@ function array2json($arr) {
         
       }
       // Numbers
-      elseif(is_numeric($value)) $str.= $value;
+      elseif(is_numeric($value) and strpos($value,'.')===FALSE) $str.= $value;
       // The booleans
 			elseif($value === false) $str.= 'false';
 			elseif($value === true) $str.= 'true';
