@@ -233,7 +233,7 @@ function find_module_uri($module,$full_uri=true,$table='') {
   else {
     $CI->data->order_by('id');
   }
-	$items = $CI->data->get_result();
+	$items = $CI->data->cache()->get_result();
   
   // oeps er zijn er meer.... pak dan degene die het hoogts in de menustructuur zit en het eerst voorkomt op dat nivo
   if (count($items)>1) {
