@@ -105,7 +105,7 @@ class MY_URI extends CI_URI {
   /**
    * Zet de standaard remove part van pagination in
    *
-   * @return string pagination remove part, default: 'offset'
+   * @return string pagination remove part, default: '_offset'
    * @author Jan den Besten
    */
 	public function remove_pagination() {
