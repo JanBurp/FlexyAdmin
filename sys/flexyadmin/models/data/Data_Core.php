@@ -2505,7 +2505,11 @@ Class Data_Core extends CI_Model {
    */
   protected function _cache_result($result,$name='') {
     if (empty($name)) $name = $this->tm_cache_name;
-    $this->cache->save( $name, $result, TIME_YEAR );
+    $cache = array(
+      'query_info'  => $this->get_query_info(),
+      'result'      => $result,
+    );
+    $this->cache->save( $name, $cache, TIME_YEAR );
     return $this;
   }
   
@@ -2518,7 +2522,13 @@ Class Data_Core extends CI_Model {
   protected function _get_cached_result($name='') {
     if (empty($name)) $name = $this->tm_cache_name;
     $cached = $this->cache->get( $name );
-    if ($cached) $this->query_info['from_cache'] = TRUE;
+    if ($cached) {
+      if (isset($cached['query_info'])) {
+        $this->query_info = $cached['query_info'];
+        $cached = $cached['results'];
+      }
+      $this->query_info['from_cache'] = TRUE;
+    }
     return $cached;
   }
   
