@@ -46,14 +46,14 @@ class MY_Pagination extends CI_Pagination {
   var $auto = FALSE;
 
   /**
-   * uripart wat wordt gebruikt voor auto pagination, default='offset'
+   * uripart wat wordt gebruikt voor auto pagination, default='_offset'
    */
-  var $auto_uripart = 'offset';
+  var $auto_uripart = '_offset';
 
   /**
    * Extra tags
    */
-  protected $total_tag_open  = '<span class="pagination_total">';
+  protected $total_tag_open  = '<span class="pagination-total">';
   protected $total_tag_close = '</span>';
 
   /**
@@ -92,11 +92,11 @@ class MY_Pagination extends CI_Pagination {
    * Stelt auto-pagination in
    *
    * @param string $auto default=TRUE
-   * @param string $part default='offset'
+   * @param string $part default='_offset'
    * @return void
    * @author Jan den Besten
    */
-	public function auto($auto=true,$part='offset') {
+	public function auto($auto=true,$part='_offset') {
 		$this->auto_uripart=$part;
 		$this->auto=$auto;
     return $this;
