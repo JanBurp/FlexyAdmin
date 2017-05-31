@@ -99,6 +99,7 @@ class MY_Pagination extends CI_Pagination {
 	public function auto($auto=true,$part='offset') {
 		$this->auto_uripart=$part;
 		$this->auto=$auto;
+    return $this;
 	}
 	
   /**
