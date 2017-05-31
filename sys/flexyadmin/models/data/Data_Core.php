@@ -321,10 +321,19 @@ Class Data_Core extends CI_Model {
         $this->settings['options'] = array_merge($this->settings['options'],$options);
       }
 
+      // Zorg ervoor dat eventuele options voor media het pad bij field_info aanpassen
+      if (isset($this->settings['options'])) {
+        foreach ($this->settings['options'] as $field => $info) {
+          if (isset($info['path'])) {
+            $this->settings['field_info'][$field]['path'] = $info['path'];
+          }
+        }
+      }
+
       // Cache 
       if ($this->settings_caching) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
-    // trace_([$this->settings['table']=>$this->settings['cache_group']]);
+
     return $this->settings;
   }
   
@@ -1255,10 +1264,9 @@ Class Data_Core extends CI_Model {
           }
         }
       }
-
       $field_info[$field] = $info;
     }
-    
+
     // Overschrijf los ingestelde settings
     if (isset($this->settings['field_info'])) {
       foreach ($field_info as $key => $info) {

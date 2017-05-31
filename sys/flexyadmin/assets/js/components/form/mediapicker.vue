@@ -107,7 +107,7 @@ export default {
     </div>
     
     <div class="mediapicker-choose" v-if="choose">
-      <flexy-grid type='mediapicker' api='table' name="pictures" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" @grid-selected="selectMedia($event)"></flexy-grid>
+      <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" @grid-selected="selectMedia($event)"></flexy-grid>
     </div>
     
   </div>
