@@ -12,6 +12,7 @@ class Plugin_db_add_relation_table extends Plugin {
 
 	public function __construct() {
 		parent::__construct();
+		$this->CI->load->dbforge();
 	}
 	
   /**
