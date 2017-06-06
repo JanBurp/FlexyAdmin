@@ -1,7 +1,11 @@
 <template>
   <div class="vselect" :class="classes" v-click-outside="blur">
     <button type="button" class="form-control dropdown-toggle" :disabled="disabled || !hasParent" :readonly="readonly" @click="toggle()" @keyup.esc="show = false">
-      <span class="btn-content" v-html="loading ? text.loading : showPlaceholder || selected"></span>
+      <span v-if="loading" class="btn-content">{{showPlaceholder}}</span>
+      <span v-else class="btn-content">
+        <select-option v-for="item in selected" :label="item" extra-class="selected-option"></select-option>
+      </span>
+      <!-- <span class="btn-content" v-html="loading ? text.loading : showPlaceholder || selected"></span> -->
       <span v-if="clearButton&&values.length" class="close" @click="clear()">&times;</span>
     </button>
     <select ref="sel" v-model="val" v-show="show" :name="name" class="secret" :multiple="multiple" :required="required" :readonly="readonly" :disabled="disabled">
@@ -15,7 +19,7 @@
         <li v-for="option in filteredOptions" :id="option[optionsValue]">
           <a @mousedown.prevent="select(option[optionsValue])">
             <flexy-button :icon="{'check-square-o':isSelected(option[optionsValue]),'square-o':!isSelected(option[optionsValue])}" class="btn-outline-default"/>
-            <span v-html="option[optionsLabel]"></span>
+            <select-option :label="option[optionsLabel]"></select-option>
           </a>
         </li>
         <li v-if="insert" class="insert-item">
@@ -33,13 +37,14 @@
 import {translations}   from './utils/utils.js'
 import ClickOutside     from '../directives/ClickOutside.js'
 import flexyButton      from '../../components/flexy-button.vue'
+import selectOption     from '../../components/form/select-option.vue'
 import jdb              from '../../jdb-tools.js'
 
 
 var timeout = {}
 export default {
   name : 'vselect',
-  components: {flexyButton},
+  components: {flexyButton,selectOption},
   directives: {
     ClickOutside
   },
@@ -105,7 +110,8 @@ export default {
       }
       var labels = this.values.map(val => (this.list.find(o => o[this.optionsValue] === val) || {})[this.optionsLabel]).filter(val => val !== undefined);
       labels.sort();
-      return '<span class="selected-option">' + labels.join('</span><span class="selected-option">') + '</span>';
+      return labels;
+      // return '<span class="selected-option">' + labels.join('</span><span class="selected-option">') + '</span>';
     },
     showPlaceholder () { return (this.values.length === 0 || !this.hasParent) ? (this.placeholder || this.text.notSelected) : null },
     text () { return translations(this.lang) },
