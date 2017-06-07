@@ -19,8 +19,7 @@
 
    public function __construct() {
      parent::__construct();
- 	   $this->load->library('upload');
- 	   $this->load->model('file_manager');
+     $this->load->model('assets');
    }
    
    /**
@@ -39,25 +38,14 @@
       if (get_prefix($key)=='file' or get_prefix($key)=='media') {
         // En is de naam van het bestand bekend?
 				if (isset($_FILES[$key]['name']) and !empty($_FILES[$key]['name']) ) {
-          // Upload het bestand
-          if (empty($this->settings['allowed_types'])) {
-    				$this->settings['allowed_types'] = $this->assets->get_folder_settings(array($this->settings['upload_path'],'str_types'));
+          $file = $this->assets->upload_file('pictures',$key);
+          if (!$file) {
+            $this->errors .= '<span class="error">'.$this->assets->get_error().'</span>';
+            return false;
           }
-					$this->upload->initialize( $this->settings );
-					$result=$this->upload->upload_file($key);
-          // Gelukt?
-					if (!empty($result['file'])) {
-            // Zo ja pas formdata aan, voeg bestand toe aan mediatable, en geef bericht
-            $path=SITEPATH.'assets/'.$this->settings['upload_path'];
-            $file=$result['file'];
-						$data[$key]=$file;
-            unset($_FILES[$key]);
-            $this->assets->insert_file($path,$file);
-					}
           else {
-            // Foutmelding
-            $this->errors.='<span class="error">'.$result['error'].'</span>';
-            $return=FALSE;
+            $data[$key] = $file;
+            unset($_FILES[$key]);
           }
 				}
       }
