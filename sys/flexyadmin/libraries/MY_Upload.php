@@ -327,21 +327,19 @@ class MY_Upload extends CI_Upload {
 		// Create cached thumb
 		if (file_exists($this->_CI->config->item('THUMBCACHE')) ) {
 			$thumbSize=$this->_CI->config->item('THUMBSIZE');
-			if ($current_size[0]>$thumbSize[0] or $current_size[1]>$thumbSize[1]) { 
-				$resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
-				$resize_config['maintain_ratio'] = TRUE;
-				$resize_config['width']          = $thumbSize[0];
-				$resize_config['height']         = $thumbSize[1];
-				$resize_config['new_image']      = $this->_CI->config->item('THUMBCACHE').pathencode($path.'/'.$this->file_name,FALSE);
-				$resize_config['master_dim']     = 'auto';
-				$this->_setMemory($current_size);
-				$this->_CI->image_lib->initialize($resize_config);
-				if (!$this->_CI->image_lib->resize()) {
-					$this->error=$this->_CI->image_lib->display_errors().' -- thumb';
-					$result = FALSE;
-				}
-				$this->_CI->image_lib->clear();
+			$resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
+			$resize_config['maintain_ratio'] = TRUE;
+			$resize_config['width']          = $thumbSize[0];
+			$resize_config['height']         = $thumbSize[1];
+			$resize_config['new_image']      = $this->_CI->config->item('THUMBCACHE').pathencode($path.'/'.$this->file_name,FALSE);
+			$resize_config['master_dim']     = 'auto';
+			$this->_setMemory($current_size);
+			$this->_CI->image_lib->initialize($resize_config);
+			if (!$this->_CI->image_lib->resize()) {
+				$this->error=$this->_CI->image_lib->display_errors().' -- thumb';
+				$result = FALSE;
 			}
+			$this->_CI->image_lib->clear();
 		}
 		return $result;
 	}
