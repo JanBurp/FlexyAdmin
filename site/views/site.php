@@ -47,7 +47,7 @@
   
   <!-- main navigation -->
   <div class="navbar navbar-default">
-    <div class="container-fluid">
+    <div class="container">
       <div class="navbar-header">
         <div class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
           <span class="fa fa-bars"></span>
