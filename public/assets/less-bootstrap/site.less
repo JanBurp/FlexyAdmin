@@ -1,43 +1,83 @@
-/* Site specifieke variabelen */
-@body : #DEA;
+//
+// Variabelen - anders dan bootstrap
+// 
+@body : #EEE;
 
-/* Algemene zaken */
+
+//
+// Algemene zaken
+// 
+h1,h2,h3,h4 {margin:0;}
+h1 {margin-bottom:1rem;}
+p {margin:0 0 1rem}
+a,a:hover,a:focus,a:active {text-decoration: none;}
 img {max-width:100%;}
+.btn.active, .btn:active {box-shadow: none}
 .error {color:@brand-warning;}
 
-/* Layout */
-
-body {background-color:@body;}
 
 
+//
+// Navigatie
+// 
+.navbar {
+  border-radius:0;
+  .container {
+    padding:0;width:100%;
+    .navbar-toggle {float:left;border:none;color:@body-bg;}
+    .navbar-toggle:hover {background-color: transparent;}
+    .navbar-collapse {
+      padding:0;
+      .nav {
+        > li.active {
+          background-color: @body-bg;
+          > a,
+          > a:hover { width:100%; }
+        }
+      }
+      .dropdown-menu {padding:0;border-radius: 0;}
+    }
+  }
+}
+// Hack om dropdown op grote schermen normaal te maken
+@media (min-width: @screen-sm) {
+  .nav {
+    > li li {width:100%;}
+    > li.dropdown:hover > ul {display: block;}
+    a.dropdown-toggle {display:none;}
+  }
+}
+// Hamburger menu
+@media (max-width: @screen-sm) {
+  .navbar .container {padding-left:2rem;padding-right:2rem;}
+  .navbar-nav {margin-left:0px;}
+  #navbar {overflow:hidden;}
+  .nav {
+    li { display:block; width:100%; float:left;}
+    li a { float:left; }
+  }
+}
+
+
+//
+// Layout
+// 
+body {
+  background-color:@body;
+}
 
 .main-container {
   background:@body-bg;
-  margin:1rem auto 4rem;
-  border-radius:@border-radius-large;
-
-  .navbar {
-  	.navbar-toggle {
-  		border:none;
-  		float:left;
-  		color:@navbar-default-color;
-  	}
-  	.navbar-toggle:hover {
-  		background-color: transparent;
-  	}
-  }
-
-	.content {
-		padding-bottom:4rem;
-	}
+  margin:0 auto;
+  .page-header {border:none;}
+	.content {padding-bottom:4rem;}
 }
 
-/* Formulieren */
 
+//
+// Formulieren
+// 
 .form-group {
 	.alert {margin-right:1rem;}
 }
 
-/* Hack voor dropdown in menu */
-li a.dropdown-toggle.disabled {margin-right: 30px;}
-li .dropdown-caret {position:absolute!important; top:0px;right:0px;}
