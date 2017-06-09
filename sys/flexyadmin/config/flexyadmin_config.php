@@ -22,8 +22,8 @@ $config['AJAX_MODULE']						= IS_AJAX;
 $config['IS_ADMIN']               = FALSE;
 if (isset($_SERVER['PATH_INFO']) and strpos($_SERVER['PATH_INFO'],'_admin')!==false) $config['IS_ADMIN'] = TRUE;
 
-$config['LANGUAGES']							= array('nl','en','de','es','fr');
-$config['ADMIN_LANGUAGES']        = array('nl','en');
+$config['LANGUAGES']							= array('en','nl');
+$config['ADMIN_LANGUAGES']        = array('en','nl');
 
 $config['MENU_TABLES']						= array('res_menu_result','tbl_menu');
 
