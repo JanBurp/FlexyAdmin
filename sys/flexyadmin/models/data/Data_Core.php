@@ -4338,13 +4338,12 @@ Class Data_Core extends CI_Model {
       return FALSE;
     }
 
-    
     /**
      * Ok we kunnen! Stel nog even alles in en maak cache leeg
      */
     if ($where) $this->where( $where );
     if ($limit) $this->limit( $limit );
-		$set = $this->tm_set;
+    $set = $this->tm_set;
     $id = NULL;
     $this->clear_cache($this->settings['table']);
     
@@ -4356,9 +4355,9 @@ Class Data_Core extends CI_Model {
     }
     
 
-		/**
-		 * Stel nieuwe volgorde van een item in, indien nodig
-		 */
+    /**
+     * Stel nieuwe volgorde van een item in, indien nodig
+     */
     if ( $type=='INSERT' and isset( $set["order"]) ) {
       $this->load->model('order','_order');
       if ( isset( $set["self_parent"]) ) { 
@@ -4434,9 +4433,10 @@ Class Data_Core extends CI_Model {
 
     /**
      * Verwijder data die NULL is of waarvan het veld niet in de table bestaat.
+     * NB Moet met ->db->field_exists() omdat het om echt bestaande velden gaat ipv om velden die in settings zijn ingesteld
      */
     foreach ( $set as $key => $value ) {
-      if ( !isset($value) or !$this->field_exists( $key) ) unset( $set[$key] );
+      if ( !isset($value) or !$this->db->field_exists( $key, $this->settings['table'] ) ) unset( $set[$key] );
     }
     
     
