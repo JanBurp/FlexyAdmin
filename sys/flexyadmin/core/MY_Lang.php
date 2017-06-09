@@ -98,14 +98,12 @@ class MY_Lang extends CI_Lang {
 		$config =& get_config();
 
 		// Changed by JdB
-		if ($idiom == '')
-		{
-      // trace_([$idiom,$this->idiom,$this->setLanguage]);
+		if ($idiom == '') {
+      $CI =& get_instance();
       if (!empty($this->setLanguage)) {
         $deft_lang=$this->setLanguage;
       }
       else {
-        $CI =& get_instance();
         if (isset($CI->session)) $deft_lang=$CI->session->userdata("language");
         if (!empty($deft_lang))
           $this->set($deft_lang);
@@ -113,7 +111,15 @@ class MY_Lang extends CI_Lang {
           $deft_lang = $CI->config->item('language');
       }
 			$idiom = ($deft_lang == '') ? 'en' : $deft_lang;
-			$this->idiom=$idiom;
+      if ($CI->config->item('IS_ADMIN'))
+        $languages = $CI->config->item('ADMIN_LANGUAGES');
+      else
+        $languages = $CI->config->item('LANGUAGES');
+      if (empty($idiom) or !in_array($idiom,$languages)) {
+        $idiom = array_shift($languages);
+      }
+
+			$this->idiom = $idiom;
 		}
 		// Changes end here. JdB
 
@@ -124,7 +130,8 @@ class MY_Lang extends CI_Lang {
     array_unshift($paths,APPPATH);
     array_unshift($paths,BASEPATH);
     $paths = array_unique($paths);
-    
+
+    $found = FALSE;    
     foreach ($paths as $path) {
 			if (file_exists($path.'language/'.$idiom.'/'.$langfile))
 			{

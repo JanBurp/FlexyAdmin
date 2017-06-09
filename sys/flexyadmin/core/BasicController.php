@@ -29,8 +29,10 @@ class BasicController extends MY_Controller {
     $this->message->init();
     $this->load->model('create_uri');
 		$this->load->helper("language");
-
     $this->language = $this->flexy_auth->get_user(NULL,'str_language');
+    if (empty($this->language) or !in_array($this->language,$this->config->item('ADMIN_LANGUAGES'))) {
+		  $this->language = array_shift($this->config->item('ADMIN_LANGUAGES'));
+    }
 		$lang = $this->language."_".strtoupper($this->language);
 		setlocale(LC_ALL, $lang);
 
