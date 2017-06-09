@@ -115,7 +115,9 @@ class order extends CI_Model {
   
 
   /**
-   * Reset volgorde nummering. Volgorde blijft hetzelde, alleen de nummering wordt ververst
+   * Reset volgorde nummering.
+   * Neemt parents als basis, verder blijft volgorde hetzelfde.
+   * De nummering wordt ververst
    *
    * @param string $table 
    * @param int $from default=0, eventueel kan alles worden opgeschoven
@@ -124,14 +126,61 @@ class order extends CI_Model {
    */
 	public function reset($table,$from=0) {
     $this->data->table($table);
-    if ($this->is_a_tree($table)) {
-      $this->data->order_by('order')->select('self_parent');
+
+    // Eenvoudig, geen self_parent
+    if ( !$this->is_a_tree($table) ) {
+      $result = $this->data->select('order')->order_by('order')->get_result();
+      $ids = array_keys($result);
+      $this->set_all($table,$ids,$from);
+      return count($ids);
+
     }
-    $this->data->select('order');
-		$result=$this->data->get_result();
-		$ids=array_keys($result);
-		$this->set_all($table,$ids,$from);
-    return count($ids);
+
+    // Complexer: met self_parent
+    // - Groupeer per parent
+    // - Sub results per parent
+    // - Voeg ze samen in nieuwe volgorde
+    $parents = $this->data->select('self_parent,uri')->order_by('order')->set_result_key('self_parent')->get_result();
+    foreach ($parents as $parent_id => $items) {
+      $parents[$parent_id] = $this->data->select('order,self_parent,uri')->order_by('order')->where('self_parent',$parent_id)->get_result();
+    }
+    $merged = $parents[0];
+    unset($parents[0]);
+    $offset = 0;
+    // Voeg samen
+    foreach ($merged as $parent_id => $item) {
+      $offset++;
+      $id = $item['id'];
+      if (isset($parents[$id])) {
+        array_splice($merged,$offset,0,$parents[$id]);
+        $offset += count($parents[$id]);
+        unset($parents[$id]);
+      }
+    }
+    // Zijn er nog 'verloren' kinderen?
+    if (count($parents)>0) {
+      foreach ($parents as $parent_id => $items) {
+        foreach ($items as $key=>$item) {
+          // Reset parent van verloren kind
+          if ($item['self_parent']==$parent_id) $items[$key]['self_parent'] = 0;
+        }
+        $merged = array_merge($merged,$items);
+      }
+      unset($parents[$parent_id]);
+    }
+    // re-id & reorder
+    $order = $from;
+    $result = array();
+    foreach ($merged as $item) {
+      $result[$item['id']] = $item;
+      $result[$item['id']]['order'] = $order;
+      $order++;
+    }
+    // Update all
+    foreach ($result as $id => $row) {
+      $this->data->table($table)->set($row)->where($id)->update();
+    }
+    return count($result);
 	}
   
 
