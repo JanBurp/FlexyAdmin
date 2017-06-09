@@ -4342,18 +4342,9 @@ Class Data_Core extends CI_Model {
     /**
      * Ok we kunnen! Stel nog even alles in en maak cache leeg
      */
-    if ($where) $this->where( $where );
-    if ($limit) $this->limit( $limit );
     $set = $this->tm_set;
     $id = NULL;
     $this->clear_cache($this->settings['table']);
-    
-    /**
-     * Als een UPDATE check of er wel een WHERE is om te voorkomen dat een hele tabel wordt overschreven.
-     */
-    if ( $type=='UPDATE' and !$this->tm_has_condition ) {
-      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): no condition set (WHERE,LIKE etc). Could result in overwriting all rows in `'.$this->settings['table'].'`' );
-    }
     
 
     /**
@@ -4361,14 +4352,46 @@ Class Data_Core extends CI_Model {
      */
     if ( $type=='INSERT' and isset( $set["order"]) ) {
       $this->load->model('order','_order');
-      if ( isset( $set["self_parent"]) ) { 
-        $set["order"] = $this->_order->get_next_order( $this->settings['table'], $set["self_parent"]);
+      if ( isset( $set['self_parent']) ) { 
+        $set['order'] = $this->_order->get_next_order( $this->settings['table'], $set['self_parent']);
       }
       else {
-        $set["order"] = $this->_order->get_next_order( $this->settings['table'] );
+        $set['order'] = $this->_order->get_next_order( $this->settings['table'] );
       }
     }
-      
+
+    /**
+     * Als 'self_parent' is aangepast, reset order
+     */
+    if ( $type=='UPDATE' and isset($set['self_parent']) and isset($set[$this->settings['primary_key']]) ) {
+      $key = $set[$this->settings['primary_key']];
+      $sql = 'SELECT `self_parent` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'`="'.$key.'"';
+      $query = $this->db->query($sql);
+      if ($query) {
+        $old_data = $query->row_array();
+        $old_parent = $old_data['self_parent'];
+        if ($old_parent!==$set['self_parent']) {
+          $this->load->model('order','_order');
+          $set['order'] = $this->_order->get_next_order( $this->settings['table'], $set['self_parent']);
+        }
+      }
+    }
+
+
+    /**
+     * Query verder opbouwen
+     */
+    if ($where) $this->where( $where );
+    if ($limit) $this->limit( $limit );
+
+    /**
+     * Als een UPDATE check of er wel een WHERE is om te voorkomen dat een hele tabel wordt overschreven.
+     */
+    if ( $type=='UPDATE' and !$this->tm_has_condition ) {
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): no condition set (WHERE,LIKE etc). Could result in overwriting all rows in `'.$this->settings['table'].'`' );
+    }
+
+
     /**
      * Valideer eventueel eerst de set
      */
@@ -4633,6 +4656,7 @@ Class Data_Core extends CI_Model {
 			}
       $this->db->trans_complete();
 		}
+
     
     if (isset($log)) {
       $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
@@ -4699,6 +4723,7 @@ Class Data_Core extends CI_Model {
      * Is het een ordered tabel?
      */
     $is_ordered_table = $this->field_exists( 'order' );
+    $is_tree          = $this->field_exists( 'self_parent' );
     if ($is_ordered_table) $this->load->model('order','_order');
 
     /**
@@ -4743,11 +4768,7 @@ Class Data_Core extends CI_Model {
      */
     $this->db->trans_start();
 		
-    // $is_deleted = $this->db->delete( $this->settings['table'], '', $this->tm_limit, $reset_data );
     $is_deleted = $this->db->query( $compiled_delete );
-    
-    // trace_(['is_deleted' => $is_deleted,'compiled_delete'=>$compiled_delete,'ids'=>$ids,'deleted_data'=>$deleted_data]);
-    
     if ($is_deleted) {
       $log = array(
         'query' => $this->db->last_query(),
@@ -4755,7 +4776,6 @@ Class Data_Core extends CI_Model {
         'id'    => implode(',',$ids),
       );
     }
-    
     
     $this->query_info = array(
       'affected_rows' => $this->db->affected_rows(),
@@ -4768,6 +4788,14 @@ Class Data_Core extends CI_Model {
   		 * Reset volgorde
   		 */
   		if ( $is_ordered_table ) {
+        if ($is_tree) {
+          // Update childrens parent and order
+          $deleted_item = current($deleted_data);
+          $this->db->set('self_parent',$deleted_item['self_parent']);
+          $this->db->set('order',$deleted_item['order']);
+          $this->db->where('self_parent',$deleted_item['id']);
+          $this->db->update($this->settings['table']);
+        }
   		  $this->query_info['moved_rows'] = $this->_order->reset( $this->settings['table'] );
   		}
 
