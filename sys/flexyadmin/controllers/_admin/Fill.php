@@ -24,7 +24,7 @@ class Fill extends AdminController {
 		
 			$aantal          = $this->input->post('aantal');
 			$addtable        = $this->input->post('addtable');
-			$fields          = get_fields_from_input( $this->input->post('fields'), $addtable );
+			$fields          = $this->input->post('fields');
 			$where           = $this->input->post('where');
       $fill            = $this->input->post('fill');
       $random          = $this->input->post('random');
@@ -32,6 +32,8 @@ class Fill extends AdminController {
 			$test            = $this->input->post('test');
       
 			$htmlTest='';
+
+			if (!is_array($fields)) $fields=explode(',',$fields);
 
 			// create rows in table
 			if ($aantal and $addtable) {
@@ -91,26 +93,29 @@ class Fill extends AdminController {
 			}
 			if (!$addtable or $test) {
 				// show form
-				$this->load->library('form');
         $this->load->model( 'Data/Options_Tables');
         $this->load->model( 'Data/Options_Fields');
-				$form=new form($this->config->item('API_fill'));
 				$tablesOptions=$this->Options_Tables->get_options();
 				$fieldsOptions=$this->Options_Fields->get_options();
 				if (empty($fields)) $fields=array();
 				else $fields=array_combine($fields,$fields);
 				// create form
-				$data=array( 	"aantal"	=> array("label"=>lang('fill_aantal'),"value"=>$aantal),
-											"addtable"=> array("label"=>lang('fill_tables'),"value"=>$addtable,"type"=>'dropdown','options'=>$tablesOptions),
-											"fields"	=> array("label"=>lang('fill_fields'),"value"=>$fields,"type"=>'dropdown','options'=>$fieldsOptions,'multiple'=>'multiple'),
-											"where"		=> array("label"=>lang('fill_where'),"value"=>$where),
-                      "fill"    => array("label"=>lang('fill_with'),"value"=>$fill),
-											"random"	=> array("label"=>lang('fill_use_random'),"type"=>"checkbox","value"=>1),
-											"many_to_many"	=> array("label"=>'Many to Many',"type"=>"checkbox","value"=>1),
-                      // ""        => array("type"=>"html","value"=>'alt[yes|no|..],[int(min,max)],[str([html|mix|lower|upper],len)]'),
-											"test"		=> array("type"=>'checkbox','value'=>1)
-											);
-				$form->set_data($data,lang('fill_fill'));
+				$data=array(
+					'aantal'       => array( 'label' => lang('fill_aantal'), 'value' => $aantal ),
+					'addtable'     => array( 'label' => lang('fill_tables'), 'value' => $addtable, 'type' => 'select', 'options' => $tablesOptions ),
+					'fields'       => array( 'label' => lang('fill_fields'), 'value' => $fields, 'type' => 'select', 'options' => $fieldsOptions, 'multiple' => 'multiple' ),
+					'where'        => array( 'label' => lang('fill_where'), 'value' => $where ),
+					'fill'         => array( 'label' => lang('fill_with'), 'value' => $fill ),
+					'random'       => array( 'label' => lang('fill_use_random'),'type' => "checkbox", 'value' => 1 ),
+					'many_to_many' => array( 'label' => 'Many to Many',	'type' => "checkbox", 'value' => 1 ),
+					'test'         => array( 'label' => 'test',	'type' => 'checkbox', 'value' => 1 )
+				);
+				
+				$this->load->library('vueform');
+				$form=new vueform(array(
+					'fields'=>$data,
+					'title' => lang('fill_fill')
+				));
 				$this->content .= $form->render();
 			}
 			$this->content .= div('after_form').$htmlTest._div();	
