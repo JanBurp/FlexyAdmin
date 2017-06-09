@@ -56,6 +56,7 @@ class Plugin_controller extends AdminController {
    * @author Jan den Besten
    */
 	public function call() {
+    if ( !$this->flexy_auth->allowed_to_use_cms() ) return false;
 
 		$args=func_get_args();
 		$ajax=false;
