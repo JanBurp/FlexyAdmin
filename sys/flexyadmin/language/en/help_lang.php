@@ -4,6 +4,9 @@ $lang['help']               = 'Help';
 $lang['logout']             = 'Logout';
 $lang['settings']           = 'Settings';
 $lang['statistics']         = 'Statistics';
+$lang['watch_help']       	= 'Read Help';
+$lang['watch_statistics'] 	= 'Statistics';
+$lang['edit_user']        	= 'Change profile';
 
 $lang['file']								= "File";
 
@@ -30,6 +33,8 @@ $lang['db_export']					= 'Export Database';
 $lang['db_import']					= 'Import Database';
 $lang['db_backup']					= 'Create backup';
 $lang['db_restore']					= 'Restore backup';
+
+$lang['plugins']					  = 'Plugins';
 
 $lang['sr_search_replace']	= 'Search/Replace';
 $lang['sr_settings']				= 'Settings';
