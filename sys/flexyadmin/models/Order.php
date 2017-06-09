@@ -96,12 +96,16 @@ class order extends CI_Model {
 	 * @author Jan den Besten
 	 */
 	public function get_next_order($table,$parent="") {
-    $this->data->table($table)->select("order")->order_by("order DESC");
-		if (!empty($parent)) $this->data->where("self_parent",$parent);
-		$lastrow = $this->data->get_row();
+    $sql = "SELECT `order` FROM `$table`";
+    if (!empty($parent)) $sql.=" WHERE `self_parent`=$parent";
+    $sql.=" ORDER BY `order` DESC";
+    $query = $this->db->query($sql);
+    $lastrow = $query->row_array();
     if (!$lastrow) {
       // Geen kinderen in de opgevraagde tree, dan is de order hetzelfde als de parent zelf
-  		$lastrow = $this->data->select("order")->where($parent)->get_row();
+      $sql = "SELECT `order` FROM `$table` WHERE `id`=$parent";
+      $query = $this->db->query($sql);
+      $lastrow = $query->row_array();
     }
     $next = $lastrow['order'] + 1;
     // Als in een tree, verschuif alles met hogere volgorde dan die van de tree op
@@ -146,17 +150,22 @@ class order extends CI_Model {
     }
     $merged = $parents[0];
     unset($parents[0]);
-    $offset = 0;
-    // Voeg samen
-    foreach ($merged as $parent_id => $item) {
-      $offset++;
-      $id = $item['id'];
-      if (isset($parents[$id])) {
-        array_splice($merged,$offset,0,$parents[$id]);
-        $offset += count($parents[$id]);
-        unset($parents[$id]);
+
+    // Voeg samen ('recursive')
+    $depth = 10;
+    while (count($parents)>0 and $depth>0 ) {
+      $offset = 0;
+      foreach ($merged as $parent_id => $item) {
+        $offset++;
+        $id = $item['id'];
+        if (isset($parents[$id])) {
+          array_splice($merged,$offset,0,$parents[$id]);
+          $offset += count($parents[$id]);
+          unset($parents[$id]);
+        }
       }
     }
+
     // Zijn er nog 'verloren' kinderen?
     if (count($parents)>0) {
       foreach ($parents as $parent_id => $items) {
@@ -165,8 +174,8 @@ class order extends CI_Model {
           if ($item['self_parent']==$parent_id) $items[$key]['self_parent'] = 0;
         }
         $merged = array_merge($merged,$items);
+        unset($parents[$parent_id]);
       }
-      unset($parents[$parent_id]);
     }
     // re-id & reorder
     $order = $from;
@@ -176,6 +185,7 @@ class order extends CI_Model {
       $result[$item['id']]['order'] = $order;
       $order++;
     }
+
     // Update all
     foreach ($result as $id => $row) {
       $this->data->table($table)->set($row)->where($id)->update();
