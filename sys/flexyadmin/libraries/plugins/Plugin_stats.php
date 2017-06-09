@@ -31,6 +31,7 @@ class Plugin_stats extends Plugin {
 
 	
 	public function _admin_api($args=NULL) {
+		if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
 		if (isset($args[0])) $year=$args[0];
 		if (isset($args[1])) $month=$args[1];
 

@@ -39,6 +39,7 @@ class Plugin_log extends Plugin {
    * @author Jan den Besten
    */
   public function _home() {
+    if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
     $this->CI->load->model('log_activity');
     $this->CI->log_activity->clean_up();
     $this->CI->lang->load('home');

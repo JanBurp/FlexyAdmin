@@ -13,6 +13,8 @@ class Plugin_resize_images extends Plugin {
 	}
 
 	public function _admin_api($args=NULL) {
+    if ( !$this->CI->flexy_auth->is_super_admin()) return false;
+
     if (isset($args[0])) {
       $maps=array($args[0]);
     }
@@ -42,6 +44,8 @@ class Plugin_resize_images extends Plugin {
   
   
   public function _ajax_api( $args ) {
+    if ( !$this->CI->flexy_auth->is_super_admin()) return false;
+    
 		$args = func_get_args();
     $path = $args[0];
     $file = $args[1];

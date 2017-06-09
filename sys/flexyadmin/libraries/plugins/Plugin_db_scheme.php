@@ -13,6 +13,8 @@
 
 
 	public function _admin_api($args=NULL) {
+    if ( !$this->CI->flexy_auth->is_super_admin()) return false;
+    
     $analyze=$this->analyze($args);
     if (is_array($analyze)) {
       // analyze=trace_(analyze,false);

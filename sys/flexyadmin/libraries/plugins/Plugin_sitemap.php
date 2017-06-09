@@ -13,19 +13,20 @@ class Plugin_sitemap extends Plugin {
 		parent::__construct();
 	}
 
-	function _admin_logout() {
+	public function _admin_logout() {
     if (!$this->CI->config->item('testmode')) {
   		$this->_create_sitemap();
     }
 	}
 	
-	function _admin_api($args=NULL) {
+	public function _admin_api($args=NULL) {
+		if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
 		$this->_create_sitemap();
     return $this->show_messages();
 	}
 
 
-	function _create_sitemap() {
+	private function _create_sitemap() {
 		// create Sitemap
     $this->CI->data->table('tbl_site');
 		$url = trim($this->CI->data->get_field('url_url'),'/');
@@ -77,7 +78,7 @@ class Plugin_sitemap extends Plugin {
     }
 	}
 	
-	function _create_robots() {
+	private function _create_robots() {
 		$robots=file_get_contents('robots.txt');
 		$url = $this->CI->data->table('tbl_site')->get_field('url_url');
 		$newSitemapLine='Sitemap: '.$url.'/sitemap.xml';

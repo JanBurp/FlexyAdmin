@@ -18,6 +18,8 @@ class Plugin_reorder extends Plugin {
   }
 
   public function _admin_api($args=NULL) {
+    if ( !$this->CI->flexy_auth->is_super_admin()) return false;
+    
     $table=el(0,$args);
     if ($table) {
       $this->add_message($table.' is re-ordered');
