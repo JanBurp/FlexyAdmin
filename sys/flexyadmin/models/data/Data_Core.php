@@ -2533,7 +2533,7 @@ Class Data_Core extends CI_Model {
     if ($cached) {
       if (isset($cached['query_info'])) {
         $this->query_info = $cached['query_info'];
-        $cached = $cached['results'];
+        $cached = $cached['result'];
       }
       $this->query_info['from_cache'] = TRUE;
     }
