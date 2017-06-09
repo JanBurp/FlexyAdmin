@@ -936,42 +936,38 @@ class DataTest extends CITestCase {
   }
   
   
-  // public function testCaching() {
-  //   $this->CI->data->table('tbl_groepen');
-  //   // Simple
-  //   $result         = $this->CI->data->table('tbl_groepen')->cache()->get_result();
-  //   $info           = $this->CI->data->get_query_info();
-  //   $cached_result  = $this->CI->data->table('tbl_groepen')->cache()->get_result();
-  //   $cached_info    = $this->CI->data->get_query_info();
-  //   trace_(count($result));
-  //   trace_($info);
-  //   trace_(count($result));
-  //   trace_($info);
-  //   $this->assertEquals($result,$cached_result);
-  //   $this->assertFalse($info['from_cache']);
-  //   $this->assertTrue($cached_info['from_cache']);
+  public function testCaching() {
+    $this->CI->data->table('tbl_groepen');
+    // Simple
+    $result         = $this->CI->data->table('tbl_groepen')->cache()->get_result();
+    $info           = $this->CI->data->get_query_info();
+    $cached_result  = $this->CI->data->table('tbl_groepen')->cache()->get_result();
+    $cached_info    = $this->CI->data->get_query_info();
+    $this->assertEquals($result,$cached_result);
+    $this->assertFalse($info['from_cache']);
+    $this->assertTrue($cached_info['from_cache']);
 
-  //   // // Where, order, limit
-  //   // $this->CI->data->table('tbl_groepen');
-  //   // $result = $this->CI->data->cache()->where('str_soort','groep')->order_by('id')->get_result(3);
-  //   // $info   = $this->CI->data->get_query_info();
-  //   // $cached_result = $this->CI->data->cache()->where('str_soort','groep')->order_by('id')->get_result(3);
-  //   // $cached_info   = $this->CI->data->get_query_info();
-  //   // $this->assertEquals($result,$cached_result);
-  //   // $this->assertFalse($info['from_cache']);
-  //   // $this->assertTrue($cached_info['from_cache']);
+    // Where, order, limit
+    $this->CI->data->table('tbl_groepen');
+    $result = $this->CI->data->cache()->where('str_soort','groep')->order_by('id')->get_result(3);
+    $info   = $this->CI->data->get_query_info();
+    $cached_result = $this->CI->data->cache()->where('str_soort','groep')->order_by('id')->get_result(3);
+    $cached_info   = $this->CI->data->get_query_info();
+    $this->assertEquals($result,$cached_result);
+    $this->assertFalse($info['from_cache']);
+    $this->assertTrue($cached_info['from_cache']);
 
-  //   // // Relations
-  //   // $result = $this->CI->data->cache()->with('many_to_many')->get_result(3);
-  //   // $info   = $this->CI->data->get_query_info();
-  //   // $cached_result = $this->CI->data->cache()->with('many_to_many')->get_result(3);
-  //   // $cached_info   = $this->CI->data->get_query_info();
-  //   // $this->assertEquals($result,$cached_result);
-  //   // $this->assertFalse($info['from_cache']);
-  //   // $this->assertTrue($cached_info['from_cache']);
+    // Relations
+    $result = $this->CI->data->cache()->with('many_to_many')->get_result(3);
+    $info   = $this->CI->data->get_query_info();
+    $cached_result = $this->CI->data->cache()->with('many_to_many')->get_result(3);
+    $cached_info   = $this->CI->data->get_query_info();
+    $this->assertEquals($result,$cached_result);
+    $this->assertFalse($info['from_cache']);
+    $this->assertTrue($cached_info['from_cache']);
     
-  //   // $this->CI->data->clear_cache();
-  // }
+    $this->CI->data->clear_cache();
+  }
 
 
 
