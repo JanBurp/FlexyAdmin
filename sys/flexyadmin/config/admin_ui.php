@@ -31,8 +31,8 @@ $config['side_menu']['tools'] = array(
   'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'db/backup',   'icon'=>'database', 'class'=>'text-muted' ),
   'restore'  => array( 'user_group'=>'[b_backup]',  'name'=>'db_restore',         'uri'=>'db/restore',  'icon'=>'database', 'class'=>'text-muted' ),
   '-'        => array( 'type'=>'seperator' ),
-  'search'   => array( 'user_group'=>'[b_tools]',   'name'=>'sr_search_replace',  'uri'=>'search',      'icon'=>'search', 'class'=>'text-muted' ),
-  'fill'     => array( 'user_group'=>'[b_tools]',   'name'=>'fill_fill',          'uri'=>'fill',        'icon'=>'arrow-circle-o-down', 'class'=>'text-muted' ),
+  'search'   => array( 'user_group'=>'super_admin',   'name'=>'sr_search_replace',  'uri'=>'search',      'icon'=>'search', 'class'=>'text-muted' ),
+  'fill'     => array( 'user_group'=>'super_admin',   'name'=>'fill_fill',          'uri'=>'fill',        'icon'=>'arrow-circle-o-down', 'class'=>'text-muted' ),
   '--'       => array( 'type'=>'seperator' ),
   'plugins'  => array( 'user_group'=>'super_admin',  'name'=>'plugins',           'uri'=>'plugin',      'icon'=>'cog',    'class'=>'text-muted' ),
 );
