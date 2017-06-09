@@ -955,6 +955,7 @@ Class Data_Core extends CI_Model {
     $this->tm_as_grid                = FALSE;
     $this->with(FALSE);
     $this->db->reset_query();
+    $this->set_result_key();
     return $this;
   }
   
