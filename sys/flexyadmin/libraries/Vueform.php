@@ -34,6 +34,7 @@ class Vueform {
    * @author Jan den Besten
    */
 	public function initialize( $settings = array()  ) {
+    if (!is_array($settings)) $settings = array('action'=>$settings);
     $this->settings = array_merge($this->default,$settings);
     // defaults
     if (empty($this->settings['action'])) $this->settings['action'] = $this->CI->uri->uri_string();
