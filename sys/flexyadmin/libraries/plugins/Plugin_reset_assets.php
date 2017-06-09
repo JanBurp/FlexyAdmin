@@ -29,8 +29,9 @@ class Plugin_reset_assets extends Plugin {
    * @author Jan den Besten
    */
 	function _admin_api($args=NULL) {
+    if ( !$this->CI->flexy_auth->is_super_admin()) return false;
+
     $arg = el(0,$args,FALSE);
-    
     $this->CI->load->model('assets');
     $paths = $this->CI->assets->refresh('',($arg==='reset'),($arg==='remove'));
     $this->add_message('<ul>');

@@ -23,6 +23,8 @@ class Plugin_video_code extends Plugin {
   }
 
 	public function _admin_api($args=NULL) {
+    if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
+
 		if (isset($args)) {
 			if (isset($args[0])) {
 				$table=$args[0];
@@ -39,12 +41,16 @@ class Plugin_video_code extends Plugin {
 
 
 	public function _after_update() {
+    if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
+
     $this->newData=$this->_get_video_codes($this->newData);
 		return $this->newData;
 	}
 
 
   private function _get_video_codes($item) {
+    if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
+    
     foreach ($this->fields as $field) {
       if (isset($item[$field])) {
         $item[$field]=get_video_code_from_url($item[$field]);

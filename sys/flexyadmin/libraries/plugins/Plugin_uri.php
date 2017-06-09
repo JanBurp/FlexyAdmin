@@ -17,6 +17,8 @@ class Plugin_uri extends Plugin {
   }
 
 	public function _admin_api($args=NULL) {
+		if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
+
 		if (isset($args[0])) {
 			$this->table=$args[0];
 			$reset = el(1,$args,false);
@@ -49,6 +51,8 @@ class Plugin_uri extends Plugin {
   
   
   public function _after_update() {
+  	if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
+  	
     $this->CI->create_uri->set_table($this->table);
 		$uri = $this->CI->create_uri->create( $this->newData );
     if ($uri) $this->newData['uri']=$uri;
