@@ -18,6 +18,8 @@ class Plugin_txt extends Plugin {
 	}
 	
 	public function _after_update() {
+    if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
+    
     // Zijn er links in de txt?
     $txt_fields = filter_by_key($this->newData,'txt_');
     $links = array();

@@ -22,6 +22,8 @@ class Plugin_db_export extends Plugin {
   /**
    */
 	public function _admin_api($args=NULL) {
+		if ( !$this->CI->flexy_auth->is_super_admin() ) return FALSE;
+
 		// What are possible tables to export?
 		$tables=$this->config('tables');
 		if (empty($tables)) {
@@ -38,7 +40,7 @@ class Plugin_db_export extends Plugin {
 			$type='csv';
 			if (isset($args[1])) $type=$args[1];
 			
-			if (in_array($table,$tables)) {
+			if (in_array($table,$tables) and $this->CI->flexy_auth->has_rights($table)) {
 				$this->export($table,$type);
 				return $this->content;
 			}

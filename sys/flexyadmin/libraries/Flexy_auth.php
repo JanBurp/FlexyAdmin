@@ -812,9 +812,12 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   public function allowed_to_use_cms() {
-    $rights = $this->current_user['rights'];
-    //return (( el('b_edit',$rights,FALSE) or el('b_add',$rights,FALSE) or el('b_delete',$rights,FALSE) or el('b_all_users',$rights,FALSE)) and !empty($rights['rights']));
-    return TRUE;
+    $most_item_rights = 0;
+    $items = $this->current_user['rights']['items'];
+    rsort($items);
+    $most_item_rights = current($items);
+    if ($most_item_rights > 0) return TRUE;
+    return FALSE;
   }
   
   /**
@@ -870,7 +873,7 @@ class Flexy_auth extends Ion_auth {
 		if ($this->current_user['rights']['tools']) return TRUE;
 		return FALSE;
 	}
-  
+
 
   /**
    * Geeft de rechten in een array terug van de meegegeven gebruiker
@@ -912,7 +915,6 @@ class Flexy_auth extends Ion_auth {
       $rights['tools']     = ($rights['tools'] OR $group['b_tools']);
       $rights['items']     = $this->_combine_item_rights( $rights['items'], $group );
     }
-    
 		return $rights;
 	}
   

@@ -18,6 +18,8 @@ class Plugin_move_site extends Plugin {
 	}
 
   public function _admin_api($args=false) {
+    if ( !$this->CI->flexy_auth->is_super_admin()) return false;
+    
 		$this->add_message('<h2>Move Old site (essentials) to Fresh Checkout</h2>');
     
     $this->old=$this->config['old'];
