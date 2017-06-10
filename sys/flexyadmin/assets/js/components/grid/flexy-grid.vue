@@ -162,6 +162,7 @@ export default {
       oldExtendedTerm     : [],
       uploadFiles         : [],
       dropUploadHover     : false,
+      altKey              : false,
     }
   },
 
@@ -787,6 +788,7 @@ export default {
       return this.draggable.item == id;
     },
     draggable_onStart: function(event){
+      // console.log('draggable_onStart',this.altKey);
       var index = event.oldIndex;
       // Onthoud 'id' van draggable item
       this.draggable.item = event.item.dataset.id;
@@ -811,6 +813,7 @@ export default {
       }
     },
     draggable_onEnd  : function(event){
+      this.pressAlt(false);
       var self = this;
       var oldIndex = event.oldIndex;
       var newIndex = event.newIndex;
@@ -871,6 +874,11 @@ export default {
       // Laat children weer zien
       this.draggable.children = false;
     },
+
+    pressAlt : function(value) {
+      // console.log('pressAlt',value);
+      this.altKey = value;
+    },
     
     postNewOrder : function(newOrder) {
       var self=this;
@@ -914,7 +922,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div @keydown.alt="pressAlt(true)" @keyup="pressAlt(false)">
     
     <flexy-form v-if="apiParts.formID!==false" :title="title" :name="name" :primary="apiParts.formID" @formclose="updateItem(apiParts.formID,$event)"></flexy-form>
     
@@ -1022,38 +1030,40 @@ export default {
             </tr>
           
             <!-- ROW -->
-            <tr v-for="row in items" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
-              <template v-for="cell in row">
-              
-                <!-- PRIMARY CELL -->
-                <td v-if="cell.type=='primary'" class="action">
-                  <flexy-button v-if="gridType()!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning action-edit" />
-                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger action-remove" />
-                  <flexy-button @click.native="select(row.id.value)" :icon="{'square-o':!isSelected(row.id.value),'check-square-o':isSelected(row.id.value)}" class="btn-outline-info action-select" />
-                  <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info action-drag" :class="{'active':isDragging(row.id.value)}" />
-                </td>
-              
-                <!-- ACTION CELL -->
-                <td v-else-if="cell.type=='action'" class="action">
-                  <flexy-button :icon="cell.value.icon" class="btn-outline-warning" :text="cell.value.text" @click.native="action(cell.value)" />
-                </td>
-              
-                <!-- CELL -->
-                <flexy-grid-cell v-else
-                  @select="select(row.id.value)"
-                  :focus="false"
-                  :type="cell.type"
-                  :name="cell.name"
-                  :value="cell.value"
-                  :level="rowLevel(row)"
-                  :primary="{ table:dataName, id:row.id.value }"
-                  :editable="isEditable(cell.name)"
-                  :readonly="isReadonly(cell.name)"
-                  :options="fields[cell.name]">
-                </flexy-grid-cell>
-              
-              </template>
-            </tr>
+            <template v-for="row in items">
+              <tr v-if="row" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
+                <template v-for="cell in row">
+                
+                  <!-- PRIMARY CELL -->
+                  <td v-if="cell.type=='primary'" class="action">
+                    <flexy-button v-if="gridType()!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning action-edit" />
+                    <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger action-remove" />
+                    <flexy-button @click.native="select(row.id.value)" :icon="{'square-o':!isSelected(row.id.value),'check-square-o':isSelected(row.id.value)}" class="btn-outline-info action-select" />
+                    <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info action-drag" :class="{'active':isDragging(row.id.value)}" />
+                  </td>
+                
+                  <!-- ACTION CELL -->
+                  <td v-else-if="cell.type=='action'" class="action">
+                    <flexy-button :icon="cell.value.icon" class="btn-outline-warning" :text="cell.value.text" @click.native="action(cell.value)" />
+                  </td>
+                
+                  <!-- CELL -->
+                  <flexy-grid-cell v-else
+                    @select="select(row.id.value)"
+                    :focus="false"
+                    :type="cell.type"
+                    :name="cell.name"
+                    :value="cell.value"
+                    :level="rowLevel(row)"
+                    :primary="{ table:dataName, id:row.id.value }"
+                    :editable="isEditable(cell.name)"
+                    :readonly="isReadonly(cell.name)"
+                    :options="fields[cell.name]">
+                  </flexy-grid-cell>
+                
+                </template>
+              </tr>
+            </template>
           </draggable>
         </table>
       </div>
