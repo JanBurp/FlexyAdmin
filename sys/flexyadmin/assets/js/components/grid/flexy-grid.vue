@@ -68,6 +68,10 @@ export default {
       }
     });
 
+    document.onmousemove = function(e){
+      self.mouseY = e.pageY;
+    }
+
     //
     // Load first page
     // 
@@ -162,7 +166,10 @@ export default {
       oldExtendedTerm     : [],
       uploadFiles         : [],
       dropUploadHover     : false,
-      altKey              : false,
+
+      mouseY              : 0,
+      mouseInterval       : null,
+      dragPosition        : '',
     }
   },
 
@@ -812,8 +819,24 @@ export default {
         } while (node_level>row.level && !_.isUndefined(this.items[childIndex]));
       }
     },
+    draggable_onMove : function(event) {
+      this.dragPosition = '';
+      var rect = event.target.getBoundingClientRect();
+      if (event.relatedRect.top <= rect.top) this.dragPosition = 'top';
+      if (event.relatedRect.top+event.relatedRect.height >= rect.bottom) this.dragPosition = 'bottom';
+      // if (this.dragPosition!=='') {
+      //   console.log('draggable_onMove',this.dragPosition, event.relatedRect.top);
+      //   this.mouseInterval = setInterval(function(){
+      //     if (this.mouseY < event.relatedRect.top) this.dragPosition = 'PREV';
+      //     if (this.mouseY > (event.relatedRect.top+event.relatedRect.height) ) this.dragPosition = 'NEXT';
+      //     console.log(this.dragPosition);
+      //   },100);
+      // }
+      // else {
+      //   clearInterval(this.mouseInterval);
+      // }
+    },
     draggable_onEnd  : function(event){
-      this.pressAlt(false);
       var self = this;
       var oldIndex = event.oldIndex;
       var newIndex = event.newIndex;
@@ -875,11 +898,6 @@ export default {
       this.draggable.children = false;
     },
 
-    pressAlt : function(value) {
-      // console.log('pressAlt',value);
-      this.altKey = value;
-    },
-    
     postNewOrder : function(newOrder) {
       var self=this;
       var itemId = this.draggable.item;
@@ -922,7 +940,7 @@ export default {
 </script>
 
 <template>
-  <div @keydown.alt="pressAlt(true)" @keyup="pressAlt(false)">
+  <div>
     
     <flexy-form v-if="apiParts.formID!==false" :title="title" :name="name" :primary="apiParts.formID" @formclose="updateItem(apiParts.formID,$event)"></flexy-form>
     
@@ -1017,7 +1035,7 @@ export default {
           </thead>
         
           <!-- GRID BODY -->
-          <draggable v-if="hasData()" :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd">
+          <draggable v-if="hasData()" :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd" :move="draggable_onMove">
 
             <!-- UPLOAD ROW -->
             <tr v-if="gridType()==='media'" class="grid-upload" :class="{'dropping':dropUploadHover}">
