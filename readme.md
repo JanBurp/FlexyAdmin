@@ -15,6 +15,7 @@ In the examples below, replace `<dir>` with the folder you'd like to have FlexyA
 ### Shallow repository (for just a simple website) ###
 
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>`
+`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --branch <branch> --single-branch --depth 10 <dir>`
   
   
 ### Shallow repository a branch ###
