@@ -153,8 +153,10 @@ Class Core_tbl_menu extends Data_Core {
       $full_uri = $item['full_uri'];
       if ( $full_uri!=$item['uri'] ) {
         $parent_uri = remove_suffix($item['full_uri'],'/');
-        $item['b_visible']    = el($parent_uri,$b_visible,true);
-        $item['b_restricted'] = el($parent_uri,$b_restricted,false);
+        if ($parent_uri!='') {
+          $item['b_visible']    = el($parent_uri,$b_visible,true);
+          $item['b_restricted'] = el($parent_uri,$b_restricted,false);
+        }
       }
       $b_visible[$full_uri] = $item['b_visible'];
       $b_restricted[$full_uri] = $item['b_restricted'];
