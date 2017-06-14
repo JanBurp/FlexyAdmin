@@ -90,7 +90,6 @@ Class Core_tbl_menu extends Data_Core {
     return el($uri,$items,FALSE);
   }
 
-
   /**
    * Geeft veld uit één item uit (samengesteld) menu
    *
@@ -103,7 +102,23 @@ Class Core_tbl_menu extends Data_Core {
     return el($field,$item,FALSE);
   }
 
-  
+  /**
+   * Geeft eerste onderliggende item van een parent
+   *
+   * @param string $uri 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_first_child( $uri ) {
+    $items = $this->get_menu_result();
+    $items = find_row_by_value($items,$uri.'/','full_uri',true);
+    if ($items) {
+      return current($items);
+    }
+    return false;
+  }
+
+ 
   
   /**
    * Maak het menu aan de hand van de 'merged_menu' instellingen in site/config/tbl_menu
