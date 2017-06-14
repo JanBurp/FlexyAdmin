@@ -185,8 +185,7 @@ class Main extends FrontEndController {
 	 * Redirect to a (set) page (and anchor), or down in the menu tree if current page is empty
 	 */
 	private function _redirect($page) {
-    $text = trim(el( 'txt_text',$page, el('txt_text_'.$this->site['language'],$page,'') ));
-		if (empty($text) or el('b_redirect',$page,false)) {
+		if ( el('b_redirect',$page,false) or (el('txt_text',$page,'')=='' and el('str_module',$page,'')=='') ) {
       if (el('list_redirect',$page,'')) {
         $newUri=$page['list_redirect'];
       }
