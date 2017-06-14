@@ -111,7 +111,7 @@ Class Core_tbl_menu extends Data_Core {
    */
   public function get_first_child( $uri ) {
     $items = $this->get_menu_result();
-    $items = find_row_by_value($items,$uri.'/','full_uri',true);
+    $items = find_row_by_value($items,$uri.'/','full_uri',0);
     if ($items) {
       return current($items);
     }
