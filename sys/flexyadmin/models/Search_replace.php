@@ -28,16 +28,10 @@ class Search_replace extends CI_Model {
 
    public function __construct() {
 		parent::__construct();
-		// TODO: This is for sites with uri's to different languages
-		$languages=$this->config->item('languages');
-		if (count($languages)>1) {
-			$autoMenuCfg = $this->data->table('cfg_auto_menu')->get_result();
-			if ($autoMenuCfg) {
-				$languageCfg=find_row_by_value($autoMenuCfg,'split by language');
-				if (isset($languageCfg['str_parameters'])) {
-					$languages=$languageCfg['str_parameters'];
-				}
-			}
+    $this->config->load('menu','menu');
+    $menu_config = $this->config->item('menu');
+		$languages=el('languages',$menu_config);
+		if (is_array($languages) and count($languages)>1) {
 			$languagesRegex=implode('/|',$languages).'/|';
 			$languagesRegex=str_replace('/','\/',$languagesRegex);
 			$this->langRegex=$languagesRegex;
