@@ -641,6 +641,7 @@ export default {
     isEditable : function(name) {
       var editable = false;
       if ( !_.isUndefined(this.fields[name]) ) editable = this.fields[name]['grid-edit'];
+      // console.log('isEditable',name,this.fields[name],editable);
       return editable;
     },
     

@@ -58,8 +58,10 @@ Class Core_res_assets extends Data_Core {
     // Load assets config
     $this->autoset['assets'] = array();
     $this->config->load('assets',true);
-    $this->settings = $this->config->get_item('assets');
+    $settings = $this->config->get_item('assets');
+    $this->settings = $settings;
     parent::__construct('res_assets');
+    $this->settings = array_merge($this->settings,$settings);
     // Add current filemanager_view setting:
     $user_id = $this->get_user_id();
     if ($user_id) {
@@ -737,6 +739,10 @@ Class Core_res_assets extends Data_Core {
       $select = $this->get_setting(array('files','select'));
     }
     $this->select( $select );
+
+    if (isset($this->settings['extra_fields'])) {
+      $this->select( el('extra_fields',$this->settings) );      
+    }
 
     
     // Van bepaalde user?
