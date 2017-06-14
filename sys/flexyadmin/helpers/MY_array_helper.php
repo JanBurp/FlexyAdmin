@@ -828,14 +828,20 @@ function array_sort_length($a) {
  *
  * @param string $v Te zoeken waarde
  * @param string $a Array
+ * @param int $offset [startpunt van te zoeken 'like' string]
  * @return mixed FALSE of gevonden key
  * @author Jan den Besten
  */
-function in_array_like($v,$a) {
+function in_array_like($v,$a,$offset=false) {
 	$in=false;
 	$i=each($a);
 	while (!empty($i['value']) and !$in) {
-		if (strpos($i['value'],$v)!==false) $in=$i['key'];
+		$pos = strpos($i['value'],$v);
+		if ($pos!==false) {
+			if ($offset===false or $pos===$offset) {
+				$in=$i['key'];
+			}
+		}
 		$i=each($a);
 	}
 	return $in;
@@ -847,7 +853,7 @@ function in_array_like($v,$a) {
  * @param array $a array waarin gezocht wordt
  * @param mixed $v waarde die gezocht wordt
  * @param string $key[''] Eventueel mee te geven key waarin gezoch moet worden
- * @param bool $like default=FALSE als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is
+ * @param bool $like default=FALSE als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is, of een vaste positie
  * @return array
  * 
  * @author Jan den Besten
@@ -856,24 +862,30 @@ function find_row_by_value($a,$v,$key='',$like=false) {
 	$found=array();
 	foreach ($a as $id=>$row) {
 		if (empty($key) and is_array($row)) {
-			if ($like) {
-				if (in_array_like($v,$row)) $found[$id]=$row;
+			if ($like!==false) {
+				if (in_array_like($v,$row,$like)) $found[$id]=$row;
 			}
 			else {
 				if (in_array($v,$row)) $found[$id]=$row;
 			}
 		}
 		elseif (is_array($row)) {
-			if ($like) {
+			if ($like===true) {
 				if (isset($row[$key]) and has_string($v,$row[$key])) $found[$id]=$row;
+			}
+			elseif ($like!==false) {
+				if (isset($row[$key]) and strpos($row[$key],$v)===$like) $found[$id]=$row;	
 			}
 			else {
 				if (isset($row[$key]) and $row[$key]==$v) $found[$id]=$row;
 			}
 		}
     else {
-			if ($like) {
+			if ($like!==false) {
 				if (has_string($v,$row)) $found[$id]=$row;
+			}
+			elseif ($like!==false) {
+				if (isset($row) and strpos($row,$v)===$like) $found[$id]=$row;	
 			}
 			else {
 				if ($row==$v) $found[$id]=$row;
