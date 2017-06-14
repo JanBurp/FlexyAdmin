@@ -228,8 +228,9 @@
         border-color:$brand-primary;
         box-shadow:0 0 .5rem $gray;
       }
-      
+
       td {
+        display:none;
         border:none;
         padding:0px;
         background-color:transparent;
@@ -237,7 +238,7 @@
       }
       
       td.action {
-        display:none;
+        // display:none;
         position:absolute;
         text-align:center;
         background-color:rgba(255,255,255,.8);
@@ -283,7 +284,7 @@
       td[name='size'],
       td[name='width'],
       td[name='height'] {
-        display:none
+        // display:none
       }
       
       
