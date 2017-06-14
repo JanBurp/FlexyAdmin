@@ -89,6 +89,20 @@ Class Core_tbl_menu extends Data_Core {
     $items = $this->get_menu_result();
     return el($uri,$items,FALSE);
   }
+
+
+  /**
+   * Geeft veld uit één item uit (samengesteld) menu
+   *
+   * @param string $uri 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_menu_field( $uri, $field ) {
+    $item = $this->get_menu_item($uri);
+    return el($field,$item,FALSE);
+  }
+
   
   
   /**
