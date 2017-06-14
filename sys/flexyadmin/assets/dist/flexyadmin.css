@@ -5815,13 +5815,13 @@ a > .fa, .btn > .fa {
     border-color: #696;
     box-shadow: 0 0 0.5rem #464a4c; }
   .grid.grid-media-view-thumbs table.grid-data tbody td, .grid.grid-media-view-small table.grid-data tbody td {
+    display: none;
     border: none;
     padding: 0px;
     background-color: transparent; }
     .grid.grid-media-view-thumbs table.grid-data tbody td input, .grid.grid-media-view-small table.grid-data tbody td input {
       text-align: center; }
   .grid.grid-media-view-thumbs table.grid-data tbody td.action, .grid.grid-media-view-small table.grid-data tbody td.action {
-    display: none;
     position: absolute;
     text-align: center;
     background-color: rgba(255, 255, 255, 0.8);
@@ -5856,22 +5856,6 @@ a > .fa, .btn > .fa {
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis; }
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name='name'],
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name='file'],
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name='path'],
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name='type'],
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name='date'],
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name='size'],
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name='width'],
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name='height'], .grid.grid-media-view-small table.grid-data tbody td[name='name'],
-  .grid.grid-media-view-small table.grid-data tbody td[name='file'],
-  .grid.grid-media-view-small table.grid-data tbody td[name='path'],
-  .grid.grid-media-view-small table.grid-data tbody td[name='type'],
-  .grid.grid-media-view-small table.grid-data tbody td[name='date'],
-  .grid.grid-media-view-small table.grid-data tbody td[name='size'],
-  .grid.grid-media-view-small table.grid-data tbody td[name='width'],
-  .grid.grid-media-view-small table.grid-data tbody td[name='height'] {
-    display: none; }
   .grid.grid-media-view-thumbs table.grid-data tbody tr.grid-upload, .grid.grid-media-view-small table.grid-data tbody tr.grid-upload {
     background-color: #f7f7f9;
     border: dashed 2px #D90; }
