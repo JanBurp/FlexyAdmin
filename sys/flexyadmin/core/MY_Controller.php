@@ -112,7 +112,7 @@ class MY_Controller extends CI_Controller {
             // Other Install options
             $this->_install();
             // Redirect
-            redirect($this->config->item('API_home'),'refresh');
+            redirect($this->config->item('API_home'),REDIRECT_METHOD);
 					}
 				}
 			}

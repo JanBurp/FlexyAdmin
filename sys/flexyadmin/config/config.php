@@ -9,7 +9,7 @@
  * - default - the basic and light flexyadmin template
  * - bootstrap - use bootstrap as a start
  */
-$config['framework']='default';
+$config['framework']='bootstrap';
 
 
 /**
@@ -73,6 +73,20 @@ $config['index_page'] = "";
 |
 */
 $config['uri_protocol']	= "PATH_INFO";
+
+
+/*
+|--------------------------------------------------------------------------
+| REDIRECT METHOD
+|--------------------------------------------------------------------------
+|
+| See CodeIgniter redirect()
+| ‘auto’, ‘location’ or ‘refresh’
+| This allows you to force a particular redirection method: location being faster but less reliable on IIS servers.
+*/
+
+$config['redirect_method'] = 'auto';
+define('REDIRECT_METHOD', 'auto');
 
 /*
 |--------------------------------------------------------------------------
