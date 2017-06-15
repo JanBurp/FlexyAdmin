@@ -173,8 +173,8 @@ class MY_Controller extends CI_Controller {
    * @return string uri
    * @author Jan den Besten
    */
-	public function find_module_uri($module,$full_uri=true) {
-    find_module_uri($module,$full_uri);
+	public function find_module_uri($module) {
+    find_module_uri($module);
 	}
   
 
