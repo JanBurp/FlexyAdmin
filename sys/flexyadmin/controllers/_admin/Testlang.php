@@ -53,7 +53,7 @@ class Testlang extends CI_Controller
     public function index ()
     {
         $this->load->helper('url');
-        redirect( $this->config->item('API_home').'testlang/summary','refresh');
+        redirect( $this->config->item('API_home').'testlang/summary',REDIRECT_METHOD);
     }
 
     public function lang_text ($idiom = 'english')
