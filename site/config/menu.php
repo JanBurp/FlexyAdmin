@@ -5,6 +5,7 @@
  * 
  * - Extra items aan het menu toevoegen
  * - Extra items vanuit een andere tabel toevoegen
+ * - Extra items toevoegen met een model.method
  * - Splitsen op taal
  * 
  * Eén item toevoegen
@@ -46,12 +47,21 @@
  * ...
  */
 
+
 /**
  * Bewaar cache van menu.
  * Tijdens developen kan het handig zijn dit uit te zetten
  */
 
 $config['caching'] = TRUE;
+
+/**
+ * Splits het menu in meerdere talen
+ */
+// $config['languages'] 				= array('nl','en');
+// $config['language_fields']		= array('str_title','txt_text');
+
+
 
 /**
  * Default: Alleen tbl_menu
@@ -123,3 +133,39 @@ $config['caching'] = TRUE;
 //     'where'    => NULL,
 //   ),
 // );
+
+
+/**
+ * Voorbeeld waarbij items vanuit een andere tabel als subpagina's kan worden toegevoegd, maar dan afhankelijk van het bestaande menu-item.
+ * Ander tabel geeft dan een koppeling met id_menu.
+ */
+// $config['menu'] = array(
+//   array(
+//     'type'  => 'table',
+//     'table' => 'tbl_menu',
+//   ),
+// 	array(
+//   	'place'    => array( 'str_module'=>'category' ),
+//   	'type'     => 'grouped',
+//   	'table'    => 'tbl_projecten',
+//   	'grouped_by' => array( 'id' => 'tbl_projecten.id_menu' ),
+// 	),
+// );
+
+/**
+ * Voorbeeld waarbij items doormiddel van een model worden toegevoegd
+ */
+// $config['menu'] = array(
+//   array(
+//     'type'  => 'table',
+//     'table' => 'tbl_menu',
+//   ),
+// 	 array(
+// 	   'type'       => 'model',
+// 	   'place'      => array( 'str_module' => 'example' ),
+// 	   'model'      => 'example.method',
+// 	 ),
+//   
+// );
+
+
