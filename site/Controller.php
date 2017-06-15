@@ -201,7 +201,7 @@ class Main extends FrontEndController {
         if (el('str_anchor',$page,'')) {
           $newUri.='#'.$page['str_anchor'];
         }
-				redirect($newUri,'refresh');
+				redirect($newUri,REDIRECT_METHOD);
 			}
 		}
 	}

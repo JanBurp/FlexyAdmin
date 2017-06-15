@@ -26,7 +26,7 @@ class Update extends BasicController {
 
   public function index() {
     if (!$this->flexy_auth->is_super_admin() and !IS_LOCALHOST) {
-      redirect($this->config->item('API_home'),'refresh');
+      redirect($this->config->item('API_home'),REDIRECT_METHOD);
     };
     
     $latest     = $this->_latest_tag();
