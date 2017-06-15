@@ -190,15 +190,15 @@ Class Core_tbl_menu extends Data_Core {
       // Visible & Restricted
       $item['b_visible']    = el('b_visible',$item,true);
       $item['b_restricted'] = el('b_restricted',$item,false);
-      
-      // Test if parent is visible/restricted
+
+           // Test if parent is visible/restricted
       $uri      = $item['uri'];
       $full_uri = $item['full_uri'];
       if ( $full_uri!=$item['uri'] ) {
         $parent_uri = remove_suffix($item['full_uri'],'/');
         if ($parent_uri!='') {
-          $item['b_visible']    = el($parent_uri,$b_visible,true);
-          $item['b_restricted'] = el($parent_uri,$b_restricted,false);
+          if (!el($parent_uri,$b_visible,true))     $item['b_visible'] = false;
+          if (el($parent_uri,$b_restricted,false))  $item['b_restricted'] = true;
         }
       }
       $b_visible[$full_uri] = $item['b_visible'];
