@@ -21,3 +21,7 @@ UPDATE `cfg_media_info` SET `str_order` = 'name' WHERE `str_order` = 'file';
 UPDATE `cfg_media_info` SET `str_order` = '_name' WHERE `str_order` = '_file';
 UPDATE `cfg_media_info` SET `str_order` = 'rawdate' WHERE `str_order` = 'date';
 UPDATE `cfg_media_info` SET `str_order` = '_rawdate' WHERE `str_order` = '_date';
+
+
+UPDATE `cfg_email` SET `txt_email_nl` = '<h1>Je nieuwe inloggevens voor {site_title}:</h1>\n<p>Gebruiker: {identity}<br /> Wachtwoord: {password}</p>' WHERE `key` = 'login_new_password';
+
