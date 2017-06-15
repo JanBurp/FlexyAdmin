@@ -74,6 +74,7 @@ Class Core_tbl_menu extends Data_Core {
       if ($this->_menu_caching) $this->cache_result($menu_result,$cache_name);
     }
     // trace_($menu_result);
+    // trace_( array_column($menu_result, 'uri','full_uri') );
     return $menu_result;
   }
   
@@ -147,16 +148,43 @@ Class Core_tbl_menu extends Data_Core {
           $this->_add_menu_table($menu_item);
           break;
 
+        case 'grouped':
+          $this->_add_grouped_table($menu_item);
+          break;
+
+
         case 'model':
           $this->_add_menu_from_model($menu_item);
           break;
       }
     }
     
-    // Reorder merged menu & zorg dat children b_visible en b_restricted overnemen (als nodig)
+    // - Reorder merged menu
+    // - Zorg dat children b_visible en b_restricted overnemen (als nodig)
+    // - Language split als nodig
     $order = 0;
+    $max_order = count($this->_menu);
+    
     $b_visible    = array();
     $b_restricted = array();
+
+    // Voorbereiding voor languages
+    $languages = $this->config->get_item(array('menu','languages'));
+    if ($languages) {
+      $language_fields = $this->config->get_item(array('menu','language_fields'));
+      $extra_lang_menu = array();
+      foreach ($languages as $lang_key => $lang) {
+        $extra_lang_menu[$lang] = array();
+        // Parent
+        $extra_lang_menu[$lang][$lang] = array(
+          'order'    => $lang_key * ($max_order + 1),
+          'full_uri' => $lang,
+          'uri'      => $lang,
+          '_lang'    => $lang,
+        );
+      }
+    }
+
     foreach ($this->_menu as $key => $item) {
       
       // Visible & Restricted
@@ -179,8 +207,47 @@ Class Core_tbl_menu extends Data_Core {
       // Add Order
       $item['order'] = $order++;
 
+      // More languages?
+      if ($languages) {
+        $base_lang = current($languages);
+        // lang_fields in normale item
+        foreach ($language_fields as $lang_field) {
+          if (isset($item[$lang_field.'_'.$lang])) {
+            $item[$lang_field] = $item[$lang_field.'_'.$lang];
+            if (empty($item[$lang_field])) $item[$lang_field] = $item[$lang_field.'_'.$base_lang];
+          }
+        }
+        // Extra items
+        foreach ($languages as $lang_key => $lang) {
+          $lang_item = $item;
+          $full_uri = $lang.'/'.$lang_item['full_uri'];
+          $lang_item['full_uri'] = $full_uri;
+          $lang_item['_lang'] = $lang;
+          $lang_item['order'] += $lang_key * ($max_order + 1);
+          foreach ($language_fields as $lang_field) {
+            if (isset($lang_item[$lang_field.'_'.$lang])) {
+              $lang_item[$lang_field] = $lang_item[$lang_field.'_'.$lang];
+              if (empty($lang_item[$lang_field])) $lang_item[$lang_field] = $lang_item[$lang_field.'_'.$base_lang];
+            }
+          }
+          // Add lang item
+          $extra_lang_menu[$lang][$full_uri] = $lang_item;
+        }
+      }
+
+      // Add (normal) item
       $this->_menu[$key] = $item;      
+
     }
+
+    // Merge language menus
+    if ($languages) {
+      $this->_menu = array();
+      foreach ($extra_lang_menu as $lang => $lang_menu) {
+        $this->_menu = array_merge($this->_menu,$lang_menu);
+      }
+    }
+
     return $this->_menu;
   }
   
@@ -335,6 +402,62 @@ Class Core_tbl_menu extends Data_Core {
     }
   }
   
+/**
+   * Voeg tabel gegroupeerd als sub-pagina's toe aan het menu
+   *
+   * @param array $item 
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _add_grouped_table($item) {
+    $table = $item['table'];
+    
+    $this->data->table($table);
+
+    // Set result_key to full_uri
+    $result_key = $this->data->get_setting('result_key');
+    if ($this->data->field_exists('self_parent')) {
+      $this->data->tree('full_uri','uri');
+      $this->data->set_result_key('full_uri');
+    }
+    else {
+      $this->data->set_result_key('uri');
+    }
+    
+    // Add Grouped data
+    foreach ($this->_menu as $menu_item) {
+      $place = false;
+      foreach ($item['place'] as $key => $value) {
+        if ($menu_item[$key]==$value) $place = $menu_item['uri'];
+      }
+      if ($place!==false) {
+        foreach ($item['grouped_by'] as $key => $field) {
+          $this->data->where($field,$menu_item[$key]);
+        }
+        if (isset($item['where']))    $this->data->where($item['where']);
+        if (isset($item['order_by'])) $this->data->order_by($item['order_by']);
+        $data_items = $this->data->get_result( el('limit',$item,0), el('offset',$item,0) );
+
+        // Add
+        $items = array();
+        foreach ($data_items as $key => $row) {
+          if (isset($item['item'])) $row = array_merge($row,$item['item']);
+          $full_uri         = $place.'/'.el('full_uri',$row, el('uri',$row));
+          $row['full_uri']  = $full_uri;
+          $row['_table']    = $table;
+          $row['self_parent'] = $menu_item['id'];
+          $items[$full_uri] = $row;
+        }
+        $this->_menu      = array_add_after( $this->_menu, $place, $items ); 
+      }
+    }
+
+    // restore
+    $this->data->set_result_key($result_key);
+    $this->data->table('tbl_menu');
+  }
+
+
 /**
    * Voeg menu items toe dmv extern model
    *
