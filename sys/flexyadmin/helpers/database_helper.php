@@ -197,54 +197,40 @@ function get_fields_from_input($wildfields,$tables='') {
  * Geeft de uri van een pagina met de gevraagde module
  *
  * @param string $module 
- * @param bool $full_uri default=true
- * @param string $table  default=''
  * @return string uri
  * @author Jan den Besten
  */
-function find_module_uri($module,$full_uri=true,$table='') {
+function find_module_uri($module) {
   $CI=&get_instance();
-  $CI->data->table('tbl_menu');
-  if ($full_uri) $full_uri = $CI->data->field_exists('self_parent');
+  $menu_items = $CI->data->table('tbl_menu')->get_menu_result();
+  $module_items = find_row_by_value($menu_items,$module,'str_module',true);
+  $item=current($module_items);
   
-	$CI->data->select('id,uri');
-  if ($table) $CI->data->where('str_table',$table);
-	if ($full_uri) {
-		$CI->data->select('order,self_parent');
-		$CI->data->tree('uri');
-	}
-	if ( get_prefix($CI->config->item('module_field'))==='id' ) {
-		// Modules from foreign table
-		$foreign_key=$CI->config->item('module_field');
-		$foreign_field='str_'.get_suffix($CI->config->item('module_field'));
-		$foreign_table=foreign_table_from_key($foreign_key);
-		$CI->data->with('many_to_one');
-		$like_field = $foreign_table.'__'.$foreign_field;
-	}
-	else {
-		// Modules direct from field
-		$like_field = $CI->config->item('module_field');
-	}
+ //  if ($full_uri) $full_uri = $CI->data->field_exists('self_parent');
   
-	$CI->data->like( $CI->config->item('module_field'), $module );
-  if ($full_uri) {
-    $CI->data->order_by('order');
-  }
-  else {
-    $CI->data->order_by('id');
-  }
-	$items = $CI->data->cache()->get_result();
+	// $CI->data->select('id,uri');
+	// if ($full_uri) {
+	// 	$CI->data->select('order,self_parent');
+	// 	$CI->data->tree('uri');
+	// }
+	// if ( get_prefix($CI->config->item('module_field'))==='id' ) {
+	// 	// Modules from foreign table
+	// 	$foreign_key=$CI->config->item('module_field');
+	// 	$foreign_field='str_'.get_suffix($CI->config->item('module_field'));
+	// 	$foreign_table=foreign_table_from_key($foreign_key);
+	// 	$CI->data->with('many_to_one');
+	// 	$like_field = $foreign_table.'__'.$foreign_field;
+	// }
+	// else {
+	// 	// Modules direct from field
+	// 	$like_field = $CI->config->item('module_field');
+	// }
   
-  // oeps er zijn er meer.... pak dan degene die het hoogts in de menustructuur zit en het eerst voorkomt op dat nivo
-  if (count($items)>1) {
-    foreach ($items as $id => $item) {
-      $items[$id]['_level']=substr_count($item['uri'],'/');
-    }
-    $items=sort_by($items,array('_level','order'));
-  }
-  reset($items);
-  $item=current($items);
-	return $item['uri'];
+	// $CI->data->like( $CI->config->item('module_field'), $module );
+ //  $CI->data->order_by('order');
+	// $items = $CI->data->cache()->get_result();
+ //  $item=current($items);
+	return $item['full_uri'];
 }
 
 /**
