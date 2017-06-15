@@ -2014,7 +2014,7 @@ Class Data_Core extends CI_Model {
           $page = (int) floor($jump_offset / $this->tm_limit);
           $this->tm_offset = $page * $this->tm_limit;
           $sql = str_replace( 'LIMIT '.$this->tm_limit, 'LIMIT '.$this->tm_offset.','.$this->tm_limit, $last_full_sql);
-          $this->create_cache_name($sql);
+          $this->create_cache_name($sql,true);
           $query = $this->db->query( $sql );
           $this->query_info['today'] = true;
         }
@@ -2089,7 +2089,7 @@ Class Data_Core extends CI_Model {
     $this->db->offset( $this->tm_offset );
     
     // Cache name
-    $this->create_cache_name( $this->db->get_compiled_select( '',FALSE ) );
+    $this->create_cache_name( $this->db->get_compiled_select( '',FALSE ), true );
     
     $this->tm_query_prepared = TRUE;
     return $this;
@@ -2497,11 +2497,16 @@ Class Data_Core extends CI_Model {
    * Maakt naam voor cache bestand specifiek voor deze query
    *
    * @param string $sql 
+   * @param bool $hash[false]
    * @return string
    * @author Jan den Besten
    */
-  public function create_cache_name($sql) {
-    $this->tm_cache_name = 'data_result_'.$this->settings['table'].'_'.md5($sql);
+  public function create_cache_name($name,$hash=false) {
+    $this->tm_cache_name = 'data_result_'.$this->settings['table'].'_';
+    if ($hash)
+      $this->tm_cache_name .= md5($name);
+    else
+      $this->tm_cache_name .= $name;
     return $this->tm_cache_name;
   }
   
