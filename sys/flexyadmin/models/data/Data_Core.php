@@ -2014,7 +2014,7 @@ Class Data_Core extends CI_Model {
           $page = (int) floor($jump_offset / $this->tm_limit);
           $this->tm_offset = $page * $this->tm_limit;
           $sql = str_replace( 'LIMIT '.$this->tm_limit, 'LIMIT '.$this->tm_offset.','.$this->tm_limit, $last_full_sql);
-          $this->_create_cache_name($sql);
+          $this->create_cache_name($sql);
           $query = $this->db->query( $sql );
           $this->query_info['today'] = true;
         }
@@ -2089,7 +2089,7 @@ Class Data_Core extends CI_Model {
     $this->db->offset( $this->tm_offset );
     
     // Cache name
-    $this->_create_cache_name( $this->db->get_compiled_select( '',FALSE ) );
+    $this->create_cache_name( $this->db->get_compiled_select( '',FALSE ) );
     
     $this->tm_query_prepared = TRUE;
     return $this;
@@ -2359,7 +2359,7 @@ Class Data_Core extends CI_Model {
     // First check if there is a cached result
     if ($this->tm_cache_result) {
       $this->_prepare_query($limit,$offset);
-      $result = $this->_get_cached_result();
+      $result = $this->get_cached_result();
       if ($result) {
         $this->reset();
         return $result;
@@ -2371,7 +2371,7 @@ Class Data_Core extends CI_Model {
     $query = $this->get( $limit, $offset, FALSE );
     if ($query) {
       $result = $this->_make_result_array( $query );
-      if ($this->tm_cache_result) $this->_cache_result($result);
+      if ($this->tm_cache_result) $this->cache_result($result);
       $query->free_result();
     }
 
@@ -2500,7 +2500,7 @@ Class Data_Core extends CI_Model {
    * @return string
    * @author Jan den Besten
    */
-  private function _create_cache_name($sql) {
+  public function create_cache_name($sql) {
     $this->tm_cache_name = 'data_result_'.$this->settings['table'].'_'.md5($sql);
     return $this->tm_cache_name;
   }
@@ -2512,7 +2512,7 @@ Class Data_Core extends CI_Model {
    * @return this
    * @author Jan den Besten
    */
-  protected function _cache_result($result,$name='') {
+  public function cache_result($result,$name='') {
     if (empty($name)) $name = $this->tm_cache_name;
     $cache = array(
       'query_info'  => $this->get_query_info(),
@@ -2528,7 +2528,7 @@ Class Data_Core extends CI_Model {
    * @return mixed
    * @author Jan den Besten
    */
-  protected function _get_cached_result($name='') {
+  public function get_cached_result($name='') {
     if (empty($name)) $name = $this->tm_cache_name;
     $cached = $this->cache->get( $name );
     if ($cached) {
