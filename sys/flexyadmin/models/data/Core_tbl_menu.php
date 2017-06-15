@@ -67,11 +67,11 @@ Class Core_tbl_menu extends Data_Core {
     $menu_result = FALSE;
     if ($this->_menu_caching) {
       $cache_name = 'data_result_'.$this->settings['table'].'_menu_result';
-      $menu_result = $this->_get_cached_result( $cache_name );
+      $menu_result = $this->get_cached_result( $cache_name );
     }
     if (!$menu_result) {
       $menu_result = $this->_create_menu_result();
-      if ($this->_menu_caching) $this->_cache_result($menu_result,$cache_name);
+      if ($this->_menu_caching) $this->cache_result($menu_result,$cache_name);
     }
     // trace_($menu_result);
     return $menu_result;
