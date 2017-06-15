@@ -504,7 +504,7 @@ Class Core_res_assets extends Data_Core {
     $name = $path.'/'.$file;
     $info = el($name,$this->file_info,FALSE);
     if (!$info) {
-      $info = $this->where('file',$file)->where('path',$path)->cache()->get_row();
+      $info = $this->where('file',$file)->where('path',$path)->get_row();
       $this->file_info[$name] = $info;
     }
     return $info;
