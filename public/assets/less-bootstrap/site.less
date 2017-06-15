@@ -7,6 +7,7 @@
 //
 // Algemene zaken
 // 
+.fa {line-height: @line-height-base!important;}
 h1,h2,h3,h4 {margin:0;}
 h1 {margin-bottom:1rem;}
 p {margin:0 0 1rem}
@@ -15,12 +16,15 @@ img {max-width:100%;}
 .btn.active, .btn:active {box-shadow: none}
 .error {color:@brand-warning;}
 
+        // color: @navbar-default-link-hover-color;
+        // background-color: @navbar-default-link-hover-bg;
 
 
 //
 // Navigatie
 // 
 .navbar {
+  border:none;
   border-radius:0;
   .container {
     padding:0;width:100%;
@@ -35,7 +39,11 @@ img {max-width:100%;}
           > a:hover { width:100%; }
         }
       }
-      .dropdown-menu {padding:0;border-radius: 0;}
+      .dropdown-menu {
+        padding:0;
+        border-radius: 0;
+        border:none;
+      }
     }
   }
 }
