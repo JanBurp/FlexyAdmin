@@ -17,8 +17,10 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
       var selectedImage = false;
       if (selected!=='') {
         var matches = selected.match(/<img.*?src="([^"]*?)"/);
-        selectedImage = matches[1];
-        selectedImage = selectedImage.substr( selectedImage.lastIndexOf('/')+1 );
+        if (matches) {
+          selectedImage = matches[1];
+          selectedImage = selectedImage.substr( selectedImage.lastIndexOf('/')+1 );
+        }
       }
       var url='_admin/editor/image?selected='+selectedImage;
       
