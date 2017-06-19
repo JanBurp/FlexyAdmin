@@ -22,23 +22,39 @@ class Plugin_resize_images extends Plugin {
       $maps=$this->CI->assets->get_assets_folders(FALSE);
     }
 
-    $actiondata=array();
-    
+    $content = '';
+        
     foreach ($maps as $map) {
-      $this->add_message(h('Resize images in `'.$map.'`'));
+      $actiondata=array();
+
       $files=read_map(assets().$map,FALSE,FALSE,FALSE);
       
       foreach ($files as $key => $file) {
-        if (substr($key,0,1)!='_') $actiondata[]=array('action_url'=> $this->CI->config->item('API_home').'ajax/plugin/resize_images/'.$map.'/'.$file['name'], 'title'=>$map.'/'.$file['name']);
+        if (substr($key,0,1)!='_') {
+          if (in_array($file['type'], $this->CI->config->item('FILE_types_img'))) {
+            $actiondata[]=array(
+              'action'  => $this->CI->config->item('API_home').'ajax/plugin/resize_images/'.$map.'/'.$file['name'],
+              'title'   => $map.'/'.$file['name'],
+              'result'  => false,
+            );
+          }
+        }
       }
+
+      $gridData = array(
+        'title'   => $map,
+        
+        'headers' => array(
+          'action'  => 'action',
+          'title'   => 'title',
+          'result'  => 'result',
+        ),
+        'data'    => $actiondata,
+      );
+      $content .= $this->CI->load->view("admin/grid",$gridData,true) ;
     }
-    
-    if ($actiondata) {
-      $this->CI->actiongrid->add_actions($actiondata);
-      $this->add_content( $this->CI->actiongrid->view() );
-    }
-    
-    return $this->view();
+
+    return $content;
 	}
   
   
