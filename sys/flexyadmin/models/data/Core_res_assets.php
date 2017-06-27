@@ -354,7 +354,7 @@ Class Core_res_assets extends Data_Core {
     );
     $config = array_merge($config,$extra_config);
     $path_settings = $this->get_folder_settings($path);
-    
+
     // Start upload
 		$this->upload->config($config);
     if ( !$this->upload->upload_file( $file_field ) ) {
@@ -385,14 +385,16 @@ Class Core_res_assets extends Data_Core {
         $this->error_message = langp('upload_img_too_small',$file);
         return FALSE;
       }
+
+      // Resize
+      if ( !$this->upload->resize_image( $path,$file,$path_settings ) ) {
+        $this->delete_file($path,$file);
+        $this->error_message = langp('upload_resize_error',$file);
+        return FALSE;
+      }
+
     }
     
-    // Resize
-    if ( !$this->upload->resize_image( $path,$file,$path_settings ) ) {
-      $this->delete_file($path,$file);
-      $this->error_message = langp('upload_resize_error',$file);
-      return FALSE;
-    }
     
     // Stop in database
     $this->insert_file($path,$file);
