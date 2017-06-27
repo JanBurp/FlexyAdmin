@@ -114,6 +114,7 @@ Class Core_tbl_menu extends Data_Core {
     $items = $this->get_menu_result();
     if ($uri!='') $items = find_row_by_value($items,$uri.'/','full_uri',0);
     if ($items) {
+      reset($items);
       return current($items);
     }
     return false;
