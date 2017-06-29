@@ -142,6 +142,7 @@ export default {
     },
     
     startEdit : function() {
+      console.log('startEdit');
       if (this.editable && !this.readonly) {
         this.isEditing = true;
         this.oldItem = this.item;
