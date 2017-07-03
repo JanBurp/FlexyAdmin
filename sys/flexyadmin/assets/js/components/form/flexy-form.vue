@@ -539,6 +539,7 @@ export default {
     },
     
     updateField : function( field, value ) {
+      console.log('updateField',field,value);
       // this.validationErrors = {};
       if (this.row[field]!==value) {
         this.row[field] = value;
@@ -713,7 +714,7 @@ export default {
 
                 <template v-if="isType('checkbox',field)">
                   <!-- Checkbox -->
-                  <input class="form-check-input" type="checkbox" :id="field" :name="field" :checked="row[field]" @input="updateField(field,$event.target.checked)">
+                  <input class="form-check-input" type="checkbox" :id="field" :name="field" :checked="row[field]" @click="updateField(field,$event.target.checked)">
                 </template>
 
                 <template v-if="isType('datepicker',field)">
