@@ -429,7 +429,7 @@ Class Core_tbl_menu extends Data_Core {
     foreach ($this->_menu as $menu_item) {
       $place = false;
       foreach ($item['place'] as $key => $value) {
-        if ($menu_item[$key]==$value) $place = $menu_item['uri'];
+        if ($menu_item[$key]==$value) $place = $menu_item['full_uri'];
       }
       if ($place!==false) {
         foreach ($item['grouped_by'] as $key => $field) {
