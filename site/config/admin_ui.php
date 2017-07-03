@@ -25,6 +25,7 @@ $config['side_menu']['media'] = array(
  */
 $config['wysiwyg'] = array(
   'plugins'                   => 'fullscreen,paste,textpattern,wordcount,lists,table,flexy_image,imagetools,flexy_link,autolink,charmap,media,code,visualblocks,preview',
+  'content_css'               => 'assets/css/admin.css',
   
   'max-height'                 => 400,
   'autoresize_max_height'     => 500,
@@ -38,10 +39,17 @@ $config['wysiwyg'] = array(
   'link_context_toolbar'      => true,
 
   'image_dimensions'          => false,
+  'imagetools_toolbar'        => 'rotateleft rotateright | flipv fliph | editimage',// imageoptions',
   
+  'style_formats'             => array(
+    array('title' => 'Paragraaf', 'block'=>'p'),
+    array('title' => 'Tussenkop 1', 'block'=>'h2'),
+    array('title' => 'Tussenkop 2', 'block'=>'h3'),
+  ),
+
   // 'menubar'                   => "edit format table tools",
   'menubar'                   => false,
-  'toolbar1'                  => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | flexy_link unlink | charmap flexy_image media | visualblocks preview fullscreen | code',
+  'toolbar1'                  => 'cut copy paste | undo redo | bold italic styleselect | alignleft aligncenter alignright | bullist numlist | flexy_link unlink | charmap flexy_image media | visualblocks preview fullscreen | code',
 );
 
 
