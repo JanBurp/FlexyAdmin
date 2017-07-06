@@ -2,7 +2,7 @@ Changes 3.5.0
 =============
 
 - data settings has new 'cache_group'
-- Update to CI 3.1.4
+- Update to CI 3.1.5
 - UI with Vue & Bootstrap
 - Models: Filemanager, Mediatable removed and replaced with Assets
 - DB: FlexyAdmin db-> extensions depricated, and standard not loaded.

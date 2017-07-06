@@ -106,7 +106,7 @@ function &DB($params = '', $query_builder_override = NULL)
 		  $active_group = "phpunit";
 		}
 		// end JDB
-		
+
 		$params = $db[$active_group];
 	}
 	elseif (is_string($params))
@@ -209,8 +209,8 @@ function &DB($params = '', $query_builder_override = NULL)
 
   // COMMENT THIS: JdB
 	// Instantiate the DB adapter
-  // $driver = 'CI_DB_'.$params['dbdriver'].'_driver';
-  // $DB = new $driver($params);
+	// $driver = 'CI_DB_'.$params['dbdriver'].'_driver';
+	// $DB = new $driver($params);
 
   // JdB, changes from here. 2015-05-02 - Loading old DB driver
   $my_driver = config_item('subclass_prefix').'DB_mysqli_driver';
