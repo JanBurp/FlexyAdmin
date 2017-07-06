@@ -344,8 +344,11 @@ Class Core_tbl_menu extends Data_Core {
    */
   private function _add_menu_items($item) {
     $places = $this->_determine_menu_item_places($item);
+    $nr = 1;
     foreach ($item['items'] as $sub_item) {
+      if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $sub_item['b_visible'] = FALSE;
       $this->_add_menu_item($sub_item,$places);
+      $nr++;
     }
   }
 
@@ -384,6 +387,7 @@ Class Core_tbl_menu extends Data_Core {
     $places = $this->_determine_menu_item_places($item);
     foreach ($places as $place) {
       $items = $data_items;
+      $nr = 1;
       if ($place['pre_uri']) {
         foreach ($items as $key => $row) {
           unset($items[$key]);
@@ -391,7 +395,9 @@ Class Core_tbl_menu extends Data_Core {
           $full_uri         = $place['pre_uri'].'/'.el('full_uri',$row, el('uri',$row));
           $row['full_uri']  = $full_uri;
           $row['_table']    = $table;
+          if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $row['b_visible'] = FALSE;
           $items[$full_uri] = $row;
+          $nr++;
         }
       }
 
@@ -440,6 +446,7 @@ Class Core_tbl_menu extends Data_Core {
         $data_items = $this->data->get_result( el('limit',$item,0), el('offset',$item,0) );
 
         // Add
+        $nr=1;
         $items = array();
         foreach ($data_items as $key => $row) {
           if (isset($item['item'])) $row = array_merge($row,$item['item']);
@@ -447,7 +454,9 @@ Class Core_tbl_menu extends Data_Core {
           $row['full_uri']  = $full_uri;
           $row['_table']    = $table;
           $row['self_parent'] = $menu_item['id'];
+          if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $row['b_visible'] = FALSE;
           $items[$full_uri] = $row;
+          $nr++;
         }
         $this->_menu      = array_add_after( $this->_menu, $place, $items ); 
       }
@@ -476,6 +485,7 @@ Class Core_tbl_menu extends Data_Core {
     $this->data->table('tbl_menu');
     $places = $this->_determine_menu_item_places($item);
     foreach ($places as $place) {
+      $nr=1;
       $items = $data_items;
       if ($place['pre_uri']) {
         foreach ($items as $key => $row) {
@@ -483,7 +493,9 @@ Class Core_tbl_menu extends Data_Core {
           if (isset($item['item'])) $row = array_merge($row,$item['item']);
           $full_uri         = $place['pre_uri'].'/'.el('full_uri',$row, el('uri',$row));
           $row['full_uri']  = $full_uri;
+          if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $row['b_visible'] = FALSE;
           $items[$full_uri] = $row;
+          $nr++;
         }
       }
 

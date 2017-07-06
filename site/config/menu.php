@@ -104,13 +104,14 @@ $config['caching'] = TRUE;
 //     'table' => 'tbl_menu',
 //   ),
 //   array(
-//     'place'    => 'blog',
-//     'type'     => 'table',
-//     'table'    => 'tbl_blog',
-//     'order_by' => 'dat_date DESC',
-//     'limit'    => 0,
-//     'offset'   => 0,
-//     'where'    => NULL,
+//     'place'         => 'blog',
+//     'type'          => 'table',
+//     'table'         => 'tbl_blog',
+//     'order_by'      => 'dat_date DESC',
+//     'visible_limit' => 3,
+//     'limit'         => 0,
+//     'offset'        => 0,
+//     'where'         => NULL,
 //   ),
 // );
 
