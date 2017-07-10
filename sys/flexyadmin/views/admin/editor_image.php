@@ -16,27 +16,31 @@
 
 <body>
 
-<div id="main">
+<div id="main" class="editor-popup">
 
-  <flexy-grid
-    type   = "media"
-    api    = "table"
-    name   = "pictures"
-    title  = "Afbeeldingen"
-    offset = "0"
-    limit  = "10"
-    order  = ""
-    filter = ""
-    <?php if (isset($selection)): ?>
-    :selection = "<?=htmlentities(array2json($selection),ENT_QUOTES, 'UTF-8')?>"
-    <?php endif ?>
-    :multiple = "false"
-  ></flexy-grid>
+  <div class="card form">
+    <div class="card-block">
+
+      <!-- Alt -->
+      <div class="form-group row">
+        <label class="col-sm-3 form-control-label" for="alt">{{$lang.img_popup_alt}}</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" id="alt" name="alt" value="<?=$alt?>">
+        </div>
+      </div>
+      
+      <!-- Mediapiacker -->
+      <div class="form-group row">
+        <label class="col-sm-3 form-control-label" for="alt">{{$lang.img_popup_src}}</label>
+        <div class="col-sm-9">
+          <mediapicker id="src" name="src" value="<?=$src?>" path="<?=$path?>"></mediapicker>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
 </div>
-
-
-
 
 <script type="text/javascript" charset="utf-8">
 var _flexy = {

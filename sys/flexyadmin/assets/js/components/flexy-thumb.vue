@@ -54,7 +54,7 @@ export default {
 </script>
 
 <template>
-  <div v-once class="flexy-thumb">
+  <div class="flexy-thumb">
     <img v-if="type==='image'" :class="mediaClass" :src="src" :alt="alt" :title="alt">
     <span v-if="type!=='image'" class="fa" :class="type" :title="src"></span>
   </div>
