@@ -5420,6 +5420,9 @@ a > .fa, .btn > .fa {
     .card .card > .card-block .form-group {
       margin-bottom: .5rem; }
 
+.editor-popup .card {
+  border: none; }
+
 [v-cloak] {
   display: none; }
 
@@ -5721,15 +5724,13 @@ a > .fa, .btn > .fa {
       position: relative;
       float: right;
       margin-top: 1px; }
-  .grid #dropdown-sort {
-    position: absolute; }
-    .grid #dropdown-sort .dropdown-menu {
-      min-width: 4rem; }
-    .grid #dropdown-sort .dropdown-item {
-      padding: .1rem 1rem .1rem .35rem;
-      padding-left: 2rem; }
-    .grid #dropdown-sort .dropdown-item.selected {
-      padding-left: .35rem; }
+  .grid #dropdown-sort .dropdown-menu {
+    min-width: 4rem; }
+  .grid #dropdown-sort .dropdown-item {
+    padding: .1rem 1rem .1rem .35rem;
+    padding-left: 2rem; }
+  .grid #dropdown-sort .dropdown-item.selected {
+    padding-left: .35rem; }
   .grid #dropdown-sort.dropdown.open .dropdown-menu {
     display: block; }
   .grid th.grid-header-type-hidden.text-primary {
@@ -6156,5 +6157,3 @@ body.uri-plugin__stats #content .card-block {
       body.uri-plugin__stats #content .card-block .card table .vertical-text {
         display: block;
         text-align: center; }
-
-/*# sourceMappingURL=flexyadmin.css.map*/

@@ -49,6 +49,10 @@ $lang['vue_form_save_error']         = "<b>FOUT</b> tijdens bewaren. Probeer nog
 $lang['vue_error_api']               = "<b>FOUT</b>. Contact met de server is mislukt. Probeer nog eens.";
 $lang['vue_error_delete']            = "<b>FOUT</b>. Niet gelukt om item(s) te verwijderen.";
 
+$lang['vue_img_popup_alt']           = "Titel";
+$lang['vue_img_popup_src']           = "Afbeelding";
+
+
 $lang['vue_strap_lang'] = array(
   'daysOfWeek'    => array('Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'),
   'limit'         => 'Maximum bereikt (maximaal {{limit}} items).',

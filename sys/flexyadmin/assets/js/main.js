@@ -22,7 +22,7 @@ import FlexyModal       from './components/flexy-modal.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
-
+import mediapicker      from './components/form/mediapicker.vue'
 
 // Import TinyMCE
 import tinymce from 'tinymce/tinymce';
@@ -69,7 +69,8 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
       FlexyPagination,
       FlexyGrid,
       FlexyForm,
-      FlexyAccordion
+      FlexyAccordion,
+      mediapicker,
     },
     data : {
       state : flexyState.state,
