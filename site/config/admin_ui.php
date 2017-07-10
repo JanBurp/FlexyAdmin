@@ -27,7 +27,7 @@ $config['wysiwyg'] = array(
   'plugins'                   => 'fullscreen,paste,textpattern,wordcount,lists,table,flexy_image,imagetools,flexy_link,autolink,charmap,media,code,visualblocks,preview',
   'content_css'               => 'assets/css/admin.css',
   
-  'max-height'                 => 400,
+  'max-height'                => 400,
   'autoresize_max_height'     => 500,
   
   'paste_as_text'             => true,
@@ -38,8 +38,14 @@ $config['wysiwyg'] = array(
   'link_title'                => false,
   'link_context_toolbar'      => true,
 
+  // 'image_caption'             => false,
+  // 'image_advtab'              => true,
   'image_dimensions'          => false,
-  'imagetools_toolbar'        => 'rotateleft rotateright | flipv fliph | editimage',// imageoptions',
+  'image_class_list'          => array(
+                                    array( 'title'=>'Left',  'value'=>'pull-left'),
+                                    array( 'title'=>'Right', 'value'=>'pull-right'),
+                                  ),
+  'imagetools_toolbar'        => 'rotateleft rotateright | flipv fliph | editimage ', //' imageoptions',
   
   'style_formats'             => array(
     array('title' => 'Paragraaf', 'block'=>'p'),

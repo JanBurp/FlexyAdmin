@@ -251,6 +251,7 @@ export default {
       if (this.apiParts.offset > 0) {
         this.apiParts.offset = Math.floor( this.apiParts.offset / this.apiParts.limit) * this.apiParts.limit
       }
+      console.log(rows,max_items);
       
       // Reload needed?
       var changed = (new_limit!==this.apiParts.limit || new_offset!==this.apiParts.offset);
@@ -488,26 +489,15 @@ export default {
       }
       var index = this.selected.indexOf(id);
       // console.log('select',id,this.selected,index);
-      if (index>-1) {
+
+      if (index > -1) {
         this.selected.splice(index, 1);
-        if (this.mediaSelection) {
-          this.mediaSelection = _.uniq(this.mediaSelection);
-          for (var i = 0; i < this.items.length; i++) {
-            var item = this.items[i];
-            if (item['id'].value === id) {
-              var src = item['media_thumb'].value;
-              if ( !_.isUndefined(src) ) {
-                var key = this.mediaSelection.indexOf(src);
-                this.mediaSelection.splice(key,1);
-              }
-            }
-          }
-        }
       }
       else {
         this.selected.push(id);
       }
-      // console.log(this.selected);
+
+      // console.log('selected',this.selected);
       this.emitSelectedMedia();
     },
     
@@ -522,7 +512,7 @@ export default {
     
     emitSelectedMedia : function() {
       if (this.type==='mediapicker') {
-        var selectedMedia = this.mediaSelection;
+        var selectedMedia = [];
         for (var i = 0; i < this.selected.length; i++) {
           for (var j = 0; j < this.items.length; j++) {
             var index = this.items[j]['id'].value;

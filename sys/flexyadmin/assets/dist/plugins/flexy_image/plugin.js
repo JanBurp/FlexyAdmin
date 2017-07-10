@@ -11,18 +11,30 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
       var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       width -= margin;
       height -= margin;
-      
+      if (width>1040) width=1040;
+      if (height>640) height=640;
+
+      // Path
+      var path = 'pictures'; 
+
       // Geselecteerde afbeelding?
       var selected = tinymce.activeEditor.selection.getContent();
       var selectedImage = false;
       if (selected!=='') {
-        var matches = selected.match(/<img.*?src="([^"]*?)"/);
+        var matches = selected.match(/<img.*?src="([^"]*?)" alt="([^"]*?)"/);
         if (matches) {
-          selectedImage = matches[1];
-          selectedImage = selectedImage.substr( selectedImage.lastIndexOf('/')+1 );
+          var src = matches[1].split('/');
+          src.shift();
+          selectedImage = {
+            'path': src.shift(),
+            'src' : src.join('/'),
+            'alt' : matches[2],
+          };
+          // console.log(selectedImage);
         }
       }
-      var url='_admin/editor/image?selected='+selectedImage;
+      var url = encodeURI('_admin/editor/image?path='+path+'&selected='+JSON.stringify(selectedImage));
+      // console.log(url);
       
       // Open window with a specific url
       editor.windowManager.open({
@@ -38,13 +50,16 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
           onclick: function(e) {
             var iframe = document.querySelector('iframe[src="'+url+'"]');
             var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-            
-            var selectedImg = innerDoc.querySelector('tbody tr.is-selected img:first-child');
+            var selectedImg = innerDoc.querySelector('#src');
+            var alt = innerDoc.querySelector('#alt').getAttribute("value");
+
             if ( selectedImg!==null ) {
-              // console.log(selectedImg);
-              var src = selectedImg.getAttribute("src").replace('/thumb/','/');
-              var alt = selectedImg.getAttribute("alt");
+              var src = selectedImg.getAttribute("data-src");
+              if (alt=='') alt = src;
+              var src = '_media/'+path+'/'+src;
+
               var img = '<img src="'+src+'" alt="'+alt+'" />';
+              console.log(img);
               editor.insertContent(img);
             }
             

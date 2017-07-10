@@ -49,6 +49,10 @@ $lang['vue_form_save_error']         = "<b>ERROR</b> while saving. Try again.";
 $lang['vue_error_api']               = "<b>ERROR</b>. No contact with server. Try again.";
 $lang['vue_error_delete']            = "<b>ERROR</b>. While deleting item(s).";
 
+$lang['vue_img_popup_alt']           = "Title";
+$lang['vue_img_popup_src']           = "Image";
+
+
 $lang['vue_strap_lang'] = array(
   'daysOfWeek'    => array('Su', 'Mo', 'Tu', 'Wo', 'Th', 'Fr', 'Sa'),
   'limit'         => 'Maximum reached (maximum {{limit}} items).',
