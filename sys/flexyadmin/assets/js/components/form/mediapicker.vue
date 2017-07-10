@@ -14,6 +14,11 @@ export default {
     'value'   : String,
     'name'    : String,
     'path'    : String,
+    'multiple':{
+      type:Boolean,
+      default:false,
+    },
+
   },
   computed : {
     
@@ -28,7 +33,6 @@ export default {
   data : function() {
     return {
       media   : this.value,
-      single  : (this.name.indexOf('_') === 5),
       choose  : false,
     };
   },
@@ -48,6 +52,7 @@ export default {
           }
         }
       }
+      // console.log('thumbs',thumbs);
       return thumbs;
     },
     
@@ -58,10 +63,8 @@ export default {
     },
     
     selectMedia : function(media) {
-      if (this.single) {
-        media.slice(0,0);
-      }
       media = _.uniq(media);
+      // console.log('selectMedia result',media);
       this.changeMedia(media);
     },
     
@@ -93,7 +96,7 @@ export default {
 </script>
 
 <template>
-  <div class="mediapicker">
+  <div class="mediapicker" :data-src="this.media" :data-alt="this.media">
     <div class="mediapicker-selection">
       <div class="mediapicker-thumb mediapicker-thumb-button">
         <flexy-button :icon="{'plus':!choose,'chevron-up':choose}" class="btn-outline-warning" @click.native="choose=!choose" />
@@ -107,7 +110,7 @@ export default {
     </div>
     
     <div class="mediapicker-choose" v-if="choose">
-      <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" @grid-selected="selectMedia($event)"></flexy-grid>
+      <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" :multiple="this.multiple" @grid-selected="selectMedia($event)"></flexy-grid>
     </div>
     
   </div>

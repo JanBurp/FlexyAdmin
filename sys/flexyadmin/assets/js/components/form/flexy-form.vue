@@ -539,7 +539,7 @@ export default {
     },
     
     updateField : function( field, value ) {
-      console.log('updateField',field,value);
+      // console.log('updateField',field,value);
       // this.validationErrors = {};
       if (this.row[field]!==value) {
         this.row[field] = value;
@@ -739,7 +739,7 @@ export default {
 
                 <template v-if="isType('mediapicker',field)">
                   <!-- Mediapiacker -->
-                  <mediapicker :id="field" :name="field" :value="row[field]" :path="form_groups[field].path" v-on:input="updateField(field,$event)"></mediapicker>
+                  <mediapicker :id="field" :name="field" :value="row[field]" :path="form_groups[field].path" :multiple="field.substr(0,7) === 'medias_'" v-on:input="updateField(field,$event)"></mediapicker>
                 </template>
 
                 <template v-if="isType('select',field)">
