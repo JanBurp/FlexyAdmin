@@ -479,14 +479,14 @@ Class Core_tbl_menu extends Data_Core {
     $method = get_suffix($item['model'],'.');
     $model = get_prefix($item['model'],'.');;
     $this->load->model($model);
-    $data_items = $this->$model->$method($item);
     
-    // Add
+    // Places
     $this->data->table('tbl_menu');
     $places = $this->_determine_menu_item_places($item);
+
+    // Get and Add items
     foreach ($places as $place) {
-      $nr=1;
-      $items = $data_items;
+      $items = $this->$model->$method($item,$place);
       if ($place['pre_uri']) {
         foreach ($items as $key => $row) {
           unset($items[$key]);
