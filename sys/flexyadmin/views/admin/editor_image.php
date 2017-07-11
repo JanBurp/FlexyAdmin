@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?=$language?>">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,6 +12,12 @@
 
   <link rel="stylesheet" href="<?=admin_assets()?>css/font-awesome.min.css" type="text/css" media="screen">
   <link rel="stylesheet" href="<?=admin_assets()?>dist/flexyadmin.css" type="text/css" media="screen">
+  <style>
+    html,body {
+      width:100%;
+      height:100%;
+    }
+  </style>
 </head>
 
 <body>
@@ -22,18 +28,18 @@
     <div class="card-block">
 
       <!-- Alt -->
-      <div class="form-group row">
-        <label class="col-sm-3 form-control-label" for="alt">{{$lang.img_popup_alt}}</label>
+      <div class="form-group row" v-cloak>
+        <label class="col-sm-3 form-control-label" for="alt" v-once>{{$lang.img_popup_alt}}</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" id="alt" name="alt" value="<?=$alt?>">
+          <input type="text" class="form-control" id="alt" name="alt" :value="mediaPopup.alt||'<?=$alt?>'">
         </div>
       </div>
       
       <!-- Mediapiacker -->
-      <div class="form-group row">
-        <label class="col-sm-3 form-control-label" for="alt">{{$lang.img_popup_src}}</label>
+      <div class="form-group row" v-cloak>
+        <label class="col-sm-3 form-control-label" for="alt" v-once>{{$lang.img_popup_src}}</label>
         <div class="col-sm-9">
-          <mediapicker id="src" name="src" value="<?=$src?>" path="<?=$path?>"></mediapicker>
+          <mediapicker id="src" name="src" value="<?=$src?>" path="<?=$path?>" :autoresize="true" :openpicker="true" @input="mediaPopupChanged"></mediapicker>
         </div>
       </div>
 

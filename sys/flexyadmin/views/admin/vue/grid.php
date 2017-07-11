@@ -7,4 +7,5 @@
   limit="<?=$limit?>"
   order="<?=$order?>"
   filter="<?=htmlentities($filter)?>"
+  :autoresize="true"
 ></flexy-grid>

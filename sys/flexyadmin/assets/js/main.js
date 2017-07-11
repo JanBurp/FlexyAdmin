@@ -74,7 +74,17 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
     },
     data : {
       state : flexyState.state,
+      mediaPopup : {
+        'src' : '',
+        'alt' : ''
+      },
     },
+    methods: {
+      mediaPopupChanged : function(media) {
+        this.mediaPopup.alt = media;
+        this.mediaPopup.src = media;
+      }
+    }
   });
 
 }

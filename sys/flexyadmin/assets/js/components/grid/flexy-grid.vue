@@ -47,6 +47,10 @@ export default {
       type:Boolean,
       default:true,
     },
+    'autoresize': {
+      type:Boolean,
+      default:false,
+    },
   },
   
   // https://vuejs.org/v2/guide/components.html#Circular-References-Between-Components
@@ -61,11 +65,17 @@ export default {
     self.calcLimit();
     
     // Bij resize
+    var resizeTimer;
     window.addEventListener('resize', function(event){
-      if (!self.isResizing) {
-        self.isResizing = true;
-        if (self.calcLimit()) self.reloadPageAfterResize();
-      }
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        if (self.calcLimit()) {
+          self.reloadPageAfterResize();
+        }
+        else {
+          self.items.splice(self.apiParts.limit);
+        }
+      }, 250);
     });
 
     document.onmousemove = function(e){
@@ -200,27 +210,38 @@ export default {
   methods:{
     
     calcLimit : function( view ) {
-      // Hoeft niet als een form wordt getoond.
-      if (this.apiParts.formID) return false;
-      // En ook niet als er geen grid_header is
-      var grid_header = document.querySelector('#content .card.grid>.card-header');
-      if (_.isUndefined(grid_header) || grid_header==null) return false; 
-      
-      // Bepaal view
-      if (_.isUndefined(view)) view = this.getMediaView();
-      
+      if (!this.autoresize) return false;
+
       // Sizes:
+      var padding   = 8;
       var rowHeight = 37;
-      var padding = 8;
       var thumb = { width: 264, height: 292 }
       var small = { width: 136, height: 164 }
-      var height = window.innerHeight - document.querySelector('#header').offsetHeight - grid_header.offsetHeight  - document.querySelector('#content .card.grid>.card-footer').offsetHeight - rowHeight - 2*padding;
-      // Defaults:
-      var max_items = 10;
-      var rows = 1;
 
-      // Calc new limit
+      // Bepaal view
+      if (_.isUndefined(view)) view = this.getMediaView();
+
+      // Bepaal maximale breedte en hoogte
+      var thisEl    = this.$el;
+      var parentEl  = thisEl.parentElement;
+      var max_width = parentEl.offsetWidth - (2*padding);
+      var max_height  = window.innerHeight - (2*padding) - rowHeight;
+      var header      = document.querySelector('#header');
+      if (header!==null) max_height -= header.offsetHeight;
+      var grid_header = document.querySelector('#content .card.grid>.card-header');
+      if (grid_header!==null) max_height -= grid_header.offsetHeight;
+      var grid_footer = document.querySelector('#content .card.grid>.card-footer');
+      if (grid_footer!==null) max_height -= grid_footer.offsetHeight;
+
+      // Bepaal breedte en hoogte
+      var width  = max_width;
+      var height = max_height;
+
+      // Defaults:
+      var rows = 1;
+      var cols = 10;
       var new_limit = this.apiParts.limit;
+
       if (this.gridType()!=='media') view = 'list';
       switch (view) {
 
@@ -229,10 +250,12 @@ export default {
           rows = 2;
         case 'thumbs':
           if (this.type!=='mediapicker') rows = Math.floor(height / thumb.height);
-          var width = this.$el.offsetWidth - (2*padding);
-          var columns = Math.floor(width / thumb.width);
-          new_limit = (columns * rows) - 1;
-          if (new_limit<=1) new_limit += columns;
+          cols = Math.floor(width / thumb.width);
+          new_limit = (cols * rows) - 1;
+          if (new_limit <= 1) {
+            new_limit += cols ;
+            rows++;
+          }
           break;
 
         case 'list':
@@ -240,9 +263,9 @@ export default {
           new_limit = 10;
           if (this.type!=='mediapicker') {
             if (this.gridType()==='media') height -= rowHeight; // Extra rij eraf voor upload item
-            max_items = height / rowHeight;
-            var step = (max_items <= 10)?2:5;
-            new_limit = Math.floor(max_items / step) * step;
+            rows = height / rowHeight;
+            var step = (rows <= 10)?2:5;
+            new_limit = Math.floor(rows / step) * step;
           }
       }
       
@@ -251,12 +274,12 @@ export default {
       if (this.apiParts.offset > 0) {
         this.apiParts.offset = Math.floor( this.apiParts.offset / this.apiParts.limit) * this.apiParts.limit
       }
-      console.log(rows,max_items);
       
       // Reload needed?
-      var changed = (new_limit!==this.apiParts.limit || new_offset!==this.apiParts.offset);
+      var changed = (new_limit > this.apiParts.limit || new_offset !== this.apiParts.offset);
       this.apiParts.limit = new_limit;
       this.apiParts.offset = new_offset;
+      // console.log('autoresize:',width,height,rows,cols,changed,new_offset,new_limit);
       return changed;
     },
     
@@ -290,7 +313,6 @@ export default {
             self.dataInfo = response.data.info;
           }
         }
-        self.isResizing = false;
         return response;
       });
     },
@@ -740,10 +762,11 @@ export default {
     startUpload : function() {
       this.dropUploadHover = false;
       var self = this;
+      var uploadedFilesCount = 0;
       for (var i = 0; i < self.uploadFiles.length; i++) {
         var file = self.uploadFiles[i];
         var formData = new FormData();
-        console.log(file,formData);
+        // console.log(file,formData);
         formData.append( 'path', self.name );
         formData.append( 'file', self.uploadFiles[i] );
         formData.append( 'fileName', self.uploadFiles[i].name );
@@ -760,13 +783,14 @@ export default {
             flexyState.addMessage(error + ' <b>`'+fileName+'`</b>','danger');
           }
           else {
-            flexyState.addMessage(fileName + self.$lang.upload_ready);
+            uploadedFilesCount++;
           }
           // Uit de lijst halen
           var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
           self.removeUploadFile(index);
           // Als alles uit de lijst is geuploade, reload
           if (self.uploadFiles.length === 0 ) {
+            flexyState.addMessage(uploadedFilesCount + self.$lang.upload_count);
             self.reloadPage();
           }
           return response;

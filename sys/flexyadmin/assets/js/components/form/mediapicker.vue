@@ -18,7 +18,14 @@ export default {
       type:Boolean,
       default:false,
     },
-
+    'openpicker': {
+      type:Boolean,
+      default:false,
+    },
+    'autoresize': {
+      type:Boolean,
+      default:true,
+    },
   },
   computed : {
     
@@ -33,7 +40,7 @@ export default {
   data : function() {
     return {
       media   : this.value,
-      choose  : false,
+      choose  : this.openpicker,
     };
   },
   
@@ -98,7 +105,7 @@ export default {
 <template>
   <div class="mediapicker" :data-src="this.media" :data-alt="this.media">
     <div class="mediapicker-selection">
-      <div class="mediapicker-thumb mediapicker-thumb-button">
+      <div class="mediapicker-thumb mediapicker-thumb-button" v-if="!openpicker">
         <flexy-button :icon="{'plus':!choose,'chevron-up':choose}" class="btn-outline-warning" @click.native="choose=!choose" />
       </div>
       <draggable :list="thumbs()" :options="draggableOptions" @end="dragEnd($event)">
@@ -110,7 +117,7 @@ export default {
     </div>
     
     <div class="mediapicker-choose" v-if="choose">
-      <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" :multiple="this.multiple" @grid-selected="selectMedia($event)"></flexy-grid>
+      <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" :multiple="this.multiple" :autoresize="this.autoresize" @grid-selected="selectMedia($event)"></flexy-grid>
     </div>
     
   </div>
