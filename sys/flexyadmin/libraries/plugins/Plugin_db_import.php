@@ -14,12 +14,13 @@
 	*/
  class Plugin_db_import extends Plugin {
    
-   private $import_table;
+    private $import_table;
    
-   private $template = array(
+    private $template = array(
                         'table_open' => '<table class="table table-bordered table-sm table-responsive">',
                         'thead_open' => '<thead class="thead-default">',
                       );
+    private $foreigns = array();
    
    
    public function __construct() {
@@ -52,61 +53,65 @@
       $data = array();
       foreach ($lines as $line) {
         $line = explode(';',$line);
-        $line = array_combine($fields,$line);
+        $line = @array_combine($fields,$line);
         $data[] = $line;
       }
-      
+
       // Import Data
       $set_data = array();
       $this->set_many_data = array();
       foreach ($data as $key=>$row) {
         $set = array();
-        foreach ($row as $field => $value) {
-          $value=trim($value);
-          if ($value) {
-            $type = get_prefix($field);
-            switch ($type) {
+        
+        if (is_array($row)) {
+          foreach ($row as $field => $value) {
+            $value=trim($value);
+            if ($value) {
+              $type = get_prefix($field);
+              switch ($type) {
 
-              case 'id' :
-                $result = $this->_add_foreign($field,$value);
-                $set[remove_suffix($field,'.')] = $result['id'];
-                if ($result['new'])
-                  $row[$field] = '<span class="text-danger">'.$result['id'].'</span> '.$row[$field];
-                else
-                  $row[$field] = '<span class="text-info">'.$result['id'].'</span> '.$row[$field];
-                break;
-              
-              case 'rel':
-                $this->_add_many_to_many($field,$value);
-                break;
+                case 'id' :
+                  $result = $this->_add_foreign($field,$value,$key);
+                  $set[remove_suffix($field,'.')] = $result['id'];
+                  if ($result['new'])
+                    $row[$field] = '<span class="text-danger">'.$result['id'].'</span> '.$row[$field];
+                  else
+                    $row[$field] = '<span class="text-info">'.$result['id'].'</span> '.$row[$field];
+                  break;
+                
+                case 'rel':
+                  $this->_add_many_to_many($field,$value);
+                  break;
 
-              case 'txt':
-                $head = get_suffix($field,':');
-                $field = get_prefix($field,':');
-                if ($head) {
-                  $value = '<b>'.$head.':&nbsp;</b>&nbsp;'.$value.'<br>';
-                }
-                if (!isset($set[$field])) $set[$field]='';
-                $set[$field] .= $value;
-                break;
+                case 'txt':
+                  $head = get_suffix($field,':');
+                  $field = get_prefix($field,':');
+                  if ($head) {
+                    $value = '<b>'.$head.':&nbsp;</b>&nbsp;'.$value.'<br>';
+                  }
+                  if (!isset($set[$field])) $set[$field]='';
+                  $set[$field] .= $value;
+                  break;
 
-              case 'stx':
-                $head = get_suffix($field,':');
-                $field = get_prefix($field,':');
-                if ($head) {
-                  $value = $head.': '.$value."\n";
-                }
-                if (!isset($set[$field])) $set[$field]='';
-                $set[$field] .= $value;
-                break;
+                case 'stx':
+                  $head = get_suffix($field,':');
+                  $field = get_prefix($field,':');
+                  if ($head) {
+                    $value = $head.': '.$value."\n";
+                  }
+                  if (!isset($set[$field])) $set[$field]='';
+                  $set[$field] .= $value;
+                  break;
 
-              case 'str':
-              default:
-                $set[$field] = $value;
-                break;
+                case 'str':
+                default:
+                  $set[$field] = $value;
+                  break;
+              }
             }
           }
         }
+
         $id = FALSE;
         if ($set) {
           // Check eerst of item al bestaat
@@ -175,7 +180,7 @@
    * @return array
    * @author Jan den Besten
    */
-  private function _add_foreign($field,$value) {
+  private function _add_foreign($field,$value,$key) {
     $result = array(
       'id'  => FALSE,
       'new' => FALSE,
@@ -197,9 +202,20 @@
         $id = $exists['id'];
       }
       else {
-        $this->CI->data->set($foreign_field,$value);
-        $id = $this->CI->data->insert();
+        // Check if new row
+        $exists = el($key,$this->foreigns);
+        if ($exists) {
+          $id = $exists['id'];
+          $this->CI->data->set($foreign_field,$value);
+          $this->CI->data->where('id',$id);
+          $this->CI->data->update();
+        }
+        else {
+          $this->CI->data->set($foreign_field,$value);
+          $id = $this->CI->data->insert();
+        }
         $result['new'] = TRUE;
+        $this->foreigns[$key] = array('id'=>$id,$foreign_field=>$value);
       }
       $result['id'] = $id;
     }
