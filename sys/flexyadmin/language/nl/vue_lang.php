@@ -37,8 +37,9 @@ $lang['vue_upload_size']             = 'Omvang';
 $lang['vue_upload_progress']         = 'Voortgang';
 $lang['vue_upload_status']           = 'Status';
 $lang['vue_upload_status_uploading'] = 'Uploading...';
-$lang['vue_upload_error']            = 'Onbekende fout.';
-$lang['vue_upload_ready']            = ' is toegevoegd.';
+$lang['vue_upload_error']            = 'Onbekende fout';
+$lang['vue_upload_ready']            = ' is toegevoegd';
+$lang['vue_upload_count']            = ' bestanden toegevoegd';
 
 $lang['vue_grid_total']              = "{0} items";
 $lang['vue_grid_pagination']         = "{0} items / {1} pagina's";
