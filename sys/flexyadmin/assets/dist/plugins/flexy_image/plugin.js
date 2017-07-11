@@ -6,13 +6,10 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
     onclick: function() {
 
       // Omvang popup
-      var margin = 200;
       var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-      width -= margin;
-      height -= margin;
-      if (width>1040) width=1040;
-      if (height>640) height=640;
+      if (width>1180) width=1180;
+      if (height>720) height=720;
 
       // Path
       var path = 'pictures'; 
@@ -51,15 +48,14 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
             var iframe = document.querySelector('iframe[src="'+url+'"]');
             var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
             var selectedImg = innerDoc.querySelector('#src');
-            var alt = innerDoc.querySelector('#alt').getAttribute("value");
+            var altInput = innerDoc.querySelector('#alt');
 
             if ( selectedImg!==null ) {
               var src = selectedImg.getAttribute("data-src");
+              var alt = altInput.value;
               if (alt=='') alt = src;
-              var src = '_media/'+path+'/'+src;
 
-              var img = '<img src="'+src+'" alt="'+alt+'" />';
-              console.log(img);
+              var img = '<img src="_media/'+path+'/'+src+'" alt="'+alt+'" />';
               editor.insertContent(img);
             }
             

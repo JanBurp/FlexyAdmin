@@ -5805,7 +5805,7 @@ a > .fa, .btn > .fa {
     display: block;
     float: left;
     position: relative;
-    width: 15rem;
+    width: 14rem;
     height: 16.75rem;
     margin: .75rem;
     overflow: visible;
@@ -6157,3 +6157,5 @@ body.uri-plugin__stats #content .card-block {
       body.uri-plugin__stats #content .card-block .card table .vertical-text {
         display: block;
         text-align: center; }
+
+/*# sourceMappingURL=flexyadmin.css.map*/
