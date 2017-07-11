@@ -181,13 +181,12 @@ class Db extends AdminController {
 			$tablesWithRights=not_filter_by($tablesWithRights,"cfg");
 			$tablesWithRights=not_filter_by($tablesWithRights,"log");
 			unset($tablesWithRights["rel_users__rights"]);
-		
+
 			// create backup
 			$prefs = array('tables'=> $tablesWithRights,'format'=>'txt');
 			$sql = $this->dbutil->backup($prefs);
-			// clean backup
 			$sql=$this->_clean_sql($sql);
-			$sql="# FlexyAdmin backup\n# User: '".$this->user_name."'  \n# Date: ".date("d F Y")."\n\n".$sql;
+			$sql="# FlexyAdmin backup\n# User: '".$this->flexy_auth->get_user(null,'str_username')."'  \n# Date: ".date("d F Y")."\n\n".$sql;
 		
 			$backup=$sql;
 			$filename='backup_'.$this->_filename().'_'.date("Y-m-d").'.txt';
@@ -376,11 +375,12 @@ class Db extends AdminController {
 			else
 				$this->content .= p()."Checking safety ... Unsafe SQL. Import aborted."._p();
 		}
+
 		if ($safe) {
       $result=$this->dbutil->import($sql);
       if (isset($result['errors'])) {
         foreach ($result['errors'] as $error) {
-          $this->content .= p('error').$error._p();
+          $this->content .= p('error').$error['message']._p();
         }
       }
 			$this->content .= p().$action.br(2)._p();//.$comments);
