@@ -83,15 +83,16 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 		if (preg_match("/\b(".$checks.")\b/i",$sql)>0)	$safe=FALSE;
 		// Check on TRUNCATE / CREATE table names, if it has rights for tables
 		if ($safe) {
-      $CI=&get_instance();
-			if (preg_match_all("/(TRUNCATE\sTABLE|CREATE\sTABLE|INSERT\sINTO|DELETE\sFROM|UPDATE)\s(.*?)(;|\s)/i",$sql,$matches)>0) {
+      $CI = &get_instance();
+			if (preg_match_all("/(TRUNCATE\sTABLE|CREATE\sTABLE|INSERT\sINTO|DELETE\sFROM|UPDATE)\s`(.*?)`(;|\s)/i",$sql,$matches)>0) {
 				$tables=$matches[2];
 				$tables=array_unique($tables);
 				$tables=not_filter_by($tables,'rel');
 				// check if rights for found tables
 				foreach ($tables as $table) {
-					if ($CI->flexy_auth->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
+					if ( $CI->flexy_auth->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
 				}
+
 			}
 		}
 		return $safe;
