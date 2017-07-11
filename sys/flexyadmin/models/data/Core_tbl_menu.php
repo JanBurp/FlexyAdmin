@@ -486,6 +486,7 @@ Class Core_tbl_menu extends Data_Core {
 
     // Get and Add items
     foreach ($places as $place) {
+      $nr=1;
       $items = $this->$model->$method($item,$place);
       if ($place['pre_uri']) {
         foreach ($items as $key => $row) {
