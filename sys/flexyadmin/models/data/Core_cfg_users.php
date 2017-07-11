@@ -97,9 +97,11 @@ Class Core_cfg_users extends Data_Core {
     $select = array_intersect($select,array_keys($this->tm_set));
     if (!empty($select)) {
       $id = $this->tm_set[$this->settings['primary_key']];
-      $sql = 'SELECT `'.implode('`,`',$select).'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = '.$id;
-      $query = $this->db->query($sql);
-      if ($query) $current = $query->row_array();
+      if ($id) {
+        $sql = 'SELECT `'.implode('`,`',$select).'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = '.$id;
+        $query = $this->db->query($sql);
+        if ($query) $current = $query->row_array();
+      }
     }
     
     foreach ( $this->tm_set as $key => $value ) {
