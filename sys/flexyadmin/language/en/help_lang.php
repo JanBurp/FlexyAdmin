@@ -75,6 +75,7 @@ $lang['mail_accepted_subject']				= 'Account registration accepted.';
 $lang['active_users']				          = 'Send new password to existing users';
 $lang['send_new_password']            = 'Send new password';
 $lang['user_send_password']           = 'User "%s" has a got an email with a new password';
+$lang['users_send_passwords']         = 'Selected users have got an email with a new password';
 $lang['user_send_password_error']     = 'ERROR: could not send email with new password to %s.';
 $lang['user_send_error']              = 'ERROR: could not send email to %s.';
 $lang['new_password']                 = 'New password';
