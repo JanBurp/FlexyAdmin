@@ -193,6 +193,9 @@ Class Core_res_assets extends Data_Core {
     if ( $remove and $hasUsedInfo ) {
       $this->delete( array('b_used'=>false) );
     }
+
+    // Remove old thumbs of files that not exists anymore
+    $this->delete( array('b_exists'=>false) );
     
     return $paths;
   }
@@ -404,10 +407,64 @@ Class Core_res_assets extends Data_Core {
 
     return $file;
 	}
+
+  /**
+   * Resize image file.
+   *
+   * @param string $path 
+   * @param string $file 
+   * @return array $result
+   * @author Jan den Besten
+   */
+  public function resize_file( $path, $file) {
+    $this->load->library('upload');
+    $path_settings = $this->get_folder_settings($path);
+    return $this->upload->resize_image( $path,$file,$path_settings );
+  }
+
+  /**
+   * Resize images in path
+   *
+   * @param string $path 
+   * @param string $file 
+   * @return array $result
+   * @author Jan den Besten
+   */
+  public function resize_path( $path ) {
+    $this->load->library('upload');
+    $path_settings = $this->get_folder_settings($path);
+    $files = $this->get_files($path);
+    foreach ($files as $file) {
+      $this->upload->resize_image( $path,$file['file'],$path_settings );
+    }
+    return $path;
+  }
+
+  /**
+   * Resize all images
+   *
+   * @param string $path 
+   * @param string $file 
+   * @return array $result
+   * @author Jan den Besten
+   */
+  public function resize_all() {
+    $paths = $this->get_setting('assets');
+    foreach ($paths as $path => $settings) {
+      if (isset($settings['resize_img'])) {
+        $this->resize_path($path);
+      }
+      else {
+        unset($paths[$path]);
+      }
+    }
+    return array_keys($paths);
+  }
   
 
   /**
    * Grid set aanpassen als er een map is ingesteld en er dus files worden opgevraagd (ip2longv ruwe data)
+   * En res_assets acties
    *
    * @return array
    * @author Jan den Besten
@@ -424,7 +481,27 @@ Class Core_res_assets extends Data_Core {
     }
     else {
       $grid_set=parent::get_setting_grid_set();
+
+      // Assets Actions
+      $grid_set['actions'] = array(
+        array(
+          'name'  => 'Refresh Assets',
+          'icon'  => 'refresh',
+          'url'   => 'assets_actions?action=refresh',
+          'class' => 'text-warning',
+        ),
+        array(
+          'name'  => 'Resize Images',
+          'icon'  => 'arrows-alt',
+          'url'   => 'assets_actions?action=resize',
+          'class' => 'text-danger',
+        ),
+      );
+
     }
+
+
+
     return $grid_set;
   }
   
