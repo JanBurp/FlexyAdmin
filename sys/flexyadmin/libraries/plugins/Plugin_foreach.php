@@ -8,14 +8,24 @@
 	* @author Jan den Besten
 	*/
  class Plugin_foreach extends Plugin {
-   
 
-	public function _admin_api($args=NULL) {
+ 	/**
+ 	 * Pas hier de tabel aan die moet worden doorlopen
+ 	 **/
+ 	var $table 					= 'cfg_users';
+ 	var $abstract_field = '';
+
+ 	public function _admin_api($args=NULL) {
 		if ( !$this->CI->flexy_auth->is_super_admin()) return false;
 
-		$table = $this->config['table'];
-		$this->CI->data->table($table);
+		$abstract_fields = $this->CI->data->table($this->table)->get_abstract_fields();
+		$this->abstract_field = array_shift($abstract_fields);
+
+
+		// Pas de database query eventueel hier aan
+		$this->CI->data->table( $this->table );
 		// $this->CI->data->with('many_to_many');
+		// $this->CI->data->where('many_to_many');
 		$items = $this->CI->data->get_result();
 		
 		$this->add_message('<ul>');
@@ -27,6 +37,11 @@
     return $this->show_messages();
 	}
 
+
+
+	/**
+	 * Pas hier de actie aan die voor elk item moet worden gedaan
+	 */
 	private function action($item) {
 
 		// if (!$item['cfg_user_groups']) {
@@ -41,8 +56,8 @@
 		// 	$this->add_message('<li>'.$item['str_username'].' -> USER GROUP </li>');
 
 		// }
-
-	$this->add_message('<li> action for '.$item['id'].'</li>');
+	
+		$this->add_message('<li>item `'.$item[$this->abstract_field].'` processed.</li>');
 
 
 	}
