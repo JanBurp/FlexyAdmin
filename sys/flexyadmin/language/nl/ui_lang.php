@@ -67,6 +67,7 @@ $lang['str_language']              = 'Taal';
 $lang['action_users']              = 'Stuur:';
 $lang['action_user_send_invite']   = 'Inloggegevens';
 $lang['action_user_send_password'] = 'Nieuw wachtwoord';
+$lang['action_user_send_password_selected'] = 'Stuur nieuw wachtwoord aan selectie';
 
 // User fields
 $lang['tme_last_changed'] ='Laatste aanpassing';
