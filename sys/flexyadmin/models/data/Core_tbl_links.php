@@ -88,6 +88,7 @@ Class Core_tbl_links extends Data_Core {
     return $this->_result_as_link_list($result);
   }
   
+
   /**
    * Maakt een link lijst resultaat
    *
@@ -108,9 +109,8 @@ Class Core_tbl_links extends Data_Core {
   
   
   
-  
   /**
-   * Voeg actie toe om link te checken
+   * Voeg actie toe om link te checken (aan row)
    *
    * @param int $limit 
    * @param int $offset 
@@ -138,28 +138,40 @@ Class Core_tbl_links extends Data_Core {
   
   
   /**
-   * Voeg linkchecker actie's toe
+   * Voeg linkchecker actie's toe aan head(er)
    *
    * @return array
    * @author Jan den Besten
    */
   public function get_setting_grid_set() {
     $grid_set = parent::get_setting_grid_set();
-    $grid_set['actions'] = array(
-      array(
-        'name' => lang('link_checker'),
-        'icon' => 'chain-broken',
-        'url'  => 'link_checker',
-      ),
-    );
+    // $grid_set['actions'] = array(
+    //   array(
+    //     'name_all'    => lang('link_checker_all'),
+    //     'name_select' => lang('link_checker_select'),
+    //     'icon'        => 'chain-broken',
+    //     'url'         => 'link_checker',
+    //   ),
+    // );
     $grid_set['field_info']['action_check_link'] = array(
+      'type'         => 'action',
+
+      'action'       => array(
+        'name_all'    => lang('link_checker_all'),
+        'name_select' => lang('link_checker_select'),
+        'url'  => 'link_checker',
+        'icon' => 'chain-broken',
+      ),
+
       'name'      => lang('link_checker'),
       'grid-type' => 'action',
+      'sortable'  => false,
     );
     
     return $grid_set;
   }
   
+
   /**
    * Controleert alle links
    *
@@ -178,6 +190,7 @@ Class Core_tbl_links extends Data_Core {
     return $result;
   }
   
+
   /**
    * Geeft een leesbaar resulaat terug na check_links
    *

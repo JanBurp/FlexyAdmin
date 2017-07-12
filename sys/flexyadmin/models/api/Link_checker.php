@@ -29,7 +29,12 @@ class Link_checker extends Api_Model {
     
     $this->data->table('tbl_links');
     if (isset($this->args['where'])) {
-      $this->data->where( $this->args['where'] );
+      if (is_array($this->args['where'])) {
+        $this->data->where_in( 'id', $this->args['where'] );
+      }
+      else {
+        $this->data->where( $this->args['where'] );
+      }
     }
     $this->result['data'] = $this->data->check_links();
     

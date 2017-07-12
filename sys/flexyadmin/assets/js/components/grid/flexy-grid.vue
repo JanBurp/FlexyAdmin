@@ -469,9 +469,13 @@ export default {
       var headerType = field['grid-type'] || field['type'];
       return (headerType==='primary');
     },
+    isActionHeader : function(field) {
+      var headerType = field['grid-type'] || field['type'];
+      return (headerType==='action');
+    },
     isNormalVisibleHeader : function(field) {
       var headerType = field['grid-type'] || field['type'];
-      return (headerType!=='hidden' && headerType!=='primary');
+      return (headerType!=='hidden' && headerType!=='primary'  && headerType!=='action');
     },
     isSortableField : function(field) {
       return field.sortable;
@@ -624,11 +628,26 @@ export default {
       }
     },
     
+    actionName : function(action) {
+      var action_name = action.name_all;
+      if (this.hasSelection()) action_name = action.name_select;
+      return action_name;
+    },
+
     // Grid action
     startAction : function(url) {
+      if (this.selected.length>0) {
+        var where='';
+        for (var i = 0; i < this.selected.length; i++) {
+          where += '&where[]=' + this.selected[i];
+        }
+        url += '?'+where.substr(1);
+        console.log('startAction',url,this.selected);
+      }
       var self = this;
       flexyState.api({
-        url       : url,
+        method :'POST',
+        url    : url,
       })
       .then(function(response){
         return response;
@@ -965,9 +984,9 @@ export default {
         <h1>{{title}}</h1>
 
         <!-- ACTIONS ?-->
-        <div v-once v-if="actions.length>0" class="grid-actions">
+        <div v-if="actions.length>0" class="grid-actions">
           <div v-for="action in actions" class="grid-action">
-            <flexy-button @click.native="startAction(action.url)" :icon="action.icon" :text="action.name" class="btn-default text-primary" :class="action.class" />
+            <flexy-button @click.native="startAction(action.url)" :icon="action.icon" :text="actionName(action)" class="btn-default text-primary" :class="action.class" />
           </div>
         </div>
         
@@ -1037,7 +1056,11 @@ export default {
                     </div>
                   </div>
                 </th>
-                
+
+                <th v-if="isActionHeader(field)" :class="headerClass(field)">
+                  <flexy-button @click.native="startAction(field.action.url)" :icon="field.action.icon" :text="actionName(field.action)" class="btn-outline-warning" :class="field.action.class" />
+                </th>
+
                 <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
                   <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.label}}</span>
                     <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
