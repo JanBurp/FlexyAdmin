@@ -73,7 +73,8 @@ $lang['tme_last_changed'] ='Laatste aanpassing';
 $lang['user_changed']     ='Aangepast door';
 
 // Tbl_links
-$lang['link_checker']             = 'Controleer links';
+$lang['link_checker_all']         = 'Controleer alle links';
+$lang['link_checker_select']      = 'Controleer geselecteerde links';
 $lang['link_check']               = 'Controleer';
 $lang['link_check_checked']       = '%s links gecontroleerd.';
 $lang['link_check_checked_one']   = 'Eén link gecontroleerd.';
