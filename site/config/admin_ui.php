@@ -24,10 +24,10 @@ $config['side_menu']['media'] = array(
  * TinyMCE settings
  */
 $config['wysiwyg'] = array(
-  'plugins'                   => 'fullscreen,paste,textpattern,wordcount,lists,table,flexy_image,imagetools,flexy_link,autolink,charmap,media,code,visualblocks,preview',
-  'content_css'               => 'assets/css/admin.css',
+  'plugins'                   => 'fullscreen,paste,textpattern,wordcount,lists,table,flexy_image,imagetools,flexy_link,autolink,charmap,media,code',//,visualblocks,preview',
+  // 'content_css'               => 'assets/css/admin.css',
   
-  'max-height'                => 400,
+  'max-height'                => 300,
   'autoresize_max_height'     => 500,
   
   'paste_as_text'             => true,
@@ -38,24 +38,21 @@ $config['wysiwyg'] = array(
   'link_title'                => false,
   'link_context_toolbar'      => true,
 
-  // 'image_caption'             => false,
-  // 'image_advtab'              => true,
   'image_dimensions'          => false,
-  'image_class_list'          => array(
-                                    array( 'title'=>'Left',  'value'=>'pull-left'),
-                                    array( 'title'=>'Right', 'value'=>'pull-right'),
-                                  ),
   'imagetools_toolbar'        => 'rotateleft rotateright | flipv fliph | editimage ', //' imageoptions',
   
   'style_formats'             => array(
-    array('title' => 'Paragraaf', 'block'=>'p'),
+    array('title' => 'Paragraaf',   'block'=>'p'),
     array('title' => 'Tussenkop 1', 'block'=>'h2'),
     array('title' => 'Tussenkop 2', 'block'=>'h3'),
+    // array('title' => 'Afbeelding Links',  'selector'=>'img', 'classes'=>'pull-left' ),
+    // array('title' => 'Afbeelding Rechts', 'selector'=>'img', 'classes'=>'pull-right' ),
   ),
 
   // 'menubar'                   => "edit format table tools",
   'menubar'                   => false,
-  'toolbar1'                  => 'cut copy paste | undo redo | bold italic styleselect | alignleft aligncenter alignright | bullist numlist | flexy_link unlink | charmap flexy_image media | visualblocks preview fullscreen | code',
+  'toolbar1'                  => 'cut copy paste | undo redo | bold italic styleselect | bullist numlist | flexy_link unlink | charmap flexy_image media | fullscreen | code',
+  // 'toolbar1'                  => 'cut copy paste | undo redo | bold italic styleselect | bullist numlist | alignleft aligncenter alignright | flexy_link unlink | charmap flexy_image media | fullscreen | code',
 );
 
 
