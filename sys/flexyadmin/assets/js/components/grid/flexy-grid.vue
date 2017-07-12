@@ -629,9 +629,18 @@ export default {
     },
     
     actionName : function(action) {
-      var action_name = action.name_all;
-      if (this.hasSelection()) action_name = action.name_select;
+      var action_name = '';
+      if (!_.isUndefined(action.name))     action_name = action.name;
+      if (!_.isUndefined(action.name_all)) action_name = action.name_all;
+      if (!_.isUndefined(action.name_select) && this.hasSelection()) action_name = action.name_select;
       return action_name;
+    },
+
+    showAction : function(action) {
+      var selected_only = false;
+      if (!_.isUndefined(action.selected_only)) selected_only = action.selected_only;
+      if (selected_only && !this.hasSelection()) return false;
+      return true;
     },
 
     // Grid action
@@ -641,8 +650,12 @@ export default {
         for (var i = 0; i < this.selected.length; i++) {
           where += '&where[]=' + this.selected[i];
         }
-        url += '?'+where.substr(1);
-        console.log('startAction',url,this.selected);
+        if (url.indexOf('?')<0) {
+          url += '?' + where.substr(1);
+        }
+        else {
+          url += where;
+        }
       }
       var self = this;
       flexyState.api({
@@ -1058,7 +1071,7 @@ export default {
                 </th>
 
                 <th v-if="isActionHeader(field)" :class="headerClass(field)">
-                  <flexy-button @click.native="startAction(field.action.url)" :icon="field.action.icon" :text="actionName(field.action)" class="btn-outline-warning" :class="field.action.class" />
+                  <flexy-button v-if="field.action" v-show="showAction(field.action)" @click.native="startAction(field.action.url)" :icon="field.action.icon" :text="actionName(field.action)" class="btn-outline-warning" :class="field.action.class" />
                 </th>
 
                 <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
