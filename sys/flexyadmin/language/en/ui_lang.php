@@ -25,13 +25,15 @@ $lang['ip_address']                = 'IP Address';
 $lang['action_users']              = 'Send:';
 $lang['action_user_send_invite']   = 'Invitation';
 $lang['action_user_send_password'] = 'New password';
+$lang['action_user_send_password_selected'] = 'Send new password to selection';
 
 
 // USER FIELDS
 $lang['user_changed']     ='Changed by';
 
 // Tbl_links
-$lang['link_checker']             = 'Check links';
+$lang['link_checker_all']         = 'Check all links';
+$lang['link_checker_select']      = 'Check selected links';
 $lang['link_check']               = 'Check';
 $lang['link_check_checked']       = '%s links checked.';
 $lang['link_check_checked_one']   = 'Eén link checked.';

@@ -11,7 +11,6 @@ class User extends Api_Model {
   
   var $needs = array(
     'action' => '',
-    'email'  => '',
   );
   
 	public function __construct() {
@@ -35,29 +34,51 @@ class User extends Api_Model {
     
     $action = $this->args['action'];
     $email  = $this->args['email'];
-    
-    $user  = $this->flexy_auth->get_user_by_email($email);
-    // No user found
-    if (!$user) {
-      $this->result['data']=FALSE;
-      $this->_set_error('NO USER FOUND');
+
+    // Multiple users
+    if (isset($this->args['where']) && is_array($this->args['where'])) {
+      foreach ($this->args['where'] as $user_id) {
+        $user  = $this->flexy_auth->get_user($user_id);      
+        if (!$user) {
+          $this->result['data']=FALSE;
+          $this->_set_error('NO USER FOUND');
+        }
+        else {
+          $send = $this->flexy_auth->send_new_password( $user );
+          if (!$send) {
+            $this->result['data']=FALSE;
+            $this->_set_error( langp('user_send_error',$user['str_username']));
+          }
+          else {
+            $message = lang('users_send_passwords');
+            $this->_set_message( $message );
+          }
+        }
+      }
     }
+    // One user
     else {
-      // User found
-      if ($action==='invite') {
-        $send = $this->flexy_auth->send_new_account( $user );
-      }
-      else {
-        $send = $this->flexy_auth->send_new_password( $user );
-      }
-      // Error when sending
-      if (!$send) {
+      $user  = $this->flexy_auth->get_user_by_email($email);      
+      if (!$user) {
         $this->result['data']=FALSE;
-        $this->_set_error( langp('user_send_error',$user['str_username']));
+        $this->_set_error('NO USER FOUND');
       }
       else {
-        $message = ($action==='invite')?langp('send_invitation',$user['str_username']):langp('user_send_password',$user['str_username']);
-        $this->_set_message( $message );
+        if ($action==='invite') {
+          $send = $this->flexy_auth->send_new_account( $user );
+        }
+        else {
+          $send = $this->flexy_auth->send_new_password( $user );
+        }
+        // Error when sending
+        if (!$send) {
+          $this->result['data']=FALSE;
+          $this->_set_error( langp('user_send_error',$user['str_username']));
+        }
+        else {
+          $message = ($action==='invite')?langp('send_invitation',$user['str_username']):langp('user_send_password',$user['str_username']);
+          $this->_set_message( $message );
+        }
       }
     }
     return $this->_result_ok();

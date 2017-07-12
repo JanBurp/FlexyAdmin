@@ -249,6 +249,15 @@ Class Core_cfg_users extends Data_Core {
   public function get_setting_grid_set() {
     $grid_set = parent::get_setting_grid_set();
     $grid_set['field_info']['action_user_invite'] = array(
+      'type'         => 'action',
+
+      'action'       => array(
+        'selected_only' => true,
+        'name'          => lang('action_user_send_password_selected'),
+        'url'           => 'user?action=new',
+        'icon'          => 'envelope-o',
+      ),
+
       'name'      => lang('action_users'),
       'grid-type' => 'action',
     );
