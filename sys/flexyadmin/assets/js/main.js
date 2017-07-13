@@ -72,12 +72,15 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
       FlexyAccordion,
       mediapicker,
     },
-    data : {
-      state : flexyState.state,
-      mediaPopup : {
-        'src' : '',
-        'alt' : ''
-      },
+    data : function() {
+      return {
+        global : flexyState,
+        state  : flexyState.state,
+        mediaPopup : {
+          'src' : '',
+          'alt' : ''
+        },
+      }
     },
     methods: {
       mediaPopupChanged : function(media) {
