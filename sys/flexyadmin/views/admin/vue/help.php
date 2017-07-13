@@ -1,1 +1,0 @@
-<flexy-accordion :items="<?=htmlentities(array2json($items),ENT_QUOTES, 'UTF-8')?>" />

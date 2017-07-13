@@ -16,7 +16,7 @@
 
 <body class="<?=$class?>">
 
-<div id="main" :class="{'help':state.help}">
+<div id="main" :class="{'help':global.helpIsOn()}">
   <div class="container-fluid">
     <progress class="progress" v-show="state.progress > 0" :value="state.progress" max="100"></progress>
     <flexy-messages v-show="state.messages.length > 0" :messages="state.messages"></flexy-messages>
@@ -41,7 +41,9 @@
     </div>
   </div>
   
-  <div id="help" v-cloak v-show="state.help"><?=$help?></div>
+  <div id="help" v-cloak v-show="global.helpIsOn()">
+    <flexy-accordion :items="state.help_items">
+  </div>
   
 </div>
 
