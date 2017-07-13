@@ -35,10 +35,10 @@
     <div id="row" class="row">
       <div id="flexy-menu-side" class="col-sm-2">
 
-      <router-link to="/foo">Go to Foo</router-link>
-      <router-link to="/bar">Go to Bar</router-link>
       <router-link to="/grid/tbl_menu">Menu</router-link>
       <router-link to="/grid/tbl_links">Links</router-link>
+      <router-link to="/grid/tbl_crud">Links</router-link>
+      <router-link to="/media/pictures">Pictures</router-link>
 
       <?=$sidemenu?>
       </div>
@@ -47,17 +47,6 @@
         <router-view></router-view>
         
         <template v-if="!state.menu"><?=$content?></template>
-        
-        <template v-if="state.menu">
-          <template v-if="state.menu.type=='grid'">
-            GRID: {{state.menu}}
-
-            <flexy-grid type="table" :api="state.menu.api" :name="state.menu.table" :title="state.menu.title" offset="0" :autoresize="true"></flexy-grid>
-
-          </template>
-          <template v-else-if="state.menu.type=='media'">MEDIA: {{state.menu}} </template>
-          <template v-else>{{state.menu}}</template>
-        </template>
       
       </div>
     </div>

@@ -1331,6 +1331,8 @@ Class Data_Core extends CI_Model {
     $searchable_fields = array_unset_keys($searchable_fields,array('id','order','self_parent','uri'));
     $searchable_fields = not_filter_by_key($searchable_fields,array('b','action'));
     $grid_set['searchable_fields'] = array_values($searchable_fields);
+
+    $grid_set['title'] = $this->lang->ui($this->settings['table']);
     return $grid_set;
   }
   

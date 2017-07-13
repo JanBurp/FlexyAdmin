@@ -13,8 +13,11 @@ export default {
   name: 'FlexyGrid',
   components: {draggable,flexyButton,FlexyGridCell,FlexyPagination },
   props:{
-    'title':String,
     'name':String,
+    'title':{
+      type: String,
+      default:'',
+    },
     'api':{
       type: [String,Boolean],
       default:false,
@@ -60,8 +63,6 @@ export default {
   
   
   mounted : function() {
-    console.log('mounted');
-
     var self = this;
     self.calcLimit();
     
@@ -83,38 +84,16 @@ export default {
       self.mouseY = e.pageY;
     }
 
-    //
-    // Load first page
-    // 
-    if (this.type!=='mediapicker') this.apiParts.formID = jdb.getUrlQueryPart('form');
-    if ( !this.apiParts.formID ) {
-      this.apiParts.formID = false;
-      this.reloadPage({
-        offset : this.offset,
-        limit  : this.apiParts.limit,
-        order  : this.order,
-        filter : this.filter,
-      });
-    }
-    
-    //
-    // Init Find
-    //
-    this.extendedFind = false;
-    if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
-      this.extendedFind = true;
-      this.extendedTerm = JSON.parse(this.filter);
-      this.filterTerm = '';
-    }
-    else {
-      this.extendedTerm = [_.clone(this.extendedTermDefault)];
-    }
-
-
+    this.loadStart();
   },
+
   
   beforeUpdate : function() {
-    console.log('beforeUpdate',this.api,this.name);
+    // Test if (re)load needed
+    if (this.name!==this.currentName) {
+      this.loadStart();
+    }
+    this.currentName = this.name;
 
     //
     // Selection
@@ -141,13 +120,10 @@ export default {
 
   },
 
-  updated : function() {
-    console.log('updated');
-  },
-
-
   data : function() {
     return {
+      uiTitle           : this.title ? this.title : '',
+      currentName       : '',
       items             : [],
       fields            : [],
       actions           : [],
@@ -206,6 +182,14 @@ export default {
   },
   
   methods:{
+
+    reset : function() {
+      this.fields            = [];
+      this.searchable_fields = [];
+      this.actions           = [];
+      this.items             = [];
+      this.dataInfo          = {};
+    },
 
     dataName : function() {
       var name = this.name;
@@ -289,6 +273,31 @@ export default {
       // console.log('autoresize:',width,height,rows,cols,changed,new_offset,new_limit);
       return changed;
     },
+
+    loadStart : function() {
+      this.reset();
+      // Load first page
+      if (this.type!=='mediapicker') this.apiParts.formID = jdb.getUrlQueryPart('form');
+      if ( !this.apiParts.formID ) {
+        this.apiParts.formID = false;
+        this.reloadPage({
+          offset : this.offset,
+          limit  : this.apiParts.limit,
+          order  : this.order,
+          filter : this.filter,
+        });
+      }
+      // Init Find
+      this.extendedFind = false;
+      if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
+        this.extendedFind = true;
+        this.extendedTerm = JSON.parse(this.filter);
+        this.filterTerm = '';
+      }
+      else {
+        this.extendedTerm = [_.clone(this.extendedTermDefault)];
+      }
+    },
     
     reloadPageAfterResize() {
       this.reloadPage();
@@ -306,6 +315,8 @@ export default {
             self.newUrl();
             // Zijn er settings meegekomen?
             if ( !_.isUndefined(response.data.settings) ) {
+              // Title
+              if (!_.isUndefined(response.data.settings.grid_set.title)) self.uiTitle = response.data.settings.grid_set.title;
               // Fields
               self.fields = response.data.settings.grid_set.field_info;
               self.searchable_fields = response.data.settings.grid_set.searchable_fields;
@@ -347,7 +358,7 @@ export default {
         var stateObj = parts;
         var url = location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+jdb.encodeURL(parts.filter)+'"}';
         if (this.apiParts.formID) url += '&form=' + this.apiParts.formID;
-        history.pushState(stateObj, "", url);
+        // history.pushState(stateObj, "", url);
       }
     },
     
@@ -996,12 +1007,12 @@ export default {
 <template>
   <div>
     
-    <flexy-form v-if="apiParts.formID!==false" :title="title" :name="name" :primary="apiParts.formID" @formclose="updateItem(apiParts.formID,$event)"></flexy-form>
+    <flexy-form v-if="apiParts.formID!==false" :title="uiTitle" :name="name" :primary="apiParts.formID" @formclose="updateItem(apiParts.formID,$event)"></flexy-form>
     
     <div v-if="apiParts.formID===false" class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
       <!-- MAIN HEADER -->
       <div class="card-header">
-        <h1>{{title}}</h1>
+        <h1>{{uiTitle}}</h1>
 
         <!-- ACTIONS ?-->
         <div v-if="actions.length>0" class="grid-actions">

@@ -71,17 +71,11 @@ $route['_admin_assets/(.*)/(.*)']   = "file/file/admin_assets/$1/$2";
 $route['_admin/plugin']      = "_admin/plugin_controller";
 $route['_admin/plugin/(.+)'] = "_admin/plugin_controller/call/$1";
 
-/**
- * This routing reroutes help subpages
- */
-$route['_admin/help/(.+)'] = "_admin/help/index/$1";
-
 
 /**
  * Update actions
  */
 $route['_admin/update/(.+)'] = "_admin/update/index/$1";
-
 
 // Reserved routes
 $route['default_controller'] = "Main";
