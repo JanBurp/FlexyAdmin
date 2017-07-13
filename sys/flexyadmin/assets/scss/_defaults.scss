@@ -23,6 +23,17 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
     background-color: $gray-lighter;
     color: $brand-primary!important;
   }
+
+  .hide-when-active {display:inline}
+  .show-when-active {display:none}
+  .active {
+    .hide-when-active {display:none}
+    .show-when-active {display:inline}
+  }
+  .help-button {
+    .active {margin-right:-1.5rem;}
+    a.active {border-top-right-radius:0;border-bottom-right-radius:0;}
+  }
 }
 .nav-item.seperator {
   border-top:solid 2px $gray-lighter;
