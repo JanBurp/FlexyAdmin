@@ -821,6 +821,7 @@ class Menu {
           'clickable'   => (!empty($thisUri)),
           'submenu'     => $submenu,
           'icon'        => $icon,
+          'active_icon' => el('active_icon',$item,false),
           'html'        => el('html',$item,''),
         ),true);
 
