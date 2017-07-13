@@ -11,6 +11,7 @@ export default {
   name: 'FlexyState',
   debug: false,
   state: {
+    menu        : false,
     progress    : 0,
     help_on     : false,
     help_items  : {},
@@ -77,6 +78,35 @@ export default {
     this.state.progress = percent;
     this.debug && console.log('state.progress',this.state.progress); 
   },
+
+  /**
+   * Menu
+   */
+  openMenu : function(uri,event) {
+    this.state.menu = false;
+    var uri = uri.split('/');
+    if (uri[0]!=='_admin') return false;
+
+    if (uri[1]=='show') {
+    
+      if (uri[2]=='grid') {
+        event.stopPropagation();
+        event.preventDefault(); 
+        var table = uri[3];
+        this.state.menu = {
+          type  : 'grid',
+          uri   : uri,
+          table : table,
+          title : table,
+          api   : 'table',
+        };
+      }
+    
+    }
+    
+    console.log('openMenu',uri,this.state.menu);
+  },
+
   
   /**
    * Help

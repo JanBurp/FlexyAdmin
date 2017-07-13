@@ -60,6 +60,7 @@ export default {
   
   
   mounted : function() {
+    console.log('mounted');
 
     var self = this;
     self.calcLimit();
@@ -108,15 +109,18 @@ export default {
     else {
       this.extendedTerm = [_.clone(this.extendedTermDefault)];
     }
+
+
   },
   
   beforeUpdate : function() {
+    console.log('beforeUpdate',this.api,this.name);
+
     //
     // Selection
     //
     if (this.selection) {
       // Pas selected aan
-      // console.log('flexy-grid.update',this.selection);
       var selected = [];
       for (var i = 0; i < this.selection.length; i++) {
         var src = this.selection[i];
@@ -130,13 +134,15 @@ export default {
         if (key_item) selected.push(key_item);
       }
       
-      // console.log( _.isEqual(selected,this.selected), selected, this.selected );
       if ( !_.isEqual(selected,this.selected) ) {
         this.selected = _.clone(selected);
       }
-      // jdb.vueLog(this.items);
-      
     }
+
+  },
+
+  updated : function() {
+    console.log('updated');
   },
 
 
@@ -185,15 +191,7 @@ export default {
 
   
   computed:{
-    
-    dataName : function() {
-      var name = this.name;
-      if (this.gridType()==='media') {
-        name = 'media_'+name;
-      }
-      return name;
-    },
-    
+
     /**
      * Options for draggable
      */
@@ -208,6 +206,15 @@ export default {
   },
   
   methods:{
+
+    dataName : function() {
+      var name = this.name;
+      if (this.gridType()==='media') {
+        name = 'media_'+name;
+      }
+      return name;
+    },
+
     
     calcLimit : function( view ) {
       if (!this.autoresize) return false;
