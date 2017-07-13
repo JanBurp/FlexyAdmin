@@ -12,7 +12,8 @@ export default {
   debug: false,
   state: {
     progress    : 0,
-    help        : false,
+    help_on     : false,
+    help_items  : {},
     messages    : [],
     media_view  : _flexy.media_view,
     _modal      : {
@@ -67,6 +68,9 @@ export default {
       self.debug && console.log('state.progress',self.state.progress); 
     }, 250);
   },
+  getProgress : function() {
+    return this.state.progress;
+  },
   setProgress : function(value,max) {
     var percent = Math.round(value * 100 / max);
     if (percent<10) percent=10; // Start met minimaal 10%
@@ -78,7 +82,24 @@ export default {
    * Help
    */
   helpIsOn : function() {
-    return this.state.help;
+    return this.state.help_on;
+  },
+  toggleHelp : function() {
+    if (this.state.help_on)
+      this.state.help_on = false;
+    else 
+      this.state.help_on = true;
+    if (this.state.help_on && _.isUndefined(this.state.help_items.help)) {
+      this.loadHelp();
+    }
+  },
+  loadHelp : function() {
+    var self = this;
+    self.api({
+      url : 'get_help',
+    }).then(function(response){
+      self.state.help_items = response.data.data;
+    });
   },
   
   /**
