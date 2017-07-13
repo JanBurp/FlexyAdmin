@@ -9,7 +9,7 @@ export default {
       visibleItem : '',
     }
   },
-  created : function() {
+  updated : function() {
     this.visibleItem = Object.keys(this.items)[0];
   },
 }
