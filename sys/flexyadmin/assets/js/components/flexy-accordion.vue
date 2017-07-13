@@ -10,7 +10,7 @@ export default {
     }
   },
   updated : function() {
-    this.visibleItem = Object.keys(this.items)[0];
+    if (this.visibleItem==='') this.visibleItem = Object.keys(this.items)[0];
   },
 }
 </script>
