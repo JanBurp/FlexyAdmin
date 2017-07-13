@@ -27,6 +27,9 @@ import mediapicker      from './components/form/mediapicker.vue'
 
 // Routes
 import RouteGrid        from './routes/grid.vue'
+import RouteMedia       from './routes/media.vue'
+import Route404         from './routes/404.vue'
+
 
 // Import TinyMCE
 import tinymce from 'tinymce/tinymce';
@@ -60,20 +63,18 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
   // ROUTER
   Vue.use(VueRouter);
 
-  const Foo = { template: '<div>foo</div>' }
-  const Bar = { template: '<div>bar</div>' }
   // const Grid = { template: '<div>GRID: {{ $route.params.table }} <flexy-grid :name="$route.params.table" :title="$route.params.table"></flexy-grid></div>' }
   
   const routes = [
-    { path: '/foo',         component: Foo },
-    { path: '/bar',         component: Bar },
     { path: '/grid/:table', component: RouteGrid },
-
+    { path: '/media/:path', component: RouteMedia },
+    // { path: '*', component: Route404 }
   ]
   const router = new VueRouter({
     // mode: 'history',
     routes // short for `routes: routes`
   })
+
 
   /**
      Main Vue Instance
