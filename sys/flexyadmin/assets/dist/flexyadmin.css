@@ -5615,9 +5615,10 @@ a > .fa, .btn > .fa {
   right: 0;
   padding-top: 2px;
   width: 30%;
-  min-height: 100%;
+  height: 100%;
   background-color: #fff;
-  border-left: solid 2px #696; }
+  border-left: solid 1px #696;
+  overflow-y: scroll; }
 
 /* MASK */
 #mask {
