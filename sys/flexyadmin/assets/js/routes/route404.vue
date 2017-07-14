@@ -1,11 +1,9 @@
 <script>
 export default {
-  name: '404',
+  name: 'route404',
 }
 </script>
 
 <template>
-  <div>
-  <h1>404</h1>
-  </div>
+  <div></div>
 </template>
