@@ -9,6 +9,6 @@ export default {
 
 <template>
   <div>
-    <flexy-grid type="table" api="table" limit="10" :name="$route.params.table"></flexy-grid>
+    <flexy-grid type="table" api="table" limit="10" :name="$route.params.table" :autoresize="true"></flexy-grid>
   </div>
 </template>
