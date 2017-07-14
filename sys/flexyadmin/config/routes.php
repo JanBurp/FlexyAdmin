@@ -71,11 +71,18 @@ $route['_admin_assets/(.*)/(.*)']   = "file/file/admin_assets/$1/$2";
 $route['_admin/plugin']      = "_admin/plugin_controller";
 $route['_admin/plugin/(.+)'] = "_admin/plugin_controller/call/$1";
 
-
 /**
  * Update actions
  */
 $route['_admin/update/(.+)'] = "_admin/update/index/$1";
+
+/**
+ * Other Admin Routes
+ */
+$route['_admin/(.*)'] 					= "_admin";
+// $route['_admin/(.*)/(.*)'] 			= "_admin";
+// $route['_admin/(.*)/(.*)/(*.)'] = "_admin";
+
 
 // Reserved routes
 $route['default_controller'] = "Main";

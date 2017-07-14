@@ -34,20 +34,11 @@
     </div>
     <div id="row" class="row">
       <div id="flexy-menu-side" class="col-sm-2">
-
-      <router-link to="/grid/tbl_menu">Menu</router-link>
-      <router-link to="/grid/tbl_links">Links</router-link>
-      <router-link to="/grid/tbl_crud">Links</router-link>
-      <router-link to="/media/pictures">Pictures</router-link>
-
-      <?=$sidemenu?>
+        <?=$sidemenu?>
       </div>
       <div id="content" class="col-sm-10">
-
-        <router-view></router-view>
-        
-        <template v-if="!state.menu"><?=$content?></template>
-      
+        <router-view v-if="$route.path.length>1"></router-view>
+        <template v-else><?=$content?></template>
       </div>
     </div>
     <div id="mask" v-cloak v-show="state.progress>0">
@@ -66,6 +57,7 @@
 
 <script type="text/javascript" charset="utf-8">
 var _flexy = {
+  'base_url'      : '<?=preg_replace("/(.*\/_admin).*/u", "$1", $_SERVER["REQUEST_URI"]);?>',
   'auth_token'    : '<?=$user['auth_token']?>',
   'media_view'    : '<?=$user['str_filemanager_view']?>',
   'language'      : '<?=$language?>',
