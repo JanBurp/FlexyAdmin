@@ -77,6 +77,8 @@ Class Admin_menu extends CI_Model {
       $first=false;
     }
 
+    // trace_($sideMenu->menu);
+
     return array(
       'homemenu'   =>$homeMenu->render(),
       'headermenu' =>$headerMenu->render(),
@@ -132,9 +134,9 @@ Class Admin_menu extends CI_Model {
             case 'table':
               $table = el('table',$item,$key);
               if ($this->flexy_auth->has_rights($table)) {
-                $menuItems[$table] = $this->_process_item($base_url, array(
+                $menuItems[$table] = $this->_process_item('', array(
                   'name'       => el('name',$item,$this->lang->ui($table)),
-                  'uri'        => 'show/grid/'.$table,
+                  'uri'        => 'grid/'.$table,
                   'icon'       => el('icon',$item,''),
                   'iconactive' => el('iconactive',$item,''),
                   'class'      => el('class',$item,''),
@@ -149,9 +151,9 @@ Class Admin_menu extends CI_Model {
               foreach ($tables as $table) {
                 if (!in_array($table,$this->hidden_tables)) {
                   if (!isset($menuItems[$table])) {
-                    $menuItems[$table] = $this->_process_item($base_url, array(
+                    $menuItems[$table] = $this->_process_item('', array(
                       'name'       => $this->lang->ui($table),
-                      'uri'        => 'show/grid/'.$table,
+                      'uri'        => 'grid/'.$table,
                       'icon'       => el('icon',$item,''),
                       'iconactive' => el('iconactive',$item,''),
                       'class'      => el('class',$item,''),
@@ -164,9 +166,9 @@ Class Admin_menu extends CI_Model {
             // Media
             case 'media':
               $path = el('path',$item,$key);
-              $menuItems['media_'.$path] = $this->_process_item($base_url, array(
+              $menuItems['media_'.$path] = $this->_process_item('', array(
                 'name'       => el('name',$item,$this->lang->ui('media_'.$path)),
-                'uri'        => 'show/media/'.$path,
+                'uri'        => 'media/'.$path,
                 'icon'       => el('icon',$item,''),
                 'iconactive' => el('iconactive',$item,''),
                 'class'      => el('class',$item,''),
@@ -178,9 +180,9 @@ Class Admin_menu extends CI_Model {
               $medias = $this->assets->get_assets_folders(false);
               foreach ($medias as $media) {
                 if (!isset($menuItems['media_'.$media])) {
-                  $menuItems['media_'.$media] = $this->_process_item($base_url, array(
+                  $menuItems['media_'.$media] = $this->_process_item('', array(
                     'name'       => $this->lang->ui('media_'.$media),
-                    'uri'        => 'show/media/'.$media,
+                    'uri'        => 'media/'.$media,
                     'icon'       => el('icon',$item,''),
                     'iconactive' => el('iconactive',$item,''),
                     'class'      => el('class',$item,''),

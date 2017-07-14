@@ -28,13 +28,12 @@ import mediapicker      from './components/form/mediapicker.vue'
 // Routes
 import RouteGrid        from './routes/grid.vue'
 import RouteMedia       from './routes/media.vue'
-import Route404         from './routes/404.vue'
+import Route404         from './routes/route404.vue'
 
 
 // Import TinyMCE
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
-
 
 if ( !_.isUndefined(_flexy.auth_token) ) {
    // TinyMCE Global & Set extra
@@ -60,20 +59,25 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
     },
   });
 
+  console.log(_flexy.base_url);
+
   // ROUTER
   Vue.use(VueRouter);
-
-  // const Grid = { template: '<div>GRID: {{ $route.params.table }} <flexy-grid :name="$route.params.table" :title="$route.params.table"></flexy-grid></div>' }
-  
-  const routes = [
-    { path: '/grid/:table', component: RouteGrid },
-    { path: '/media/:path', component: RouteMedia },
-    // { path: '*', component: Route404 }
-  ]
   const router = new VueRouter({
-    // mode: 'history',
-    routes // short for `routes: routes`
-  })
+    mode                 : 'history',
+    base                 : _flexy.base_url,
+    linkExactActiveClass : 'active',
+
+    routes : [
+      { path: '/grid/:table', component: RouteGrid },
+      { path: '/media/:path', component: RouteMedia },
+      { path: '*', component: Route404 }
+    ],
+    scrollBehavior (to, from, savedPosition) {
+     return { x: 0, y: 0 }
+    }
+  });
+
 
 
   /**
