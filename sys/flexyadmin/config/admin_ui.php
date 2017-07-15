@@ -14,12 +14,13 @@ $config['home_menu'] = array(
  * Menu
  */
 $config['header_menu'] = array(
-  'statistics' => array( 'name'=>'statistics', 'uri'=>'plugin/stats',                  'icon'=>'bar-chart'),
-  'settings'   => array( 'name'=>'settings',   'uri'=>'show/form/tbl_site/1',          'icon'=>'cog'),
-  'user'       => array( 'name'=>'{username}', 'uri'=>'show/form/cfg_users/{user_id}', 'icon'=>'user') ,
-  'logout'     => array( 'name'=>'logout',     'uri'=>'logout',                        'icon'=>'power-off' ),
-  'help'       => array( 'name'=>'help',       'uri'=>'help',                          'icon'=>'question-circle' ), // Hier komt extra code bij
+  'statistics' => array( 'name'=>'statistics', 'uri'=>'plugin/stats',                     'icon'=>'bar-chart'),
+  'settings'   => array( 'name'=>'settings',   'uri'=>'form/tbl_site/1/single',           'icon'=>'cog'),
+  'user'       => array( 'name'=>'{username}', 'uri'=>'form/cfg_users/{user_id}/single',  'icon'=>'user') ,
+  'logout'     => array( 'name'=>'logout',     'uri'=>'logout',                           'icon'=>'power-off' ),
+  'help'       => array( 'name'=>'help',       'uri'=>'help',                             'icon'=>'question-circle' ), // Hier komt extra code bij
 );
+
 
 $config['side_menu']           = array();
 $config['side_menu']['tables'] = array();

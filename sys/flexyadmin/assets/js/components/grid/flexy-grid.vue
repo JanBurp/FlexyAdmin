@@ -90,7 +90,7 @@ export default {
   
   beforeUpdate : function() {
     // Test if (re)load needed
-    if (this.name!==this.currentName) {
+    if ( this.name!==this.currentName) {
       this.loadStart();
     }
     this.currentName = this.name;
@@ -138,7 +138,6 @@ export default {
         limit         : this.limit,
         txt_abstract  : true,
         as_grid       : true,
-        formID        : false,
       },
       changeUrlApi: true,
       focus       : {id:false,cell:false},
@@ -276,17 +275,13 @@ export default {
 
     loadStart : function() {
       this.reset();
-      // Load first page
-      if (this.type!=='mediapicker') this.apiParts.formID = jdb.getUrlQueryPart('form');
-      if ( !this.apiParts.formID ) {
-        this.apiParts.formID = false;
-        this.reloadPage({
-          offset : this.offset,
-          limit  : this.apiParts.limit,
-          order  : this.order,
-          filter : this.filter,
-        });
-      }
+      this.reloadPage({
+        offset : this.offset,
+        limit  : this.apiParts.limit,
+        order  : this.order,
+        filter : this.filter,
+      });
+
       // Init Find
       this.extendedFind = false;
       if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
@@ -311,8 +306,6 @@ export default {
       .then(function(response){
         if (!_.isUndefined(response.data)) {
           if (response.data.success) {
-            // Stel url in van browser
-            self.newUrl();
             // Zijn er settings meegekomen?
             if ( !_.isUndefined(response.data.settings) ) {
               // Title
@@ -350,16 +343,6 @@ export default {
         url += '&settings=grid_set';
       }
       return url;
-    },
-    
-    newUrl : function(){
-      if (this.changeUrlApi) {
-        var parts = this.apiParts;
-        var stateObj = parts;
-        var url = location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+jdb.encodeURL(parts.filter)+'"}';
-        if (this.apiParts.formID) url += '&form=' + this.apiParts.formID;
-        // history.pushState(stateObj, "", url);
-      }
     },
     
     hasData : function() {
@@ -586,21 +569,9 @@ export default {
     },
     
     editItem : function(id) {
-      // var url = this.editUrl(id);
-      // window.location.assign(url);
-      this.apiParts.formID = id;
-      this.newUrl();
+      var url = '/form/'+this.name+'/'+id;
+      this.$router.push(url);
     },
-    
-    updateItem : function(id,data) {
-      this.apiParts.formID = false;
-      this.items = [];
-      this.reloadPage();
-      // var itemIndex = jdb.indexOfProperty(this.items,'id',id);
-      // console.log(itemIndex);
-      // jdb.vueLog(this.items);
-    },
-    
     
     removeItems : function(removeIds) {
       var self = this;
@@ -1007,9 +978,7 @@ export default {
 <template>
   <div>
     
-    <flexy-form v-if="apiParts.formID!==false" :title="uiTitle" :name="name" :primary="apiParts.formID" @formclose="updateItem(apiParts.formID,$event)"></flexy-form>
-    
-    <div v-if="apiParts.formID===false" class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
+    <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
       <!-- MAIN HEADER -->
       <div class="card-header">
         <h1>{{uiTitle}}</h1>

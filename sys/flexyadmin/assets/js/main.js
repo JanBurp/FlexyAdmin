@@ -27,6 +27,7 @@ import mediapicker      from './components/form/mediapicker.vue'
 
 // Routes
 import RouteGrid        from './routes/grid.vue'
+import RouteForm        from './routes/form.vue'
 import RouteMedia       from './routes/media.vue'
 import Route404         from './routes/route404.vue'
 
@@ -59,8 +60,6 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
     },
   });
 
-  console.log(_flexy.base_url);
-
   // ROUTER
   Vue.use(VueRouter);
   const router = new VueRouter({
@@ -69,9 +68,11 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
     linkExactActiveClass : 'active',
 
     routes : [
-      { path: '/grid/:table', component: RouteGrid },
-      { path: '/media/:path', component: RouteMedia },
-      { path: '*', component: Route404 }
+      { path: '/grid/:table',           component: RouteGrid },
+      { path: '/form/:table/:id',       component: RouteForm },
+      { path: '/form/:table/:id/:type', component: RouteForm },
+      { path: '/media/:path',           component: RouteMedia },
+      { path: '*',                      component: Route404 }
     ],
     scrollBehavior (to, from, savedPosition) {
      return { x: 0, y: 0 }
