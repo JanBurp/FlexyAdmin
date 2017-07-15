@@ -1367,6 +1367,8 @@ Class Data_Core extends CI_Model {
     
     // Field info
     $form_set['field_info'] = $this->get_setting_field_info_extended($form_set['fields'],array(),true);
+
+    $form_set['title'] = $this->lang->ui($this->settings['table']);
     return $form_set;
   }
   

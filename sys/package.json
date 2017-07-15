@@ -7,9 +7,9 @@
   "private": true,
   "main": "index.php",
   "scripts": {
-    "watch": "NODE_ENV=watch webpack --devtool eval --progress --watch",
+    "watch":   "NODE_ENV=watch webpack --devtool eval --progress --watch",
     "develop": "NODE_ENV=develop webpack --devtool eval --progress",
-    "build": "NODE_ENV=production webpack --progress"
+    "build":   "NODE_ENV=production webpack --progress"
   },
   "eslintConfig": {
     "parserOptions": {
