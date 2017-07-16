@@ -29,6 +29,8 @@ import mediapicker      from './components/form/mediapicker.vue'
 import RouteGrid        from './routes/grid.vue'
 import RouteForm        from './routes/form.vue'
 import RouteMedia       from './routes/media.vue'
+import RoutePlugin      from './routes/plugin.vue'
+import RouteLogout      from './routes/logout.vue'
 import Route404         from './routes/route404.vue'
 
 
@@ -68,11 +70,13 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
     linkExactActiveClass : 'active',
 
     routes : [
-      { path: '/grid/:table',           component: RouteGrid },
-      { path: '/form/:table/:id',       component: RouteForm },
-      { path: '/form/:table/:id/:type', component: RouteForm },
-      { path: '/media/:path',           component: RouteMedia },
-      { path: '*',                      component: Route404 }
+      { path: '/grid/:table',             component: RouteGrid },
+      { path: '/form/:table/:id/:type?',  component: RouteForm },
+      { path: '/media/:path',             component: RouteMedia },
+      { path: '/plugin',                  component: RoutePlugin },
+      { path: '/plugin/:plugin*',         component: RoutePlugin },
+      { path: '/logout',                  component: RouteLogout },
+      { path: '*',                        component: Route404 }
     ],
     scrollBehavior (to, from, savedPosition) {
      return { x: 0, y: 0 }
@@ -100,8 +104,8 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
     },
     data : function() {
       return {
-        global : flexyState,
-        state  : flexyState.state,
+        global            : flexyState,
+        state             : flexyState.state,
         mediaPopup : {
           'src' : '',
           'alt' : ''
@@ -109,10 +113,12 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
       }
     },
     methods: {
+
       mediaPopupChanged : function(media) {
         this.mediaPopup.alt = media;
         this.mediaPopup.src = media;
-      }
+      },
+
     }
   });
 

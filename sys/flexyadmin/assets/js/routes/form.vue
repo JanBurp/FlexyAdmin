@@ -1,5 +1,5 @@
 <script>
-import FlexyForm    from '../components/form/flexy-form.vue'
+import FlexyForm  from '../components/form/flexy-form.vue'
 
 export default {
   name: 'form',
