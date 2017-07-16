@@ -44,7 +44,7 @@ Class Admin_menu extends CI_Model {
     $homeMenu = new Menu();
     $homeMenu->set('view_path','admin/menu-home');
     $homeMenu->set_current($current_uri);
-    $homeMenu->add_items( $this->_process_items($base_url, $this->_get_config_item('home_menu') ) );
+    $homeMenu->add_items( $this->_process_items('', $this->_get_config_item('home_menu') ) );
     
     /**
      * Headermenu
@@ -55,9 +55,10 @@ Class Admin_menu extends CI_Model {
     $headerMenu->set_current($current_uri);
     $headerMenu->add_items( $this->_process_items('', $this->_get_config_item('header_menu') ) );
     // Headermenu Help
-    $headerMenu->menu['_admin/help']['html'] = '@click.stop.prevent="global.toggleHelp()" :class="{\'active\':state.help_on}"';
-    $headerMenu->menu['_admin/help']['class'] = 'help-button';
-    $headerMenu->menu['_admin/help']['active_icon'] = 'chevron-right';
+    $headerMenu->menu['help']['uri']          ='';
+    $headerMenu->menu['help']['html']         = '@click.stop.prevent="global.toggleHelp()" :class="{\'active\':state.help_on}"';
+    $headerMenu->menu['help']['class']        = 'help-button';
+    $headerMenu->menu['help']['active_icon']  = 'chevron-right';
 
     /**
      * Side menu
@@ -69,10 +70,10 @@ Class Admin_menu extends CI_Model {
     $first=true;
     $side = $this->_get_config_item('side_menu');
     foreach ($side as $group) {
-      $items = $this->_process_items($base_url,$group);
+      $items = $this->_process_items('',$group);
       if ($items) {
         if (!$first) $sideMenu->add_split();
-        $sideMenu->add_items( $this->_process_items($base_url,$group) );
+        $sideMenu->add_items( $this->_process_items('',$group) );
       }
       $first=false;
     }
