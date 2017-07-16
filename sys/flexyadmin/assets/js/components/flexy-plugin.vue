@@ -40,6 +40,7 @@ export default {
       return flexyState.api({
         url   : 'get_plugin?plugin='+plugin,
       }).then(function(response){
+        console.log(response.data.data);
         self.name = response.data.data.title;
         self.html = response.data.data.html;
         self.list = _.isUndefined(response.data.data.plugin);
@@ -57,10 +58,12 @@ export default {
 
 <template>
   <div class="card flexy-plugin" :class="'plugin_'+plugin">
+    
     <template v-if="!list">
       <h1 class="card-header">{{name}}</h1>
       <div class="card-block" v-html="html"></div>
     </template>
+
     <template v-if="list">
       <h1 class="card-header">{{name}}</h1>
       <div class="card-block">
