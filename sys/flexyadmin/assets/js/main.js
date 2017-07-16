@@ -30,6 +30,7 @@ import RouteGrid        from './routes/grid.vue'
 import RouteForm        from './routes/form.vue'
 import RouteMedia       from './routes/media.vue'
 import RoutePlugin      from './routes/plugin.vue'
+import RouteTools       from './routes/tools.vue'
 import RouteLogout      from './routes/logout.vue'
 import Route404         from './routes/route404.vue'
 
@@ -75,6 +76,7 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
       { path: '/media/:path',             component: RouteMedia },
       { path: '/plugin',                  component: RoutePlugin },
       { path: '/plugin/:plugin*',         component: RoutePlugin },
+      { path: '/tools/:tool*',            component: RouteTools },
       { path: '/logout',                  component: RouteLogout },
       { path: '*',                        component: Route404 }
     ],
