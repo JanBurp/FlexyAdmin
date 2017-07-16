@@ -1,4 +1,4 @@
-<?php require_once(APPPATH."core/AdminController.php");
+<?php
 
 /** \ingroup controllers
  * Special Controller Class
@@ -7,29 +7,27 @@
  * @copyright (c) Jan den Besten
  */
 
-class Fill extends AdminController {
+class Plugin_fill extends Plugin {
   
-  private $content = '';
-
   public function __construct() {
 		parent::__construct();
 	}
 
-  public function index() {
-		if ($this->flexy_auth->can_use_tools()) {
-			$this->lang->load('help');
-			$this->lang->load('form');
-      $this->load->library('lorem');
+  public function _admin_api() {
+		if ($this->CI->flexy_auth->can_use_tools()) {
+			$this->CI->lang->load('help');
+			$this->CI->lang->load('form');
+      $this->CI->load->library('lorem');
       $lorem = new Lorem();
 		
-			$aantal          = $this->input->post('aantal');
-			$addtable        = $this->input->post('addtable');
-			$fields          = $this->input->post('fields');
-			$where           = $this->input->post('where');
-      $fill            = $this->input->post('fill');
-      $random          = $this->input->post('random');
-      $many_to_many    = $this->input->post('many_to_many');
-			$test            = $this->input->post('test');
+			$aantal          = $this->CI->input->post('aantal');
+			$addtable        = $this->CI->input->post('addtable');
+			$fields          = $this->CI->input->post('fields');
+			$where           = $this->CI->input->post('where');
+      $fill            = $this->CI->input->post('fill');
+      $random          = $this->CI->input->post('random');
+      $many_to_many    = $this->CI->input->post('many_to_many');
+			$test            = $this->CI->input->post('test');
       
 			$htmlTest='';
 
@@ -37,18 +35,18 @@ class Fill extends AdminController {
 
 			// create rows in table
 			if ($aantal and $addtable) {
-        $this->data->table($addtable);
+        $this->CI->data->table($addtable);
 				$first_field = remove_prefix(current($fields),'.');
 				for ($i=0; $i < $aantal; $i++) { 
 					$id='#';
-					if (!$test) $id = $this->data->table($addtable)->set($first_field,random_string())->insert();
+					if (!$test) $id = $this->CI->data->table($addtable)->set($first_field,random_string())->insert();
 					$htmlTest.="<li>+ $addtable [$id]</li>";
 				}
 			}
 
       if (!empty($addtable) and (empty($fields) or (count($fields)==1 and $fields[0]=='.'))) {
         // Voeg alle velden van gekozen tabel toe
-        $fields = $this->data->table($addtable)->list_fields();
+        $fields = $this->CI->data->table($addtable)->list_fields();
         foreach ($fields as $key => $field) {
           $fields[$key]=$addtable.'.'.$field;
           if ($field=='id') unset($fields[$key]);
@@ -56,7 +54,7 @@ class Fill extends AdminController {
       }
       // Voeg many_to_many velden toe
       if ($many_to_many) {
-        $relations = $this->data->table( $addtable )->get_setting(array('relations','many_to_many'));
+        $relations = $this->CI->data->table( $addtable )->get_setting(array('relations','many_to_many'));
         if ($relations) {
           foreach ($relations as $relation) {
             array_push($fields,$addtable.'.rel_'.$relation['result_name']);
@@ -70,19 +68,19 @@ class Fill extends AdminController {
 					$table = get_prefix($field,'.');
           $field = get_suffix($field,'.');
           // items
-          $this->data->table($table)->select('id');
-					if (!empty($where)) $this->data->where($where);
-					$items = $this->data->get_result();
+          $this->CI->data->table($table)->select('id');
+					if (!empty($where)) $this->CI->data->where($where);
+					$items = $this->CI->data->get_result();
 					foreach ($items as $id => $item) {
 						$result = $fill;
             if ($random) {
-              $result = $this->data->table($table)->random_field_value( $field, $id );
+              $result = $this->CI->data->table($table)->random_field_value( $field, $id );
             }
             if (!$test and isset($result)) {
-              $this->data->table($table)->where('id',$id);
-              if (!empty($where)) $this->data->where($where);
-              $this->data->set($field,$result);
-              $this->data->update();
+              $this->CI->data->table($table)->where('id',$id);
+              if (!empty($where)) $this->CI->data->where($where);
+              $this->CI->data->set($field,$result);
+              $this->CI->data->update();
             }
 						$htmlTest.="<li>$field [$id] = '$result'</li>";
 					}
@@ -93,10 +91,10 @@ class Fill extends AdminController {
 			}
 			if (!$addtable or $test) {
 				// show form
-        $this->load->model( 'Data/Options_Tables');
-        $this->load->model( 'Data/Options_Fields');
-				$tablesOptions=$this->Options_Tables->get_options();
-				$fieldsOptions=$this->Options_Fields->get_options();
+        $this->CI->load->model( 'Data/Options_Tables');
+        $this->CI->load->model( 'Data/Options_Fields');
+				$tablesOptions=$this->CI->Options_Tables->get_options();
+				$fieldsOptions=$this->CI->Options_Fields->get_options();
 				if (empty($fields)) $fields=array();
 				else $fields=array_combine($fields,$fields);
 				// create form
@@ -111,7 +109,7 @@ class Fill extends AdminController {
 					'test'         => array( 'label' => 'test',	'type' => 'checkbox', 'value' => 1 )
 				);
 				
-				$this->load->library('vueform');
+				$this->CI->load->library('vueform');
 				$form=new vueform(array(
 					'fields'=>$data,
 					'title' => lang('fill_fill')
@@ -120,20 +118,10 @@ class Fill extends AdminController {
 			}
 			$this->content .= div('after_form').$htmlTest._div();	
 		}
-		$this->view_admin('plugins/plugin',array('title'=>'Fill','content'=>$this->content));
-	}
 
- //  public function myErrorHandler($errno, $errstr, $errfile, $errline) 	{
-	// 	static $WarnedAllready=FALSE;
- //    if ($errno==E_WARNING and strpos($errstr,'REG_BADRPT')) {
-	// 		if (!$WarnedAllready) {
-	// 			$this->content .= p('error').lang('bad_regex')._p();
-	// 			$WarnedAllready=TRUE;
-	// 		}
-	// 		return true;
- //    }
- //    return false;
-	// }
+		return $this->content;
+		// $this->CI->load->view('admin/plugins/plugin',array('title'=>'Fill','content'=>$this->content));
+	}
 
 }
 
