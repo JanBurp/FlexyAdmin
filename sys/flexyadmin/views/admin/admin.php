@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="<?=admin_assets()?>dist/flexyadmin.css" type="text/css" media="screen">
 </head>
 
-<body class="<?=$class?>">
+<body>
 
 <div id="main" :class="{'help':global.helpIsOn()}">
   <div class="container-fluid">
