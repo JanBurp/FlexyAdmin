@@ -1,6 +1,6 @@
 <script>
-import dbTool from '../tools/db.vue'
-import fillTool from '../tools/fill.vue'
+import dbTool 		from '../tools/db.vue'
+import fillTool 	from '../tools/fill.vue'
 import searchTool from '../tools/search.vue'
 
 export default {
