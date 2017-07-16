@@ -5,8 +5,8 @@
  * Home Wizards
  */
 $config['home_menu'] = array(
-  'statistics' => array( 'name'=>'watch_statistics', 'uri'=>'plugin/stats',                  'icon'=>'bar-chart',         "class"=>"primary" ),
-  'user'       => array( 'name'=>'edit_user',        'uri'=>'show/form/cfg_users/{user_id}', 'icon'=>'user',              "class"=>"primary" ),
+  'statistics' => array( 'name'=>'watch_statistics', 'uri'=>'plugin/stats',             'icon'=>'bar-chart',         "class"=>"primary" ),
+  'user'       => array( 'name'=>'edit_user',        'uri'=>'form/cfg_users/{user_id}', 'icon'=>'user',              "class"=>"primary" ),
 );
 
 
