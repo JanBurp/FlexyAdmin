@@ -27,13 +27,13 @@ $config['side_menu']['tables'] = array();
 $config['side_menu']['media']  = array();
 
 $config['side_menu']['tools'] = array(
-  'export'   => array( 'user_group'=>'super_admin', 'name'=>'db_export',          'uri'=>'plugin/db/export',   'icon'=>'database', 'class'=>'text-muted' ),
-  'import'   => array( 'user_group'=>'super_admin', 'name'=>'db_import',          'uri'=>'plugin/db/import',   'icon'=>'database', 'class'=>'text-muted' ),
-  'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'plugin/db/backup',   'icon'=>'database', 'class'=>'text-muted' ),
-  'restore'  => array( 'user_group'=>'[b_backup]',  'name'=>'db_restore',         'uri'=>'plugin/db/restore',  'icon'=>'database', 'class'=>'text-muted' ),
+  'export'   => array( 'user_group'=>'super_admin', 'name'=>'db_export',          'uri'=>'tools/db_export',   'icon'=>'database', 'class'=>'text-muted' ),
+  'import'   => array( 'user_group'=>'super_admin', 'name'=>'db_import',          'uri'=>'tools/db_import',   'icon'=>'database', 'class'=>'text-muted' ),
+  'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'tools/db_backup',   'icon'=>'database', 'class'=>'text-muted' ),
+  'restore'  => array( 'user_group'=>'[b_backup]',  'name'=>'db_restore',         'uri'=>'tools/db_restore',  'icon'=>'database', 'class'=>'text-muted' ),
   '-'        => array( 'type'=>'seperator' ),
-  'search'   => array( 'user_group'=>'super_admin',   'name'=>'sr_search_replace',  'uri'=>'plugin/search',      'icon'=>'search', 'class'=>'text-muted' ),
-  'fill'     => array( 'user_group'=>'super_admin',   'name'=>'fill_fill',          'uri'=>'plugin/fill',        'icon'=>'arrow-circle-o-down', 'class'=>'text-muted' ),
+  'search'   => array( 'user_group'=>'super_admin',   'name'=>'sr_search_replace',  'uri'=>'tools/search',      'icon'=>'search', 'class'=>'text-muted' ),
+  'fill'     => array( 'user_group'=>'super_admin',   'name'=>'fill_fill',          'uri'=>'tools/fill',        'icon'=>'arrow-circle-o-down', 'class'=>'text-muted' ),
   '--'       => array( 'type'=>'seperator' ),
   'plugins'  => array( 'user_group'=>'super_admin',  'name'=>'plugins',           'uri'=>'plugin',      'icon'=>'cog',    'class'=>'text-muted' ),
 );
