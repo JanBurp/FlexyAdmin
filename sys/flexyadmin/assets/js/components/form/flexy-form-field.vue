@@ -40,6 +40,11 @@ export default {
       data : this.value,
     }
   },
+
+  beforeUpdate : function() {
+    console.log('beforeUpdate',name,value);
+  },
+
   
   methods:{
     
