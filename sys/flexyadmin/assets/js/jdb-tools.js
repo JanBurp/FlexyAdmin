@@ -106,7 +106,7 @@ export default {
         }
         // normal
         else {
-          serializeString += encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+          if (!_.isUndefined(data[key])) serializeString += encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
         }
       }
     }
