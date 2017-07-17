@@ -1,4 +1,5 @@
 <script>
+
 import FlexyFormField  from './flexy-form-field.vue'
 
 export default {
@@ -22,6 +23,13 @@ export default {
       this.data[field] = this.fields[field].value;
     }
   },
+
+  beforeUpdate : function() {
+    for (var field in this.fields) {
+      this.data[field] = this.fields[field].value;
+    }
+  },
+
 
   methods : {
 
