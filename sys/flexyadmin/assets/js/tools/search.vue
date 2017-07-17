@@ -1,4 +1,7 @@
 <script>
+
+import jdb              from './../jdb-tools.js'
+import flexyState       from './../flexy-state.js'
 import FlexySimpleForm  from '../components/form/flexy-simple-form.vue'
 
 export default {
@@ -8,19 +11,36 @@ export default {
   data : function() {
     return {
       fields : {
-        'search'    : { 'label':'Search',     'type':'input',   'value':'test' },
-        'replace'   : { 'label':'Replace',    'type':'input' },
-        'regex'     : { 'label':'Regex',      'type':'checkbox' },
-        'fields'    : { 'label':'In Fields',  'type':'input' },
-        'test'      : { 'label':'Test',       'type':'checkbox', 'value':true },
+        'search'    : { 'label':'Search',     'type':'input',   'value':'FlexyAdmin' },
+        'replace'   : { 'label':'Replace',    'type':'input',   'value':'REPLACED' },
+        'regex'     : { 'label':'Regex',      'type':'checkbox','value':false },
+        'fields'    : { 'label':'In Fields',  'type':'input',   'value':'str_title,txt_text' },
+        'test'      : { 'label':'Test',       'type':'checkbox','value':true },
       },
+      search : '',
+      replace: '',
+      result : false,
     }
   },
 
   methods : {
 
     submit : function(data) {
-      console.log('submit search',data);
+      var self = this;
+      self.search = data.search;
+      self.replace = data.replace;
+      var url = jdb.serializeJSON(data);
+
+      return flexyState.api({
+        url : 'tools/search?'+url,
+      }).then(function(response){
+        self.result = response.data.data.result;
+        self.fields.fields.value = response.data.data.found_fields.join(', ');
+      });
+    },
+
+    highlight : function(item,highlight) {
+      return item.replace(new RegExp(highlight,'g'),'<span class="text-danger">'+highlight+'</span>');
     },
 
   },
@@ -37,6 +57,43 @@ export default {
       </div>
     </div>
 
+    <div v-if="result!==false" class="card">
+      <h1 class="card-header">Result</h1>
+      <div class="card-block tool-result">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr>
+              <th>#id</th>
+              <th>Abstract</th>
+              <th>Found</th>
+              <th>Replaced</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in result">
+              <td valign="top">{{item.table}}.{{item.field}}[{{item.primary_key}}]</td>
+              <td valign="top">{{item.abstract}}</td>
+              <td valign="top" v-html="highlight(item.value,search)"></td>
+              <td valign="top" v-html="highlight(item.newvalue,replace)"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
   
 </template>
+
+<style>
+  .flexy-tool td,
+  .flexy-tool th {
+    white-space: nowrap;
+    overflow: auto;
+    padding:4px;
+  }
+  .flexy-tool .tool-result {
+    padding:0px;
+    overflow: auto;
+  }
+</style>
