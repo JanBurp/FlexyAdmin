@@ -176,17 +176,18 @@ function array2json($arr) {
 		else {
 			$str = '';
 			if(!$is_list) $str = '"' . $key . '":';
+			
 			//Custom handling for multiple data types
+
       // Booleans
       if (in_array($prefix,array('b','is','has'))) {
   			if ($value == false)
           $str.= 'false';
   			else
-          $str.= 'true';
-        
+          $str.= 'true';       
       }
       // Numbers
-      elseif(is_numeric($value) and strpos($value,'.')===FALSE and (substr($value,0,1)!=='0' or $value==0)) $str.= $value;
+      elseif( is_numeric($value) and preg_match('/[^\d]/u',$value)===0 and (substr($value,0,1)!=='0' or $value==0)) $str.= $value;
       // The booleans
 			elseif($value === false) $str.= 'false';
 			elseif($value === true) $str.= 'true';
