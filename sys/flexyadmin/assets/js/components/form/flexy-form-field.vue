@@ -73,6 +73,7 @@ export default {
     <div class="col-md-9">
       <input v-if="type=='input'"     type="input"    class="form-control" :id="name" :name="name" :placeholder="placeholder" :value="data" @input="update($event.target.value)" />
       <input v-if="type=='checkbox'"  type="checkbox" class="form-control" :id="name" :name="name" v-model="data" @click="update($event.target.checked)" />
+      <input v-if="type=='file'"      type="file"     class="form-control" :id="name" :name="name" @change="update($event.target.value)" />
     </div>
   </div>  
 </template>

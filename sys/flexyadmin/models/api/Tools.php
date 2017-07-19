@@ -11,7 +11,60 @@ class Tools extends Api_Model {
   
 	public function __construct() {
 		parent::__construct();
+    $this->load->dbutil();
   }
+
+  public function db_backup() {
+    if (!$this->flexy_auth->can_backup()) return $this->_result_status401();
+
+    $tablesWithRights=$this->flexy_auth->get_table_rights();
+    // select only data (not config)
+    $tablesWithRights=array_combine($tablesWithRights,$tablesWithRights);
+    $tablesWithRights=not_filter_by($tablesWithRights,"cfg");
+    $tablesWithRights=not_filter_by($tablesWithRights,"log");
+    unset($tablesWithRights["rel_users__rights"]);
+
+    // create backup
+    $prefs = array('tables'=> $tablesWithRights,'format'=>'sql');
+    $sql = $this->dbutil->backup($prefs);
+    $sql = $this->dbutil->clean_sql($sql);
+    $sql = "# FlexyAdmin backup\n# User: '".$this->flexy_auth->get_user(null,'str_username')."'  \n# Date: ".date("d F Y")."\n\n".$sql;
+    $filename='backup_'.$this->_filename().'_'.date("Y-m-d").'.sql';
+    
+    $this->result['data'] = array(
+      'filename' => $filename,
+      'sql'      => $sql,
+    );    
+    return $this->_result_ok();
+  }
+
+
+  private function _filename() {
+    $name=$this->data->table('tbl_site')->get_field("url_url");
+    $name=str_replace(array('http://','https://','www.'),'',$name);
+    $name=explode(".",$name);
+    $name=$name[0];
+    return $name;
+  }
+
+  private function _sql($sql,$super_admin=TRUE) {
+    if (!$this->dbutil->is_safe_sql($sql)) return false;
+    if ($super_admin and !$this->flexy_auth->is_super_admin()) return false;
+    $result = $this->dbutil->import($sql);
+    unset($result['queries']);
+    return $result;
+  }
+
+  public function db_restore() {
+    if (!$this->flexy_auth->can_backup()) return $this->_result_status401();
+
+    $sql = $this->args['sql'];
+    if (empty($sql)) return $this->_result_status401();
+
+    $this->result['data'] = $this->_sql($sql,false);
+    return $this->_result_ok();
+  }
+
 
   public function fill() {
     if (!$this->has_args()) return $this->_result_wrong_args(); 
@@ -80,8 +133,6 @@ class Tools extends Api_Model {
     );    
     return $this->_result_ok();
   }
-
-
 
   
   public function search() {
@@ -193,6 +244,8 @@ class Tools extends Api_Model {
     }
     return false;
   }
+
+
 
 
 }
