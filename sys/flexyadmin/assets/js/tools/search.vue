@@ -37,7 +37,7 @@ export default {
         self.result = response.data.data.result;
         if (response.data.data.found_fields!=='') {
           self.fields.fields.value = response.data.data.found_fields.join(',');
-          self.fields = Object.assign({}, self.fields,  );
+          self.fields = Object.assign({}, self.fields  );
         };
       });
     },
@@ -56,7 +56,7 @@ export default {
     <div class="card">
       <h1 class="card-header">Search &amp; Replace</h1>
       <div class="card-block">
-        <flexy-simple-form :fields="fields" @submit="submit($event)"/>
+        <flexy-simple-form :fields="fields" @submit="submit($event)" />
       </div>
     </div>
 
