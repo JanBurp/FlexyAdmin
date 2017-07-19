@@ -95,6 +95,19 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
   border:none;
 }
 
+// TOOLS
+.flexy-tool {
+  td,
+  th {
+    white-space: nowrap;
+    overflow: auto;
+    padding:4px;
+  }
+  .tool-result {
+    padding:0px;
+    overflow: auto;
+  }
+}
 
 // VUE
 [v-cloak] {
