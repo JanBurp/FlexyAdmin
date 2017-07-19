@@ -12,6 +12,77 @@ class Tools extends Api_Model {
 	public function __construct() {
 		parent::__construct();
   }
+
+  public function fill() {
+    if (!$this->has_args()) return $this->_result_wrong_args(); 
+    if (!$this->flexy_auth->can_use_tools()) return $this->_result_status401();
+
+    $aantal          = el('aantal',$this->args,0);
+    $table           = el('table',$this->args);
+    $fields          = el('fields',$this->args);
+    $where           = el('where',$this->args);
+    $value           = el('value',$this->args,0);
+    $random          = $value=='{RANDOM}';
+    $test            = el('test',$this->args,0);
+
+    $result = array();
+    if ($table) {
+
+      if (!is_array($fields)) $fields=explode(',',$fields);
+
+      // create rows in table
+      if ( $aantal>0 ) {
+        $this->data->table($table);
+        $abstract_fields = $this->data->get_abstract_fields();
+        $abstract_field  = current($abstract_fields);
+        for ($i=0; $i < $aantal; $i++) { 
+          $id='#';
+          if (!$test) $id = $this->data->table($table)->set($abstract_field,random_string())->insert();
+        }
+      }
+
+      // Relaties?
+      // $relations = $this->data->table( $table )->get_setting(array('relations','many_to_many'));
+      // if ($relations) {
+      //   foreach ($relations as $relation) {
+      //     array_push($fields,$table.'.rel_'.$relation['result_name']);
+      //   }
+      // }
+
+      $this->data->table($table)->select( 'id' );
+      if (!empty($where)) $this->data->where($where);
+      $items = $this->data->get_result();
+      foreach ($items as $id => $item) {
+        $result[$id]       = array();
+        $result[$id]['id'] = $id;
+
+        foreach($fields as $field) {
+
+          $item_value = $value;
+          if ($random) $item_value = $this->data->table($table)->random_field_value( $field, $id );
+
+
+          if (!$test) {
+            $this->data->table($table)->where('id',$id);
+            if (!empty($where)) $this->data->where($where);
+            $this->data->set($field,$item_value);
+            $this->data->update();
+          }
+
+          $result[$id][$field] = $item_value;
+        }
+      }
+
+    }
+
+    $this->result['data'] = array(
+      'result'          => $result,
+    );    
+    return $this->_result_ok();
+  }
+
+
+
   
   public function search() {
     if (!$this->has_args()) return $this->_result_wrong_args(); 
