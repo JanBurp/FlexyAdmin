@@ -29,8 +29,8 @@ $config['side_menu']['media']  = array();
 $config['side_menu']['tools'] = array(
   'export'   => array( 'user_group'=>'super_admin', 'name'=>'db_export',          'uri'=>'tools/db_export',   'icon'=>'database', 'class'=>'text-muted' ),
   'import'   => array( 'user_group'=>'super_admin', 'name'=>'db_import',          'uri'=>'tools/db_import',   'icon'=>'database', 'class'=>'text-muted' ),
-  'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'tools/db_backup',   'icon'=>'database', 'class'=>'text-muted' ),
-  'restore'  => array( 'user_group'=>'[b_backup]',  'name'=>'db_restore',         'uri'=>'tools/db_restore',  'icon'=>'database', 'class'=>'text-muted' ),
+  'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'tools/db_backup',   'icon'=>'download', 'class'=>'text-muted' ),
+  'restore'  => array( 'user_group'=>'[b_backup]',  'name'=>'db_restore',         'uri'=>'tools/db_restore',  'icon'=>'upload', 'class'=>'text-muted' ),
   '-'        => array( 'type'=>'seperator' ),
   'search'   => array( 'user_group'=>'super_admin',   'name'=>'sr_search_replace',  'uri'=>'tools/search',      'icon'=>'search', 'class'=>'text-muted' ),
   'fill'     => array( 'user_group'=>'super_admin',   'name'=>'fill_fill',          'uri'=>'tools/fill',        'icon'=>'arrow-circle-o-down', 'class'=>'text-muted' ),
