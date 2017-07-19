@@ -22,7 +22,7 @@ export default {
       default: '',
     },
     'value' :{
-      type: [Number,String,Boolean,Array],
+      type: [Number,String,Boolean,Array,FileList],
       default: null,
     },
     'options' :{
@@ -103,6 +103,10 @@ export default {
       return this.multiple;
     },
 
+    fileChange : function(event) {
+      this.$emit('input',event);
+    },
+
   },
 
 }
@@ -114,7 +118,8 @@ export default {
     <div class="col-md-9">
       <input v-if="type=='input'"     type="input"    class="form-control" :id="name" :name="name" :placeholder="placeholder" v-model="internalValue" />
       <input v-if="type=='checkbox'"  type="checkbox" class="form-control" :id="name" :name="name" v-model="internalValue" />
-
+      <input v-if="type=='file'"      type="file"     class="form-control" :id="name" :name="name" @change="fileChange($event.target.files)" />
+      <textarea v-if="type=='textarea'" class="form-control" :id="name" :name="name" :placeholder="placeholder" v-model="internalValue"></textarea>
       <select v-if="type=='select'" class="form-control" :id="name" :name="name" v-model="internalValue" :multiple="isMultiple()">
         <option v-for="option in options" :value="option.value" :selected="isSelected(option)">{{option.title}}</option>
       </select>
