@@ -5956,6 +5956,9 @@ a > .fa, .btn > .fa {
 .form-control {
   padding-bottom: .25rem; }
 
+.form-control[type='checkbox'] {
+  width: auto; }
+
 .form-group.row .col-md-1 {
   padding-top: .25rem; }
   .form-group.row .col-md-1 * {
