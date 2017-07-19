@@ -22,8 +22,16 @@ export default {
       default: '',
     },
     'value' :{
-      type: [Number,String,Boolean],
+      type: [Number,String,Boolean,Array],
       default: null,
+    },
+    'options' :{
+      type: [Array,Object],
+      default: null,
+    },
+    'multiple' :{
+      type: [Boolean],
+      default: false,
     },
     'placeholder' :{
       type: [Number,String,Boolean],
@@ -62,6 +70,18 @@ export default {
       this.$emit('changed',value);
     },
 
+    isSelected : function(option) {
+      var selected = '';
+      if (option.value == this.value) selected = 'selected';
+      return selected;
+    },
+
+    isMultiple : function() {
+      var multiple = '';
+      if (this.multiple) multiple = 'multiple';
+      return this.multiple;
+    },
+
   },
 
 }
@@ -74,6 +94,10 @@ export default {
       <input v-if="type=='input'"     type="input"    class="form-control" :id="name" :name="name" :placeholder="placeholder" :value="data" @input="update($event.target.value)" />
       <input v-if="type=='checkbox'"  type="checkbox" class="form-control" :id="name" :name="name" v-model="data" @click="update($event.target.checked)" />
       <input v-if="type=='file'"      type="file"     class="form-control" :id="name" :name="name" @change="update($event.target.value)" />
+
+      <select v-if="type=='select'" class="form-control" :id="name" :name="name" v-model="data" :multiple="isMultiple()" @input="update($event.target.checked)">
+        <option v-for="option in options" :value="option.value" :selected="isSelected(option)">{{option.title}}</option>
+      </select>
     </div>
   </div>  
 </template>

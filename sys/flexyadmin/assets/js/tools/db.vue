@@ -35,9 +35,26 @@ export default {
         });
         break
 
-      case 'restore':
-        break;
 
+      case 'export':
+        return flexyState.api({
+          url : 'tools/db_export_form',
+        }).then(function(response){
+          var tables = response.data.data.tables;
+          self.filename = response.data.data.filename;
+          var types = [
+            { 'value':'full',    'title':'Full Export (without Session data)' },
+            { 'value':'all',     'title':'Complete (without Session & Log data)' },
+            { 'value':'data',    'title':'Data (without Session,Logs & Config)' },
+            { 'value':'select',  'title':'Select (select tables)' },
+          ];
+          var fields = {
+            'type'    : { 'label':'Wat',      'type':'select', 'options':types,  'value':'data' },
+            'tables'  : { 'label':'Tables',   'type':'select', 'options':tables, 'multiple':true, 'value':[] },
+          };
+          self.fields = Object.assign( {}, fields );
+        });
+        break;
 
     }
 
@@ -70,6 +87,31 @@ export default {
       reader.readAsText(input.files[0]);
     },
 
+    export_db : function(event) {
+      console.log('export',event);
+      return flexyState.api({
+        method : 'POST',
+        url    : 'tools/db_export',
+        data   : {
+          'export_type'  : event.type,
+          'tables'       : event.tables,
+        },
+      }).then(function(response){
+        console.log(response.data.data);
+        // if (!_.isUndefined(response.data.data.errors) && response.data.data.errors.length>0) {
+        //   self.errors = Object.assign( {}, response.data.data.errors );
+        // }
+        // self.message = response.data.data.comments;
+        // if (!self.errors) {
+        //   self.message = '<b>Succes!!</b><br><br>' + self.message;  
+        // }
+      });
+
+
+    },
+
+
+
   }
   
 }
@@ -95,6 +137,14 @@ export default {
           <div v-for="error in errors" class="alert alert-danger">{{error.message}}</div>
         </div>
         <div v-if="message!==false" class="alert alert-success" v-html="message"></div>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div v-if="action=='export'" class="card">
+      <h1 class="card-header">Export Database</h1>
+      <div class="card-block">
+        <flexy-simple-form v-if="fields!=={}" :fields="fields" @submit="export_db($event)"></flexy-simple-form>
       </div>
     </div>
 
