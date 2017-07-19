@@ -1960,6 +1960,7 @@ Class Data_Core extends CI_Model {
           }
         }
         else {
+          $this->load->library('Lorem');
           $value = str_replace(array('.',','),'',$this->lorem->getContent(rand(1,5),'plain'));
         }
         break;
