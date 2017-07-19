@@ -37,12 +37,15 @@ export default {
 
   data : function() {
     return {
-      data : this.value,
+      data        : this.value,
+      isUpdating  : false,
     }
   },
 
-  beforeUpdate : function() {
-    console.log('beforeUpdate',name,value);
+
+  updated : function() {
+    if (!this.isUpdating) this.data = this.value;
+    this.isUpdating = false;
   },
 
   
@@ -54,6 +57,8 @@ export default {
     },
 
     update : function(value) {
+      this.data = value;
+      this.isUpdating = true;
       this.$emit('changed',value);
     },
 
@@ -66,7 +71,7 @@ export default {
   <div class="form-group row">
     <label class="col-md-3 form-control-label" :for="name">{{title()}}</label>
     <div class="col-md-9">
-      <input v-if="type=='input'"     type="input"    class="form-control" :id="name" :name="name" v-model="data" :placeholder="placeholder" v-on:input="update($event.target.value)" />
+      <input v-if="type=='input'"     type="input"    class="form-control" :id="name" :name="name" :placeholder="placeholder" :value="data" @input="update($event.target.value)" />
       <input v-if="type=='checkbox'"  type="checkbox" class="form-control" :id="name" :name="name" v-model="data" @click="update($event.target.checked)" />
     </div>
   </div>  
