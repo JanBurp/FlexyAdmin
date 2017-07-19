@@ -29,7 +29,7 @@ class Tools extends Api_Model {
     $sql = $this->dbutil->backup($prefs);
     $sql = $this->dbutil->clean_sql($sql);
     $sql = "# FlexyAdmin backup\n# User: '".$this->flexy_auth->get_user(null,'str_username')."'  \n# Date: ".date("d F Y")."\n\n".$sql;
-    $filename='backup_'.$this->_filename().'_'.date("Y-m-d").'.sql';
+    $filename=$this->_filename().'_backup'.'.sql';
     
     $this->result['data'] = array(
       'filename' => $filename,
@@ -44,7 +44,7 @@ class Tools extends Api_Model {
     $name=str_replace(array('http://','https://','www.'),'',$name);
     $name=explode(".",$name);
     $name=$name[0];
-    return $name;
+    return date("Y-m-d").'_'.$name;
   }
 
   private function _sql($sql,$super_admin=TRUE) {
@@ -64,6 +64,40 @@ class Tools extends Api_Model {
     $this->result['data'] = $this->_sql($sql,false);
     return $this->_result_ok();
   }
+
+  public function db_export_form() {
+    if (!$this->flexy_auth->is_super_admin()) return false;
+
+    $tables = $this->data->list_tables();
+    $tables_as_options = array();
+    foreach ($tables as $table) {
+      $tables_as_options[] = array(
+        'value' => $table,
+        'title' => $table,
+      );
+    }
+
+    $this->result['data'] = array(
+      'filename' => $this->_filename(),
+      'tables'   => $tables_as_options,
+    );
+    return $this->_result_ok();
+  }
+
+  public function db_export() {
+    if (!$this->flexy_auth->is_super_admin()) return false;
+
+    $sql = '';
+
+    $this->result['data'] = array(
+      'filename' => $this->_filename().'_'.$this->args['export_type'].'.sql',
+      'sql'      => $sql,
+    );
+    return $this->_result_ok();     
+  }
+
+
+
 
 
   public function fill() {
