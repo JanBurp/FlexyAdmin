@@ -11,8 +11,8 @@ export default {
   data : function() {
     return {
       fields : {
-        'search'    : { 'label':'Search',     'type':'input',   'value':'FlexyAdmin' },
-        'replace'   : { 'label':'Replace',    'type':'input',   'value':'REPLACED' },
+        'search'    : { 'label':'Search',     'type':'input',   'value':'' },
+        'replace'   : { 'label':'Replace',    'type':'input',   'value':'' },
         'regex'     : { 'label':'Regex',      'type':'checkbox','value':false },
         'fields'    : { 'label':'In Fields',  'type':'input',   'value':'str_title,txt_text' },
         'test'      : { 'label':'Test',       'type':'checkbox','value':true },
@@ -30,12 +30,15 @@ export default {
       self.search = data.search;
       self.replace = data.replace;
       var url = jdb.serializeJSON(data);
-
+     
       return flexyState.api({
         url : 'tools/search?'+url,
       }).then(function(response){
         self.result = response.data.data.result;
-        self.fields.fields.value = response.data.data.found_fields.join(', ');
+        if (response.data.data.found_fields!=='') {
+          self.fields.fields.value = response.data.data.found_fields.join(',');
+          self.fields = Object.assign({}, self.fields,  );
+        };
       });
     },
 
