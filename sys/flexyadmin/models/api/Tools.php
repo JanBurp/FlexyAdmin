@@ -19,8 +19,10 @@ class Tools extends Api_Model {
 
     $search   = $this->args['search'];
     $replace  = el('replace',$this->args,'');
-    $fields   = explode(',',trim(el('fields',$this->args,array())));
+    $fields   = el('fields',$this->args,array());
+    if (!is_array($fields)) $fields = explode(',',$fields);
     $regex    = el('regex',$this->args,false);
+    if (!$regex) $search = preg_quote($search,'/');
     $test     = el('test',$this->args,true);
 
     if ($search) {
@@ -44,12 +46,12 @@ class Tools extends Api_Model {
           if (strpos($field,'.')===false) {
             unset($fields[$key]);
             foreach ($tables as $table) {
-              if ($this->db->field_exists($field,$table)) $fields[] = $table.'.'.$field;   
+              if ($this->db->field_exists($field,$table)) $fields[] = $table.'.'.trim($field);   
             }
           }
           else {
-            $split = explode($field);
-            if ( !$this->db->field_exists($split[1],$split[0])) unset($fields[$key]);
+            $split = explode('.',trim($field));
+            if ( !$this->db->field_exists(trim($split[1]),trim($split[0]))) unset($fields[$key]);
           }
         }
       }
@@ -58,8 +60,8 @@ class Tools extends Api_Model {
       $result = array();
       $found_fields = array();
       foreach ($fields as $field) {
-        $table = get_prefix($field,'.');
-        $field = remove_prefix($field,'.');
+        $table = trim(get_prefix($field,'.'));
+        $field = trim(remove_prefix($field,'.'));
           
         $data = $this->data->table($table)->select($field)->get_result();
 
@@ -68,10 +70,12 @@ class Tools extends Api_Model {
           foreach ($row as $key => $value) {
             $count=0;
             $matches=FALSE;
+
             $oldErrorHandler = set_error_handler(array($this,"myErrorHandler"));
             $newValue = preg_replace( "/$search/", $replace, $value, -1, $count);
             if ($count>0) preg_match_all("/$search/", $value,$matches);
             set_error_handler($oldErrorHandler);
+
             if ($newValue!==$value) {
               $abstract = $this->data->table($table)->where($id)->select_abstract()->get_row();
               $abstract = $abstract['abstract'];
@@ -86,12 +90,9 @@ class Tools extends Api_Model {
                 'test'        => $test,
               );
 
-              // if (!$test) $this->data->set($key,$newValue);  
+              if (!$test) $this->data->set($key,$newValue);  
             }
-            // if (!$test) {
-            //   $this->data->where($id);
-            //   $res = $this->data->update();
-            // }
+            if (!$test) $this->data->where($id)->update();
           }
         }
       }
