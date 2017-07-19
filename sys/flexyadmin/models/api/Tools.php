@@ -88,6 +88,33 @@ class Tools extends Api_Model {
     if (!$this->flexy_auth->is_super_admin()) return false;
 
     $sql = '';
+    $backup_prefs = array('format' => 'sql');
+    switch ($this->args['export_type']) {
+      case 'complete':
+        $sql = $this->dbutil->backup($backup_prefs);
+        break;
+      case 'all':
+        $tables = $this->data->list_tables();
+        $tablesWithData       = not_filter_by($tables,array('log','cfg_sessions'));
+        $backup_prefs = array('tables'=> $tablesWithData, 'format'=>'sql');
+        $sql = $this->dbutil->backup($backup_prefs);
+        $tablesWithStructure  = array_diff($tables,$tablesWithData);
+        $backup_prefs = array( 'tables'=> $tablesWithStructure, 'format'=>'sql' ,'add_insert'  => FALSE);
+        $sql .= $this->dbutil->backup($backup_prefs);
+        break;
+      case 'data':
+        $tables = $this->data->list_tables();
+        $tables = not_filter_by($tables,array('log','cfg'));
+        $backup_prefs = array('tables'=> $tables, 'format'=>'sql');
+        $sql = $this->dbutil->backup($backup_prefs);
+        break;
+      case 'select':
+        $tables = $this->args['tables'];
+        $backup_prefs = array('tables'=> $tables, 'format'=>'sql');
+        $sql = $this->dbutil->backup($backup_prefs);
+        break;
+    }
+    $sql = "# FlexyAdmin backup\n# User: '".$this->flexy_auth->get_user(null,'str_username')."'  \n# Date: ".date("d F Y")."\n\n" . $sql;
 
     $this->result['data'] = array(
       'filename' => $this->_filename().'_'.$this->args['export_type'].'.sql',
