@@ -14,52 +14,35 @@ export default {
     
   data : function() {
     return {
-      data : [],
+      internalValues : {},
     }
   },
 
   created : function() {
     var self = this;
+    var values = {};
     for (var field in this.fields) {
       var value = self.fields[field].value;
-      // if (this.fields[field].multiple) {
-      //   if (value===null) value = [];
-      //   if (typeof(value)!=='string') value = [value];
-      // }
-      self.$set(self.data, field, value);
+      values[field] = value;
     }
+    self.internalValues = Object.assign( {}, values );
   },
 
-  // beforeUpdate : function() {
-  //   var self = this;
-  //   for (var field in self.fields) {
-  //     var value = self.fields[field].value;
-  //     if (self.data[field] !== value) {
-  //       self.$set(self.data, field, value);
-  //     }
-  //   }
-  // },
-
-  updated : function() {
-    var self = this;
-    for (var field in self.fields) {
-      var value = self.fields[field].value;
-      if (self.data[field] !== value) {
-        self.$set(self.data, field, value);
-      }
-    }
+  watch : {
+    'internalValues' : function() {
+      this.$emit('changed',this.internalValues);
+    },
   },
 
 
   methods : {
 
-    changed : function(field,value) {
-      this.$set(this.data, field, value);
-      this.$emit('changed',this.data);
+    changed : function(field,$event) {
+      this.$emit('changed',this.internalValues);
     },
 
     submit : function(event) {
-      this.$emit('submit',this.data);
+      this.$emit('submit',this.internalValues);
     },
 
     isMultiple : function(field) {
@@ -74,7 +57,7 @@ export default {
 <template>
   <form @submit.prevent.stop="submit($event)">
     <template v-for="(field,name) in fields">
-      <flexy-form-field :name="name" :type="field.type" :label="field.label" :value="field.value" :options="field.options" :multiple="isMultiple(name)" @changed="changed(name,$event)"></flexy-form-field>
+      <flexy-form-field :name="name" :type="field.type" :label="field.label" :options="field.options" :multiple="isMultiple(name)" v-model="internalValues[name]" @input="changed(name,$event)"></flexy-form-field>
     </template>
     <button class="btn btn-primary" type="submit">Submit</button>
   </form>
