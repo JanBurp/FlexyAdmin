@@ -19,22 +19,38 @@ export default {
   },
 
   created : function() {
+    var self = this;
     for (var field in this.fields) {
-      this.data[field] = this.fields[field].value;
+      var value = self.fields[field].value;
+      self.$set(self.data, field, value);
     }
   },
 
-  beforeUpdate : function() {
-    for (var field in this.fields) {
-      this.data[field] = this.fields[field].value;
-    }
-  },
+  // beforeUpdate : function() {
+  //   var self = this;
+  //   for (var field in self.fields) {
+  //     var value = self.fields[field].value;
+  //     if (self.data[field] !== value) {
+  //       self.$set(self.data, field, value);
+  //     }
+  //   }
+  // },
+
+  // updated : function() {
+  //   var self = this;
+  //   for (var field in self.fields) {
+  //     var value = self.fields[field].value;
+  //     if (self.data[field] !== value) {
+  //       self.$set(self.data, field, value);
+  //     }
+  //   }
+  // },
 
 
   methods : {
 
-    update : function(name,value) {
-      this.data[name] = value;
+    changed : function(field,value) {
+      this.$set(this.data, field, value);
     },
 
     submit : function(event) {
@@ -48,7 +64,9 @@ export default {
 
 <template>
   <form @submit.prevent.stop="submit($event)">
-    <flexy-form-field v-for="(field,name) in fields" :name="name" :type="field.type" :label="field.label" :value="field.value" @changed="update(name,$event)"></flexy-form-field>
+    <template v-for="(field,name) in fields">
+      <flexy-form-field :name="name" :type="field.type" :label="field.label" :value="data[name]" @changed="changed(name,$event)"></flexy-form-field>
+    </template>
     <button class="btn btn-primary" type="submit">Submit</button>
   </form>
 </template>
