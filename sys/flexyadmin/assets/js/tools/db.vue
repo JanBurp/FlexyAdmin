@@ -11,7 +11,7 @@ export default {
   
   data :function(){
     return {
-      fields   : {},
+      fields   : false,
       filename : '',
       sql      : '',
       errors   : false,
@@ -24,7 +24,6 @@ export default {
     var self = this;
 
     switch (this.action) {
-
 
       case 'backup':
         return flexyState.api({
@@ -43,14 +42,14 @@ export default {
           var tables = response.data.data.tables;
           self.filename = response.data.data.filename;
           var types = [
-            { 'value':'full',    'title':'Full Export (without Session data)' },
-            { 'value':'all',     'title':'Complete (without Session & Log data)' },
-            { 'value':'data',    'title':'Data (without Session,Logs & Config)' },
-            { 'value':'select',  'title':'Select (select tables)' },
+            { 'value':'complete',    'title':'Complete Export     (without Session data)' },
+            { 'value':'all',         'title':'All Export          (without Session & Log data)' },
+            { 'value':'data',        'title':'Data Only Export    (without Session,Logs & Config)' },
+            { 'value':'select',      'title':'Select              (select tables)' },
           ];
           var fields = {
-            'type'    : { 'label':'Wat',      'type':'select', 'options':types,  'value':'data' },
-            'tables'  : { 'label':'Tables',   'type':'select', 'options':tables, 'multiple':true, 'value':[] },
+            'type'    : { 'label':'Wat',    'type':'select', 'options':types,  'value':'data' },
+            'tables'  : { 'label':'Tables', 'type':'select', 'options':tables, 'multiple':true },
           };
           self.fields = Object.assign( {}, fields );
         });
@@ -63,6 +62,7 @@ export default {
 
   methods : {
 
+    // RESTORE
     restore : function(event) {
       var self=this;
       var input = event.target;
@@ -87,8 +87,12 @@ export default {
       reader.readAsText(input.files[0]);
     },
 
+
+    // EXPORT
     export_db : function(event) {
-      console.log('export',event);
+      var self=this;
+      self.filename = '';
+      self.sql      = '';
       return flexyState.api({
         method : 'POST',
         url    : 'tools/db_export',
@@ -97,17 +101,9 @@ export default {
           'tables'       : event.tables,
         },
       }).then(function(response){
-        console.log(response.data.data);
-        // if (!_.isUndefined(response.data.data.errors) && response.data.data.errors.length>0) {
-        //   self.errors = Object.assign( {}, response.data.data.errors );
-        // }
-        // self.message = response.data.data.comments;
-        // if (!self.errors) {
-        //   self.message = '<b>Succes!!</b><br><br>' + self.message;  
-        // }
+        self.filename = response.data.data.filename;
+        self.sql      = response.data.data.sql;
       });
-
-
     },
 
 
@@ -143,8 +139,11 @@ export default {
     <!-- EXPORT -->
     <div v-if="action=='export'" class="card">
       <h1 class="card-header">Export Database</h1>
-      <div class="card-block">
-        <flexy-simple-form v-if="fields!=={}" :fields="fields" @submit="export_db($event)"></flexy-simple-form>
+      <div v-if="fields!==false" class="card-block">
+        <flexy-simple-form :fields="fields" @submit="export_db($event)"></flexy-simple-form>
+      </div>
+      <div v-if="sql!==''" class="card-block">
+        <a :href="'data:text/plain;charset=utf-8,' + encodeURIComponent(sql)" :download="filename" class="btn btn-warning"><span class="fa fa-download"></span>Download Export</a>
       </div>
     </div>
 
