@@ -48,8 +48,8 @@ class Tools extends Api_Model {
   }
 
   private function _sql($sql,$super_admin=TRUE) {
-    if (!$this->dbutil->is_safe_sql($sql)) return false;
-    if ($super_admin and !$this->flexy_auth->is_super_admin()) return false;
+    // if (!$this->dbutil->is_safe_sql($sql)) return ['errors'=>[0=>['message'=>'Unsafe SQL.']]];
+    if ($super_admin and !$this->flexy_auth->is_super_admin()) return ['errors'=>[0=>['message'=>'No Rights.']]];
     $result = $this->dbutil->import($sql);
     unset($result['queries']);
     return $result;
@@ -121,6 +121,17 @@ class Tools extends Api_Model {
       'sql'      => $sql,
     );
     return $this->_result_ok();     
+  }
+
+  public function db_import() {
+    if (!$this->flexy_auth->is_super_admin()) return $this->_result_status401();
+
+    xdebug_break();
+    $sql = $this->args['sql'];
+    if (empty($sql)) return $this->_result_status401();
+
+    $this->result['data'] = $this->_sql($sql,false);
+    return $this->_result_ok();
   }
 
 
