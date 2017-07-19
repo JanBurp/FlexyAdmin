@@ -87,16 +87,3 @@ export default {
   </div>
   
 </template>
-
-<style>
-  .flexy-tool td,
-  .flexy-tool th {
-    white-space: nowrap;
-    overflow: auto;
-    padding:4px;
-  }
-  .flexy-tool .tool-result {
-    padding:0px;
-    overflow: auto;
-  }
-</style>
