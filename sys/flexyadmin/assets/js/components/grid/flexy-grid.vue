@@ -13,8 +13,11 @@ export default {
   name: 'FlexyGrid',
   components: {draggable,flexyButton,FlexyGridCell,FlexyPagination },
   props:{
-    'title':String,
     'name':String,
+    'title':{
+      type: String,
+      default:'',
+    },
     'api':{
       type: [String,Boolean],
       default:false,
@@ -60,7 +63,6 @@ export default {
   
   
   mounted : function() {
-
     var self = this;
     self.calcLimit();
     
@@ -82,41 +84,22 @@ export default {
       self.mouseY = e.pageY;
     }
 
-    //
-    // Load first page
-    // 
-    if (this.type!=='mediapicker') this.apiParts.formID = jdb.getUrlQueryPart('form');
-    if ( !this.apiParts.formID ) {
-      this.apiParts.formID = false;
-      this.reloadPage({
-        offset : this.offset,
-        limit  : this.apiParts.limit,
-        order  : this.order,
-        filter : this.filter,
-      });
-    }
-    
-    //
-    // Init Find
-    //
-    this.extendedFind = false;
-    if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
-      this.extendedFind = true;
-      this.extendedTerm = JSON.parse(this.filter);
-      this.filterTerm = '';
-    }
-    else {
-      this.extendedTerm = [_.clone(this.extendedTermDefault)];
-    }
+    this.loadStart();
   },
+
   
   beforeUpdate : function() {
+    // Test if (re)load needed
+    if ( this.name!==this.currentName) {
+      this.loadStart();
+    }
+    this.currentName = this.name;
+
     //
     // Selection
     //
     if (this.selection) {
       // Pas selected aan
-      // console.log('flexy-grid.update',this.selection);
       var selected = [];
       for (var i = 0; i < this.selection.length; i++) {
         var src = this.selection[i];
@@ -130,18 +113,17 @@ export default {
         if (key_item) selected.push(key_item);
       }
       
-      // console.log( _.isEqual(selected,this.selected), selected, this.selected );
       if ( !_.isEqual(selected,this.selected) ) {
         this.selected = _.clone(selected);
       }
-      // jdb.vueLog(this.items);
-      
     }
-  },
 
+  },
 
   data : function() {
     return {
+      uiTitle           : this.title ? this.title : '',
+      currentName       : '',
       items             : [],
       fields            : [],
       actions           : [],
@@ -156,7 +138,6 @@ export default {
         limit         : this.limit,
         txt_abstract  : true,
         as_grid       : true,
-        formID        : false,
       },
       changeUrlApi: true,
       focus       : {id:false,cell:false},
@@ -185,15 +166,7 @@ export default {
 
   
   computed:{
-    
-    dataName : function() {
-      var name = this.name;
-      if (this.gridType()==='media') {
-        name = 'media_'+name;
-      }
-      return name;
-    },
-    
+
     /**
      * Options for draggable
      */
@@ -208,6 +181,23 @@ export default {
   },
   
   methods:{
+
+    reset : function() {
+      this.fields            = [];
+      this.searchable_fields = [];
+      this.actions           = [];
+      this.items             = [];
+      this.dataInfo          = {};
+    },
+
+    dataName : function() {
+      var name = this.name;
+      if (this.gridType()==='media') {
+        name = 'media_'+name;
+      }
+      return name;
+    },
+
     
     calcLimit : function( view ) {
       if (!this.autoresize) return false;
@@ -282,6 +272,27 @@ export default {
       // console.log('autoresize:',width,height,rows,cols,changed,new_offset,new_limit);
       return changed;
     },
+
+    loadStart : function() {
+      this.reset();
+      this.reloadPage({
+        offset : this.offset,
+        limit  : this.apiParts.limit,
+        order  : this.order,
+        filter : this.filter,
+      });
+
+      // Init Find
+      this.extendedFind = false;
+      if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
+        this.extendedFind = true;
+        this.extendedTerm = JSON.parse(this.filter);
+        this.filterTerm = '';
+      }
+      else {
+        this.extendedTerm = [_.clone(this.extendedTermDefault)];
+      }
+    },
     
     reloadPageAfterResize() {
       this.reloadPage();
@@ -295,10 +306,10 @@ export default {
       .then(function(response){
         if (!_.isUndefined(response.data)) {
           if (response.data.success) {
-            // Stel url in van browser
-            self.newUrl();
             // Zijn er settings meegekomen?
             if ( !_.isUndefined(response.data.settings) ) {
+              // Title
+              if (!_.isUndefined(response.data.settings.grid_set.title)) self.uiTitle = response.data.settings.grid_set.title;
               // Fields
               self.fields = response.data.settings.grid_set.field_info;
               self.searchable_fields = response.data.settings.grid_set.searchable_fields;
@@ -332,16 +343,6 @@ export default {
         url += '&settings=grid_set';
       }
       return url;
-    },
-    
-    newUrl : function(){
-      if (this.changeUrlApi) {
-        var parts = this.apiParts;
-        var stateObj = parts;
-        var url = location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+jdb.encodeURL(parts.filter)+'"}';
-        if (this.apiParts.formID) url += '&form=' + this.apiParts.formID;
-        history.pushState(stateObj, "", url);
-      }
     },
     
     hasData : function() {
@@ -568,21 +569,9 @@ export default {
     },
     
     editItem : function(id) {
-      // var url = this.editUrl(id);
-      // window.location.assign(url);
-      this.apiParts.formID = id;
-      this.newUrl();
+      var url = '/form/'+this.name+'/'+id;
+      this.$router.push(url);
     },
-    
-    updateItem : function(id,data) {
-      this.apiParts.formID = false;
-      this.items = [];
-      this.reloadPage();
-      // var itemIndex = jdb.indexOfProperty(this.items,'id',id);
-      // console.log(itemIndex);
-      // jdb.vueLog(this.items);
-    },
-    
     
     removeItems : function(removeIds) {
       var self = this;
@@ -989,12 +978,10 @@ export default {
 <template>
   <div>
     
-    <flexy-form v-if="apiParts.formID!==false" :title="title" :name="name" :primary="apiParts.formID" @formclose="updateItem(apiParts.formID,$event)"></flexy-form>
-    
-    <div v-if="apiParts.formID===false" class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
+    <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
       <!-- MAIN HEADER -->
       <div class="card-header">
-        <h1>{{title}}</h1>
+        <h1>{{uiTitle}}</h1>
 
         <!-- ACTIONS ?-->
         <div v-if="actions.length>0" class="grid-actions">

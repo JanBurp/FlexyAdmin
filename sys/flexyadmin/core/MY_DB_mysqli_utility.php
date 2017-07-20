@@ -9,62 +9,27 @@
  */
 class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 	
-
-  // /**
- //   * for add_flexy_field()
- //   */
- //  private $flexy_types = array(
- //    'id'     => array('type' => 'INT','constraint' => 11, 'unsigned' => TRUE,'auto_increment' => TRUE),
- //    'uri'    => array('type' => 'VARCHAR','constraint' => 255),
- //
- //    'id_'    => array('type' => 'INT','constraint' => 11, 'unsigned' => TRUE),
- //    'str_'   => array('type' => 'VARCHAR','constraint' => 255),
- //    'email_' => array('type' => 'VARCHAR','constraint' => 255),
- //    'url_'   => array('type' => 'VARCHAR','constraint' => 255),
- //    'txt_'   => array('type' => 'TEXT','null' => true),
- //    'stx_'   => array('type' => 'TEXT','null' => true),
- //    'tme_'   => array('type' => 'DATETIME'),
- //    'b_'     => array('type' => 'TINYINT', 'constraint'=>1 ),
- //  );
-
   public function __construct(&$db) {
     parent::__construct($db);
   }
 
+  /**
+   * Maak ruwe SQL schoon:
+   * - Verwijder alle comments
+   * - DROP TABLE wordt TRUNCATE table
+   * - CREATE TABLE wordt verwijderd (INSERTS blijven)
+   *
+   * @param      string  $sql ruw SQL
+   * @return     string  Schone SQL
+   */
+  public function clean_sql($sql) {
+    // $sql=preg_replace("/#(.*?)\n/","",$sql);
+    $sql=preg_replace("/DROP TABLE(.*) (.*?);/","# Empty $2\nTRUNCATE TABLE $2;",$sql);
+    $sql=preg_replace("/CREATE TABLE (.*?) (.|\n)*?;\n/","# Inserts for $1",$sql);
+    return $sql;
+  }
 
-  // /**
-  //  * undocumented function
-  //  *
-  //  * @param string $fields
-  //  * @return void
-  //  * @author Jan den Besten
-  //  */
-  // public function create_forge_fields($fields) {
-  //   if (!is_array($fields)) $fields=array($fields);
-  //
-  //   $forge_fields=array();
-  //
-  //   foreach ($fields as $field) {
-  //     if (is_string($field)) {
-  //       $pre=get_prefix($field);
-  //       if (empty($pre)) {
-  //         $pre=$field;
-  //       }
-  //       else {
-  //         $pre.='_';
-  //       }
-  //       $forge_fields[$field] = $this->flexy_types[$pre];
-  //     }
-  //   }
-  //
-  //   return $forge_fields;
-  //
-  //   $this->db->forge->add_fields($forge_fields);
-  // }
-  
-  
-  
-  
+
   /**
    * Test of een sql veilig is om te importeren
    *

@@ -21,15 +21,18 @@ export default {
   name: 'FlexyForm',
   components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,tab,tabs,datepicker,vselect},
   props:{
-    'action'  :{
-      type: String,
-      default: '',
-    },
-    'title'   :String,
     'name'    :String,
     'primary' :{
       type: [Number,String],
       default: -1,
+    },
+    'action'  :{
+      type: String,
+      default: '',
+    },
+    'title'   : {
+      type: String,
+      default: '',
     },
     'fields' : {
       type: [Boolean,Array,Object],
@@ -70,12 +73,14 @@ export default {
   // Copy of props.data
   data : function() {
     return {
-      row : {},
-      form_groups : {},
-      fieldsets: {},
+      uiTitle          : this.title,
+      currentName      : '',
+      row              : {},
+      form_groups      : {},
+      fieldsets        : {},
       validationErrors : {},
-      isSaving : false,
-      insertForm : {},
+      isSaving         : false,
+      insertForm       : {},
     }
   },
   
@@ -89,7 +94,7 @@ export default {
       // Fields
       var fields = Object.keys(this.fields);
       // Fieldsests
-      var fieldset = this.title;
+      var fieldset = this.uiTitle;
       this.fieldsets = { fieldset : fields };
       this.form_groups = this.fields;
       for (var field in this.fields) {
@@ -107,6 +112,14 @@ export default {
       this.createWysiwyg();
     }
   },
+
+
+  beforeUpdate : function() {
+    if (this.name !== this.currentName) {
+      this.reloadForm();
+    }
+    this.currentName = this.name;
+  },
   
   methods:{
     
@@ -120,8 +133,9 @@ export default {
           if (response.data.success) {
             // Zijn er settings meegekomen?
             if ( !_.isUndefined(response.data.settings) ) {
-              self.form_groups = response.data.settings.form_set.field_info;
-              self.fieldsets = response.data.settings.form_set.fieldsets;
+              self.uiTitle      = response.data.settings.form_set.title;
+              self.form_groups  = response.data.settings.form_set.field_info;
+              self.fieldsets    = response.data.settings.form_set.fieldsets;
             }
             // Data en die aanvullen met data
             self.row = response.data.data;
@@ -135,6 +149,7 @@ export default {
     
     createWysiwyg: function() {
       var self=this;
+      var init = _flexy.tinymceOptions;
       var init = _.extend(_flexy.tinymceOptions,{
         setup : function(ed){
           ed.on('NodeChange', function(e){ self.updateText(ed); })
@@ -397,7 +412,8 @@ export default {
       var self=this;
       if (!this.isSaving) {
         tinyMCE.remove();
-        self.$emit('formclose',self.row);
+        var url = '/grid/'+this.name;
+        this.$router.push(url);
       }
     },
     
@@ -408,8 +424,7 @@ export default {
         if (promise) {
           promise.then(function (response) {
             if (!response.error) {
-              tinyMCE.remove();
-              self.$emit('formclose',self.row);
+              self.cancel();
             }
           })
         }
@@ -681,7 +696,7 @@ export default {
 <template>
 <div class="card form">
   <div class="card-header">
-    <h1>{{title}}</h1>
+    <h1>{{uiTitle}}</h1>
     <div>
       <flexy-button v-if="formtype!=='single'" @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
       <flexy-button v-if="formtype!=='subform' && action===''" @click.native="save()"  icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-warning"/>

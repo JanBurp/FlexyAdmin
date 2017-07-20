@@ -95,6 +95,25 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
   border:none;
 }
 
+// TOOLS
+.flexy-tool {
+  textarea {
+    height: 8rem;
+  }
+  td,
+  th {
+    white-space: nowrap;
+    overflow: auto;
+    padding:4px;
+  }
+  .tool-result {
+    padding:0px;
+    overflow: auto;
+  }
+  .messages {
+    margin-top:2rem;
+  }
+}
 
 // VUE
 [v-cloak] {
