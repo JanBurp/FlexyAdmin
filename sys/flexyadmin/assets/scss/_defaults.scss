@@ -97,6 +97,9 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 
 // TOOLS
 .flexy-tool {
+  textarea {
+    height: 8rem;
+  }
   td,
   th {
     white-space: nowrap;
@@ -106,6 +109,9 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
   .tool-result {
     padding:0px;
     overflow: auto;
+  }
+  .messages {
+    margin-top:2rem;
   }
 }
 

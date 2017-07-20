@@ -40,7 +40,6 @@ export default {
       return flexyState.api({
         url   : 'get_plugin?plugin='+plugin,
       }).then(function(response){
-        console.log(response.data.data);
         self.name = response.data.data.title;
         self.html = response.data.data.html;
         self.list = _.isUndefined(response.data.data.plugin);
