@@ -431,6 +431,7 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function resize_path( $path ) {
+    ini_set('max_execution_time', 3600); // 60 minuten
     $this->load->library('upload');
     $path_settings = $this->get_folder_settings($path);
     $files = $this->get_files($path);
