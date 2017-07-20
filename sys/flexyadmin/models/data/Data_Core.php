@@ -2075,8 +2075,13 @@ Class Data_Core extends CI_Model {
     $this->db->select( $this->tm_select, FALSE );
     
     // order_by
-    if ( empty($this->tm_order_by) and !empty($this->settings['order_by']) ) {
-      $this->order_by( $this->settings['order_by'] );
+    if (empty($this->tm_order_by)) {
+      if ($this->tm_as_grid and isset($this->tm_as_grid['order_by'])) {
+        $this->order_by( $this->tm_as_grid['order_by'] );  
+      }
+      else {
+        $this->order_by( $this->settings['order_by'] );
+      }
     }
     if ( !empty($this->tm_order_by) ) {
       foreach ($this->tm_order_by as $order_by) {
