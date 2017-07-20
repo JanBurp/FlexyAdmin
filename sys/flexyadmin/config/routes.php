@@ -72,15 +72,21 @@ $route['_admin/plugin']      = "_admin/plugin_controller";
 $route['_admin/plugin/(.+)'] = "_admin/plugin_controller/call/$1";
 
 /**
- * This routing reroutes help subpages
- */
-$route['_admin/help/(.+)'] = "_admin/help/index/$1";
-
-
-/**
  * Update actions
  */
 $route['_admin/update/(.+)'] = "_admin/update/index/$1";
+
+/**
+ * Other Admin Routes
+ */
+$route['_admin/login'] 				= "_admin/login";
+$route['_admin/login/(.*)'] 	= "_admin/login/$1";
+$route['_admin/logout'] 			= "_admin/logout";
+
+$route['_admin'] 								= "_admin";
+$route['_admin/(.*)'] 					= "_admin";
+$route['_admin/(.*)/(.*)'] 			= "_admin";
+$route['_admin/(.*)/(.*)/(*.)'] = "_admin";
 
 
 // Reserved routes
