@@ -149,24 +149,28 @@ export default {
     
     createWysiwyg: function() {
       var self=this;
+
+      // Init settings
       var init = _flexy.tinymceOptions;
-      var init = _.extend(_flexy.tinymceOptions,{
+      init = _.extend(_flexy.tinymceOptions,{
         setup : function(ed){
           ed.on('NodeChange', function(e){ self.updateText(ed); })
           ed.on('keyup', function(e){ self.updateText(ed); });
         }
       });
-      
-      tinyMCE.remove();
 
-      // Wait just a bit...
+      // Need to remove?
+      var exists = document.querySelector('.mce-tinymce');
+      if ( !_.isUndefined(exists) && exists!==null ) tinymce.remove();
+
+      // Init (try untill its ready)
       var timer = window.setInterval(function(){
         tinymce.init(init);
-        var exists = document.querySelector('.mce-tinymce');
+        exists = document.querySelector('.mce-tinymce');
         if ( !_.isUndefined(exists) && exists!==null ) {
           clearInterval(timer)
         };
-      }, 10 );
+      }, 25 );
     },
     
     apiUrl : function(parts) {
