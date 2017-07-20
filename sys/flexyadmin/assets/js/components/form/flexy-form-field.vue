@@ -22,8 +22,16 @@ export default {
       default: '',
     },
     'value' :{
-      type: [Number,String,Boolean],
+      type: [Number,String,Boolean,Array,FileList],
       default: null,
+    },
+    'options' :{
+      type: [Array,Object],
+      default: null,
+    },
+    'multiple' :{
+      type: [Boolean],
+      default: false,
     },
     'placeholder' :{
       type: [Number,String,Boolean],
@@ -37,29 +45,66 @@ export default {
 
   data : function() {
     return {
-      data        : this.value,
-      isUpdating  : false,
+      internalValue   : null,
     }
   },
 
-
-  updated : function() {
-    if (!this.isUpdating) this.data = this.value;
-    this.isUpdating = false;
+  watch : {
+    'value' : function() {
+      if (this.value!==this.internalValue) {
+        this.initInternalValue(this.value);
+      }
+    },
+    'internalValue' : function() {
+      this.$emit('input',this.internalValue);
+    },
   },
 
-  
-  methods:{
+  created : function() {
+    this.initInternalValue(this.value);
+  },
+
+  methods: {
+
+    initInternalValue : function(value) {
+      var value = this.value;
+      if (this.type=='select' && this.multiple) {
+        if (value===null) {
+          value = [];
+        }
+        else {
+          switch (typeof(value)) {
+            case 'undefined':
+              value = [];
+              break;
+            default:
+              value = [value];
+              break;
+          }
+        }
+      }
+      this.internalValue = value;
+    },
     
     title : function() {
       if (this.label==='') return this.name;
       return this.label;
     },
 
-    update : function(value) {
-      this.data = value;
-      this.isUpdating = true;
-      this.$emit('changed',value);
+    isSelected : function(option) {
+      var selected = '';
+      if (option.value == this.value) selected = 'selected';
+      return selected;
+    },
+
+    isMultiple : function() {
+      var multiple = '';
+      if (this.multiple) multiple = 'multiple';
+      return this.multiple;
+    },
+
+    fileChange : function(event) {
+      this.$emit('input',event);
     },
 
   },
@@ -71,8 +116,13 @@ export default {
   <div class="form-group row">
     <label class="col-md-3 form-control-label" :for="name">{{title()}}</label>
     <div class="col-md-9">
-      <input v-if="type=='input'"     type="input"    class="form-control" :id="name" :name="name" :placeholder="placeholder" :value="data" @input="update($event.target.value)" />
-      <input v-if="type=='checkbox'"  type="checkbox" class="form-control" :id="name" :name="name" v-model="data" @click="update($event.target.checked)" />
+      <input v-if="type=='input'"     type="input"    class="form-control" :id="name" :name="name" :placeholder="placeholder" v-model="internalValue" />
+      <input v-if="type=='checkbox'"  type="checkbox" class="form-control" :id="name" :name="name" v-model="internalValue" />
+      <input v-if="type=='file'"      type="file"     class="form-control" :id="name" :name="name" @change="fileChange($event.target.files)" />
+      <textarea v-if="type=='textarea'" class="form-control" :id="name" :name="name" :placeholder="placeholder" v-model="internalValue"></textarea>
+      <select v-if="type=='select'" class="form-control" :id="name" :name="name" v-model="internalValue" :multiple="isMultiple()">
+        <option v-for="option in options" :value="option.value" :selected="isSelected(option)">{{option.title}}</option>
+      </select>
     </div>
   </div>  
 </template>

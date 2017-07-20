@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="<?=admin_assets()?>dist/flexyadmin.css" type="text/css" media="screen">
 </head>
 
-<body class="<?=$class?>">
+<body>
 
 <div id="main" :class="{'help':global.helpIsOn()}">
   <div class="container-fluid">
@@ -33,8 +33,13 @@
       </div>
     </div>
     <div id="row" class="row">
-      <div id="flexy-menu-side" class="col-sm-2"><?=$sidemenu?></div>
-      <div id="content" class="col-sm-10"><?=$content?></div>
+      <div id="flexy-menu-side" class="col-sm-2">
+        <?=$sidemenu?>
+      </div>
+      <div id="content" class="col-sm-10">
+        <router-view v-if="$route.path.length>1"></router-view>
+        <template v-else><?=$content?></template>
+      </div>
     </div>
     <div id="mask" v-cloak v-show="state.progress>0">
       <span class="spinner fa fa-spinner fa-pulse fa-fw"></span>
@@ -52,6 +57,7 @@
 
 <script type="text/javascript" charset="utf-8">
 var _flexy = {
+  'base_url'      : '<?=preg_replace("/(.*\/_admin).*/u", "$1", $_SERVER["REQUEST_URI"]);?>',
   'auth_token'    : '<?=$user['auth_token']?>',
   'media_view'    : '<?=$user['str_filemanager_view']?>',
   'language'      : '<?=$language?>',
