@@ -5442,6 +5442,22 @@ a > .fa, .btn > .fa {
 .editor-popup .card {
   border: none; }
 
+.flexy-tool textarea {
+  height: 8rem; }
+
+.flexy-tool td,
+.flexy-tool th {
+  white-space: nowrap;
+  overflow: auto;
+  padding: 4px; }
+
+.flexy-tool .tool-result {
+  padding: 0px;
+  overflow: auto; }
+
+.flexy-tool .messages {
+  margin-top: 2rem; }
+
 [v-cloak] {
   display: none; }
 
@@ -6163,22 +6179,22 @@ textarea {
   border-color: #696;
   background-color: #ffe5aa; }
 
-body.uri-plugin__stats #content .card-block {
+.flexy-plugin.plugin_stats .card-block {
   padding: 0px; }
-  body.uri-plugin__stats #content .card-block p {
+  .flexy-plugin.plugin_stats .card-block p {
     margin: .5rem 1rem; }
-  body.uri-plugin__stats #content .card-block .card {
+  .flexy-plugin.plugin_stats .card-block .card {
     border-radius: 0;
     border: none; }
-    body.uri-plugin__stats #content .card-block .card .card-header {
+    .flexy-plugin.plugin_stats .card-block .card .card-header {
       border-radius: 0;
       font-size: 1.25rem; }
-    body.uri-plugin__stats #content .card-block .card table {
+    .flexy-plugin.plugin_stats .card-block .card table {
       border: none; }
-      body.uri-plugin__stats #content .card-block .card table td.bar {
+      .flexy-plugin.plugin_stats .card-block .card table td.bar {
         border: none; }
-      body.uri-plugin__stats #content .card-block .card table td.graph {
+      .flexy-plugin.plugin_stats .card-block .card table td.graph {
         text-align: center; }
-      body.uri-plugin__stats #content .card-block .card table .vertical-text {
+      .flexy-plugin.plugin_stats .card-block .card table .vertical-text {
         display: block;
         text-align: center; }

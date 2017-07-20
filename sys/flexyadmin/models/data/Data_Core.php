@@ -1331,6 +1331,8 @@ Class Data_Core extends CI_Model {
     $searchable_fields = array_unset_keys($searchable_fields,array('id','order','self_parent','uri'));
     $searchable_fields = not_filter_by_key($searchable_fields,array('b','action'));
     $grid_set['searchable_fields'] = array_values($searchable_fields);
+
+    $grid_set['title'] = $this->lang->ui($this->settings['table']);
     return $grid_set;
   }
   
@@ -1365,6 +1367,8 @@ Class Data_Core extends CI_Model {
     
     // Field info
     $form_set['field_info'] = $this->get_setting_field_info_extended($form_set['fields'],array(),true);
+
+    $form_set['title'] = $this->lang->ui($this->settings['table']);
     return $form_set;
   }
   
@@ -1956,6 +1960,7 @@ Class Data_Core extends CI_Model {
           }
         }
         else {
+          $this->load->library('Lorem');
           $value = str_replace(array('.',','),'',$this->lorem->getContent(rand(1,5),'plain'));
         }
         break;

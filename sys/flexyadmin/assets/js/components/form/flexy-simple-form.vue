@@ -14,47 +14,39 @@ export default {
     
   data : function() {
     return {
-      data : [],
+      internalValues : {},
     }
   },
 
   created : function() {
     var self = this;
+    var values = {};
     for (var field in this.fields) {
       var value = self.fields[field].value;
-      self.$set(self.data, field, value);
+      values[field] = value;
     }
+    self.internalValues = Object.assign( {}, values );
   },
 
-  // beforeUpdate : function() {
-  //   var self = this;
-  //   for (var field in self.fields) {
-  //     var value = self.fields[field].value;
-  //     if (self.data[field] !== value) {
-  //       self.$set(self.data, field, value);
-  //     }
-  //   }
-  // },
-
-  // updated : function() {
-  //   var self = this;
-  //   for (var field in self.fields) {
-  //     var value = self.fields[field].value;
-  //     if (self.data[field] !== value) {
-  //       self.$set(self.data, field, value);
-  //     }
-  //   }
-  // },
+  watch : {
+    'internalValues' : function() {
+      this.$emit('changed',this.internalValues);
+    },
+  },
 
 
   methods : {
 
-    changed : function(field,value) {
-      this.$set(this.data, field, value);
+    changed : function(field,$event) {
+      this.$emit('changed',this.internalValues);
     },
 
     submit : function(event) {
-      this.$emit('submit',this.data);
+      this.$emit('submit',this.internalValues);
+    },
+
+    isMultiple : function(field) {
+      return this.fields[field].multiple;
     },
 
   },
@@ -63,9 +55,9 @@ export default {
 </script>
 
 <template>
-  <form @submit.prevent.stop="submit($event)">
+  <form @submit.prevent.stop="submit($event)" class="flexy-simple-form">
     <template v-for="(field,name) in fields">
-      <flexy-form-field :name="name" :type="field.type" :label="field.label" :value="data[name]" @changed="changed(name,$event)"></flexy-form-field>
+      <flexy-form-field :name="name" :type="field.type" :label="field.label" :options="field.options" :multiple="isMultiple(name)" v-model="internalValues[name]" @input="changed(name,$event)"></flexy-form-field>
     </template>
     <button class="btn btn-primary" type="submit">Submit</button>
   </form>

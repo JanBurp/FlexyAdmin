@@ -77,7 +77,7 @@ export default {
     this.state.progress = percent;
     this.debug && console.log('state.progress',this.state.progress); 
   },
-  
+
   /**
    * Help
    */
