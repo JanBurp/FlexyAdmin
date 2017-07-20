@@ -141,6 +141,7 @@ export default {
           ed.on('keyup', function(e){ self.updateText(ed); });
         }
       });
+      
       tinyMCE.remove();
 
       // Wait just a bit...
