@@ -5442,6 +5442,9 @@ a > .fa, .btn > .fa {
 .editor-popup .card {
   border: none; }
 
+.flexy-tool textarea {
+  height: 8rem; }
+
 .flexy-tool td,
 .flexy-tool th {
   white-space: nowrap;
@@ -5451,6 +5454,9 @@ a > .fa, .btn > .fa {
 .flexy-tool .tool-result {
   padding: 0px;
   overflow: auto; }
+
+.flexy-tool .messages {
+  margin-top: 2rem; }
 
 [v-cloak] {
   display: none; }

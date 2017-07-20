@@ -55,7 +55,7 @@ export default {
 </script>
 
 <template>
-  <form @submit.prevent.stop="submit($event)">
+  <form @submit.prevent.stop="submit($event)" class="flexy-simple-form">
     <template v-for="(field,name) in fields">
       <flexy-form-field :name="name" :type="field.type" :label="field.label" :options="field.options" :multiple="isMultiple(name)" v-model="internalValues[name]" @input="changed(name,$event)"></flexy-form-field>
     </template>

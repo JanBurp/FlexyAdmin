@@ -23,7 +23,7 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
    * @return     string  Schone SQL
    */
   public function clean_sql($sql) {
-    $sql=preg_replace("/#(.*?)\n/","",$sql);
+    // $sql=preg_replace("/#(.*?)\n/","",$sql);
     $sql=preg_replace("/DROP TABLE(.*) (.*?);/","# Empty $2\nTRUNCATE TABLE $2;",$sql);
     $sql=preg_replace("/CREATE TABLE (.*?) (.|\n)*?;\n/","# Inserts for $1",$sql);
     return $sql;
