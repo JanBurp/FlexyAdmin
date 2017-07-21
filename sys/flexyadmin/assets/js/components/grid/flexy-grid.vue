@@ -569,7 +569,7 @@ export default {
     },
     
     editItem : function(id) {
-      var url = '/form/'+this.name+'/'+id;
+      var url = '/edit/'+this.name+'/'+id;
       this.$router.push(url);
     },
     
@@ -683,18 +683,6 @@ export default {
       if ( !_.isUndefined(this.fields[name]) ) readonly = this.fields[name]['readonly'];
       return readonly;
     },
-    
-    editUrl : function(id) {
-      var url = '';
-      if (this.gridType()==='media') {
-        url = 'admin/show/form/_media_/'+ this.name+'/'+id;
-      }
-      else {
-        url = 'admin/show/form/'+this.name+'/'+id;
-      }
-      return url;
-    },
-    
     
     startFinding : function(event) {
       if (event) event.preventDefault();
