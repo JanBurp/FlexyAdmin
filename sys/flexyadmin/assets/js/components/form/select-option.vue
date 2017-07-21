@@ -5,7 +5,7 @@ import jdb  from '../../jdb-tools.js'
 export default {
   name: 'select-option',
   props:{
-    'label'       : String,
+    'label'      : [String,Number,Boolean],
     'extraClass' : String,
   },
   
@@ -16,7 +16,7 @@ export default {
   
   methods : {
     style : function(value) {
-      if ( value.substr(0,1)=='#' && value.length==7 ) {
+      if ( typeof(value)==='string' && value.substr(0,1)=='#' && value.length==7 ) {
         return 'color:'+jdb.complementColor(value)+';background-color:'+value+';padding:.25rem .5rem;';
       }
       return '';
