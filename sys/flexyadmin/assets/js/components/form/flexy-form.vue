@@ -14,7 +14,7 @@ import mediapicker      from './mediapicker.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
-import vselect           from '../../vue-strap-src/components/Select.vue'
+import vselect          from '../../vue-strap-src/components/Select.vue'
 import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
@@ -255,7 +255,7 @@ export default {
     
     selectOption: function(field,option) {
       this.row[field] = option;
-      console.log('selectOption',field,option);
+      // console.log('selectOption',field,option);
     },
     
     selectItem : function (value) {
@@ -362,7 +362,7 @@ export default {
       var value = this.row[field];
       if (!_.isUndefined(this.form_groups[field].value_eval)) {
         var value_eval = this.form_groups[field].value_eval;
-        console.log(field,value_eval);
+        // console.log(field,value_eval);
       }
       return value;
     },
@@ -384,12 +384,10 @@ export default {
     showInsertForm : function(field) {
       var show = false;
       if ( !_.isUndefined(this.insertForm[field]) ) show = this.insertForm[field].show;
-      // console.log('showInsertForm',field,show);
       return show;
     },
     
     subForm : function(field,property) {
-      // console.log('subForm',field,property);
       if ( _.isUndefined(this.insertForm[field]) ) return '';
       return this.insertForm[field][property];
     },
@@ -403,10 +401,11 @@ export default {
       })
       .then(function(response){
         if (!_.isUndefined(response.data)) {
-          // Vervang de opties 
+          // Vervang de opties
           self.form_groups[field]._options = response.data.data[field];
           // Selecteer zojuist toegevoegde item
           self.addToSelect(field,event);
+          self.$emit('formclose');
         }
         return response;
       });      
@@ -414,10 +413,15 @@ export default {
     
     cancel : function() {
       var self=this;
-      if (!this.isSaving) {
-        tinyMCE.remove();
-        var url = '/edit/'+this.name;
-        this.$router.push(url);
+      if (this.formtype==='subform') {
+        self.$emit('formclose');
+      }
+      else {
+        if (!this.isSaving) {
+          tinyMCE.remove();
+          var url = '/edit/'+this.name;
+          this.$router.push(url);
+        }
       }
     },
     
@@ -438,11 +442,14 @@ export default {
     add : function() {
       var self=this;
       if (!this.isSaving) {
-        self.postForm().then(function (response) {
-          if (!response.error) {
-            self.$emit('added',response.data.data.id);
-          }
-        })
+        var promise = self.postForm();
+        if ( typeof(promise.then)=='function') {
+          promise.then(function (response) {
+            if (!response.error) {
+              self.$emit('added',response.data.data.id);
+            }
+          })
+        }
       }
     },
     
@@ -491,10 +498,10 @@ export default {
           if (data[field].length>0) filled=true;
         }
         else {
-          if (data[field] && data[field]!==this.form_groups[field]['default']) filled=true;
+          if (data[field] && !_.isUndefined(this.form_groups[field]) && data[field]!==this.form_groups[field]['default']) filled=true;
         }
       }
-      
+
       // Als goed is ingevuld, ga dan door.
       if (filled) {
         return self._postForm(data);
@@ -506,6 +513,7 @@ export default {
           return self._postForm(data);
         }
       });
+
       return false;
     },
     
@@ -702,11 +710,11 @@ export default {
   <div class="card-header">
     <h1>{{uiTitle}}</h1>
     <div>
-      <flexy-button v-if="formtype!=='single'" @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
+      <flexy-button v-if="formtype!=='single'"                 @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
       <flexy-button v-if="formtype!=='subform' && action===''" @click.native="save()"  icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-warning"/>
-      <flexy-button v-if="action !==''" @click.native="save()" :text="$lang.submit" :disabled="isSaving" class="btn-outline-info"/>
-      <flexy-button v-if="formtype==='normal'" @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-info"/>
-      <flexy-button v-if="formtype==='subform'" @click.native="add()" :text="$lang.add" :disabled="isSaving" class="btn-outline-warning"/>
+      <flexy-button v-if="action !==''"                        @click.native="save()" :text="$lang.submit" :disabled="isSaving" class="btn-outline-info"/>
+      <flexy-button v-if="formtype==='normal'"                 @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-info"/>
+      <flexy-button v-if="formtype==='subform'"                @click.native="add()" :text="$lang.add" :disabled="isSaving" class="btn-outline-warning"/>
     </div>
   </div>
 
