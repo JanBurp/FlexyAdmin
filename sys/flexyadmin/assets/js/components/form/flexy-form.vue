@@ -416,7 +416,7 @@ export default {
       var self=this;
       if (!this.isSaving) {
         tinyMCE.remove();
-        var url = '/grid/'+this.name;
+        var url = '/edit/'+this.name;
         this.$router.push(url);
       }
     },

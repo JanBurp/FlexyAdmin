@@ -26,8 +26,7 @@ import FlexyForm        from './components/form/flexy-form.vue'
 import mediapicker      from './components/form/mediapicker.vue'
 
 // Routes
-import RouteGrid        from './routes/grid.vue'
-import RouteForm        from './routes/form.vue'
+import RouteEdit        from './routes/edit.vue'
 import RouteMedia       from './routes/media.vue'
 import RoutePlugin      from './routes/plugin.vue'
 import RouteTools       from './routes/tools.vue'
@@ -68,11 +67,11 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
   const router = new VueRouter({
     mode                 : 'history',
     base                 : _flexy.base_url,
+    linkActiveClass      : 'active',
     linkExactActiveClass : 'active',
 
     routes : [
-      { path: '/grid/:table',             component: RouteGrid },
-      { path: '/form/:table/:id/:type?',  component: RouteForm },
+      { path: '/edit/:table/:id?/:type?', component: RouteEdit },
       { path: '/media/:path',             component: RouteMedia },
       { path: '/plugin',                  component: RoutePlugin },
       { path: '/plugin/:plugin*',         component: RoutePlugin },
