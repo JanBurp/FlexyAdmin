@@ -6,7 +6,7 @@
  */
 $config['home_menu'] = array(
   'statistics' => array( 'name'=>'watch_statistics', 'uri'=>'plugin/stats',             'icon'=>'bar-chart',         "class"=>"primary" ),
-  'user'       => array( 'name'=>'edit_user',        'uri'=>'form/cfg_users/{user_id}', 'icon'=>'user',              "class"=>"primary" ),
+  'user'       => array( 'name'=>'edit_user',        'uri'=>'edit/cfg_users/{user_id}', 'icon'=>'user',              "class"=>"primary" ),
 );
 
 
@@ -15,8 +15,8 @@ $config['home_menu'] = array(
  */
 $config['header_menu'] = array(
   'statistics' => array( 'name'=>'statistics', 'uri'=>'plugin/stats',                     'icon'=>'bar-chart'),
-  'settings'   => array( 'name'=>'settings',   'uri'=>'form/tbl_site/1/single',           'icon'=>'cog'),
-  'user'       => array( 'name'=>'{username}', 'uri'=>'form/cfg_users/{user_id}/single',  'icon'=>'user') ,
+  'settings'   => array( 'name'=>'settings',   'uri'=>'edit/tbl_site/1/single',           'icon'=>'cog'),
+  'user'       => array( 'name'=>'{username}', 'uri'=>'edit/cfg_users/{user_id}/single',  'icon'=>'user') ,
   'logout'     => array( 'name'=>'logout',     'uri'=>'logout',                           'icon'=>'power-off' ),
   'help'       => array( 'name'=>'help',       'uri'=>'help',                             'icon'=>'question-circle' ), // Hier komt extra code bij
 );

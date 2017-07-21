@@ -137,7 +137,7 @@ Class Admin_menu extends CI_Model {
               if ($this->flexy_auth->has_rights($table)) {
                 $menuItems[$table] = $this->_process_item('', array(
                   'name'       => el('name',$item,$this->lang->ui($table)),
-                  'uri'        => 'grid/'.$table,
+                  'uri'        => 'edit/'.$table,
                   'icon'       => el('icon',$item,''),
                   'iconactive' => el('iconactive',$item,''),
                   'class'      => el('class',$item,''),
@@ -154,7 +154,7 @@ Class Admin_menu extends CI_Model {
                   if (!isset($menuItems[$table])) {
                     $menuItems[$table] = $this->_process_item('', array(
                       'name'       => $this->lang->ui($table),
-                      'uri'        => 'grid/'.$table,
+                      'uri'        => 'edit/'.$table,
                       'icon'       => el('icon',$item,''),
                       'iconactive' => el('iconactive',$item,''),
                       'class'      => el('class',$item,''),
