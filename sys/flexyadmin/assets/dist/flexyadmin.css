@@ -5990,8 +5990,7 @@ a > .fa, .btn > .fa {
   border-color: #696 !important; }
 
 .card.form .form-group.row:hover {
-  border-radius: 0.25rem;
-  background-color: #ffe5aa; }
+  border-radius: 0.25rem; }
 
 textarea {
   height: 400px; }
