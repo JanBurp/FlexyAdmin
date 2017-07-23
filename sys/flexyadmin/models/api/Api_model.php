@@ -74,10 +74,10 @@ class Api_Model extends CI_Model {
     
     // Get arguments
     $this->args=$this->_get_args($this->needs);
-    
+
     // Standard result
-    $this->result['args']=$this->args;
-    $this->result['api']=__CLASS__;
+    $this->result['args'] = $this->args;
+    $this->result['api']  = __CLASS__;
 
     $loggedIn = FALSE;
     // If not login request (_api/auth/login), check authentication header
@@ -214,6 +214,7 @@ class Api_Model extends CI_Model {
       $this->result['args'] = $this->args;
       if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
       if (empty($this->result['args']['config'])) unset($this->result['args']['config']);
+      unset($this->result['args']['_authorization']);
     }
 
     // cleanup result
