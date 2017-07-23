@@ -168,7 +168,7 @@ class Row extends Api_Model {
 
 	public function __construct() {
 		parent::__construct();
-    	}
+  }
   
 
   /**
@@ -257,6 +257,7 @@ class Row extends Api_Model {
       $values = $this->data->get_row( $args['where'] );
     }
     $this->info=$this->data->get_query_info();
+    $this->info['action'] = 'get';
     return $values;
   }
   
@@ -278,6 +279,7 @@ class Row extends Api_Model {
       // Save
       $id = $this->data->table($this->args['table'])->validate()->update( $data, $args['where'] );
       $this->info = $this->data->get_query_info();
+      $this->info['action'] = 'update';
       // Get data back
       $this->data->table( $args['table'] );
       $new_data = $this->data->get_row( $args['where'] );
@@ -305,6 +307,7 @@ class Row extends Api_Model {
       // Insert
       $id = $this->data->table($args['table'])->validate()->insert( $data );
       $this->info = $this->data->get_query_info();
+      $this->info['action'] = 'insert';
       // Get data back
       $this->data->table( $args['table'] );
       $new_data = $this->data->get_row( $id );
@@ -344,6 +347,7 @@ class Row extends Api_Model {
 
     }
     $this->info = $this->data->get_query_info();
+    $this->info['action'] = 'delete';
     return $id;
   }
 
