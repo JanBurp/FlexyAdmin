@@ -168,9 +168,9 @@ class Api_Model extends CI_Model {
     if (empty($args['settings'])) unset($args['settings']);
     $this->result['success'] = false;
     $this->result['error']   = 'WRONG ARGUMENTS';
-    // $this->result['needs']   = $this->needs;
     unset($this->result['status']);
     unset($this->result['message']);
+    unset($this->result['args']['_authorization']);
     return $this->result;
   }
   
