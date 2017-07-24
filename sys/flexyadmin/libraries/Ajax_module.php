@@ -22,7 +22,7 @@ class Ajax_module extends Parent_module_plugin {
 
   /**
    */
-	function __construct($name='') {
+	public function __construct($name='') {
 		parent::__construct($name);
 	}
 
