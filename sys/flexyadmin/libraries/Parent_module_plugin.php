@@ -44,7 +44,7 @@ class Parent_module_plugin {
           $this->CI->config->unload($name); // Will be reloaded later
         }
       }
-      $this->load_config($file);
+      if ($file) $this->load_config($file);
 		}
 	}
 
