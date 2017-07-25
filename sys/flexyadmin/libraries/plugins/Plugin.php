@@ -156,19 +156,6 @@ class Plugin extends Parent_module_plugin {
     return $this->CI->load->view($view,$args,$hide);
   }
   
-  
-	/**
-	 * Depricated
-	 *
-	 * @return void
-	 * @author Jan den Besten
-   * @internal
-	 */
-	function get_show_type() {
-		return '';
-	}
-
-
 }
 
 /**
