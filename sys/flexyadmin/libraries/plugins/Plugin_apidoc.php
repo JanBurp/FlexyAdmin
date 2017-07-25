@@ -40,8 +40,8 @@ class Plugin_apidoc extends Plugin {
         $md = preg_replace("/^\s\* /uUsm", "", $md);
         $md = preg_replace("/- /uUsm", " - ", $md);
         $md = preg_replace("/^@(.*)\n/um", "", $md);
-        $api  = "_api/".str_replace('.php','',$name);
-        $doc .= $api."\n".repeater("=",strlen($api))."\n" . $md . "\n\n";
+        $api  = "".str_replace('.php','',$name);
+        $doc .= '#'.$api."\n\n" . $md . "\n\n";
       }
     }
     
