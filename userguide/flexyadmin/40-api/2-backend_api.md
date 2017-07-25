@@ -1,12 +1,12 @@
-_api/assets_actions
-===================
+#assets_actions
+
  \ingroup models
 API: assets
 
  
 
-_api/auth
-=========
+#auth
+
  \ingroup models
 API auth. Hiermee kan worden ingelogd of uitgelogd.
 
@@ -79,51 +79,51 @@ Voorbeeld:
 
  
 
-_api/get_admin_nav
-==================
+#get_admin_nav
+
 
 API: Geeft het admin menu terug voor in het backend deel van FlexyAdmin.
 
  
 
-_api/get_help
-=============
+#get_help
+
 
 API: Geeft help tekst
 
  
 
-_api/get_image_list
-===================
+#get_image_list
+
 
 API: Geeft een lijst van links voor de TinyMCE editor
 
  
 
-_api/get_link_list
-==================
+#get_link_list
+
 
 API: Geeft een lijst van links voor de TinyMCE editor
 
  
 
-_api/get_plugin
-===============
+#get_plugin
+
 
 API: Geeft plugin pagina, voor backend van FlexyAdmin
 
  
 
-_api/link_checker
-=================
+#link_checker
+
  \ingroup models
 API user
 
    
  
 
-_api/media
-==========
+#media
+
  \ingroup models
 API: media. Geeft een lijst, bewerkt of upload bestanden toe aan een map.
 De specifieke functie wordt bepaald door de (soort) parameters. Zie hieronder per functie.
@@ -286,8 +286,8 @@ Als response wordt in `data` TRUE gegeven als het verwijderen is gelukt:
 
  
 
-_api/row
-========
+#row
+
  \ingroup models
 API row. Geeft, bewerkt of voegt een record toe aan een tabel.
 De specifieke functie wordt bepaald door de (soort) parameters. Zie hieronder per functie.
@@ -443,8 +443,8 @@ Voorbeeld response (dump) van bovenstaand voorbeeld:
 
  
 
-_api/table
-==========
+#table
+
  \ingroup models
 API table. Geeft de data van een tabel uit de database.
 
@@ -538,8 +538,8 @@ De `info` response key geeft extra informatie over het resultaat, met de volgend
    
  
 
-_api/table_order
-================
+#table_order
+
  \ingroup models
 API order. Past volgorde van items aan in een tabel
 
@@ -600,16 +600,16 @@ Voorbeeld response (dump) van bovenstaand voorbeeld:
 
  
 
-_api/tools
-==========
+#tools
+
  \ingroup models
 API user
 
    
  
 
-_api/user
-=========
+#user
+
  \ingroup models
 API user
 
