@@ -107,6 +107,10 @@ class Plugin extends Parent_module_plugin {
 		$this->content.=$content;
 		return $this->content;
 	}
+
+  protected function add_trace($content) {
+    return $this->add_content(str_replace("\n",'<br>',trace_($content,false)));
+  }
 	
   /**
    * Voegt een bericht toe wat naar de output kan worden gestuurd

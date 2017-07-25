@@ -304,8 +304,8 @@ function print_ar($array,$return=false,$tabs=0,$brackets="()") {
  * @return string
  * @author Jan den Besten
  */
-function tabs($t,$tab=" ") {
-  // if (IS_AJAX) $tab="\t";
+function tabs($t=0,$tab=" ") {
+  if ($t<0) $t=0;
 	return str_repeat($tab,$t);
 }
 
