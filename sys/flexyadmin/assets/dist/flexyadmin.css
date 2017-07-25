@@ -5678,6 +5678,13 @@ a > .fa, .btn > .fa {
   padding: .5rem;
   margin: .5rem; }
 
+.card-block ._trace {
+  font-size: .8rem;
+  border-radius: 0.25rem;
+  border: solid 1px #696;
+  background-color: #f7f7f9;
+  margin: .5rem 0; }
+
 .grid {
   /*  td.is-editing {padding:2px;box-shadow:0px 0px 1px $brand-danger inset;}*/ }
   .grid td.has-focus {

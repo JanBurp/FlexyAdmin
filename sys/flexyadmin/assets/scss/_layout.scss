@@ -205,3 +205,12 @@
   padding:.5rem;
   margin:.5rem;
 }
+.card-block {
+  ._trace {
+    font-size: .8rem;
+    border-radius: $border-radius;
+    border: solid 1px $brand-primary;
+    background-color:$gray-lightest;
+    margin:.5rem 0;
+  }
+}
