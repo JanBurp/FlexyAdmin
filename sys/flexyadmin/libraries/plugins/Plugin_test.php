@@ -1,11 +1,11 @@
-<?php require_once(APPPATH."core/MY_Controller.php");
+<?php 
 
-class Test extends MY_Controller {
+class Plugin_test extends Plugin {
 	
 	public function __construct()	{
 		parent::__construct();
-    $this->load->library('table');
-    $this->load->library('flexy_auth');
+    $this->CI->load->library('table');
+    $this->CI->load->library('flexy_auth');
     
     $template = array(
       'table_open'            => '<table border="1" cellpadding="4" cellspacing="0">',
@@ -27,53 +27,57 @@ class Test extends MY_Controller {
       'cell_alt_end'          => '</code></pre></td>',
       'table_close'           => '</table>'
     );
-    $this->table->set_template($template);
+    $this->CI->table->set_template($template);
 	}
   
-  public function index() {
+  public function _admin_api() {
     if (!IS_LOCALHOST) return;
+    $args = func_get_args();
+    if ($args) {
+      $method = array_shift($args);
+      if ($method) {
+        $method = current($method);
+        return $this->$method($args);
+      }
+    }
 
-    $this->data->table('tbl_groepen');
+    $this->CI->data->table('tbl_groepen');
     // Simple
-    $result         = $this->data->table('tbl_groepen')->cache()->get_result();
-    $info           = $this->data->get_query_info();
-    $this->data->table('tbl_groepen');
-    $cached_result  = $this->data->cache()->get_result();
-    $cached_info    = $this->data->get_query_info();
-    trace_(count($result));
-    trace_($info);
-    trace_(count($cached_result));
-    trace_($cached_info);
-
-    $this->data->clear_cache();
+    $result         = $this->CI->data->table('tbl_groepen')->get_result();
+    $info           = $this->CI->data->get_query_info();
     
+    $this->add_trace(count($result));
+    $this->add_trace( $result );
+    
+    return $this->content;
   }
   
   
-  public function settings() {
+  private function settings() {
     if (!IS_LOCALHOST) return;
 
-    $tables = $this->data->list_tables();
+    $tables = $this->CI->data->list_tables();
     $tables = filter_by($tables,'tbl');
     $tables = array('res_assets');
     foreach ($tables as $table) {
-      $this->data->table( $table );
+      $this->CI->data->table( $table );
       echo h($table);
       echo h('grid_set',3);
-      trace_( $this->data->get_setting('grid_set') );
+      trace_( $this->CI->data->get_setting('grid_set') );
       echo h('form_set',3);
-      trace_( $this->data->get_setting('form_set'));
+      trace_( $this->CI->data->get_setting('form_set'));
       echo hr();
     }
 
+    // return $this->content;
   }
 
 
-  public function validatons() {
+  private function validatons() {
     if (!IS_LOCALHOST) return;
-    $this->load->library('form_validation');
+    $this->CI->load->library('form_validation');
     
-    $tables = $this->data->list_tables();
+    $tables = $this->CI->data->list_tables();
     $tables = filter_by($tables,'tbl');
     foreach ($tables as $table) {
       echo h($table);
@@ -91,17 +95,17 @@ class Test extends MY_Controller {
 
 
 
-  public function options() {
+  private function options() {
     if (!IS_LOCALHOST) return;
     
-    $tables = $this->data->list_tables();
+    $tables = $this->CI->data->list_tables();
     foreach ($tables as $table) {
-      $this->data->table( $table );
-      $options_settings = $this->data->get_setting('options');
+      $this->CI->data->table( $table );
+      $options_settings = $this->CI->data->get_setting('options');
       if ($options_settings) {
         echo h($table);
-        trace_( $this->data->get_setting('options') );
-        trace_( $this->data->get_options());
+        trace_( $this->CI->data->get_setting('options') );
+        trace_( $this->CI->data->get_options());
       }
     }
     
@@ -109,10 +113,10 @@ class Test extends MY_Controller {
 
   
   
-  public function users( $user_id=FALSE ) {
+  private function users( $user_id=FALSE ) {
     if (!IS_LOCALHOST) return;
 
-    $this->load->library('flexy_auth');
+    $this->CI->load->library('flexy_auth');
     if ($user_id) {
       $user = $this->flexy_auth->get_user($user_id);
       $users[$user_id] = $user;
@@ -135,20 +139,20 @@ class Test extends MY_Controller {
     }
 
     echo( '<h1>User rights</h1>' );
-    $this->table->set_heading( array('id','user_name','groups.description','rights') );
+    $this->CI->table->set_heading( array('id','user_name','groups.description','rights') );
     foreach ($users as $user) {
-      $this->table->add_row( $user );
+      $this->CI->table->add_row( $user );
     }
-    echo $this->table->generate();
+    echo $this->CI->table->generate();
   }
   
   
   
-  public function relations() {
+  private function relations() {
     if (!IS_LOCALHOST) return;
     
     // many_to_one
-    $this->data->table( 'tbl_kinderen' );
+    $this->CI->data->table( 'tbl_kinderen' );
     $many_to_one['without']  = "";
     $many_to_one['normal']   = "->with( 'many_to_one' )";
     $many_to_one['specific'] = "->with( 'many_to_one', ['id_adressen'=>['str_zipcode','str_city']] )";
@@ -158,7 +162,7 @@ class Test extends MY_Controller {
     $this->eval_table('many_to_one',$many_to_one);
 
     // one_to_many
-    $this->data->table( 'tbl_adressen' );
+    $this->CI->data->table( 'tbl_adressen' );
     $one_to_many['without']  = "";
     $one_to_many['normal']   = "->with( 'one_to_many' )";
     $one_to_many['specific'] = "->with( 'one_to_many', ['tbl_kinderen'=>['str_first_name','str_last_name']] )";
@@ -167,7 +171,7 @@ class Test extends MY_Controller {
     $this->eval_table('one_to_many',$one_to_many);
 
     // many_to_many
-    $this->data->table( 'tbl_groepen' );
+    $this->CI->data->table( 'tbl_groepen' );
     $many_to_many['without']  = "";
     $many_to_many['normal']   = "->with( 'many_to_many' )";
     $many_to_many['specific'] = "->with( 'many_to_many', ['rel_groepen__adressen'=>['str_zipcode']] )";
@@ -203,10 +207,10 @@ class Test extends MY_Controller {
       // Result
       $eval = 'return $this->data'.$value.'->get_result( 2 );';
       $array = eval($eval);
-      $num_rows = $this->data->num_rows();
+      $num_rows = $this->CI->data->num_rows();
       $result[$key] = 'num_rows = '.$num_rows.' (2)'.br().highlight_code(array2php( array_slice($array,0,2) ));
       // Query
-      $sql[$key] = highlight_code(nice_sql( $this->data->last_query() ));
+      $sql[$key] = highlight_code(nice_sql( $this->CI->data->last_query() ));
     }
     array_unshift($with,"\n<strong>with()</strong>");
     array_unshift($get,"<strong>get()->result_array()</strong>");
@@ -214,24 +218,24 @@ class Test extends MY_Controller {
     array_unshift($sql,"\n<strong>->last_query()</strong>");
     
     echo( '<h1>'.$caption.'</h1>' );
-    $this->table->set_heading( array_keys($with) );
-    $this->table->add_row( $with );
-    $this->table->add_row( $sql );
-    $this->table->add_row( $get );
-    $this->table->add_row( $result );
-    echo $this->table->generate();
+    $this->CI->table->set_heading( array_keys($with) );
+    $this->CI->table->add_row( $with );
+    $this->CI->table->add_row( $sql );
+    $this->CI->table->add_row( $get );
+    $this->CI->table->add_row( $result );
+    echo $this->CI->table->generate();
   }
   
   
 
-  public function menu() {
-    $menu = $this->data->table('tbl_menu')
+  private function menu() {
+    $menu = $this->CI->data->table('tbl_menu')
                         ->unselect('txt_text')
                         ->tree('full_uri','uri')
                         ->where_tree( 'full_uri','een_pagina/een_pagina')
                         ->get_result();
     trace_($menu);
-    trace_($this->data->get_query_info());
+    trace_($this->CI->data->get_query_info());
   }
   
 
