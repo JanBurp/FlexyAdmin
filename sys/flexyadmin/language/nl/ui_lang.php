@@ -61,6 +61,7 @@ $lang['stx_keywords']     = $lang['str_keywords'];
 
 // Fields in cfg_users
 $lang['rel_users__groups']         = 'Gebruikers groep';
+$lang['cfg_user_groups']           = 'Gebruikers groep';
 $lang['gpw_password']              = 'Wachtwoord';
 $lang['ip_address']                = 'IP Adres';
 $lang['str_language']              = 'Taal';
