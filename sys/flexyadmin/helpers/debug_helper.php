@@ -192,6 +192,11 @@ function nice_sql($sql,$eol="\n") {
   return $sql;
 }
 
+function is_sql($txt) {
+  return (preg_match('/^\bSELECT|INSERT|UPDATE|SHOW\b/u', $txt) >=1);
+}
+
+
 /**
  * Geeft een trace van een string-waarde
  *
