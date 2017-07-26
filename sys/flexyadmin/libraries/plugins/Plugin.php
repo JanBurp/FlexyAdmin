@@ -112,6 +112,10 @@ class Plugin extends Parent_module_plugin {
     return $this->add_content(str_replace("\n",'<br>',trace_($content,false)));
   }
 	
+  protected function add_trace_sql($content) {
+    return $this->add_content('<pre class="_trace">'.str_replace("\n",'<br>',highlight_code(nice_sql($content))).'</pre>');
+  }
+
   /**
    * Voegt een bericht toe wat naar de output kan worden gestuurd
    *
