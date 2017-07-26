@@ -129,7 +129,7 @@ export default {
   addMessage : function(message,type) {
     if (_.isUndefined(type)) type='success';
     var self = this;
-    if (type==='popup') {
+    if (type==='popup' || type==='danger') {
       self.openModal({
         body    : message,
         size    : 'modal-lg',
@@ -246,6 +246,7 @@ export default {
     return Axios.request( request ).then(function (response) {
       self.hideProgress();
       self.debug && console.log('api < ',response);
+
       // trace/bug?
       if (typeof(response.data)==='string' && response.data.substr(0,1)==='<') {
         self.addMessage(response.data,'danger');
@@ -253,12 +254,15 @@ export default {
         var startOfObject = response.data.indexOf('{"success":');
         response.data = JSON.parse(response.data.substr(startOfObject));
       }
+
       if (!_.isUndefined(response.data.error)) {
         self.addMessage(response.data.error,'danger');
       }
+
       if (!_.isUndefined(response.data.message)) {
         self.addMessage(response.data.message,response.data.message_type || 'success');
       }
+
       return response;
     })
     .catch(function (error) {
