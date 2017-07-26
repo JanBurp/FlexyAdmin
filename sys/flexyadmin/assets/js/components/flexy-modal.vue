@@ -53,7 +53,7 @@ export default {
   <div class="modal flexy-modal" id="flexyadmin-modal" :class="{'hidden':!settings.show}">
     <div class="modal-dialog" :class="options.size" @keyup.esc="close()" @keyup.enter="enter()">
       <div class="modal-content">
-        <div v-show="settings.title!==''" class="modal-header bg-primary text-white">
+        <div v-show="settings.title!==''" class="modal-header text-white" :class="(settings.type=='danger'?'bg-danger':'bg-primary')">
           <flexy-button @click.native="close()" icon="remove" class="btn-danger" />
           <h4 class="modal-title">{{settings.title}}</h4>
         </div>
