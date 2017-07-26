@@ -28,7 +28,8 @@ $config['grid_set'] = array(
 );
 
 $config['form_set'] = array(
-  'fieldsets' => array('Users'=>array( 'id','str_username', 'email_email', 'gpw_password', 'cfg_user_groups', 'str_language')),
+  'fieldsets' => array(
+    'cfg_users' => array( 'id','str_username', 'email_email', 'gpw_password', 'cfg_user_groups', 'str_language')),
   'with'      => array( 'many_to_many' ),
 );
 
