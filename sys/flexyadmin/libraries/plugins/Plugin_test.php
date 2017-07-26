@@ -41,13 +41,15 @@ class Plugin_test extends Plugin {
       }
     }
 
-    $this->CI->data->table('tbl_groepen');
-    // Simple
-    $result         = $this->CI->data->table('tbl_groepen')->get_result();
-    $info           = $this->CI->data->get_query_info();
-    
-    $this->add_trace(count($result));
+    $this->CI->data->table('cfg_users');
+    $result         = $this->CI->data->get_grid(1);
     $this->add_trace( $result );
+    $this->add_trace_sql( $this->CI->data->last_query() );
+
+    // $this->CI->data->table('cfg_users')->with('one_to_one',array( 'tbl_user_settings' => array('str_newsletter_what','str_newsletter_when','b_show_address','b_show_email','b_show_phone','b_show_kids_photos','b_show_disclaimer') ));
+    // $result         = $this->CI->data->get_grid(1);
+    // $this->add_trace( $result );
+    // $this->add_trace_sql( $this->CI->data->last_query() );
     
     return $this->content;
   }
