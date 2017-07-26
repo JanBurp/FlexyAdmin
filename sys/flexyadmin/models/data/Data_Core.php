@@ -1420,10 +1420,10 @@ Class Data_Core extends CI_Model {
                 $field = $this->get_other_table_abstract_fields($info['other_table']);
               }
               $relation_fields = $field;
-              if (!is_array($relation_fields)) $relation_fields = array($relation_fields);
-              foreach ($relation_fields as $key => $value) {
-                $relation_fields[$key] = $info['other_table'].'.'.$value;
-              }
+              // if (!is_array($relation_fields)) $relation_fields = array($relation_fields);
+              // foreach ($relation_fields as $key => $value) {
+              //   $relation_fields[$key] = $info['other_table'].'.'.$value;
+              // }
             }
             $set['with'][$type][$what] = $field;
 
@@ -4104,7 +4104,7 @@ Class Data_Core extends CI_Model {
           'add_slashes' => !in_array($field_type, $this->config->item('FIELDS_number_fields')) and !in_array($field_type, $this->config->item('FIELDS_bool_fields')),
           'field'       => $field,
           'select'      => '`' . $as_table . '`.`'.$field.'`',
-          // 'select'      => '`' . ( $type==='many_to_many' ? $other_table : $as_table) . '`.`'.$field.'`',
+          // 'select'      => ( $type==='one_to_one' ? '' : '`'.$as_table.'`.') .'`'.$field.'`',
         );
       }
       
@@ -4112,17 +4112,18 @@ Class Data_Core extends CI_Model {
       if (!$json) {
         // trace_($select_fields);
         foreach ($select_fields as $field => $select_field) {
-          $sub_select = $select_field['select'].' AS `'.$as_table.'.'.$field.'`';
-          if ($type!=='one_to_one') {
-            $select .= $sub_select.', ';
-          }
-          else {
+          if ($type==='one_to_one') {
+            $sub_select = $select_field['select'].' AS `'.$field.'`';
             if (isset($this->tm_select[$field])) {
               $this->tm_select[$field] = $sub_select;
             }
             elseif ($this->tm_select[$as_table]) {
               $select .= $sub_select.', ';  
             }
+          }
+          else {
+            $sub_select = $select_field['select'].' AS `'.$as_table.'.'.$field.'`';
+            $select .= $sub_select.', ';
           }
         }
         $select = trim($select,',');
