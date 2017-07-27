@@ -159,7 +159,7 @@ class AjaxController extends BasicController {
         if (el('format',$result,'default')==='_json') {
           $output = $this->prettyJSON( $output );
         }
-        header("Content-Type: application/json");
+        @header("Content-Type: application/json");
         break;
 
       // default:
@@ -179,11 +179,11 @@ class AjaxController extends BasicController {
     // ENABLE CORS
     if ($cors and el('format',$result,'default')!=='dump') {
       // default Status header
-      if (!$status) header("HTTP/1.1 200 OK");
-      header("Access-Control-Allow-Origin: ".$cors);
-      header("Access-Control-Allow-Methods: GET, POST");
-      header("Access-Control-Allow-Credentials: true");
-      header("Access-Control-Allow-Headers: Authorization");
+      if (!$status) @header("HTTP/1.1 200 OK");
+      @header("Access-Control-Allow-Origin: ".$cors);
+      @header("Access-Control-Allow-Methods: GET, POST");
+      @header("Access-Control-Allow-Credentials: true");
+      @header("Access-Control-Allow-Headers: Authorization");
     }
     
     echo $output;
