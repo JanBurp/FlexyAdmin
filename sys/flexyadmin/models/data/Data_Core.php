@@ -4265,8 +4265,34 @@ Class Data_Core extends CI_Model {
    */
   public function validate( $validation = true ) {
     $this->validation = $validation;
-    if ( $this->validation ) $this->load->library('form_validation');
     return $this;
+  }
+
+
+  /**
+   * Run validation
+   *
+   * @param      array  $set    De data
+   * @param      string  $table  Table[''] standaard de ingesteld tabel
+   *
+   * @return     bool
+   */
+  protected function run_validation($set,$table='') {
+    if (empty($table)) $table = $this->settings['table'];
+
+    // Alleen op velden die in deze tabel echt bestaan
+    foreach ($set as $field => $value) {
+      if (!$this->db->field_exists($field,$table)) unset($set[$field]);
+    }
+
+    $this->load->library('form_validation');
+    $validated = $this->form_validation->validate_data( $set, $table );
+    if (!$validated) {
+      $this->query_info['validation'] = FALSE;
+      if (!isset($this->query_info['validation_errors']) or empty($this->query_info['validation_errors'])) $this->query_info['validation_errors'] = array();
+      $this->query_info['validation_errors'] = array_merge( $this->query_info['validation_errors'], $this->form_validation->get_error_messages() );
+    }
+    return $validated;
   }
   
   
@@ -4452,17 +4478,12 @@ Class Data_Core extends CI_Model {
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): no condition set (WHERE,LIKE etc). Could result in overwriting all rows in `'.$this->settings['table'].'`' );
     }
 
-
     /**
      * Valideer eventueel eerst de set
      */
     if ( $this->validation ) {
       // Niet gevalideerd, dus we kunnen geen update doen, FALSE als return
-      if ( ! $this->form_validation->validate_data( $set, $this->settings['table'] ) ) {
-        $this->query_info = array(
-          'validation'        => FALSE,
-          'validation_errors' => $this->form_validation->get_error_messages()
-        );
+      if ( ! $this->run_validation( $set ) ) {
         $this->reset();
         return FALSE;
       }
