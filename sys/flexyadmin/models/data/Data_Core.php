@@ -4552,12 +4552,12 @@ Class Data_Core extends CI_Model {
       $this->db->trans_start();
 
       /**
-       * Als set leeg is (maar wel ..to_many) zoek dan de id en stel WHERE opnieuw in
+       * Als set leeg is (maar wel relatie data) zoek dan de id en stel WHERE opnieuw in
        */
       if (empty($set)) {
         // WHERE is al ingesteld, dus we kunnen gewoon de id's vinden
-        $result = $this->select( $this->settings['primary_key'] )->get_result();
-        $ids = array_keys($result);
+        $result = $this->select( $this->settings['table'].'.'.$this->settings['primary_key']. ' AS `primary_key`' )->get_result();
+        $ids = array_column($result,'primary_key');
         $id = current($ids);
         $log = array(
           'query' => $this->db->last_query(),
