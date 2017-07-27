@@ -104,7 +104,7 @@ class MY_Form_validation extends CI_Form_validation {
    * @return bool
    * @author Jan den Besten
    */
-  public function validate_data($data,$table='') {
+  public function validate_data($data,$table='',$validation='') {
     // (re)Set data
     $this->set_data($data);
     $this->_field_data     = array();
@@ -118,8 +118,8 @@ class MY_Form_validation extends CI_Form_validation {
         $thisTable=get_prefix($field);
         $field=remove_prefix($field);
       }
-      $label      = $this->CI->lang->ui($thisTable.'.'.$field);
-      $validation = $this->get_rules($thisTable,$field);
+      $label = $this->CI->lang->ui($thisTable.'.'.$field);
+      if (empty($validation)) $validation = $this->get_rules($thisTable,$field);
       $this->set_rules($field, $label, $validation);
 		}
     // Run validation
