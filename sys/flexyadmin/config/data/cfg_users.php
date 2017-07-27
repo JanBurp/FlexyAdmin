@@ -8,7 +8,6 @@ $config['fields']          = array( 'id','str_username', 'email_email', 'str_lan
 $config['order_by']        = 'str_username,id';
 $config['abstract_fields'] = array('str_username');
 
-
 $config['options'] = array( 
   'str_language' => array(
     'data' => array_combine($this->config['languages'],$this->config['languages']),
@@ -29,16 +28,22 @@ $config['relations'] = array(
 );
 
 $config['grid_set'] = array(
-  'fields'    => array( 'id','str_username', 'email_email','cfg_user_groups', 'str_language','b_active'),
+  'fields'    => array( 'id','str_username', 'email_email','cfg_user_groups', 'b_active' ),
   'order_by'  => 'cfg_user_groups.id, str_username',
   'with'      => array( 'many_to_many' ),
 );
 
 $config['form_set'] = array(
   'fieldsets' => array(
-    'cfg_users' => array( 'id','str_username', 'email_email', 'gpw_password', 'cfg_user_groups', 'str_language')),
+    'cfg_users' => array( 'id','str_username', 'email_email', 'gpw_password', 'cfg_user_groups' )),
   'with'      => array( 'many_to_many' ),
 );
+
+// Taal veld alleen als nodig
+if (count($this->config['languages'])>1) {
+  if (isset($config['grid_set']['fields'])) array_push($config['grid_set']['fields'],'str_language' );
+  if (isset($config['form_set']['fieldsets']['cfg_users'])) array_push($config['form_set']['fieldsets']['cfg_users'],'str_language' );
+}
 
 
 $config['multiple_groups'] = FALSE;
