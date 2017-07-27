@@ -249,7 +249,7 @@ class Row extends Api_Model {
     $args=$this->_clean_args(array('table','where','select'));
     $this->data->table( $args['table'] );
     if (!isset($args['where'])) $args['where']=null;
-    if (isset($args['select'])) $this->data->select($args['select']);
+    if (isset($args['select'])) $this->data->select($args['select'])->with('one_to_one');
     if (el('as_form',$this->args,false)) {
       $values = $this->data->get_form( $args['where'] );
     }
@@ -277,7 +277,7 @@ class Row extends Api_Model {
       $current_data = $this->data->get_row( $args['where'] );
       $data = $this->_after_update( $this->args['table'], $current_data, $data);
       // Save
-      $id = $this->data->table($this->args['table'])->validate()->update( $data, $args['where'] );
+      $id = $this->data->table($this->args['table'])->with('one_to_one')->validate()->update( $data, $args['where'] );
       $this->info = $this->data->get_query_info();
       $this->info['action'] = 'update';
       // Get data back
@@ -305,7 +305,7 @@ class Row extends Api_Model {
       $old = $this->data->get_defaults();
       $data = $this->_after_update( $this->args['table'], $old, $data);
       // Insert
-      $id = $this->data->table($args['table'])->validate()->insert( $data );
+      $id = $this->data->table($args['table'])->with('one_to_one')->validate()->insert( $data );
       $this->info = $this->data->get_query_info();
       $this->info['action'] = 'insert';
       // Get data back

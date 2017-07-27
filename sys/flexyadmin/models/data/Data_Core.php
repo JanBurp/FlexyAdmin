@@ -1230,7 +1230,7 @@ Class Data_Core extends CI_Model {
       $info['label'] = $this->lang->ui($field);
       
       // Schema: default
-      $schema = $field_info_config['FIELDS_default'];
+      $schema       = $field_info_config['FIELDS_default'];
       // Schema: from prefix
       $fieldPrefix  = get_prefix($field);
       $schema       = array_merge($schema, el(array('FIELDS_prefix',$fieldPrefix),$field_info_config,array()) );
@@ -1246,7 +1246,7 @@ Class Data_Core extends CI_Model {
       $info['validation'] = is_array($info['validation']) ? implode('|',$info['validation']) : $info['validation'];
       
       // Options
-      $options = $this->get_options($field,array('many_to_many','one_to_many'));
+      $options = $this->get_options($field,array('many_to_many','one_to_many','one_to_one'));
       if ($options) {
         $info['type'] = 'select';
         if ($fieldPrefix==='media' or $fieldPrefix==='medias') {
@@ -1623,7 +1623,8 @@ Class Data_Core extends CI_Model {
     $options=array();
     $where_primary_key = $this->tm_where_primary_key; // Bewaar dit voor opties uit andere tabellen
     foreach ($fields as $field) {
-      $field_options = el( array($field), $this->settings['options'] );
+
+      $field_options  = $this->get_setting( array('options',$field) );
       $field_options['field'] = $field;
       
       if ($field_options) {
@@ -1685,18 +1686,19 @@ Class Data_Core extends CI_Model {
     if ( in_array('one_to_one',$with) ) {
       $relations = $this->settings['relations']['one_to_one'];
       foreach ($relations as $relation) {
-        $other_table = $relation['other_table'];
+        $other_table   = $relation['other_table'];
         $other_options = $this->data->table( $other_table )->get_options();
         $this->data->table($this->settings['table']); // Terug naar huidige data table.
         unset($other_options[$relation['foreign_key']]);
         if ($other_options) {
           foreach ($other_options as $field => $info) {
-            $options[$other_table.'.'.$field] = $info;
+            $info['data'] = array_column($info['data'],'name','value');;
+            $options[$field] = $info;
           }
         }
       }
     }
-    
+
     // ..._to_many opties
     if ( in_array('many_to_many',$with) or in_array('one_to_many',$with) ) {
       foreach ($with as $type) {
@@ -3645,6 +3647,7 @@ Class Data_Core extends CI_Model {
    * ----------
    * 
    * Wordt niet vaak gebruikt. Maar in sommige gevallen toch handig om data van een tabel in meerdere tabellen te splitsen.
+   * Je kunt het zien als een samenvoeging van twee tabellen.
    * Werkt hetzelfde als many_to_one.
    * 
    * ->with( 'one_to_one' );
@@ -3652,8 +3655,8 @@ Class Data_Core extends CI_Model {
    * one_to_one resultaat
    * --------------------
    * 
-   * De velden uit de extra tabel krijgen de naam: 'extra_tabel.veld' om vewarringen te voorkomen.
-   * Bij ->get_result() varianten wordt niet een mogelijk niet bestaande rij uit de extra tabel vervangen door default data.
+   * De velden uit de extra tabel krijgen de naam van zichzelf. Dus je moet altijd unieke veldnamen hebben.
+   * Bij ->get_result() varianten wordt een mogelijk niet bestaande rij uit de extra tabel vervangen door default data.
    * 
    * 
    * many_to_one
@@ -4435,6 +4438,8 @@ Class Data_Core extends CI_Model {
     }
 
 
+    
+
     /**
      * Query verder opbouwen
      */
@@ -4474,10 +4479,10 @@ Class Data_Core extends CI_Model {
     if ( isset($this->settings['relations']['one_to_one'])) {
       $to_one = array();
       foreach ($this->settings['relations']['one_to_one'] as $what=>$relation) {
-        // $other_table = $relation['other_table'];
-        // $foreign_key = $relation['foreign_key'];
-        $result_name = $relation['result_name'];
-        $to_one[$what] = filter_by_key($set,$result_name.'.');
+        $other_fields = el(array('one_to_one',$what,'fields'),$this->tm_with);
+        $other_fields = array_diff($other_fields,array('id','uri','user_changed','tme_last_changed'));
+        $to_one_keys  = array_intersect(array_keys($set),$other_fields);
+        $to_one[$what] = array_keep_keys($set,$to_one_keys);
         if ($to_one[$what]) {
           $set = array_unset_keys($set,array_keys($to_one[$what]));
         }
@@ -4613,7 +4618,6 @@ Class Data_Core extends CI_Model {
             $other_table = $this->settings['relations']['one_to_one'][$what]['other_table'];
             $foreign_key = $this->settings['relations']['one_to_one'][$what]['foreign_key'];
             $result_name = $this->settings['relations']['one_to_one'][$what]['result_name'];
-            
             if ( $this->user_id!==FALSE ) $other_set = $this->_add_user_fields_to_set( $other_set,$type,$other_table );
             
             /**
