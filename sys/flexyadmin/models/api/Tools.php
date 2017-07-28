@@ -126,7 +126,6 @@ class Tools extends Api_Model {
   public function db_import() {
     if (!$this->flexy_auth->is_super_admin()) return $this->_result_status401();
 
-    xdebug_break();
     $sql = $this->args['sql'];
     if (empty($sql)) return $this->_result_status401();
 
