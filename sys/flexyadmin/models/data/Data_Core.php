@@ -1684,15 +1684,17 @@ Class Data_Core extends CI_Model {
     // one_to_one opties: die opties toevoegen
     if ( in_array('one_to_one',$with) ) {
       $relations = $this->settings['relations']['one_to_one'];
-      foreach ($relations as $relation) {
-        $other_table   = $relation['other_table'];
-        $other_options = $this->data->table( $other_table )->get_options();
-        $this->data->table($this->settings['table']); // Terug naar huidige data table.
-        unset($other_options[$relation['foreign_key']]);
-        if ($other_options) {
-          foreach ($other_options as $field => $info) {
-            $info['data'] = array_column($info['data'],'name','value');;
-            $options[$field] = $info;
+      if ($relations) {
+        foreach ($relations as $relation) {
+          $other_table   = $relation['other_table'];
+          $other_options = $this->data->table( $other_table )->get_options();
+          $this->data->table($this->settings['table']); // Terug naar huidige data table.
+          unset($other_options[$relation['foreign_key']]);
+          if ($other_options) {
+            foreach ($other_options as $field => $info) {
+              $info['data'] = array_column($info['data'],'name','value');;
+              $options[$field] = $info;
+            }
           }
         }
       }
