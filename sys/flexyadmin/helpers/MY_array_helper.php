@@ -180,7 +180,7 @@ function array2json($arr) {
 			//Custom handling for multiple data types
 
       // Booleans
-      if (in_array($prefix,array('b','is','has'))) {
+      if (in_array($prefix,array('b','is','has')) and (is_bool($value) or (is_numeric($value) and $value>=0 and $value<=1) or in_array($value,array('true','false'))) ) {
   			if ($value == false)
           $str.= 'false';
   			else
