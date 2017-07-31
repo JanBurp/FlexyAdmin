@@ -4282,18 +4282,22 @@ Class Data_Core extends CI_Model {
   protected function run_validation($set,$table='') {
     if (empty($table)) $table = $this->settings['table'];
 
-    // Alleen op velden die in deze tabel echt bestaan
+    // Alleen op velden die in deze tabel echt bestaan, of extra one_to_one velden die validatie info hebben
     foreach ($set as $field => $value) {
-      if (!$this->db->field_exists($field,$table)) unset($set[$field]);
+      if (!$this->db->field_exists($field,$table) and !isset($this->settings['field_info'][$field]['validation'])) unset($set[$field]);
     }
 
-    $this->load->library('form_validation');
-    $validated = $this->form_validation->validate_data( $set, $table );
-    if (!$validated) {
-      $this->query_info['validation'] = FALSE;
-      if (!isset($this->query_info['validation_errors']) or empty($this->query_info['validation_errors'])) $this->query_info['validation_errors'] = array();
-      $this->query_info['validation_errors'] = array_merge( $this->query_info['validation_errors'], $this->form_validation->get_error_messages() );
+    $validated = true;
+    if (!empty($set)) {
+      $this->load->library('form_validation');
+      $validated = $this->form_validation->validate_data( $set, $table );
+      if (!$validated) {
+        $this->query_info['validation'] = FALSE;
+        if (!isset($this->query_info['validation_errors']) or empty($this->query_info['validation_errors'])) $this->query_info['validation_errors'] = array();
+        $this->query_info['validation_errors'] = array_merge( $this->query_info['validation_errors'], $this->form_validation->get_error_messages() );
+      }
     }
+
     return $validated;
   }
   
