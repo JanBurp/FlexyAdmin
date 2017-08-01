@@ -37,7 +37,7 @@
         <?=$sidemenu?>
       </div>
       <div id="content" class="col-sm-10">
-        <router-view v-if="$route.path.length>1"></router-view>
+        <router-view v-if="($route.path.length>1 && $route.path.substr(0,5)!=='/load')"></router-view>
         <template v-else><?=$content?></template>
       </div>
     </div>

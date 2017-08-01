@@ -124,27 +124,29 @@ export default {
   methods:{
     
     reloadForm : function(apiParts) {
-      var self = this;
-      return flexyState.api({
-        url       : self.apiUrl(apiParts),
-      })
-      .then(function(response){
-        if (!_.isUndefined(response.data)) {
-          if (response.data.success) {
-            // Zijn er settings meegekomen?
-            if ( !_.isUndefined(response.data.settings) ) {
-              self.uiTitle      = response.data.settings.form_set.title;
-              self.form_groups  = response.data.settings.form_set.field_info;
-              self.fieldsets    = response.data.settings.form_set.fieldsets;
+      if (this.action==='') {
+        var self = this;
+        return flexyState.api({
+          url       : self.apiUrl(apiParts),
+        })
+        .then(function(response){
+          if (!_.isUndefined(response.data)) {
+            if (response.data.success) {
+              // Zijn er settings meegekomen?
+              if ( !_.isUndefined(response.data.settings) ) {
+                self.uiTitle      = response.data.settings.form_set.title;
+                self.form_groups  = response.data.settings.form_set.field_info;
+                self.fieldsets    = response.data.settings.form_set.fieldsets;
+              }
+              // Data en die aanvullen met data
+              self.row = response.data.data;
             }
-            // Data en die aanvullen met data
-            self.row = response.data.data;
           }
-        }
-        // TinyMCE
-        self.createWysiwyg();
-        return response;
-      });
+          // TinyMCE
+          self.createWysiwyg();
+          return response;
+        });
+      }
     },
     
     createWysiwyg: function() {
@@ -161,7 +163,9 @@ export default {
 
       // Need to remove?
       var exists = document.querySelector('.mce-tinymce');
-      if ( !_.isUndefined(exists) && exists!==null ) tinymce.remove();
+      // console.log(exists);
+      // if ( !_.isUndefined(exists) && exists!==null )
+      tinymce.remove();
 
       // Init (try untill its ready)
       var timer = window.setInterval(function(){
@@ -519,7 +523,7 @@ export default {
     
     _postForm : function(data) {
       this.validationErrors = {};
-      
+
       // Normale form?
       if (this.action !=='' ) {
         jdb.submitWithPost(this.action, data );

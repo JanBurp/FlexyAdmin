@@ -5,5 +5,5 @@ export default {
 </script>
 
 <template>
-  <div></div>
+  <div><h1>404</h1></div>
 </template>
