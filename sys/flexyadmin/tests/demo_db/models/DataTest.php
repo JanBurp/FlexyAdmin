@@ -452,20 +452,20 @@ class DataTest extends CITestCase {
     $result = $this->CI->data->table( 'cfg_users' )->get_grid();
     // data, klopt num_rows & num_fields?
     $this->assertEquals( 3, $this->CI->data->num_rows() );
-    $this->assertEquals( 6, $this->CI->data->num_fields() );
+    $this->assertEquals( 5, $this->CI->data->num_fields() );
     // kloppen keys in row?
     $row=current($result);
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id','action_user_invite','str_username', 'email_email', 'cfg_user_groups', 'str_language', 'b_active' ), $keys );
+    $this->assertEquals( array( 'id','action_user_invite','str_username', 'email_email', 'cfg_user_groups', 'b_active' ), $keys );
 
     // Users resultaat zoals in admin
     $result = $this->CI->data->table( 'cfg_users' )->get_form();
     // data, klopt num_rows & num_fields?
     $this->assertEquals( 3, $this->CI->data->num_rows() );
-    $this->assertEquals( 6, $this->CI->data->num_fields() );
+    $this->assertEquals( 5, $this->CI->data->num_fields() );
     // kloppen keys in row?
     $keys = array_keys($row);
-    $this->assertEquals( array( 'id','action_user_invite','str_username', 'email_email', 'cfg_user_groups', 'str_language', 'b_active' ), $keys );
+    $this->assertEquals( array( 'id','action_user_invite','str_username', 'email_email', 'cfg_user_groups', 'b_active' ), $keys );
   }
 
  
