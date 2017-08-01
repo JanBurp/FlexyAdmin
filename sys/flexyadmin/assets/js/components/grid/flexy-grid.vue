@@ -214,7 +214,8 @@ export default {
       // Bepaal maximale breedte en hoogte
       var thisEl    = this.$el;
       var parentEl  = thisEl.parentElement;
-      var max_width = parentEl.offsetWidth - (2*padding);
+      var max_width = thisEl.offsetWidth - (2*padding);
+      if (parentEl) var max_width = parentEl.offsetWidth - (2*padding);
       var max_height  = window.innerHeight - (2*padding) - rowHeight;
       var header      = document.querySelector('#header');
       if (header!==null) max_height -= header.offsetHeight;
