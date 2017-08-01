@@ -45,6 +45,10 @@ export default {
       return type;
     },
     
+    typeClass  : function() {
+      return this.type + ' fa-'+this.size;
+    },
+
     mediaClass : function() {
       return 'media-thumb-' + this.size;
     },
@@ -55,14 +59,19 @@ export default {
 
 <template>
   <div class="flexy-thumb">
-    <img v-if="type==='image'" :class="mediaClass" :src="src" :alt="alt" :title="alt">
-    <span v-if="type!=='image'" class="fa" :class="type" :title="src"></span>
+    <img  v-if="type==='image'" :class="mediaClass" :src="src" :alt="alt" :title="alt">
+    <span v-if="type!=='image'" class="fa" :class="typeClass" :title="src" :alt="src"></span>
   </div>
 </template>
 
 <style>
   .flexy-thumb {display:inline;margin:0;}
   .flexy-thumb .fa {font-size:1.6rem;}
+  .flexy-thumb .fa-lg {
+    font-size:4.5rem;
+    margin:.75rem .5rem;
+  }
+
   .flexy-thumb img {width:auto;}
   
   .grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;}
@@ -70,7 +79,6 @@ export default {
 
   .grid-media-view-small .flexy-thumb .fa {font-size:5rem;}
   .grid-media-view-small .flexy-thumb img {width:auto;max-width:6rem;height:auto;max-height:6rem;}
-
 
   .media-thumb-sm {
     height:1.7rem;
