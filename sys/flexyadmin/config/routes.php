@@ -68,8 +68,8 @@ $route['_admin_assets/(.*)/(.*)']   = "file/file/admin_assets/$1/$2";
 /**
  * This routing reroutes plugin calls
  */
-$route['_admin/plugin']      = "_admin/plugin_controller";
-$route['_admin/plugin/(.+)'] = "_admin/plugin_controller/call/$1";
+$route['_admin/load/plugin']      = "_admin/plugin_controller";
+$route['_admin/load/plugin/(.+)'] = "_admin/plugin_controller/call/$1";
 
 /**
  * Update actions
