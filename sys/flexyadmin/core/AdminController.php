@@ -54,7 +54,6 @@ class AdminController extends BasicController {
         $this->current_uri = preg_replace($search,$replace,$this->current_uri);
       }
     }
-
 	}
   
   
