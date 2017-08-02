@@ -38,6 +38,8 @@ import Route404         from './routes/route404.vue'
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
 
+var vm = {};
+
 if ( !_.isUndefined(_flexy.auth_token) ) {
    // TinyMCE Global & Set extra
   _flexy.tinymceOptions = JSON.parse(_flexy.tinymceOptions);
@@ -89,7 +91,7 @@ if ( !_.isUndefined(_flexy.auth_token) ) {
   /**
      Main Vue Instance
    */
-  var vm = new Vue({
+  vm = new Vue({
     router,
     el:'#main',
     components: {
@@ -131,7 +133,7 @@ else {
   /**
      Login Vue Instance
    */
-  var vm = new Vue({
+  vm = new Vue({
     el:'#main',
     components: {},
     data : {
@@ -150,10 +152,3 @@ else {
   });
   
 }
-
-// runtime bug, just testing;
-// window.setTimeout(function(){
-//   console.log('start bug');
-//   var bug = bugger;
-// }, 500);
-
