@@ -1228,7 +1228,7 @@ Class Data_Core extends CI_Model {
     foreach ($field_info as $field => $info) {
       if (!is_array($info)) $info=array();
       // UI name
-      $info['label'] = $this->lang->ui($field);
+      $info['label'] = $this->lang->ui($this->settings['table'].'.'.$field);
       
       // Schema: default
       $schema       = $field_info_config['FIELDS_default'];
