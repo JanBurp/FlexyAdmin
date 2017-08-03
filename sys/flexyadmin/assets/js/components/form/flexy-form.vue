@@ -258,8 +258,8 @@ export default {
     },
     
     selectOption: function(field,option) {
-      this.row[field] = option;
       // console.log('selectOption',field,option);
+      this.row[field] = option;
     },
     
     selectItem : function (value) {
