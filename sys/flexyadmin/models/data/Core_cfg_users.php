@@ -156,12 +156,12 @@ Class Core_cfg_users extends Data_Core {
           $this->settings['form_set']['with'] = $this->tm_with;
           if (isset($this->settings['form_set']['fields'])) {
             $key = array_search($result_name,$this->settings['form_set']['fields']);
-            unset($this->settings['form_set']['fields'][$key]);
+            if ($key!==FALSE) unset($this->settings['form_set']['fields'][$key]);
           }
           if (isset($this->settings['form_set']['fieldsets'])) {
             foreach ($this->settings['form_set']['fieldsets'] as $set => $fields) {
               $key = array_search($result_name,$this->settings['form_set']['fieldsets'][$set]);
-              unset($this->settings['form_set']['fieldsets'][$set][$key]);
+              if ($key!==FALSE) unset($this->settings['form_set']['fieldsets'][$set][$key]);
             }
           }
         }
