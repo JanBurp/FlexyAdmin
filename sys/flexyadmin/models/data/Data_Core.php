@@ -1211,6 +1211,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_setting_field_info_extended($fields=array(),$extra=array(),$include_options=FALSE) {
+
     $this->config->load('field_info',true);
     $field_info_config = $this->config->item('field_info');
     
@@ -1361,7 +1362,7 @@ Class Data_Core extends CI_Model {
     $fieldset_keys = array_keys($form_set['fieldsets']);
     $fieldset_keys = $this->lang->ui($fieldset_keys);
     $form_set['fieldsets'] = array_combine($fieldset_keys,$form_set['fieldsets']);
-    
+
     // Relaties
     $form_set = $this->_complete_relations_of_set($form_set,'form_set');
     
@@ -1621,6 +1622,7 @@ Class Data_Core extends CI_Model {
     // Alle opties van de velden verzamelen
     $options=array();
     $where_primary_key = $this->tm_where_primary_key; // Bewaar dit voor opties uit andere tabellen
+
     foreach ($fields as $field) {
 
       $field_options  = $this->get_setting( array('options',$field) );
@@ -1641,7 +1643,8 @@ Class Data_Core extends CI_Model {
             $current_table = $this->settings['table'];
             $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(0,0, $where_primary_key );
             // $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
-            $this->data->table($current_table); // Terug naar huidige data table.
+            $this->data->table($current_table);               // Terug naar huidige data table.
+            $this->tm_where_primary_key = $where_primary_key; // En dit ook weer terug
           }
           // Rechten om nieuwe aan te maken?
           if ($this->flexy_auth->has_rights($other_table)) {
@@ -1676,6 +1679,7 @@ Class Data_Core extends CI_Model {
           $field_options['table'] = $this->settings['table'];
           $field_options['data'] = $this->$model->get_options( $field_options );
           $this->data->table($current_table);
+          $this->tm_where_primary_key = $where_primary_key;
         }
       }
       $options[$field] = $field_options;
@@ -1717,6 +1721,7 @@ Class Data_Core extends CI_Model {
                 'insert_rights' => $this->flexy_auth->has_rights($other_table),
               );
               $this->data->table($this->settings['table']); // Weer terug naar huidige tabel
+              $this->tm_where_primary_key = $where_primary_key;
             }
           }
         }
@@ -2692,6 +2697,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_form( $where = '' ) {
+    if (is_numeric($where)) $this->tm_where_primary_key = $where;
     $form_set = $this->get_setting_form_set();
 
     // Select
