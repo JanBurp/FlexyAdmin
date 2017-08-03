@@ -14,11 +14,11 @@ $config['home_menu'] = array(
  * Menu
  */
 $config['header_menu'] = array(
-  'statistics' => array( 'name'=>'statistics', 'uri'=>'plugin/stats',                     'icon'=>'bar-chart'),
-  'settings'   => array( 'name'=>'settings',   'uri'=>'edit/tbl_site/1/single',           'icon'=>'cog'),
-  'user'       => array( 'name'=>'{username}', 'uri'=>'edit/cfg_users/{user_id}/single',  'icon'=>'user') ,
-  'logout'     => array( 'name'=>'logout',     'uri'=>'logout',                           'icon'=>'power-off' ),
-  'help'       => array( 'name'=>'help',       'uri'=>'help',                             'icon'=>'question-circle' ), // Hier komt extra code bij
+  'statistics' => array( 'name'=>'statistics', 'uri'=>'plugin/stats',              'icon'=>'bar-chart'),
+  'settings'   => array( 'name'=>'settings',   'uri'=>'edit/tbl_site/1',           'icon'=>'cog'),
+  'user'       => array( 'name'=>'{username}', 'uri'=>'edit/cfg_users/{user_id}',  'icon'=>'user') ,
+  'logout'     => array( 'name'=>'logout',     'uri'=>'logout',                    'icon'=>'power-off' ),
+  'help'       => array( 'name'=>'help',       'uri'=>'help',                      'icon'=>'question-circle' ), // Hier komt extra code bij
 );
 
 
