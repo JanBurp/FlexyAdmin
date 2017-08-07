@@ -2224,8 +2224,9 @@ Class Data_Core extends CI_Model {
       // defaults bij niet bestaande one_to_one
       if ($one_to_one and in_array(NULL,$row)) {
         foreach ($row as $field => $value) {
-          if (is_null($value)) {
-            $other_table = get_prefix($field,'.');
+          $other_table = get_prefix($field,'.');
+          $other_field = remove_prefix($field,'.');
+          if (is_null($value) and $this->db->table_exists($other_table) and $this->data->table($other_table)->field_exists($other_field)) {
             if ($other_table and !isset($one_to_one_defaults[$other_table])) {
               $one_to_one_defaults[$other_table] = $this->data->table($other_table)->get_defaults();
               $this->data->table($this->settings['table']); // Terug naar huidige data table.
@@ -4595,7 +4596,8 @@ Class Data_Core extends CI_Model {
        */
       if (empty($set)) {
         // WHERE is al ingesteld, dus we kunnen gewoon de id's vinden
-        $result = $this->select( $this->settings['table'].'.'.$this->settings['primary_key']. ' AS `primary_key`' )->get_result();
+        $this->select( $this->settings['table'].'.'.$this->settings['primary_key']. ' AS `primary_key`' );
+        $result = $this->get_result();
         $ids = array_column($result,'primary_key');
         $id = current($ids);
         $log = array(
