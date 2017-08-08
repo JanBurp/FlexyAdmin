@@ -121,7 +121,7 @@ export default {
       <input v-if="type=='file'"      type="file"     class="form-control" :id="name" :name="name" @change="fileChange($event.target.files)" />
       <textarea v-if="type=='textarea'" class="form-control" :id="name" :name="name" :placeholder="placeholder" v-model="internalValue"></textarea>
       <select v-if="type=='select'" class="form-control" :id="name" :name="name" v-model="internalValue" :multiple="isMultiple()">
-        <option v-for="option in options" :value="option.value" :selected="isSelected(option)">{{option.title}}</option>
+        <option v-for="option in options" :value="option.value" :selected="isSelected(option)">{{option.title||option.name}}</option>
       </select>
     </div>
   </div>  
