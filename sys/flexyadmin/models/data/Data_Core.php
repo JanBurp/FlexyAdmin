@@ -953,6 +953,7 @@ Class Data_Core extends CI_Model {
     $this->tm_find                   = FALSE;
     $this->tm_has_condition          = FALSE;
     $this->tm_as_grid                = FALSE;
+    $this->tm_set                    = array();
     $this->with(FALSE);
     $this->db->reset_query();
     $this->set_result_key();
@@ -4358,7 +4359,7 @@ Class Data_Core extends CI_Model {
    */
 	public function set($key, $value = '', $escape = NULL) {
 		if ( ! is_array($key)) $key = array($key => $value);
-    $this->tm_set = $key;
+    $this->tm_set = array_merge($this->tm_set,$key);
 		return $this;
 	}
 
