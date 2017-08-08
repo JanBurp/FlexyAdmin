@@ -30,8 +30,7 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
           // console.log(selectedImage);
         }
       }
-      var url = encodeURI('_admin/editor/image?path='+path+'&selected='+JSON.stringify(selectedImage));
-      // console.log(url);
+      var url = encodeURI('_admin/load/editor/image?path='+path+'&selected='+JSON.stringify(selectedImage));
       
       // Open window with a specific url
       editor.windowManager.open({
