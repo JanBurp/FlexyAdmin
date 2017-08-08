@@ -2464,6 +2464,7 @@ Class Data_Core extends CI_Model {
     if ($where==-1) {
       return $this->get_defaults($set);
     }
+    if (is_numeric($where)) $this->tm_where_primary_key = $where;
     
     if ($where) $this->where( $where );
     // Als er many_to_many data is die niet JSON is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
@@ -3020,7 +3021,7 @@ Class Data_Core extends CI_Model {
         if ($has_where AND $this->tm_limit==1 AND has_string('WHERE `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`',$sql) ) {
           $this->tm_limit=0;
         }
-        if ($has_where AND $this->tm_limit>0) {
+        if ($has_where AND $this->tm_limit>0 AND !$this->tm_where_primary_key) {
           $json = TRUE;
           foreach ($this->tm_with as $type => $with) {
             if ($type==='one_to_many' or $type==='many_to_many') {
