@@ -2490,6 +2490,35 @@ Class Data_Core extends CI_Model {
 		return $row[$field];
 	}
   
+
+  /**
+   * Geeft resulaat terug als opties klaar voor gebruik in vue form.
+   *
+   * @param int $limit [0]
+   * @param int $offset [0] 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_as_options( $limit=0, $offset=0 ) {
+    $this->select_abstract();
+    if (empty($this->tm_order_by) and !el('order_by',$this->settings) ) {
+      $abstract_fields = $this->settings['abstract_fields'];
+      $this->order_by( $abstract_fields );
+    }
+    $query = $this->get( $limit,$offset );
+    $options = array();
+    if ($query) {
+      foreach ( $query->result_array() as $row ) {
+        $options[] = array(
+          'value' => $row[$this->settings['result_key']],
+          'name'  => $row['abstract'],
+        );
+      }
+      $query->free_result();
+    }
+    return $options;
+  }
+
   
   /**
    * Geeft resulaat terug als opties. Een resultaat is combinatie van hetvolgende:
