@@ -62,9 +62,40 @@ export default {
 
   created : function() {
     this.initInternalValue(this.value);
+    this.createWysiwyg();
   },
 
   methods: {
+
+    createWysiwyg: function() {
+      var self=this;
+
+      // Init settings
+      var init = _flexy.tinymceOptions;
+      init = _.extend(_flexy.tinymceOptions,{
+        setup : function(ed){
+          ed.on('NodeChange', function(e){ self.updateWysiwyg(ed); })
+          ed.on('keyup', function(e){ self.updateWysiwyg(ed); });
+        }
+      });
+
+      // Need to remove?
+      var exists = document.querySelector('.mce-tinymce');
+      tinymce.remove();
+
+      // Init (try untill its ready)
+      var timer = window.setInterval(function(){
+        tinymce.init(init);
+        exists = document.querySelector('.mce-tinymce');
+        if ( !_.isUndefined(exists) && exists!==null ) {
+          clearInterval(timer)
+        };
+      }, 25 );
+    },
+
+    updateWysiwyg : function(editor) {
+      this.internalValue = editor.getContent();
+    },
 
     initInternalValue : function(value) {
       var value = this.value;
@@ -119,7 +150,8 @@ export default {
       <input v-if="type=='input'"     type="input"    class="form-control" :id="name" :name="name" :placeholder="placeholder" v-model="internalValue" />
       <input v-if="type=='checkbox'"  type="checkbox" class="form-control" :id="name" :name="name" v-model="internalValue" />
       <input v-if="type=='file'"      type="file"     class="form-control" :id="name" :name="name" @change="fileChange($event.target.files)" />
-      <textarea v-if="type=='textarea'" class="form-control" :id="name" :name="name" :placeholder="placeholder" v-model="internalValue"></textarea>
+      <textarea v-if="type=='textarea'" class="form-control"          :id="name" :name="name" :placeholder="placeholder" v-model="internalValue"></textarea>
+      <textarea v-if="type=='wysiwyg'"  class="form-control wysiwyg"  :id="name" :name="name" :placeholder="placeholder" :value="internalValue"></textarea>
       <select v-if="type=='select'" class="form-control" :id="name" :name="name" v-model="internalValue" :multiple="isMultiple()">
         <option v-for="option in options" :value="option.value" :selected="isSelected(option)">{{option.title||option.name}}</option>
       </select>
