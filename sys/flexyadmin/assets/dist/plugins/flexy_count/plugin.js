@@ -1,5 +1,10 @@
 (function () {
 
+	var max_chars = {
+		count: 		600,
+		message:  ' LET OP! De tekst is nu te lang voor de nieuwsbrief (er wordt een ‘lees verder’ link geplaatst).',
+	};
+
 var defs = {}; // id -> {dependencies, definition, instance (possibly undefined)}
 
 // Used when there is no 'main' module.
@@ -487,8 +492,20 @@ define("tinymce.flexy_count.Plugin", [
 			return WordGetter.getWords(getTextContent(editor)).length;
 		};
 
+		var getCharsCount = function() {
+			return getTextContent(editor).length;
+		}
+
+		var getChars = function() {
+			var count = getCharsCount();
+			var chars = count+'/'+max_chars.count;
+			if (count > max_chars.count) chars = count+'/'+max_chars.count + max_chars.message;
+			return chars;
+		}
+
 		var update = function() {
-			editor.theme.panel.find('#wordcount').text(['Words: {0}', getCount()]);
+			// editor.theme.panel.find('#wordcount').text(['Words: {0}', getCount()]);
+			editor.theme.panel.find('#wordcount').text(['Karakters: {0}', getChars()]);
 		};
 
 		editor.on('init', function() {
@@ -500,7 +517,7 @@ define("tinymce.flexy_count.Plugin", [
 					statusbar.insert({
 						type: 'label',
 						name: 'wordcount',
-						text: ['Words: {0}', getCount()],
+						text: ['Karakters: {0}', getChars()],
 						classes: 'wordcount',
 						disabled: editor.settings.readonly
 					}, 0);
