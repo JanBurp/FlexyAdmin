@@ -54,8 +54,17 @@
 }
 
 // Sizes
-textarea {
+textarea, iframe {
   height:400px;
+  border-color:$brand-primary;
+  border-radius:$border-radius;
+}
+iframe {
+  border-style:none;
+  border:solid 1px $brand-primary;
+  width:600px;
+  height: auto;
+  min-height:400px;
 }
 
 select:-moz-focusring {
