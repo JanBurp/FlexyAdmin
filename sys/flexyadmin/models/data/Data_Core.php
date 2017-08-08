@@ -1062,7 +1062,7 @@ Class Data_Core extends CI_Model {
     }
     // Maak de SQL
     $delimiter = $this->get_other_table_setting($table,'abstract_delimiter');
-		$sql = "REPLACE( CONCAT_WS('".$delimiter."',`".$as_table.'`.`' . implode( "`,`".$as_table.'`.`' ,$abstract_fields ) . "`), '".$delimiter.$delimiter."','' )  AS `" . $abstract_field_name . "`";
+		$sql = "REPLACE( CONCAT_WS('".$delimiter."',`".$as_table.'`.`' . implode( "`,`".$as_table.'`.`' ,$abstract_fields ) . "`), '".$delimiter.$delimiter."',' ' )  AS `" . $abstract_field_name . "`";
     return $sql;
 	}
   
