@@ -23,21 +23,29 @@ class Cronjob extends CI_Model {
       $this->jobs = $this->config->item('cronjobs');
       
       // Eerst alle informatie verzamelen
-      $this->data->table('log_cronjobs');
       foreach ($this->jobs as $key=>$job) {
-        $last = $this->data->where('str_job',$job['name'])->get_field('tme_last_run');
+        // Every van models
+        if (substr($job['every'],0,5)=='model') {
+          $job['every'] = $this->_every_model($job['every'],$key);
+        }
+
+        // Laatste run
+        $last = $this->data->table('log_cronjobs')->where('str_job',$job['name'])->get_field('tme_last_run');
         if ($last)
           $job['last'] = mysql_to_unix($last);
         else
           $job['last'] = 0;
+
+        // Volgende run
         $job['next'] = $this->_calc_next( $job['every'], $job['last'] );
+
         // Moet de job gebeuren?
-        $job['run']  = ( time()>=$job['next'] );
-        // $job['run']  = true;
+        $job['run'] = false;
+        if ($job['next']) $job['run']  = ( time()>=$job['next'] );
+        
         $this->jobs[$key] = $job;
       }
-      
-      
+ 
       // Run de jobs die moeten runnen
       foreach ($this->jobs as $key => $job) {
 
@@ -89,6 +97,12 @@ class Cronjob extends CI_Model {
       
 
     }
+  }
+
+  private function _every_model($every,$name) {
+    $model = remove_prefix($every,' ');
+    $this->load->model($model,'model');
+    return $this->model->cronjob($name);
   }
   
   
