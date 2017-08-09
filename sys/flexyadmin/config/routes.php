@@ -92,7 +92,7 @@ $route['_admin/logout'] 			= "_admin/logout";
 $route['_admin'] 								= "_admin";
 $route['_admin/(.*)'] 					= "_admin";
 $route['_admin/(.*)/(.*)'] 			= "_admin";
-$route['_admin/(.*)/(.*)/(*.)'] = "_admin";
+// $route['_admin/(.*)/(.*)/(*.)'] = "_admin";
 
 
 // Reserved routes
