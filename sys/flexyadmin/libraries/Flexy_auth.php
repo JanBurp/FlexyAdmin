@@ -545,6 +545,7 @@ class Flexy_auth extends Ion_auth {
     if (!$mail_info) return FALSE;
     $user = $this->get_user_by_name($mail_info['identity']);
     $mail_info['password'] = $mail_info['new_password'];
+    if (!empty($mail_info['password'])) $mail_info['password'] = htmlentities($mail_info['password']); // Zorg ervoor dat password goed is te zien in html view
     $send = $this->_mail( 'login_new_password', $user, $mail_info );
     if ($send!==true) $this->set_error('password_change_unsuccessful');
     return $send;
@@ -609,6 +610,7 @@ class Flexy_auth extends Ion_auth {
         $data['password'] = $password_info['password'];
       }
       $data['identity'] = $user['username'];
+      if (!empty($data['password'])) $data['password'] = htmlentities($data['password']); // Zorg ervoor dat password goed is te zien in html view
       return $this->_mail($template, $user, $data);
 		}
 		else {
