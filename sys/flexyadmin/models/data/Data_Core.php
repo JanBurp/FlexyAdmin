@@ -4550,11 +4550,13 @@ Class Data_Core extends CI_Model {
       $to_one = array();
       foreach ($this->settings['relations']['one_to_one'] as $what=>$relation) {
         $other_fields = el(array('one_to_one',$what,'fields'),$this->tm_with);
-        $other_fields = array_diff($other_fields,array('id','uri','user_changed','tme_last_changed'));
-        $to_one_keys  = array_intersect(array_keys($set),$other_fields);
-        $to_one[$what] = array_keep_keys($set,$to_one_keys);
-        if ($to_one[$what]) {
-          $set = array_unset_keys($set,array_keys($to_one[$what]));
+        if ($other_fields) {
+          $other_fields = array_diff($other_fields,array('id','uri','user_changed','tme_last_changed'));
+          $to_one_keys  = array_intersect(array_keys($set),$other_fields);
+          $to_one[$what] = array_keep_keys($set,$to_one_keys);
+          if ($to_one[$what]) {
+            $set = array_unset_keys($set,array_keys($to_one[$what]));
+          }
         }
       }
     }
