@@ -281,7 +281,7 @@ class MY_URI extends CI_URI {
 	public function get_parameter($parameter,$default=NULL) {
 		$uri=$this->segment_array();
 		$segment=array_search($parameter,$uri);
-		if ( ! $segment) $segment=1;
+		if ( !$segment ) return false;
 		return $this->segment($segment+1,$default);
 	}
 	
