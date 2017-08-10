@@ -3431,8 +3431,11 @@ Class Data_Core extends CI_Model {
     if (empty($terms)) return $this;
     
     // Settings
-    $with = el('with',$this->tm_as_grid );
-    if (empty($with)) $with = array('many_to_one','one_to_many','many_to_many');
+    $with = $tm_with;
+    if ($this->tm_as_grid) {
+      $with = el('with',$this->tm_as_grid );
+      if (empty($with)) $with = array('many_to_one','one_to_many','many_to_many');
+    }
     $defaults = array(
       'and'             => 'OR',
       'equals'          => 'like',
