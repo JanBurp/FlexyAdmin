@@ -91,7 +91,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( array('str_title','str_module'), $abstract_fields );
     // ->get_compiled_abstract_select()
     $abstract_fields_sql  = $this->CI->data->get_compiled_abstract_select();
-    $this->assertEquals( "REPLACE( CONCAT_WS(' | ',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`), ' |  | ','' )  AS `abstract`", $abstract_fields_sql );
+    $this->assertEquals( "REPLACE( CONCAT_WS(' | ',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`), ' |  | ',' ' )  AS `abstract`", $abstract_fields_sql );
     // ->select_abstract()
     $query = $this->CI->data->select_abstract()->get();
     $this->assertEquals( 6, $query->num_rows() );
@@ -134,8 +134,8 @@ class DataTest extends CITestCase {
     $this->assertEquals( 'pictures', $options['path'] );
     $this->assertArrayHasKey( 'multiple', $options );
     $this->assertEquals( TRUE, $options['multiple'] );
-    $this->assertArrayHasKey( 'data', $options );
-    $this->assertEquals( 2, count($options['data']) );
+    // $this->assertArrayHasKey( 'data', $options );
+    // $this->assertEquals( 2, count($options['data']) );
     // $current = current($options['data']);
     // $this->assertArrayHasKey( 'name', $current);
     // $this->assertInternalType( 'array', $current['name']);
@@ -206,8 +206,8 @@ class DataTest extends CITestCase {
     $this->assertArrayHasKey( 'path', $options );
     $this->assertEquals( 'pictures', $options['path'] );
     $this->assertArrayNotHasKey( 'multiple', $options );
-    $this->assertArrayHasKey( 'data', $options );
-    $this->assertEquals( 2, count($options['data']) );
+    // $this->assertArrayHasKey( 'data', $options );
+    // $this->assertEquals( 2, count($options['data']) );
     // $current = current($options['data']);
     // $this->assertArrayHasKey( 'name', $current);
     // $this->assertArrayHasKey( 'value', $current);
@@ -707,6 +707,15 @@ class DataTest extends CITestCase {
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 4, $info['num_rows'] );
+
+    // Zoeken in combinatie met andere WHERE statements
+    $this->CI->data->table('tbl_kinderen');
+    $this->CI->data->where('id_groepen',32);
+    $this->CI->data->find('va');
+    $result = $this->CI->data->get_result();
+    $info = $this->CI->data->get_query_info();
+    $this->assertEquals( 3, $info['num_rows'] );
+
   }
 
 
