@@ -737,10 +737,10 @@ Class Core_res_assets extends Data_Core {
     $this->load->library('flexy_auth');
     if (!$this->flexy_auth->has_rights('media_'.$path)) return false;
     // Is de user niet gekoppeld aan dit bestand? Dan mag het.
-    $info = $this->get_file_info($map.'/'.$file);
+    $info = $this->get_file_info($path,$file);
     if (!isset($info['user'])) return true;
     // Is het de goed user?
-    if ( $this->flexy_auth->get_user()['id'] == $info['user']) return true;
+    if ( $this->flexy_auth->get_user(null,'id') == $info['user']) return true;
     return false;
   }
   
