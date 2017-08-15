@@ -5999,8 +5999,17 @@ a > .fa, .btn > .fa {
 .card.form .form-group.row:hover {
   border-radius: 0.25rem; }
 
-textarea {
-  height: 400px; }
+textarea, iframe {
+  height: 400px;
+  border-color: #696;
+  border-radius: 0.25rem; }
+
+iframe {
+  border-style: none;
+  border: solid 1px #696;
+  width: 600px;
+  height: auto;
+  min-height: 400px; }
 
 select:-moz-focusring {
   color: transparent !important;

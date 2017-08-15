@@ -111,6 +111,7 @@ export default {
       }
       this.createWysiwyg();
     }
+    this.currentName = this.name;
   },
 
 
@@ -123,11 +124,11 @@ export default {
   
   methods:{
     
-    reloadForm : function(apiParts) {
+    reloadForm : function() {
       if (this.action==='') {
         var self = this;
         return flexyState.api({
-          url       : self.apiUrl(apiParts),
+          url       : self.apiUrl(),
         })
         .then(function(response){
           if (!_.isUndefined(response.data)) {
@@ -177,8 +178,8 @@ export default {
       }, 25 );
     },
     
-    apiUrl : function(parts) {
-      parts = _.extend( this.apiParts, parts );
+    apiUrl : function() {
+      var parts = _.extend( this.apiParts );
       this.apiParts = parts;
       var url = 'row?table='+this.name + '&where='+this.primary + '&as_form=true&settings=form_set';
       return url;

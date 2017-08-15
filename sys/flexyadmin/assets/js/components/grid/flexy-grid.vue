@@ -122,6 +122,7 @@ export default {
 
   data : function() {
     return {
+      isLoading         : false,
       uiTitle           : this.title ? this.title : '',
       currentName       : '',
       items             : [],
@@ -276,12 +277,15 @@ export default {
 
     loadStart : function() {
       this.reset();
-      this.reloadPage({
-        offset : this.offset,
-        limit  : this.apiParts.limit,
-        order  : this.order,
-        filter : this.filter,
-      });
+      if (!this.isLoading) {
+        this.isLoading = true;
+        this.reloadPage({
+          offset : this.offset,
+          limit  : this.apiParts.limit,
+          order  : this.order,
+          filter : this.filter,
+        });
+      }
 
       // Init Find
       this.extendedFind = false;
@@ -305,6 +309,7 @@ export default {
         url       : self.apiUrl(apiParts),
       })
       .then(function(response){
+        self.isLoading = false;
         if (!_.isUndefined(response.data)) {
           if (response.data.success) {
             // Zijn er settings meegekomen?
