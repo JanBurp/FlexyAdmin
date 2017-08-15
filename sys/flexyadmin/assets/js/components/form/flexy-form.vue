@@ -136,8 +136,10 @@ export default {
               // Zijn er settings meegekomen?
               if ( !_.isUndefined(response.data.settings) ) {
                 self.uiTitle      = response.data.settings.form_set.title;
-                self.form_groups  = response.data.settings.form_set.field_info;
-                self.fieldsets    = response.data.settings.form_set.fieldsets;
+                // self.form_groups  = response.data.settings.form_set.field_info;
+                // self.fieldsets    = response.data.settings.form_set.fieldsets;
+                self.form_groups  = Object.assign({},response.data.settings.form_set.field_info);
+                self.fieldsets    = Object.assign({},response.data.settings.form_set.fieldsets);
               }
               // Data en die aanvullen met data
               self.row = response.data.data;
