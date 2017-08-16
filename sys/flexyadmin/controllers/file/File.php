@@ -34,7 +34,16 @@ class File extends CI_Controller {
 		if (!empty($path) and !empty($file)) {
       $fullpath = SITEPATH.'assets/'.$path.'/'.$file;
 			if ( file_exists($fullpath) ) {
-        if ( in_array($path,$this->serve_rights) or $this->assets->has_serve_rights($path,$file) ) {
+        $serve = false;
+        if ( in_array($path,$this->serve_rights) ) $serve = true;
+        if (!$serve) {
+          if ($this->assets->has_serve_rights($path,$file)) $serve = true;
+          if (!$serve) {
+            $this->flexy_auth->login_with_authorization_header();
+            if ($this->assets->has_serve_rights($path,$file)) $serve = true;
+          }
+        }
+        if ( $serve ) {
           $type=get_suffix($file,'.');
           $this->output->set_content_type($type);
           $this->output->set_output(file_get_contents($fullpath));
