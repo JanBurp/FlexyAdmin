@@ -68,7 +68,8 @@ export default {
       options = options.substr(9);
       options = decodeURIComponent(options);
       options = JSON.parse(options);
-      this.apiParts = Object.assign(this.apiParts,options);
+      this.urlOptions = Object.assign(this.urlOptions,options);
+      this.apiParts = Object.assign(this.apiParts,this.urlOptions);
       this.findTerm = this.apiParts.filter;
     }
     var self = this;
@@ -592,7 +593,7 @@ export default {
     },
     
     editItem : function(id) {
-      var url = '/edit/'+this.name+'/'+id;
+      var url = '/edit/'+this.name+'/'+id+'?options='+JSON.stringify(this.urlOptions);
       this.$router.push(url);
     },
     
