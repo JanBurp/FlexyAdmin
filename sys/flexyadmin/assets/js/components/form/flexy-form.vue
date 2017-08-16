@@ -426,7 +426,7 @@ export default {
       else {
         if (!this.isSaving) {
           tinyMCE.remove();
-          var url = '/edit/'+this.name;
+          var url = '/edit/'+this.name + location.search;
           this.$router.push(url);
         }
       }
