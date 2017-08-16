@@ -63,6 +63,14 @@ export default {
   
   
   mounted : function() {
+    var options = location.search;
+    if (options!=='') {
+      options = options.substr(9);
+      options = decodeURIComponent(options);
+      options = JSON.parse(options);
+      this.apiParts = Object.assign(this.apiParts,options);
+      this.findTerm = this.apiParts.filter;
+    }
     var self = this;
     self.calcLimit();
     
@@ -140,6 +148,7 @@ export default {
         txt_abstract  : true,
         as_grid       : true,
       },
+      urlOptions      : {},
       changeUrlApi: true,
       focus       : {id:false,cell:false},
       draggable   : {
@@ -280,10 +289,10 @@ export default {
       if (!this.isLoading) {
         this.isLoading = true;
         this.reloadPage({
-          offset : this.offset,
+          offset : this.apiParts.offset,
           limit  : this.apiParts.limit,
-          order  : this.order,
-          filter : this.filter,
+          order  : this.apiParts.order,
+          filter : this.apiParts.filter,
         });
       }
 
@@ -348,6 +357,14 @@ export default {
       if (this.fields.length==0) {
         url += '&settings=grid_set';
       }
+      // Options in URL query
+      this.urlOptions = {
+        offset : parts.offset,
+        limit  : parts.limit,
+        order  : parts.order,
+        filter : parts.filter,
+      };
+      history.pushState(this.urlOptions, '', location.pathname+'?options='+JSON.stringify(this.urlOptions));
       return url;
     },
     
