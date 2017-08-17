@@ -10,6 +10,7 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
       var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       if (width>1180) width=1180;
       if (height>720) height=720;
+      height -= 100;
 
       // Path
       var path = 'pictures'; 
