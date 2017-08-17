@@ -4367,7 +4367,7 @@ Class Data_Core extends CI_Model {
       $this->tm_set = array_merge($this->tm_set,$key);
     }
     else {
-      $this->tm_set = $set;
+      $this->tm_set = $key;
     }
 		return $this;
 	}
