@@ -4363,7 +4363,12 @@ Class Data_Core extends CI_Model {
    */
 	public function set($key, $value = '', $escape = NULL) {
 		if ( ! is_array($key)) $key = array($key => $value);
-    $this->tm_set = array_merge($this->tm_set,$key);
+    if ($this->tm_set) {
+      $this->tm_set = array_merge($this->tm_set,$key);
+    }
+    else {
+      $this->tm_set = $set;
+    }
 		return $this;
 	}
 
