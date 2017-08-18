@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "axios": "^0.15.2",
-    "bootstrap": "^4.0.0-alpha.5",
+    "bootstrap": "^4.0.0-alpha.6",
     "bootstrap-vue": "^0.3.10",
     "tinymce": "^4.5.1",
     "vue": "^2.0.1",
