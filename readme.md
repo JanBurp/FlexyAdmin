@@ -3,7 +3,6 @@
 A Flexible and userfriendly CMS.
 (c) Jan den Besten - www.flexyadmin.com
 
-
 # Installing
 
 In the examples below, replace `<dir>` with the folder you'd like to have FlexyAdmin installed
@@ -15,17 +14,24 @@ In the examples below, replace `<dir>` with the folder you'd like to have FlexyA
 ### Shallow repository (for just a simple website) ###
 
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>`
-`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --branch <branch> --single-branch --depth 10 <dir>`
 
-### Shallow copy of 3.5.0
+### Shallow copy of branch (3.5.0 for example)
+
+`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --branch <branch> --single-branch --depth 10 <dir>`
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --branch feature/3.5.0 --single-branch --depth 10 <dir>`
-  
-  
+    
 ### Shallow repository a branch ###
 
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 -b <branch> <dir>`
   
-  
+## More git
+
+### Removing (old) tags
+
+`git push https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git :refs/tags/3.5.0-beta.x`
+Or use the script: `php scripts/git_remove_tags.php 3.5.0-beta. to from`
+ 
+
 # Update
 
 Local URL: /admin/update
