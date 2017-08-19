@@ -1,7 +1,6 @@
 # FlexyAdmin Scripts
 
-A collections of scripts that can run in the terminal.
-All use PHP.
+A collections of (PHP) scripts that can run in the terminal.
 
 ## Running a script
 
@@ -11,13 +10,14 @@ The scripts are written in PHP, so running a script works like this:
 
 ## Scripts
 
-`php hello.php` - Simple hello world (for testing)
+`php hello.php` 	- Simple hello world (for testing)
 `php phpinfo.php` - Raw PHP info
 
-These need to be run from root:
+## Scripts run from root:
 
-'php scripts/old_install.php` - Change install from safe folder structure to normal.
-'php scripts/safe_install.php` - Change install from old folder structure to safe folder structure.
+`php scripts/git_remove_tags.php` 	- Delete old git tags, example: `php scripts/git_remove_tags.php 3.5.0-beta. 1 19`
+`php scripts/old_install.php` 			- Change install from safe folder structure to normal.
+`php scripts/safe_install.php` 			- Change install from old folder structure to safe folder structure.
 
 
 ## Other terminal commands
