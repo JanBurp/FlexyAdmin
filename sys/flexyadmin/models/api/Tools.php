@@ -59,6 +59,7 @@ class Tools extends Api_Model {
     if (!$this->flexy_auth->can_backup()) return $this->_result_status401();
 
     $sql = $this->args['sql'];
+    unset($this->args['sql']);
     if (empty($sql)) return $this->_result_status401();
 
     $this->result['data'] = $this->_sql($sql,false);
@@ -127,6 +128,7 @@ class Tools extends Api_Model {
     if (!$this->flexy_auth->is_super_admin()) return $this->_result_status401();
 
     $sql = $this->args['sql'];
+    unset($this->args['sql']);
     if (empty($sql)) return $this->_result_status401();
 
     $this->result['data'] = $this->_sql($sql,false);
