@@ -15,11 +15,19 @@
 
 // These settings are ready for the Mac App: MockSmtp 
 
+// $config['mailtype'] = 'html';
+// $config['protocol'] = 'smtp';
+// $config['smtp_host'] = 'localhost';
+// $config['smtp_port'] = 1025;
+// $config['newline'] = "\r\n";
+
+
 $config['mailtype'] = 'html';
-$config['protocol'] = 'smtp';
-$config['smtp_host'] = 'localhost';
-$config['smtp_port'] = 1025;
-$config['newline'] = "\r\n";
+$config['newline']  = "\r\n";
+
+$config['protocol'] = 'sendmail';
+$config['mailpath'] = 'sudo -u jan /Users/jan/Sites/smtp_out/smtp_catcher.php';
+
 
 
 ?>
