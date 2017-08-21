@@ -819,7 +819,7 @@ class Flexy_auth extends Ion_auth {
     $items = $this->current_user['rights']['items'];
     rsort($items);
     $most_item_rights = current($items);
-    if ($most_item_rights > 0) return TRUE;
+    if ($most_item_rights > RIGHTS_SHOW) return TRUE;
     return FALSE;
   }
   
