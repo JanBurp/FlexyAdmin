@@ -1212,7 +1212,6 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_setting_field_info_extended($fields=array(),$extra=array(),$include_options=FALSE) {
-
     $this->config->load('field_info',true);
     $field_info_config = $this->config->item('field_info');
     
@@ -1269,6 +1268,7 @@ Class Data_Core extends CI_Model {
       }
       $field_info[$field] = $info;
     }
+    
 
     // Overschrijf los ingestelde settings
     if (isset($this->settings['field_info'])) {
@@ -1691,13 +1691,14 @@ Class Data_Core extends CI_Model {
     }
     
     // one_to_one opties: die opties toevoegen
-    if ( in_array('one_to_one',$with) ) {
+    if ( in_array('one_to_one',$with) and !$this->tm_as_grid ) {
       $relations = $this->settings['relations']['one_to_one'];
       if ($relations) {
         foreach ($relations as $relation) {
           $other_table   = $relation['other_table'];
+          $table = $this->settings['table'];
           $other_options = $this->data->table( $other_table )->get_options();
-          $this->data->table($this->settings['table']); // Terug naar huidige data table.
+          $this->data->table($table); // Terug naar huidige data table.
           unset($other_options[$relation['foreign_key']]);
           if ($other_options) {
             foreach ($other_options as $field => $info) {
@@ -2662,9 +2663,10 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_grid( $limit = 20, $offset = FALSE ) {
+    $this->tm_as_grid = true; // Alvast, zodat daarop gecheck kan worden
     $grid_set = $this->get_setting_grid_set();
     $this->tm_as_grid = $grid_set;
-    
+
     // Select
     $this->select( $grid_set['fields'] );
     
