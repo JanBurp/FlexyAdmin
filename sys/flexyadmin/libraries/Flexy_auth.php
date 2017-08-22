@@ -817,9 +817,11 @@ class Flexy_auth extends Ion_auth {
   public function allowed_to_use_cms() {
     $most_item_rights = 0;
     $items = $this->current_user['rights']['items'];
-    rsort($items);
-    $most_item_rights = current($items);
-    if ($most_item_rights > RIGHTS_SHOW) return TRUE;
+    if ($items) {
+      rsort($items);
+      $most_item_rights = current($items);
+      if ($most_item_rights > RIGHTS_SHOW) return TRUE;
+    }
     return FALSE;
   }
   
