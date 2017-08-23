@@ -31,6 +31,11 @@ In the examples below, replace `<dir>` with the folder you'd like to have FlexyA
 `git push https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git :refs/tags/3.5.0-beta.x`
 Or use the script: `php scripts/git_remove_tags.php 3.5.0-beta. to from`
  
+### Removing all assets in all the commits in history
+
+`git filter-branch --tree-filter 'rm -rf site/assets' HEAD`
+After that push all tags and branches with `--force`
+(See: https://dalibornasevic.com/posts/2-permanently-remove-files-and-folders-from-a-git-repository)
 
 # Update
 
