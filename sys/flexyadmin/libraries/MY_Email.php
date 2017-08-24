@@ -569,8 +569,31 @@ class MY_Email extends CI_Email {
 		$body=str_replace('href="undefined/','href="'.base_url(),$body);
 		$body=preg_replace('/href=\"(?!https?:\/\/).*?/','href="'.base_url(),$body);
 		$body=str_replace('##MAIL##','href="mailto:',$body);
+    
+
+    // If restricted image -> copy in _tmp assets folder and serve from there
+    if (preg_match_all('/<img.*src=\".*_media\/(.*)\/(.*)"/iu', $body, $matches)) {
+      foreach ($matches[2] as $key => $src) {
+        $path     = $matches[1][$key];
+        if ( $this->CI->assets->is_restricted($path) ) {
+          // Restriced file
+          $filename = $this->CI->config->item('ASSETSFOLDER').$path.'/'.$src;
+          $temp     = '_tmp/'.$path.'__'.$src;
+          $tempname = $this->CI->config->item('ASSETSFOLDER').$temp;
+          $tempsrc  = $this->CI->config->item('ASSETS').$temp;
+          // copy
+          if (!file_exists($tempname)) {
+            if (!file_exists($this->CI->config->item('ASSETSFOLDER').'_tmp')) mkdir($this->CI->config->item('ASSETSFOLDER').'_tmp');
+            copy($filename,$tempname);
+          }
+          $body = str_replace( $this->CI->config->item('ASSETS').$path.'/'.$src, $tempsrc, $body );
+        }
+      }
+    }
+
     // good paths to local images // LET OP: MockSMTP maakt soms een dubbele punt ergens van :-(
     $body=preg_replace('/src=\"(?!https?:\/\/).*?/iu','src="'.base_url(),$body);
+
     // good paths to url() in styles
     $body = preg_replace('/(url\([\'|"])/uU', '$1'.base_url(), $body);
     return $body;
