@@ -62,9 +62,7 @@ class Flexy_auth extends Ion_auth {
     $site_config=$this->db->get('tbl_site')->row_array();
     $this->set_config( $site_config );
     $this->tables = $this->config->item( 'tables', 'ion_auth');
-    // Token secret, Expiration of auth_token: each day a new one, add 'unixday' to key
     if (empty($this->auth_key)) $this->auth_key = $this->config->item('sess_cookie_name');
-    // $this->auth_key.= ceil((date('U') - (3*TIME_DAY)) / TIME_DAY);
 	}
 
   
@@ -125,9 +123,11 @@ class Flexy_auth extends Ion_auth {
    */
   public function login_with_authorization_header() {
     $loggedIn = FALSE;
+    
     // Van header
     $this->auth_token = $this->input->get_request_header('Authorization', TRUE);
-    // Van GET
+    
+    // Van GET of GET
     if (empty($this->auth_token) or $this->auth_token==='undefined') {
       $this->auth_token = $this->input->post_get('_authorization', TRUE);
     }
