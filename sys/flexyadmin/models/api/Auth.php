@@ -152,6 +152,9 @@ class auth extends Api_Model {
   public function login() {
     // First logout if there is a login
     if ( $this->flexy_auth->logged_in() ) $this->flexy_auth->logout();
+
+    unset($_POST['_authorization']);
+    unset($_GET['_authorization']);
     
     // Has POST args?
     if ($this->args['type']!='POST' or !isset($this->args['username']) or !isset($this->args['password']) ) {
