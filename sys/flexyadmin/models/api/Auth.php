@@ -86,8 +86,8 @@ class auth extends Api_Model {
   );
   
 	public function __construct() {
-    $checkAuthenticatonHeader = $this->uri->get(3)==='check';
-    parent::__construct( !$checkAuthenticatonHeader );
+    $loginRequest = $this->uri->get(3)==='login';
+    parent::__construct( $loginRequest );
 	}
   
   public function index() {
@@ -152,12 +152,9 @@ class auth extends Api_Model {
   public function login() {
     // First logout if there is a login
     if ( $this->flexy_auth->logged_in() ) $this->flexy_auth->logout();
-
-    unset($_POST['_authorization']);
-    unset($_GET['_authorization']);
     
     // Has POST args?
-    if ($this->args['type']!='POST' or !isset($this->args['username']) or !isset($this->args['password']) ) {
+    if ($this->args['type']!=='POST' or !isset($this->args['username']) or !isset($this->args['password']) ) {
       return $this->_result_wrong_args();
     }
 
