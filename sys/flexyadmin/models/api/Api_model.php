@@ -65,13 +65,18 @@ class Api_Model extends CI_Model {
       $origin = $this->input->get_request_header('Origin',TRUE);
       header("HTTP/1.1 200 OK");
       header("Access-Control-Allow-Origin: ".$origin);
-      header("Access-Control-Allow-Methods: GET, POST");
+      if (!$loginRequest) {
+        header("Access-Control-Allow-Methods: GET, POST");
+      }
+      else {
+        header("Access-Control-Allow-Methods: POST"); 
+      }
       header("Access-Control-Allow-Credentials: true");
-      header("Access-Control-Allow-Headers: Authorization");
+      if (!$loginRequest) header("Access-Control-Allow-Headers: Authorization");
       echo '';
       die();
     }
-    
+
     // Get arguments
     $this->args=$this->_get_args($this->needs);
 
@@ -80,24 +85,28 @@ class Api_Model extends CI_Model {
     $this->result['api']  = __CLASS__;
 
     $loggedIn = FALSE;
-    // If not login request (_api/auth/login), check authentication header
-    if ( !$loginRequest ) {
-      $loggedIn = $this->flexy_auth->login_with_authorization_header();
 
-      // Always remove session when no authentication, and return 401
-      if ( !$loggedIn ) {
-        $this->flexy_auth->logout();
-        return $this->_result_status401();
-      }
-      
+    if ( $loginRequest ) {
+      // $this->flexy_auth->logout();
+      unset($_POST['_authorization']);
+      unset($_GET['_authorization']);
+    }
+    else {
+      $loggedIn = $this->flexy_auth->login_with_authorization_header();
       // Set CORS
-      $this->cors = '*';
-      
+      $this->cors = '*';     
       // Rights for given table?
       if (isset($this->args['table']) and !$this->_has_rights($this->args['table'])) {
         return $this->_result_norights();
       }
     }
+
+    // Always remove session when no authentication, and return 401
+    if ( !$loggedIn ) {
+      $this->flexy_auth->logout();
+      return $this->_result_status401();
+    }
+
     
 		$this->load->model('plugin_handler');
 		$this->plugin_handler->init_plugins();
