@@ -728,6 +728,7 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function has_serve_rights($path,$file) {
+    if ($path='_tmp') return true;
     if ($path==='_thumbcache') {
       $path = get_prefix($file,'___');
     }
