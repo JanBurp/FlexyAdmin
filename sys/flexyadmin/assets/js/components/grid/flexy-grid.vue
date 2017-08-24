@@ -64,11 +64,11 @@ export default {
   
   mounted : function() {
     var options = location.search;
-    if (options!=='' && options.substr(9)==='options') {
+    if (options!=='' && options.substr(0,9)==='?options=') {
       options = options.substr(9);
       options = decodeURIComponent(options);
-      console.log('mounted',options);
       options = JSON.parse(options);
+      // console.log('mounted',options);
       this.urlOptions = Object.assign(this.urlOptions,options);
       this.apiParts = Object.assign(this.apiParts,this.urlOptions);
       this.findTerm = this.apiParts.filter;
