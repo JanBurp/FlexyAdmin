@@ -204,7 +204,7 @@ class ApiTestModel extends CITestCase {
     foreach ($this->users as $user) {
       // login
       $this->CI->flexy_auth->login($user['username'], $user['password']);
-      
+
       // which tables?
       $tables = $this->_tableFromArgs($params['args']);
       if ($tables) {
@@ -216,8 +216,6 @@ class ApiTestModel extends CITestCase {
           $this->CI->$apiModel->set_args($args);
           $result    = $this->CI->$apiModel->index();
           $results[] = $result;
-        
-          // trace_([$table,$result['info']]);
         
           // trace_([$table,$user]);
           if (empty($table) or in_array($table,$user['tables'])) {

@@ -57,11 +57,14 @@ class Api_Model extends CI_Model {
   /**
    */
 	public function __construct( $loginRequest = FALSE) {
-		parent::__construct();
+    parent::__construct();
     $this->load->library('flexy_auth');
     
     // OPTIONS - preflight
     if ($this->input->server('REQUEST_METHOD')==='OPTIONS') {
+      // $loginRequest word bij preflight niet goed meegegeven.. dus nog een keer.
+      $loginRequest = $this->uri->get(3)==='login';
+      $uri = $this->uri->uri_string();
       $origin = $this->input->get_request_header('Origin',TRUE);
       header("HTTP/1.1 200 OK");
       header("Access-Control-Allow-Origin: ".$origin);
@@ -72,7 +75,9 @@ class Api_Model extends CI_Model {
         header("Access-Control-Allow-Methods: POST"); 
       }
       header("Access-Control-Allow-Credentials: true");
-      if (!$loginRequest) header("Access-Control-Allow-Headers: Authorization");
+      if (!$loginRequest) {
+        header("Access-Control-Allow-Headers: Authorization");
+      }
       echo '';
       die();
     }
@@ -87,7 +92,6 @@ class Api_Model extends CI_Model {
     $loggedIn = FALSE;
 
     if ( $loginRequest ) {
-      // $this->flexy_auth->logout();
       unset($_POST['_authorization']);
       unset($_GET['_authorization']);
     }
@@ -102,15 +106,15 @@ class Api_Model extends CI_Model {
     }
 
     // Always remove session when no authentication, and return 401
-    if ( !$loggedIn ) {
+    if ( !$loggedIn and !defined('PHPUNIT_TEST')) {
       $this->flexy_auth->logout();
       return $this->_result_status401();
     }
 
     
-		$this->load->model('plugin_handler');
-		$this->plugin_handler->init_plugins();
-	}
+    $this->load->model('plugin_handler');
+    $this->plugin_handler->init_plugins();
+  }
   
   /**
    * Geeft terug of er is ingelogd of niet

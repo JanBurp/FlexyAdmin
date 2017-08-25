@@ -104,7 +104,7 @@ class ApiRowTest extends ApiTestModel {
       $auto_increment = $status['auto_increment'];
 
       // data
-      $data=$test['insert'];
+      $data   = $test['insert'];
       $update = $test['update'];
 
       // TEST INSERT DATA
