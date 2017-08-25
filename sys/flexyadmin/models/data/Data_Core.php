@@ -2202,7 +2202,7 @@ Class Data_Core extends CI_Model {
     $result    = array();
     $with_data = array();
     
-    // Pad fields
+    // Tree fields
     if ($this->tm_tree) {
       $tree = array();
       $needed_tree_fields = array_merge(array_keys($this->tm_tree),array($this->settings['primary_key'],'self_parent'));
@@ -2379,6 +2379,7 @@ Class Data_Core extends CI_Model {
       $value .= $this->_fill_tree( $result, $parent, $tree_info, $counter+1) . $tree_info['split'];
     }
     $part = el( array($key,$tree_info['original_field']), $result );
+    
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
     if (is_null($part) and $key!==0) {
       $order = array();
@@ -2386,13 +2387,17 @@ Class Data_Core extends CI_Model {
         $split = $this->_split_order($order_by);
         $order[]='`'.$split['field'].'` '.$split['direction'];
       }
-      $sql = 'SELECT `'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
+      $sql = 'SELECT `self_parent`,`'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
       $query = $this->db->query($sql);
       if ($query) {
         $row = $query->unbuffered_row('array'); ;
         $part = el( $tree_info['original_field'],$row );
+        if ($row['self_parent']>0) {
+          $part = $this->_fill_tree($result,$row['self_parent'],$tree_info,$counter+1) . $tree_info['split'] . $part;
+        }
       }
     }
+
     $value .= $part;
     return $value;
   }
