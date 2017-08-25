@@ -116,6 +116,13 @@ class auth extends Api_Model {
    * @author Jan den Besten
    */
   protected function _check() {
+    // Double check if realy logged in
+    $user = $this->flexy_auth->get_user();
+    if ( !isset($user['groups']) or !$user['groups'] or empty($user['groups']) ) {
+      $this->flexy_auth->logout();
+      return null;
+    }
+
     // if not logged in status = 401
     $logged_in = $this->logged_in();
     if ( !$logged_in ) return null;
