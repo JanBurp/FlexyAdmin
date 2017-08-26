@@ -4554,6 +4554,7 @@ Class Data_Core extends CI_Model {
       }
       // Goed gevalideerd, maar wellicht is de data geprepped
       else {
+        $this->load->library('form_validation');
         $set = array_merge( $set, $this->form_validation->get_validated_data( array_keys($set)) );
       }
     }
