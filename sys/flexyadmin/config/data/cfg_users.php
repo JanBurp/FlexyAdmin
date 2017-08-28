@@ -8,6 +8,10 @@ $config['fields']          = array( 'id','str_username', 'email_email', 'str_lan
 $config['order_by']        = 'str_username,id';
 $config['abstract_fields'] = array('str_username');
 
+$config['field_info']['str_username']['validation']    = array('required');
+$config['field_info']['cfg_user_groups']['validation'] = array('required');
+$config['field_info']['email_email']['validation']     = array('required');
+
 $config['options'] = array( 
   'str_language' => array(
     'data' => array_combine($this->config['languages'],$this->config['languages']),
