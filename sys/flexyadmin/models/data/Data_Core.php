@@ -4571,7 +4571,7 @@ Class Data_Core extends CI_Model {
           $to_one_keys  = array_intersect(array_keys($set),$other_fields);
           $to_one[$what] = array_keep_keys($set,$to_one_keys);
           if ($to_one[$what]) {
-            $set = array_unset_keys($set,array_keys($to_one[$what]));
+            $set = array_unset_keys($set,$to_one_keys);
           }
         }
       }
@@ -4644,20 +4644,23 @@ Class Data_Core extends CI_Model {
        * Als set leeg is (maar wel relatie data) zoek dan de id en stel WHERE opnieuw in
        */
       if (empty($set)) {
-        // WHERE is al ingesteld, dus we kunnen gewoon de id's vinden
-        $this->select( $this->settings['table'].'.'.$this->settings['primary_key']. ' AS `primary_key`' );
-        $result = $this->get_result();
-        $ids = array_column($result,'primary_key');
-        $id = current($ids);
-        $log = array(
-          'query' => $this->db->last_query(),
-          'table' => $this->settings['table'],
-          'id'    => $id
-        );
-        $this->query_info = array(
-          'affected_rows' => 0,
-          'affected_ids'  => $ids,
-        );
+        $id=-1;
+        if ($type=='UPDATE') {
+          // WHERE is al ingesteld, dus we kunnen gewoon de id's vinden
+          $this->select( $this->settings['table'].'.'.$this->settings['primary_key']. ' AS `primary_key`' );
+          $result = $this->get_result();
+          $ids = array_column($result,'primary_key');
+          $id = current($ids);
+          $log = array(
+            'query' => $this->db->last_query(),
+            'table' => $this->settings['table'],
+            'id'    => $id
+          );
+          $this->query_info = array(
+            'affected_rows' => 0,
+            'affected_ids'  => $ids,
+          );
+        }
       }
       else {
         
@@ -4708,6 +4711,13 @@ Class Data_Core extends CI_Model {
             $foreign_key = $this->settings['relations']['one_to_one'][$what]['foreign_key'];
             $result_name = $this->settings['relations']['one_to_one'][$what]['result_name'];
             if ( $this->user_id!==FALSE ) $other_set = $this->_add_user_fields_to_set( $other_set,$type,$other_table );
+
+            // only existing keys in set
+            foreach ($other_set as $key => $value) {
+              if ( is_numeric($key) or !$this->db->field_exists( $key, $other_table ) ) {
+                unset( $other_set[$key] );
+              }
+            }
             
             /**
              * INSERT als niet bestaat, anders UPDATE
