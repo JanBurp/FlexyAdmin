@@ -309,9 +309,9 @@ export default {
 
       // Init Find
       this.extendedFind = false;
-      if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
+      if (this.urlOptions.filter.substr(0,1)==='[' || this.urlOptions.filter.substr(0,1)==='{') {
         this.extendedFind = true;
-        this.extendedTerm = JSON.parse(this.filter);
+        this.extendedTerm = JSON.parse(this.urlOptions.filter);
         this.filterTerm = '';
       }
       else {
