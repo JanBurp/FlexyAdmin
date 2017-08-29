@@ -50,6 +50,8 @@ class Search_replace extends CI_Model {
    * @author Jan den Besten
    */
   public function replace_all($search,$replace,$types='txt',$regex=false) {
+    $search=trim($search);
+    if (empty($search)) return FALSE;
     if (!is_array($types)) $types=array($types);
 		$result=FALSE;
 		$tables=$this->data->list_tables();
@@ -82,6 +84,8 @@ class Search_replace extends CI_Model {
    * @author Jan den Besten
    */
   public function replace_in($search,$replace,$table,$field,$regex=FALSE) {
+    $search=trim($search);
+    if (empty($search)) return FALSE;
 		$result=FALSE;
 		$this->db->select("id,$field");
 		$this->db->where("$field !=","");
@@ -144,6 +148,8 @@ class Search_replace extends CI_Model {
    * @author Jan den Besten
    */
   public function media($search,$replace='') {
+    $search=trim($search);
+    if (empty($search)) return FALSE;
     $search = str_replace('.','\.',$search);
     if (empty($replace)) {
       $search = array( '/<img.*src=\".*'.$search.'\".*>/uU', '/'.$search.'/uU');
@@ -165,6 +171,8 @@ class Search_replace extends CI_Model {
    * @author Jan den Besten
    */
   public function links($search,$replace='') {
+    $search=trim($search);
+    if (empty($search)) return FALSE;
     $search = str_replace(array('/','.'),array('\/','\.'),$search);
     if (empty($replace)) {
       $search = array( '/<a.*href=\".*'.$search.'.*\".*>(.*)<\/a>/uU');
