@@ -101,7 +101,7 @@ export default {
   beforeUpdate : function() {
     // Test if (re)load needed
     if ( this.name!==this.currentName) {
-      this.loadStart();
+      this.loadStart(true);
     }
     this.currentName = this.name;
 
@@ -286,16 +286,25 @@ export default {
       return changed;
     },
 
-    loadStart : function() {
+    loadStart : function(reset) {
       this.reset();
       if (!this.isLoading) {
         this.isLoading = true;
-        this.reloadPage({
+        var args = {
           offset : this.apiParts.offset,
           limit  : this.apiParts.limit,
           order  : this.apiParts.order,
           filter : this.apiParts.filter,
-        });
+        };
+        if (reset===true) {
+          args = {
+            offset : 0,
+            limit  : this.apiParts.limit,
+            order  : '',
+            filter : '',
+          };
+        }
+        this.reloadPage(args);
       }
 
       // Init Find
