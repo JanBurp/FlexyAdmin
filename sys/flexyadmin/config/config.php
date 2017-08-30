@@ -39,6 +39,7 @@ elseif (isset($_SERVER['HTTP_HOST']) and isset($_SERVER['SCRIPT_NAME'])) {
   if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
     $protocol = 'https';
   }
+  define('PROTOCOL', $protocol);
   $config['base_url']=$protocol."://".$_SERVER['HTTP_HOST'];
   $config['base_url'].=str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
 }
