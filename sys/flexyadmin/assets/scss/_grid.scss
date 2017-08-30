@@ -156,7 +156,14 @@
      max-width:250px;
      input {padding:0;float:left;width:100%;color:$brand-primary;}
   }
-  td.grid-cell-full-show {max-width:none;}
+  td.grid-cell-full-show {
+    max-width:none;
+  }
+  td.grid-cell-wrap {
+    overflow: auto;
+    white-space: normal;
+    max-width:none;
+  }
   td.grid-cell-type-color {
     max-width:6.25rem;
     min-width:5rem;
@@ -179,7 +186,7 @@
      max-width:none;
      div {display:block;}
    }
-   
+
    
    // FOOTER
    .card-footer {
