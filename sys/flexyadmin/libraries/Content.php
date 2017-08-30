@@ -14,6 +14,7 @@
  * - compress               - [TRUE] de HTML output wordt gecomprimeerd (overbodige spaties en returns worden verwijderd)
  * - safe_emails            - [TRUE] emaillinks worden vervangen door spambot veilige emaillinks
  * - auto_target_links      - [TRUE] alle link-tags naar externe adressen krijgen de attributen `target="_blank"` en `rel="external"` mee.
+ * - auto_iframe_https      - [TRUE] bij een https website worden alle iframes met http veranderd in http
  * - site_links             - [FALSE] alle link-tags naar interne adressen worden aangepast met site_url(), zodat eventueel index.php ervoor wordt gezet.
  * - add_classes            - [FALSE] alle div, p, en img tags krijgen extra classes: een nr en 'odd' of 'even'
  * - remove_sizes           - [FALSE] Als TRUE dan worden width en height attributen van img tags verwijderd (zodat met css styling kan worden ingegrepen). Je kunt ook alleen de 'width' of 'height' attributen verwijderen door 'width' of 'height' (of 'style').
@@ -38,6 +39,7 @@ class Content {
     'compress'          => true,
     'safe_emails'       => true,
     'auto_target_links' => true,
+    'auto_iframe_https' => true,
     'site_links'        => true,
     'remove_sizes'      => false,
     'add_classes'       => false,
@@ -122,8 +124,6 @@ class Content {
     }
     return $res;
   }
-
-
 
   /**
    * Behandelt interne links met site_url()
@@ -326,6 +326,11 @@ class Content {
       if ($this->settings['auto_target_links']) {
         $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_auto_target_links"),$txt);
       }
+
+      if ($this->settings['auto_iframe_https'] and PROTOCOL==='https') {
+        $txt = preg_replace('/<iframe\ssrc=\"http:/uiUm', '<iframe src="https:', $txt);
+      }
+
 
   		if ($this->settings['safe_emails']) {
   			if (preg_match_all("/<a([^<]*)href=\"mailto:(.*?)\"([^>]*)>(.*?)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>

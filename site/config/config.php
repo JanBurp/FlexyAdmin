@@ -71,6 +71,7 @@ $config['use_minimized'] = TRUE;
  * - compress               - [TRUE] de HTML output wordt gecomprimeerd (overbodige spaties en returns worden verwijderd)
  * - safe_emails            - [TRUE] emaillinks worden vervangen door spambot veilige emaillinks
  * - auto_target_links      - [TRUE] alle link-tags naar externe adressen krijgen de attributen `target="_blank"` en `rel="external"` mee.
+ * - auto_iframe_https      - [TRUE] bij een https website worden alle iframes met http veranderd in http
  * - site_links             - [FALSE] alle link-tags naar interne adressen worden aangepast met site_url(), zodat eventueel index.php ervoor wordt gezet.
  * - add_classes            - [FALSE] alle div, p, en img tags krijgen extra classes: een nr en 'odd' of 'even'
  * - remove_sizes           - [FALSE] Als TRUE dan worden width en height attributen van img tags verwijderd (zodat met css styling kan worden ingegrepen). Je kunt ook alleen de 'width' of 'height' attributen verwijderen door 'width' of 'height' (of 'style').
