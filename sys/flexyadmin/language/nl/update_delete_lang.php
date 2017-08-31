@@ -17,7 +17,7 @@ $lang['delete_error_value']	  = "Fout tijdens verwijderen van %s! ";
 
 $lang['upload_succes']			  = "Bestand %s ge-upload.";
 $lang['upload_error']				  = "Fout tijdens uploading %s. ";
-$lang['upload_img_too_small']	= "De afbeelding %s is te klein en is niet ge-upload. ";
+$lang['upload_img_too_small']	= "De afbeelding <b>%s</b> is te klein en daarom niet ge-upload.<br>Kies een afbeelding van minimaal %s pixels.";
 $lang['upload_resize_error']  = 'Schalen van  het bestand %s gaf een fout.';
 
 $lang['rename_succes']			  = "Bestand hernoemd naar %s.";
