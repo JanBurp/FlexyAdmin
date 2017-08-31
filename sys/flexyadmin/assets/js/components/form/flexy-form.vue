@@ -234,6 +234,8 @@ export default {
     },
 
     fieldOptions: function(field) {
+      // console.log('fieldOptions',field);
+      if (_.isUndefined(this.form_groups[field])) return [];
       var options = _.clone(this.form_groups[field]._options.data);
       if ( !_.isUndefined(this.form_groups[field]['dynamic']) && !_.isUndefined(this.form_groups[field]['dynamic']['options']) ) {
         var filter_field = this.form_groups[field]['dynamic']['options']['filter_by'];
@@ -325,6 +327,7 @@ export default {
     },
     
     validationClass : function(field) {
+      // console.log('validationClass',field);
       var validationClass='';
       if ( this.validationErrors[field] ) validationClass = 'has-danger';
       if ( this.isRequired(field) ) {
@@ -340,6 +343,7 @@ export default {
     },
         
     isRequired : function(field) {
+      if ( _.isUndefined(this.form_groups[field])) return false;
       if ( _.isUndefined(this.form_groups[field].validation)) return false;
       var validation = this.form_groups[field].validation;
       if (validation.indexOf('required')>=0) {
@@ -350,6 +354,7 @@ export default {
     
     showFormGroup : function(field) {
       var show = true;
+      if (_.isUndefined(this.form_groups[field])) return show;
       if (!_.isUndefined(this.form_groups[field].dynamic) && !_.isUndefined(this.form_groups[field].dynamic.show) ) {
         var func = this.form_groups[field].dynamic.show;
         func = this._replace_field_in_func(func);
@@ -367,6 +372,7 @@ export default {
     
     valueFromApi : function(field) {
       var value = this.row[field];
+      if (_.isUndefined(this.form_groups[field])) return value;
       if (!_.isUndefined(this.form_groups[field].value_eval)) {
         var value_eval = this.form_groups[field].value_eval;
         // console.log(field,value_eval);
@@ -385,7 +391,6 @@ export default {
           table : this.form_groups[field]._options.table,
         });
       }
-      // console.log('toggleInsertForm',field,this.insertForm);
     },
     
     showInsertForm : function(field) {
@@ -735,9 +740,9 @@ export default {
             <div class="form-group row" :class="validationClass(field)" v-show="showFormGroup(field)">
               <div v-if="validationError(field)!==false" class="validation-error"><span class="fa fa-exclamation-triangle"></span> {{validationError(field)}}</div>
               <label class="col-md-3 form-control-label" :for="field">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-sm fa-asterisk text-warning"></span> </label>
-              <div class="col-md-9">
 
-                <template v-if="isType('textarea',field)">
+              <div class="col-md-9">
+              <template v-if="isType('textarea',field)">
                   <!-- Textarea -->
                   <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></textarea>
                 </template>
@@ -818,6 +823,7 @@ export default {
                 <div v-if="showInsertForm(field)">
                   <flexy-form :title="$lang.add_item | replace(label(field))" :name="subForm(field,'table')" :primary="-1" formtype="subform" @added="subFormAdded(field,$event)" @formclose="toggleInsertForm(field)"></flexy-form>
                 </div>
+
 
               </div>
               
