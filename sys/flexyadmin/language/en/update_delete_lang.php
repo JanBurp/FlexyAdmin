@@ -17,7 +17,7 @@ $lang['delete_error_value'] = "Error deleting %s! ";
 
 $lang['upload_succes']        = "Uploaded file %s.";
 $lang['upload_error']         = "Error uploading file %s. ";
-$lang['upload_img_too_small'] = "The image %s is too small and not uploaded. ";
+$lang['upload_img_too_small'] = "The image <b>%s</b> is too small and not uploaded. .<br>Choose an image with at least %s pixels. ";
 $lang['upload_resize_error']  = 'Resizen of %s results in an error.';
 
 $lang['rename_succes']			= "File renamed to %s.";
