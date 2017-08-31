@@ -4086,7 +4086,7 @@ Class Data_Core extends CI_Model {
       $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
       $as                = $this->settings['relations']['many_to_many'][$what]['result_name'];
       // $sub_as            = '_'.$as.'_';
-      $sub_as            = $rel_table;
+      $sub_as            = $rel_table.'-'.$other_table;
       // Select fields
       $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
       // Joins
