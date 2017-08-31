@@ -356,7 +356,7 @@ Class Core_res_assets extends Data_Core {
       // check minimal size, if too small: delete and error
       if ( !$this->upload->check_size($path,$file,$path_settings) ) {
         $this->delete_file($path,$file);
-        $this->error_message = langp('upload_img_too_small',$file);
+        $this->error_message = langp('upload_img_too_small',$file, $path_settings['min_width'].' x '.$path_settings['min_height']);
         return FALSE;
       }
 
