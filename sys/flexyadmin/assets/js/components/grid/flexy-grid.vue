@@ -823,7 +823,7 @@ export default {
           var error = response.data.error;
           if (!error && response.data.data===false) error = self.$lang.upload_error;
           if (error) {
-            flexyState.addMessage(error + ' <b>`'+fileName+'`</b>','danger');
+            flexyState.addMessage(error,'danger');
           }
           else {
             uploadedFilesCount++;
