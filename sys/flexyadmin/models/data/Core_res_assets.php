@@ -139,21 +139,22 @@ Class Core_res_assets extends Data_Core {
       $assetsPath = add_assets($path);
       $files = read_map($assetsPath,'',FALSE,TRUE,$hasMetaInfo);
       $files = not_filter_by($files,'_');
-      foreach ($files as $file => $info) {
-        if (is_visible_file($file)) {
-          $existingInfo = $this->get_file_info($path,$file);
-          if ($existingInfo) $info = array_merge($info,$existingInfo);
-          $info['path'] = $path;
-          $info['file'] = str_replace($path,'',$file);
-          $info['b_exists'] = true;
-          $info['date'] = str_replace(' ','-',$info['rawdate']);
-          if ($hasMetaInfo and isset($info['meta'])) $info['meta'] = json_encode($info['meta']);
-          if ($hasUsedInfo) $info['b_used'] = $this->is_file_used($path,$file);
+      foreach ($files as $file) {
+        $name = $file['name'];
+        if (is_visible_file($name)) {
+          $existingInfo = $this->get_file_info($path,$name);
+          if ($existingInfo) $file = array_merge($file,$existingInfo);
+          $file['path'] = $path;
+          $file['file'] = str_replace($path,'',$name);
+          $file['b_exists'] = true;
+          $file['date'] = str_replace(' ','-',$file['rawdate']);
+          if ($hasMetaInfo and isset($file['meta'])) $file['meta'] = json_encode($file['meta']);
+          if ($hasUsedInfo) $file['b_used'] = $this->is_file_used($path,$name);
           if ($clean or !$existingInfo) {
-            $this->insert_file($path,$file,$info);
+            $this->insert_file($path,$name,$file);
           }
           else {
-            $this->update_file($path,$file,$info);
+            $this->update_file($path,$name,$file);
           }
         }
       }
