@@ -740,7 +740,7 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    // trace_([$this->settings['table'],$relations]);
+    // trace_([$this->settings['table'],$relations['many_to_one']]);
     return $relations;
   }
 
@@ -1413,6 +1413,7 @@ Class Data_Core extends CI_Model {
           // Loop alle relaties langs en complementeer die
           if ($relations) {
             foreach ($relations as $what => $info) {
+              unset($relation_fields);
 
               // Velden
               $field = 'abstract';
@@ -1439,9 +1440,15 @@ Class Data_Core extends CI_Model {
               if (!is_array($relation_fields)) $relation_fields = array($relation_fields);
 
               foreach ($relation_fields as $key => $relation_field) {
-                if (!in_array($relation_field,$set['fields'])) {
-                  $set['fields'][] = $relation_field;
-                  if ($set_type==='form_set') {
+                if ($set_type==='grid_set') {
+                  // if (!in_array($relation_field,$set['fields'])) $set['fields'][] = $relation_field;
+                }
+                if ($set_type==='form_set') {
+                  $in_field_set = false;
+                  foreach ($set['fieldsets'] as $fieldset) {
+                    if (in_array($relation_field,$fieldset)) $in_field_set = true;
+                  }
+                  if (!$in_field_set) {
                     $first_fieldset = array_keys($set['fieldsets']);
                     $first_fieldset = current($first_fieldset);
                     $set['fieldsets'][$first_fieldset][] = $relation_field;
@@ -1455,7 +1462,7 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    // trace_($set['fields']);
+    // trace_($set);
     // trace_($set['with']);
 
     return $set;
