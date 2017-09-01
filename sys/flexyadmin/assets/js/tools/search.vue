@@ -43,7 +43,9 @@ export default {
     },
 
     highlight : function(item,highlight) {
-      return item.replace(new RegExp(highlight,'g'),'<span class="text-danger">'+highlight+'</span>');
+      if (typeof(item)=='string')
+        return item.replace(new RegExp(highlight,'g'),'<span class="text-danger">'+highlight+'</span>');
+      return item;
     },
 
   },
