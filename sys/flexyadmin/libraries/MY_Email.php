@@ -584,7 +584,7 @@ class MY_Email extends CI_Email {
           // copy
           if (!file_exists($tempname)) {
             if (!file_exists($this->CI->config->item('ASSETSFOLDER').'_tmp')) mkdir($this->CI->config->item('ASSETSFOLDER').'_tmp');
-            copy($filename,$tempname);
+            @copy($filename,$tempname);
           }
           $body = str_replace( $this->CI->config->item('ASSETS').$path.'/'.$src, $tempsrc, $body );
         }
