@@ -97,7 +97,9 @@ export default {
       var self = this;
       var search = (self.searchValue || '').toLowerCase()
       return !search ? self.list : self.list.filter( function(el){
-        return (el[self.optionsLabel].toLowerCase().search(search) >= 0) ;
+        var label = el[self.optionsLabel];
+        if (typeof(label)!=='string') label = label.toString();
+        return (label.toLowerCase().search(search) >= 0) ;
       })
     },
     hasParent () { return this.parent instanceof Array ? this.parent.length : this.parent },
