@@ -549,7 +549,6 @@ export default {
         this.selected = [];
       }
       var index = this.selected.indexOf(id);
-      // console.log('select',id,this.selected,index);
 
       if (index > -1) {
         this.selected.splice(index, 1);
@@ -558,8 +557,7 @@ export default {
         this.selected.push(id);
       }
 
-      // console.log('selected',this.selected);
-      this.emitSelectedMedia();
+      this.emitToggleMedia(id);
     },
     
     reverseSelection:function() {
@@ -568,24 +566,25 @@ export default {
         ids.push(this.items[i].id.value);
       }
       this.selected = _.difference(ids,this.selected);
-      this.emitSelectedMedia();
     },
     
-    emitSelectedMedia : function() {
+    emitToggleMedia : function(id) {
       if (this.type==='mediapicker') {
-        var selectedMedia = [];
-        for (var i = 0; i < this.selected.length; i++) {
-          for (var j = 0; j < this.items.length; j++) {
-            var index = this.items[j]['id'].value;
-            if (index===this.selected[i]) {
-              var media = this.items[j]['media_thumb'].value;
-              selectedMedia.push( media );
-            }
-          }
-        }
-        // console.log('emitSelectedMedia',selectedMedia);
-        this.$emit('grid-selected',selectedMedia);
+        var media = this.findMediaByIndex(id);
+        this.$emit('grid-toggle-item',media);
+        // console.log('emitToggleMedia',id,media);
       }
+    },
+
+    findMediaByIndex : function(id) {
+      var media = false;
+      for (var j = 0; j < this.items.length; j++) {
+        var index = this.items[j]['id'].value;
+        if (index===id) {
+          media = this.items[j]['media_thumb'].value;
+        }
+      }
+      return media;
     },
     
     newItem : function() {
@@ -1065,7 +1064,7 @@ export default {
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                   <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                   <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
-                  <flexy-button v-if="multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
+                  <flexy-button v-if="gridType()!=='media' && multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
 
                   <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                     <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort" />

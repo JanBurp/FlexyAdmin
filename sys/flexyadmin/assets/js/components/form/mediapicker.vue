@@ -68,14 +68,30 @@ export default {
       // console.log('mediapicker.selection():',selection);
       return selection;
     },
-    
+
     selectMedia : function(media) {
-      media = _.uniq(media);
       // console.log('selectMedia result',media);
+      media = _.uniq(media);
       this.changeMedia(media);
     },
-    
-    removeMedia : function(index) {
+
+    toggleMedia : function(item) {
+      var currentMedia = _.trim(this.media,'|').split('|');
+      var newMedia = _.clone(currentMedia);
+      var exist = false;
+      for (var i = newMedia.length - 1; i >= 0; i--) {
+        if ( newMedia[i]==item ) {
+          newMedia.splice(i, 1);
+          exist = true;
+        }
+      }
+      if ( !exist ) {
+        newMedia.push(item);
+      }
+      this.changeMedia(newMedia);
+    },
+
+    removeMediaIndex : function(index) {
       var currentMedia = _.trim(this.media,'|').split('|');
       var newMedia = _.clone(currentMedia);
       newMedia.splice(index, 1);
@@ -110,14 +126,14 @@ export default {
       </div>
       <draggable :list="thumbs()" :options="draggableOptions" @end="dragEnd($event)">
         <div v-for="(img,index) in thumbs()" class="mediapicker-thumb">
-          <flexy-button icon="remove" class="btn-danger" @click.native="removeMedia(index)"/>
+          <flexy-button icon="remove" class="mediapicker-remove-button btn-danger" @click.native="removeMediaIndex(index)"/>
           <flexy-thumb size="lg" :src="img.src" :alt="img.alt" :value="img.value" />
         </div>
       </draggable>
     </div>
     
     <div class="mediapicker-choose" v-if="choose">
-      <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" :multiple="this.multiple" :autoresize="this.autoresize" @grid-selected="selectMedia($event)"></flexy-grid>
+      <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" :multiple="this.multiple" :autoresize="this.autoresize" @grid-toggle-item="toggleMedia($event)"></flexy-grid>
     </div>
     
   </div>
