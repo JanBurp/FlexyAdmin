@@ -116,7 +116,7 @@ if (defined('PHPUNIT_TEST')) {
   define("IS_LOCALHOST",TRUE);
 }
 else {
-  define("LOCALHOSTS","0.0.0.0,127.0.0.1,localhost,localhost:8888,10.37.129.2");
+  define("LOCALHOSTS","0.0.0.0,127.0.0.1,localhost,localhost:8888,10.37.129.2,192.168.178.20");
   function is_local_host() { $is=FALSE; $localhosts=explode(",",LOCALHOSTS); foreach ($localhosts as $host) { if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; } } return $is; }
   
   // HTTP SERVER?
