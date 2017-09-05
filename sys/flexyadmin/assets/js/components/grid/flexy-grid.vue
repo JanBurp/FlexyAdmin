@@ -346,8 +346,16 @@ export default {
             }
             // Data en die aanvullen met data
             var data = response.data.data;
-            self.items = self.addInfo( data, true );
-            self.dataInfo = response.data.info;
+            if (data.length==0 && self.apiParts.filter!=='') {
+              self.apiParts.filter = '';
+              self.findTerm = '';
+              self.extendedFind = false;
+              return self.reloadPage(self.apiParts);
+            }
+            else {
+              self.items = self.addInfo( data, true );
+              self.dataInfo = response.data.info;
+            }
           }
         }
         return response;
