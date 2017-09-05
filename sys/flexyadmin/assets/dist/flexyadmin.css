@@ -6133,29 +6133,36 @@ textarea {
   border: solid 1px transparent;
   border-radius: 0.25rem; }
   .mediapicker .mediapicker-selection {
+    display: block;
+    clear: both;
+    width: 100%;
     min-height: 5rem;
     margin: .25rem; }
-    .mediapicker .mediapicker-selection > .flexy-button {
-      float: left;
-      margin-right: .5rem;
-      margin-top: 3.25rem; }
     .mediapicker .mediapicker-selection .mediapicker-thumb {
-      display: inline;
+      display: inline-block;
+      position: relative;
       margin-right: .25rem;
+      margin-bottom: .25rem;
       cursor: move; }
-      .mediapicker .mediapicker-selection .mediapicker-thumb > .flexy-button {
-        position: absolute; }
+      .mediapicker .mediapicker-selection .mediapicker-thumb > .mediapicker-remove-button {
+        position: absolute;
+        top: 0px;
+        left: 0px; }
     .mediapicker .mediapicker-selection .mediapicker-thumb-button {
       display: block;
+      position: relative;
       float: left;
       width: 3.5rem;
       height: 5rem;
       border: dashed 2px #D90;
       cursor: default; }
       .mediapicker .mediapicker-selection .mediapicker-thumb-button > .flexy-button {
-        top: 2rem;
-        left: 2rem; }
+        position: absolute;
+        top: 1.5rem;
+        left: .75rem; }
   .mediapicker .mediapicker-choose {
+    display: block;
+    width: 100%;
     margin: .5rem 0 0; }
     .mediapicker .mediapicker-choose > .card {
       border: none;

@@ -203,30 +203,41 @@ body.mce-fullscreen .mce-tinymce{
   border:solid 1px transparent;
   border-radius:$border-radius;
   .mediapicker-selection {
+    display: block;
+    clear:both;
+    width:100%;
     min-height:5rem;
     margin:.25rem;
-    >.flexy-button {
-      float:left;
-      margin-right:.5rem;
-      margin-top:3.25rem;
-    }
     .mediapicker-thumb {
-      display:inline;
+      display:inline-block;
+      position: relative;
       margin-right:.25rem;
+      margin-bottom: .25rem;
       cursor:move;
-      >.flexy-button {position:absolute;}
+      >.mediapicker-remove-button {
+        position:absolute;
+        top:0px;
+        left:0px;
+      }
     }
     .mediapicker-thumb-button {
       display:block;
+      position: relative;
       float:left;
       width:3.5rem;
       height:5rem;
       border:dashed 2px $brand-warning;
       cursor:default;
-      >.flexy-button {top:2rem;left:2rem;}
+      >.flexy-button {
+        position: absolute;
+        top:1.5rem;
+        left:.75rem;
+      }
     }
   }
   .mediapicker-choose {
+    display: block;
+    width:100%;
     margin:.5rem 0 0;
     >.card {
       border:none;
