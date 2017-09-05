@@ -40,9 +40,20 @@ php scripts/git_remove_tags.php schoool-2.0. 0 9
  
 ### Removing all assets in all the commits in history
 
-`git filter-branch --tree-filter 'rm -rf site/assets' HEAD`
-After that push all tags and branches with `--force`
 (See: https://dalibornasevic.com/posts/2-permanently-remove-files-and-folders-from-a-git-repository)
+
+`git filter-branch --tree-filter 'rm -rf site/assets' HEAD`
+`git filter-branch --tree-filter 'rm -rf site/cache' HEAD`
+`git filter-branch --tree-filter 'rm -rf site/stats' HEAD`
+
+Remove all garbage:
+
+git for-each-ref --format='delete %(refname)' refs/original | git update-ref --stdin
+git reflog expire --expire=now --all
+git gc --prune=now
+
+After that push all tags and branches with `--force`
+
 
 # Update
 
