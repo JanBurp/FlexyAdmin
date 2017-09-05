@@ -26,7 +26,7 @@
         <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>"><span class="flexy-block btn btn-secondary">
           <span class="fa fa-home fa-lg"></span>
         </span></a>
-        <flexy-blocks v-once href="<?=$base_url?>" text="<?=$str_title?>" class="hidden-md-down"/>
+        <flexy-blocks v-once href="<?=$base_url?>" text="<?=$str_title?>" class="hidden-md-down"></flexy-blocks>
       </div>
       <div class="navbar-nav">
         <?=$headermenu?>
@@ -47,7 +47,7 @@
   </div>
   
   <div id="help" v-cloak v-show="global.helpIsOn()">
-    <flexy-accordion :items="state.help_items">
+    <flexy-accordion :items="state.help_items"></flexy-accordion>
   </div>
   
 </div>
