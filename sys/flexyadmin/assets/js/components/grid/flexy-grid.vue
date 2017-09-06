@@ -346,16 +346,23 @@ export default {
             }
             // Data en die aanvullen met data
             var data = response.data.data;
+            
+            // Als data is 0 bij filter, geef een popup
             if (data.length==0 && self.apiParts.filter!=='') {
-              self.apiParts.filter = '';
-              self.findTerm = '';
-              self.extendedFind = false;
-              return self.reloadPage(self.apiParts);
+              // Vraag of filter gereset of niet
+              var message = self.$lang['grid_no_result'];
+              flexyState.openModal( {'title':'','body':message,'size':'modal-sm'}, function(event) {
+                if ( event.state.type==='ok') {
+                  self.apiParts.filter = '';
+                  self.findTerm = '';
+                  self.extendedFind = false;
+                  return self.reloadPage(self.apiParts);
+                }
+              });
             }
-            else {
-              self.items = self.addInfo( data, true );
-              self.dataInfo = response.data.info;
-            }
+
+            self.items = self.addInfo( data, true );
+            self.dataInfo = response.data.info;
           }
         }
         return response;
