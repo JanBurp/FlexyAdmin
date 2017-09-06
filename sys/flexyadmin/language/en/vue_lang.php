@@ -26,6 +26,7 @@ $lang['vue_grid_search_or']          = "or";
 $lang['vue_grid_search_exist']       = 'has';
 $lang['vue_grid_search_word']        = 'has word';
 $lang['vue_grid_search_exact']       = 'same as';
+$lang['vue_grid_no_result']          = "Search has no results.<br>Reset search?";
 
 $lang['vue_grid_edit_success']       = 'Field is changed';
 
