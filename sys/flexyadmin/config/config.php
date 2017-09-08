@@ -175,7 +175,7 @@ $config['subclass_prefix'] = 'MY_';
 if (SAFE_INSTALL)
   $config['composer_autoload'] = '../sys/vendor/autoload.php';
 else
-  $config['composer_autoload'] = '/sys/vendor/autoload.php';
+  $config['composer_autoload'] = 'sys/vendor/autoload.php';
   
 
 
