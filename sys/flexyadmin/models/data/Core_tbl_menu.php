@@ -211,6 +211,7 @@ Class Core_tbl_menu extends Data_Core {
 
       // More languages?
       if ($languages) {
+        $this->load->model('create_uri');
         $base_lang = current($languages);
         // lang_fields in normale item
         foreach ($language_fields as $lang_field) {
@@ -226,13 +227,26 @@ Class Core_tbl_menu extends Data_Core {
           $lang_item['full_uri'] = $full_uri;
           $lang_item['_lang'] = $lang;
           $lang_item['order'] += $lang_key * ($max_order + 1);
+          // (full_)uri
+          // if ($lang !== $base_lang) {
+          //   if (isset($lang_item['_table'])) {
+          //     $this->create_uri->set_table($lang_item['_table']);
+          //     $original_uri = $lang_item['uri'];
+          //     $lang_uri = $this->create_uri->create($lang_item,$lang);
+          //     $lang_item['uri'] = $lang_uri;
+          //     $full_uri = preg_replace('/\b'.$original_uri.'\b/uU', $lang_uri, $full_uri);
+          //     $lang_item['full_uri'] = $full_uri;
+          //   }
+          // }
           foreach ($language_fields as $lang_field) {
+            // multi lang fields
             if (isset($lang_item[$lang_field.'_'.$lang])) {
               $lang_item[$lang_field] = $lang_item[$lang_field.'_'.$lang];
               if (empty($lang_item[$lang_field])) $lang_item[$lang_field] = $lang_item[$lang_field.'_'.$base_lang];
             }
           }
           // Add lang item
+          // trace_($lang_item);  
           $extra_lang_menu[$lang][$full_uri] = $lang_item;
         }
       }
@@ -379,7 +393,10 @@ Class Core_tbl_menu extends Data_Core {
     if (isset($item['where']))    $this->data->where($item['where']);
     if (isset($item['order_by'])) $this->data->order_by($item['order_by']);
     $data_items = $this->data->get_result( el('limit',$item,0), el('offset',$item,0) );
-    
+    foreach ($data_items as $key => $row) {
+      $data_items[$key]['_table'] = $table;
+    }
+
     // restore
     $this->data->set_result_key($result_key);
     $this->data->table('tbl_menu');
@@ -395,7 +412,6 @@ Class Core_tbl_menu extends Data_Core {
           if (isset($item['item'])) $row = array_merge($row,$item['item']);
           $full_uri         = $place['pre_uri'].'/'.el('full_uri',$row, el('uri',$row));
           $row['full_uri']  = $full_uri;
-          $row['_table']    = $table;
           if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $row['b_visible'] = FALSE;
           $items[$full_uri] = $row;
           $nr++;

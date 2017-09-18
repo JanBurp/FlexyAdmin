@@ -83,13 +83,17 @@ class Create_uri extends CI_Model {
  	 * @return string
  	 * @author Jan den Besten
  	 */
-  public function create($data) {
+  public function create($data,$lang='') {
     // init
     $this->table_data = $data;
     $this->fields = array_keys($data);
 
     if (empty($this->source_field)) $this->source_field = $this->_find_source_field($data);
     if (empty($this->source_field)) return FALSE;
+    if ($lang) {
+      $language = $this->config->item('language');
+      $this->source_field = str_replace('_'.$language,'_'.$lang,$this->source_field);
+    }
 
     // Uri source
     $uri = el('uri',$this->table_data,'');
