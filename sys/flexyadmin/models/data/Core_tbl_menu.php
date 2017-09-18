@@ -182,6 +182,7 @@ Class Core_tbl_menu extends Data_Core {
           'full_uri' => $lang,
           'uri'      => $lang,
           '_lang'    => $lang,
+          'str_title'=> $lang,
         );
       }
     }
@@ -192,7 +193,7 @@ Class Core_tbl_menu extends Data_Core {
       $item['b_visible']    = el('b_visible',$item,true);
       $item['b_restricted'] = el('b_restricted',$item,false);
 
-           // Test if parent is visible/restricted
+      // Test if parent is visible/restricted
       $uri      = $item['uri'];
       $full_uri = $item['full_uri'];
       if ( $full_uri!=$item['uri'] ) {

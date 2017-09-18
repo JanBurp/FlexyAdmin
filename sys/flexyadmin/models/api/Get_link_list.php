@@ -12,9 +12,9 @@ class Get_link_list extends Api_Model {
   /**
    */
 	public function __construct($name='') {
-		parent::__construct(TRUE,TRUE);
+    parent::__construct();
     return $this;
-	}
+  }
   
   public function index() {
     if (!$this->logged_in()) return $this->_result_status401();
