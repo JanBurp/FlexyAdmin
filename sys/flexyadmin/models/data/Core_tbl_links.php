@@ -43,22 +43,14 @@ Class Core_tbl_links extends Data_Core {
    * @author Jan den Besten
    */
   protected function _menu_link_list() {
-    $this->data->table('tbl_menu')->select('uri,str_title AS title,order,self_parent')->tree('uri');
-    $this->data->where('uri !=""');
-    $result = $this->data->cache()->get_result();
+    $this->data->table('tbl_menu');
+    $result = $this->data->get_menu_result();
     $parents = array();
     $level = 0;
     foreach ($result as $key => $item) {
-      if ($item['self_parent']!==0) {
-        if (isset($parents[$item['self_parent']])) {
-          $level = $parents[$item['self_parent']];
-        }
-        else {
-          $level++;
-          $parents[$item['self_parent']] = $level;
-        }
-      }
-      $result[$key]['title'] = str_repeat(" ",$level-1) . $item['title'];
+      $level = count(explode('/',$key));
+      $result[$key]['title'] = str_repeat(" ",$level-1) . $item['str_title'];
+      $result[$key]['uri']   = $key;
     }
     return $this->_result_as_link_list($result);
   }
