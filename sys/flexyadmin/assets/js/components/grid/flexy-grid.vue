@@ -527,6 +527,9 @@ export default {
       var headerType = field['grid-type'] || field['type'];
       return (headerType!=='hidden' && headerType!=='primary'  && headerType!=='action');
     },
+    hasFieldInfo : function(field) {
+      return !_.isUndefined(this.fields[field]);
+    },
     isSortableField : function(field) {
       return field.sortable;
     },
@@ -1051,7 +1054,7 @@ export default {
           </div>
           <div class="form-group grid-extended-search-field">
             <select class="form-control form-control-sm custom-select" name="grid-extended-search-field[]" v-model="term.field">
-              <option v-for="field in searchable_fields" :value="field" :selected="term.field===field">{{fields[field].label}}</option>
+              <option v-if="hasFieldInfo(field)" v-for="field in searchable_fields" :value="field" :selected="term.field===field">{{fields[field].label}}</option>
             </select>
           </div>
           <div class="form-group grid-extended-search-equals">
