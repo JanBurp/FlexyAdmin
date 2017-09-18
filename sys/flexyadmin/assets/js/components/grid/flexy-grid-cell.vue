@@ -78,11 +78,14 @@ export default {
     
     thumbs : function(media) {
       var path = this.options.path;
-      var array = media.split('|');
-      for (var i = 0; i < array.length; i++) {
-        array[i] = {
-          src : '_media/thumb/' + path +'/'+ array[i],
-          alt : array[i],
+      var array = [];
+      if (typeof(media)=='string') {
+        array = media.split('|');
+        for (var i = 0; i < array.length; i++) {
+          array[i] = {
+            src : '_media/thumb/' + path +'/'+ array[i],
+            alt : array[i],
+          }
         }
       }
       return array;
