@@ -74,7 +74,7 @@ export default {
       this.findTerm = this.apiParts.filter;
     }
     var self = this;
-    self.calcLimit();
+    // self.calcLimit(); // -> NIET MEER, zodat pagination uit kan
     
     // Bij resize
     var resizeTimer;
@@ -141,7 +141,8 @@ export default {
       searchable_fields : [],
       dataInfo          : {},
       selected          : [],
-      mediaSelection    : this.selection, 
+      mediaSelection    : this.selection,
+      pagination        : true,
       apiParts    : {
         order         : this.order,
         filter        : this.filter,
@@ -212,7 +213,7 @@ export default {
 
     
     calcLimit : function( view ) {
-      if (!this.autoresize) return false;
+      if (!this.autoresize || !this.pagination) return false;
 
       // Sizes:
       var padding   = 8;
@@ -282,7 +283,6 @@ export default {
       var changed = (new_limit > this.apiParts.limit || new_offset !== this.apiParts.offset);
       this.apiParts.limit = new_limit;
       this.apiParts.offset = new_offset;
-      // console.log('autoresize:',width,height,rows,cols,changed,new_offset,new_limit);
       return changed;
     },
 
@@ -336,6 +336,8 @@ export default {
             if ( !_.isUndefined(response.data.settings) ) {
               // Title
               if (!_.isUndefined(response.data.settings.grid_set.title)) self.uiTitle = response.data.settings.grid_set.title;
+              // Pagination
+              if (!_.isUndefined(response.data.settings.grid_set.pagination)) self.pagination = response.data.settings.grid_set.pagination;
               // Fields
               self.fields = response.data.settings.grid_set.field_info;
               self.searchable_fields = response.data.settings.grid_set.searchable_fields;
@@ -360,6 +362,9 @@ export default {
                 }
               });
             }
+
+            self.calcLimit();
+            data.splice(self.apiParts.limit);
 
             self.items = self.addInfo( data, true );
             self.dataInfo = response.data.info;
