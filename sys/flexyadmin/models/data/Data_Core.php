@@ -1480,10 +1480,11 @@ Class Data_Core extends CI_Model {
       foreach ($relations as $key => $relation) {
         if (isset($relation['result_name']) and isset($relation['other_table'])) {
           $this->relation_result_fields[ $relation['result_name'] ] = array(
-            'relation'    => $type,
-            'other_table' => $relation['other_table'],
-            'result_name' => $relation['result_name'],
-            'fields'      => $this->get_other_table_fields( $relation['other_table'] ),
+            'relation'        => $type,
+            'other_table'     => $relation['other_table'],
+            'result_name'     => $relation['result_name'],
+            'fields'          => $this->get_other_table_fields( $relation['other_table'] ),
+            'abstract_fields' => $this->get_other_table_abstract_fields( $relation['other_table'] ),
           );
         }
       }
@@ -3579,6 +3580,7 @@ Class Data_Core extends CI_Model {
           else {
             $fields[$key] = $this->_get_relation_result($field,$this->tm_with);
             if ($fields[$key]) {
+              $fields[$key]['fields'] = $fields[$key]['abstract_fields'];
               $fields[$key]['fields'] = array_diff($fields[$key]['fields'],$this->forbidden_find_fields);
               $fields[$key]['fields'] = array_diff($fields[$key]['fields'],$this->forbidden_find_relation_fields);
             }
@@ -3588,7 +3590,7 @@ Class Data_Core extends CI_Model {
           }
         }
       }
-      
+
       // Plak tabelnaam voor elk veld, als dat nog niet zo is, en escape
       foreach ( $fields as $key => $field ) {
         if (is_array($field)) {
@@ -3600,7 +3602,7 @@ Class Data_Core extends CI_Model {
           $fields[$key] = $this->_protect_field($field,$this->settings['table']);
         }
       }
-      
+
       // Zoek in alle termen
       foreach ($terms as $term) {
         // Begin van deze term
