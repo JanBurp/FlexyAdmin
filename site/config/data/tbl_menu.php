@@ -23,7 +23,8 @@ $config['options'] = array(
 
 
 $config['grid_set'] = array(
-  'fields' => array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module'),
+  'pagination'  => false,
+  'fields'      => array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module'),
 );
 
 $config['form_set'] = array(
