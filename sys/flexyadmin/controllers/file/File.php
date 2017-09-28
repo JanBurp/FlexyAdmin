@@ -58,6 +58,13 @@ class File extends CI_Controller {
   public function thumb($path,$file) {
 		if (!empty($path) and !empty($file)) {
       $fullpath = $this->config->item('THUMBCACHE').$path.'___'.$file;
+
+      // Create thumb if not exists
+      if ( !file_exists($fullpath) ) {
+        $this->assets->resize_file($path,$file);
+      }
+
+      // Show if exists (now)
 			if ( file_exists($fullpath) ) {
         if ( in_array($path,$this->serve_rights) or $this->assets->has_serve_rights($path,$file) ) {
           $type=get_suffix($file,'.');
