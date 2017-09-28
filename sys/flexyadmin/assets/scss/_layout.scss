@@ -39,12 +39,18 @@
 /* HEADER */
 #header {
   padding:0 .5rem 0 0;
-  background-color:$gray-lightest;
-  border-bottom:solid 1px $gray-lighter;
+  height: 47px;
+  max-height: 47px;
+  background-color:transparent;
   .nav {padding-top:.1rem;}
   .navbar-brand {
     max-width:50%;
     overflow:hidden;
+  }
+  .home-button {
+    margin-right:1.25rem;
+    padding-left:4px;
+    padding-right:3px;
   }
 }
 
@@ -106,7 +112,7 @@
 
 /* SIDEBAR MENU */
 #flexy-menu-side>ul {
-  background-color: $gray-lightest;
+  background-color: transparent;
   border:solid 1px $gray-lighter;
   margin-bottom:1rem;
   border-radius:.25rem;

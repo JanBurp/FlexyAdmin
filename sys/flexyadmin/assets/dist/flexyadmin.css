@@ -5526,13 +5526,18 @@ a > .fa, .btn > .fa {
 /* HEADER */
 #header {
   padding: 0 .5rem 0 0;
-  background-color: #f7f7f9;
-  border-bottom: solid 1px #eceeef; }
+  height: 47px;
+  max-height: 47px;
+  background-color: transparent; }
   #header .nav {
     padding-top: .1rem; }
   #header .navbar-brand {
     max-width: 50%;
     overflow: hidden; }
+  #header .home-button {
+    margin-right: 1.25rem;
+    padding-left: 4px;
+    padding-right: 3px; }
 
 /* MESSAGES */
 #messages {
@@ -5587,7 +5592,7 @@ a > .fa, .btn > .fa {
 
 /* SIDEBAR MENU */
 #flexy-menu-side > ul {
-  background-color: #f7f7f9;
+  background-color: transparent;
   border: solid 1px #eceeef;
   margin-bottom: 1rem;
   border-radius: .25rem; }
