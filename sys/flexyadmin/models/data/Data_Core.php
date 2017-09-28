@@ -1324,6 +1324,7 @@ Class Data_Core extends CI_Model {
    */
   public function get_setting_grid_set() {
     $grid_set = el('grid_set',$this->settings);
+    if (!isset($grid_set['pagination'])) $grid_set['pagination'] = true;
     $grid_set = $this->_complete_relations_of_set($grid_set,'grid_set');
 
     $field_info = $this->get_setting_field_info_extended($grid_set['fields']);

@@ -85,7 +85,7 @@ export default {
           self.reloadPageAfterResize();
         }
         else {
-          self.items.splice(self.apiParts.limit);
+          if (self.pagination) self.items.splice(self.apiParts.limit);
         }
       }, 250);
     });
@@ -196,6 +196,7 @@ export default {
   methods:{
 
     reset : function() {
+      this.pagination        = true;
       this.fields            = [];
       this.searchable_fields = [];
       this.actions           = [];
@@ -213,6 +214,7 @@ export default {
 
     
     calcLimit : function( view ) {
+      // console.log('calcLimit',this.pagination);
       if (!this.autoresize || !this.pagination) return false;
 
       // Sizes:
@@ -363,8 +365,10 @@ export default {
               });
             }
 
-            self.calcLimit();
-            data.splice(self.apiParts.limit);
+            if (self.pagination) {
+              self.calcLimit();
+              data.splice(self.apiParts.limit);
+            }
 
             self.items = self.addInfo( data, true );
             self.dataInfo = response.data.info;
@@ -376,6 +380,10 @@ export default {
     
     apiUrl : function(parts) {
       parts = _.extend( this.apiParts, parts );
+      if (!this.pagination) {
+        parts.offset = 0;
+        parts.limit = 0;
+      }
       this.apiParts = parts;
       var url = this.api;
       if (this.gridType()==='media') {
