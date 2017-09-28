@@ -1,13 +1,13 @@
 Changes 3.5.0
 =============
 
-- data settings has new 'cache_group'
-- Update to CI 3.1.5
+- Update to CI 3.1.6
 - UI with Vue & Bootstrap
 - Models: Filemanager, Mediatable removed and replaced with Assets
 - DB: FlexyAdmin db-> extensions depricated, and standard not loaded.
 - Rewrite data->find()
 - data->path() renamed to data->tree()
+- data settings has new 'cache_group'
 - URL: /admin changed to /_admin
 - URL: /file/... changed to /_media/...
 - DB: res_media_files removed and replaced with res_assets
