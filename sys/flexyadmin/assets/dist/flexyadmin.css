@@ -5770,6 +5770,7 @@ a > .fa, .btn > .fa {
       float: right;
       margin-top: 1px; }
   .grid #dropdown-sort .dropdown-menu {
+    position: absolute;
     min-width: 4rem; }
   .grid #dropdown-sort .dropdown-item {
     padding: .1rem 1rem .1rem .35rem;
@@ -5777,7 +5778,8 @@ a > .fa, .btn > .fa {
   .grid #dropdown-sort .dropdown-item.selected {
     padding-left: .35rem; }
   .grid #dropdown-sort.dropdown.open .dropdown-menu {
-    display: block; }
+    display: block;
+    z-index: 999999; }
   .grid th.grid-header-type-hidden.text-primary {
     width: 2rem;
     white-space: nowrap; }
@@ -5843,6 +5845,9 @@ a > .fa, .btn > .fa {
 
 .grid.grid-type-tree tbody td[level="7"][name="str_title"] {
   padding-left: 7rem; }
+
+.grid.grid-media-view-thumbs table.grid-data thead th, .grid.grid-media-view-small table.grid-data thead th {
+  overflow: visible; }
 
 .grid.grid-media-view-thumbs table.grid-data thead th:not(.grid-actions), .grid.grid-media-view-small table.grid-data thead th:not(.grid-actions) {
   display: none; }

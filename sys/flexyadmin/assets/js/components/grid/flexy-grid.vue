@@ -1087,7 +1087,7 @@ export default {
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                   <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                   <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
-                  <flexy-button v-if="gridType()!=='media' && multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
+                  <flexy-button v-if="type!=='mediapicker' && multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
 
                   <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                     <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort" />
