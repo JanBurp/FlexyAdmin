@@ -23,7 +23,7 @@
     <flexy-modal :options="state.modal"></flexy-modal>
     <div id="header" class="navbar navbar-fixed-top flex-row d-flex justify-content-between">
       <div class="navbar-brand navbar-collapse">
-        <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>"><span class="flexy-block btn btn-secondary">
+        <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>"><span class="flexy-block home-button btn btn-secondary">
           <span class="fa fa-home fa-lg"></span>
         </span></a>
         <flexy-blocks v-once href="<?=$base_url?>" text="<?=$str_title?>" class="hidden-md-down"></flexy-blocks>

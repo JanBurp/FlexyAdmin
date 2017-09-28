@@ -19,13 +19,14 @@ export default {
 </script>
 
 <template>
-  <a v-bind:href="href">
-    <span v-once v-for="char in chars" class="flexy-block btn btn-secondary" v-bind:class="char.css">{{char.char}}</span>
+  <a v-bind:href="href" class="flexy-block-container">
+    <span v-once v-for="char in chars" class="flexy-block btn btn-secondary" :title="text" v-bind:class="char.css">{{char.char}}</span>
   </a>
 </template>
 
 <style>
-  .flexy-block {text-transform:uppercase;margin-right:1px;}
+  .flexy-block-container {overflow: hidden;}
+  .flexy-block {text-transform:uppercase;float:left;margin-right:1px;margin-bottom:5px;}
   .flexy-block.text-lowercase {text-transform:lowercase;}
   .flexy-block.char-space {visibility:hidden;}
 </style>
