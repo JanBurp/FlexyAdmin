@@ -78,6 +78,7 @@ export default {
     toggleMedia : function(item) {
       var currentMedia = _.trim(this.media,'|').split('|');
       var newMedia = _.clone(currentMedia);
+      if (!this.multiple) newMedia = [];
       var exist = false;
       for (var i = newMedia.length - 1; i >= 0; i--) {
         if ( newMedia[i]==item ) {
