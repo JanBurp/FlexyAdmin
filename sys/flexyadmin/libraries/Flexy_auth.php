@@ -162,8 +162,8 @@ class Flexy_auth extends Ion_auth {
     $user_id    = el('id',$this->current_user);
     $logout     = parent::logout();
     if ($logout) {
-      $this->load->model('log_activity');
-      $this->log_activity->auth('logout',$user_id);
+      // $this->load->model('log_activity');
+      // $this->log_activity->auth('logout',$user_id);
       $logout = ! $this->logged_in();
     }
     return $logout;
