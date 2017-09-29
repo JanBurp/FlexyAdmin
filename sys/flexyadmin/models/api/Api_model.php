@@ -111,7 +111,6 @@ class Api_Model extends CI_Model {
       return $this->_result_status401();
     }
 
-    
     $this->load->model('plugin_handler');
     $this->plugin_handler->init_plugins();
   }
@@ -196,6 +195,12 @@ class Api_Model extends CI_Model {
    */
   protected function _result_ok() {
     log_message('info', 'API OK : '.array2json($this->args));
+    $this->load->model('log_activity');
+    $log_args = $this->args;
+    if (isset($log_args['_authorization'])) $log_args['_authorization'] = '...';
+    if (isset($log_args['password']))       $log_args['password'] = '***';
+    $this->log_activity->api($log_args,$this->flexy_auth->get_user(null,'id'));
+
 
     // Add settings
     if (el('settings',$this->args,false) and isset($this->args['table'])) {

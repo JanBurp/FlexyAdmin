@@ -15,17 +15,22 @@ class Stats {
     '_media',
     '_admin',
     '_rss',
+    '_api/assets_actions',
     '_api/auth',
-    '_api/table',
-    '_api/table_order',
+    '_api/schoolbase_auth',
+    '_api/get_admin_nav',
+    '_api/get_help',
+    '_api/get_image_list',
+    '_api/get_link_list',
+    '_api/get_plugin',
+    '_api/link_checker',
     '_api/media',
     '_api/row',
-    '_api/admin_nav',
-    '_api/image_list',
-    '_api/link_list',
-    '_api/plugin',
-    '_api/user',
+    '_api/table',
+    '_api/table_order',
+    '_api/tools',
     '_api/link_checker',
+    '_api/user',
   );
 
 	private $table;
@@ -64,8 +69,13 @@ class Stats {
 	public function add_uri($uri=NULL) {
 		if ($uri==NULL) $uri="";
 		// only insert page uri's (no images, css etc).
-		if (strpos($uri,'.')===FALSE) {
+		if (strpos($uri,'assets/')===FALSE and strpos($uri,'_media/')===FALSE and strpos($uri,'_media/')===FALSE) {
 			$AGENT=&load_class('User_agent', 'libraries');
+
+			// Remove authorization and passwords
+			$uri = preg_replace('/_authorization=(.*)&/u', '', $uri);
+			$uri = preg_replace('/_authorization=(.*)$/u', '', $uri);
+		
 			// only insert a known (mobile) browser
 			if ($AGENT->is_browser() or $AGENT->is_mobile()) {
 				$set=array();

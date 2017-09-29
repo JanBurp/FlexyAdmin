@@ -47,6 +47,10 @@ class Log_activity extends CI_Model {
     return $this->add('database',$activity,$model,$key);
   }
 
+  public function api($args,$user) {
+    return $this->add('api',array2json($args),$this->uri->uri_string(),$user);
+  }
+
   public function auth( $activity='', $user_id = FALSE ) {
     if (empty($activity)) $activity = 'login';
     return $this->add('auth',$activity,'','',$user_id);
