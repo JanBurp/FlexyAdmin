@@ -140,7 +140,8 @@ Class Core_cfg_users extends Data_Core {
    * @author Jan den Besten
    */
   public function get( $limit=0, $offset=0, $reset = true ) {
-    if ($this->user_id) {
+    
+    if ($this->user_id and $this->tm_as_grid) {
 
       // Als geen rechten om users aan te passen dan geen id_user_group tonen/aanpassen
       if ( !$this->allowed_to_edit_users ) {
