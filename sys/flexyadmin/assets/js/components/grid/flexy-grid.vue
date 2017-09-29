@@ -74,7 +74,7 @@ export default {
       this.findTerm = this.apiParts.filter;
     }
     var self = this;
-    // self.calcLimit(); // -> NIET MEER, zodat pagination uit kan
+    self.calcLimit(); // -> NIET MEER, zodat pagination uit kan
     
     // Bij resize
     var resizeTimer;
@@ -85,7 +85,11 @@ export default {
           self.reloadPageAfterResize();
         }
         else {
-          if (self.pagination) self.items.splice(self.apiParts.limit);
+          if (self.pagination) {
+            self.items.splice(self.apiParts.limit);
+            self.dataInfo.limit = self.apiParts.limit;
+            self.dataInfo.num_pages = Math.ceil(self.dataInfo.total_rows / self.dataInfo.limit);
+          }
         }
       }, 250);
     });
@@ -196,6 +200,7 @@ export default {
   methods:{
 
     reset : function() {
+      this.currentName       = '';
       this.pagination        = true;
       this.fields            = [];
       this.searchable_fields = [];
@@ -215,7 +220,7 @@ export default {
     
     calcLimit : function( view ) {
       // console.log('calcLimit',this.pagination);
-      if (!this.autoresize || !this.pagination) return false;
+      if (!this.autoresize) return false;
 
       // Sizes:
       var padding   = 8;
@@ -262,6 +267,7 @@ export default {
             new_limit += cols ;
             rows++;
           }
+          if (new_limit <= 1) new_limit = 1;
           break;
 
         case 'list':
@@ -273,16 +279,21 @@ export default {
             var step = (rows <= 10)?2:5;
             new_limit = Math.floor(rows / step) * step;
           }
+          if (new_limit <= 1) new_limit = 1;
       }
       
+      var changed = false;
       // Calc new offset
-      var new_offset = this.apiParts.offset;
-      if (this.apiParts.offset > 0) {
-        this.apiParts.offset = Math.floor( this.apiParts.offset / this.apiParts.limit) * this.apiParts.limit
+      var new_offset = 0;
+      if ( this.pagination ) {
+        new_offset = this.apiParts.offset;
+        if (this.apiParts.offset > 0) {
+          this.apiParts.offset = Math.floor( this.apiParts.offset / this.apiParts.limit) * this.apiParts.limit
+        }
+        // Reload needed?
+        changed = (new_limit > this.apiParts.limit || new_offset !== this.apiParts.offset);
       }
-      
-      // Reload needed?
-      var changed = (new_limit > this.apiParts.limit || new_offset !== this.apiParts.offset);
+      if (new_limit<0) new_limit = 0;
       this.apiParts.limit = new_limit;
       this.apiParts.offset = new_offset;
       return changed;
