@@ -85,7 +85,7 @@ class MY_Form_validation extends CI_Form_validation {
    */ 
   public function get_error_messages() {
     $messages=$this->_error_messages;
-    if (empty($messages) and !empty($this->_field_data)) {
+    if (!empty($this->_field_data)) {
       foreach ($this->_field_data as $key => $data) {
         if ($data['error']) {
           $messages[$key]=$data['error'];
