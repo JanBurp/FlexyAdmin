@@ -175,10 +175,9 @@ function array2json($arr) {
 			}
 		else {
 			$str = '';
-			if(!$is_list) $str = '"' . $key . '":';
+			if (!$is_list) $str = '"' . $key . '":';
 			
-			//Custom handling for multiple data types
-
+			// Custom handling for multiple data types:
       // Booleans
       if (in_array($prefix,array('b','is','has')) and (is_bool($value) or (is_numeric($value) and $value>=0 and $value<=1) or in_array($value,array('true','false'))) ) {
   			if ($value == false)
@@ -187,12 +186,21 @@ function array2json($arr) {
           $str.= 'true';       
       }
       // Numbers
-      elseif( is_numeric($value) and preg_match('/[^\d]/u',$value)===0 and (substr($value,0,1)!=='0' or $value==0)) $str.= $value;
-      // The booleans
-			elseif($value === false) $str.= 'false';
-			elseif($value === true) $str.= 'true';
+      elseif( is_numeric($value) and preg_match('/[^\d]/u',$value)===0 and (substr($value,0,1)!=='0' or $value==0)) {
+      	$str.= $value;
+      }
+      // Other booleans
+			elseif($value === false) {
+				$str.= 'false';
+			}
+			elseif($value === true) {
+				$str.= 'true';
+			}
       // Strings - Default
-      else $str.='"'.addcslashes ($value, '"'."\n\r".chr(92)).'"'; // All other things: escape double quotes, backslash and newlines
+      else {
+      	$value = preg_replace('/[\x00-\x1F\x7F]/u', '', $value);
+      	$str.='"'.addcslashes ($value, '"'."\n\r".chr(92)).'"'; // All other things: escape double quotes, backslash and newlines
+      }
 			$parts[] = $str;
 		}
 	}
