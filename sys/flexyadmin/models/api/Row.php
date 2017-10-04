@@ -177,7 +177,7 @@ class Row extends Api_Model {
    * @return void
    * @author Jan den Besten
    */
-  public function index() {
+  public function index($rights=RIGHTS_NO) {
     
     // Media?
     $is_media = (isset($this->args['path']) and $this->args['table']==='res_assets');
@@ -187,15 +187,16 @@ class Row extends Api_Model {
       $this->args['table'] = 'res_assets';
     }
 
-    // Check rechten
-    $rights = FALSE;
-    if ($is_media) {
-      $rights = $this->_has_rights('media_'.$this->args['path'], el('where',$this->args));
+    // Check rechten (als nog niet ingesteld)
+    if ( $rights===RIGHTS_NO ) {
+      if ($is_media) {
+        $rights = $this->_has_rights('media_'.$this->args['path'], el('where',$this->args));
+      }
+      else {
+        $rights = $this->_has_rights( $this->args['table'], el('where',$this->args));
+      }
+      if ( $rights===RIGHTS_NO ) return $this->_result_status401();
     }
-    else {
-      $rights = $this->_has_rights( $this->args['table'], el('where',$this->args));
-    }
-    if ( !$rights ) return $this->_result_status401();
     
     if ( !$this->has_args() ) {
       return $this->_result_wrong_args();
