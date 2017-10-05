@@ -198,7 +198,7 @@ function array2json($arr) {
 			}
       // Strings - Default
       else {
-      	$value = preg_replace('/[\x00-\x1F\x7F]/u', '', $value);
+      	$value = preg_replace('/[\x00-\x09\x0B-\x1F\x7F]/u', '', $value);
       	$str.='"'.addcslashes ($value, '"'."\n\r".chr(92)).'"'; // All other things: escape double quotes, backslash and newlines
       }
 			$parts[] = $str;
