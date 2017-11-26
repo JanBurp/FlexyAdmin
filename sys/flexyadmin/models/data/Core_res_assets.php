@@ -54,6 +54,7 @@ Class Core_res_assets extends Data_Core {
   
   
   public function __construct() {
+    $this->load->model('log_activity');
     $this->lang->load('update_delete');
     // Load assets config
     $this->autoset['assets'] = array();
@@ -283,9 +284,11 @@ Class Core_res_assets extends Data_Core {
 
 		if ($result) {
 			log_("info","[FM] delete file/dir '$name'");
+      $this->log_activity->media( $path,'deleted',$name );
 		}
 		else {
 			log_("info","[FM] ERROR deleting file/dir '$name'");
+      $this->log_activity->media( $path,'ERROR could not delete',$name );
 		}
 		return $result;
   }
@@ -331,10 +334,13 @@ Class Core_res_assets extends Data_Core {
 
     // Start upload
 		$this->upload->config($config);
+
+    $this->log_activity->media( array2json($config) .' '.array2json($_FILES) ,'start_upload',$path );
     if ( !$this->upload->upload_file( $file_field ) ) {
       $file = $this->upload->get_file();
 			$this->error_message = $this->upload->get_error();
 			log_("info","[FM] error while uploading: '$file' [$this->error_message]");
+      $this->log_activity->media( $this->error_message,'UPLOAD ERROR',$file );
       return false;
     }
     
@@ -346,6 +352,7 @@ Class Core_res_assets extends Data_Core {
       if (rename($folder.'/'.$file, $folder.'/'.$saveName));
     }
     $file = $saveName;
+    $this->log_activity->media( array2json($config),'upload success',$file );
 
     // Image? Check size
     if ( in_array(strtolower($ext),$this->config->item('FILE_types_img')) ) {
@@ -357,6 +364,7 @@ Class Core_res_assets extends Data_Core {
       if ( !$this->upload->check_size($path,$file,$path_settings) ) {
         $this->delete_file($path,$file);
         $this->error_message = langp('upload_img_too_small',$file, $path_settings['min_width'].' x '.$path_settings['min_height']);
+        $this->log_activity->media( $path .':'. array2json($path_settings),'upload_img_too_small',$file );
         return FALSE;
       }
 
@@ -364,6 +372,7 @@ Class Core_res_assets extends Data_Core {
       if ( !$this->upload->resize_image( $path,$file,$path_settings ) ) {
         $this->delete_file($path,$file);
         $this->error_message = langp('upload_resize_error',$file);
+        $this->log_activity->media( $path .':'. array2json($path_settings),'upload_resize_error',$file );
         return FALSE;
       }
 

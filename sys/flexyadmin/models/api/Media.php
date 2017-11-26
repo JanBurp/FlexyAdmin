@@ -266,7 +266,7 @@ class Media extends Api_Model {
 		$file = $this->assets->upload_file( $args['path'] );
     
     // Error
-    if ( !$file ) {
+    if ( $file===FALSE ) {
   		$error = $this->assets->get_error();
 			$this->_set_error( $error );
       return false;
