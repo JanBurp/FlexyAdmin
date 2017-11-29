@@ -141,20 +141,33 @@ class Search_replace extends CI_Model {
   /**
    * Vervangt alle bestandsnamen en afbeeldingen
    *
+   * @param string $path Map waar te vervangen bestand in zit
    * @param array $search Te zoeken bestandsnaam, of een array van meerdere te zoeken/vervangen bestanden
    * @param string $replace['']
    * @return array Resultaten
    * @author Jan den Besten
    */
-  public function media($search,$replace='') {
-    if (empty($search)) return FALSE;
+  public function media($path, $search,$replace='') {
+    if (empty($path) or empty($search)) return FALSE;
     $search = str_replace('.','\.',$search);
     if (empty($replace)) {
-      $search = array( '/<img.*src=\".*'.$search.'\".*>/uU', '/'.$search.'/uU');
+      $search = array(
+        '/<img.*src=\".*'.$path.'\/'.$search.'\".*>/uU',
+        '/^'.$search.'/uU',   // start van media veld
+        '/\|'.$search.'/uU',  // ergens in een medias veld
+      );
     }
     else {
-      $search  = array( '/<img(.*)src=\"(.*)'.$search.'\"(.*)>/uU', '/'.$search.'/uU' );
-      $replace = array( '<img$1src="$2'.$replace.'"$3>', $replace );
+      $search  = array(
+        '/<img(.*)src=\"(.*)'.$path.'\/'.$search.'\"(.*)>/uU',
+        '/^'.$search.'/uU',   // start van media veld
+        '/\|'.$search.'/uU',  // ergens in een medias veld
+      );
+      $replace = array(
+        '<img$1src="$2'.$path.'\/'.$replace.'"$3>',
+        $replace,
+        '|'.$replace,
+      );
     }
     
     return $this->replace_all($search,$replace, array_merge($this->field_types,$this->media_types), true );

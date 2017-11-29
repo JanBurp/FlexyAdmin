@@ -262,22 +262,6 @@ Class Core_res_assets extends Data_Core {
           }
   			}
 			
-        // /**
-        //  * Remove this file from other fields in data
-        //  */
-        //         $searchedFields=array();
-        //         // txt & media fields
-        //         $tables = $this->data->list_tables();
-        //         $tables = filter_by($tables,'tbl');
-        // foreach ($tables as $table) {
-        //   $fields = $this->data->table($table)->list_fields();
-        //   foreach ($fields as $field) {
-        //     $pre=get_prefix($field);
-        //     if ($pre=="txt") $searchedFields[]=$table.'.'.$field;
-        //             if ($pre=="media") $searchedFields[]=$table.'.'.$field;
-        //             if ($pre=="medias") $searchedFields[]=$table.'.'.$field;
-        //   }
-        //         }
         if (!defined('PHPUNIT_TEST')) $this->_remove_file_from_fields($path,$file);
       }      
     }
@@ -304,8 +288,7 @@ Class Core_res_assets extends Data_Core {
    */
   private function _remove_file_from_fields($path,$file) {
     $this->load->model('search_replace');
-    // $name = $path."/".$file;
-    $this->search_replace->media($file,'');
+    $this->search_replace->media($path,$file,'');
   }
   
   
