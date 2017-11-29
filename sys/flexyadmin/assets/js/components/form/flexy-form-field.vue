@@ -1,16 +1,16 @@
 <script>
 
 import flexyButton      from '../flexy-button.vue'
+import vselect           from '../../vue-strap-src/components/Select.vue'
 // import timepicker       from './timepicker.vue'
 // import datetimepicker   from './datetimepicker.vue'
 // import colorpicker      from './colorpicker.vue'
 // import mediapicker      from './mediapicker.vue'
-// import vselect           from '../../vue-strap-src/components/Select.vue'
 // import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyFormField',
-  components: {flexyButton},//,timepicker,datetimepicker,colorpicker,mediapicker,datepicker,vselect},
+  components: {flexyButton,vselect},//,timepicker,datetimepicker,colorpicker,mediapicker,datepicker,vselect},
   props:{
     'name':String,
     'type':{
@@ -51,11 +51,13 @@ export default {
 
   watch : {
     'value' : function() {
+      // console.log('value',this.internalValue);
       if (this.value!==this.internalValue) {
         this.initInternalValue(this.value);
       }
     },
     'internalValue' : function() {
+      // console.log('internalValue',this.internalValue);
       this.$emit('input',this.internalValue);
     },
   },
@@ -134,6 +136,10 @@ export default {
       return this.multiple;
     },
 
+    selectChange : function(event) {
+      this.internalValue = event;
+    },
+
     fileChange : function(event) {
       this.$emit('input',event);
     },
@@ -152,9 +158,14 @@ export default {
       <input v-if="type=='file'"      type="file"     class="form-control" :id="name" :name="name" @change="fileChange($event.target.files)" />
       <textarea v-if="type=='textarea'" class="form-control"          :id="name" :name="name" :placeholder="placeholder" v-model="internalValue"></textarea>
       <textarea v-if="type=='wysiwyg'"  class="form-control wysiwyg"  :id="name" :name="name" :placeholder="placeholder" :value="internalValue"></textarea>
-      <select v-if="type=='select'" class="form-control" :id="name" :name="name" v-model="internalValue" :multiple="isMultiple()">
+<!--       <select v-if="type=='select'" class="form-control" :id="name" :name="name" v-model="internalValue" :multiple="isMultiple()">
         <option v-for="option in options" :value="option.value" :selected="isSelected(option)">{{option.title||option.name}}</option>
       </select>
+ -->
+      <vselect v-if="type=='select'" :id="name" :name="name" :multiple="isMultiple()" :options="options" options-label="name" :value="internalValue" @change="selectChange($event)"></vselect>
+
+
+
     </div>
   </div>  
 </template>
