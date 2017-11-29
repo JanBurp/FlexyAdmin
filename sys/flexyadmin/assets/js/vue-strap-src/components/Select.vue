@@ -13,8 +13,11 @@
     </select>
     <ul class="dropdown-menu">
       <template v-if="list.length">
-        <li v-if="canSearch" class="search-item">
-          <input type="text" :placeholder="searchText||text.search" class="form-control" autocomplete="off" ref="search" v-model="searchValue" @keyup.esc="show = false" />
+        <li v-if="canSearch || multiple" class="search-item">
+          <flexy-button v-if="multiple" icon="check-square-o" class="btn-outline-default text-warning" @click.native="invertSelection()"/>
+          <input v-if="canSearch" type="text" :placeholder="searchText||text.search" class="form-control" autocomplete="off" ref="search" v-model="searchValue" @keyup.esc="show = false" />
+        </li>
+        <li v-if="multiple">
         </li>
         <li v-for="option in filteredOptions" :id="option[optionsValue]">
           <a @mousedown.prevent="select(option[optionsValue])">
@@ -221,6 +224,12 @@ export default {
         this.toggle()
       }
     },
+    invertSelection() {
+      var self = this;
+      for (var i = self.list.length - 1; i >= 0; i--) {
+        self.select(self.list[i].value);
+      }
+    },
     setOptions (options) {
       this.list = options.map(el => {
         if (el instanceof Object) { return el }
@@ -337,6 +346,19 @@ button>.close { margin-left: 5px;}
   margin-bottom: -4px;
 }
 .btn-group-justified .dropdown-menu { width: 100%; }
+
+.search-item {
+  width: 100%;
+  padding-bottom:0px!important;
+  margin-bottom:0px;
+  margin-top:2px;
+}
+.search-item input {
+  width: calc(100% - 35px);
+  margin-left:35px;
+  margin-top:-26px;
+  padding:2px 5px 0px;
+}
 
 
 
