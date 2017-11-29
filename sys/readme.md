@@ -13,7 +13,7 @@ First go to the `sys` folder before running these commands in terminal.
 
 ### Watch with autoreload
 
-`npm run develop`
+`npm run watch`
 
 ### Production build
 
