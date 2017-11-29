@@ -24,7 +24,7 @@ class ReplaceTest extends CITestCase {
     $this->assertEquals(3, count($found));
     
     // 2e situatie
-    $result = $this->CI->SR->media('test_01.jpg','test_11.jpg');
+    $result = $this->CI->SR->media('pictures','test_01.jpg','test_11.jpg');
 
     $this->CI->data->table('tbl_menu');
     $this->CI->data->find('test_01.jpg');
@@ -37,7 +37,7 @@ class ReplaceTest extends CITestCase {
     $this->assertEquals(3, count($found));
 
     // 3e situatie
-    $this->CI->SR->media('test_11.jpg','test_01.jpg');
+    $this->CI->SR->media('pictures','test_11.jpg','test_01.jpg');
     
     $this->CI->data->table('tbl_menu');
     $this->CI->data->find('test_01.jpg');
@@ -45,7 +45,7 @@ class ReplaceTest extends CITestCase {
     $this->assertEquals(3, count($found));
     
     // 4e situatie - verwijderd
-    $this->CI->SR->media('test_01.jpg','');
+    $this->CI->SR->media('pictures','test_01.jpg','');
 
     $this->CI->data->table('tbl_menu');
     $this->CI->data->find('test_01.jpg');
@@ -56,13 +56,9 @@ class ReplaceTest extends CITestCase {
     $this->CI->data->like('<img src="_media/pictures/test_01.jpg" alt="test_01" />');
     $found = $this->CI->data->get_result();
     $this->assertEquals(0, count($found));
-
-    
-
   }
   
-  public function test_links() {
-    
+  public function test_links() {  
     // Begin situatie
     $this->CI->data->table('tbl_menu');
     $this->CI->data->find('mailto:info@flexyadmin.com');
