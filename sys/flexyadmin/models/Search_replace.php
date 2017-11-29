@@ -164,7 +164,7 @@ class Search_replace extends CI_Model {
         '/\|'.$search.'/uU',  // ergens in een medias veld
       );
       $replace = array(
-        '<img$1src="$2'.$path.'\/'.$replace.'"$3>',
+        '<img$1src="$2'.$path.'/'.$replace.'"$3>',
         $replace,
         '|'.$replace,
       );
