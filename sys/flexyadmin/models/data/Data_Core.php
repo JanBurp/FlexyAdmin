@@ -1280,7 +1280,6 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-
     return $field_info;
   }
   
@@ -1366,6 +1365,7 @@ Class Data_Core extends CI_Model {
     $form_set['fieldsets'] = array_combine($fieldset_keys,$form_set['fieldsets']);
 
     // Relaties
+    xdebug_break();
     $form_set = $this->_complete_relations_of_set($form_set,'form_set');
 
     // Field info
@@ -1454,6 +1454,7 @@ Class Data_Core extends CI_Model {
                     $first_fieldset = current($first_fieldset);
                     $set['fieldsets'][$first_fieldset][] = $relation_field;
                   }
+                  if (!in_array($relation_field,$set['fields'])) $set['fields'][] = $relation_field;
                 }
               }
             }
