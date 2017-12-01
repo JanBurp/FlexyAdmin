@@ -3,18 +3,21 @@
     <button type="button" class="form-control dropdown-toggle" :disabled="disabled || !hasParent" :readonly="readonly" @click="toggle()" @keyup.esc="show = false">
       <span v-if="loading" class="btn-content">{{showPlaceholder}}</span>
       <span v-else class="btn-content">
+        <span v-show="multiple && selected.length>=2" class="selected-option selected-count">{{$lang.grid_total | replace(selected.length)}}</span>
         <select-option v-for="item in selected" :label="item" extra-class="selected-option"></select-option>
       </span>
       <!-- <span class="btn-content" v-html="loading ? text.loading : showPlaceholder || selected"></span> -->
       <span v-if="clearButton&&values.length" class="close" @click="clear()">&times;</span>
     </button>
+    
     <select ref="sel" v-model="val" v-show="show" :name="name" class="secret" :multiple="multiple" :required="required" :readonly="readonly" :disabled="disabled">
       <option v-for="option in list" :value="option[optionsValue]">{{ option[optionsLabel] }}</option>
     </select>
+    
     <ul class="dropdown-menu">
       <template v-if="list.length">
         <li v-if="canSearch || multiple" class="search-item">
-          <flexy-button v-if="multiple" icon="check-square-o" class="btn-outline-default text-warning" @click.native="invertSelection()"/>
+          <flexy-button v-if="multiple" icon="check-square-o" class="btn-outline-default" @click.native="invertSelection()"/>
           <input v-if="canSearch" type="text" :placeholder="searchText||text.search" class="form-control" autocomplete="off" ref="search" v-model="searchValue" @keyup.esc="show = false" />
         </li>
         <li v-if="multiple">
@@ -42,6 +45,7 @@ import ClickOutside     from '../directives/ClickOutside.js'
 import flexyButton      from '../../components/flexy-button.vue'
 import selectOption     from '../../components/form/select-option.vue'
 import jdb              from '../../jdb-tools.js'
+import flexyState       from '../../flexy-state.js'
 
 
 var timeout = {}
@@ -240,7 +244,7 @@ export default {
       })
       this.$emit('options', this.list)
     },
-    toggle () {
+    toggle (event) {
       this.show = !this.show
     },
     urlChanged () {
@@ -272,6 +276,11 @@ export default {
 button.form-control.dropdown-toggle{
   height: auto;
   padding-right: 24px;
+  max-height: 36px;
+  overflow:hidden;
+}
+.selected-count {
+  float:right!important;
 }
 button.form-control.dropdown-toggle:after{
   content: ' ';
@@ -349,15 +358,18 @@ button>.close { margin-left: 5px;}
 
 .search-item {
   width: 100%;
-  padding-bottom:0px!important;
+  padding-bottom:5px!important;
   margin-bottom:0px;
   margin-top:2px;
+  border-bottom:solid 1px;
 }
 .search-item input {
+  padding:2px 5px 0px;
+}
+.vselect.multiple .search-item input {
   width: calc(100% - 35px);
   margin-left:35px;
   margin-top:-26px;
-  padding:2px 5px 0px;
 }
 
 

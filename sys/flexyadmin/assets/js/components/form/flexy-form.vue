@@ -198,7 +198,13 @@ export default {
     },
         
     isType : function( type,field ) {
-      if (_.isUndefined(this.form_groups[field])) return false;
+      if (_.isUndefined(this.form_groups[field])) {
+        if (type==='default') {
+          console.error('FlexyAdmin error: No (existing) field type defined for `'+field+'`. Set to `default`.');
+          return true;
+        }
+        return false;
+      }
       if (type==='default') {
         return this.fieldTypes['default'].indexOf(this.form_groups[field]['type']) === -1;
       }
