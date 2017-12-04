@@ -4096,14 +4096,16 @@ Class Data_Core extends CI_Model {
       $other_table       = $this->settings['relations']['many_to_many'][$what]['other_table'];
       $this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
       $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
-      $as                = $this->settings['relations']['many_to_many'][$what]['result_name'];
-      // $sub_as            = '_'.$as.'_';
-      $sub_as            = $rel_table.'-'.$other_table;
+      $result_name       = $this->settings['relations']['many_to_many'][$what]['result_name'];
+      $join_name         = $rel_table;
+      if (isset($this->settings['relations']['many_to_many'][$what]['join_name'])) {
+        $join_name = $this->settings['relations']['many_to_many'][$what]['join_name'];
+      }
       // Select fields
-      $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
+      $this->_select_with_fields( 'many_to_many', $other_table, $result_name, $fields, '', $json );
       // Joins
-      $this->join( $rel_table.' AS '.$sub_as, $this_table.'.'.$id.' = '.$sub_as.".".$this_foreign_key, 'left');
-      $this->join( $other_table.' AS '.$as,   $sub_as.'.'.$other_foreign_key.' = '.$as.".".$id, 'left');
+      $this->join( $rel_table.' AS '.$join_name,     $this_table.'.'.$id.' = '.$join_name.".".$this_foreign_key, 'left');
+      $this->join( $other_table.' AS '.$result_name, $join_name.'.'.$other_foreign_key.' = '.$result_name.".".$id, 'left');
     }
     return $this;
   }
