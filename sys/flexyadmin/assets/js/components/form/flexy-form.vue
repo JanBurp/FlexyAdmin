@@ -80,7 +80,7 @@ export default {
       fieldsets        : {},
       validationErrors : {},
       isSaving         : false,
-      insertForm       : {},
+      subForm          : {},
     }
   },
   
@@ -242,6 +242,8 @@ export default {
     fieldOptions: function(field) {
       // console.log('fieldOptions',field);
       if (_.isUndefined(this.form_groups[field])) return [];
+      if (_.isUndefined(this.form_groups[field]._options)) return [];
+      if (_.isUndefined(this.form_groups[field]._options.data)) return [];
       var options = _.clone(this.form_groups[field]._options.data);
       if ( !_.isUndefined(this.form_groups[field]['dynamic']) && !_.isUndefined(this.form_groups[field]['dynamic']['options']) ) {
         var filter_field = this.form_groups[field]['dynamic']['options']['filter_by'];
@@ -386,33 +388,34 @@ export default {
       return value;
     },
     
-    toggleInsertForm : function(field) {
-      if (this.showInsertForm(field)) {
-        this.insertForm[field].show = false;
+    toggleSubForm : function(field,id) {
+      if (this.showSubForm(field)) {
+        this.subForm[field].show = false;
       }
       else {
-        this.$set(this.insertForm,field,{
+        this.$set(this.subForm,field,{
           show  : true,
-          field : field,
           table : this.form_groups[field]._options.table,
+          field : field,
+          id    : id,
         });
       }
     },
     
-    showInsertForm : function(field) {
+    showSubForm : function(field) {
       var show = false;
-      if ( !_.isUndefined(this.insertForm[field]) ) show = this.insertForm[field].show;
+      if ( !_.isUndefined(this.subForm[field]) ) show = this.subForm[field].show;
       return show;
     },
     
-    subForm : function(field,property) {
-      if ( _.isUndefined(this.insertForm[field]) ) return '';
-      return this.insertForm[field][property];
+    subFormData : function(field,property) {
+      if ( _.isUndefined(this.subForm[field]) ) return '';
+      return this.subForm[field][property];
     },
-    
+
     subFormAdded : function(field,event) {
       var self = this;
-      self.insertForm[field].show = false;
+      self.subForm[field].show = false;
       flexyState.api({
         // TODO: alleen opties van dit veld wellicht?
         url : 'table?table='+self.name+'&as_options=true',
@@ -421,7 +424,7 @@ export default {
         if (!_.isUndefined(response.data)) {
           // Vervang de opties
           self.form_groups[field]._options = response.data.data[field];
-          // Selecteer zojuist toegevoegde item
+          // Selecteer zojuist toegevoegde/aangepaste item
           self.addToSelect(field,event);
           self.$emit('formclose');
         }
@@ -450,26 +453,31 @@ export default {
         if (promise) {
           promise.then(function (response) {
             if (!response.error) {
-              self.cancel();
+              if (self.formtype=='subform') {
+                self.$emit('added',response.data.data.id);
+              }
+              else {
+                self.cancel();
+              }
             }
           })
         }
       }
     },
     
-    add : function() {
-      var self=this;
-      if (!this.isSaving) {
-        var promise = self.postForm();
-        if ( typeof(promise.then)=='function') {
-          promise.then(function (response) {
-            if (!response.error) {
-              self.$emit('added',response.data.data.id);
-            }
-          })
-        }
-      }
-    },
+    // add : function() {
+    //   var self=this;
+    //   if (!this.isSaving) {
+    //     var promise = self.postForm();
+    //     if ( typeof(promise.then)=='function') {
+    //       promise.then(function (response) {
+    //         if (!response.error) {
+    //           self.$emit('added',response.data.data.id);
+    //         }
+    //       })
+    //     }
+    //   }
+    // },
     
     save : function() {
       if (!this.isSaving) {
@@ -696,13 +704,9 @@ export default {
           value = currentSelection;
         }
         else {
-          // Als al bestaat, dan juist verwijderen
+          // Alleen toevoegen als nog niet bestaat
           var exists = jdb.indexOfProperty(currentSelection,'id',value);
-          if (exists!==false) {
-            // Verwijderen
-            delete currentSelection[exists];
-          }
-          else {
+          if (!exists) {
             // Toevoegen
             currentSelection.push({'id':value});
           }
@@ -729,10 +733,10 @@ export default {
     <h1>{{uiTitle}}</h1>
     <div>
       <flexy-button v-if="formtype!=='single'"                 @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
-      <flexy-button v-if="formtype!=='subform' && action===''" @click.native="save()"  icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-warning"/>
-      <flexy-button v-if="action !==''"                        @click.native="save()" :text="$lang.submit" :disabled="isSaving" class="btn-outline-info"/>
+      <flexy-button v-if="formtype!=='subform' && action===''" @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving" class="btn-outline-warning"/>
+      <flexy-button v-if="action !==''"                        @click.native="save()"   :text="$lang.submit" :disabled="isSaving" class="btn-outline-info"/>
       <flexy-button v-if="formtype==='normal'"                 @click.native="submit()" icon="level-down fa-rotate-90" :text="$lang.submit" :disabled="isSaving" class="btn-outline-info"/>
-      <flexy-button v-if="formtype==='subform'"                @click.native="add()" :text="$lang.add" :disabled="isSaving" class="btn-outline-warning"/>
+      <flexy-button v-if="formtype==='subform'"                @click.native="submit()" :text="$lang.submit" :disabled="isSaving" class="btn-outline-warning"/>
     </div>
   </div>
 
@@ -797,7 +801,8 @@ export default {
                     @change="updateSelect(field,$event)"
                     :insert="hasInsertRights(field)"
                     :insertText="$lang.add_item | replace(label(field))"
-                    @insert="toggleInsertForm(field)"
+                    @insert="toggleSubForm(field)"
+                    @update="toggleSubForm(field,$event)"
                     >
                   </vselect>
                 </template>
@@ -826,15 +831,14 @@ export default {
                   <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="" @keyup.enter="submit">
                 </template>
 
-                <div v-if="showInsertForm(field)">
-                  <flexy-form :title="$lang.add_item | replace(label(field))" :name="subForm(field,'table')" :primary="-1" formtype="subform" @added="subFormAdded(field,$event)" @formclose="toggleInsertForm(field)"></flexy-form>
+                <div v-if="showSubForm(field)">
+                  <flexy-form :title="$lang.add_item | replace(label(field))" :name="subFormData(field,'table')" :primary="subFormData(field,'id')" formtype="subform" @added="subFormAdded(field,$event)" @formclose="toggleSubForm(field)"></flexy-form>
                 </div>
-
 
               </div>
               
               <!-- <div class="col-md-1" v-if="hasInsertRights(field)">
-                <flexy-button @click.native="toggleInsertForm(field)" :icon="{'plus':!showInsertForm(field),'chevron-up':showInsertForm(field)}" class="btn-outline-warning" />
+                <flexy-button @click.native="toggleSubForm(field)" :icon="{'plus':!showSubForm(field),'chevron-up':showSubForm(field)}" class="btn-outline-warning" />
               </div> -->
             </div>
             
