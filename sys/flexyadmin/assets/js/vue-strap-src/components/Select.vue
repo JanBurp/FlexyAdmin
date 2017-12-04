@@ -20,13 +20,10 @@
           <flexy-button v-if="multiple" icon="check-square-o" class="btn-outline-default" @click.native="invertSelection()"/>
           <input v-if="canSearch" type="text" :placeholder="searchText||text.search" class="form-control" autocomplete="off" ref="search" v-model="searchValue" @keyup.esc="show = false" />
         </li>
-        <li v-if="multiple">
-        </li>
         <li v-for="option in filteredOptions" :id="option[optionsValue]">
-          <a @mousedown.prevent="select(option[optionsValue])">
-            <flexy-button :icon="{'check-square-o':isSelected(option[optionsValue]),'square-o':!isSelected(option[optionsValue])}" class="btn-outline-default"/>
-            <select-option :label="option[optionsLabel]"></select-option>
-          </a>
+          <flexy-button :icon="{'check-square-o':isSelected(option[optionsValue]),'square-o':!isSelected(option[optionsValue])}" class="btn-outline-default" @click.native="select(option[optionsValue])" />
+          <flexy-button v-if="insert" icon="pencil" class="btn-outline-warning" @click.native="startEdit(option)" />
+          <select-option :label="option[optionsLabel]" @dblclick.native="startEdit(option)"></select-option>
         </li>
         <li v-if="insert" class="insert-item">
           <flexy-button @click.native="clickInsert()" icon="plus" class="btn-outline-warning" />{{insertText}}
@@ -84,6 +81,7 @@ export default {
       loading: null,
       searchValue: null,
       show: false,
+      editing:false,
       notify: false,
       val: null,
       valid: null
@@ -264,9 +262,32 @@ export default {
       return !this.required ? true : this.val instanceof Array ? this.val.length > 0 : this.val !== null
     },
     clickInsert: function() {
-      this.show = false;
-      this.$emit('insert', true);
+      if (this.insert) {
+        this.show = false;
+        this.$emit('insert', true);
+      }
     },
+    startEdit: function(item) {
+      if (this.insert) {
+        this.editing = item.value;
+        this.show = false;
+        this.$emit('update', item.value );
+      }
+    },
+    // cancelEdit: function(item) {
+    //   console.log('cancelEdit',item.name,item.value);
+    //   this.editing = false;
+    // },
+    // updateItem: function(event,item) {
+    //   this.editing = false;
+    //   if (item.value!==event.target.value) {
+    //     var newItem = {
+    //       'value' : item.value,
+    //       'name'  : event.target.value, 
+    //     }
+    //     this.$emit('update', newItem );
+    //   }
+    // },
   },
 
 }
@@ -371,7 +392,12 @@ button>.close { margin-left: 5px;}
   margin-left:35px;
   margin-top:-26px;
 }
-
+/*.input-option {
+  display: inline-block;
+  width: auto;
+  padding: 3px 4px 0px;
+}
+*/
 
 
 </style>
