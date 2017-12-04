@@ -13,10 +13,6 @@ class DebugTest extends CITestCase {
   );
   
   private $excludedFiles = array(
-    'sys/flexyadmin/models/Cronjob.php',
-    'sys/flexyadmin/tests/commit/CodeTest.php',
-    'sys/flexyadmin/controllers/_admin/Test.php',
-    'sys/flexyadmin/helpers/debug_helper.php'
   );
 
 
@@ -27,7 +23,8 @@ class DebugTest extends CITestCase {
    * @author Jan den Besten
    */
   public function test_debug_code() {
-    $files=scan_map('site','php',true);
+    $files=scan_map('../site','php',true);
+    $this->assertNotEmpty($files,'No code found to test. ('.__DIR__.')');
     foreach ($files as $file) {
       if (!in_array($file,$this->excludedFiles) and !has_string($this->excludedFolders,$file)) {
         $lines=file($file);

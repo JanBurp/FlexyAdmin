@@ -1365,7 +1365,6 @@ Class Data_Core extends CI_Model {
     $form_set['fieldsets'] = array_combine($fieldset_keys,$form_set['fieldsets']);
 
     // Relaties
-    xdebug_break();
     $form_set = $this->_complete_relations_of_set($form_set,'form_set');
 
     // Field info
