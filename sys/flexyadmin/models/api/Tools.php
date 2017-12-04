@@ -74,7 +74,7 @@ class Tools extends Api_Model {
     foreach ($tables as $table) {
       $tables_as_options[] = array(
         'value' => $table,
-        'title' => $table,
+        'name'  => $table,
       );
     }
 

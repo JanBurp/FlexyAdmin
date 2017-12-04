@@ -23,10 +23,10 @@ export default {
       var tables = response.data.data.tables;
       self.filename = response.data.data.filename;
       var types = [
-        { 'value':'complete',    'title':'Complete Export     (without Session data)' },
-        { 'value':'all',         'title':'All Export          (without Session & Log data)' },
-        { 'value':'data',        'title':'Data Only Export    (without Session,Logs & Config)' },
-        { 'value':'select',      'title':'Select              (select tables)' },
+        { 'value':'complete',    'name':'Complete Export     (without Session data)' },
+        { 'value':'all',         'name':'All Export          (without Session & Log data)' },
+        { 'value':'data',        'name':'Data Only Export    (without Session,Logs & Config)' },
+        { 'value':'select',      'name':'Select              (select tables)' },
       ];
       var fields = {
         'type'    : { 'label':'Wat',    'type':'select', 'options':types,  'value':'data' },
