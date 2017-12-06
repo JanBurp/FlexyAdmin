@@ -495,7 +495,7 @@ Class Core_tbl_menu extends Data_Core {
   private function _add_menu_from_model($item) {
     $method = get_suffix($item['model'],'.');
     $model = get_prefix($item['model'],'.');
-    $this->load->model($model,'model');
+    $this->load->model($model,$model);
     
     // Places
     $this->data->table('tbl_menu');
@@ -504,7 +504,7 @@ Class Core_tbl_menu extends Data_Core {
     // Get and Add items
     foreach ($places as $place) {
       $nr=1;
-      $items = $this->model->$method($item,$place);
+      $items = $this->$model->$method($item,$place);
       if ($place['pre_uri']) {
         foreach ($items as $key => $row) {
           unset($items[$key]);
