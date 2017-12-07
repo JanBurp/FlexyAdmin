@@ -39,22 +39,6 @@ class Vueform {
     // defaults
     if (empty($this->settings['action'])) $this->settings['action'] = $this->CI->uri->uri_string();
     if (empty($this->settings['title']))  $this->settings['title']  = $this->settings['name'];
-    // _options
-    foreach ($this->settings['fields'] as $field => $info) {
-      if (isset($info['options'])) {
-        $_options = array(
-          'data'      => array(),
-          'multiple'  => el('multiple',$info,''),
-        );
-        foreach ($info['options'] as $value => $name) {
-          $_options['data'][] = array(
-            'value' => $value,
-            'name'  => $name,
-          );
-        }
-        $this->settings['fields'][$field]['_options'] = $_options;
-      }
-    }
     return $this;
 	}
   

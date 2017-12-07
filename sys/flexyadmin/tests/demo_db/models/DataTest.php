@@ -75,10 +75,10 @@ class DataTest extends CITestCase {
     $this->assertEquals( array(), $form_set['with'] );
     $this->assertEquals( 'select', $form_set['field_info']['str_module']['type'] );
     $this->assertEquals( 'media', $form_set['field_info']['medias_fotos']['type'] );
-    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['_options']);
-    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['_options']['data']);
-    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['_options']);
-    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['_options']['data']);
+    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['options']);
+    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['options']['data']);
+    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['options']);
+    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['options']['data']);
     $this->assertEquals( 'pictures', $grid_set['field_info']['medias_fotos']['path'] );
   }
 
