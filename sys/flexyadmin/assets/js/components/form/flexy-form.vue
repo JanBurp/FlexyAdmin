@@ -214,8 +214,8 @@ export default {
     isMultiple : function( field ) {
       var multiple = false;
       if (_.isUndefined(this.form_groups[field])) return false;
-      if (_.isUndefined(this.form_groups[field]._options)) return false;
-      if (this.form_groups[field]._options.multiple || this.form_groups[field].multiple) multiple='multiple';
+      if (_.isUndefined(this.form_groups[field].options)) return false;
+      if (this.form_groups[field].options.multiple) multiple='multiple';
       if (flexyState.debug) console.log('isMultiple',field,multiple);
       return multiple;
     },
@@ -242,9 +242,9 @@ export default {
     fieldOptions: function(field) {
       // console.log('fieldOptions',field);
       if (_.isUndefined(this.form_groups[field])) return [];
-      if (_.isUndefined(this.form_groups[field]._options)) return [];
-      if (_.isUndefined(this.form_groups[field]._options.data)) return [];
-      var options = _.clone(this.form_groups[field]._options.data);
+      if (_.isUndefined(this.form_groups[field].options)) return [];
+      if (_.isUndefined(this.form_groups[field].options.data)) return [];
+      var options = _.clone(this.form_groups[field].options.data);
       if ( !_.isUndefined(this.form_groups[field]['dynamic']) && !_.isUndefined(this.form_groups[field]['dynamic']['options']) ) {
         var filter_field = this.form_groups[field]['dynamic']['options']['filter_by'];
         var filter = this.row[filter_field];
@@ -306,9 +306,9 @@ export default {
     
     hasInsertRights : function(field) {
       if ( _.isUndefined(this.form_groups[field]) ) return false;
-      if ( _.isUndefined(this.form_groups[field]._options) ) return false;
-      if ( _.isUndefined(this.form_groups[field]._options.insert_rights) ) return false;
-      var rights = this.form_groups[field]._options.insert_rights;
+      if ( _.isUndefined(this.form_groups[field].options) ) return false;
+      if ( _.isUndefined(this.form_groups[field].options.insert_rights) ) return false;
+      var rights = this.form_groups[field].options.insert_rights;
       return (rights===true || rights>=2);
     },
     
@@ -395,7 +395,7 @@ export default {
       else {
         this.$set(this.subForm,field,{
           show  : true,
-          table : this.form_groups[field]._options.table,
+          table : this.form_groups[field].options.table,
           field : field,
           id    : id,
         });
@@ -423,7 +423,7 @@ export default {
       .then(function(response){
         if (!_.isUndefined(response.data)) {
           // Vervang de opties
-          self.form_groups[field]._options = response.data.data[field];
+          self.form_groups[field].options = response.data.data[field];
           // Selecteer zojuist toegevoegde/aangepaste item
           self.addToSelect(field,event);
           self.$emit('formclose');

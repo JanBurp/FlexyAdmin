@@ -1255,15 +1255,10 @@ Class Data_Core extends CI_Model {
           $info['type'] = 'media';
           unset($options['path']);
         }
-        $options = array_keep_keys($options,array('table','data','multiple','api','insert_rights'));
-        $info['_options'] = $options;
         if ($include_options) {
-          $select_options = el('data',$options);
-          if ($select_options) {
-            $select_options = array_column($select_options,'name','value');
-            $info['options']  = $select_options;
-            $info['multiple'] = el('multiple',$options,FALSE)?'multiple':'';
-          }
+          $options = array_keep_keys($options,array('table','data','multiple','api','insert_rights'));
+          $options['multiple'] = el('multiple',$options,FALSE)?'multiple':'';
+          $info['options'] = $options;
         }
       }
       $field_info[$field] = $info;
