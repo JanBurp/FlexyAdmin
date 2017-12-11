@@ -140,6 +140,8 @@ class Plugin_move_site extends Plugin {
               // Create the missing fields
               $field_info = $this->oldDB->field_data( $table );
               $field_info = object2array($field_info);
+              $names      = array_column($field_info,'name');
+              $field_info = array_combine($names, $field_info);
               $field_info = array_keep_keys($field_info,$missing_fields);
               // Create the fields
               foreach ($field_info as $name => $info) {
@@ -150,8 +152,8 @@ class Plugin_move_site extends Plugin {
               }
             }
           }
-          $data = $this->oldDB->get_result($table);
-          foreach ($data as $id => $row) {
+          $data = $this->oldDB->get($table)->result_array();
+          foreach ($data as $row) {
             $this->CI->db->set($row);
             $this->CI->db->insert( $table );
           }
@@ -183,7 +185,7 @@ class Plugin_move_site extends Plugin {
     $paths=$this->config['empty'];
     $ul=array();
     foreach ($paths as $path) {
-      $map=$this->new.$path;
+      $map = $this->CI->config->item('ASSETSFOLDER').$path;
       empty_map($map);
       $ul[]=str_replace($this->new,'',$map);
     }
@@ -199,40 +201,45 @@ class Plugin_move_site extends Plugin {
    * @author Jan den Besten
    */
   private function move() {
-    $paths=$this->config['move'];
+    $move_paths = $this->config['move'];
     $moved=array();
     $error=array();
-    foreach ($paths as $path) {
-      $old=$this->old.$path;
-      $new=$this->new.$path;
+    foreach ($move_paths as $type => $paths) {
+      foreach ($paths as $path) {
+        $old = $this->old.'site/assets/'.$path;
+        $new = $this->CI->config->item('ASSETSFOLDER').$path;
+        if ($type=='public') {
+          $new = $this->CI->config->item('PUBLICASSETS').$path;
+        }
 
-      // Collect files
-      $move_files=array();
-      if (is_dir($old)) {
-        // Files in (sub)folder
-        $files=read_map($old,'',TRUE,FALSE,FALSE,FALSE);
-        foreach ($files as $file) {
-          if (is_file($file['path'])) {
-            $full_name=str_replace($old,'',$file['path']);
-            $move_files[$old.$full_name] = $new.$full_name;
+        // Collect files
+        $move_files=array();
+        if (is_dir($old)) {
+          // Files in (sub)folder
+          $files=read_map($old,'',TRUE,FALSE,FALSE,FALSE);
+          foreach ($files as $file) {
+            if (is_file($file['path'])) {
+              $full_name=str_replace($old,'',$file['path']);
+              $move_files[$old.$full_name] = $new.$full_name;
+            }
           }
         }
-      }
-      else {
-        // File
-        $move_files[$old]=$new;
-      }
-      
-      // Move them
-      foreach ($move_files as $from => $to) {
-        $li=str_replace($this->new,'',$to);
-        $dir=remove_suffix($to,'/');
-        if (!file_exists($dir)) mkdir($dir,0777,true);
-        if (file_exists($from) and copy($from,$to)) {
-          $moved[]=$li;
-        }
         else {
-          $error[]='<span class="error">'.$li.'</span>';
+          // File
+          $move_files[$old]=$new;
+        }
+        
+        // Move them
+        foreach ($move_files as $from => $to) {
+          $li=str_replace($this->new,'',$to);
+          $dir=remove_suffix($to,'/');
+          if (!file_exists($dir)) mkdir($dir,0777,true);
+          if (file_exists($from) and copy($from,$to)) {
+            $moved[]=$li;
+          }
+          else {
+            $error[]='<span class="error">'.$li.'</span>';
+          }
         }
       }
     }
@@ -258,8 +265,8 @@ class Plugin_move_site extends Plugin {
     $replaced=array();
     $error=array();
     foreach ($paths as $path) {
-      $old=$this->old.$path;
-      $new=$this->new.$path;
+      $old = $this->old.'site/'.$path;
+      $new = $this->new.'site/'.$path;
 
       // Collect files
       $move_files=array();

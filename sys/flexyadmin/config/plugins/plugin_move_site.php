@@ -24,16 +24,15 @@ $config['new'] = '';
 $config['db'] = 'import'; // set this group in config/database_local.php
 
 $config['truncate_demo_tables'] = array(
+  'log_login_attempts',
   'log_activity',
   'log_stats',
   'res_assets',
-  'res_menu_result',
   'tbl_links',
   'tbl_menu',
 );
 
 $config['merge_tables'] = array(
-  // 'cfg_auto_menu',
   // 'cfg_user_groups',
   // 'cfg_users',
 );
@@ -42,37 +41,41 @@ $config['merge_and_complete_tables'] = array(
   'tbl_menu',
   'tbl_links',
   'tbl_site',
-  // 'res_menu_result',
 );
-
 
 
 // Paths to clean before move new content in
 $config['empty'] = array(
-  SITEPATH.'assets/_thumbcache',
-  SITEPATH.'assets/pictures',
-  SITEPATH.'assets/downloads',
-  SITEPATH.'assets/img',
+  '_tmp',
+  '_thumbcache',
+  'pictures',
+  'downloads',
+  'img',
 );
 
 // Paths & files  to move
 $config['move'] = array(
-  SITEPATH.'assets/js',
-  SITEPATH.'assets/img',
-  SITEPATH.'assets/css',
-  SITEPATH.'assets/less-bootstrap',
-  SITEPATH.'assets/less-default',
-  SITEPATH.'assets/pictures',
-  SITEPATH.'assets/downloads',
+  'public' => array(
+    'js',
+    'img',
+    'css',
+    'less-bootstrap',
+    'less-default',
+  ),
+  'private' => array(
+    'pictures',
+    'downloads',
+  ),
 );
+
 
 // Paths & files to merge (keep newest)
 $config['merge'] = array(
-  SITEPATH.'views/',
-  SITEPATH.'libraries/',
-  SITEPATH.'models/',
-  SITEPATH.'helpers/',
-  SITEPATH.'config/',
+  'views/',
+  'libraries/',
+  'models/',
+  'helpers/',
+  'config/',
 );
 
 
