@@ -224,7 +224,10 @@ export default {
       var selected = '';
       if (typeof(value)!=='object') {
         if (typeof(value)==='string') {
-          if (value.indexOf(option)>=0) selected='selected';
+          value = value.split('|');
+          for (var i = 0; i < value.length; i++) {
+            if (value[i]==option) selected='selected';
+          }
         }
         else {
           if (parseInt(value)===option || value===option) selected='selected';
@@ -691,17 +694,18 @@ export default {
       if ( this.isMultiple(field) ) {
         var currentSelection = this.row[field];
         if ( typeof(currentSelection)==='string' ) {
+          currentSelection = currentSelection.split('|');
           // Als bestaat: verwijderen
           var exists = currentSelection.indexOf(value);
           if (exists>=0) {
-            currentSelection = currentSelection.replace(value,'');
+            currentSelection.splice(exists,1);
           }
           else {
-            currentSelection += '|'+value;
+            currentSelection.push(value);
           }
-          currentSelection = currentSelection.replace(/\|+/, '|');
-          currentSelection = _.trim(currentSelection,'|');
-          value = currentSelection;
+          value = currentSelection.join('|');
+          value = value.replace(/\|+/, '|');
+          value = _.trim(value,'|');
         }
         else {
           // Alleen toevoegen als nog niet bestaat
@@ -710,8 +714,8 @@ export default {
             // Toevoegen
             currentSelection.push({'id':value});
           }
+          value = currentSelection;
         }
-        value = currentSelection;
       }
       this.updateField(field,value);
     },
@@ -818,7 +822,6 @@ export default {
                               :name="field"
                               :type="isMultiple(field)?'checkbox':'radio'"
                               :checked="isSelectedOption(field,row[field],option.value)"
-                              
                               >
                       {{selectItem(option.name)}}
                       </label>
