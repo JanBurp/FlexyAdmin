@@ -54,7 +54,7 @@
 					$error = '';
 					foreach ($lines as $key => $line) {
 						if (is_sql($line)) {
-							$lines[$key] = '<pre><code>'.highlight_code(nice_sql($line)).'</code></pre>';
+							$lines[$key] = '<pre><code>'.nice_sql($line).'</code></pre>';
 						}
 						$error.= '<p>'.$lines[$key].'</p>';
 					}
