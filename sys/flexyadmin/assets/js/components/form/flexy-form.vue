@@ -108,6 +108,21 @@ export default {
         if (!_.isUndefined(this.fields[field].validation_error)) {
           this.$set( this.validationErrors, field, this.fields[field].validation_error );
         }
+        // options in name->value pairs
+        if (!_.isUndefined(this.form_groups[field].options)) {
+          var options = this.form_groups[field].options;
+          var optionsArray = [];
+          Object.keys(options).forEach(function(key) {
+            if (_.isUndefined(options[key].name)) {
+              optionsArray.push({name:options[key],value:key});
+            }
+            else {
+              optionsArray.push(options[key]);  
+            }
+          });
+          this.form_groups[field].options = {};
+          this.form_groups[field].options.data = optionsArray;
+        }
       }
       this.createWysiwyg();
     }
@@ -136,8 +151,6 @@ export default {
               // Zijn er settings meegekomen?
               if ( !_.isUndefined(response.data.settings) ) {
                 self.uiTitle      = response.data.settings.form_set.title;
-                // self.form_groups  = response.data.settings.form_set.field_info;
-                // self.fieldsets    = response.data.settings.form_set.fieldsets;
                 self.form_groups  = Object.assign({},response.data.settings.form_set.field_info);
                 self.fieldsets    = Object.assign({},response.data.settings.form_set.fieldsets);
               }
