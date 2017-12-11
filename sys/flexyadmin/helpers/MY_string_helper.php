@@ -597,6 +597,21 @@ function restore_tags($input) {
 	return $input;
 }
 
+
+/**
+ * Zorg ervoor dat de tekst altijd met HTML tags is ingesloten (standaard <p>)
+ *
+ * @param      string  $text     text
+ * @param      string  $wrapper  Tag (DEFAULT <p>)
+ * @return     string  string
+ * @author Jan den Besten
+ */
+function must_be_html($text,$wrapper='<p>') {
+  $replace = $wrapper.'$0'.str_replace('<','</',$wrapper);
+  $text = preg_replace('/^[^<].*/ui', $replace, $text);
+  return $text;
+}
+
 /**
  * Test of string heeft letters
  *
