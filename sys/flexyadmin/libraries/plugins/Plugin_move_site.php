@@ -197,7 +197,7 @@ class Plugin_move_site extends Plugin {
           // $data['fields'] = $fields;
           if ($table_info['str_order_by'])            $data['order_by'] = $table_info['str_order_by'];
           if ($table_info['int_max_rows']>0)          $data['max_rows'] = $table_info['int_max_rows'];
-          if ($table_info['str_abstract_fields'])     $data['abstract_fields'] = $table_info['str_abstract_fields'];
+          if ($table_info['str_abstract_fields'])     $data['abstract_fields'] = explode(',',$table_info['str_abstract_fields']);
           if ($table_info['b_freeze_uris'])           $data['update_uris'] = FALSE;
 
           $grid_set = array(
@@ -388,7 +388,7 @@ class Plugin_move_site extends Plugin {
     $error=array();
     foreach ($paths as $path) {
       $old = $this->old.'site/'.$path;
-      $new = $this->new.'site/'.$path;
+      $new = '../site/'.$path;
 
       // Collect files
       $move_files=array();
