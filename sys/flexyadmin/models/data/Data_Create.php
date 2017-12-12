@@ -139,6 +139,7 @@ Class Data_Create extends CI_Model {
     // Remove all comments from config_template
     $config_template = preg_replace("~/\*\*.*\/\n~uUs", "", $config_template);
     // All data to template and save this table model
+    $replace['NAME'] = $name;
     $replace['DATE'] = date('D j F Y, H:i');
     
     $config = $this->replace_config($config_template,$config);
@@ -159,8 +160,13 @@ Class Data_Create extends CI_Model {
    */
   private function replace_config( $template, $config ) {
     foreach ($config as $key => $value) {
-      $value = $this->value_to_string($value);
-      $template = preg_replace("/(config\['".$key."']\s?).*;/um", "$1= ".$value.";", $template);
+      if (is_null($value) or $value=='NULL' or $value==='') {
+        $template = preg_replace("/(.config\['".$key."']\s?).*;\n*/um", '', $template);
+      }
+      else {
+        $value = $this->value_to_string($value);
+        $template = preg_replace("/(config\['".$key."']\s?).*;/um", "$1= ".$value.";", $template);
+      }
     }
     return $template;
   }

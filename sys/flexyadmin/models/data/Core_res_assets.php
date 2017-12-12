@@ -97,6 +97,33 @@ Class Core_res_assets extends Data_Core {
     }
     return $assets;
   }
+
+  /**
+   * Haalt assets uit (oude) database tabellen
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function _create_assets_settings($old=FALSE, $DB = NULL) {
+    if ($DB===NULL) $DB = $this->db;
+    $info = $DB->select('`path`,`str_types` AS `types`,`b_encrypt_name` AS `encrypt_name`,`fields_media_fields` AS `media_fields`,`str_autofill` AS `autofill`,`fields_autofill_fields` AS `autofill_fields`,`b_in_link_list` AS `in_link_list`,`b_user_restricted` AS `user_restricted`,`b_serve_restricted` AS `serve_restricted`')->get('cfg_media_info')->result_array();
+
+    $assets = array();
+    foreach ($info as $path_info) {
+      $path = $path_info['path'];
+      unset($path_info['path']);
+
+      $img_info = $DB->select('`int_min_width` AS `min_width`,`int_min_height` AS `min_height`,`b_resize_img` AS `resize_img`,`int_img_width` AS `img_width`,`int_img_height` AS `img_height`,`b_create_1` AS `create_1`,`int_width_1` AS `width_1`,`int_height_1` AS `height_1`,`str_prefix_1` AS `prefix_1`,`str_suffix_1` AS `suffix_1`,`b_create_2` AS `create_2`,`int_width_2` AS `width_2`,`int_height_2` AS `height_2`,`str_prefix_2` AS `prefix_2`,`str_suffix_2` AS `suffix_2`')->where('path',$path)->get('cfg_img_info');
+      if ($img_info) {
+        $img_info = $img_info->row_array();
+        if (is_array($img_info)) $path_info = array_merge($path_info,$img_info);
+      }
+      $assets[$path] = $path_info;
+    }
+
+    $this->load->model('data/data_create');
+    $this->data_create->save_config( 'assets', $this->config->item('SYS').'flexyadmin/config/assets.php', $this->config->item('SITE').'config/assets.php', array('assets'=>$assets) );
+  }
   
   /**
    * Stel de assets map in

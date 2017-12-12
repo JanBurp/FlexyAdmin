@@ -38,11 +38,12 @@ class Plugin_move_site extends Plugin {
     $this->add_message('<pre><strong>New site: </strong> '.$this->new.'</pre>');
 
     // Actions
-    if (file_exists($this->old) and file_exists($this->new)) {
-      $this->empty_paths();
-      $this->move();
-      $this->merge();
-    }
+    // if (file_exists($this->old) and file_exists($this->new)) {
+    //   $this->empty_paths();
+    //   $this->move();
+    //   $this->merge();
+    // }
+
     
     $this->add_message('<h2>Merge old database with fresh database</h2>');
     $old_db = $this->config['db'];
@@ -50,6 +51,7 @@ class Plugin_move_site extends Plugin {
       $this->oldDB = $this->CI->load->database( $old_db, TRUE);
       $this->truncate_demo_tables();
       $this->import_database();
+      $this->create_data_config();
     }
 	
   	return $this->view('admin/plugins/plugin');
@@ -171,7 +173,127 @@ class Plugin_move_site extends Plugin {
     $this->add_message('<h3>'.$title.'</h3>');
     $this->add_message(ul($ul));
   }
-  
+
+
+  private function create_data_config() {
+    // assets (from cfg_media_info & cfg_img_info)
+    $this->CI->load->model('data/data_create');
+    $this->CI->assets->_create_assets_settings(TRUE,$this->oldDB);
+    $this->add_message('<h2>Created config file `assets.php`</h2>');
+    
+    // table & field info
+    $this->add_message('<h2>Created data config file for:</h2>');
+    $ul = '<ul>';
+    $tables = $this->CI->db->list_tables();
+    foreach ($tables as $table) {
+
+      $table_info = $this->oldDB->where('table',$table)->get('cfg_table_info');
+      if ($table_info) {
+        $table_info = $table_info->row_array();
+        if ($table_info) {
+          $fields = $this->oldDB->list_fields($table);
+          $data = array();
+          $data['table'] = $table;
+          // $data['fields'] = $fields;
+          if ($table_info['str_order_by'])            $data['order_by'] = $table_info['str_order_by'];
+          if ($table_info['int_max_rows']>0)          $data['max_rows'] = $table_info['int_max_rows'];
+          if ($table_info['str_abstract_fields'])     $data['abstract_fields'] = $table_info['str_abstract_fields'];
+          if ($table_info['b_freeze_uris'])           $data['update_uris'] = FALSE;
+
+          $grid_set = array(
+            'fields'     => $fields,
+            'pagination' => true,
+          );
+          if ($table_info['b_grid_add_many']) $grid_set['with']   = array('many_to_one','many_to_many');
+
+          $form_set = array(
+            'fieldsets'  => array($table=>$fields),
+          );
+          if ($table_info['str_fieldsets'])   {
+            $fieldsets = explode(',',$table_info['str_fieldsets']);
+            $fieldsets = array_combine($fieldsets,$fieldsets);
+            foreach ($fieldsets as $key => $set) {
+              $fieldsets[$key] = array();
+            }
+            $form_set['fieldsets'] = array_merge($form_set['fieldsets'],$fieldsets);
+          }
+          if ($table_info['b_form_add_many']) $form_set['with']      = array('many_to_one','many_to_many');
+
+          // Field info
+          foreach ($fields as $field) {
+            $field_info = $this->oldDB->where('field_field',$table.'.'.$field)->get('cfg_field_info');
+            if ($field_info) $field_info = $field_info->row_array();
+            if (!is_array($field_info) or empty($field_info)) {
+              $field_info = $this->oldDB->where('field_field','*.'.$field)->get('cfg_field_info');
+              if ($field_info) $field_info = $field_info->row_array();
+            }
+            if ($field_info) {
+              // trace_($field);
+              // trace_($field_info);
+              
+              // Validation
+              if (!empty($field_info['str_validation_rules'])) {
+                if (!isset($data['field_info'])) $data['field_info'] = array();
+                $data['field_info'][$field]['validation'] = $field_info['str_validation_rules'];
+              } 
+              
+              // Options
+              if (!empty($field_info['str_options'])) {
+                if (!isset($data['options'])) $data['options'] = array();
+                $options = explode('|',$field_info['str_options']);
+                $data['options'][$field] = array(
+                  'data'     => array_combine($options,$options),
+                  'multiple' => $field_info['b_multi_options'],
+                );
+              }
+
+              // Grid fields
+              if ( !$field_info['b_show_in_grid'] ) {
+                if ($found = array_search($field,$grid_set['fields'])) {
+                  unset($grid_set['fields'][$found]);
+                }
+              }
+              
+              // Form fieldsets/fields
+              if ( !$field_info['b_show_in_form'] ) {
+                if ($found = array_search($field,$form_set['fields'])) {
+                  unset($form_set['fields'][$found]);
+                }
+              }
+              if ( !empty($field_info['str_fieldset']) ) {
+                $fieldset=trim($field_info['str_fieldset']);
+                $form_set['fieldsets'][$fieldset][] = $field;
+                if ($found = array_search($field,$form_set['fieldsets'][$table])) {
+                  unset($form_set['fieldsets'][$table][$found]);
+                }
+              }
+
+            }
+          }
+
+          $data['grid_set'] = $grid_set;
+          $data['form_set'] = $form_set;
+
+          // Current data?
+          $data_file = $this->CI->config->item('SITE').'config/data/'.$table.'.php';
+          $this->CI->config->load('data/'.$table.'.php',true);
+          $current_data = $this->CI->config->config['data/'.$table];
+          if ($current_data) {
+            $data = array_merge($current_data,$data);
+          }
+
+          // Write
+          $this->CI->data_create->save_config( $table, $this->CI->config->item('SYS').'flexyadmin/config/data/data.php', $data_file, $data );
+
+          $ul.='<li>'.$table.'</li>';
+        }
+      }
+
+    }
+    $ul.='</ul>';
+    $this->add_message($ul);
+  }
+
   
   
   
