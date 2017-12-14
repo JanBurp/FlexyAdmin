@@ -7,6 +7,8 @@ $lang['vue_submit']        = "Submit";
 $lang['vue_add']           = "Add";
 $lang['vue_add_item']      = "New item in `{0}`";
 $lang['vue_ok']            = "Ok";
+$lang['vue_yes']           = "Yes";
+$lang['vue_no']            = "No";
 $lang['vue_save']          = "Save";
 $lang['vue_remove']        = "Remove";
 $lang['vue_browse']        = "Browse";
@@ -17,6 +19,7 @@ $lang['vue_confirm_delete_multiple'] = "Are you sure to remove {0} selected item
 $lang['vue_deleted']                 = "{0} item(s) remove.";
 
 $lang['vue_confirm_save_default']    = "You changed nothing! Are you sure to submit?";
+$lang['vue_confirm_cancel']    			 = "You made changes. Are you sure to cancel these changes?";
 
 $lang['vue_grid_search']             = "Search";
 $lang['vue_grid_fast_search']        = "Fast search";

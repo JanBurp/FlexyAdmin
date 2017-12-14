@@ -70,7 +70,7 @@ export default {
     },
   },
   
-  // Copy of props.data
+  // Copy of props.data (& more)
   data : function() {
     return {
       uiTitle          : this.title,
@@ -81,6 +81,8 @@ export default {
       validationErrors : {},
       isSaving         : false,
       subForm          : {},
+      isEdited         : false,
+      wysiwygJustReady : false,
     }
   },
   
@@ -172,15 +174,14 @@ export default {
       var init = _flexy.tinymceOptions;
       init = _.extend(_flexy.tinymceOptions,{
         setup : function(ed){
-          ed.on('NodeChange', function(e){ self.updateText(ed); })
-          ed.on('keyup', function(e){ self.updateText(ed); });
+          ed.on('NodeChange', function(e){ self.updateText(e,ed); })
+          ed.on('keyup', function(e){ self.updateText(e,ed); });
         }
       });
 
       // Need to remove?
       var exists = document.querySelector('.mce-tinymce');
-      // console.log(exists);
-      // if ( !_.isUndefined(exists) && exists!==null )
+      this.wysiwygJustReady = false;
       tinymce.remove();
 
       // Init (try untill its ready)
@@ -189,6 +190,7 @@ export default {
         exists = document.querySelector('.mce-tinymce');
         if ( !_.isUndefined(exists) && exists!==null ) {
           clearInterval(timer)
+          self.wysiwygJustReady = 2;
         };
       }, 25 );
     },
@@ -450,6 +452,37 @@ export default {
     
     cancel : function() {
       var self=this;
+      if (this.isEdited) {
+        flexyState.openModal( {
+            'title':'',
+            'body':self.$lang['confirm_cancel'],
+            'size':'modal-sm',
+            'buttons' : [
+              {
+                type   : 'no',
+                title  : _flexy.language_keys.no,
+                class  : 'btn-outline-primary',
+                close  : true,
+              },
+              {
+                type   : 'yes',
+                title  : _flexy.language_keys.yes,
+                class  : 'btn-outline-danger',
+                close  : true,
+              },
+            ],
+          }, function(event) {
+          if ( event.state.type==='yes') {
+            self._cancel();
+          }
+        });
+      }
+      else {
+        this._cancel();
+      }
+    },
+    _cancel : function() {
+      var self=this;
       if (this.formtype==='subform') {
         self.$emit('formclose');
       }
@@ -473,7 +506,7 @@ export default {
                 self.$emit('added',response.data.data.id);
               }
               else {
-                self.cancel();
+                self._cancel();
               }
             }
           })
@@ -609,11 +642,12 @@ export default {
     },
     
     updateField : function( field, value ) {
-      // console.log('updateField',field,value);
       // this.validationErrors = {};
       if (this.row[field]!==value) {
         this.row[field] = value;
         this.dynamicWatch(field,value);
+        this.isEdited = true;
+        // console.log('updateField',field);
       }
     },
     
@@ -735,8 +769,16 @@ export default {
     
 
     // TinyMCE changed
-    updateText : function(editor) {
-      this.updateField(editor.id,editor.getContent());
+    updateText : function(event,editor) {
+      // console.log('updateText',this.row[editor.id]!==editor.getContent(),event.type);
+      if (this.wysiwygJustReady==0) {
+        this.updateField(editor.id,editor.getContent());
+      }
+      else {
+        if (event.type=='nodechange') {
+          this.wysiwygJustReady--;
+        }
+      }
     }
     
   }
