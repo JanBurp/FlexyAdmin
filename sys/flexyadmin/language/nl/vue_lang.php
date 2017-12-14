@@ -7,6 +7,8 @@ $lang['vue_submit']        = "Invoeren";
 $lang['vue_add']           = "Toevoegen";
 $lang['vue_add_item']      = "Nieuw item in `{0}`";
 $lang['vue_ok']            = "Ok";
+$lang['vue_yes']           = "Ja";
+$lang['vue_no']            = "Nee";
 $lang['vue_save']          = "Bewaar";
 $lang['vue_remove']        = "Verwijder";
 $lang['vue_browse']        = "Bladeren";
@@ -17,6 +19,7 @@ $lang['vue_confirm_delete_multiple'] = "Weet u zeker dat u {0} geselecteerde ite
 $lang['vue_deleted']                 = "{0} item(s) verwijderd.";
 
 $lang['vue_confirm_save_default']    = "U heeft niets aangepast! Weet u zeker dat u dit item wilt invoeren?";
+$lang['vue_confirm_cancel']    			 = "U heeft aanpassingen gedaan. Weet u zeker dat u deze aanpassingen wilt annuleren?";
 
 $lang['vue_grid_search']             = "Zoeken";
 $lang['vue_grid_fast_search']        = "Snel zoeken";
