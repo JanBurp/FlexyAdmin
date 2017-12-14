@@ -206,13 +206,13 @@
 
 // TREE
 .grid.grid-type-tree tbody {
-  td[level="1"][name="str_title"] {padding-left:1rem;}
-  td[level="2"][name="str_title"] {padding-left:2rem;}
-  td[level="3"][name="str_title"] {padding-left:3rem;}
-  td[level="4"][name="str_title"] {padding-left:4rem;}
-  td[level="5"][name="str_title"] {padding-left:5rem;}
-  td[level="6"][name="str_title"] {padding-left:6rem;}
-  td[level="7"][name="str_title"] {padding-left:7rem;}
+  td.is-tree-field[level="1"] {padding-left:1rem;}
+  td.is-tree-field[level="2"] {padding-left:2rem;}
+  td.is-tree-field[level="3"] {padding-left:3rem;}
+  td.is-tree-field[level="4"] {padding-left:4rem;}
+  td.is-tree-field[level="5"] {padding-left:5rem;}
+  td.is-tree-field[level="6"] {padding-left:6rem;}
+  td.is-tree-field[level="7"] {padding-left:7rem;}
 }
 
 

@@ -5830,25 +5830,25 @@ a > .fa, .btn > .fa {
       float: left;
       margin-right: 1rem; }
 
-.grid.grid-type-tree tbody td[level="1"][name="str_title"] {
+.grid.grid-type-tree tbody td.is-tree-field[level="1"] {
   padding-left: 1rem; }
 
-.grid.grid-type-tree tbody td[level="2"][name="str_title"] {
+.grid.grid-type-tree tbody td.is-tree-field[level="2"] {
   padding-left: 2rem; }
 
-.grid.grid-type-tree tbody td[level="3"][name="str_title"] {
+.grid.grid-type-tree tbody td.is-tree-field[level="3"] {
   padding-left: 3rem; }
 
-.grid.grid-type-tree tbody td[level="4"][name="str_title"] {
+.grid.grid-type-tree tbody td.is-tree-field[level="4"] {
   padding-left: 4rem; }
 
-.grid.grid-type-tree tbody td[level="5"][name="str_title"] {
+.grid.grid-type-tree tbody td.is-tree-field[level="5"] {
   padding-left: 5rem; }
 
-.grid.grid-type-tree tbody td[level="6"][name="str_title"] {
+.grid.grid-type-tree tbody td.is-tree-field[level="6"] {
   padding-left: 6rem; }
 
-.grid.grid-type-tree tbody td[level="7"][name="str_title"] {
+.grid.grid-type-tree tbody td.is-tree-field[level="7"] {
   padding-left: 7rem; }
 
 .grid.grid-media-view-thumbs table.grid-data thead th, .grid.grid-media-view-small table.grid-data thead th {
