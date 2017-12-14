@@ -39,7 +39,9 @@ export default {
     },
     
     showTreeNode : function() {
-      return (this.name==="str_title" && this.level>0);
+      if (_.isUndefined(this.options)) return false;
+      if (_.isUndefined(this.options.is_tree_field)) return false;
+      return (this.options.is_tree_field===true && this.level>0);
     },
   },
   
@@ -62,6 +64,7 @@ export default {
       if (this.focus) c.push('has-focus');
       if (this.isEditing) c.push('is-editing');
       if (this.showAll) c.push('show-all');
+      if (!_.isUndefined(this.options) && !_.isUndefined(this.options.is_tree_field) && this.options.is_tree_field) c.push('is-tree-field');
       return c;
     },
     

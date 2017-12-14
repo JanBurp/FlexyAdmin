@@ -1225,6 +1225,7 @@ Class Data_Core extends CI_Model {
     $field_info = array_keep_keys($field_info,$fields);
     
     // Loop alle velden en vul informatie aan
+    $found_first_str_field = false;
     foreach ($field_info as $field => $info) {
       if (!is_array($info)) $info=array();
       // UI name
@@ -1239,6 +1240,12 @@ Class Data_Core extends CI_Model {
       $schema       = array_merge($schema, el(array('FIELDS_special',$field),$field_info_config,array()) );
       // Grid-type?
       if (!isset($schema['grid-type'])) $schema['grid-type'] = $schema['type'];
+
+      if ($fieldPrefix=='str' and !$found_first_str_field) {
+        $found_first_str_field = $field;
+        $schema['is_tree_field'] = true;
+      }
+
       
       // Combineer
       $info = array_merge($info,$schema,$extra);
