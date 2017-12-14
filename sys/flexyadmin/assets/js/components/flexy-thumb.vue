@@ -60,7 +60,8 @@ export default {
 <template>
   <div class="flexy-thumb">
     <img  v-if="type==='image'" :class="mediaClass" :src="src" :alt="alt" :title="alt">
-    <span v-if="type!=='image'" class="fa" :class="typeClass" :title="src" :alt="src"></span>
+    <span v-if="type!=='image'" class="fa" :class="typeClass" :title="src" :alt="alt"></span>
+    <span v-if="type!=='image'" class="thumb-title">{{alt}}</span>
   </div>
 </template>
 
@@ -73,6 +74,8 @@ export default {
   }
 
   .flexy-thumb img {width:auto;}
+  .flexy-thumb .thumb-title {display:none;}
+  .mediapicker-selection .flexy-thumb .thumb-title {display:inline;}
   
   .grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;}
   .grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;}
@@ -80,7 +83,7 @@ export default {
   .grid-media-view-small .flexy-thumb .fa {font-size:5rem;}
   .grid-media-view-small .flexy-thumb img {width:auto;max-width:6rem;height:auto;max-height:6rem;}
 
-  .media-thumb-sm {
+    .media-thumb-sm {
     height:1.7rem;
     border-radius:2px;
   }
