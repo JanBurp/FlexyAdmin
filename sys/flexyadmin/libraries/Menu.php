@@ -376,7 +376,7 @@ class Menu {
 
         // name
 				if (empty($thisItem['name'])) {
-					if (isset($item[$this->settings['fields']["title"]])) {
+					if (isset($item[$this->settings['fields']["title"]]) and !empty($item[$this->settings['fields']["title"]])) {
 					  $thisItem['name'] = $item[$this->settings['fields']["title"]];
 					}
 					else {
