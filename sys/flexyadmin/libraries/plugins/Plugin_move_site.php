@@ -101,7 +101,10 @@ class Plugin_move_site extends Plugin {
     $old_tables = $this->oldDB->list_tables();
     $missing_tables = array_diff($old_tables,$tables);
     // only 'tbl_' tables
+    $old_media = in_array('res_media_files',$missing_tables);
     $missing_tables = filter_by($missing_tables,'tbl');
+    if ($old_tables) $missing_tables[] = 'res_media_files';
+
     // create them
     foreach ($missing_tables as $table) {
       $this->CI->dbforge->add_field('id');
