@@ -230,7 +230,13 @@ export default {
       var multiple = false;
       if (_.isUndefined(this.form_groups[field])) return false;
       if (_.isUndefined(this.form_groups[field].options)) return false;
-      if (this.form_groups[field].options.multiple) multiple='multiple';
+      if (this.form_groups[field].options.multiple) {
+        multiple='multiple';
+      }
+      else {
+        if (_.isUndefined(this.form_groups[field].multiple)) return false;
+        if (this.form_groups[field].multiple) multiple='multiple';
+      }
       if (flexyState.debug) console.log('isMultiple',field,multiple);
       return multiple;
     },
