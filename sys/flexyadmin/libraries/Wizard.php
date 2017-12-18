@@ -93,7 +93,7 @@ class Wizard {
    */
   public function render() {
     $this->get_step();
-    $out = h($this->title,2);
+    $out = h($this->title,1);
     $out .= '<div class="btn-group" role="group">';
     $link = true;
     $class = 'btn-warning';
