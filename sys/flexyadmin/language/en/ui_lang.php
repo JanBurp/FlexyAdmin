@@ -35,10 +35,15 @@ $lang['user_changed']     ='Changed by';
 $lang['link_checker_all']         = 'Check all links';
 $lang['link_checker_select']      = 'Check selected links';
 $lang['link_check']               = 'Check';
+$lang['link_check_ok']            = 'Ok';
+$lang['link_check_bad']           = 'Broken';
+
 $lang['link_check_checked']       = '%s links checked.';
 $lang['link_check_checked_one']   = 'Eén link checked.';
 $lang['link_check_checked_ok']    = '%s link(s) allright.';
 $lang['link_check_checked_false'] = '%s link(s) wrong.';
+
+$lang['link_check_help']					= 'After you clicked `OK` broken links will be on top.';
 
 
 // MEDIA GRID fields
