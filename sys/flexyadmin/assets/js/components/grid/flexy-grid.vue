@@ -708,7 +708,9 @@ export default {
     },
 
     // Grid action
-    startAction : function(url) {
+    startAction : function(action) {
+      var self = this;
+      var url = action.url;
       if (this.selected.length>0) {
         var where='';
         for (var i = 0; i < this.selected.length; i++) {
@@ -721,24 +723,34 @@ export default {
           url += where;
         }
       }
-      var self = this;
       flexyState.api({
         method :'POST',
         url    : url,
       })
       .then(function(response){
+        if (!_.isUndefined(action.reload)) {
+          self.reloadPage(action.reload);
+        }
         return response;
       });
     },
     
     // Row action
     action: function(action) {
+      var self = this;
       return flexyState.api({
         method: 'POST',
         url : action.uri,
       }).then(function(response){
+        if (!_.isUndefined(action.reload) && action.reload) {
+          self.reloadPage(action.reload);
+        }
         return response;
       });
+    },
+    actionClass : function(cell) {
+      if (!_.isUndefined(cell.value.class)) return cell.value.class || 'btn-outline-warning';
+      return 'btn-outline-warning';
     },
         
     rowLevel:function(row) {
@@ -1125,7 +1137,7 @@ export default {
                 </th>
 
                 <th v-if="isActionHeader(field)" :class="headerClass(field)">
-                  <flexy-button v-if="field.action" v-show="showAction(field.action)" @click.native="startAction(field.action.url)" :icon="field.action.icon" :text="actionName(field.action)" class="btn-outline-warning" :class="field.action.class" />
+                  <flexy-button v-if="field.action" v-show="showAction(field.action)" @click.native="startAction(field.action)" :icon="field.action.icon" :text="actionName(field.action)" class="btn-outline-warning" :class="field.action.class" />
                 </th>
 
                 <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
@@ -1167,7 +1179,7 @@ export default {
                 
                   <!-- ACTION CELL -->
                   <td v-else-if="cell.type=='action'" class="action">
-                    <flexy-button :icon="cell.value.icon" class="btn-outline-warning" :text="cell.value.text" @click.native="action(cell.value)" />
+                    <flexy-button :icon="cell.value.icon" :class="actionClass(cell)" :text="cell.value.text" @click.native="action(cell.value)" />
                   </td>
                 
                   <!-- CELL -->
