@@ -862,13 +862,17 @@ export default {
         }).then(function(response){
           var fileName = response.data.args.fileName;
           var error = response.data.error;
-          if (!error && response.data.data===false) error = self.$lang.upload_error;
-          if (error) {
-            flexyState.addMessage(error,'danger');
+          if (!error && response.data.data===false) {
+            error = self.$lang.upload_error;
           }
           else {
             uploadedFilesCount++;
           }
+
+          if (error) {
+            flexyState.addMessage( error, 'danger' );
+          }
+
           // Uit de lijst halen
           var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
           self.removeUploadFile(index);

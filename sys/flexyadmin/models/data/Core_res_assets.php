@@ -355,11 +355,17 @@ Class Core_res_assets extends Data_Core {
     }
     
 		// Rename
-    $file = $this->upload->get_file();
+    $file_data = $this->upload->data();
+    $file = $file_data['file_name'];
+    if ($file != $file_data['orig_name']) {
+      $this->log_activity->media( array2json($config),'upload renamed `'.$file_data['orig_name'].'` => `'.$file.'`',$saveName );
+      $this->error_message = langp('rename_succes',$file_data['orig_name'],$file);
+    }
 		$ext = get_file_extension($file);
     $saveName = clean_file_name($file);
     if ($file!==$saveName) {
       if (rename($folder.'/'.$file, $folder.'/'.$saveName));
+      $this->log_activity->media( array2json($config),'upload renamed `'.$file.'` => `'.$saveName.'`',$saveName );
     }
     $file = $saveName;
     $this->log_activity->media( array2json($config),'upload success',$file );

@@ -245,8 +245,8 @@ class Media extends Api_Model {
    * @author Jan den Besten
    */
   private function _update_file() {
-    $args=$this->args;
-    $result=$this->assets->update_file( $args['path'], $args['where'], $args['data'] );
+    $args   = $this->args;
+    $result = $this->assets->update_file( $args['path'], $args['where'], $args['data'] );
     if (!$result) {
       $this->_set_error('MAYBE FILE NOT FOUND');
     }
@@ -271,9 +271,13 @@ class Media extends Api_Model {
 			$this->_set_error( $error );
       return false;
     }
-    
+
     // message
-		$this->_set_message( langp("upload_succes",$file) );
+    $error = $this->assets->get_error();
+    if ($error) {
+      $this->_set_error( $error );
+    }
+    $this->_set_message( langp("upload_succes",$file) );
     
     // Return file info
     $file_info = $this->assets->get_file_info( $path, $file);

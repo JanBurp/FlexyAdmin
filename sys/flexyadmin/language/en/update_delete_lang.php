@@ -20,7 +20,7 @@ $lang['upload_error']         = "Error uploading file %s. ";
 $lang['upload_img_too_small'] = "The image <b>%s</b> is too small and not uploaded. .<br>Choose an image with at least %s pixels. ";
 $lang['upload_resize_error']  = 'Resizen of %s results in an error.';
 
-$lang['rename_succes']			= "File renamed to %s.";
+$lang['rename_succes']			= "<b class=\"text-danger\">WARNING</b>: File  `%s` existed allready. New file renamed to `<span class=\"text-warning\">%s</span>`";
 $lang['rename_exists']			= "File %s allready exists, choose another name.";
 $lang['rename_error']				= "Error while renaming %s.";
 $lang['rename_no_file']			= "%s doesn't exist, or no rights.";
