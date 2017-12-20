@@ -9,10 +9,12 @@
 
 Class Core_tbl_links extends Data_Core {
   
-  private $checked_links = array();
+  private $checked_links      = false;
+  private $checked_cache_name = 'tbl_links_checked';
 
   public function __construct() {
     parent::__construct();
+    $this->checked_links = $this->get_cached_result($this->checked_cache_name);
   }
   
   /**
@@ -110,17 +112,70 @@ Class Core_tbl_links extends Data_Core {
    * @author Jan den Besten
    */
   public function get_grid( $limit = 20, $offset = FALSE ) {
-    $result = parent::get_grid($limit,$offset);
+    $checked_order = FALSE;
+    if (strpos($this->tm_order_by[0],'checked')===0) {
+      $checked_order = 'ASC';
+      if (strpos($this->tm_order_by[0],'DESC')>0) $checked_order = 'DESC';
+      $this->tm_order_by=array();
+      $result = parent::get_grid();
+      $this->tm_limit = $limit;
+      $this->tm_offset = $offset;
+    }
+    else {
+      $result = parent::get_grid($limit,$offset);
+    }
+
     foreach ($result as $key => $link) {
-      $id   = $link['id'];
+      $id    = $link['id'];
+      $icon  = 'question';
+      $class = '';
+      $text  = lang('link_check');
+
+      if ($checked_order) $link['_checked'] = 0;
+      if ($this->checked_links and isset($this->checked_links[$id])) {
+        if ($this->checked_links[$id]['checked']) {
+          if ($checked_order) $link['_checked'] = 1;
+          $icon  = 'chain';
+          $class = 'btn-outline-primary';
+          $text  = lang('link_check_ok');
+        }
+        else {
+          if ($checked_order) $link['_checked'] = -1;
+          $icon = 'chain-broken'; 
+          $class = 'btn-outline-danger';
+          $text  = lang('link_check_bad');
+        }
+      }
       $link = array_add_after($link,'id', array(
         'action_check_link' => array(
-          'uri'   => 'link_checker?where='.$id,
-          'icon'  => 'chain-broken', 
-          'text'  => lang('link_check')
+          'uri'     => 'link_checker?where='.$id,
+          'icon'    => $icon, 
+          'text'    => $text,
+          'class'   => $class,
+          'reload'  => array('offset'=>0,'order'=>'checked'),
         ))
       );
+
       $result[$key] = $link;
+    }
+
+    // Checked order?
+    if ($checked_order) {
+      function cmp($a,$b) {
+        return ($a['_checked'] > $b['_checked']);
+      }
+      // Query Info aanpassen
+      $this->query_info['total_rows']   = count($result);
+      $this->query_info['offset']       = $this->tm_offset;
+      $this->query_info['limit']        = $this->tm_limit;
+      // Sorteren
+      uasort($result,'cmp');
+      $result = array_slice($result,$this->tm_offset,$this->tm_limit,true);
+      $result = array_unset_keys($result,array('_checked'),true);
+      // Query Info aanpassen
+      $this->query_info['num_rows']   = count($result);
+      $this->query_info['page']       = (int) floor($this->tm_offset / $this->tm_limit);
+      $this->query_info['num_pages']  = (int) ceil($this->query_info['total_rows'] / $this->tm_limit);
     }
     
     // Voeg het veld toe
@@ -137,22 +192,15 @@ Class Core_tbl_links extends Data_Core {
    */
   public function get_setting_grid_set() {
     $grid_set = parent::get_setting_grid_set();
-    // $grid_set['actions'] = array(
-    //   array(
-    //     'name_all'    => lang('link_checker_all'),
-    //     'name_select' => lang('link_checker_select'),
-    //     'icon'        => 'chain-broken',
-    //     'url'         => 'link_checker',
-    //   ),
-    // );
     $grid_set['field_info']['action_check_link'] = array(
       'type'         => 'action',
 
       'action'       => array(
         'name_all'    => lang('link_checker_all'),
         'name_select' => lang('link_checker_select'),
-        'url'  => 'link_checker',
-        'icon' => 'chain-broken',
+        'url'         => 'link_checker',
+        'icon'        => 'chain',
+        'reload'      => array('offset'=>0,'order'=>'checked'),
       ),
 
       'name'      => lang('link_checker'),
@@ -162,6 +210,30 @@ Class Core_tbl_links extends Data_Core {
     
     return $grid_set;
   }
+
+
+  /**
+   * Zorg ervoor dat de cache van checke links wordt bijgewerkt
+   */
+  protected function _update_insert( $type, $set = NULL, $where = NULL, $limit = NULL ) {
+    $id = parent::_update_insert($type, $set, $where, $limit);
+    if ($this->checked_links and isset($this->checked_links[$id])) {
+      unset($this->checked_links[$id]);
+      $this->cache_result($this->checked_links,$this->checked_cache_name);
+    }
+    return $id;
+  }
+
+  public function delete( $where = '', $limit = NULL, $reset_data = TRUE ) {
+    $deleted_items = parent::delete($where, $limit, $reset_data);
+    if ($deleted_items and $this->checked_links) {
+      foreach ($deleted_items as $item) {
+        unset($this->checked_links[$item[$this->settings['primary_key']]]);
+      }
+      $this->cache_result($this->checked_links,$this->checked_cache_name); 
+    }
+    return $ids;
+  }
   
 
   /**
@@ -170,13 +242,30 @@ Class Core_tbl_links extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  public function check_links() {
-    $this->select(array('url_url'));
+  public function check_links($where=false) {
+
+    if (is_array($where)) {
+      $this->data->where_in( 'id', $where );
+    }
+    elseif ($where!==false) {
+      $this->data->where( $where );
+    }
+
+    $this->select(array('str_title,url_url'));
     $this->like('url_url','http','after');
     $result = $this->get_result();
     foreach ($result as $id => $link) {
       $url = $link['url_url'];
       $result[$id]['checked'] = $this->_check_link( $url );
+      if ($this->checked_links) {
+        $this->checked_links[$id] = $result[$id];
+      }
+    }
+    if ($this->checked_links) {
+      $this->cache_result($this->checked_links,$this->checked_cache_name);
+    }
+    else {
+      $this->cache_result($result,$this->checked_cache_name);
     }
     $this->checked_links = $result;
     return $result;
@@ -208,13 +297,14 @@ Class Core_tbl_links extends Data_Core {
       $message = h(langp('link_check_checked_one'));
     }
     if (count($false)>0) {
-      $message .= '<span class="text-danger">'.langp('link_check_checked_false',count($false));
-      $message .= '<hr>';
-      $message .= implode('<br>',$false).'<br>';
+      $message .= '<span class="text-danger">'.langp('link_check_checked_false',count($false)).'</span>';
+      // $message .= '<hr>';
+      // $message .= implode('<br>',$false).'<br>';
     }
-    if (count($good)>0) {
-      $message .= implode('<br>',$good).'<br>';
-    }
+    // if (count($good)>0) {
+    //   $message .= implode('<br>',$good).'<br>';
+    // }
+    $message .= '<hr>'.langp('link_check_help');
     return $message;
   }
   

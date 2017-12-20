@@ -78,10 +78,16 @@ $lang['user_changed']     ='Aangepast door';
 $lang['link_checker_all']         = 'Controleer alle links';
 $lang['link_checker_select']      = 'Controleer geselecteerde links';
 $lang['link_check']               = 'Controleer';
+$lang['link_check_ok']            = 'In orde';
+$lang['link_check_bad']           = 'Gebroken';
+
 $lang['link_check_checked']       = '%s links gecontroleerd.';
 $lang['link_check_checked_one']   = 'Eén link gecontroleerd.';
 $lang['link_check_checked_ok']    = '%s link(s) in orde.';
-$lang['link_check_checked_false'] = '%s link(s) nu niet in orde.';
+$lang['link_check_checked_false'] = '%s link(s) niet in orde.';
+
+$lang['link_check_help']					= 'Als je op `OK` hebt gedrukt zullen de gebroken links bovenaan staan en kun je ze aanpassen.';
+
 
 
 // MEDIA GRID fields

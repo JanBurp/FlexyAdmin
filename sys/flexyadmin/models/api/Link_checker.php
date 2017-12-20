@@ -25,18 +25,14 @@ class Link_checker extends Api_Model {
     if (!$this->_has_rights('tbl_links')) {
       return $this->_result_status401();
     }
-    
-    
+        
     $this->data->table('tbl_links');
     if (isset($this->args['where'])) {
-      if (is_array($this->args['where'])) {
-        $this->data->where_in( 'id', $this->args['where'] );
-      }
-      else {
-        $this->data->where( $this->args['where'] );
-      }
+      $this->result['data'] = $this->data->check_links($this->args['where']);
     }
-    $this->result['data'] = $this->data->check_links();
+    else {
+      $this->result['data'] = $this->data->check_links(); 
+    }
     
     $message = $this->data->get_message();
     $this->_set_message( $message );
