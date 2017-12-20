@@ -73,6 +73,9 @@
 
 /* MODAL */
 #flexyadmin-modal {
+  .modal-dialog {
+    margin-top: 120px;
+  }
   .modal-body {
     max-height:600px;
     overflow:auto;

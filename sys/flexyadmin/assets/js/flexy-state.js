@@ -106,8 +106,21 @@ export default {
    * Modal
    */
   openModal : function(options,callback) {
+    var body = this.state.modal.body || '';
+
     if (!_.isUndefined(options)) _.merge( this.state.modal, this.state.modal_default, options);
     if (!_.isUndefined(options.buttons)) this.state.modal.buttons = options.buttons;
+
+    // Merge message?
+    if ( body.indexOf(options.body) < 0 ) {
+      if (body!=='') body += '<hr>';
+      body += options.body;
+      this.state.modal.body = body;
+    }
+    else {
+      this.state.modal.body = body;
+    }
+
     this.state.modal.show = true;
     this.state._modal.callback = callback;
     // var buttonEL = document.querySelector('#flexyadmin-modal .modal-footer button:last-child');
@@ -118,6 +131,7 @@ export default {
   },
   closeModal  : function() {
     this.state.modal.show = false;
+    this.state.modal.body = '';
     if ( !_.isUndefined(this.state._modal.callback) ) {
       this.state._modal.callback.call( this, this.state._modal );
     }

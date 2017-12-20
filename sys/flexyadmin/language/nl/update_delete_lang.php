@@ -20,7 +20,7 @@ $lang['upload_error']				  = "Fout tijdens uploading %s. ";
 $lang['upload_img_too_small']	= "De afbeelding <b>%s</b> is te klein en daarom niet ge-upload.<br>Kies een afbeelding van minimaal %s pixels.";
 $lang['upload_resize_error']  = 'Schalen van  het bestand %s gaf een fout.';
 
-$lang['rename_succes']			  = "Bestand hernoemd naar %s.";
+$lang['rename_succes']			  = "<b class=\"text-danger\">LET OP:</b> Het bestand `%s` bestond al. Het nieuwe bestand is hernoemd naar `<span class=\"text-warning\">%s</span>`.";
 $lang['rename_exists']			  = "Er bestaat al een ander bestand met de naam %s.";
 $lang['rename_error']				  = "Fout tijdens hernoemen van %s.";
 $lang['rename_no_file']			  = "%s bestaat niet, of je hebt geen rechten om %s aan te passen.";

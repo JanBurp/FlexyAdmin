@@ -5560,6 +5560,9 @@ a > .fa, .btn > .fa {
     float: right; }
 
 /* MODAL */
+#flexyadmin-modal .modal-dialog {
+  margin-top: 120px; }
+
 #flexyadmin-modal .modal-body {
   max-height: 600px;
   overflow: auto; }
