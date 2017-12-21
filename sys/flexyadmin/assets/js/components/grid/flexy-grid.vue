@@ -414,7 +414,7 @@ export default {
         order  : parts.order,
         filter : parts.filter,
       };
-      history.pushState(this.urlOptions, '', location.pathname+'?options='+JSON.stringify(this.urlOptions));
+      if (this.changeUrlApi) history.pushState(this.urlOptions, '', location.pathname+'?options='+JSON.stringify(this.urlOptions));
       return url;
     },
     
