@@ -61,7 +61,8 @@ export default {
   methods: {
     select (tab) {
       if (!tab.disabled) {
-        this.index = this.tabs.indexOf(tab)
+        this.index = this.tabs.indexOf(tab);
+        this.$emit('tab',this.index);
       }
     }
   },
