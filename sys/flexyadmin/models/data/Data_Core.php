@@ -2613,16 +2613,18 @@ Class Data_Core extends CI_Model {
    * Bewaar huidige resultaat in de cache
    *
    * @param string $result 
+   * @param string $name [default = tm_cache_name] 
+   * @param int $time [default = TIME_YEAR] 
    * @return this
    * @author Jan den Besten
    */
-  public function cache_result($result,$name='') {
+  public function cache_result($result,$name='',$time=TIME_YEAR) {
     if (empty($name)) $name = $this->tm_cache_name;
     $cache = array(
       'query_info'  => $this->get_query_info(),
       'result'      => $result,
     );
-    $this->cache->save( $name, $cache, TIME_YEAR );
+    $this->cache->save( $name, $cache, $time );
     return $this;
   }
   

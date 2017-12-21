@@ -11,6 +11,7 @@ Class Core_tbl_links extends Data_Core {
   
   private $checked_links      = false;
   private $checked_cache_name = 'tbl_links_checked';
+  private $cache_expire       = TIME_MINUTE;
 
   public function __construct() {
     parent::__construct();
@@ -219,7 +220,7 @@ Class Core_tbl_links extends Data_Core {
     $id = parent::_update_insert($type, $set, $where, $limit);
     if ($this->checked_links and isset($this->checked_links[$id])) {
       unset($this->checked_links[$id]);
-      $this->cache_result($this->checked_links,$this->checked_cache_name);
+      $this->cache_result($this->checked_links,$this->checked_cache_name,$this->cache_expire);
     }
     return $id;
   }
@@ -230,7 +231,7 @@ Class Core_tbl_links extends Data_Core {
       foreach ($deleted_items as $item) {
         unset($this->checked_links[$item[$this->settings['primary_key']]]);
       }
-      $this->cache_result($this->checked_links,$this->checked_cache_name); 
+      $this->cache_result($this->checked_links,$this->checked_cache_name,$this->cache_expire); 
     }
     return $ids;
   }
@@ -262,10 +263,10 @@ Class Core_tbl_links extends Data_Core {
       }
     }
     if ($this->checked_links) {
-      $this->cache_result($this->checked_links,$this->checked_cache_name);
+      $this->cache_result($this->checked_links,$this->checked_cache_name,$this->cache_expire);
     }
     else {
-      $this->cache_result($result,$this->checked_cache_name);
+      $this->cache_result($result,$this->checked_cache_name,$this->cache_expire);
     }
     $this->checked_links = $result;
     return $result;
