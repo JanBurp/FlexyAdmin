@@ -75,6 +75,7 @@ export default {
     return {
       uiTitle          : this.title,
       currentName      : '',
+      activeTab        : 0,
       row              : {},
       form_groups      : {},
       fieldsets        : {},
@@ -131,6 +132,15 @@ export default {
     this.currentName = this.name;
   },
 
+  mounted : function() {
+    var options = location.search;
+    if (options!=='' && options.substr(0,9)==='?options=') {
+      options = options.substr(9);
+      options = decodeURIComponent(options);
+      options = JSON.parse(options);
+      this.activeTab = options.tab || 0;
+    }
+  },
 
   beforeUpdate : function() {
     if (this.name !== this.currentName) {
@@ -205,6 +215,25 @@ export default {
     label : function(field) {
       if (_.isUndefined(this.form_groups[field])) return field;
       return this.form_groups[field].label;
+    },
+
+    selectTab : function(tab) {
+      this.activeTab = tab;
+      if (this.formtype!=='subform') {
+        var options = location.search;
+        if (options!=='' && options.substr(0,9)==='?options=') {
+          options = options.substr(9);
+          options = decodeURIComponent(options);
+          options = JSON.parse(options);
+          // update with current tab
+          options.tab = this.activeTab;
+          history.pushState(options, '', location.pathname+'?options='+JSON.stringify(options));
+        }
+      }
+    },
+
+    selectedTab : function() {
+      return this.activeTab;
     },
     
     tabsClass : function() {
@@ -807,7 +836,7 @@ export default {
 
   <div class="card-block">
     
-    <tabs navStyle="tabs" class="tabs" :class="tabsClass()">
+    <tabs navStyle="tabs" class="tabs" :class="tabsClass()" @tab="selectTab($event)" :value="selectedTab()">
       <tab v-for="(fieldset,name) in fieldsets" :header="name">
         <template v-for="field in fieldset">
           <template v-if="!isType('hidden',field)">
