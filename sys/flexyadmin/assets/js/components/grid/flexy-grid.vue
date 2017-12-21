@@ -1065,7 +1065,7 @@ export default {
         <!-- ACTIONS ?-->
         <div v-if="actions.length>0" class="grid-actions">
           <div v-for="action in actions" class="grid-action">
-            <flexy-button @click.native="startAction(action.url)" :icon="action.icon" :text="actionName(action)" class="btn-default text-primary" :class="action.class" />
+            <flexy-button @click.native="startAction(action)" :icon="action.icon" :text="actionName(action)" class="btn-default text-primary" :class="action.class" />
           </div>
         </div>
         
