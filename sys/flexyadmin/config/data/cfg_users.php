@@ -40,7 +40,9 @@ $config['grid_set'] = array(
 $config['form_set'] = array(
   'fieldsets' => array(
     'cfg_users' => array( 'id','str_username', 'email_email', 'gpw_password', 'cfg_user_groups' )),
-  'with'      => array( 'many_to_many' ),
+  'with'      => array(
+    'many_to_many' => 'abstract',
+  ),
 );
 
 // Taal veld alleen als nodig

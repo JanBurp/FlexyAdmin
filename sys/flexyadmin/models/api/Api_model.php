@@ -423,14 +423,23 @@ class Api_Model extends CI_Model {
   
   
   /**
-   * Gives clean args
+   * Gives clean args and decodes (array) data if needed
    *
    * @param array $keep  default=array('table','where','data') of keys that needs to be kept
    * @return array
    * @author Jan den Besten
    */
   protected function _clean_args($keep=array('table','where','data')) {
-    return array_keep_keys($this->args,$keep);
+    $data = array_keep_keys($this->args,$keep);
+    if (isset($data['data'])) {
+      foreach ($data['data'] as $field => $value) {
+        if (get_suffix($field,'__')==='array') {
+          $data['data'][remove_suffix($field,'__')] = json2array($value);
+          unset($data['data'][$field]);
+        }
+      }
+    }
+    return $data;
   }
   
   

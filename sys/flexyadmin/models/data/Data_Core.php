@@ -740,7 +740,6 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    // trace_([$this->settings['table'],$relations['many_to_one']]);
     return $relations;
   }
 
@@ -1392,23 +1391,34 @@ Class Data_Core extends CI_Model {
         $set['with'] = array('many_to_one');
       else 
         $set['with'] = array('many_to_one','many_to_many');
-
     }
+
 
     // Relaties
     if ( $set['with']!==FALSE ) {
       foreach ($set['with'] as $type => $relations) {
         if ($type!=='one_to_one') {
+
+          // trace_([$this->settings['table']=>[$type=>$relations]]);
+          
           // Vul aan als alleen maar de types zijn ingesteld
           if (is_numeric($type)) {
             unset($set['with'][$type]);
             $type = $relations;
             $relations = $this->get_setting(array('relations',$type));
           }
+          elseif (is_string($relations)) {
+            unset($set['with'][$type]);
+            $relations = $this->get_setting(array('relations',$type));
+          }
           else {
             $original_relations = $relations;
             $complete_relations = $this->get_setting(array('relations',$type));
             $relations = array_keep_keys($complete_relations,array_keys($relations));
+            // Als er velden zijn ingesteld, neem die mee.
+            foreach ($set['with'][$type] as $key => $fields) {
+              if (is_array($fields)) $relations[$key]['fields'] = $fields;
+            }
             $set['with'][$type] = $relations;
           }
 
@@ -1419,6 +1429,7 @@ Class Data_Core extends CI_Model {
 
               // Velden
               $field = 'abstract';
+              if (isset($info['fields'])) $field=$info['fields'];
               if ($type==='one_to_one' and isset($info['other_table'])) {
                 if (isset($original_relations[$what])) {
                   $field = $original_relations[$what];
@@ -1437,7 +1448,7 @@ Class Data_Core extends CI_Model {
               // Vul ook de velden aan als relatie veld er nog niet instaat
               if (!isset($relation_fields)) {
                 $relation_fields = $what;
-                if ($type==='many_to_many') $relation_fields = $info['result_name'];
+                if ($type==='many_to_many' and isset($info['result_name'])) $relation_fields = $info['result_name'];
               }
               if (!is_array($relation_fields)) $relation_fields = array($relation_fields);
 
@@ -2773,6 +2784,7 @@ Class Data_Core extends CI_Model {
         }
       }
     }
+
     $result = $this->get_row( $where, 'form' );
     // trace_sql($this->last_query());
     // trace_($result);
@@ -4484,7 +4496,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	protected function _update_insert( $type, $set = NULL, $where = NULL, $limit = NULL ) {
-    
+
     // Is een type meegegeven?
     $types = array('INSERT','UPDATE');
     if ( ! in_array($type,$types) ) {
@@ -4763,7 +4775,7 @@ Class Data_Core extends CI_Model {
 			 */
 			if ( !empty($to_many) ) {
         $affected = 0;
-        
+
         // many_to_many
         if (isset($to_many['many_to_many'])) {
   				foreach( $to_many['many_to_many'] as $what => $other_ids ) {
