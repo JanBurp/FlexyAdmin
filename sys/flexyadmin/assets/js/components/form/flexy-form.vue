@@ -43,6 +43,10 @@ export default {
       type:String,
       default:'normal', // normal|single|subform
     },
+    'parent_id':{
+      type:[Number,String],
+      default:'',
+    },
   },
     
   
@@ -211,6 +215,7 @@ export default {
       var parts = _.extend( this.apiParts );
       this.apiParts = parts;
       var url = 'row?table='+this.name + '&where='+this.primary + '&as_form=true&settings=form_set';
+      if (this.parent_id) url+='&parent_id='+this.parent_id;
       return url;
     },
     
@@ -468,17 +473,23 @@ export default {
       return this.subForm[field][property];
     },
 
+    // Geeft zinvolle velden van de parent form mee naar subform
+    parentID : function() {
+      return this.row['id'];
+    },
+
     subFormAdded : function(field,event) {
       var self = this;
       self.subForm[field].show = false;
       flexyState.api({
         // TODO: alleen opties van dit veld wellicht?
-        url : 'table?table='+self.name+'&as_options=true',
+        url : 'row?table='+self.name+'&where='+self.primary+'&settings=form_set',
       })
       .then(function(response){
         if (!_.isUndefined(response.data)) {
+          // console.log(response.data.settings.form_set.field_info[field]);
           // Vervang de opties
-          self.form_groups[field].options = response.data.data[field];
+          self.form_groups[field].options = response.data.settings.form_set.field_info[field].options;
           // Selecteer zojuist toegevoegde/aangepaste item
           self.addToSelect(field,event);
           self.$emit('formclose');
@@ -961,7 +972,7 @@ export default {
                 </template>
 
                 <div v-if="showSubForm(field)">
-                  <flexy-form :title="$lang.add_item | replace(label(field))" :name="subFormData(field,'table')" :primary="subFormData(field,'id')" formtype="subform" @added="subFormAdded(field,$event)" @formclose="toggleSubForm(field)"></flexy-form>
+                  <flexy-form :title="$lang.add_item | replace(label(field))" :name="subFormData(field,'table')" :primary="subFormData(field,'id')" formtype="subform" :parent_id="parentID()" @added="subFormAdded(field,$event)" @formclose="toggleSubForm(field)"></flexy-form>
                 </div>
 
               </div>
