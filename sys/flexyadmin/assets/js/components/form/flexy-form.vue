@@ -11,6 +11,7 @@ import timepicker       from './timepicker.vue'
 import datetimepicker   from './datetimepicker.vue'
 import colorpicker      from './colorpicker.vue'
 import mediapicker      from './mediapicker.vue'
+import joinselect       from './joinselect.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
@@ -19,7 +20,7 @@ import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,tab,tabs,datepicker,vselect},
+  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,joinselect,tab,tabs,datepicker,vselect},
   props:{
     'name'    :String,
     'primary' :{
@@ -58,6 +59,7 @@ export default {
         mediapicker       : ['media','medias'],
         select            : ['select'],
         radio             : ['radio'],
+        joinselect        : ['joinselect'],
         textarea          : ['textarea'],
         wysiwyg           : ['wysiwyg'],
       };
@@ -584,7 +586,7 @@ export default {
             data[field] = (data[field]?1:0);
           }
           // Multiple
-          if (typeof(data[field])==='object' && this.isMultiple(field)) {
+          if (typeof(data[field])==='object' && this.isMultiple(field) && !this.isType('joinselect',field)) {
             var fieldData = [];
             for (var i = 0; i < data[field].length; i++) {
               if ( !_.isUndefined(data[field][i]) ) {
@@ -598,6 +600,29 @@ export default {
             }
             data[field] = fieldData;
           }
+          
+          // Joinselect -> maak aan post ready array (en lege items verwijderen)
+          if (this.isType('joinselect',field)) {
+            // cleanup empty data
+            function isEmpty(item) {
+              var empty = true;
+              _.each(item,function(value,field){
+                if (value!=='' && field!=='id') {
+                  empty = false;
+                }
+              });
+              return empty;
+            };
+            for (var index = data[field].length - 1; index >= 0; index--) {
+              if ( isEmpty(data[field][index]) ) {
+                data[field].splice(index,1);
+              }
+            }
+            // JSONify
+            data[field+'__array'] = JSON.stringify(data[field]);
+            delete(data[field]);
+          }
+
         }
       }
       
@@ -648,6 +673,7 @@ export default {
         },
       }).then(function(response){
         self.isSaving = false;
+        self.isEdited = false;
         if (!response.error) {
           if ( _.isUndefined(response.data.info) || response.data.info.validation!==false) {
             flexyState.addMessage('Item saved');
@@ -677,12 +703,12 @@ export default {
     },
     
     updateField : function( field, value ) {
+      // console.log('updateField',field,value);
       // this.validationErrors = {};
       if (this.row[field]!==value) {
         this.row[field] = value;
         this.dynamicWatch(field,value);
         this.isEdited = true;
-        // console.log('updateField',field);
       }
     },
     
@@ -736,6 +762,11 @@ export default {
           });
         }
       }
+    },
+
+    updateJoinSelect : function(field,value) {
+      this.isEdited = true;
+      return this.updateField(field,value);
     },
     
     updateSelect : function( field, selected ) {
@@ -917,6 +948,11 @@ export default {
                       </label>
                     </div>
                   </template>
+                </template>
+
+                <template v-if="isType('joinselect',field)">
+                  <!-- Joinselect -->
+                  <joinselect :id="field" :name="field" :value="row[field]" @change="updateJoinSelect(field,$event)"></joinselect>
                 </template>
               
                 <template v-if="isType('default',field)">

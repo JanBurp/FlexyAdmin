@@ -271,7 +271,7 @@ class Row extends Api_Model {
    */
   private function _update_row() {
     $args=$this->_clean_args(array('table','where','data'));
-    $data=$this->args['data'];
+    $data=$args['data'];
     $fields=array_keys($data);
     $this->data->table( $args['table'] );
     if ($data) {
@@ -284,7 +284,7 @@ class Row extends Api_Model {
       $this->info['action'] = 'update';
       // Get data back
       $this->data->table( $args['table'] );
-      $new_data = $this->data->get_row( $args['where'] );
+      $new_data = $this->data->get_form( $args['where'] );
       return $new_data;
     }
     return false;
@@ -300,7 +300,7 @@ class Row extends Api_Model {
   private function _insert_row() {
     $args=$this->_clean_args(array('table','data'));
     $this->data->table( $args['table'] );
-    $data=$this->args['data'];
+    $data=$args['data'];
     $id = false;
     if ($data) {
       // Call plugins
@@ -312,7 +312,7 @@ class Row extends Api_Model {
       $this->info['action'] = 'insert';
       // Get data back
       $this->data->table( $args['table'] );
-      $new_data = $this->data->get_row( $id );
+      $new_data = $this->data->get_form( $id );
       return $new_data;
     }
     return array('id'=>$id);
