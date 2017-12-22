@@ -3210,6 +3210,10 @@ Class Data_Core extends CI_Model {
         $this->tm_where_primary_key = $value;
       }
     }
+    if ($key==$this->settings['primary_key'] and is_numeric($value)) {
+      $this->tm_where_primary_key = $value;
+    }
+
     // where
     if (isset($key)) {
       if ($type=='AND')
