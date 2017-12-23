@@ -43,9 +43,9 @@ export default {
       type:String,
       default:'normal', // normal|single|subform
     },
-    'parent_id':{
-      type:[Number,String],
-      default:'',
+    'parent_data':{
+      type:[Boolean,Object],
+      default:false,
     },
   },
     
@@ -215,7 +215,7 @@ export default {
       var parts = _.extend( this.apiParts );
       this.apiParts = parts;
       var url = 'row?table='+this.name + '&where='+this.primary + '&as_form=true&settings=form_set';
-      if (this.parent_id) url+='&parent_id='+this.parent_id;
+      if (this.parent_data) url+='&parent_data='+JSON.stringify(this.parent_data);
       return url;
     },
     
@@ -473,9 +473,9 @@ export default {
       return this.subForm[field][property];
     },
 
-    // Geeft zinvolle velden van de parent form mee naar subform
-    parentID : function() {
-      return this.row['id'];
+    // Geeft zinvolle data (table,id) van de parent form mee naar subform
+    parentData : function() {
+      return { table:this.name, id:this.primary };
     },
 
     subFormAdded : function(field,event) {
@@ -675,13 +675,17 @@ export default {
       // Ajax post naar API
       var self = this;
       self.isSaving = true;
+      var postData = {
+        'table'   : self.name,
+        'where'   : self.row['id'],
+        'data'    : data,
+      }
+      if (this.formtype==='subform') {
+        postData.parent_data = self.parent_data;
+      }
       return flexyState.api({
-        url : 'row',
-        'data': {
-          'table'   : this.name,
-          'where'   : this.row['id'],
-          'data'    : data
-        },
+        url  : 'row',
+        data : postData,
       }).then(function(response){
         self.isSaving = false;
         self.isEdited = false;
@@ -972,7 +976,7 @@ export default {
                 </template>
 
                 <div v-if="showSubForm(field)">
-                  <flexy-form :title="$lang.add_item | replace(label(field))" :name="subFormData(field,'table')" :primary="subFormData(field,'id')" formtype="subform" :parent_id="parentID()" @added="subFormAdded(field,$event)" @formclose="toggleSubForm(field)"></flexy-form>
+                  <flexy-form :title="$lang.add_item | replace(label(field))" :name="subFormData(field,'table')" :primary="subFormData(field,'id')" formtype="subform" :parent_data="parentData()" @added="subFormAdded(field,$event)" @formclose="toggleSubForm(field)"></flexy-form>
                 </div>
 
               </div>
