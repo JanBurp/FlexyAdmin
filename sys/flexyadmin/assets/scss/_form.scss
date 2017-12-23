@@ -74,6 +74,27 @@
   }
 }
 
+.form-subform {
+  .card-block {
+    padding-bottom:0px!important;
+    background-color:$brand-primary;
+  }
+  .tab-content {margin:0px!important;}
+  .form-group {
+    margin-bottom:0.2rem!important;
+    div {
+      padding: 0px 10px;
+      .form-control {
+        padding:.25rem .5rem;
+      }
+    }
+  }
+  .card-header {
+    padding:0px 0.25rem 2px!important;
+    background-color:$brand-primary;
+  }
+}
+
 // Sizes
 textarea, iframe {
   height:400px;

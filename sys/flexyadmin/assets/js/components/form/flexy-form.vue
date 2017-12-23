@@ -224,6 +224,11 @@ export default {
       return this.form_groups[field].label;
     },
 
+    placeholder : function(field) {
+      if (this.formtype!=='subform') return '';
+      return this.label(field);
+    },    
+
     selectTab : function(tab) {
       this.activeTab = tab;
       if (this.formtype!=='subform') {
@@ -500,7 +505,7 @@ export default {
     
     cancel : function() {
       var self=this;
-      if (this.isEdited) {
+      if (this.isEdited && this.formtype!=='subform') {
         flexyState.openModal( {
             'title':'',
             'body':self.$lang['confirm_cancel'],
@@ -868,8 +873,8 @@ export default {
 </script>
 
 <template>
-<div class="card form">
-  <div class="card-header">
+<div class="card form" :class="'form-'+formtype">
+  <div v-if="formtype!=='subform'" class="card-header">
     <h1>{{uiTitle}}</h1>
     <div>
       <flexy-button v-if="formtype!=='single'"                 @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
@@ -889,9 +894,9 @@ export default {
           
             <div class="form-group row" :class="validationClass(field)" v-show="showFormGroup(field)">
               <div v-if="validationError(field)!==false" class="validation-error"><span class="fa fa-exclamation-triangle"></span> {{validationError(field)}}</div>
-              <label class="col-md-3 form-control-label" :for="field">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-sm fa-asterisk text-warning"></span> </label>
+              <label v-if="formtype!=='subform'" class="form-control-label col-md-3" :for="field">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-sm fa-asterisk text-warning"></span> </label>
 
-              <div class="col-md-9">
+              <div :class="{'col-md-9':formtype!=='subform','col-md-12':formtype=='subform'}">
               <template v-if="isType('textarea',field)">
                   <!-- Textarea -->
                   <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></textarea>
@@ -972,7 +977,7 @@ export default {
               
                 <template v-if="isType('default',field)">
                   <!-- Default -->
-                  <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="" @keyup.enter="submit">
+                  <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" :placeholder="placeholder(field)" @keyup.enter="submit">
                 </template>
 
                 <div v-if="showSubForm(field)">
@@ -989,5 +994,14 @@ export default {
     </tabs>
 
   </div>
+
+  <div v-if="formtype==='subform'" class="card-header">
+    <h1></h1>
+    <div>
+      <flexy-button @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
+      <flexy-button @click.native="submit()" :text="$lang.submit" :disabled="isSaving" class="btn-outline-warning"/>
+    </div>
+  </div>
+
 </div>
 </template>

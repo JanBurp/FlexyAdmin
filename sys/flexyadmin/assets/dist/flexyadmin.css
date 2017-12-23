@@ -6038,6 +6038,24 @@ a > .fa, .btn > .fa {
 .card.form .form-group.row:hover {
   border-radius: 0.25rem; }
 
+.form-subform .card-block {
+  padding-bottom: 0px !important;
+  background-color: #00A0C2; }
+
+.form-subform .tab-content {
+  margin: 0px !important; }
+
+.form-subform .form-group {
+  margin-bottom: 0.2rem !important; }
+  .form-subform .form-group div {
+    padding: 0px 10px; }
+    .form-subform .form-group div .form-control {
+      padding: .25rem .5rem; }
+
+.form-subform .card-header {
+  padding: 0px 0.25rem 2px !important;
+  background-color: #00A0C2; }
+
 textarea, iframe {
   height: 400px;
   border-color: #696;
