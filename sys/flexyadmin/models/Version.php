@@ -98,6 +98,18 @@ class Version extends CI_Model {
     }
     return $tag;
   }
+
+  public function get_changelog($version='') {
+    if (empty($version)) $version=$this->get_version();
+    $changelog = read_file(APPPATH.'../../changelog.txt');
+    if (preg_match_all('/(?m)^\=(\d.*)\s*([^\=]*)/ui', $changelog,$matches)) {
+      $keys = $matches[1];
+      $logs = $matches[2];
+      $changelog = array_combine($keys, $logs);
+      return $changelog;
+    }
+    return FALSE;
+  }
   
 
 }
