@@ -976,14 +976,11 @@ export default {
                 </template>
 
                 <div v-if="showSubForm(field)">
-                  <flexy-form :title="$lang.add_item | replace(label(field))" :name="subFormData(field,'table')" :primary="subFormData(field,'id')" formtype="subform" :parent_data="parentData()" @added="subFormAdded(field,$event)" @formclose="toggleSubForm(field)"></flexy-form>
+                  <flexy-form :title="label(field)" :name="subFormData(field,'table')" :primary="subFormData(field,'id')" formtype="subform" :parent_data="parentData()" @added="subFormAdded(field,$event)" @formclose="toggleSubForm(field)"></flexy-form>
                 </div>
 
               </div>
               
-              <!-- <div class="col-md-1" v-if="hasInsertRights(field)">
-                <flexy-button @click.native="toggleSubForm(field)" :icon="{'plus':!showSubForm(field),'chevron-up':showSubForm(field)}" class="btn-outline-warning" />
-              </div> -->
             </div>
             
           </template>
