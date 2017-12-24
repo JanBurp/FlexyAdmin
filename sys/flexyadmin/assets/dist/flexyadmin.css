@@ -6038,23 +6038,39 @@ a > .fa, .btn > .fa {
 .card.form .form-group.row:hover {
   border-radius: 0.25rem; }
 
-.form-subform .card-block {
-  padding-bottom: 0px !important;
-  background-color: #696; }
+.form-subform {
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important; }
+  .form-subform .card-block {
+    padding-bottom: 0px !important;
+    background-color: #696; }
+  .form-subform .tab-content {
+    margin: 2px 0 !important; }
+  .form-subform .form-group {
+    margin-bottom: 0.2rem !important; }
+    .form-subform .form-group label {
+      color: #fff !important;
+      font-weight: normal; }
+    .form-subform .form-group > div {
+      padding: 0px 10px; }
+      .form-subform .form-group > div .form-control {
+        padding: .35rem .5rem; }
+  .form-subform .card-header {
+    padding: 0px 0.25rem 3px !important;
+    background-color: #696; }
+  .form-subform .nav-link {
+    padding: .25rem;
+    background-color: #fff;
+    margin-right: 1px;
+    opacity: .7; }
+  .form-subform .nav-link.active {
+    opacity: 1; }
+  .form-subform .joinselect-group {
+    margin-bottom: 0; }
 
-.form-subform .tab-content {
-  margin: 0px !important; }
-
-.form-subform .form-group {
-  margin-bottom: 0.2rem !important; }
-  .form-subform .form-group div {
-    padding: 0px 10px; }
-    .form-subform .form-group div .form-control {
-      padding: .25rem .5rem; }
-
-.form-subform .card-header {
-  padding: 0px 0.25rem 2px !important;
-  background-color: #696; }
+.form-group.has-subform > div:not(.subform) > div.vselect > .form-control {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px; }
 
 textarea, iframe {
   height: 400px;
@@ -6149,9 +6165,6 @@ textarea {
   max-width: 500px !important;
   overflow: hidden; }
 
-.datepicker {
-  height: 1.8rem; }
-
 .form-control.datepicker-input {
   width: 7rem;
   margin-bottom: 0; }
@@ -6196,7 +6209,8 @@ textarea {
       position: relative;
       margin-right: .25rem;
       margin-bottom: .25rem;
-      cursor: move; }
+      cursor: move;
+      background-color: #fff; }
       .mediapicker .mediapicker-selection .mediapicker-thumb > .mediapicker-remove-button {
         position: absolute;
         top: 0px;
@@ -6235,7 +6249,8 @@ textarea {
     padding: 0;
     width: 100%; }
     .vselect ul.dropdown-menu li {
-      padding: .2rem .5rem; }
+      padding: .2rem .5rem;
+      overflow: hidden; }
     .vselect ul.dropdown-menu li:hover {
       background-color: #ffe5aa; }
     .vselect ul.dropdown-menu li.search-item {
