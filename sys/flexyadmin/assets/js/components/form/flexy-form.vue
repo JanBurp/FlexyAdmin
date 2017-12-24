@@ -225,8 +225,9 @@ export default {
     },
 
     placeholder : function(field) {
-      if (this.formtype!=='subform') return '';
-      return this.label(field);
+      return '';
+      // if (this.formtype!=='subform') return '';
+      // return this.label(field);
     },    
 
     selectTab : function(tab) {
@@ -399,14 +400,17 @@ export default {
       return date;
     },
     
-    validationClass : function(field) {
-      // console.log('validationClass',field);
-      var validationClass='';
-      if ( this.validationErrors[field] ) validationClass = 'has-danger';
+    formGroupClass : function(field) {
+      // console.log('formGroupClass',field);
+      var formGroupClass='';
+      if ( this.validationErrors[field] ) formGroupClass = 'has-danger';
       if ( this.isRequired(field) ) {
-        validationClass += ' required';
+        formGroupClass += ' required';
       }
-      return validationClass.trim();
+      if (!_.isUndefined(this.subForm[field])) {
+        if (this.subForm[field].show) formGroupClass += ' has-subform';
+      }
+      return formGroupClass.trim();
     },
     
     validationError : function(field) {
@@ -466,12 +470,22 @@ export default {
         });
       }
     },
-    
+
     showSubForm : function(field) {
       var show = false;
       if ( !_.isUndefined(this.subForm[field]) ) show = this.subForm[field].show;
       return show;
     },
+
+    hasVisibleSubform : function(field) {
+      if ( !_.isUndefined(this.subForm[field]) ) return this.subForm[field].show;
+      return false;
+    },
+
+    // hideSubForm : function(field) {
+    //   if ( !_.isUndefined(this.subForm[field]) ) this.subForm[field].show = false;
+    //   return false;
+    // },
     
     subFormData : function(field,property) {
       if ( _.isUndefined(this.subForm[field]) ) return '';
@@ -892,11 +906,11 @@ export default {
         <template v-for="field in fieldset">
           <template v-if="!isType('hidden',field)">
           
-            <div class="form-group row" :class="validationClass(field)" v-show="showFormGroup(field)">
+            <div class="form-group row" :class="formGroupClass(field)" v-show="showFormGroup(field)">
               <div v-if="validationError(field)!==false" class="validation-error"><span class="fa fa-exclamation-triangle"></span> {{validationError(field)}}</div>
-              <label v-if="formtype!=='subform'" class="form-control-label col-md-3" :for="field">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-sm fa-asterisk text-warning"></span> </label>
+              <label class="form-control-label col-md-3" :for="field" :title="label(field)">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-sm fa-asterisk text-warning"></span> </label>
 
-              <div :class="{'col-md-9':formtype!=='subform','col-md-12':formtype=='subform'}">
+              <div class="col-md-9">
               <template v-if="isType('textarea',field)">
                   <!-- Textarea -->
                   <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></textarea>
@@ -948,6 +962,7 @@ export default {
                     :insertText="$lang.add_item | replace(label(field))"
                     @insert="toggleSubForm(field)"
                     @update="toggleSubForm(field,$event)"
+                    :disabled="hasVisibleSubform(field)"
                     >
                   </vselect>
                 </template>
@@ -980,7 +995,7 @@ export default {
                   <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" :placeholder="placeholder(field)" @keyup.enter="submit">
                 </template>
 
-                <div v-if="showSubForm(field)">
+                <div v-if="showSubForm(field)" class="subform">
                   <flexy-form :title="label(field)" :name="subFormData(field,'table')" :primary="subFormData(field,'id')" formtype="subform" :parent_data="parentData()" @added="subFormAdded(field,$event)" @formclose="toggleSubForm(field)"></flexy-form>
                 </div>
 
