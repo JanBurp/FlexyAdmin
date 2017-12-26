@@ -823,8 +823,11 @@ Class Data_Core extends CI_Model {
   
   protected function get_other_table_settings( $table ) {
     $settings = NULL;
-    $this->load->model('data/'.$table,$table);
-    $settings = $this->$table->get_settings();
+
+    $current_table = $this->settings['table'];
+    $settings = $this->data->table($table)->get_settings();
+    $this->data->table( $current_table );
+
     return $settings;
   }
   

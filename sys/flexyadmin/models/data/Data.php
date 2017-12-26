@@ -14,7 +14,7 @@ Class Data extends CI_Model {
   /**
    * Huidige tabel
    */
-  private $table = '';
+  private $current_table = '';
   
   /**
    * Alle al geladen objecten
@@ -30,6 +30,8 @@ Class Data extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 	}
+
+ 
   
   
   /**
@@ -44,7 +46,7 @@ Class Data extends CI_Model {
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'() table is not given.' );
       return $this;
     }
-    $this->table = $table;
+    $this->current_table = $table;
     
     // Als model nog niet is geladen, dan gaan we dat nu doen
     if (!isset($this->models[$table])) {
@@ -92,7 +94,7 @@ Class Data extends CI_Model {
    * @internal
    */
 	public function __call( $method, $args ) {
-    $table = $this->table;
+    $table = $this->current_table;
     // Error if table/model not set and needed
     if (!isset($this->models[$table])) {
       throw new ErrorException( __CLASS__.'->'.$method.' model not set. Try using ->data->table() first.' );
