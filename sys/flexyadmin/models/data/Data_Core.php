@@ -823,18 +823,8 @@ Class Data_Core extends CI_Model {
   
   protected function get_other_table_settings( $table ) {
     $settings = NULL;
-    // Probeer eerst of het table model bestaat
-    // if ( method_exists( $table, 'get_settings' ) ) {
-    //   $settings = $this->$table->get_settings();
-    // }
-    // // Laad anders de config van die tabel/model
-    // else {
-      $current_table = $this->settings['table'];
-      $settings = $this->data->table($table)->get_settings();
-      $this->data->table( $current_table );
-      // $this->config->load( 'data/'.$table, true);
-      // $settings = $this->config->item( 'data/'.$table );
-    // }
+    $this->load->model('data/'.$table,$table);
+    $settings = $this->$table->get_settings();
     return $settings;
   }
   
