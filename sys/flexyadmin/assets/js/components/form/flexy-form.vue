@@ -253,6 +253,14 @@ export default {
       if (Object.keys(this.fieldsets).length<2) return 'single-tab';
       return '';
     },
+
+    tabHeaderClass : function(fieldset) {
+      for(var index in fieldset) {
+        var field=fieldset[index];
+        if (this.validationError(field)) return 'text-danger';
+      }
+      return '';
+    },
         
     isType : function( type,field ) {
       if (_.isUndefined(this.form_groups[field])) {
@@ -902,7 +910,7 @@ export default {
   <div class="card-block">
     
     <tabs navStyle="tabs" class="tabs" :class="tabsClass()" @tab="selectTab($event)" :value="selectedTab()">
-      <tab v-for="(fieldset,name) in fieldsets" :header="name">
+      <tab v-for="(fieldset,name) in fieldsets" :header="name" :headerclass="tabHeaderClass(fieldset)">
         <template v-for="field in fieldset">
           <template v-if="!isType('hidden',field)">
           
