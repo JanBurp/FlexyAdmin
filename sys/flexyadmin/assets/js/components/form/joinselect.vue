@@ -119,7 +119,7 @@ export default {
         </div>
       </div>
       <div class="col-md-1">
-        <flexy-button icon="remove" class="btn-outline-danger" @click.native="removeItem(index)" />
+        <flexy-button v-show="!isEmpty(index) || index>0" icon="remove" class="btn-outline-danger" @click.native="removeItem(index)" />
       </div>
       <div class="col-md-1">
         <flexy-button v-show="index==value.length-1" icon="plus" class="btn-outline-warning"  @click.native="addItem()"/>
