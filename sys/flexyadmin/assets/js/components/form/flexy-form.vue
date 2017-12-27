@@ -611,7 +611,7 @@ export default {
     
     postForm : function() {
       var self=this;
-      var data = _.clone(this.row);
+      var data = JSON.parse(JSON.stringify(this.row)); // Deep copy
       
       // Prepare data
       for (var field in data) {
@@ -639,7 +639,7 @@ export default {
             data[field] = fieldData;
           }
           
-          // Joinselect -> maak aan post ready array (en lege items verwijderen)
+          // Joinselect -> maak een post ready array (en lege items verwijderen)
           if (this.isType('joinselect',field)) {
             // cleanup empty data
             function isEmpty(item) {
@@ -663,7 +663,7 @@ export default {
 
         }
       }
-      
+
       // Controleer of data niet leeg is
       var filled = false;
       for (var field in data) {
@@ -719,18 +719,14 @@ export default {
         if (!response.error) {
           if ( _.isUndefined(response.data.info) || response.data.info.validation!==false) {
             flexyState.addMessage('Item saved');
-            // Update data (if prepped)
-            for (var field in response.data.data) {
-              if (!_.isUndefined(self.row[field])) {
-                self.row[field] = response.data.data[field];
-              }
-            }
+            self._updateDataAfterPost(response.data.data);
           }
           else {
             // Validation error
             response.error = true;
             flexyState.addMessage( self.$lang.form_validation_error, 'danger');
             if ( !_.isUndefined(response.data.info) ) self.validationErrors = response.data.info.validation_errors;
+            // self._updateDataAfterPost(response.data.data);
           }
         }
         else {
@@ -738,6 +734,14 @@ export default {
         }
         return response;
       });
+    },
+    _updateDataAfterPost : function(postdata) {
+      var self = this;
+      for (var field in postdata) {
+        if ( !_.isUndefined(self.row[field]) ) {
+          self.row[field] = postdata[field];
+        }
+      }
     },
     
     isNewItem : function() {

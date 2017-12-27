@@ -280,6 +280,7 @@ class Row extends Api_Model {
       $data = $this->_after_update( $this->args['table'], $current_data, $data);
       // Save
       $id = $this->data->table($this->args['table'])->with('one_to_one')->validate()->update( $data, $args['where'] );
+      if ($id===FALSE) $id = $args['where'];
       $this->info = $this->data->get_query_info();
       $this->info['action'] = 'update';
       // Get data back
@@ -308,6 +309,7 @@ class Row extends Api_Model {
       $data = $this->_after_update( $this->args['table'], $old, $data);
       // Insert
       $id = $this->data->table($args['table'])->with('one_to_one')->validate()->insert( $data );
+      if ($id===FALSE) $id=-1;
       $this->info = $this->data->get_query_info();
       $this->info['action'] = 'insert';
       // Get data back

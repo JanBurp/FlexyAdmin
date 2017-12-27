@@ -82,15 +82,6 @@ export default {
     },
 
     _emit : function() {
-      // var self = this;
-      // var emitData = _.clone(self.data);
-      // // cleanup empty data
-      // for (var index = self.data.length - 1; index >= 0; index--) {
-      //   if ( self.isEmpty(index) ) {
-      //     emitData.splice(index,1);
-      //   }
-      // }
-      // console.log(emitData);
       this.$emit('change',this.data);
     },
 
