@@ -244,8 +244,8 @@ class Api_Model extends CI_Model {
 
     // Set error/succes 
     if ($this->error) {
-      $this->result['error']=$this->error;
-      $this->result['success']=false;
+      $this->result['error']   = $this->error;
+      $this->result['success'] = false;
     }
     
     // Add message

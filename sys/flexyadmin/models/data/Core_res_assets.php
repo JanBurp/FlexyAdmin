@@ -12,8 +12,11 @@ Class Core_res_assets extends Data_Core {
   // Some methods use the global set path
   private $media_path = '';
   
-  // Error message if uploading has error
+  // (Error) message after uploading (error)
   private $error_message = '';
+  private $message       = '';
+
+  private $upload_data   = array(); 
   
   // Bestanden die na uploading extra zijn aangemaakt
   private $created_files = array();
@@ -355,11 +358,11 @@ Class Core_res_assets extends Data_Core {
     }
     
 		// Rename
-    $file_data = $this->upload->data();
-    $file = $file_data['file_name'];
-    if ($file != $file_data['orig_name']) {
-      $this->log_activity->media( array2json($config),'upload renamed `'.$file_data['orig_name'].'` => `'.$file.'`',$saveName );
-      $this->error_message = langp('rename_succes',$file_data['orig_name'],$file);
+    $this->upload_data = $this->upload->data();
+    $file = $this->upload_data['file_name'];
+    if (strtolower($file) != strtolower($this->upload_data['orig_name'])) {
+      $this->log_activity->media( array2json($config),'upload renamed `'.$this->upload_data['orig_name'].'` => `'.$file.'`',$saveName );
+      $this->message = langp('rename_succes',$this->upload_data['orig_name'],$file);
     }
 		$ext = get_file_extension($file);
     $saveName = clean_file_name($file);
@@ -514,6 +517,17 @@ Class Core_res_assets extends Data_Core {
     return $this->error_message;
   }
   
+  /**
+   * Geeft eventuele melding (bijvoorbeeld nieuwe naam na uploaden)
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_message() {
+    return $this->message;
+  }
+
+
   
   /**
    * Geeft extra aangemaakt bestandsnamen terug na uploaden
@@ -582,6 +596,9 @@ Class Core_res_assets extends Data_Core {
     if (!$info) {
       $info = $this->where('file',$file)->where('path',$path)->get_row();
       $this->file_info[$name] = $info;
+    }
+    if ($this->upload_data and $this->upload_data['file_name']==$file) {
+      $info['orig_name'] = $this->upload_data['orig_name'];
     }
     return $info;
   }

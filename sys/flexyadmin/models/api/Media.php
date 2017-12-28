@@ -273,11 +273,13 @@ class Media extends Api_Model {
     }
 
     // message
-    $error = $this->assets->get_error();
-    if ($error) {
-      $this->_set_error( $error );
+    $message = $this->assets->get_message();
+    if ($message) {
+      $this->_set_message( $message );
     }
-    $this->_set_message( langp("upload_succes",$file) );
+    else {
+      $this->_set_message( langp("upload_succes",$file) );
+    }
     
     // Return file info
     $file_info = $this->assets->get_file_info( $path, $file);
