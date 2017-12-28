@@ -881,6 +881,13 @@ export default {
             uploadedFilesCount++;
           }
 
+          if (_.isUndefined(response.data.orig_name)) {
+            var origName = response.data.orig_name;
+            if (origName !== fileName) {
+              flexyState.addMessage( response.data.message, 'danger' );  
+            }
+          }
+
           if (error) {
             flexyState.addMessage( error, 'danger' );
           }
