@@ -20,7 +20,8 @@ Executre scripts written in PHP (.php) like this:
 
 ## Overview of the scripts
 
-`hello.sh` 	  					- Simple hello world (for testing)
+`hello.sh` 	  					- Simple hello world
+`update.sh` 	  				- Pull & Merge latest FlexyAdmin (set branche variables first!)
 `phpinfo.php` 					- Raw PHP info
 `git_remove_tags.php` 	- Delete old git tags, example: `php scripts/git_remove_tags.php 3.5.0-beta. 1 19`
 `old_install.php` 			- Change install from safe folder structure to normal.
