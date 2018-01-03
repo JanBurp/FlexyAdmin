@@ -63,7 +63,7 @@ Class Core_cfg_users extends Data_Core {
   public function where($key, $value = NULL, $escape = NULL) {
     if ($key==='current' and isset($this->user_id)) {
       $value = $this->user_id;
-      $key = $this->settings['primary_key'];
+      $key   = $this->settings['table'].'.'.$this->settings['primary_key'];
     }
     return parent::where($key,$value,$escape);
   }
