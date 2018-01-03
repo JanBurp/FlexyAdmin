@@ -98,7 +98,7 @@ function get_full_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
   	if (in_array($info["type"],$CI->config->item('FILE_types_img'))) {
   		$errorReporting=error_reporting(E_ALL);
   		error_reporting($errorReporting - E_WARNING - E_NOTICE);
-  		$size=getimagesize($file);
+  		$size=@getimagesize($file);
   		error_reporting($errorReporting);
   		$info["width"]=$size[0];
   		$info["height"]=$size[1];
