@@ -11,10 +11,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 <?php foreach($posts as $entry): ?>
   <entry>
     <id><?=site_url($entry['url']);?></id>
-    <title><?=xml_convert($entry['title'])?></title>
+    <title type="html"><?=xml_convert($entry['title'])?></title>
+    <author><?=$author?></author>
     <updated><?=$entry['date'];?></updated>
     <link rel="alternate" href="<?=site_url($entry['url']);?>" />
-    <summary><![CDATA[<?=$entry['body']; ?>]]></summary>
+    <summary type="html"><![CDATA[<?=$entry['body']; ?>]]></summary>
   </entry>
 <?php endforeach; ?>
 </feed>
