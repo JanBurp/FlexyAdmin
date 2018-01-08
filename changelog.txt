@@ -1,8 +1,8 @@
-~3.5.0-beta.51
+3.5.0-beta.51
 
 [BUG]
+- grid: uploading file error did not check good for changed filename
 - RSS feed seems to have character coding errors
-
 
 3.5.0-beta.50
 
