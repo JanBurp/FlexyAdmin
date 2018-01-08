@@ -872,7 +872,7 @@ export default {
           data      : formData,
           formData  : true,
         }).then(function(response){
-          var fileName = response.data.args.fileName;
+
           var error = response.data.error;
           if (!error && response.data.data===false) {
             error = self.$lang.upload_error;
@@ -881,8 +881,9 @@ export default {
             uploadedFilesCount++;
           }
 
-          if (_.isUndefined(response.data.orig_name)) {
-            var origName = response.data.orig_name;
+          var fileName = response.data.data.file;
+          if ( !_.isUndefined(response.data.data.orig_name) ) {
+            var origName = response.data.data.orig_name;
             if (origName !== fileName) {
               flexyState.addMessage( response.data.message, 'danger' );  
             }
