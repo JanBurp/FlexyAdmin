@@ -80,8 +80,10 @@ class Plugin_links extends Plugin {
 					$newUrl=$this->newData[$field];
 				}
 				if ($field=='uri' and isset($this->oldData['self_parent'])) {
-					$oldUrl=$this->_getFullParentUri($this->oldData);
-					$newUrl=remove_suffix($oldUrl,'/').'/'.$newUrl;
+					$oldFullUrl = $this->_getFullParentUri($this->oldData);
+					if ($oldFullUrl!==$oldUrl) {
+						$newUrl = remove_suffix($oldFullUrl,'/').'/'.$newUrl;
+					}
 				}
 				$this->CI->search_replace->links($oldUrl,$newUrl);
 			}
