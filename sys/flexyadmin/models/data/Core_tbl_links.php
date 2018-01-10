@@ -17,6 +17,21 @@ Class Core_tbl_links extends Data_Core {
     parent::__construct();
     $this->checked_links = $this->get_cached_result($this->checked_cache_name);
   }
+
+  /**
+   * Dit geeft de linklijst als options
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_options_link_list() {
+    $this->data->table('tbl_menu');
+    $links = $this->data->get_menu_result();
+    $links = array_combine(array_keys($links),array_column($links,'full_title'));
+    $this->data->table('tbl_links');
+    return $links;
+  }
+
   
   /**
    * Dit geeft de linklijst aan de API call get_link_list
