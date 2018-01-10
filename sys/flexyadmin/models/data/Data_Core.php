@@ -507,6 +507,10 @@ Class Data_Core extends CI_Model {
           $options['model'] = 'fields';
           if ($type=='fields') $options['multiple']=true;
           break;
+
+        case 'link':
+          $options['model'] = 'links';
+          break;
       }
       
       switch ($field) {

@@ -183,6 +183,11 @@ class Search_replace extends CI_Model {
    */
   public function links($search,$replace='') {
     if (empty($search)) return FALSE;
+
+    // In link_ velden
+    $result_link = $this->replace_all($search,$replace, 'link' );
+    
+    // In txt_ velden
     $search = str_replace(array('/','.'),array('\/','\.'),$search);
     if (empty($replace)) {
       $search = array( '/<a.*href=\".*'.$search.'.*\".*>(.*)<\/a>/uU');
@@ -192,7 +197,9 @@ class Search_replace extends CI_Model {
       $search  = array( '/<a(.*)href=\"(.*)'.$search.'(.*)\"(.*)>/uU' );
       $replace = array( '<a$1href="$2'.$replace.'$3"$4>' );
     }
-    return $this->replace_all($search,$replace, $this->field_types, true );
+    $result_txt = $this->replace_all($search,$replace, $this->field_types, true );
+
+    return array_merge($result_link,$result_txt);
 	}
 
 }
