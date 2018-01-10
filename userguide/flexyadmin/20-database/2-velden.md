@@ -24,6 +24,7 @@ dec_            |dec_price              |DECIMAL      |Voor getallen met decimal
 b_, is_         |b_visible              |TINYINT      |Boolean. Komt in CMS tevoorschijn als vink (aan/uit).
 str_            |str_title              |VARCHAR      |Een stringveld, komt tevoorschijn als lang veld in CMS
 url_            |url_link               |VARCHAR      |Een veld met URL.
+link_						|url_pagina							|VARCHAR			|Een veld met een link naar een pagina van de site
 email_          |email_email            |VARCHAR      |Een veld met een emailadres
 txt_            |txt_text               |TEXT         |Een groot tekst veld. In CMS als HTML editor te zien.
 stx_            |stx_description        |TEXT         |Een groot teksveld (geen HTML editor).
@@ -33,7 +34,6 @@ media_          |media_foto             |VARCHAR      |Een bestandsnaam. Via **M
 medias_         |medias_fotos           |VARCHAR      |idem, maar nu kunnen er meerdere gekozen worden
 video_					|video_youtube					|VARCHAR			|Een code (of link) naar een YouTube video.
 rgb_            |rgb_color              |VARCHAR(7)   |Een HTML kleurcode. FlexyAdmin toont een kleurkiezer.
-list_           |list_link, list_links  |VARCHAR      |Dit veld verwijst naar een keuze uit uit &eacute;&eacute;n van de javascript list bestanden die FlexyAdmin genereerd (*img_list.js, link_list.js, media_list.js en embed_list.js*). Als je dit veld *list_link* noemt toont FlexyAdmin een keuzeveld met alle links uit *link_list.js*. Als je een keuzeveld wilt waar meerdere links gekozen kunnen worden voeg je een 's' toe aan het eind van de naam: *list_links*. Zie bij <a href="index.html#section_links_en_downloads">Links</a>.
 ip_             |ip_ip                  |VARCHAR(15)  |Bevat een ip adres
 
 Voor alle velden geld dat de lengte en in sommige gevallen het type van het MySQL data type zelf gekozenkan worden. Dus ipv INT kan ook SMALLINT of BIGINT worden gebruikt. Of ipv VARCHAR kan ook TEXT worden gebruikt.

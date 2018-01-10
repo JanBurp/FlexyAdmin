@@ -1,3 +1,12 @@
+
+[FEATURES]
+- New field: 'video_' can have a youtube video code (or link)
+- New field ‘links_’ for choosing a link (page uri)
+- Adding full_title to menu_result
+- New function find_embedded_video() in video_helper
+[BUG]
+- Replacing links when not a full_uri changed to a suburi
+
 3.5.0-beta.51
 
 [BUG]
