@@ -105,3 +105,15 @@ function get_video_code_from_url($url,$type='youtube') {
 	}
 	return $code;
 }
+
+
+function find_embedded_video($html) {
+	if (preg_match('/<iframe.*src="(.*)".*>(<\/iframe>)*?/uU', $html,$match)) {
+		return array(
+			'iframe' => $match[0],
+			'src'		 => $match[1],
+		);
+	}
+	return false;
+}
+
