@@ -22,6 +22,7 @@ $config['after_update_method'] = '_after_update';
 */
 
 $config['trigger'] = array(
+	'field_types'			=> array('video'),
   'fields'          => array('str_video','str_youtube','str_vimeo'),
 );
 
