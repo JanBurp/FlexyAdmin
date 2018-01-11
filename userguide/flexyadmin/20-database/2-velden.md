@@ -31,6 +31,7 @@ pwd_            |pwd_password           |VARCHAR      |Paswoord veld. Geen zicht
 gpw_            |gpw_password           |VARCHAR      |Idem, maar met een knop ernaast om automatisch paswoord te genereren.
 media_          |media_foto             |VARCHAR      |Een bestandsnaam. Via **Media Info** gekoppeld aan een assets map.FlexyAdmin toont dit als een keuzeveld, met als keuze alle bestanden in de assets map.Als het om afbeeldingen gaat kan het ook getoond worden als thumbnails.Zie bij <a href="index.html#section_afbeeldingen_en_bestanden">Afbeeldingen en bestanden</a>.
 medias_         |medias_fotos           |VARCHAR      |idem, maar nu kunnen er meerdere gekozen worden
+video_					|video_youtube					|VARCHAR			|Een code (of link) naar een YouTube video.
 rgb_            |rgb_color              |VARCHAR(7)   |Een HTML kleurcode. FlexyAdmin toont een kleurkiezer.
 list_           |list_link, list_links  |VARCHAR      |Dit veld verwijst naar een keuze uit uit &eacute;&eacute;n van de javascript list bestanden die FlexyAdmin genereerd (*img_list.js, link_list.js, media_list.js en embed_list.js*). Als je dit veld *list_link* noemt toont FlexyAdmin een keuzeveld met alle links uit *link_list.js*. Als je een keuzeveld wilt waar meerdere links gekozen kunnen worden voeg je een 's' toe aan het eind van de naam: *list_links*. Zie bij <a href="index.html#section_links_en_downloads">Links</a>.
 ip_             |ip_ip                  |VARCHAR(15)  |Bevat een ip adres

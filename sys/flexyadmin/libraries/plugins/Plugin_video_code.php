@@ -14,11 +14,13 @@
 
 class Plugin_video_code extends Plugin {
 
-  var $fields;
+  private $fields;
+  private $field_types;
   
   public function __construct() {
     parent::__construct();
     $this->fields = $this->config['trigger']['fields'];
+    $this->field_types = $this->config['trigger']['field_types'];
     $this->CI->load->helper('video');
   }
 
@@ -51,11 +53,13 @@ class Plugin_video_code extends Plugin {
   private function _get_video_codes($item) {
     if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
     
-    foreach ($this->fields as $field) {
-      if (isset($item[$field])) {
-        $item[$field]=get_video_code_from_url($item[$field]);
+    foreach ($item as $field => $value) {
+      $pre = get_prefix($field);
+      if ( in_array($pre,$this->field_types) or in_array($field,$this->fields)) {
+        $item[$field] = get_video_code_from_url($item[$field]);
       }
     }
+
     return $item;
   }
 
