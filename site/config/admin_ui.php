@@ -51,7 +51,7 @@ $config['wysiwyg'] = array(
 
   // 'menubar'                   => "edit format table tools",
   'menubar'                   => false,
-  'toolbar1'                  => 'cut copy paste | undo redo | bold italic styleselect | bullist numlist | flexy_link unlink | charmap flexy_image media | fullscreen | code',
+  'toolbar1'                  => 'cut copy paste | undo redo | bold italic styleselect removeformat | bullist numlist | flexy_link unlink | charmap flexy_image media | fullscreen | code',
   // 'toolbar1'                  => 'cut copy paste | undo redo | bold italic styleselect | bullist numlist | alignleft aligncenter alignright | flexy_link unlink | charmap flexy_image media | fullscreen | code',
 );
 
