@@ -298,11 +298,11 @@ Class Core_res_assets extends Data_Core {
 
 		if ($result) {
 			log_("info","[FM] delete file/dir '$name'");
-      $this->log_activity->media( $path,'deleted',$name );
+      $this->log_activity->media('deleted',$path,$name );
 		}
 		else {
 			log_("info","[FM] ERROR deleting file/dir '$name'");
-      $this->log_activity->media( $path,'ERROR could not delete',$name );
+      $this->log_activity->media( 'ERROR could not delete',$path,$name );
 		}
 		return $result;
   }
@@ -348,12 +348,12 @@ Class Core_res_assets extends Data_Core {
     // Start upload
 		$this->upload->config($config);
 
-    $this->log_activity->media( array2json($config) .' '.array2json($_FILES) ,'start_upload',$path );
+    $this->log_activity->media( array2json($config).' '.array2json($_FILES), $path, 'start_upload' );
     if ( !$this->upload->upload_file( $file_field ) ) {
       $file = $this->upload->get_file();
 			$this->error_message = $this->upload->get_error();
 			log_("info","[FM] error while uploading: '$file' [$this->error_message]");
-      $this->log_activity->media( $this->error_message,'UPLOAD ERROR',$file );
+      $this->log_activity->media( $this->error_message, $path, 'UPLOAD ERROR '.$file );
       return false;
     }
     
@@ -361,17 +361,17 @@ Class Core_res_assets extends Data_Core {
     $this->upload_data = $this->upload->data();
     $file = $this->upload_data['file_name'];
     if (strtolower($file) != strtolower($this->upload_data['orig_name'])) {
-      $this->log_activity->media( array2json($config),'upload renamed `'.$this->upload_data['orig_name'].'` => `'.$file.'`',$saveName );
+      $this->log_activity->media( array2json($config), $path, 'upload renamed `'.$this->upload_data['orig_name'].'` => `'.$file.'`' );
       $this->message = langp('rename_succes',$this->upload_data['orig_name'],$file);
     }
 		$ext = get_file_extension($file);
     $saveName = clean_file_name($file);
     if ($file!==$saveName) {
       if (rename($folder.'/'.$file, $folder.'/'.$saveName));
-      $this->log_activity->media( array2json($config),'upload renamed `'.$file.'` => `'.$saveName.'`',$saveName );
+      $this->log_activity->media( array2json($config), $path, 'upload renamed `'.$file.'` => `'.$saveName.'`' );
     }
     $file = $saveName;
-    $this->log_activity->media( array2json($config),'upload success',$file );
+    $this->log_activity->media( array2json($config),$path, 'upload success '.$file );
 
     // Image? Check size
     if ( in_array(strtolower($ext),$this->config->item('FILE_types_img')) ) {
@@ -383,7 +383,7 @@ Class Core_res_assets extends Data_Core {
       if ( !$this->upload->check_size($path,$file,$path_settings) ) {
         $this->delete_file($path,$file);
         $this->error_message = langp('upload_img_too_small',$file, $path_settings['min_width'].' x '.$path_settings['min_height']);
-        $this->log_activity->media( $path .':'. array2json($path_settings),'upload_img_too_small',$file );
+        $this->log_activity->media( array2json($path_settings), $path, 'upload_img_too_small '.$file );
         return FALSE;
       }
 
@@ -391,7 +391,7 @@ Class Core_res_assets extends Data_Core {
       if ( !$this->upload->resize_image( $path,$file,$path_settings ) ) {
         $this->delete_file($path,$file);
         $this->error_message = langp('upload_resize_error',$file);
-        $this->log_activity->media( $path .':'. array2json($path_settings),'upload_resize_error',$file );
+        $this->log_activity->media( array2json($path_settings),$path,'upload_resize_error '.$file );
         return FALSE;
       }
 
