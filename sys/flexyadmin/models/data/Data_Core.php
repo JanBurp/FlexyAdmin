@@ -2146,8 +2146,10 @@ Class Data_Core extends CI_Model {
       foreach ($this->tm_order_by as $order_by) {
         $split = $this->_split_order($order_by);
         $field = $split['field'];
-        if (strpos($field,'.')===false and $this->field_exists($field)) $field = $this->settings['table'].'.'.$field;
-        $this->db->order_by( $field, $split['direction'] );
+        if ($this->field_exists($field)) {
+          if (strpos($field,'.')===false) $field = $this->settings['table'].'.'.$field;
+          $this->db->order_by( $field, $split['direction'] );
+        }
       }
     }
 
