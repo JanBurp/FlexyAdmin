@@ -37,6 +37,7 @@ class Stats {
 
 	public function __construct() {
 		$this->set_table();
+		$this->CI = & get_instance();
 	}
 
 	public function set_table($table="") {
@@ -69,7 +70,13 @@ class Stats {
 	public function add_uri($uri=NULL) {
 		if ($uri==NULL) $uri="";
 		// only insert page uri's (no images, css etc).
-		if (strpos($uri,'assets/')===FALSE and strpos($uri,'_media/')===FALSE and strpos($uri,'_media/')===FALSE) {
+		$ext = strtolower(get_file_extension($uri));
+		if (
+			strpos($uri,'assets/')===FALSE
+			and strpos($uri,'_media/')===FALSE
+			and strpos($uri,'_media/')===FALSE
+			and (!in_array($ext,array('ico','jpg','jpeg','gif','png','tiff','cur','tif','tiff')))
+		) {
 			$AGENT=&load_class('User_agent', 'libraries');
 
 			// Remove authorization and passwords
@@ -112,8 +119,7 @@ class Stats {
 	}
 
 	public function get_top($nr=10) {
-		$CI =& get_instance();
-		$results=$CI->fd->get_results($this->table,$nr);
+		$results = $this->CI->fd->get_results($this->table,$nr);
 		return $results;
 	}
 
