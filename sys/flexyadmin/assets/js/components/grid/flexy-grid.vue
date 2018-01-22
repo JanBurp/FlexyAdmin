@@ -884,7 +884,7 @@ export default {
           var fileName = response.data.data.file;
           if ( !_.isUndefined(response.data.data.orig_name) ) {
             var origName = response.data.data.orig_name;
-            if (origName !== fileName) {
+            if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
               flexyState.addMessage( response.data.message, 'danger' );  
             }
           }
