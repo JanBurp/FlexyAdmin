@@ -224,10 +224,13 @@ class MY_Lang extends CI_Lang {
 			}
       return $item;
     }
+
     // From Lang
     $ui = $this->line($item,false,false);
+    
     // Only field?
     if (empty($ui)) $ui = $this->line(remove_prefix($item,'.'),false,false);
+    
     // Create?
     if (empty($ui)) {
       $ui = remove_prefix($item,'.');
