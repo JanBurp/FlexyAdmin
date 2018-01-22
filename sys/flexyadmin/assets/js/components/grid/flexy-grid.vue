@@ -309,7 +309,7 @@ export default {
           order  : this.apiParts.order,
           filter : this.apiParts.filter,
         };
-        if (reset===true) {
+        if (reset===true || this.type==='mediapicker') {
           args = {
             offset : 0,
             limit  : this.apiParts.limit,
