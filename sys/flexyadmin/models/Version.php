@@ -103,14 +103,17 @@ class Version extends CI_Model {
     if (empty($version)) $version=$this->get_version();
     $changelog = read_file(APPPATH.'../../changelog.txt');
     if (preg_match_all('/(?m)^\=(\d.*)\s*([^\=]*)/ui', $changelog,$matches)) {
-      $keys = $matches[1];
-      $logs = $matches[2];
-      $changelog = array_combine($keys, $logs);
+      $changelog = array();
+      foreach ($matches[1] as $key => $version) {
+        $changelog[]=array(
+          'version' => $version,
+          'log'     => $matches[2][$key],
+        );
+      }
       return $changelog;
     }
     return FALSE;
   }
-  
 
 }
 

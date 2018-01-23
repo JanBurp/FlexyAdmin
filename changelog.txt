@@ -2,6 +2,9 @@
 - New field: 'link_redirect' for redirecting in menu tables
 - New form validation: 'prep_uri'
 - uri field can be eddited now (with some config changes, see config/data/tbl_menu.php)
+- Remember system version on login (per user)
+[SQL]
+- update_v3.5.0-beta.53.sql
 
 3.5.0-beta.52
 
