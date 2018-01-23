@@ -84,7 +84,7 @@ class Main extends FrontEndController {
 		 * Redirect to a page down in the menu tree, if current page is empty.
 		 * If needed, set the redirect config to TRUE in config.php
 		 */
-		if ($this->config->item('redirect') or el('b_redirect',$page,false)) $this->_redirect($page);
+		if ($this->config->item('redirect') or el('b_redirect',$page,false) or el('link_redirect',$page,'')) $this->_redirect($page);
 
 
 		/***********************************************
@@ -185,9 +185,9 @@ class Main extends FrontEndController {
 	 * Redirect to a (set) page (and anchor), or down in the menu tree if current page is empty
 	 */
 	private function _redirect($page) {
-		if ( el('b_redirect',$page,false) or (el('txt_text',$page,'')=='' and el('str_module',$page,'')=='') ) {
-      if (el('list_redirect',$page,'')) {
-        $newUri=$page['list_redirect'];
+		if ( el('b_redirect',$page,false) or el('link_redirect',$page,'') or (el('txt_text',$page,'')=='' and el('str_module',$page,'')=='') ) {
+      if (el('link_redirect',$page,'')) {
+        $newUri = $page['link_redirect'];
       }
       else {
         $this->data->table('tbl_menu');
