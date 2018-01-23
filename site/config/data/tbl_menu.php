@@ -5,6 +5,12 @@ $config['result_key'] = 'full_uri';
 
 $config['field_info']['str_title']['validation'] = 'required';
 
+// Als uris aangepast moeten kunnen worden, dan de volgende instellingen:
+// $config['field_info']['uri']['type'] = 'input';
+// $config['field_info']['uri']['readonly'] = false;
+// $config['update_uris'] = FALSE;
+
+
 $config['options'] = array( 
 	'self_parent'  => array( 'special' => 'self_parent' ), 
 	'medias_fotos' => array(

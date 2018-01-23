@@ -24,7 +24,8 @@ class Create_uri extends CI_Model {
   /**
    * Of bepaalde uri's van een bepaald item niet aangepast mag worden
    */
-  private $freeze = FALSE;
+  private $update_uris = TRUE;
+  private $freeze      = FALSE;
 
   /**
    * Een prefix die voor elke uri wordt geplakt
@@ -65,12 +66,15 @@ class Create_uri extends CI_Model {
   public function set_table($table) {
     $this->table = $table;
     $this->table_settings = $this->data->table($table)->get_settings();
-    $update_uris = el( 'update_uris', $this->table_settings, FALSE );
-    if (is_array($update_uris)) {
-      $this->source_field = el( 'source', $update_uris, '' );
-      $this->prefix = el( 'prefix', $update_uris, '' );
-      $this->prefix_callback = el( 'prefix_callback', $update_uris, false );
-      $this->freeze = el( 'freeze', $update_uris, '' );
+    $this->update_uris = el( 'update_uris', $this->table_settings, FALSE );
+    if (is_array($this->update_uris)) {
+      $this->source_field = el( 'source', $this->update_uris, '' );
+      $this->prefix = el( 'prefix', $this->update_uris, '' );
+      $this->prefix_callback = el( 'prefix_callback', $this->update_uris, false );
+      $this->freeze = el( 'freeze', $this->update_uris, '' );
+    }
+    else {
+      $this->freeze = ! $this->update_uris;
     }
     return $this;
   }
@@ -256,7 +260,12 @@ class Create_uri extends CI_Model {
    * @return     boolean  ( description_of_the_return_value )
    */
   private function _freeze_uri($data) {
+    // Als nog geen uri, dan geen freeze
+    if ( empty(el('uri',$data,'')) ) return FALSE;
+    // Standaard instelling
     $freeze = false;
+    if (is_bool($this->freeze)) return $this->freeze;
+    // Specifieke instelling
     if (is_array($this->freeze)) {
       foreach ($this->freeze as $field => $value) {
         if (isset($data[$field])) {
