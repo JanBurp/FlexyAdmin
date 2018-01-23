@@ -435,6 +435,19 @@ class MY_Form_validation extends CI_Form_validation {
     }
     return $str;
   }
+
+
+
+  /**
+   * Prepareer een uri
+   * @param      string  $uri    The uri
+   * @return     string
+   */
+  public function prep_uri($uri) {
+    $this->CI->load->model('create_uri');
+    $uri = $this->CI->create_uri->cleanup($uri);
+    return $uri;
+  }
   
   
   /**
