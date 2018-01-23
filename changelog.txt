@@ -1,3 +1,5 @@
+=3.5.0-beta.53
+
 [FEATURES]
 - New field: 'link_redirect' for redirecting in menu tables
 - New form validation: 'prep_uri'
@@ -6,44 +8,45 @@
 [SQL]
 - update_v3.5.0-beta.53.sql
 
-3.5.0-beta.52
+=3.5.0-beta.52
 
 [FEATURES]
 - New field: 'video_' can have a youtube video code (or link)
 - New field ‘links_’ for choosing a link (page uri)
 - Adding full_title to menu_result
 - New function find_embedded_video() in video_helper
-[BUG]
+
+[BUGS]
 - Replacing links when not a full_uri changed to a suburi
 - Mediapicker used url parts
 - Log media did not used correct model
 - Some images were added to statistics
 
-3.5.0-beta.51
+=3.5.0-beta.51
 
-[BUG]
+[BUGS]
 - grid: uploading file error did not check good for changed filename
 - RSS feed seems to have character coding errors
 
-3.5.0-beta.50
+=3.5.0-beta.50
 
 [FEATURES]
 - update script added
-[BUG]
+[BUGS]
 - CoreUsersModel: id was not unique (found when changing filemanager view)
 - Reading image size information from file could result in error
 
-3.5.0-beta.49
+=3.5.0-beta.49
 
-[BUG]
+[BUGS]
 - Uploading file that was renamed gave an false succes in the API. Now nice with message.
 
-3.5.0-beta.48
+=3.5.0-beta.48
 
-[BUG]
+[BUGS]
 - Form/JoinSelect did not keep filled data after wrong validated post
 
-3.5.0-beta.47
+=3.5.0-beta.47
 
 [FEATURES]
 - FormsTabs have danger color when validation errors in that tab
