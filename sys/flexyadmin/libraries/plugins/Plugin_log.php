@@ -51,6 +51,7 @@ class Plugin_log extends Plugin {
     $log=array_slice($log,0,10);
     $gridData = array(
       'title'   => langp("home_activity"),
+      'class'   => '',
       'headers' => array(
         'id_user'       => lang('home_user'),
         'tme_timestamp' => lang('home_date'),

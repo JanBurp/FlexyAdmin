@@ -21,7 +21,8 @@ class Plugin_update extends Plugin {
 	public function __construct() {
 		parent::__construct();
     $this->CI->load->model('version');
-	}
+    $this->CI->lang->load('home');
+  }
 
   /**
    * Log activity on homepage
@@ -29,30 +30,53 @@ class Plugin_update extends Plugin {
    * @return void
    * @author Jan den Besten
    */
-  // public function _admin_homepage() {
-  //   return $this->show_last_update();
-  // }
+  public function _admin_homepage() {
+    return $this->show_last_update(true,'home_new_update');
+  }
 
   public function _admin_api() {
     return $this->show_last_update();
   }
 
-  private function show_last_update() {
+  private function show_last_update($last=false,$title='home_update_history') {
     if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
 
-    $changelog = $this->CI->version->get_changelog();
+    $version      = $this->CI->version->get_version();
+    $user_version = $this->CI->data->table('cfg_users')->get_last_version();
+    if ($user_version=='') $user_version = $version;
+    $this->CI->data->table('cfg_users')->update_last_version();
 
-    foreach ($changelog as $version => $log) {
-      $log = $this->_nicelog($log);
-      $this->add_message( '<h1>'.$version.'</h1>' );
-      $this->add_message( $log );
+    if ( !$last or $user_version<$version) {
+      $changelog = $this->CI->version->get_changelog();
+      foreach ($changelog as $key => $log) {
+        if ($last and $user_version>$log['version']) {
+          unset($changelog[$key]);
+        }
+        else {
+          $changelog[$key]['log'] = $this->_nicelog($log['log']);
+        }
+      }
+      if ($last) {
+        array_push($changelog,array('version'=>'','log'=>'<a class="btn btn-primary" href="_admin/plugin/update">show update history</a>'));
+      }
+
+      $gridData = array(
+        'title'   => langp($title),
+        'class'   => $last?'bg-warning':'',
+        'headers' => array(
+          'version' => lang('home_version'),
+          'log'     => lang('home_changelog'),
+        ),
+        'data'    => $changelog,
+      );
+      return $this->CI->load->view("admin/grid",$gridData,true);
     }
 
-    return $this->show_messages();
+    return false;
   }
 
   private function _nicelog($log) {
-    $log = preg_replace('/\[([^\]]*)\]\s*/u', '<br><h3>$1</h3>', $log);
+    $log = preg_replace('/\[([^\]]*)\]\s*/u', '<h3>$1</h3>', $log);
     $log = str_replace("\n",'<br>',$log);
     return $log;
   }

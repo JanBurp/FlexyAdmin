@@ -284,6 +284,41 @@ Class Core_cfg_users extends Data_Core {
     }
     return $row;
   }
+
+
+  /**
+   * Geef laatste versie van systeem dat de user gezien heeft
+   *
+   * @return     string
+   */
+  public function get_last_version() {
+    $user_id = $this->get_user_id();
+    if ($user_id) {
+      return $this->get_field('str_last_version',array('id'=>$user_id));
+    }
+    return false;
+  }
+
+
+  /**
+   * Update laatste versie van systeem dat de user gezien heeft
+   *
+   * @return     this
+   */
+  public function update_last_version($version=false) {
+    $user_id = $this->get_user_id();
+    if ($user_id) {
+      if ($this->db->field_exists('str_last_version','cfg_users')) {
+        if (!$version) {
+          $this->load->model('version');
+          $version = $this->version->get_version();
+        }
+        $this->set('str_last_version',$version)->where('id',$user_id)->update();
+      }
+    }
+    return $this;
+  }
+
   
   
 }
