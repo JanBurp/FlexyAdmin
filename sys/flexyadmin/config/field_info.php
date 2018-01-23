@@ -208,7 +208,7 @@ $config['FIELDS_special'] = array(
 	'uri'				=> array(
     'type'        => 'hidden',
     'readonly'    => true,
-    'validation'	=> 'trim',
+    'validation'	=> 'prep_uri',
   ),
   'actions'   => array(
     'type'        => 'input',
