@@ -23,6 +23,5 @@ Velden in een menu tabel
 -------------|-------------------------------- |----------
 b_visible    |                                 | Zichtbaarheid van de pagina in het menu
 b_redirect   |                                 | Of de pagina altijd geredirect moet worden, standaard naar de eerstvolgende onderliggende pagina
-url_redirect |																 | In plaats van een uri, kan hier een complete link worden geplaatst. Naar buiten.
-list_redirect|                                 | Een link waarnaar de pagina geredirect moet worden (als b_redirect = TRUE)
+link_redirect|																 | In plaats van een uri, kan hier een complete link worden geplaatst. Naar buiten.
 str_anchor   |                                 | Het anker deel van een link (#anker). Wordt bij een redirect achter de link geplaatst
