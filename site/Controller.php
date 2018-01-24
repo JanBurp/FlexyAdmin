@@ -190,11 +190,7 @@ class Main extends FrontEndController {
         $newUri = $page['link_redirect'];
       }
       else {
-        $this->data->table('tbl_menu');
-  			$this->data->select('uri');
-  			$this->data->where('self_parent',$page['id']);
-  			if (isset($page['b_visible'])) $this->data->where('b_visible','1');
-  			$subItem = $this->data->get_row();
+        $subItem = $this->data->table('tbl_menu')->get_first_child( $page['uri'],true );
   			if ($subItem) $newUri=$this->site['uri'].'/'.$subItem['uri'];
       }
       if (isset($newUri)) {
