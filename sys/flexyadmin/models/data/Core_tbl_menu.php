@@ -111,12 +111,21 @@ Class Core_tbl_menu extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  public function get_first_child( $uri='' ) {
+  public function get_first_child( $uri='', $visible = false ) {
     $items = $this->get_menu_result();
     if ($uri!='') $items = find_row_by_value($items,$uri.'/','full_uri',0);
     if ($items) {
       reset($items);
-      return current($items);
+      if ($visible) {
+        $child = current($items);
+        while (!el('b_visible',$child,true)) {
+          $child = next($items);
+        }
+      }
+      else {
+        $child = current($items);
+      }
+      return $child;
     }
     return false;
   }
