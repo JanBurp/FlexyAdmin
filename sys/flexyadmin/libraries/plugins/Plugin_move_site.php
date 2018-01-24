@@ -38,12 +38,11 @@ class Plugin_move_site extends Plugin {
     $this->add_message('<pre><strong>New site: </strong> '.$this->new.'</pre>');
 
     // Actions
-    // if (file_exists($this->old) and file_exists($this->new)) {
-    //   $this->empty_paths();
-    //   $this->move();
-    //   $this->merge();
-    // }
-
+    if (file_exists($this->old) and file_exists($this->new)) {
+      $this->empty_paths();
+      $this->move();
+      $this->merge();
+    }
     
     $this->add_message('<h2>Merge old database with fresh database</h2>');
     $old_db = $this->config['db'];
@@ -103,7 +102,7 @@ class Plugin_move_site extends Plugin {
     // only 'tbl_' tables
     $old_media = in_array('res_media_files',$missing_tables);
     $missing_tables = filter_by($missing_tables,'tbl');
-    if ($old_tables) $missing_tables[] = 'res_media_files';
+    if ($old_tables and !$this->CI->db->table_exists('res_media_files')) $missing_tables[] = 'res_media_files';
 
     // create them
     foreach ($missing_tables as $table) {
@@ -258,7 +257,7 @@ class Plugin_move_site extends Plugin {
               }
               
               // Form fieldsets/fields
-              if ( !$field_info['b_show_in_form'] ) {
+              if ( !$field_info['b_show_in_form'] and isset($form_set['fields']) ) {
                 if ($found = array_search($field,$form_set['fields'])) {
                   unset($form_set['fields'][$found]);
                 }
