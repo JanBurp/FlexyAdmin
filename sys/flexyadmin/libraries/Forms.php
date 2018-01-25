@@ -260,7 +260,7 @@ class Forms extends Module {
           // remove (old) entries
           $this->CI->data->table('log_forms_submit')
                           ->where('ip',$ip)->where('str_form',$this->form_id)
-                          ->delete('log_forms_submit');
+                          ->delete();
           $set=array(
             'str_form'  => $this->form_id,
             'ip'        => $this->CI->input->ip_address(),
