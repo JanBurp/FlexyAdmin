@@ -293,7 +293,7 @@ Class Core_cfg_users extends Data_Core {
    */
   public function get_last_version() {
     $user_id = $this->get_user_id();
-    if ($user_id) {
+    if ($user_id and $this->db->field_exists('str_last_version','cfg_users')) {
       return $this->get_field('str_last_version',array('id'=>$user_id));
     }
     return false;
