@@ -180,8 +180,8 @@ class Forms extends Module {
     // Geen velden en geen tabel, maar een flexyform
     if (!$formFields) {
       $this->CI->load->model('getform');
-      $flexyform=str_replace('flexyform_','',$this->name);
-      $formData=$this->CI->getform->by_name($flexyform);
+      $flexyform = str_replace('flexyform_','',$this->name);
+      $formData  = $this->CI->getform->by_name($flexyform);
       if ($formData) {
   			$formFieldSets=$formData['fieldsets'];
   			$formFields=$formData['fields'];
