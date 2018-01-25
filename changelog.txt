@@ -1,3 +1,14 @@
+=3.5.0-beta.54
+
+[UPDATE]
+- CodeIgniter 3.1.7
+[BUGS]
+- Redirect did not work allways with merged menu
+- Form with radio-buttons had no values
+- FlexyForm did not worked well with new Data model
+[SQL]
+- Rename `id_form` to `id_forms` in table `tbl_formfields` if the website uses flexyforms
+
 =3.5.0-beta.53
 
 [FEATURES]
