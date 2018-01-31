@@ -76,6 +76,49 @@ class MY_Form_validation extends CI_Form_validation {
   }
 
 
+  /**
+   * Uitbreiding zodat ook required_if kan werken
+   *
+   * @param      <type>   $row       The row
+   * @param      <type>   $rules     The rules
+   * @param      <type>   $postdata  The postdata
+   * @param      integer  $cycles    The cycles
+   */
+  protected function _execute($row, $rules, $postdata = NULL, $cycles = 0) {
+
+    // If the $_POST data is an array we will run a recursive call
+    //
+    // Note: We MUST check if the array is empty or not!
+    //       Otherwise empty arrays will always pass validation.
+    if (is_array($postdata) && ! empty($postdata))
+    {
+      foreach ($postdata as $key => $val)
+      {
+        $this->_execute($row, $rules, $val, $key);
+      }
+
+      return;
+    }
+
+    // required_if
+    if ( $rule = find_row_by_value($rules,'required_if','',true)) {
+      $key = key($rule);
+      $rule = current($rule);
+      $param = FALSE;
+      if ( preg_match('/(.*?)\[(.*)\]/', $rule, $match))
+      {
+        $rule = $match[1];
+        $param = $match[2];
+        $if_field_exists = isset($_POST[$param]);
+        if ( $if_field_exists and $_POST[$param] ) {
+          $rules[$key] = 'required';
+        }
+      }
+    }
+
+    return parent::_execute($row,$rules,$postdata,$cycles);
+  }
+  
   
   /**
    * Geeft validation foutmeldingen terug
