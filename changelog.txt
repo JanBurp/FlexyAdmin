@@ -1,5 +1,8 @@
+=3.5.0-beta.55
+
 [FEATURES]
 - New Form validation rule: required_if[other_field], the field is required if the other_field value is true
+- htaccess redirect option for allways https
 [BUGS]
 - BUG when `str_last_version` did not exist in user table
 
