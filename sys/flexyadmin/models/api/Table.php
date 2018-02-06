@@ -158,6 +158,8 @@ class Table extends Api_Model {
   private function _get_data() {
     $this->data->table( $this->args['table'] );
 
+    $is_media = ($this->args['table'] === 'res_assets' AND isset($this->args['path']));
+
     // Filter?
     $this->args['filter'] = el( 'filter', $this->args, '' );
     if (!empty($this->args['filter'])) {
@@ -183,10 +185,9 @@ class Table extends Api_Model {
     }
     else {
       // Media?
-      if ( $this->args['table'] === 'res_assets' AND isset($this->args['path']) ) {
+      if ( $is_media ) {
         $this->data->order_by( $this->args['order'] );
         $items = $this->data->get_files( $this->args['path'], $this->args['filter'], $this->args['limit'], $this->args['offset'], TRUE );
-        // trace_sql($this->data->last_query());
       }
       else {
         // Geen grid & geen media - where, txt_abstract, options
@@ -204,7 +205,12 @@ class Table extends Api_Model {
     
     // Info
     $this->info = $this->data->get_query_info();
-    $this->info['count_all'] = $this->data->count_all();
+    if ($is_media) {
+      $this->info['count_all'] = $this->data->count_all($this->args['path']);
+    }
+    else {
+      $this->info['count_all'] = $this->data->count_all(); 
+    }
     
     return $items;
   }

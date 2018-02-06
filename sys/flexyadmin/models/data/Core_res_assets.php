@@ -505,6 +505,19 @@ Class Core_res_assets extends Data_Core {
     return $grid_set;
   }
   
+
+  /**
+   * Geeft aantal bestanden in de map
+   *
+   * @param string $path ['']
+   * @return int
+   * @author Jan den Besten
+   */
+  public function count_all($table='') {
+    $query = $this->db->where('path',$table)->select('id')->get($this->settings['table']);
+    return $query->num_rows();
+  }
+
   
   
   /**
