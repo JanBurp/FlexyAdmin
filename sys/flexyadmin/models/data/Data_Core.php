@@ -2150,6 +2150,9 @@ Class Data_Core extends CI_Model {
           if (strpos($field,'.')===false) $field = $this->settings['table'].'.'.$field;
           $this->db->order_by( $field, $split['direction'] );
         }
+        elseif ($this->tm_as_grid and isset($this->tm_as_grid['fields']) and in_array($field,$this->tm_as_grid['fields'])) {
+          $this->db->order_by( $field, $split['direction'] ); 
+        }
       }
     }
 
