@@ -39,14 +39,14 @@ export default {
       Calculates number of buttons needed, returns it as an array
      */
     pagesButtons : function() {
-      if (this.buttons>=this.pages) return this.pages;
+      if (this.buttons >= this.pages) return this.pages;
       var min = this.current - Math.floor(this.buttons/2);
       var max = this.current + Math.floor(this.buttons/2);
       while (min<=0) {
         min++;
         max++;
       }
-      while (max>=this.pages) {
+      while (max>this.pages) {
         min--;
         max--;
       }
