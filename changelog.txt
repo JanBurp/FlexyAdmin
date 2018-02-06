@@ -1,3 +1,9 @@
+=3.5.0-beta.57
+
+[BUGS]
+- flexy_pagination did not jump to last page
+- MediaGrid: total count gave total of res_assets table instead of total files in folder
+
 =3.5.0-beta.56
 
 [BUGS]
