@@ -13,6 +13,19 @@ class MY_Controller extends CI_Controller {
 
 	public function __construct($isAdmin=false) {
 		parent::__construct();
+
+    /**
+     * Force https?
+     */
+    if ($this->config->item('force_https')) {
+      if( empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off" ){
+        $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: ' . $redirect);
+        exit();
+      }
+    }
+
     
     /**
      * Load extra's needed for front,back & ajax
