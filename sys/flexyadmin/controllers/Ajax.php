@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * For testing frontend ajax calls
  *
