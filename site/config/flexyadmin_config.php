@@ -11,5 +11,12 @@ $config['CACHE_DATA_SETTINGS'] = TRUE;
 
 
 
+/**
+ * Public folder staat default op 'public'.
+ * Hier kun je die eventueel hernoemen als de server dat verlangt.
+ */
+// $config['PUBLICFOLDER']        = 'public_html';
+
+
 
 /* End of file flexyadmin_config.php */
