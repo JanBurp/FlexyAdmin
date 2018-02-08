@@ -31,6 +31,7 @@ $config['MENU_TABLES']						= array('res_menu_result','tbl_menu');
 $config['SITE']										= SITEPATH;
 $config['SYS']										= 'sys/';
 $config['ADMINASSETS']						= $config['SYS'].'flexyadmin/assets/';
+$config['PUBLICFOLDER']           = 'public';
 $config['PUBLICASSETS']						= $config['SITE'].'assets/';
 $config['ASSETS']									= $config['PUBLICASSETS'];
 $config['ASSETSFOLDER']						= $config['ASSETS'];
