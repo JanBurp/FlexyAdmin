@@ -77,7 +77,13 @@ export default {
 </template>
 
 <style>
-  .flexy-button {cursor:pointer;width:2rem;height:1.55rem;padding:.15rem .5rem 1rem .4rem;text-align:center;}
+  .flexy-button {
+    cursor:pointer;
+    width:2rem;
+    height:1.5rem;
+    padding:0rem .45rem 1.5rem .45rem;
+    text-align:center;
+  }
   .flexy-button.no-border {border-color:transparent;}
   .flexy-button.btn-outline-default {background-color:transparent;}
   .flexy-button.btn-icon.dropdown-toggle {width:3.2rem;}

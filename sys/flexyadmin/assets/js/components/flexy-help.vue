@@ -30,7 +30,7 @@ export default {
     <div class="flexy-help-content col-sm-9">
       <div v-for="(item,key) in helpItems" v-show="key===visibleItem" class="card">
         <h1 class="card-header bg-primary text-white">{{item.title}}</h1>
-        <div class="card-block"v-html="item.content"></div>
+        <div class="card-body"v-html="item.content"></div>
       </div>
     </div>
 

@@ -64,10 +64,10 @@ export default {
   <div class="flexy-tool flexy-tool-db">
     <div class="card">
       <h1 class="card-header">Export Database</h1>
-      <div v-if="fields!==false" class="card-block">
+      <div v-if="fields!==false" class="card-body">
         <flexy-simple-form :fields="fields" @submit="export_db($event)"></flexy-simple-form>
       </div>
-      <div v-if="sql!==''" class="card-block">
+      <div v-if="sql!==''" class="card-body">
         <a :href="'data:text/plain;charset=utf-8,' + encodeURIComponent(sql)" :download="filename" class="btn btn-warning"><span class="fa fa-download"></span>Download Export</a>
       </div>
     </div>

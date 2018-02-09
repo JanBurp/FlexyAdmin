@@ -14,7 +14,7 @@
       <option v-for="option in list" :value="option[optionsValue]">{{ option[optionsLabel] }}</option>
     </select>
     
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" v-show="show">
       <template v-if="list.length">
         <li v-if="canSearch || multiple" class="search-item">
           <flexy-button v-if="multiple" icon="check-square-o" class="btn-outline-default" @click.native="invertSelection()"/>
@@ -376,6 +376,8 @@ button>.close { margin-left: 5px;}
   margin-bottom: -4px;
 }
 .btn-group-justified .dropdown-menu { width: 100%; }
+
+
 
 .search-item {
   width: 100%;

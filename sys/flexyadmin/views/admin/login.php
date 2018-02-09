@@ -19,7 +19,7 @@
 <div id="main">
   <div class="card" id="login-form">
 		<h1 v-cloak v-if="message!==''" class="card-header bg-danger" style="padding-left:1.25rem;">{{message}}</h1>
-    <div class="card-block">
+    <div class="card-body">
   		<form v-if="!forgottenPasswordDialog" action="<?=site_url("_admin/login/check")?>" method="post" class="">
         <div class="form-group row">
           <div class="col-10"><input type="text" class="form-control" id="user" name="user" placeholder="<?=lang('login_username')?>" value=""></div>

@@ -1,6 +1,6 @@
 <div id="content-home" class="card">
   <h1 class="card-header">Wat wilt u doen?</h1>
-  <div class="card-block">
+  <div class="card-body">
     <?=$homemenu?>
   </div>
 </div>

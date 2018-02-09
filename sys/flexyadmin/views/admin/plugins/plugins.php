@@ -1,6 +1,6 @@
 <div class="card">
   <h1 class="card-header"><?=$title?></h1>
-  <div class="card-block">
+  <div class="card-body">
     <table class="table table-hover table-sm">
       <?php foreach ($plugins as $plugin): ?>
         <tr>

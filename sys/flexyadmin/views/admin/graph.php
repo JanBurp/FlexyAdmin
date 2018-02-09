@@ -1,7 +1,7 @@
 <div class="card grid graph">
   <h1 class="card-header"><?=$title?></h1>
 
-  <div class="card-block table-responsive">
+  <div class="card-body table-responsive">
     <table class="table table-bordered table-hover table-sm">
 
     	<tbody>
