@@ -1,3 +1,15 @@
+=3.5.0-beta.58
+
+[UPDATE]
+- Bootstrap 4.0.0
+- Vue 2.5.13
+- etc.
+[FEATURES]
+- New (flexy_) config option ‘PUBLICFOLDER’ for changing the 'public' folder (to 'public_html' for example). Note: you need to rename the folder.
+- New config option: ‘force_https’
+[BUGS]
+- PHP long tags instead of short tags (some servers cannot use short tags)
+
 =3.5.0-beta.57
 
 [BUGS]
