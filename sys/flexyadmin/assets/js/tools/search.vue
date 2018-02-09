@@ -57,14 +57,14 @@ export default {
   <div class="flexy-tool flexy-tool-search">
     <div class="card">
       <h1 class="card-header">Search &amp; Replace</h1>
-      <div class="card-block">
+      <div class="card-body">
         <flexy-simple-form :fields="fields" @submit="submit($event)" />
       </div>
     </div>
 
     <div v-if="result!==false" class="card">
       <h1 class="card-header">Result</h1>
-      <div class="card-block tool-result">
+      <div class="card-body tool-result">
         <table class="table table-bordered table-condensed">
           <thead>
             <tr>

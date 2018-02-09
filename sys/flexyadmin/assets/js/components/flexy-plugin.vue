@@ -60,12 +60,12 @@ export default {
     
     <template v-if="!list">
       <h1 class="card-header">{{name}}</h1>
-      <div class="card-block" v-html="html"></div>
+      <div class="card-body" v-html="html"></div>
     </template>
 
     <template v-if="list">
       <h1 class="card-header">{{name}}</h1>
-      <div class="card-block">
+      <div class="card-body">
         <table class="table table-hover table-sm">
           <tr v-for="plugin in plugins">
             <td><router-link :to="plugin.uri">{{plugin.name}}</router-link></td>

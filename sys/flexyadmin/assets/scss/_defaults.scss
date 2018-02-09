@@ -2,8 +2,18 @@
 a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 
 /* BTN */
-.btn-default {background-color:$body-bg;color:$brand-primary;}
-.btn-default:hover {background-color:$brand-info;color:$body-bg;}
+.btn-default {background-color:$body-bg;color:$primary;}
+.btn-default:hover {background-color:$info;color:$body-bg;}
+.btn-secondary {background-color:$body-bg;color:$gray-900;border-color:$gray-400;}
+.btn-secondary:hover {background-color:$gray-300;color:$gray-900;border-color:$gray-400;}
+.btn-warning {color:$body-bg}
+
+.flexy-button.btn-outline-primary:hover,
+.flexy-button.btn-outline-info:hover,
+.flexy-button.btn-outline-default:hover,
+.flexy-button.btn-outline-warning:hover,
+.flexy-button.btn-outline-danger:hover {color:$body-bg;}
+
 
 /* NAV */
 .nav-pills {
@@ -15,13 +25,13 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
     text-overflow: ellipsis;
   }
   .nav-link.active {
-    background-color: $brand-primary;
+    background-color: $primary;
     color: $body-bg!important;
   }
   .nav-link:not(.active):hover,
   .nav-link:not(.active):focus {
-    background-color: $gray-lighter;
-    color: $brand-primary!important;
+    background-color: $gray-200;
+    color: $primary!important;
   }
 
   .hide-when-active {display:inline}
@@ -36,7 +46,7 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
   }
 }
 .nav-item.seperator {
-  border-top:solid 2px $gray-lighter;
+  border-top:solid 1px $gray-300;
 }
 
 /* PAGINATION */
@@ -48,7 +58,7 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
       cursor:pointer;
     }
     .page-item:not(.active) {
-      color:$brand-primary;
+      color:$primary;
     }
   }
   .pagination-info {
@@ -60,9 +70,9 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 /* CARD */
 .card {
   margin:0;
-  border:solid 1px $brand-primary;
+  border:solid 1px $primary;
   >.card-header {
-    background-color:$brand-primary;
+    background-color:$primary;
     color:$body-bg;
     padding:.5rem;
     >* {margin:0 1rem 0 0;float:left;}
@@ -80,11 +90,11 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
       padding:.25rem .5rem;
       h1 {
         font-weight:normal;
-        font-size:$font-size-h2;
+        font-size:$h2-font-size;
         padding-top:.125rem;
       }
     }
-    >.card-block {
+    >.card-body {
 //      overflow:hidden;
       padding:.25rem .5rem;
       .form-group {margin-bottom:.5rem;}
@@ -149,10 +159,17 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 
 
 // header nav icons only
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(lg) {
   #header .navbar-nav li {
     .fa {margin:0;}
    .nav-title {display:none;}
   }
 }
+// Only homebutton
+@include media-breakpoint-down(md) {
+  #header{
+    .flexy-block-container {display:none;}
+  }
+}
+
 

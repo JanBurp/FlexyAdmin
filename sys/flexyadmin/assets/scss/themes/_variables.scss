@@ -42,18 +42,18 @@
 //
 // Grayscale and brand colors for use across Bootstrap.
 
-$gray-dark:                 #373a3c !default;
+$gray-700:                 #373a3c !default;
 $gray:                      #55595c !default;
-$gray-light:                #818a91 !default;
-$gray-lighter:              #eceeef !default;
-$gray-lightest:             #f7f7f9 !default;
+$gray-600:                #818a91 !default;
+$gray-600:              #eceeef !default;
+$gray-200:             #f7f7f9 !default;
 
-$brand-primary:             #0275d8 !default;
-$brand-success:             #5cb85c !default;
-$brand-info:                #5bc0de !default;
-$brand-warning:             #f0ad4e !default;
-$brand-danger:              #d9534f !default;
-$brand-inverse:             $gray-dark !default;
+$primary:             #0275d8 !default;
+$success:             #5cb85c !default;
+$info:                #5bc0de !default;
+$warning:             #f0ad4e !default;
+$danger:              #d9534f !default;
+$inverse:             $gray-700 !default;
 
 
 // Options
@@ -105,14 +105,14 @@ $border-width: 1px !default;
 // Settings for the `<body>` element.
 
 $body-bg:    #fff !default;
-$body-color: $gray-dark !default;
+$body-color: $gray-700 !default;
 
 
 // Links
 //
 // Style anchor elements.
 
-$link-color:            $brand-primary !default;
+$link-color:            $primary !default;
 $link-decoration:       none !default;
 $link-hover-color:      darken($link-color, 15%) !default;
 $link-hover-decoration: underline !default;
@@ -170,7 +170,7 @@ $font-family-monospace:  Menlo, Monaco, Consolas, "Liberation Mono", "Courier Ne
 $font-family-base:       $font-family-sans-serif !default;
 
 // Pixel value used to responsively scale all typography. Applied to the `<html>` element.
-$font-size-root: 16px !default;
+$font-size-base: 16px !default;
 
 $font-size-base: 1rem !default;
 $font-size-lg:   1.25rem !default;
@@ -179,12 +179,12 @@ $font-size-xs:   .75rem !default;
 
 $line-height-base: 1.5 !default;
 
-$font-size-h1: 2.5rem !default;
-$font-size-h2: 2rem !default;
-$font-size-h3: 1.75rem !default;
-$font-size-h4: 1.5rem !default;
-$font-size-h5: 1.25rem !default;
-$font-size-h6: 1rem !default;
+$h1-font-size: 2.5rem !default;
+$h2-font-size: 2rem !default;
+$h3-font-size: 1.75rem !default;
+$h4-font-size: 1.5rem !default;
+$h5-font-size: 1.25rem !default;
+$h6-font-size: 1rem !default;
 
 $display1-size: 6rem !default;
 $display2-size: 5.5rem !default;
@@ -207,13 +207,13 @@ $lead-font-weight: 300 !default;
 
 $small-font-size: 80% !default;
 
-$text-muted: $gray-light !default;
+$text-muted: $gray-600 !default;
 
-$abbr-border-color: $gray-light !default;
+$abbr-border-color: $gray-600 !default;
 
-$blockquote-small-color:  $gray-light !default;
+$blockquote-small-color:  $gray-600 !default;
 $blockquote-font-size:    ($font-size-base * 1.25) !default;
-$blockquote-border-color: $gray-lighter !default;
+$blockquote-border-color: $gray-600 !default;
 $blockquote-border-width: .25rem !default;
 
 $hr-border-color: rgba(0,0,0,.1) !default;
@@ -241,7 +241,7 @@ $border-radius-lg:       .3rem !default;
 $border-radius-sm:       .2rem !default;
 
 $component-active-color: #fff !default;
-$component-active-bg:    $brand-primary !default;
+$component-active-bg:    $primary !default;
 
 $caret-width:            .3em !default;
 $caret-width-lg:         $caret-width !default;
@@ -260,7 +260,7 @@ $table-bg-hover:                rgba(0,0,0,.075) !default;
 $table-bg-active:               $table-bg-hover !default;
 
 $table-border-width:            $border-width !default;
-$table-border-color:            $gray-lighter !default;
+$table-border-color:            $gray-600 !default;
 
 
 // Buttons
@@ -275,30 +275,30 @@ $btn-box-shadow:                 inset 0 1px 0 rgba(255,255,255,.15), 0 1px 1px 
 $btn-active-box-shadow:          inset 0 3px 5px rgba(0,0,0,.125) !default;
 
 $btn-primary-color:              #fff !default;
-$btn-primary-bg:                 $brand-primary !default;
+$btn-primary-bg:                 $primary !default;
 $btn-primary-border:             $btn-primary-bg !default;
 
-$btn-secondary-color:            $gray-dark !default;
+$btn-secondary-color:            $gray-700 !default;
 $btn-secondary-bg:               #fff !default;
 $btn-secondary-border:           #ccc !default;
 
 $btn-info-color:                 #fff !default;
-$btn-info-bg:                    $brand-info !default;
+$btn-info-bg:                    $info !default;
 $btn-info-border:                $btn-info-bg !default;
 
 $btn-success-color:              #fff !default;
-$btn-success-bg:                 $brand-success !default;
+$btn-success-bg:                 $success !default;
 $btn-success-border:             $btn-success-bg !default;
 
 $btn-warning-color:              #fff !default;
-$btn-warning-bg:                 $brand-warning !default;
+$btn-warning-bg:                 $warning !default;
 $btn-warning-border:             $btn-warning-bg !default;
 
 $btn-danger-color:               #fff !default;
-$btn-danger-bg:                  $brand-danger !default;
+$btn-danger-bg:                  $danger !default;
 $btn-danger-border:              $btn-danger-bg !default;
 
-$btn-link-disabled-color:        $gray-light !default;
+$btn-link-disabled-color:        $gray-600 !default;
 
 $btn-padding-x-sm:               .5rem !default;
 $btn-padding-y-sm:               .25rem !default;
@@ -322,7 +322,7 @@ $input-padding-y:                .5rem !default;
 $input-line-height:              1.25 !default;
 
 $input-bg:                       #fff !default;
-$input-bg-disabled:              $gray-lighter !default;
+$input-bg-disabled:              $gray-600 !default;
 
 $input-color:                    $gray !default;
 $input-border-color:             rgba(0,0,0,.15) !default;
@@ -352,7 +352,7 @@ $input-height-sm:                (($font-size-sm * $line-height-sm) + ($input-pa
 
 $form-group-margin-bottom:       $spacer-y !default;
 
-$input-group-addon-bg:           $gray-lighter !default;
+$input-group-addon-bg:           $gray-600 !default;
 $input-group-addon-border-color: $input-border-color !default;
 
 $cursor-disabled:                not-allowed !default;
@@ -395,9 +395,9 @@ $custom-select-padding-x:          .75rem  !default;
 $custom-select-padding-y:          .375rem !default;
 $custom-select-indicator-padding:  1rem !default; // Extra padding to account for the presence of the background-image based indicator
 $custom-select-color:          $input-color !default;
-$custom-select-disabled-color: $gray-light !default;
+$custom-select-disabled-color: $gray-600 !default;
 $custom-select-bg:            #fff !default;
-$custom-select-disabled-bg:   $gray-lighter !default;
+$custom-select-disabled-bg:   $gray-600 !default;
 $custom-select-bg-size:       8px 10px !default; // In pixels because image dimensions
 $custom-select-indicator-color: #333 !default;
 $custom-select-indicator:     url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color}' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") !default;
@@ -437,13 +437,13 @@ $custom-file-text: (
 
 
 // Form validation icons
-$form-icon-success-color: $brand-success !default;
+$form-icon-success-color: $success !default;
 $form-icon-success: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-success-color}' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E") !default;
 
-$form-icon-warning-color: $brand-warning !default;
+$form-icon-warning-color: $warning !default;
 $form-icon-warning: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$form-icon-warning-color}' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E") !default;
 
-$form-icon-danger-color: $brand-danger !default;
+$form-icon-danger-color: $danger !default;
 $form-icon-danger: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$form-icon-danger-color}' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E") !default;
 
 
@@ -460,18 +460,18 @@ $dropdown-border-width:          $border-width !default;
 $dropdown-divider-bg:            #e5e5e5 !default;
 $dropdown-box-shadow:            0 .5rem 1rem rgba(0,0,0,.175) !default;
 
-$dropdown-link-color:            $gray-dark !default;
-$dropdown-link-hover-color:      darken($gray-dark, 5%) !default;
+$dropdown-link-color:            $gray-700 !default;
+$dropdown-link-hover-color:      darken($gray-700, 5%) !default;
 $dropdown-link-hover-bg:         #f5f5f5 !default;
 
 $dropdown-link-active-color:     $component-active-color !default;
 $dropdown-link-active-bg:        $component-active-bg !default;
 
-$dropdown-link-disabled-color:   $gray-light !default;
+$dropdown-link-disabled-color:   $gray-600 !default;
 
 $dropdown-item-padding-x:        1.5rem !default;
 
-$dropdown-header-color:          $gray-light !default;
+$dropdown-header-color:          $gray-600 !default;
 
 
 // Z-index master list
@@ -526,15 +526,15 @@ $navbar-light-toggler-border:       rgba(0,0,0,.1) !default;
 $nav-item-margin:               .2rem !default;
 $nav-item-inline-spacer:        1rem !default;
 $nav-link-padding:              .5em 1em !default;
-$nav-link-hover-bg:             $gray-lighter !default;
-$nav-disabled-link-color:       $gray-light !default;
-$nav-disabled-link-hover-color: $gray-light !default;
+$nav-link-hover-bg:             $gray-600 !default;
+$nav-disabled-link-color:       $gray-600 !default;
+$nav-disabled-link-hover-color: $gray-600 !default;
 $nav-disabled-link-hover-bg:    transparent !default;
 
 $nav-tabs-border-color:                       #ddd !default;
 $nav-tabs-border-width:                       $border-width !default;
 $nav-tabs-border-radius:                      $border-radius !default;
-$nav-tabs-link-hover-border-color:            $gray-lighter !default;
+$nav-tabs-link-hover-border-color:            $gray-600 !default;
 $nav-tabs-active-link-hover-color:            $gray !default;
 $nav-tabs-active-link-hover-bg:               $body-bg !default;
 $nav-tabs-active-link-hover-border-color:     #ddd !default;
@@ -562,14 +562,14 @@ $pagination-border-width:              $border-width !default;
 $pagination-border-color:              #ddd !default;
 
 $pagination-hover-color:               $link-hover-color !default;
-$pagination-hover-bg:                  $gray-lighter !default;
+$pagination-hover-bg:                  $gray-600 !default;
 $pagination-hover-border:              #ddd !default;
 
 $pagination-active-color:              #fff !default;
-$pagination-active-bg:                 $brand-primary !default;
-$pagination-active-border:             $brand-primary !default;
+$pagination-active-bg:                 $primary !default;
+$pagination-active-border:             $primary !default;
 
-$pagination-disabled-color:            $gray-light !default;
+$pagination-disabled-color:            $gray-600 !default;
 $pagination-disabled-bg:               #fff !default;
 $pagination-disabled-border:           #ddd !default;
 
@@ -577,7 +577,7 @@ $pagination-disabled-border:           #ddd !default;
 // Jumbotron
 
 $jumbotron-padding:              2rem !default;
-$jumbotron-bg:                   $gray-lighter !default;
+$jumbotron-bg:                   $gray-600 !default;
 
 
 // Form states and alerts
@@ -660,12 +660,12 @@ $popover-arrow-outer-color:           fade-in($popover-border-color, .05) !defau
 
 // Tags
 
-$tag-default-bg:            $gray-light !default;
-$tag-primary-bg:            $brand-primary !default;
-$tag-success-bg:            $brand-success !default;
-$tag-info-bg:               $brand-info !default;
-$tag-warning-bg:            $brand-warning !default;
-$tag-danger-bg:             $brand-danger !default;
+$tag-default-bg:            $gray-600 !default;
+$tag-primary-bg:            $primary !default;
+$tag-success-bg:            $success !default;
+$tag-info-bg:               $info !default;
+$tag-warning-bg:            $warning !default;
+$tag-danger-bg:             $danger !default;
 
 $tag-color:                 #fff !default;
 $tag-link-hover-color:      #fff !default;
@@ -742,11 +742,11 @@ $progress-bar-color:          #0074d9 !default;
 $progress-border-radius:      $border-radius !default;
 $progress-box-shadow:         inset 0 .1rem .1rem rgba(0,0,0,.1) !default;
 
-$progress-bar-bg:             $brand-primary !default;
-$progress-bar-success-bg:     $brand-success !default;
-$progress-bar-warning-bg:     $brand-warning !default;
-$progress-bar-danger-bg:      $brand-danger !default;
-$progress-bar-info-bg:        $brand-info !default;
+$progress-bar-bg:             $primary !default;
+$progress-bar-success-bg:     $success !default;
+$progress-bar-warning-bg:     $warning !default;
+$progress-bar-danger-bg:      $danger !default;
+$progress-bar-info-bg:        $info !default;
 
 
 // List group
@@ -762,8 +762,8 @@ $list-group-active-bg:          $component-active-bg !default;
 $list-group-active-border:      $list-group-active-bg !default;
 $list-group-active-text-color:  lighten($list-group-active-bg, 40%) !default;
 
-$list-group-disabled-color:      $gray-light !default;
-$list-group-disabled-bg:         $gray-lighter !default;
+$list-group-disabled-color:      $gray-600 !default;
+$list-group-disabled-bg:         $gray-600 !default;
 $list-group-disabled-text-color: $list-group-disabled-color !default;
 
 $list-group-link-color:         #555 !default;
@@ -796,9 +796,9 @@ $breadcrumb-padding-y:          .75rem !default;
 $breadcrumb-padding-x:          1rem !default;
 $breadcrumb-item-padding:       .5rem !default;
 
-$breadcrumb-bg:                 $gray-lighter !default;
-$breadcrumb-divider-color:      $gray-light !default;
-$breadcrumb-active-color:       $gray-light !default;
+$breadcrumb-bg:                 $gray-600 !default;
+$breadcrumb-divider-color:      $gray-600 !default;
+$breadcrumb-active-color:       $gray-600 !default;
 $breadcrumb-divider:            "/" !default;
 
 
@@ -852,6 +852,6 @@ $kbd-color:                   #fff !default;
 $kbd-bg:                      #333 !default;
 
 $pre-bg:                      #f7f7f9 !default;
-$pre-color:                   $gray-dark !default;
+$pre-color:                   $gray-700 !default;
 $pre-border-color:            #ccc !default;
 $pre-scrollable-max-height:   340px !default;

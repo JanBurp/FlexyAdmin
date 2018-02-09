@@ -28,7 +28,7 @@
 <div id="main" class="editor-popup">
 
   <div class="card form">
-    <div class="card-block">
+    <div class="card-body">
 
       <!-- Alt -->
       <div class="form-group row" v-cloak>

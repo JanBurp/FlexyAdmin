@@ -1,7 +1,7 @@
 <div class="card form">
   <h1 class="card-header"><?=$title?></h1>
 
-  <div class="card-block">
+  <div class="card-body">
     
     <vf-form action="<?=$this->uri->uri_string()?>" method="POST">
       <vf-status-bar ref="statusbar"></vf-status-bar>

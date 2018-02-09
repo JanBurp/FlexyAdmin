@@ -58,7 +58,7 @@ export default {
   <div class="flexy-tool flexy-tool-db">
     <div class="card">
       <h1 class="card-header">Restore backup</h1>
-      <div class="card-block">
+      <div class="card-body">
         <flexy-simple-form v-if="fields!==false" :fields="fields" @submit="restore($event)"></flexy-simple-form>
         <div v-if="errors!==false" class="messages">
           <div v-for="error in errors" class="alert alert-danger">{{error.message}}</div>

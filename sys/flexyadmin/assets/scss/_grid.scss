@@ -2,17 +2,17 @@
 .grid {
   
   // Table cells Focus/Editing
-  td.has-focus {background-color:$brand-warning-light}
-/*  td.is-editing {padding:2px;box-shadow:0px 0px 1px $brand-danger inset;}*/
+  td.has-focus {background-color:$warning-light}
+/*  td.is-editing {padding:2px;box-shadow:0px 0px 1px $danger inset;}*/
   
   // Relation item
   .grid-relation-item {
-    border:solid 1px $gray-lighter;
+    border:solid 1px $gray-600;
     border-radius:$border-radius;
     padding:.15rem .35rem;
     margin-right:.25rem;
   }
-  .grid-relation-item:hover {border-color:$brand-primary;background-color:$brand-warning-light};
+  .grid-relation-item:hover {border-color:$primary;background-color:$warning-light};
   
   // Thumb
   .color-thumb-sm {
@@ -33,8 +33,8 @@
     }
   }
   #grid-find {
-    padding-top:.4rem;
-    padding-bottom:0.1rem;
+    height:1.65rem!important;
+    padding-top:.25rem;
     margin-right:.25rem;
     border-color:$body-bg;
   }
@@ -42,12 +42,12 @@
   
   // Extended find Header
   .card-header.grid-extended-find {
-    background-color:$gray-lighter!important;
-    color:$brand-primary!important;
+    background-color:$gray-200!important;
+    color:$primary!important;
     h4 {
       float:left;
       position:absolute;
-      color:$gray-light;
+      color:$gray-600;
       opacity:.35;
     }
     form {
@@ -64,18 +64,18 @@
   }
    
    // CARD BLOCK
-   .card-block {
+   .card-body {
       padding:0;
    }
    
    // UPLOAD ROW
    .grid-upload {
-     background-color:$gray-lightest;
+     background-color:$gray-200;
      input#browsefiles {
        display:none;
      }
      .grid-upload-dropbox {
-       color:$gray-light;
+       color:$gray-600;
        .flexy-button {
          margin-right:.35rem;
        }
@@ -87,9 +87,9 @@
      }
    }
    .grid-upload.dropping {
-     background-color:$brand-warning!important;
+     background-color:$warning!important;
      color:$body-bg!important;
-     border-color:$brand-danger!important;
+     border-color:$danger!important;
      * {
        color:$body-bg!important;
      }
@@ -159,7 +159,7 @@
      text-overflow:ellipsis;
      white-space:nowrap;
      max-width:250px;
-     input {padding:0;float:left;width:100%;color:$brand-primary;}
+     input {padding:0;float:left;width:100%;color:$primary;}
   }
   td.grid-cell-full-show {
     max-width:none;
@@ -246,14 +246,14 @@
         overflow:hidden;
       }
       tr:hover {
-        border-color:$brand-primary;
-        box-shadow:0 0 .1rem $gray;
+        border-color:$primary;
+        box-shadow:0 0 .1rem $gray-500;
         td.action {display:block;}
       }
       tr.is-selected {
-        background-color:$gray-lighter;
-        border-color:$brand-primary;
-        box-shadow:0 0 .5rem $gray;
+        background-color:$gray-600;
+        border-color:$primary;
+        box-shadow:0 0 .5rem $gray-500;
       }
 
       td {
@@ -317,8 +317,8 @@
       
       // UPLOAD ROW
       tr.grid-upload {
-        background-color:$gray-lightest;
-        border:dashed 2px $brand-warning;
+        background-color:$gray-200;
+        border:dashed 2px $warning;
         td.grid-upload-dropbox {
           display:block;
           width:100%;
@@ -335,7 +335,7 @@
         }
       }
       tr.grid-upload:hover {
-        border-color:$brand-danger;
+        border-color:$danger;
         box-shadow:none;
       }
       
@@ -373,8 +373,8 @@
 
 /* SORTABLE */
 .sortable-chosen {
-  background-color:$gray-lightest;
-  box-shadow:0 0 .5rem $gray-dark;
+  background-color:$gray-200;
+  box-shadow:0 0 .5rem $gray-700;
 }
 .draggable-handle {
   cursor:move;
@@ -388,7 +388,7 @@
 /* GRAPH */
 .graph {
   .bar {padding:0;}
-  .graph-bar {background-color:$brand-warning;}
+  .graph-bar {background-color:$warning;}
   .vertical-text {}
 }
   

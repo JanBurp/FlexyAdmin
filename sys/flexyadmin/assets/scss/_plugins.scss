@@ -1,7 +1,7 @@
 // plugin_stats
 
 .flexy-plugin.plugin_stats {
-  .card-block {
+  .card-body {
     padding:0px;
     p {margin:.5rem 1rem;}
     .card {
@@ -9,7 +9,7 @@
       border:none;
       .card-header {
         border-radius:0;
-        font-size:$font-size-h2;
+        font-size:$h2-font-size;
       }
       table {
         border:none;

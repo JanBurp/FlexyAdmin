@@ -5,7 +5,7 @@
     </div>
     <transition name="collapse">
       <div class="card-collapse" v-if="open">
-        <div class="card-block">
+        <div class="card-body">
           <slot></slot>
         </div>
       </div>

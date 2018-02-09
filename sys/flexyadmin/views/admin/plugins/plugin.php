@@ -1,6 +1,6 @@
 <div class="card">
   <h1 class="card-header"><?=$title?></h1>
-  <div class="card-block">
+  <div class="card-body">
     <?php if (isset($messages)): ?>
       <?php foreach ($messages as $message): ?>
       <p><?=$message?></p>

@@ -7,11 +7,11 @@
 
 // Variables
 // --------------------------------------------------
-$brand-primary: darken(#428bca, 6.5%); // #337ab7
+$primary: darken(#428bca, 6.5%); // #337ab7
 $spinner-backdrop-background: rgba(255,255,255,0.9) !default;;
-$spinner-text-color: $brand-primary !default;
+$spinner-text-color: $primary !default;
 $spinner-border-size: 4px !default;
-$spinner-border-primary-color:  $brand-primary !default;
+$spinner-border-primary-color:  $primary !default;
 $spinner-border-secondary-color: #ccc !default;
 $spinner-sm: 1.5em !default;
 $spinner-md: 2em !default;

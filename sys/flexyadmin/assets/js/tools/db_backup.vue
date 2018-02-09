@@ -32,7 +32,7 @@ export default {
   <div class="flexy-tool flexy-tool-db">
     <div class="card">
       <h1 class="card-header">Backup</h1>
-      <div v-if="filename!==''" class="card-block">
+      <div v-if="filename!==''" class="card-body">
         <a :href="'data:text/plain;charset=utf-8,' + encodeURIComponent(sql)" :download="filename" class="btn btn-warning"><span class="fa fa-download"></span>Download Backup</a>
       </div>
     </div>

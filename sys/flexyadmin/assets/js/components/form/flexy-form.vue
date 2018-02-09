@@ -930,7 +930,7 @@ export default {
     </div>
   </div>
 
-  <div class="card-block">
+  <div class="card-body">
     
     <tabs navStyle="tabs" class="tabs" :class="tabsClass()" @tab="selectTab($event)" :value="selectedTab()">
       <tab v-for="(fieldset,name) in fieldsets" :header="name" :headerclass="tabHeaderClass(fieldset)">

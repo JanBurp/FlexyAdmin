@@ -1,7 +1,7 @@
 <div class="card grid">
   <h1 class="card-header <?=isset($class)?$class:'';?>"><?=$title?></h1>
 
-  <div class="card-block table-responsive">
+  <div class="card-body table-responsive">
     <table class="table table-striped table-bordered table-hover table-sm">
       <thead class="">
         <tr>

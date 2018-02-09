@@ -1121,7 +1121,7 @@ export default {
       </div>
 
       <!-- GRID HEADERS -->
-      <div class="card-block table-responsive">
+      <div class="card-body table-responsive">
         <table class="table table-bordered table-sm grid-data">
           <thead>
             <tr>
