@@ -202,13 +202,16 @@ export default {
 
       // Init (try untill its ready)
       var timer = window.setInterval(function(){
-        tinymce.init(init);
+        if ( !self.wysiwygJustReady ) {
+          tinymce.init(init);
+          self.wysiwygJustReady=1;
+        }
         exists = document.querySelector('.mce-tinymce');
         if ( !_.isUndefined(exists) && exists!==null ) {
           clearInterval(timer)
           self.wysiwygJustReady = 2;
         };
-      }, 25 );
+      }, 100 );
     },
     
     apiUrl : function() {
@@ -273,6 +276,22 @@ export default {
       if (type==='default') {
         return this.fieldTypes['default'].indexOf(this.form_groups[field]['type']) === -1;
       }
+      // // wysiwyg is textarea as long as editor is not present
+      // if (this.form_groups[field]['type']==='wysiwyg') {
+      //   console.log(type,field,this.wysiwygJustReady);
+      //   if (this.wysiwygJustReady!==false) {
+      //     if (type==='wysiwyg') {
+      //       return true;
+      //     }
+      //   }
+      //   else {
+      //     if (type==='textarea') {
+      //       return true;
+      //     }
+      //   }
+      //   return false;
+      // }
+
       return this.fieldTypes[type].indexOf(this.form_groups[field]['type']) >= 0;
     },
     
