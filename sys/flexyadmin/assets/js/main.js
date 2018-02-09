@@ -155,3 +155,5 @@ else {
   
 }
 
+// console.log( 'Vue version:', Vue.version );
+
