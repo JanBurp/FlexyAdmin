@@ -5663,6 +5663,12 @@ a > .fa, .btn > .fa {
   #flexyadmin-modal .modal-body {
     max-height: 200px !important; } }
 
+@media (max-width: 991.98px) {
+  #header .help-button {
+    display: none; }
+  #help {
+    display: none; } }
+
 @media (max-width: 767.98px) {
   #header .title {
     display: none; }
@@ -5804,35 +5810,35 @@ a > .fa, .btn > .fa {
     width: 100%;
     overflow: hidden; }
 
-.flexy-accordion .card {
-  border: none;
-  border-bottom: solid 1px #696;
-  border-radius: 0 !important; }
-  .flexy-accordion .card .card-header {
-    background-color: #fff;
-    color: #696;
-    border-radius: 0 !important;
-    cursor: pointer;
-    padding: 9px .5rem 10px; }
-    .flexy-accordion .card .card-header .fa {
-      width: 2rem; }
-  .flexy-accordion .card .card-header:hover {
-    background-color: #6c757d; }
-  .flexy-accordion .card .card-body {
+.flexy-accordion {
+  margin-top: .15rem; }
+  .flexy-accordion .card {
+    border: none;
+    border-bottom: solid 1px #696;
     border-radius: 0 !important; }
-    .flexy-accordion .card .card-body h1 {
+    .flexy-accordion .card .card-header {
+      background-color: #fff;
       color: #696;
-      margin-left: -.5rem; }
-    .flexy-accordion .card .card-body li {
-      margin-left: -1rem;
-      padding-left: 0; }
-
-.flexy-accordion .card.active .card-header {
-  background-color: #696;
-  color: #fff; }
-
-.flexy-accordion img {
-  max-width: 100%; }
+      border-radius: 0 !important;
+      cursor: pointer;
+      padding: .5rem .5rem .55rem; }
+      .flexy-accordion .card .card-header .fa {
+        width: 2rem; }
+    .flexy-accordion .card .card-header:hover {
+      background-color: #dee2e6; }
+    .flexy-accordion .card .card-body {
+      border-radius: 0 !important; }
+      .flexy-accordion .card .card-body h1 {
+        color: #696;
+        margin-left: -.5rem; }
+      .flexy-accordion .card .card-body li {
+        margin-left: -1rem;
+        padding-left: 0; }
+  .flexy-accordion .card.active .card-header {
+    background-color: #696;
+    color: #fff; }
+  .flexy-accordion img {
+    max-width: 100%; }
 
 #main.help {
   width: 70%; }

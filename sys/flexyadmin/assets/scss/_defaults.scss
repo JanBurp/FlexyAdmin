@@ -160,6 +160,10 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 
 
 // Layout
+@include media-breakpoint-down(md) {
+  #header .help-button {display:none;}
+  #help {display:none;}
+}
 @include media-breakpoint-down(sm) {
   #header {
     .title {display:none;}
