@@ -27,3 +27,7 @@ export default {
     </transition-group>
   </div>
 </template>
+
+<style>
+  #messages > div {width:100%}
+</style>
