@@ -21,26 +21,37 @@
     <progress class="progress" v-show="state.progress > 0" :value="state.progress" max="100"></progress>
     <flexy-messages v-show="state.messages.length > 0" :messages="state.messages"></flexy-messages>
     <flexy-modal :options="state.modal"></flexy-modal>
-    <div id="header" class="navbar navbar-fixed-top flex-row d-flex justify-content-between">
-      <div class="navbar-brand navbar-collapse">
-        <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>"><span class="flexy-block home-button btn btn-secondary">
-          <span class="fa fa-home fa-lg"></span>
-        </span></a>
-        <flexy-blocks v-once href="<?=$base_url?>" text="<?=$str_title?>" class="hidden-md-down"></flexy-blocks>
+
+    <div id="header" class="navbar navbar-fixed-top row align-items-start">
+
+      <div class="col navbar-brand">
+        <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>">
+          <span class="flexy-block home-button btn btn-secondary">
+            <span class="fa fa-home fa-lg"></span>
+          </span>
+        </a>
+        <span class="flexy-block menu-button btn btn-secondary d-md-none" :class="{'bg-primary':global.menuIsVisible()}" @click="global.toggleMenu()">
+          <span class="fa fa-bars fa-lg"></span>
+        </span>
+
+        <flexy-blocks v-once href="<?=$base_url?>" text="<?=$admin_title?>" class="title"></flexy-blocks>
       </div>
-      <div class="navbar-nav">
+
+      <div class="col-auto navbar-nav">
         <?=$headermenu?>
       </div>
     </div>
+    
     <div id="row" class="row">
-      <div id="flexy-menu-side" class="col-sm-2">
+      <div id="flexy-menu-side" class="col-md-2 d-md-block" :class="{'d-none':!global.menuIsVisible()}" @click="global.toggleMenu()">
         <?=$sidemenu?>
       </div>
-      <div id="content" class="col-sm-10">
+      <div id="content" class="col-md-10">
         <router-view v-if="($route.path.length>1 && $route.path.substr(0,5)!=='/load')"></router-view>
         <template v-else><?=$content?></template>
       </div>
     </div>
+
     <div id="mask" v-cloak v-show="state.progress>0">
       <span class="spinner fa fa-spinner fa-pulse fa-fw"></span>
     </div>

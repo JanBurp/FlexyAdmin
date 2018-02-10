@@ -2,10 +2,11 @@
 #login-form {
   position:absolute;
   left:50%;
-  top:30%;
+  top:20%;
   width:25rem;
+  max-width:96%;
   box-shadow:0 0 1.25rem $gray-700;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%,0%);
   h1 {text-transform:none;}
   
   #forgotten-password-link {
@@ -36,21 +37,24 @@
 .progress::-webkit-progress-value {background:$danger}
 .progress::-moz-progress-bar {background:$danger}
 
+#main {
+  min-width:20rem;
+}
+
 /* HEADER */
 #header {
   padding:0 .5rem 0 0;
   height: 47px;
   max-height: 47px;
   background-color:transparent;
-  .nav {padding-top:.1rem;}
+  overflow:hidden;
+  .nav {padding-top:.25rem;}
   .navbar-brand {
-    max-width:50%;
-    overflow:hidden;
-  }
-  .home-button {
-    margin-right:1.25rem;
-    padding-left:4px;
-    padding-right:3px;
+    .home-button,.menu-button {
+      margin-right:.75rem;
+      padding-left:4px;
+      padding-right:3px;
+    }
   }
 }
 
