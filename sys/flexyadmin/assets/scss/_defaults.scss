@@ -18,7 +18,8 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 /* NAV */
 .nav-pills {
   .nav-link {
-    padding:.45rem .5rem;
+    >.fa {margin-left:0;margin-right:0;}
+    padding:.45rem 1rem;
     font-size:1.15rem;
     white-space:nowrap;
     overflow:hidden;
@@ -158,18 +159,27 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 }
 
 
-// header nav icons only
-@include media-breakpoint-down(lg) {
-  #header .navbar-nav li {
-    .fa {margin:0;}
-   .nav-title {display:none;}
+// Layout
+@include media-breakpoint-down(sm) {
+  #header {
+    .title {display:none;}
+    .navbar-nav li {
+      .fa {margin:0;}
+      .nav-title {display:none;}
+    }
+  }
+  #content {
+    padding:0!important;
   }
 }
-// Only homebutton
-@include media-breakpoint-down(md) {
-  #header{
-    .flexy-block-container {display:none;}
+@include media-breakpoint-down(xs) {
+  #header {
+    .flexy-block {
+      margin-right:.25rem!important;
+      // font-size:.85rem;
+    }
+    .nav-link {
+      padding:.5rem;
+    }
   }
 }
-
-

@@ -32,13 +32,17 @@
       float:left;
     }
   }
+  .card-header {
+    .form-group {
+      margin-bottom:0;
+    }
+  }
   #grid-find {
     height:1.65rem!important;
     padding-top:.25rem;
     margin-right:.25rem;
     border-color:$body-bg;
   }
-
   
   // Extended find Header
   .card-header.grid-extended-find {

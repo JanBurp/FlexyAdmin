@@ -5542,11 +5542,14 @@ a > .fa, .btn > .fa {
 
 /* NAV */
 .nav-pills .nav-link {
-  padding: .45rem .5rem;
+  padding: .45rem 1rem;
   font-size: 1.15rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; }
+  .nav-pills .nav-link > .fa {
+    margin-left: 0;
+    margin-right: 0; }
 
 .nav-pills .nav-link.active {
   background-color: #696;
@@ -5660,24 +5663,31 @@ a > .fa, .btn > .fa {
   #flexyadmin-modal .modal-body {
     max-height: 200px !important; } }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 767.98px) {
+  #header .title {
+    display: none; }
   #header .navbar-nav li .fa {
     margin: 0; }
   #header .navbar-nav li .nav-title {
-    display: none; } }
+    display: none; }
+  #content {
+    padding: 0 !important; } }
 
-@media (max-width: 991.98px) {
-  #header .flexy-block-container {
-    display: none; } }
+@media (max-width: 575.98px) {
+  #header .flexy-block {
+    margin-right: 0.25rem !important; }
+  #header .nav-link {
+    padding: .5rem; } }
 
 /* LOGIN */
 #login-form {
   position: absolute;
   left: 50%;
-  top: 30%;
+  top: 20%;
   width: 25rem;
+  max-width: 96%;
   box-shadow: 0 0 1.25rem #495057;
-  transform: translate(-50%, -50%); }
+  transform: translate(-50%, 0%); }
   #login-form h1 {
     text-transform: none; }
   #login-form #forgotten-password-link {
@@ -5713,19 +5723,20 @@ a > .fa, .btn > .fa {
 .progress::-moz-progress-bar {
   background: #D00; }
 
+#main {
+  min-width: 20rem; }
+
 /* HEADER */
 #header {
   padding: 0 .5rem 0 0;
   height: 47px;
   max-height: 47px;
-  background-color: transparent; }
+  background-color: transparent;
+  overflow: hidden; }
   #header .nav {
-    padding-top: .1rem; }
-  #header .navbar-brand {
-    max-width: 50%;
-    overflow: hidden; }
-  #header .home-button {
-    margin-right: 1.25rem;
+    padding-top: .25rem; }
+  #header .navbar-brand .home-button, #header .navbar-brand .menu-button {
+    margin-right: .75rem;
     padding-left: 4px;
     padding-right: 3px; }
 
@@ -5908,6 +5919,8 @@ a > .fa, .btn > .fa {
   .grid .grid-actions .grid-action {
     margin: 0 0 0 1rem;
     float: left; }
+  .grid .card-header .form-group {
+    margin-bottom: 0; }
   .grid #grid-find {
     height: 1.65rem !important;
     padding-top: .25rem;

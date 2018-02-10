@@ -12,6 +12,7 @@ export default {
   debug: false,
   state: {
     progress    : 0,
+    menu_visible : false,
     help_on     : false,
     help_items  : {},
     messages    : [],
@@ -76,6 +77,16 @@ export default {
     if (percent<10) percent=10; // Start met minimaal 10%
     this.state.progress = percent;
     this.debug && console.log('state.progress',this.state.progress); 
+  },
+
+  /**
+   * Menu button
+   */
+  toggleMenu : function() {
+    this.state.menu_visible = !this.state.menu_visible;
+  },
+  menuIsVisible : function() {
+    return this.state.menu_visible;
   },
 
   /**
