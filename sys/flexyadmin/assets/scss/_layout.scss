@@ -101,16 +101,23 @@
 
 #content-home {
   .nav-item {
-    display:inline-block;
     width:auto;
+    max-width:100%;
+    overflow:hidden;
     margin-right:2rem;
     margin-bottom:1rem;
+    a {
+      width:100%;
+      display:inline-block;
+    }
     .flexy-button {
       float:left;
       margin-right:.5rem;
     }
     .nav-title {
-      display:inline-block;
+      width:100%;
+      white-space:nowrap;
+      text-overflow:ellipsis;
       margin:0;
     }
   }
