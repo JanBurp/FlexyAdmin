@@ -150,7 +150,7 @@ export default {
 </script>
 
 <template>
-  <div class="form-group row">
+  <div class="form-group row" :class="'form-group-type-'+type">
     <label class="col-md-3 form-control-label" :for="name">{{title()}}</label>
     <div class="col-md-9">
       <input v-if="type=='input'"     type="input"    class="form-control" :id="name" :name="name" :placeholder="placeholder" v-model="internalValue" />
