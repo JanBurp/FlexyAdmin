@@ -255,9 +255,9 @@
         td.action {display:block;}
       }
       tr.is-selected {
-        background-color:$gray-600;
+        background-color:$gray-300;
         border-color:$primary;
-        box-shadow:0 0 .5rem $gray-500;
+        box-shadow:0 0 .5rem $gray-900;
       }
 
       td {

@@ -203,6 +203,21 @@ select.form-control:not([size]):not([multiple]) {
 
 // FIELDS
 
+.form-group-type-checkbox {
+  @include media-breakpoint-down(md) {
+    .form-control-label {
+      width:80%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    div {
+      width:20%;
+      text-align:right;
+      input {position:static;}
+    }
+  }
+}
+
 textarea {
   min-height:5rem;
   max-height:30rem;
@@ -226,8 +241,11 @@ body.mce-fullscreen .mce-tinymce{
   max-width:500px!important;
   overflow:hidden;
 }
-
-
+.mce-wordcount {
+  max-width:75%!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis;
+}
 
 // DatePicker overrides
 .form-control.datepicker-input {
@@ -270,6 +288,7 @@ body.mce-fullscreen .mce-tinymce{
     width:100%;
     min-height:5rem;
     margin:.25rem;
+    overflow:hidden;
     .mediapicker-thumb {
       display:inline-block;
       position: relative;

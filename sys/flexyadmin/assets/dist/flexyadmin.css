@@ -5683,7 +5683,9 @@ a > .fa, .btn > .fa {
   #header .flexy-block {
     margin-right: 0.25rem !important; }
   #header .nav-link {
-    padding: .5rem; } }
+    padding: .5rem; }
+  .grid .pagination-info {
+    display: none; } }
 
 /* LOGIN */
 #login-form {
@@ -5789,21 +5791,22 @@ a > .fa, .btn > .fa {
     margin: 0; }
 
 #content-home .nav-item {
+  display: inline;
   width: auto;
   max-width: 100%;
   overflow: hidden;
   margin-right: 2rem;
   margin-bottom: 1rem; }
   #content-home .nav-item a {
-    width: 100%;
+    max-width: 100%;
     display: inline-block; }
   #content-home .nav-item .flexy-button {
     float: left;
     margin-right: .5rem; }
   #content-home .nav-item .nav-title {
-    width: 100%;
     white-space: nowrap;
     text-overflow: ellipsis;
+    overflow: hidden;
     margin: 0; }
 
 /* SIDEBAR MENU */
@@ -6097,9 +6100,9 @@ a > .fa, .btn > .fa {
     .grid.grid-media-view-thumbs table.grid-data tbody tr:hover td.action, .grid.grid-media-view-small table.grid-data tbody tr:hover td.action {
       display: block; }
   .grid.grid-media-view-thumbs table.grid-data tbody tr.is-selected, .grid.grid-media-view-small table.grid-data tbody tr.is-selected {
-    background-color: #6c757d;
+    background-color: #dee2e6;
     border-color: #696;
-    box-shadow: 0 0 0.5rem #adb5bd; }
+    box-shadow: 0 0 0.5rem #212529; }
   .grid.grid-media-view-thumbs table.grid-data tbody td, .grid.grid-media-view-small table.grid-data tbody td {
     display: none;
     border: none;
@@ -6363,6 +6366,17 @@ select:-moz-focusring {
   padding: .25rem 1rem;
   border-radius: 0.25rem; }
 
+@media (max-width: 991.98px) {
+  .form-group-type-checkbox .form-control-label {
+    width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+  .form-group-type-checkbox div {
+    width: 20%;
+    text-align: right; }
+    .form-group-type-checkbox div input {
+      position: static; } }
+
 textarea {
   min-height: 5rem;
   max-height: 30rem; }
@@ -6389,6 +6403,11 @@ textarea {
 .mce-menu-item {
   max-width: 500px !important;
   overflow: hidden; }
+
+.mce-wordcount {
+  max-width: 75% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis; }
 
 .form-control.datepicker-input {
   width: 7rem;
@@ -6428,7 +6447,8 @@ textarea {
     clear: both;
     width: 100%;
     min-height: 5rem;
-    margin: .25rem; }
+    margin: .25rem;
+    overflow: hidden; }
     .mediapicker .mediapicker-selection .mediapicker-thumb {
       display: inline-block;
       position: relative;
