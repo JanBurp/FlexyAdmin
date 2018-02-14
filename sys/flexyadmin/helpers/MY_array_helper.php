@@ -843,15 +843,15 @@ function array_sort_length($a) {
  */
 function in_array_like($v,$a,$offset=false) {
 	$in=false;
-	$i=each($a);
-	while (!empty($i['value']) and !$in) {
-		$pos = strpos($i['value'],$v);
+	$i=current($a);
+	while (!empty($i) and !$in) {
+		$pos = strpos($i,$v);
 		if ($pos!==false) {
 			if ($offset===false or $pos===$offset) {
-				$in=$i['key'];
+				$in=key($a);
 			}
 		}
-		$i=each($a);
+		$i=next($a);
 	}
 	return $in;
 }
@@ -1048,7 +1048,7 @@ function array_add_after($a,$key,$row) {
 	}
 	$firstslice[$item['key']]=$item['value'];
 	array_shift($a);
-	$item=each($a);
+	// $item=next($a);
 	return array_merge($firstslice,$row,$a);
 }
 
@@ -1072,9 +1072,6 @@ function array_add_before($a,$key,$row) {
 		array_shift($a);
 		$item=each($a);
 	}
-	// $firstslice[$item['key']]=$item['value'];
-	// array_shift($a);
-	// $item=each($a);
 	return array_merge($firstslice,$row,$a);
 }
 

@@ -1063,15 +1063,16 @@ class Menu {
 		if ($ParentUri) {
 			$ParentMenu=$this->_get_submenu($ParentUri);
 			$ParentShortUri=get_suffix($ParentUri,'/');
-			do {
-				$current=each($ParentMenu);
-			} while ($current and $current['key']!=$ParentShortUri );
+      $current=current($ParentMenu);
+      while ($current and key($ParentMenu)!=$ParentShortUri ) {
+				$current=next($ParentMenu);
+      }
 			if ($current) {
-				$next=each($ParentMenu);
+				$next = next($ParentMenu);
 				if ($next) {
-					$branch=$next['value']['sub'];
+					$branch=$next['sub'];
 					$branch=current($branch);
-					$branch['full_uri']=remove_suffix($ParentUri,'/').'/'.$next['value']['uri'].'/'.$branch['uri'];
+					$branch['full_uri']=remove_suffix($ParentUri,'/').'/'.$next['uri'].'/'.$branch['uri'];
 				}
 			}
 		}
