@@ -428,12 +428,17 @@ export default {
     },
     
     formGroupClass : function(field) {
-      // console.log('formGroupClass',field);
       var formGroupClass='';
-      if ( this.validationErrors[field] ) formGroupClass = 'has-danger';
+      // type
+      formGroupClass += 'form-group-type-' + this.form_groups[field].type + ' ';
+      // validation
+      if ( this.validationErrors[field] ) {
+        formGroupClass += 'has-danger';
+      }
       if ( this.isRequired(field) ) {
         formGroupClass += ' required';
       }
+      // subform
       if (!_.isUndefined(this.subForm[field])) {
         if (this.subForm[field].show) formGroupClass += ' has-subform';
       }
