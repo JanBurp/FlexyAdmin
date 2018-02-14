@@ -6301,16 +6301,19 @@ select:-moz-focusring {
   text-shadow: 0 0 0 #000 !important; }
 
 .custom-select {
-  height: 2.1rem !important;
-  padding-top: 0.5rem; }
+  height: 2.25rem !important;
+  padding-top: 0.45rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none; }
 
 .form-control-sm, .input-group-sm > .form-control,
 .input-group-sm > .input-group-prepend > .input-group-text,
 .input-group-sm > .input-group-append > .input-group-text,
 .input-group-sm > .input-group-prepend > .btn,
 .input-group-sm > .input-group-append > .btn {
-  padding-top: .25rem;
-  height: 1.55rem !important; }
+  padding-top: .15rem;
+  height: 1.65rem !important; }
 
 .form-check-input {
   margin-left: 0; }
@@ -6320,7 +6323,7 @@ select:-moz-focusring {
 
 .form-subcheck {
   margin: 0.25rem 1% 0 0 !important;
-  padding: 0 .5rem .25rem;
+  padding: 0;
   border: solid 1px #6c757d;
   border-radius: 0.25rem;
   width: 19%;
@@ -6335,12 +6338,11 @@ select:-moz-focusring {
   .form-subcheck input {
     display: none; }
 
-.form-subcheck:hover {
-  border-color: #696;
-  background-color: #fff; }
-
-.form-subcheck.checked {
-  background-color: #6c757d; }
+.form-subcheck:hover, .form-subcheck.checked {
+  background-color: #dee2e6;
+  background-color: #dee2e6; }
+  .form-subcheck:hover .flexy-button, .form-subcheck.checked .flexy-button {
+    color: #212529; }
 
 .form-group.has-danger {
   background-color: #ffdddd !important;

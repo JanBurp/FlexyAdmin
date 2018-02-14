@@ -139,12 +139,15 @@ select.form-control:not([size]):not([multiple]) {
 //  height:auto;
 }
 .custom-select {
-  height: 2.1rem!important;
-  padding-top:0.5rem;
+  height: 2.25rem!important;
+  padding-top:0.45rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 .form-control-sm {
-  padding-top:.25rem;
-  height: 1.55rem!important;
+  padding-top:.15rem;
+  height: 1.65rem!important;
 }
 
 .form-check-input {
@@ -157,7 +160,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .form-subcheck {
   margin:.25rem 1% 0 0!important;
-  padding:0 .5rem .25rem;
+  padding:0;
   border:solid 1px $gray-600;
   border-radius:$border-radius;
   width:19%;
@@ -172,12 +175,12 @@ select.form-control:not([size]):not([multiple]) {
   }
   input {display:none;}
 }
-.form-subcheck:hover {
-  border-color:$primary;
-  background-color:$body-bg;
-}
-.form-subcheck.checked {
-  background-color: $gray-600;
+.form-subcheck:hover,.form-subcheck.checked {
+  background-color:$gray-300;
+  background-color: $gray-300;
+  .flexy-button {
+    color:$gray-900;
+  }
 }
 
 

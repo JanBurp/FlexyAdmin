@@ -82,6 +82,9 @@ export default {
 
 
 <style>
-  .timepicker-hours, .timepicker-minutes {padding-left:.25rem;padding-right:1.5rem;}
+  .timepicker-hours, .timepicker-minutes {
+    width:auto;
+    padding-left:.25rem;
+  }
 </style>
 
