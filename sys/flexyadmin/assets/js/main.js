@@ -39,6 +39,25 @@ import Route404         from './routes/route404.vue'
 // Import TinyMCE
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
+// standard plugins
+import 'tinymce/plugins/autolink';
+import 'tinymce/plugins/charmap';
+import 'tinymce/plugins/code';
+import 'tinymce/plugins/fullscreen';
+import 'tinymce/plugins/image';
+import 'tinymce/plugins/imagetools';
+import 'tinymce/plugins/lists';
+import 'tinymce/plugins/media';
+import 'tinymce/plugins/paste';
+import 'tinymce/plugins/preview';
+import 'tinymce/plugins/table';
+import 'tinymce/plugins/textpattern';
+import 'tinymce/plugins/visualblocks';
+import 'tinymce/plugins/wordcount';
+// flexy plugins
+import '../dist/plugins/flexy_count';
+import '../dist/plugins/flexy_image';
+import '../dist/plugins/flexy_link';
 
 var vm = {};
 
