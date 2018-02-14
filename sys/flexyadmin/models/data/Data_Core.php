@@ -556,16 +556,17 @@ Class Data_Core extends CI_Model {
     
     // Zoek mogelijke standaard order fields
     $order_fields = $this->config->item( 'ORDER_default_fields' );
+    $possible_order_field = current( $order_fields );
     do {
-      $possible_order_field = each( $order_fields );
       if ($possible_order_field) {
-        $possible_order_field = explode( ' ', $possible_order_field['value'] ); // split DESC/ASC
+        $possible_order_field = explode( ' ', $possible_order_field ); // split DESC/ASC
         $possible_field = $possible_order_field[0];
         if ( $key=in_array_like($possible_field, $fields) ) {
           $order_by = $fields[$key];
           if ( isset($possible_order_field[1]) ) $order_by .= ' ' . $possible_order_field[1]; // add DESC/ASC
         }
       }
+      $possible_order_field = next( $order_fields );
     } while (empty($order_by) and $possible_order_field);
 
     // Als leeg: Pak dat het laatste standaard order veld ('id')
@@ -613,12 +614,13 @@ Class Data_Core extends CI_Model {
       $abstract_fields=array();
   		$abstract_field_types = $this->config->item('ABSTRACT_field_pre_types');
       $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
-  		while ( list($key,$field) = each( $fields ) and $max_abstract_fields>0) {
+  		while ( $field = current( $fields ) and $max_abstract_fields>0) {
   			$pre = get_prefix($field);
   			if ( in_array( $pre, $abstract_field_types ) ) {
   				array_push( $abstract_fields, $field );
   				$max_abstract_fields--;
   			}
+        next($fields);
   		}
     }
     
