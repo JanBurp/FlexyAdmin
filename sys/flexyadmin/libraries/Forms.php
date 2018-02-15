@@ -131,7 +131,6 @@ class Forms extends Module {
   	*/
 	public function index($page) {
     $this->form_id=$this->name;
-    $formAction=$this->get_action();
     $thanks='';
 		$html='';
     $errors='';
@@ -170,6 +169,10 @@ class Forms extends Module {
       if (!isset($this->CI->$model)) $this->CI->load->model($model);
       $this->CI->$model->initialize($this->settings);
       $formFields=$this->CI->$model->$method();
+      // settings changed?
+      if (method_exists($this->CI->$model, 'get_settings')) {
+        $this->settings = array_merge($this->settings,$this->CI->$model->get_settings());
+      }
     }
     // Geen velden ingesteld, maar wel een tabel: haal ze uit de tabel
     if (!$formFields and $this->settings('table')) {
@@ -220,7 +223,8 @@ class Forms extends Module {
     // Extra veld toevoegen om op spamrobot te testen (die zal dit veld meestal automatisch vullen)
     if ($this->settings('check_for_spam')) $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
     
-		$form=new form($formAction,$this->form_id);
+    $formAction = $this->get_action();
+		$form = new form($formAction,$this->form_id);
     
     $framework=$this->CI->config->item('framework');
     if (isset($this->settings['framework'])) $framework=$this->settings('framework','default');
