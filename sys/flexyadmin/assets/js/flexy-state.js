@@ -74,7 +74,8 @@ export default {
   },
   setProgress : function(value,max) {
     var percent = Math.round(value * 100 / max);
-    if (percent<10) percent=10; // Start met minimaal 10%
+    if (percent<10) percent=10;   // Start met minimaal 10%
+    if (percent>100) percent=100; // Max 100%
     this.state.progress = percent;
     this.debug && console.log('state.progress',this.state.progress); 
   },

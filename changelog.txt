@@ -1,3 +1,10 @@
+=3.5.0-beta.61
+
+[FEATURES]
+- FORMS settings can be changed by form model
+[BUGS]
+- Webkit browsers had a (infinity) bug in progressbar.
+
 =3.5.0-beta.60
 
 [FEATURES]
