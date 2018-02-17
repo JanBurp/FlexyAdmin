@@ -76,6 +76,14 @@ class Plugin_update extends Plugin {
   }
 
   private function _nicelog($log) {
+    $lang = $this->CI->language;
+    if ($lang) {
+      if (preg_match('/\['.$lang.'](.*)\[\/nl]/us', $log, $match)) {
+        $log = $match[1];
+        $log = str_replace("\n",'<br>',trim($log,"\n"));
+        return $log;
+      }
+    }
     $log = preg_replace('/\[([^\]]*)\]\s*/u', '<h3>$1</h3>', $log);
     $log = str_replace("\n",'<br>',$log);
     return $log;
