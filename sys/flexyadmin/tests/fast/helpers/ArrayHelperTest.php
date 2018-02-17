@@ -75,6 +75,105 @@ class ArrayHelperTest extends CITestCase {
   //       'id_example',
   //     ), filter_by_prefix( $array,'id' ) );
   // }
+  
+  public function testArrayAddAfter() {
+    $array = array( 'first','second','third','fourth' );
+    
+    // Normal
+    // (bijna) Begin
+    $new = array_add_after($array, 'first', 'between' );
+    $expected = array( 'first','between','second','third','fourth' );
+    $this->assertEquals( $expected, $new);
+
+    // Tussenin
+    $new = array_add_after($array,'second','between' );
+    $expected = array( 'first','second','between','third','fourth' );
+    $this->assertEquals( $expected, $new);
+
+    // Eind
+    $new = array_add_after($array,'fourth','between' );
+    $expected = array( 'first','second','third','fourth','between' );
+    $this->assertEquals( $expected, $new);
+
+    // Array
+    $new = array_add_after($array,'third',array('between','extra') );
+    $expected = array( 'first','second','third',array('between','extra'),'fourth' );
+    $this->assertEquals( $expected, $new);
+    // assoc Array
+    $new = array_add_after($array,'third',array('between'=>'value') );
+    $expected = array( 'first','second','third',array('between'=>'value'),'fourth' );
+    $this->assertEquals( $expected, $new);
+
+
+    // Assoc
+    $array = array_combine($array,$array);
+
+    // (bijna) Begin
+    $new = array_add_after($array,'first',array('between'=>'between') );
+    $expected = array( 'first','between','second','third','fourth' );
+    $this->assertEquals( array_combine($expected,$expected), $new);
+
+    // Tussenin
+    $new = array_add_after($array,'second',array('between'=>'between') );
+    $expected = array( 'first','second','between','third','fourth' );
+    $this->assertEquals( array_combine($expected,$expected), $new);
+
+    // Eind
+    $new = array_add_after($array,'fourth',array('between'=>'between') );
+    $expected = array( 'first','second','third','fourth','between' );
+    $this->assertEquals( array_combine($expected,$expected), $new);
+
+  }
+
+
+  public function testArrayAddBefore() {
+    $array = array( 'first','second','third','fourth' );
+    
+    // Normaal
+
+    // Begin
+    $new = array_add_before($array,'first','between' );
+    $expected = array( 'between','first','second','third','fourth' );
+    $this->assertEquals( $expected, $new);
+
+    // Tussenin
+    $new = array_add_before($array,'second','between' );
+    $expected = array( 'first','between','second','third','fourth' );
+    $this->assertEquals( $expected, $new);
+
+    // (bijna) Eind
+    $new = array_add_before($array,'fourth','between' );
+    $expected = array( 'first','second','third','between','fourth' );
+    $this->assertEquals( $expected, $new);
+
+    // Array
+    $new = array_add_before($array,'fourth',array('between','extra') );
+    $expected = array( 'first','second','third',array('between','extra'),'fourth' );
+    $this->assertEquals( $expected, $new);
+    // assoc Array
+    $new = array_add_before($array,'fourth',array('between'=>'value') );
+    $expected = array( 'first','second','third',array('between'=>'value'),'fourth' );
+    $this->assertEquals( $expected, $new);
+
+
+    // Assoc
+    $array = array_combine($array,$array);
+
+    // Begin
+    $new = array_add_before($array,'first',array('between'=>'between') );
+    $expected = array( 'between','first','second','third','fourth' );
+    $this->assertEquals( array_combine($expected,$expected), $new);
+
+    // Tussenin
+    $new = array_add_before($array,'second',array('between'=>'between') );
+    $expected = array( 'first','between','second','third','fourth' );
+    $this->assertEquals( array_combine($expected,$expected), $new);
+
+    // (bijna) Eind
+    $new = array_add_before($array,'fourth',array('between'=>'between') );
+    $expected = array( 'first','second','third','between','fourth' );
+    $this->assertEquals( array_combine($expected,$expected), $new);
+  }
 
 }
 
