@@ -39,6 +39,11 @@ import Route404         from './routes/route404.vue'
 // Import TinyMCE
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
+// import 'tinymce/skins/lightgray/skin.min.css';
+// import 'tinymce/skins/lightgray/content.min.css';
+// import 'tinymce/skins/lightgray/fonts/';
+
+
 // standard plugins
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/charmap';

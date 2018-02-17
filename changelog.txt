@@ -3,6 +3,7 @@
 - Nicer changelog messages in user language
 - PHP 7.2.1 ready (each() was depricated)
 - Removed old MY_DB
+- Include more in build (for faster loading)
 
 =3.5.0-beta.61
 
