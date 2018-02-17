@@ -1,4 +1,17 @@
+
+[FEATURES]
+- Nicer changelog messages in user language
+- PHP 7.2.1 ready (each() was depricated)
+- Removed old MY_DB
+
 =3.5.0-beta.61
+
+[nl]
+- Enkele bugs opgelost.
+[/nl]
+[en]
+- Some bus resolved.
+[/en]
 
 [FEATURES]
 - FORMS settings can be changed by form model
@@ -7,11 +20,27 @@
 
 =3.5.0-beta.60
 
+[nl]
+- Betere responsive styling
+- Snellere initialisatie editor
+[/nl]
+[en]
+- Better responsive styling
+- Faster initializing editor
+[/en]
+
 [FEATURES]
 - Better responsive styling
 - Faster initializing wysiwyg editor
 
 =3.5.0-beta.59
+
+[nl]
+- Betere responsive styling
+[/nl]
+[en]
+- Better responsive styling
+[/en]
 
 [FEATURES]
 - Better responsive styling
