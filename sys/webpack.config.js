@@ -55,7 +55,7 @@ module.exports.push(
   entry: "./flexyadmin/assets/scss/flexyadmin.scss",
   output: {
     path: __dirname + '/flexyadmin/assets/dist/',
-    publicPath:'/flexyadmin/assets/dist/',
+    publicPath:'',
     filename: "bundle.css",
   },
   module: {
@@ -64,7 +64,12 @@ module.exports.push(
         {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
-        }
+        },
+        // fonts
+        {
+          test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+          loader: 'file-loader?name=fonts/[name].[ext]'
+        },
       ]
   },
   devtool: "source-map",
