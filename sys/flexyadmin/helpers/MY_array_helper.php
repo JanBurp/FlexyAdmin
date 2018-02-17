@@ -1036,20 +1036,17 @@ function array_last($a) {
  * @author Jan den Besten
  */
 function array_add_after($a,$key,$row) {
-	if (!is_array($row)) $row=array($row);
-	$firstslice=array();
-	$k='';
-	reset($a);
-	$item=each($a);
-	while ( $item and $item['key']!=$key ) {
-		$firstslice[$item['key']]=$item['value'];
-		array_shift($a);
-		$item=each($a);
+	// normal
+	if (!is_assoc($a)) {
+		$offset = array_search($key, $a) + 1;
+		$row = array($row);
+	  return array_merge( array_slice($a, 0, $offset, true), $row, array_slice($a, $offset, NULL, true) );
 	}
-	$firstslice[$item['key']]=$item['value'];
-	array_shift($a);
-	// $item=next($a);
-	return array_merge($firstslice,$row,$a);
+	// assoc
+	$offset = array_search($key, array_keys($a)) + 1;
+	return array_slice($a, 0, $offset, true)
+					+ $row
+					+ array_slice($a, $offset, NULL, true);
 }
 
 /**
@@ -1062,17 +1059,17 @@ function array_add_after($a,$key,$row) {
  * @author Jan den Besten
  */
 function array_add_before($a,$key,$row) {
-	if (!is_array($row)) $row=array($row);
-	$firstslice=array();
-	$k='';
-	reset($a);
-	$item=each($a);
-	while ( $item and $item['key']!=$key ) {
-		$firstslice[$item['key']]=$item['value'];
-		array_shift($a);
-		$item=each($a);
+	// normal
+	if (!is_assoc($a)) {
+		$offset = array_search($key, $a);
+		$row = array($row);
+	  return array_merge( array_slice($a, 0, $offset, true), $row, array_slice($a, $offset, NULL, true) );
 	}
-	return array_merge($firstslice,$row,$a);
+	// assoc
+	$offset = array_search($key, array_keys($a));
+	return array_slice($a, 0, $offset, true)
+					+ $row
+					+ array_slice($a, $offset, NULL, true);
 }
 
 

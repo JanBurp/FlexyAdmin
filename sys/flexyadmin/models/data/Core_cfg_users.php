@@ -237,7 +237,7 @@ Class Core_cfg_users extends Data_Core {
     }
     
     // Voeg het veld toe
-    $this->settings['grid_set']['fields'] = array_add_after($this->settings['grid_set']['fields'],'id','action_user_invite');
+    $this->settings['grid_set']['fields'] = array_add_after( $this->settings['grid_set']['fields'], 'id', 'action_user_invite' );
     return $result;
   }
 
