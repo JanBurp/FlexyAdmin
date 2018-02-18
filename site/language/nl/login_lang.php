@@ -21,8 +21,9 @@ $lang['register']								= 'Maak account aan.';
 $lang['login_register']					= 'Maak account aan.';
 $lang['remember']								= 'Laat me ingelogd blijven';
 $lang['login_submit']						= 'Inloggen';
-$lang['login_error']						= 'Verkeerde gebruikersnaam/wachtwoord combinatie.';
-$lang['login_already']					= 'Je bent (al) ingelogd.';
+$lang['login_error']						= 'Onbekende gebruikersnaam/wachtwoord combinatie';
+$lang['login_wrong_email']			= 'Geen geldig email-adres';
+$lang['login_already']					= 'Je bent (al) ingelogd';
 
 // LOGOUT
 $lang['logout_done']						= 'Je bent uitgelogd.';
