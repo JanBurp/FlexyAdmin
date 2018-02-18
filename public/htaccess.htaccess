@@ -2,7 +2,7 @@
 RewriteEngine on
 # RewriteCond %{HTTPS} !=on
 # RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
-RewriteCond $1 !^(index\.php|site/assets|sys/flexyadmin/assets|sys/tinymce|sys/jquery|sitemap\.xml|robots\.txt)
+RewriteCond $1 !^(index\.php|assets|sitemap\.xml|robots\.txt)
 RewriteRule ^(.*)$ index.php/$1 [L]
 
 # gzip content
