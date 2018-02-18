@@ -1,8 +1,8 @@
 # Nice urls (& https on)
 RewriteEngine on
-#RewriteCond %{HTTPS} !=on
-#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
-RewriteCond $1 !^(index\.php|assets|sys/flexyadmin/assets|sys/tinymce|sys/jquery|sitemap\.xml|robots\.txt)
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+RewriteCond $1 !^(index\.php|assets|sitemap\.xml|robots\.txt)
 RewriteRule ^(.*)$ index.php/$1 [L]
 
 
