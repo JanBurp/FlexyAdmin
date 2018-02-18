@@ -10,6 +10,8 @@ $lang['login_login']             = "Back to login";
 $lang['login_email']             = "E-mail";
 $lang['login_send_new_password'] = "Send new password";
 
+$lang['login_wrong_email']			= 'No valid email';
+
 $lang['login_forgot_mail_send'] 	= "An email has been send.";
 $lang['login_forgot_password_send'] = "New password has been send.";
 

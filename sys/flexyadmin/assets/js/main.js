@@ -64,120 +64,90 @@ import '../dist/plugins/flexy_count';
 import '../dist/plugins/flexy_image';
 import '../dist/plugins/flexy_link';
 
-var vm = {};
+ // TinyMCE Global & Set extra
+_flexy.tinymceOptions = JSON.parse(_flexy.tinymceOptions);
+_flexy.tinymceOptions['link_list'] = '_api/get_link_list?_authorization='+_flexy.auth_token;
+_flexy.tinymceOptions['image_list'] = '_api/get_image_list?_authorization='+_flexy.auth_token;
+tinymce.init( _flexy.tinymceOptions );
 
-if ( !_.isUndefined(_flexy.auth_token) ) {
-   // TinyMCE Global & Set extra
-  _flexy.tinymceOptions = JSON.parse(_flexy.tinymceOptions);
-  _flexy.tinymceOptions['link_list'] = '_api/get_link_list?_authorization='+_flexy.auth_token;
-  _flexy.tinymceOptions['image_list'] = '_api/get_image_list?_authorization='+_flexy.auth_token;
-  tinymce.init( _flexy.tinymceOptions );
+// Language settings
+const LOCALES = {};
+// _flexy.language_keys = JSON.parse(_flexy.language_keys);
+LOCALES['lang'] = _flexy.language;
+LOCALES[_flexy.language] = _flexy.language_keys;
+window.VueStrapLang = function() { return LOCALES[_flexy.language]['strap_lang']; }
+Vue.use(Lang, {lang: _flexy.language, locales: LOCALES});
 
-  // Language settings
-  const LOCALES = {};
-  // _flexy.language_keys = JSON.parse(_flexy.language_keys);
-  LOCALES['lang'] = _flexy.language;
-  LOCALES[_flexy.language] = _flexy.language_keys;
-  window.VueStrapLang = function() { return LOCALES[_flexy.language]['strap_lang']; }
-  Vue.use(Lang, {lang: _flexy.language, locales: LOCALES});
-
-  // Global Vue registering (state)
-  Vue.mixin({
-    data : function() {
-      return {
-        state : flexyState.state,
-      }
-    },
-  });
-
-  // ROUTER
-  Vue.use(VueRouter);
-  const router = new VueRouter({
-    mode                 : 'history',
-    base                 : _flexy.base_url,
-    linkActiveClass      : 'active',
-    linkExactActiveClass : 'active',
-
-    routes : [
-      { path: '/edit/:table/:id?/:type?', component: RouteEdit },
-      { path: '/media/:path',             component: RouteMedia },
-      { path: '/plugin',                  component: RoutePlugin },
-      { path: '/plugin/:plugin*',         component: RoutePlugin },
-      { path: '/tools/:tool*',            component: RouteTools },
-      { path: '/logout',                  component: RouteLogout },
-      { path: '*',                        component: Route404 }
-    ],
-    scrollBehavior (to, from, savedPosition) {
-     return { x: 0, y: 0 }
+// Global Vue registering (state)
+Vue.mixin({
+  data : function() {
+    return {
+      state : flexyState.state,
     }
-  });
+  },
+});
+
+// ROUTER
+Vue.use(VueRouter);
+const router = new VueRouter({
+  mode                 : 'history',
+  base                 : _flexy.base_url,
+  linkActiveClass      : 'active',
+  linkExactActiveClass : 'active',
+
+  routes : [
+    { path: '/edit/:table/:id?/:type?', component: RouteEdit },
+    { path: '/media/:path',             component: RouteMedia },
+    { path: '/plugin',                  component: RoutePlugin },
+    { path: '/plugin/:plugin*',         component: RoutePlugin },
+    { path: '/tools/:tool*',            component: RouteTools },
+    { path: '/logout',                  component: RouteLogout },
+    { path: '*',                        component: Route404 }
+  ],
+  scrollBehavior (to, from, savedPosition) {
+   return { x: 0, y: 0 }
+  }
+});
 
 
 
-  /**
-     Main Vue Instance
-   */
-  vm = new Vue({
-    router,
-    el:'#main',
-    components: {
-      FlexyBlocks,
-      FlexyButton,
-      FlexyModal,
-      FlexyMessages,
-      FlexyPagination,
-      FlexyGrid,
-      FlexyForm,
-      FlexyAccordion,
-      mediapicker,
-    },
-    data : function() {
-      return {
-        global            : flexyState,
-        state             : flexyState.state,
-        mediaPopup : {
-          'src' : '',
-          'alt' : ''
-        },
-      }
-    },
-    methods: {
-
-      mediaPopupChanged : function(media) {
-        this.mediaPopup.alt = media;
-        this.mediaPopup.src = media;
+/**
+   Main Vue Instance
+ */
+var vm = new Vue({
+  router,
+  el:'#main',
+  components: {
+    FlexyBlocks,
+    FlexyButton,
+    FlexyModal,
+    FlexyMessages,
+    FlexyPagination,
+    FlexyGrid,
+    FlexyForm,
+    FlexyAccordion,
+    mediapicker,
+  },
+  data : function() {
+    return {
+      global            : flexyState,
+      state             : flexyState.state,
+      mediaPopup : {
+        'src' : '',
+        'alt' : ''
       },
-
     }
-  });
+  },
+  methods: {
 
-}
+    mediaPopupChanged : function(media) {
+      this.mediaPopup.alt = media;
+      this.mediaPopup.src = media;
+    },
 
-// LOGIN
-else {
-  
-  /**
-     Login Vue Instance
-   */
-  vm = new Vue({
-    el:'#main',
-    components: {},
-    data : {
-      message                 : _flexy.message,
-      forgottenPasswordDialog : false,
-    },
-    methods : {
-      
-      showForgottenPasswordDialog : function(show) {
-        this.message = '';
-        this.forgottenPasswordDialog = show;
-      },
-      
-    },
-    
-  });
-  
-}
+  }
+});
+
 
 // console.log( 'Vue version:', Vue.version );
 
