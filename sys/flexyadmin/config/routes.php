@@ -62,6 +62,7 @@ $route['_media/download/(.*)/(.*)'] = "file/file/download/$1/$2";
 $route['_media/serve/(.*)/(.*)']    = "file/file/serve/$1/$2";
 $route['_media/thumb/(.*)/(.*)']    = "file/file/thumb/$1/$2";
 $route['_media/(.*)/(.*)']          = "file/file/serve/$1/$2";
+$route['_admin_assets/(.*)']   			= "file/file/admin_assets/$1";
 $route['_admin_assets/(.*)/(.*)']   = "file/file/admin_assets/$1/$2";
 
 /**

@@ -10,10 +10,11 @@
 
 class File extends CI_Controller {
   
-  /**
-   * Always serve files from these folders
-   */
+  // Always serve files from these folders
   private $serve_rights = array( 'css','fonts','js' );
+
+  // Restricted admin files
+  private $restricted_admin_files = array('main.build.js');
   
 	
 	function __construct()	{
@@ -93,14 +94,25 @@ class File extends CI_Controller {
     $args = func_get_args();
     $file = array_pop($args);
     $path = implode('/',$args);
-		if (!empty($path) and !empty($file)) {
-      $fullpath = APPPATH.'assets/'.$path.'/'.$file;
+		if (!empty($file)) {
+      $fullpath = APPPATH.'assets/dist/'.$path.'/'.$file;
 			if ( file_exists($fullpath) ) {
+        $has_serve_rights = FALSE;
+        if ( in_array($file,$this->restricted_admin_files) ) {
+          if ( $this->flexy_auth->logged_in() and $this->flexy_auth->allowed_to_use_cms() ) {
+            $has_serve_rights = TRUE;
+          }
+        }
+        else {
+          $has_serve_rights = TRUE;
+        }
+			}
+      if ($has_serve_rights) {
         $type=get_suffix($file,'.');
         $this->output->set_content_type($type);
         $this->output->set_output(file_get_contents($fullpath));
-        return;
-			}
+        return;         
+      }
 		}
     header('HTTP/1.1 401 Unauthorized');
     return false;

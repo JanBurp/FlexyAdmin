@@ -10,7 +10,7 @@
 	<title>Login</title>
 	<base href="<?=base_url()?>" />
 
-  <link rel="stylesheet" href="<?=admin_assets()?>dist/flexyadmin.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="<?=admin_assets()?>flexyadmin.css" type="text/css" media="screen">
 </head>
 
 <body class="login-body bg-primary">
@@ -47,13 +47,11 @@
 
 <script type="text/javascript" charset="utf-8">
 var _flexy = {
-  'media_view'    : '',
   'language'      : '<?=$lang?>',
-  'language_keys' : {},
   'message'       : '<?=isset($message)?strip_tags($message):''?>',
 };
 </script>
-<script src="<?=admin_assets()?>dist/bundle.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=admin_assets()?>login.build.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
 </html>

@@ -5,6 +5,8 @@ var LiveReloadPlugin  = require('webpack-livereload-plugin');
 
 module.exports = [];
 
+
+// Main JS
 module.exports.push(
 {
   name    : 'js',
@@ -12,7 +14,7 @@ module.exports.push(
   output  : {
     path              : __dirname + '/flexyadmin/assets/dist/',
     publicPath        : '/flexyadmin/assets/dist/',
-    filename          : "bundle.js",
+    filename          : "main.build.js",
     devtoolLineToLine : true,
     pathinfo          : true,
   },
@@ -49,6 +51,54 @@ module.exports.push(
   }
 });
 
+
+// Login JS
+module.exports.push(
+{
+  name    : 'js',
+  entry   : "./flexyadmin/assets/js/login.js",
+  output  : {
+    path              : __dirname + '/flexyadmin/assets/dist/',
+    publicPath        : '/flexyadmin/assets/dist/',
+    filename          : "login.build.js",
+    devtoolLineToLine : true,
+    pathinfo          : true,
+  },
+  module  : {
+      rules : [
+        // eslint
+        {
+          enforce : 'pre',
+          test    : /.vue$/,
+          loader  : 'eslint-loader',
+          exclude : /node_modules/
+        },
+        // vue loader
+        {
+          test    : /\.vue$/,
+          loader  : 'vue-loader',
+          options : {}
+        },
+        // babel
+        {
+          test    : /\.js$/,
+          loader  : 'babel-loader',
+          exclude : /node_modules/
+        }
+        
+      ]
+  },
+  plugins: [
+  ],
+  
+  resolve: {
+    // alias: {'vue$': 'vue/dist/vue.js'},
+    alias: {'vue$': 'vue/dist/vue.common.js'}
+  }
+});
+
+
+// Styling (scss,css,fonts)
 module.exports.push(
 {
   name: 'scss',
