@@ -53,6 +53,9 @@ class Login extends MY_Controller {
 		else { 
 			// Unsuccesfull
       $message = $this->flexy_auth->errors();
+      if (empty($message)) {
+      	$message = $this->flexy_auth->messages();
+      }
 			$this->session->set_userdata('message', $message);
 		}
 		redirect( $this->config->item('API_home'),REDIRECT_METHOD);
@@ -60,13 +63,19 @@ class Login extends MY_Controller {
   
   
 	public function forgot() {
+		$this->load->library('form_validation');
 		$email = $this->input->post("email",FALSE);
-    $message = lang('login_error');
+    $message = '';
 		if ($email) {
-      $this->flexy_auth->set_forgotten_password_uri( $this->config->item('API_login').'forgot_complete');
-      if ($this->flexy_auth->forgotten_password( $email )) {
-        $message = lang('login_forgot_mail_send');
-      }
+			if ($this->form_validation->valid_email($email)) {
+				$this->flexy_auth->set_forgotten_password_uri( $this->config->item('API_login').'forgot_complete');
+				if ($this->flexy_auth->forgotten_password( $email )) {
+				  $message = lang('login_forgot_mail_send');
+				}
+			}
+			else {
+				$message = lang('login_wrong_email');
+			}
 		}
 		$this->session->set_userdata('message', $message);
 		redirect( $this->config->item('API_home'),REDIRECT_METHOD);
