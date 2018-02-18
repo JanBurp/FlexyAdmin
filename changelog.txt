@@ -1,9 +1,13 @@
+=3.5.0-rc.1
 
 [FEATURES]
-- Nicer changelog messages in user language
 - PHP 7.2.1 ready (each() was depricated)
 - Removed old MY_DB
-- Include more in build (for faster loading)
+- Nicer changelog messages in user language
+- Include more in builds (faster/smaller)
+- Smaller builds (faster/smaller)
+- Split in login.build.js & main.build.js (safer & faster login loading )
+- Only loads main.bundle.js if loggedin and may use cms (safer)
 
 =3.5.0-beta.61
 
