@@ -52,7 +52,7 @@ class Version extends CI_Model {
         $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[$key])))));
       }
       // build
-      $this->build = $this->version.' ['.$this->revision.'] {'.$this->hash.'} '.$this->date;
+      $this->build = $this->version.' {'.$this->hash.'} ';
       write_file($this->buildFile, $this->build);
     }
     else {
