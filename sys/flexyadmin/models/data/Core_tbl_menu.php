@@ -23,6 +23,7 @@ Class Core_tbl_menu extends Data_Core {
    * Instellingen voor menu
    */
   private $_menu_caching        = TRUE;
+  private $_menu_compact_caching= FALSE;
   private $_menu_config         = NULL;
   private $_menu_config_default = array(
                                     array(
@@ -35,8 +36,9 @@ Class Core_tbl_menu extends Data_Core {
   public function __construct() {
     parent::__construct();
     $this->config->load('menu',true);
-    $this->_menu_caching = $this->config->get_item(array('menu','caching'));
-    $this->_menu_config  = $this->config->get_item(array('menu','menu'));
+    $this->_menu_caching          = $this->config->get_item(array('menu','caching'));
+    $this->_menu_compact_caching  = $this->config->get_item(array('menu','compact_caching'),false);
+    $this->_menu_config           = $this->config->get_item(array('menu','menu'));
     if (empty($this->_menu_config)) {
       $this->_menu_config = $this->_menu_config_default;
     }
@@ -71,7 +73,15 @@ Class Core_tbl_menu extends Data_Core {
     }
     if (!$menu_result) {
       $menu_result = $this->_create_menu_result();
-      if ($this->_menu_caching) $this->cache_result($menu_result,$cache_name);
+      if ($this->_menu_caching) {
+        if ( $this->_menu_compact_caching ) {
+          foreach ($menu_result as $key => $item) {
+            $menu_result[$key] = array_keep_keys($item,array('id','order','self_parent','uri','full_uri','str_title','full_title','_table','b_visible','b_restricted'));
+            $menu_result[$key]['_compact'] = true;
+          }
+        }
+        $this->cache_result($menu_result,$cache_name);
+      }
     }
     // trace_($menu_result);
     // trace_( array_column($menu_result, 'full_title','full_uri') );
@@ -89,7 +99,12 @@ Class Core_tbl_menu extends Data_Core {
    */
   public function get_menu_item( $uri ) {
     $items = $this->get_menu_result();
-    return el($uri,$items,FALSE);
+    $item = el($uri,$items,FALSE);
+    if (el('_compact',$item,false)) {
+      $complete = $this->data->table($item['_table'])->get_row($item['id']);
+      $item = array_merge($complete,$item);
+    }
+    return $item;
   }
 
   /**
