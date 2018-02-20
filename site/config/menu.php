@@ -53,7 +53,8 @@
  * Tijdens developen kan het handig zijn dit uit te zetten
  */
 
-$config['caching'] = TRUE;
+$config['caching'] 					= TRUE;
+$config['compact_caching']  = FALSE;
 
 /**
  * Splits het menu in meerdere talen

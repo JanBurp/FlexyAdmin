@@ -1,3 +1,8 @@
+=3.5.0-rc.2
+
+[FEATURES]
+- Menu compact caching as feature (if menu cache becomes to big)
+
 =3.5.0-rc.1
 
 [FEATURES]
