@@ -183,6 +183,14 @@ select.form-control:not([size]):not([multiple]) {
   }
 }
 
+.form-group-type-radio_image {
+  .form-check {
+    width:auto;
+    button {float:left;}
+    .radio-image {margin:0 .1rem .1rem 0}
+  }
+}
+
 
 
 // Validation

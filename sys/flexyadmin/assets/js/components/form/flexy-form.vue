@@ -12,6 +12,7 @@ import datetimepicker   from './datetimepicker.vue'
 import colorpicker      from './colorpicker.vue'
 import mediapicker      from './mediapicker.vue'
 import joinselect       from './joinselect.vue'
+import radioimage       from './radio-image.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
@@ -20,7 +21,7 @@ import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,joinselect,tab,tabs,datepicker,vselect},
+  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,joinselect,radioimage,tab,tabs,datepicker,vselect},
   props:{
     'name'    :String,
     'primary' :{
@@ -62,7 +63,7 @@ export default {
         colorpicker       : ['color','rgb'],
         mediapicker       : ['media','medias'],
         select            : ['select'],
-        radio             : ['radio'],
+        radio             : ['radio','radio_image'],
         joinselect        : ['joinselect'],
         textarea          : ['textarea'],
         wysiwyg           : ['wysiwyg'],
@@ -294,6 +295,10 @@ export default {
 
       return this.fieldTypes[type].indexOf(this.form_groups[field]['type']) >= 0;
     },
+
+    isRadioImage : function(field) {
+      return (this.form_groups[field]['type']=='radio_image');
+    },
     
     isMultiple : function( field ) {
       var multiple = false;
@@ -368,11 +373,20 @@ export default {
       this.row[field] = option;
     },
     
-    selectItem : function (value) {
+    selectItem : function (field,value) {
       if (!value) return '';
       value = value.toString();
       value = value.replace(/\|/g,' | ').replace(/^\|/,'').replace(/\|$/,'');
       return value;
+    },
+
+    selectItemImg : function(field,value) {
+      var optionsSettings = this.form_groups[field].options.settings;
+      return {
+        'src'   : 'assets/img/' + optionsSettings.src,
+        'width' : optionsSettings.width,
+        'height': optionsSettings.height,
+      };
     },
     
     selectValue: function(field) {
@@ -1005,9 +1019,9 @@ export default {
 
                 <template v-if="isType('radio',field)">
                   <!-- Radio -->
-                  <template v-for="option in fieldOptions(field)">
+                  <template v-for="(option,index) in fieldOptions(field)">
                     <div class="form-check form-check-inline form-subcheck" :class="{'checked':isSelectedOption(field,row[field],option.value)}" @click="addToSelect(field,option.value)">
-                      <label class="form-check-label" :title="selectItem(option.name)">
+                      <label class="form-check-label" :title="selectItem(field,option.name)">
                       <flexy-button :icon="{'check-square-o':isSelectedOption(field,row[field],option.value),'square-o':!isSelectedOption(field,row[field],option.value)}" class="btn-outline-default"/>
                       <input  class="form-check-input"
                               :value="option.value"
@@ -1015,7 +1029,12 @@ export default {
                               :type="isMultiple(field)?'checkbox':'radio'"
                               :checked="isSelectedOption(field,row[field],option.value)"
                               >
-                      {{selectItem(option.name)}}
+                      <template v-if="isRadioImage(field)">
+                        <radioimage :settings="selectItemImg(field,option.name)" :index="index"></radioimage>
+                      </template>
+                      <template v-else>
+                        {{selectItem(field,option.name)}}
+                      </template>
                       </label>
                     </div>
                   </template>
