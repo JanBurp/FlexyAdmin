@@ -2370,7 +2370,7 @@ Class Data_Core extends CI_Model {
     
     // pas query info aan
     $this->query_info['num_rows']     = count($result);
-    $this->query_info['num_fields']   = count(current($result));
+    $this->query_info['num_fields']   = (is_array(current($result))?count(current($result)):false);
     if ( isset($this->tm_with['many_to_many']) or isset($this->tm_with['one_to_many']) ) {
       $this->query_info['total_rows'] = $this->total_rows(true,true);
     }
