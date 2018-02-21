@@ -1261,7 +1261,7 @@ Class Data_Core extends CI_Model {
           unset($options['path']);
         }
         if ($include_options) {
-          $options = array_keep_keys($options,array('table','data','multiple','api','insert_rights'));
+          $options = array_keep_keys($options,array('table','data','multiple','api','insert_rights','settings'));
           $options['multiple'] = el('multiple',$options,FALSE)?'multiple':'';
           $info['options'] = $options;
         }
