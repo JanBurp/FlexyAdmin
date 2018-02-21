@@ -53,6 +53,9 @@ class Plugin_txt extends Plugin {
         if (substr($link['url'],0,4)!=='http') {
           unset($links[$key]);
         }
+        if ( strpos($link['url'],site_url())===0 ) {
+          unset($links[$key]);
+        }
         if ($this->CI->data->select('str_title,url_url')->where('url_url',$link['prep_url'])->get_row()) {
           unset($links[$key]);
         }
