@@ -728,6 +728,13 @@ export default {
       return false;
     },
     
+
+    /**
+     * Post form door api aan te roepen
+     *
+     * @param      {<type>}  data    The data
+     * @return     {<type>}  { description_of_the_return_value }
+     */
     _postForm : function(data) {
       this.validationErrors = {};
 
@@ -775,11 +782,16 @@ export default {
     },
     _updateDataAfterPost : function(postdata) {
       var self = this;
+      // Update all fields in row
       for (var field in postdata) {
         if ( !_.isUndefined(self.row[field]) ) {
           self.row[field] = postdata[field];
         }
       }
+      // Update url (id)
+      var url = location.pathname;
+      var newUrl = url.replace( '/'+self.name+'/-1', '/'+self.name+'/'+postdata['id'] ) + location.search;
+      history.pushState( location.search, '', newUrl);
     },
     
     isNewItem : function() {

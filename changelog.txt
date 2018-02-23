@@ -2,8 +2,27 @@
 
 [FEATURES]
 - Menu compact caching as feature (if menu cache becomes to big)
+- New flexy-form field type: radio_image
+[UPDATE]
+- PHP 7.2 count() must allways have array
+[BUGS]
+- Reloading a saved but new form (id=-1) did create a new entry instead saving the changed item
+- Link checker did not show all pages after checking
+- Link inserting prevent local url's
+
 
 =3.5.0-rc.1
+
+[nl]
+- Enkele technische verbeteringen
+- Enkele performance en veiligheids verbeteringen
+- Mooiere en meertalige update meldingen
+[/nl]
+[en]
+- Some technical updates
+- Some performance and safety updates
+- Nicer and multi-language update messages
+[/en]
 
 [FEATURES]
 - PHP 7.2.1 ready (each() was depricated)
