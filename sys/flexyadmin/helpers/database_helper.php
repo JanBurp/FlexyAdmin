@@ -204,32 +204,7 @@ function find_module_uri($module) {
   $CI=&get_instance();
   $menu_items = $CI->data->table('tbl_menu')->get_menu_result();
   $module_items = find_row_by_value($menu_items,$module,'str_module',true);
-  $item=current($module_items);
-  
- //  if ($full_uri) $full_uri = $CI->data->field_exists('self_parent');
-  
-	// $CI->data->select('id,uri');
-	// if ($full_uri) {
-	// 	$CI->data->select('order,self_parent');
-	// 	$CI->data->tree('uri');
-	// }
-	// if ( get_prefix($CI->config->item('module_field'))==='id' ) {
-	// 	// Modules from foreign table
-	// 	$foreign_key=$CI->config->item('module_field');
-	// 	$foreign_field='str_'.get_suffix($CI->config->item('module_field'));
-	// 	$foreign_table=foreign_table_from_key($foreign_key);
-	// 	$CI->data->with('many_to_one');
-	// 	$like_field = $foreign_table.'__'.$foreign_field;
-	// }
-	// else {
-	// 	// Modules direct from field
-	// 	$like_field = $CI->config->item('module_field');
-	// }
-  
-	// $CI->data->like( $CI->config->item('module_field'), $module );
- //  $CI->data->order_by('order');
-	// $items = $CI->data->cache()->get_result();
- //  $item=current($items);
+  $item = current($module_items);
 	return $item['full_uri'];
 }
 
