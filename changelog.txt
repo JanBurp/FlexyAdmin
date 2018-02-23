@@ -10,7 +10,6 @@
 - Link checker did not show all pages after checking
 - Link inserting prevent local url's
 
-
 =3.5.0-rc.1
 
 [nl]
