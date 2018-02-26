@@ -100,7 +100,7 @@ Class Core_tbl_menu extends Data_Core {
   public function get_menu_item( $uri ) {
     $items = $this->get_menu_result();
     $item = el($uri,$items,FALSE);
-    if (el('_compact',$item,false)) {
+    if ( el('_compact',$item,false) and isset($item['_table']) ) {
       $complete = $this->data->table($item['_table'])->get_row($item['id']);
       $item = array_merge($complete,$item);
     }
