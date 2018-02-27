@@ -4414,6 +4414,15 @@ Class Data_Core extends CI_Model {
     else {
       $this->tm_set = $key;
     }
+
+    // Controleer of een veld opties heeft, en zorg dat , worden vervangen door |
+    foreach ($this->tm_set as $key => $item) {
+      if ( el(array('options',$key,'multiple'),$this->settings) and isset($this->settings['options'][$key]['data']) ) {
+        $item = str_replace(',','|',$item);
+        $this->tm_set[$key] = $item;
+      }
+    }
+
 		return $this;
 	}
 
