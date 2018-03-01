@@ -1,4 +1,32 @@
+=3.5.0-rc.3
+
+[nl]
+- Enkele technische verbeteringen
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Some technical updates
+- Some bugs solved
+[/en]
+
+[UPDATE]
+- PHP 7.2 count() must allways have array (2)
+- TinyMCE 4.7.9
+[BUGS]
+- multiple options (for str fields) came with , but needs |
+- compact cache menu -> get item when item did not came from a table
+- compact cache menu did not have ‘str_module’
+
 =3.5.0-rc.2
+
+[nl]
+- Enkele technische verbeteringen
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Some technical updates
+- Some bugs solved
+[/en]
 
 [FEATURES]
 - Menu compact caching as feature (if menu cache becomes to big)
