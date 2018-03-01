@@ -23,7 +23,7 @@ export default {
   methods : {
     style : function() {
       var style = 'background-image:url("'+ this.settings.src +'"); width:'+ this.settings.width +'px; height:'+ this.settings.height +'px;';
-      style += "background-position: "+ (this.index * this.settings.width) +"px; top";
+      style += "background-position: "+ (-this.index * this.settings.width) +"px; top";
       return style;
     },
   },
