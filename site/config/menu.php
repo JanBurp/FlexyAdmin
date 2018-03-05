@@ -51,10 +51,13 @@
 /**
  * Bewaar cache van menu.
  * Tijdens developen kan het handig zijn dit uit te zetten
+ * - compact_caching beperkt de cache tot noodzakelijke velden zoals id,uri,order,str_title etc. (geen content)
+ * - Eventueel kun je bij 'compact_cache_extra_fields' extra velden toevoegen
  */
 
-$config['caching'] 					= TRUE;
-$config['compact_caching']  = FALSE;
+$config['caching'] 										= TRUE;
+$config['compact_caching']  					= FALSE;
+// $config['compact_cache_extra_fields'] = array();
 
 /**
  * Splits het menu in meerdere talen
