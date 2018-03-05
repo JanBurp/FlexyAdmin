@@ -38,6 +38,7 @@ Class Core_tbl_menu extends Data_Core {
     $this->config->load('menu',true);
     $this->_menu_caching          = $this->config->get_item(array('menu','caching'));
     $this->_menu_compact_caching  = $this->config->get_item(array('menu','compact_caching'),false);
+    $this->_compact_cache_fields  = array_merge( array('id','order','self_parent','uri','full_uri','str_title','full_title','str_module','_table','b_visible','b_restricted') ,$this->config->get_item(array('menu','compact_cache_extra_fields'),array()) );
     $this->_menu_config           = $this->config->get_item(array('menu','menu'));
     if (empty($this->_menu_config)) {
       $this->_menu_config = $this->_menu_config_default;
@@ -76,7 +77,7 @@ Class Core_tbl_menu extends Data_Core {
       if ($this->_menu_caching) {
         if ( $this->_menu_compact_caching ) {
           foreach ($menu_result as $key => $item) {
-            $menu_result[$key] = array_keep_keys($item,array('id','order','self_parent','uri','full_uri','str_title','full_title','str_module','_table','b_visible','b_restricted'));
+            $menu_result[$key] = array_keep_keys($item,$this->_compact_cache_fields);
             $menu_result[$key]['_compact'] = true;
           }
         }
