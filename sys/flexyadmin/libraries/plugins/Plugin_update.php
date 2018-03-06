@@ -46,10 +46,10 @@ class Plugin_update extends Plugin {
     if ($user_version=='') $user_version = $version;
     $this->CI->data->table('cfg_users')->update_last_version();
 
-    if ( !$last or $user_version<$version) {
+    if ( !$last or version_compare($version, $user_version)) {
       $changelog = $this->CI->version->get_changelog();
       foreach ($changelog as $key => $log) {
-        if ($last and $user_version>$log['version']) {
+        if ($last and version_compare($log['version'],$user_version)<0 ) {
           unset($changelog[$key]);
         }
         else {
@@ -57,7 +57,7 @@ class Plugin_update extends Plugin {
         }
       }
       if ($last) {
-        array_push($changelog,array('version'=>'','log'=>'<a class="btn btn-primary" href="_admin/plugin/update">show update history</a>'));
+        array_push($changelog,array('version'=>'','log'=>'<a class="btn btn-primary" href="_admin/plugin/update">'.lang('show_update_history').'</a>'));
       }
 
       $gridData = array(

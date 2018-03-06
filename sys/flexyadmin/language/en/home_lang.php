@@ -6,7 +6,8 @@ $lang["home_changes"]			= "Changes in";
 
 $lang["home_new_update"]			= "An update has been done:";
 $lang["home_update_history"]	= "Update history";
-$lang["home_version"]			= "Version";
-$lang["home_changelog"]		= "Changes";
+$lang["show_update_history"]	= "Show update history";
+$lang["home_version"]					= "Version";
+$lang["home_changelog"]				= "Changes";
 
 ?>
