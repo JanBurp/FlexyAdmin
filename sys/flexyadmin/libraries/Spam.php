@@ -7,6 +7,8 @@
  */
 
 class Spam {
+
+  private $CI;
   
   /**
    * Instellingen
@@ -15,14 +17,14 @@ class Spam {
     'score_low'=>5,
     'score_high'=>10,
     'trigger_words'=>'buy,cheap,offer,discount,viagra,cialis,$,money,free,f r e e,amazing,billion,cash,cheap,credit,earn,sales,order now,sex,sell,partyhardcore,hardcord,party,cum,sex,download,pictures,movies,masturbating,penis,vagina,enhancement,weight loss',
-		'trigger_word_weight'=>5,
+		'trigger_word_weight'=>7,
 		'link_http_weight'=>10,
 		'link_url_weight'=>10,
 		'text_density_limit'=>70,
-		'text_density_weight'=>10,
+		'text_density_weight'=>5,
 		'vowel_density_limit'=>10,
-		'vowel_density_weight'=>5,
-    'spambody_weight'=>5
+		'vowel_density_weight'=>7,
+    'spambody_weight'=>7
   );
 
   
@@ -45,6 +47,7 @@ class Spam {
   /**
    */
   public function __construct($settings=array()) {
+    $this->CI = @get_instance();
 		$this->settings=array_merge($this->settings,$settings);
     $this->rapport = array(
       'score' =>  0,
@@ -99,6 +102,9 @@ class Spam {
     }
     // check if robot
     $this->check_if_robot($data,$spamBody);
+    // check if filled within minimal time
+    $this->check_if_to_fast($data);
+    xdebug_break();
     $this->create_action();
 		return ($this->get_action()>=2);
   }
@@ -259,6 +265,14 @@ class Spam {
     if ($robot) $this->rapport['score']+=$this->settings['spambody_weight'];
 		return $robot;
 	}
+
+  public function check_if_to_fast($data) {
+    $timestamp = $this->CI->session->userdata('spamcheck');
+    $timefast  = time() - (5*TIME_SECOND);
+    $this->rapport['fast'] = ( $timestamp > $timefast );
+    if ($this->rapport['fast']) $this->rapport['score'] += 10;
+    return $this->rapport['fast'];
+  }
   
   
 
