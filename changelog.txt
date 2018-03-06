@@ -1,3 +1,17 @@
+=3.5.0-rc.4
+
+[nl]
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
+
+[BUGS]
+- radio-image wrong order of images
+- Cached Menu extra setting for more fields
+
+
 =3.5.0-rc.3
 
 [nl]
