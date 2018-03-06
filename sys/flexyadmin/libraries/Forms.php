@@ -221,7 +221,12 @@ class Forms extends Module {
     }
     
     // Extra veld toevoegen om op spamrobot te testen (die zal dit veld meestal automatisch vullen)
-    if ($this->settings('check_for_spam')) $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
+    // En een timestamp onthouden (antwoord binnen 5 seconden is een bot)
+    if ($this->settings('check_for_spam')) {
+      $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
+      $timestamp = $this->CI->session->userdata('spamcheck');
+      if (!$timestamp) $this->CI->session->set_userdata('spamcheck',time());
+    }
     
     $formAction = $this->get_action();
 		$form = new form($formAction,$this->form_id);
@@ -250,15 +255,16 @@ class Forms extends Module {
       // Spamcheck?
       if ($this->settings('check_for_spam')) {
         $this->CI->load->library('spam');
-        $this->spam=$this->CI->spam->check($data,'__test__');
-        $this->settings['spam_rapport']=$this->CI->spam->get_rapport();
-        $data['int_spamscore']=$this->CI->spam->get_score();
+        $this->spam                     = $this->CI->spam->check($data,'__test__');
+        $this->settings['spam_rapport'] = $this->CI->spam->get_rapport();
+        $data['int_spamscore']          = $this->CI->spam->get_score();
         unset($formFields['__test__']);
         unset($data['__test__']);
       }
     
       if (!$this->spam) {
         // Do the Action(s)
+        $this->CI->session->unset_userdata('spamcheck');
 
         if ($this->settings('restrict_this_ip_days')) {
           // remove (old) entries
