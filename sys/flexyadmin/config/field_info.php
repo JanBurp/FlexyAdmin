@@ -171,6 +171,11 @@ $config['FIELDS_prefix'] = array (
     'grid-edit'   => true,
     'validation'	=> 'valid_option[0,1]'
 	),
+  'has'          => array(
+    'type'        => 'checkbox',
+    'grid-edit'   => true,
+    'validation'  => 'valid_option[0,1]'
+  ),
 );
 
 
