@@ -104,7 +104,7 @@ class Log_activity extends CI_Model {
   public function get_grouped_user_activity( $user_id=FALSE, $limit=10 ) {
     if (!$this->db->table_exists('log_activity')) return array();
     if (!$user_id) $user_id = $this->session->userdata("user_id");
-    $query = $this->db->query( "SELECT DISTINCT `id_user`, DATE_FORMAT( `tme_timestamp`, '%Y-%m-%d') AS `tme_timestamp`, `str_model`,`str_activity_type` FROM `log_activity` WHERE (`str_activity_type`='database' OR `str_activity_type`='media') AND SUBSTRING(`str_model`,1,3)!='log' ORDER BY `tme_timestamp` DESC LIMIT ".$limit*10 );
+    $query = $this->db->query( "SELECT DISTINCT `id_user`, DATE_FORMAT( `tme_timestamp`, '%Y-%m-%d %H:%i') AS `tme_timestamp`, `str_model`,`str_activity_type` FROM `log_activity` WHERE (`str_activity_type`='database' OR `str_activity_type`='media') AND SUBSTRING(`str_model`,1,3)!='log' ORDER BY `tme_timestamp` DESC LIMIT ".$limit*20 );
     $result = $query->result_array();
     $user = FALSE;
     $user_row_id = 0;
@@ -112,15 +112,20 @@ class Log_activity extends CI_Model {
       $model = $row['str_model'];
       if ($row['str_activity_type']==='media') $model = 'media_'.$model;
       if ($row['id_user']===$user) {
-        $result[$user_row_id]['str_model'].=' | '.$this->lang->ui( $model );
+        if (is_string($result[$user_row_id]['str_model'])) $result[$user_row_id]['str_model'] = array();
+        $result[$user_row_id]['str_model'][] = $model;
         unset($result[$id]);
       }
       else {
         $user = $row['id_user'];
         $user_row_id = $id;
-        $result[$id]['str_model'] = $this->lang->ui( $model );
+        if (is_string($result[$user_row_id]['str_model'])) $result[$user_row_id]['str_model'] = array();
+        $result[$id]['str_model'][] = $model;
       }
       unset($result[$id]['str_activity_type']);
+    }
+    foreach ($result as $id => $row) {
+      $result[$id]['str_model'] = implode(' | ',$this->lang->ui( array_unique($row['str_model'])) );
     }
     return $result;
   }
