@@ -4379,6 +4379,22 @@ Class Data_Core extends CI_Model {
       if (!$this->db->field_exists($field,$table) and !isset($this->settings['field_info'][$field]['validation'])) unset($set[$field]);
     }
 
+    // Prep Booleans
+    foreach ($set as $field => $value) {
+      $prefix = get_prefix($field);
+      if (in_array($prefix,array('b','is','has'))) {
+        if ($value===true) $value = true;
+        if ($value===false) $value = false;
+        if ($value===1) $value = true;
+        if ($value===0) $value = false;
+        if ($value==='1') $value = true;
+        if ($value==='0') $value = false;
+        if (strtolower($value)==='true') $value = true;
+        if (strtolower($value)==='false') $value = false;
+        $set[$field] = $value;
+      }
+    }
+
     $validated = true;
     if (!empty($set)) {
       $this->load->library('form_validation');
