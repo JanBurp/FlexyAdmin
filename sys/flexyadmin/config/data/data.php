@@ -95,6 +95,11 @@ $config['max_rows']         = NULL;
  * 	'uri' => array('freeze','keep','always_the_same'),
  * 	'id'	=> 2,
  * 	'id'	=> array(2,5,6),
+ * 	
+ * 	Als uris aangepast moeten kunnen worden, dan de volgende instellingen:
+ * 	$config['field_info']['uri']['type'] = 'input';
+ * 	$config['field_info']['uri']['readonly'] = false;
+ * 	$config['update_uris'] = FALSE;
  */
 $config['update_uris']      = NULL;
 

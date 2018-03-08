@@ -104,7 +104,6 @@ class Spam {
     $this->check_if_robot($data,$spamBody);
     // check if filled within minimal time
     $this->check_if_to_fast($data);
-    xdebug_break();
     $this->create_action();
 		return ($this->get_action()>=2);
   }
