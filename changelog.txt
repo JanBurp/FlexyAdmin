@@ -1,3 +1,25 @@
+=3.5.0-rc.5
+
+[nl]
+- Verbeterd tonen van laatste aanpassingen op startscherm
+- Verbeterde spamchecker
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Better last updates messages on homescreen
+- Better spamchecker
+- Some bugs solved
+[/en]
+
+[UPDATE]
+- Better spamchecker
+- Plugin log home activity rewrite - better update log
+
+[BUGS]
+- Old images in editor had wrong path in editor
+- Prepping booleans before UPDATE/INSERTING
+- plugin_update did not compare versions good
+
 =3.5.0-rc.4
 
 [nl]
@@ -6,6 +28,9 @@
 [en]
 - Some bugs solved
 [/en]
+
+[FEATURES]
+- Cached Menu extra setting for more fields
 
 [BUGS]
 - radio-image wrong order of images
