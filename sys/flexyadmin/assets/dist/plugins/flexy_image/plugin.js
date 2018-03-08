@@ -22,13 +22,12 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
         var matches = selected.match(/<img.*?src="([^"]*?)" alt="([^"]*?)"/);
         if (matches) {
           var src = matches[1].split('/');
-          src.shift();
+          var srcL = src.length;
           selectedImage = {
-            'path': src.shift(),
-            'src' : src.join('/'),
+            'path': src[srcL-2],
+            'src' : src[srcL-1],
             'alt' : matches[2],
           };
-          // console.log(selectedImage);
         }
       }
       var url = encodeURI('_admin/load/editor/image?path='+path+'&selected='+JSON.stringify(selectedImage));
