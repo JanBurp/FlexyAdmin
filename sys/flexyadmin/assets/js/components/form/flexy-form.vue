@@ -487,9 +487,14 @@ export default {
     },
     
     _replace_field_in_func : function(func) {
-      var expression = func.trim().split(/\s/g);
-      expression[0] = "this.row['" + expression[0].trim() + "']";
-      func = expression.join(' ');
+      var fields = Object.keys(this.row);
+      var newFunc = '';
+      var regex = '';
+      for (var i = fields.length - 1; i >= 0; i--) {
+        regex = new RegExp('\\b'+fields[i]+'\\b','');
+        newFunc = func.replace(regex, "this.row['" + fields[i] + "']");
+        if (newFunc!==func) func = newFunc;
+      }
       return func;
     },
     
