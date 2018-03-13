@@ -148,6 +148,7 @@ class Create_uri extends CI_Model {
    * @author Jan den Besten
    */
   public function cleanup($uri) {
+    $uri=preg_replace("/&#?[a-z0-9]+;/i","",$uri); 
     $uri=trim(strip_tags($uri),' -_');
     $uri=str_replace(" ",$this->replaceSpace,$uri);
 		$uri=clean_string($uri);
