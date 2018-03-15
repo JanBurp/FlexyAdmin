@@ -426,11 +426,11 @@ class Menu {
 				}
 			}
 			$item=prev($menu);
-		}
+    }
     
-		// set first
-		reset($menu);
-		$menu=current($menu);
+    // set first
+    reset($menu);
+    $menu=current($menu);
 		$this->set_menu($menu);
 		return $menu;
 	}
@@ -752,9 +752,9 @@ class Menu {
         // create uri
         if (isset($item['uri'])) $uri=$item['uri'];
         $thisUri=el($this->settings['fields']['url'],$item,$uri);
-        if (!el('unique_uri',$item,false) and !empty($thisUri)) $thisUri=$preUri."/".$thisUri;
+        if (!el('unique_uri',$item,false) and !empty($thisUri) and strpos($thisUri,'http')===FALSE) $thisUri=$preUri."/".$thisUri;
         $thisUri=trim($thisUri,'/');
-				$cleanUri=remove_suffix($thisUri,$this->CI->config->item('URI_HASH'));
+        $cleanUri=remove_suffix($thisUri,$this->CI->config->item('URI_HASH'));
         $classUri=str_replace('/','',get_suffix(str_replace(array('?','='),'_',$cleanUri),'/'));
         
         // title
