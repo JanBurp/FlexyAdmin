@@ -1,3 +1,22 @@
+=3.5.0-rc.6
+
+[nl]
+- Enkele bugs opgelost
+- Start gemaakt met userguide
+[/nl]
+[en]
+- Some bugs solved
+- Started with userguide
+[/en]
+
+[FEATURES]
+- Dynamic Show in forms can use more complex functions
+[BUGS]
+- url_redirect did not work (http problem)
+- Remove htmlentities from uri source (so &shy; is possible in uri sources)
+[USERGUIDE]
+- Start making userguid with PhpDoc
+
 =3.5.0-rc.5
 
 [nl]
