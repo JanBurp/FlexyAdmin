@@ -1,7 +1,0 @@
-{
-	"description" : "Auto update & install CodeIgniter and others",
-	"require": {
-    "firebase/php-jwt":"*",
-		"mpdf/mpdf": "^6.1"
-	}
-}
