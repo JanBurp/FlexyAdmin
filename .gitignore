@@ -1,13 +1,12 @@
 bower_components/*
 node_modules/*
+/.idea
 sys/bower_components/*
 sys/node_modules/*
 sys/build.txt
 site/stats/*.xml
 site/cache/log*.php
-site/cache/data_settings_*
-site/cache/data_result*
-/.idea
-/site/cache/tbl_links_checked
+site/cache/data_*
+site/cache/tbl_links_checked
 site/assets/_tmp/*
 userguide/vendor
