@@ -1,3 +1,17 @@
+=3.5.0-rc.7
+
+[nl]
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
+
+[FEATURES]
+- Dynamic Show in forms can use more complex functions (reprise)
+[UPDATE]
+- PHP 7.2 ready
+
 =3.5.0-rc.6
 
 [nl]

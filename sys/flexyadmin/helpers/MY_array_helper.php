@@ -735,7 +735,7 @@ function ignorecase_ksort(&$a) {
 
 
 /**
- * Sorteerd een associatieve array met de values van een bepaalde key
+ * Sorteert een associatieve array met de values van een bepaalde key
  * 
  * Hiermee kun je het een resultaat array van de database opnieuw sorteren (anders dan op de key)
  *
@@ -747,25 +747,42 @@ function ignorecase_ksort(&$a) {
  * @return array
  * @author Jan den Besten
  */
-function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
+function sort_by($array,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 	if (!is_array($keys)) $keys=array($keys);
-	if ($case) $comparefunction='strcasecmp'; else $comparefunction='strnatcmp';
-	$key=array_shift($keys);
+	$key = array_shift($keys);
+	// DESC
 	if ($desc) {
-		$f = "return $comparefunction(\$b['$key'], \$a['$key']);";
-		uasort($a, create_function('$a,$b', $f));
+		if ($case) {
+			uasort($array, function($a,$b){
+				return strcasecmp($a[$key],$b[$key]);
+			});	
+		}
+		else {
+			uasort($array, function($a,$b) {
+				return strnatcmp($a[$key],$b[$key]);
+			});	
+		}
 	}
+	// ASC
 	else {
-		$f = "return $comparefunction(\$a['$key'], \$b['$key']);";
-		uasort($a, create_function('$a,$b', $f));
+		if ($case) {
+			uasort($array, function($a,$b){
+				return strcasecmp($b[$key],$a[$key]);
+			});	
+		}
+		else {
+			uasort($array, function($a,$b) {
+				return strnatcmp($b[$key],$a[$key]);
+			});	
+		}
 	}
 	// slice
-	if ($max>0) $a=array_slice($a,0,$max);
+	if ($max>0) $array=array_slice($array,0,$max);
 	// subsort
 	if (count($keys)>0) {
 		$nr=0;
-		array_push($a,array());
-		foreach ($a as $k => $val) {
+		array_push($array,array());
+		foreach ($array as $k => $val) {
 			if (isset($v)) {
 				if (!empty($val) and $val[$key]==$v) {
 					// add to sub
@@ -776,7 +793,7 @@ function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 					if (count($b)>1) {
 						// subsort
 						$b=sort_by($b,$keys,FALSE,$case); // $desc standard
-						$a=array_merge( array_slice($a,0,$start), $b, array_slice($a,$start+count($b)) );
+						$array=array_merge( array_slice($array,0,$start), $b, array_slice($array,$start+count($b)) );
 					}
 					unset($b);
 					unset($v);
@@ -790,9 +807,9 @@ function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 			}
 			$nr++;
 		}
-		array_pop($a);
+		array_pop($array);
 	}
-	return $a;
+	return $array;
 }
 
 
