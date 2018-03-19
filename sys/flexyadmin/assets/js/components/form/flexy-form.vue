@@ -491,7 +491,12 @@ export default {
       var newFunc = '';
       var regex = '';
       for (var i = fields.length - 1; i >= 0; i--) {
-        regex = new RegExp('\\b'+fields[i]+'\\b','');
+        if (func.indexOf('%')>=0) {
+          regex = new RegExp('%'+fields[i]+'%','');
+        }
+        else {
+          regex = new RegExp('\\b'+fields[i]+'\\b','');
+        }
         newFunc = func.replace(regex, "this.row['" + fields[i] + "']");
         if (newFunc!==func) func = newFunc;
       }
