@@ -53,14 +53,7 @@ class Cronjob extends CI_Model {
           
           // log in db
           $job['at'] = time();
-          // Nieuw?
-          $job_exists = $this->data->table('log_cronjobs')->where('str_job',$job['name'])->get_row();
-          // Log
-          $this->data->set( array( 'str_job'=>$job['name'], 'tme_last_run'=>unix_to_mysql($job['at'])) );
-          if ( !$job_exists )
-            $this->data->insert();
-          else
-            $this->data->where('str_job',$job['name'])->update();
+          $this->log_last_run($job['name'],$job['at']);
 
           // Run
           $name = ucfirst($job['name']);
@@ -99,10 +92,21 @@ class Cronjob extends CI_Model {
     }
   }
 
+
   private function _every_model($every,$name) {
     $model = remove_prefix($every,' ');
     $this->load->model($model,'model');
     return $this->model->cronjob($name);
+  }
+
+
+  public function log_last_run($name,$last) {
+    $job_exists = $this->data->table('log_cronjobs')->where('str_job',$name)->get_row();
+    $this->data->set( array( 'str_job'=>$name, 'tme_last_run'=>unix_to_mysql($last)) );
+    if ( !$job_exists )
+      $this->data->insert();
+    else
+      $this->data->where('str_job',$name)->update();
   }
   
   
