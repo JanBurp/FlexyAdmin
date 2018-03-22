@@ -488,14 +488,16 @@ export default {
     
     _replace_field_in_func : function(func) {
       var fields = Object.keys(this.row);
+      var normalReplace = true;
+      if (func.indexOf('%')>=0) normalReplace = false;
       var newFunc = '';
       var regex = '';
       for (var i = fields.length - 1; i >= 0; i--) {
-        if (func.indexOf('%')>=0) {
-          regex = new RegExp('%'+fields[i]+'%','');
+        if (normalReplace) {
+          regex = new RegExp('\\b'+fields[i]+'\\b','');
         }
         else {
-          regex = new RegExp('\\b'+fields[i]+'\\b','');
+          regex = new RegExp('%'+fields[i]+'%','');
         }
         newFunc = func.replace(regex, "this.row['" + fields[i] + "']");
         if (newFunc!==func) func = newFunc;
