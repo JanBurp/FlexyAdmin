@@ -204,12 +204,30 @@ class MY_Email extends CI_Email {
 
   
   /**
-   * Stel template in (van cfg_email)
+   * Stel template in
    *
-   * @param      string  $template  Komt overeen met de key uit cfg_email
+   * @param      string  $template      Subject of de key uit cfg_email
+   * @param      string  $body [FALSE]  Body van de template. Als FALSE dan word de template uit cfg_email gehaald en is $template de key
    */
-  public function set_template( $template ) {
-    $this->template = $template;
+  public function set_template( $template, $body=FALSE ) {
+    if (empty($body)) {
+      if (empty($this->lang)) $this->set_language();
+      $this->template = $this->CI->data->table('cfg_email')
+                                      ->select('str_subject_'.$this->lang.' AS `subject`, txt_email_'.$this->lang.' AS `body`')
+                                      ->where('key',$template)
+                                      ->get_row();
+      if (!$this->template) {
+        $this->_set_error_message('email_key_not_found', $key);
+        return false;
+      }
+
+    }
+    else {
+      $this->template = array(
+        'subject' => $template,
+        'body'    => $body,
+      ); 
+    }
     return $this;
   }
 
@@ -389,15 +407,8 @@ class MY_Email extends CI_Email {
 
     // Template?
     if ($this->template) {
-      $mail = $this->CI->data->table('cfg_email')->where('key',$this->template)->get_row();
-      if (!$mail) {
-        $this->_set_error_message('email_key_not_found', $key);
-        return false;
-      }
-
-      // Get subject & body from template
-      $this->subject = el('str_subject_'.$this->lang, $mail,'');
-      $this->body = el('txt_email_'.$this->lang, $mail,'');
+      $this->subject = el('subject', $this->template,'');
+      $this->body = el('body', $this->template,'');
       if (empty($this->subject) or empty($this->body)) {
         $this->_set_error_message('email_subject_text_empty', $key);
         return false;

@@ -1,3 +1,18 @@
+=3.5.0-rc.8
+
+[nl]
+- Enkele bugs opgelost
+- Meer email template mogelijkheden
+[/nl]
+[en]
+- Some bugs solved
+- More email template possibilities
+[/en]
+
+[FEATURES]
+- Email-templates can be set by method (not only from cfg_email)
+
+
 =3.5.0-rc.7
 
 [nl]
