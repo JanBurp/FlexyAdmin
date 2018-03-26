@@ -6,7 +6,7 @@
 	*
 	* @author Jan den Besten
 	*/
- 
+
  class Ajax_example extends Ajax_module {
 
   /**
@@ -45,7 +45,7 @@
 	 * @author Jan den Besten
 	 */
   public function index($args) {
-    return $this->result(array('message'=>__CLASS__));
+    return $this->result(array('message'=>__CLASS__,'user'=>$this->user_info));
   }
 
 
@@ -60,7 +60,7 @@
   	*/
 	public function other($args) {
     return $this->result(array('method'=>'other','message'=>__CLASS__));
-	}
+}
 
 
 }
