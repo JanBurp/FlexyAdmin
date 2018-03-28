@@ -198,7 +198,7 @@ class Cronjob extends CI_Model {
           $start = mktime( 0,0,0, date('n',$last), date('j',$last), date('Y',$last) ) - ($day_of_week * TIME_DAY);
           $next  = (int) $start + ($day * TIME_DAY) + $hour*TIME_HOUR + $min*TIME_MINUTE;
           // Next kan nooit kleiner zijn dan laatste keer, en marge van 6 dagen, tel er dan een week bij op
-          $marge = 6 * TIME_DAY;
+          $marge = TIME_DAY;
           if (($next-$marge)<$last) $next+=TIME_WEEK;
           // Compenseer overgang van zomer/winter tijd
           $daylight_saving_difference = date('I',$last) - date('I',$next);
@@ -212,7 +212,7 @@ class Cronjob extends CI_Model {
           $start = mktime( 0,0,0, date('n',$last), date('j',$last), date('Y',$last) ) + (-$day_of_month+$days_in_month) * TIME_DAY;
           $next  = (int) $start + $day * TIME_DAY + $hour*TIME_HOUR + $min*TIME_MINUTE;
           // Next kan nooit kleiner zijn dan laatste keer, tel er dan een maand bij op, marge een drie weken
-          $marge = 3* TIME_WEEK;
+          $marge = TIME_WEEK;
           if (($next-$marge)<$last) $next+=($days_in_month * TIME_DAY);
           // Compenseer overgang van zomer/winter tijd
           $daylight_saving_difference = date('I',$last) - date('I',$next);
