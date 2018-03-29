@@ -1733,6 +1733,7 @@ Class Data_Core extends CI_Model {
 
     // ..._to_many opties
     if ( in_array('many_to_many',$with) or in_array('one_to_many',$with) ) {
+      if (!isset($this->flexy_auth)) $this->load->library('flexy_auth');
       foreach ($with as $type) {
         $relations = $this->get_setting(array('relations',$type));
         if ($relations) {
@@ -1742,9 +1743,9 @@ Class Data_Core extends CI_Model {
               $result_name = $relation['result_name'];
               $this->data->table($other_table);
               $options[$result_name] = array(
-                'table'         =>$other_table,
-                'data'          =>$this->data->get_result_as_options(),
-                'multiple'      =>true,
+                'table'         => $other_table,
+                'data'          => $this->data->get_result_as_options(),
+                'multiple'      => true,
                 'insert_rights' => $this->flexy_auth->has_rights($other_table),
               );
               $this->data->table($this->settings['table']); // Weer terug naar huidige tabel
