@@ -17,8 +17,9 @@ Class Core_tbl_menu extends Data_Core {
    * Bewaar het menu
    */
   private $_menu                = array();
-  
-  
+
+  private $title_field          = 'str_title';
+
   /**
    * Instellingen voor menu
    */
@@ -36,13 +37,19 @@ Class Core_tbl_menu extends Data_Core {
   public function __construct() {
     parent::__construct();
     $this->config->load('menu',true);
+
+    if ($languages = $this->config->get_item('languages')) {
+      $this->title_field = $this->title_field .= '_'.$languages[0];
+    }
+
     $this->_menu_caching          = $this->config->get_item(array('menu','caching'));
     $this->_menu_compact_caching  = $this->config->get_item(array('menu','compact_caching'),false);
-    $this->_compact_cache_fields  = array_merge( array('id','order','self_parent','uri','full_uri','str_title','full_title','str_module','_table','b_visible','b_restricted') ,$this->config->get_item(array('menu','compact_cache_extra_fields'),array()) );
+    $this->_compact_cache_fields  = array_merge( array('id','order','self_parent','uri','full_uri',$this->title_field,'full_title','str_module','_table','b_visible','b_restricted') ,$this->config->get_item(array('menu','compact_cache_extra_fields'),array()) );
     $this->_menu_config           = $this->config->get_item(array('menu','menu'));
     if (empty($this->_menu_config)) {
       $this->_menu_config = $this->_menu_config_default;
     }
+    
   }
 
 
@@ -204,11 +211,11 @@ Class Core_tbl_menu extends Data_Core {
         $extra_lang_menu[$lang] = array();
         // Parent
         $extra_lang_menu[$lang][$lang] = array(
-          'order'    => $lang_key * ($max_order + 1),
-          'full_uri' => $lang,
-          'uri'      => $lang,
-          '_lang'    => $lang,
-          'str_title'=> $lang,
+          'order'             => $lang_key * ($max_order + 1),
+          'full_uri'          => $lang,
+          'uri'               => $lang,
+          '_lang'             => $lang,
+          'str_title'         => $lang,
         );
       }
     }
@@ -338,7 +345,7 @@ Class Core_tbl_menu extends Data_Core {
       $pre_title = '';
       if (isset($this->_menu[$found_uri]) and $place) {
         $pre_uri   = el('full_uri',$this->_menu[$found_uri], el('uri',$this->_menu[$found_uri],'') );
-        $pre_title = el('full_title',$this->_menu[$found_uri], el('str_title',$this->_menu[$found_uri],'') );
+        $pre_title = el('full_title',$this->_menu[$found_uri], el($this->title_field,$this->_menu[$found_uri],'') );
       }
       $result[] = array(
         'key'       => $found_uri,
@@ -363,7 +370,7 @@ Class Core_tbl_menu extends Data_Core {
     if (!is_array($places)) $places = array($places);
 
     foreach ($places as $place) {
-      if (!isset($item['full_title'])) $item['full_title'] = $item['str_title'];
+      if (!isset($item['full_title'])) $item['full_title'] = $item[$this->title_field];
       if ($place['pre_uri']) {
         $item['full_uri'] = $place['pre_uri'].'/'.$item['uri'];
         $menu_item = array( $item['full_uri'] => $item );
@@ -413,7 +420,7 @@ Class Core_tbl_menu extends Data_Core {
     $result_key = $this->data->get_setting('result_key');
     if ($this->data->field_exists('self_parent')) {
       $this->data->tree('full_uri','uri');
-      $this->data->tree('full_title','str_title');
+      $this->data->tree('full_title',$this->title_field);
       $this->data->set_result_key('full_uri');
     }
     else {
@@ -444,7 +451,7 @@ Class Core_tbl_menu extends Data_Core {
           $full_uri         = $place['pre_uri'].'/'.el('full_uri',$row, el('uri',$row));
           $row['full_uri']  = $full_uri;
           if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $row['b_visible'] = FALSE;
-          if (isset($place['pre_title'])) $row['full_title'] = $place['pre_title'].' / '.el('full_title',$row, el('str_title',$row));;
+          if (isset($place['pre_title'])) $row['full_title'] = $place['pre_title'].' / '.el('full_title',$row, el($this->title_field,$row));
           $items[$full_uri] = $row;
           $nr++;
         }
@@ -501,7 +508,7 @@ Class Core_tbl_menu extends Data_Core {
           if (isset($item['item'])) $row = array_merge($row,$item['item']);
           $full_uri         = $place.'/'.el('full_uri',$row, el('uri',$row));
           $row['full_uri']  = $full_uri;
-          // $row['full_title']= el('full_title',$row, el('str_title',$row));;
+          // $row['full_title']= el('full_title',$row, el($this->title_field,$row));
           $row['_table']    = $table;
           $row['self_parent'] = $menu_item['id'];
           if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $row['b_visible'] = FALSE;
@@ -544,7 +551,7 @@ Class Core_tbl_menu extends Data_Core {
           if (isset($item['item'])) $row = array_merge($row,$item['item']);
           $full_uri         = $place['pre_uri'].'/'.el('full_uri',$row, el('uri',$row));
           $row['full_uri']  = $full_uri;
-          if (isset($place['pre_title'])) $row['full_title'] = $place['pre_title'].' / '.el('full_title',$row, el('str_title',$row));;
+          if (isset($place['pre_title'])) $row['full_title'] = $place['pre_title'].' / '.el('full_title',$row, el($this->title_field,$row));;
           if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $row['b_visible'] = FALSE;
           $items[$full_uri] = $row;
           $nr++;

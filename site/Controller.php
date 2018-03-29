@@ -96,7 +96,8 @@ class Main extends FrontEndController {
 		/**
 		 * Rendering Menu and show site view
 		 */
-		$this->site['menu']=$this->menu->render();
+		$this->site['menu'] 		= $this->menu->render();
+		if (count($this->site['languages'])>1) $this->site['submenu'] = $this->menu->render_branch($this->uri->get(1));
 
 
 		/**********************************************
@@ -169,7 +170,7 @@ class Main extends FrontEndController {
 		$this->site['language']=$lang;
 		$this->add_class('language_'.$lang);
     $this->config->set_item('language',$lang);
-		return $lang;
+  	return $lang;
 	}
 	
 	// Test if language is set to a possible language (and not empty)

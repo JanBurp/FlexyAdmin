@@ -1,3 +1,20 @@
+=3.5.0-rc.9
+
+[nl]
+- Cronjob bugs opgelost
+- Verbeterde meeltaligheid oplossingen
+[/nl]
+[en]
+- Cronjob bugs solved
+- Better multilanguage solutions
+[/en]
+
+[BUGS]
+- Cronjob rewrite,testing and daylightsaving compensation
+[FEATURES]
+- Standard multi-language soltions in menu & frontend-controller
+- better unit testing (frontend & cronjob)
+
 =3.5.0-rc.8
 
 [nl]
