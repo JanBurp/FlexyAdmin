@@ -434,6 +434,17 @@ Class Core_tbl_menu extends Data_Core {
     $data_items = $this->data->get_result( el('limit',$item,0), el('offset',$item,0) );
     foreach ($data_items as $key => $row) {
       $data_items[$key]['_table'] = $table;
+
+      if (isset($item['inherit'])) {
+        foreach($item['inherit'] as $inherit) {
+          if ( !isset($row[$inherit]) or empty($row[$inherit]) ) {
+            $parent_uri = remove_suffix($row['full_uri'],'/');
+            if (isset($data_items[$parent_uri])) {
+              $data_items[$key][$inherit] = $data_items[$parent_uri][$inherit];
+            }
+          }
+        }
+      }
     }
 
     // restore
