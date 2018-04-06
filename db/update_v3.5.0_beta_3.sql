@@ -1,5 +1,5 @@
 # Change db revision
-UPDATE `cfg_configurations` SET `str_revision` = '3.5.0';
+UPDATE `cfg_configurations` SET `str_revision` = '3.5.0-beta.3';
 
 RENAME TABLE `cfg_configurations` TO `cfg_version`;
 ALTER TABLE `cfg_version` DROP `txt_help`;

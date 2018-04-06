@@ -37,8 +37,9 @@ Class Core_tbl_menu extends Data_Core {
   public function __construct() {
     parent::__construct();
     $this->config->load('menu',true);
-
-    if ($languages = $this->config->get_item('languages')) {
+    
+    $languages = $this->config->get_item('languages');
+    if ( $languages and count($languages)>1 ) {
       $this->title_field = $this->title_field .= '_'.$languages[0];
     }
 
@@ -49,7 +50,7 @@ Class Core_tbl_menu extends Data_Core {
     if (empty($this->_menu_config)) {
       $this->_menu_config = $this->_menu_config_default;
     }
-    
+
   }
 
 
@@ -433,6 +434,17 @@ Class Core_tbl_menu extends Data_Core {
     $data_items = $this->data->get_result( el('limit',$item,0), el('offset',$item,0) );
     foreach ($data_items as $key => $row) {
       $data_items[$key]['_table'] = $table;
+
+      if (isset($item['inherit'])) {
+        foreach($item['inherit'] as $inherit) {
+          if ( !isset($row[$inherit]) or empty($row[$inherit]) ) {
+            $parent_uri = remove_suffix($row['full_uri'],'/');
+            if (isset($data_items[$parent_uri])) {
+              $data_items[$key][$inherit] = $data_items[$parent_uri][$inherit];
+            }
+          }
+        }
+      }
     }
 
     // restore
