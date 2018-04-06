@@ -46,6 +46,22 @@ $config['fields']           = NULL;
  */
 $config['field_info']       = NULL;
 
+
+/**
+ * Per veld is het mogelijk om het aanpassen alleen voor bepaalde usergroups toe te laten.
+ * Verwacht word een array met als key de veldnaam en als value een array met:
+ * - 'types' 	- een array met edit types (INSERT,UPDATE,DELETE) - NB Werkt nu alleen nog met UPDATE #TODO#
+ * - 'groups'	- een array met ids van de usergroups die dit veld mogen aanpassen
+ * - 'where'	- hiermee kan nog een voorwaarde worden gesteld dmv een SQL WHERE. Zodat deze extra rechten alleen voor bepaalde items uit de tabel geld.
+ */
+// $config['restricted_rights'] = array(
+//   'b_restricted' => array(
+//     'groups' 	=> array(1),													// b_restricted mag alleen door super_admins(1) worden aangepast
+//     'where'  	=> '`str_module`="example"',					// dit geld alleen in het geval dat str_module="example", voor andere gevallen gelden de normale rechten
+//   ),
+// );
+
+
 /**
  * Per veld informatie over mogelijk opties
  * 
@@ -102,6 +118,11 @@ $config['max_rows']         = NULL;
  * 	$config['update_uris'] = FALSE;
  */
 $config['update_uris']      = NULL;
+
+// NB Als uris aangepast moeten kunnen worden, dan de volgende instellingen:
+// $config['update_uris'] = FALSE;
+// $config['field_info']['uri']['type'] = 'input';
+// $config['field_info']['uri']['readonly'] = false;
 
 
 /**

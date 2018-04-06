@@ -5,6 +5,7 @@
 [FEATURES]
 - Menu: can inherit fields (example: str_module) from parent fields
 - Log activity logs IP adress
+- Data: it's now possible to restricts updates to a specific field to specific usergroups (see config/data.php - 'restricted_rights')
 [SQL UPDATE]
 - update_v3.5.0-rc.10.sql
 
