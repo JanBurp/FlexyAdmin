@@ -28,6 +28,7 @@ class Search_replace extends CI_Model {
 
    public function __construct() {
 		parent::__construct();
+    $this->load->model('log_activity');
     $this->config->load('menu','menu');
     $menu_config = $this->config->item('menu');
 		$languages=el('languages',$menu_config);
@@ -110,6 +111,7 @@ class Search_replace extends CI_Model {
 			}
 		}
 		$query->free_result();
+    $this->log_activity->add('replace',json_encode(array('search'=>$search,'replace'=>$replace,'result'=>$result)),$table,$field);
 		return $result;
   }
   
