@@ -30,7 +30,7 @@ $config['MENU_TABLES']						= array('res_menu_result','tbl_menu');
 // Directories
 $config['SITE']										= SITEPATH;
 $config['SYS']										= 'sys/';
-$config['ADMINASSETS']						= $config['SYS'].'flexyadmin/assets/';
+$config['ADMINASSETS']						= $config['SYS'].'flexyadmin/assets/dist/';
 $config['PUBLICFOLDER']           = 'public';
 $config['PUBLICASSETS']						= $config['SITE'].'assets/';
 $config['ASSETS']									= $config['PUBLICASSETS'];
