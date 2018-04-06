@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: localhost (MySQL 5.6.35)
-# Database: flexyadmin_demo
-# Generation Time: 2018-01-23 15:05:14 +0000
+# Host: localhost (MySQL 5.6.38)
+# Database: flexyadmin_test
+# Generation Time: 2018-04-06 15:23:42 +0000
 # ************************************************************
 
 
@@ -158,7 +158,7 @@ LOCK TABLES `cfg_version` WRITE;
 
 INSERT INTO `cfg_version` (`id`, `str_version`)
 VALUES
-	(1,'3.5.0-beta.53');
+	(1,'3.5.0-rc.10');
 
 /*!40000 ALTER TABLE `cfg_version` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -172,6 +172,7 @@ DROP TABLE IF EXISTS `log_activity`;
 CREATE TABLE `log_activity` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id_user` int(11) NOT NULL DEFAULT '0',
+  `ip_address` varchar(15) NOT NULL,
   `tme_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `stx_activity` longtext NOT NULL,
   `str_activity_type` varchar(10) NOT NULL DEFAULT '',
