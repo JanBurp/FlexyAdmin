@@ -207,8 +207,10 @@ Class Data_Core extends CI_Model {
   /**
    * Is nodig om eventueel te kunnen instellen in de database wie iets heeft aangepast.
    * En om eventueel alleen rijen terug te geven waarvoor de gebruiker rechten heeft.
+   * En om eventueel op minimal rights te controleren.
    */
-  protected $user_id    = NULL;
+  protected $user_id     = NULL;
+  protected $user_groups = array(0);
   
   /**
    * Bewaar de id van opgevraagde row als ->where( id ) wordt gebruikt.
@@ -998,11 +1000,18 @@ Class Data_Core extends CI_Model {
     if ( $user_id === FALSE ) {
       $this->user_id = FALSE; // we hebben het iig gebrobeerd in te stellen
       if (defined('PHPUNIT_TEST')) {
-        $this->user_id = 0; // TESTER
+        $this->user_id     = 0; // TESTER
+        $this->user_groups = array(0);
       }
       else {
         $this->load->library('flexy_auth');
-        $this->user_id = $this->flexy_auth->get_user(NULL,'id');
+        $this->user_id    = $this->flexy_auth->get_user(NULL,'id');
+        $groups = $this->flexy_auth->get_user($this->user_id,'groups');
+        if ($groups) {
+          $groups = array_column($groups,'id');
+          sort($groups);
+          $this->user_groups = $groups;
+        }
       }
     }
     return $this;
@@ -4538,7 +4547,7 @@ Class Data_Core extends CI_Model {
     }
     
     // Is user id nodig?
-    if ( $this->field_exists('user_changed')) {
+    if ( $this->field_exists('user_changed') or isset($this->settings['restricted_rights']) ) {
       if ( !isset( $this->user_id )) {
         $this->set_user_id();
       }
@@ -4554,10 +4563,53 @@ Class Data_Core extends CI_Model {
     }
 
     /**
-     * Ok we kunnen! Stel nog even alles in en maak cache leeg
+     * Stel nog alles in.
      */
     $set = $this->tm_set;
     $id = NULL;
+
+    /**
+     * Zijn er restricties op rechten?
+     */
+    if (isset( $this->settings['restricted_rights'])) {
+      $restricted_rights = $this->settings['restricted_rights'];
+      $restricted_rights_fields = array_keys($restricted_rights);
+      $restricted_rights_fields = array_intersect( $restricted_rights_fields, array_keys($set) );
+      if ($restricted_rights_fields) {
+        foreach ($restricted_rights_fields as $field) {
+          $rights = $restricted_rights[$field];
+          // Check if type is restricted to this type
+          if (in_array($type,el('types',$rights,array('UPDATE')))) {
+            // Check user group
+            $groups = $rights['groups'];
+            if (!array_intersect($groups,$this->user_groups)) {
+              // Alleen in bepaalde gevallen (en where is een id)
+              if (isset($rights['where']) and is_numeric($where)) {
+                $sql = 'SELECT * FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'`="'.$where.'" AND '.$rights['where'];
+                $query = $this->db->query($sql);
+                if ($query->num_rows()>=1) {
+                  $this->query_info['validation'] = FALSE;  
+                }
+              }
+              else {
+                $this->query_info['validation'] = FALSE;                
+              }
+              if (isset($this->query_info['validation']) and $this->query_info['validation']===FALSE) {
+                if (!isset($this->query_info['validation_errors']) or empty($this->query_info['validation_errors'])) $this->query_info['validation_errors'] = array();
+                $this->query_info['validation_errors'] = array_merge( $this->query_info['validation_errors'], array( $field => langp('no_minimal_rights_for',$field)) );
+                return FALSE;
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+
+    /**
+     * Maak cache leeg
+     */
     $this->clear_cache($this->settings['table']);
     
 
