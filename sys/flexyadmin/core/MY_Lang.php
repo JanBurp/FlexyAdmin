@@ -250,7 +250,7 @@ class MY_Lang extends CI_Lang {
    * @author Jan den Besten
    */
 	public function replace_ui($s) {
-    $s=preg_split("/\s/",$s);
+    $s=preg_split("/\b/",$s);
     foreach ($s as $key => $word) {
       // only replace if word has a underscore and no dot
       if (has_string('_',$word) and !has_string('.',$word)) {
@@ -258,7 +258,7 @@ class MY_Lang extends CI_Lang {
         if (!empty($newword)) $s[$key]=$newword;
       }
     }
-    $s=implode(' ',$s);
+    $s=implode('',$s);
     $s=str_replace(' .','.',$s);
 		return $s;
 	}
