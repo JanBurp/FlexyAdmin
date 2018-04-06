@@ -1,5 +1,5 @@
 # Change db revision
-UPDATE `cfg_configurations` SET `str_revision` = '3.5.0';
+UPDATE `cfg_configurations` SET `str_revision` = '3.5.0-alpha.0';
 
 # Rename res_media_files to res_assets and standardize fieldnames
 RENAME TABLE `res_media_files` TO `res_assets`;

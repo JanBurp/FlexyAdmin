@@ -1,10 +1,28 @@
 =3.5.0-rc.10
 
+[nl]
+- Het is nu mogelijk om extra rechten in te stellen voor specifieke velden
+- Loggen van IP adres van gebruiker
+- Loggen van search_replace acties
+- Submenus kunnen waarden overerven
+- BUG in: Verbeterde meeltaligheid oplossingen
+[/nl]
+[en]
+- It's now possible to restricts updates to a specific field to specific usergroups
+- Log IP adresses from user
+- Log search_replace actions
+- Submenus can inherit fields from parent fields
+- BUG in: Better multilanguage solutions
+[/en]
+
+
 [BUGS]
 - BUG in core menu (since multilang changes)
+- BUG in old (not safe) folder settings (folder to dist)
 [FEATURES]
 - Menu: can inherit fields (example: str_module) from parent fields
 - Log activity logs IP adress
+- Log search_replace actions
 - Data: it's now possible to restricts updates to a specific field to specific usergroups (see config/data.php - 'restricted_rights')
 [SQL UPDATE]
 - update_v3.5.0-rc.10.sql

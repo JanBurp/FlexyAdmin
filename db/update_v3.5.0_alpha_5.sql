@@ -1,5 +1,5 @@
 # Change db revision
-UPDATE `cfg_configurations` SET `str_revision` = '3.5.0';
+UPDATE `cfg_configurations` SET `str_revision` = '3.5.0-alpha.5';
 
 DROP TABLE `cfg_field_info`;
 DROP TABLE `cfg_img_info`;
