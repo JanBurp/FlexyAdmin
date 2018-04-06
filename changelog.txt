@@ -1,3 +1,12 @@
+=3.5.0-rc.10
+
+
+[BUGS]
+- BUG in core menu (since multilang changes)
+[FEATURES]
+- Menu: can inherit fields (example: str_module) from parent fields
+
+
 =3.5.0-rc.9
 
 [nl]
