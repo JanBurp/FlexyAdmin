@@ -12,10 +12,12 @@ class Tools extends Api_Model {
 	public function __construct() {
 		parent::__construct();
     $this->load->dbutil();
+    $this->load->driver('cache', array('adapter' => 'file'));
   }
 
   public function db_backup() {
     if (!$this->flexy_auth->can_backup()) return $this->_result_status401();
+
 
     $tablesWithRights=$this->flexy_auth->get_table_rights();
     // select only data (not config)
@@ -52,6 +54,7 @@ class Tools extends Api_Model {
     if ($super_admin and !$this->flexy_auth->is_super_admin()) return ['errors'=>[0=>['message'=>'No Rights.']]];
     $result = $this->dbutil->import($sql);
     unset($result['queries']);
+    $this->cache->clean();
     return $result;
   }
 
