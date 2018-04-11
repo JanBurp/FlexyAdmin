@@ -26,7 +26,7 @@ Class Core_res_assets extends Data_Core {
   private $find_in_fields = array();
   
   private $default_assets = array(
-    'types'            => array('jpg','jpeg','gif','png','pdf','doc','docx','xls','xlsx'),
+    'types'            => array('jpg','jpeg','gif','png','pdf','doc','docx','xls','xlsx','svg'),
     'encrypt_name'     => FALSE,
     'media_fields'     => array(),
     'autofill'         => '',
