@@ -21,6 +21,7 @@ export default {
         'jpeg'  : 'image',
         'gif'   : 'image',
         'png'   : 'image',
+        'svg'   : 'image',
         
         'zip'   : 'fa-file-archive-o',
         'pdf'   : 'fa-file-pdf-o',
