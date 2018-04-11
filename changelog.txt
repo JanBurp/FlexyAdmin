@@ -1,3 +1,21 @@
+=3.5.0-rc.11
+
+[nl]
+- Uploaden van .svg afbeeldingen is nu mogelijk
+- Enkele fouten opgelost
+[/nl]
+[en]
+- Uploading .svg images possible now
+- Some bugs solved
+[/en]
+
+[BUGS]
+- Restoring DB did not clean cache
+- Redirect sometimes loops
+- Plugin_uri did not get old uri resulting in always creating new uri
+[FEATURES]
+- Uploading .svg images possible now (without scaling, just copy)
+
 =3.5.0-rc.10
 
 [nl]
