@@ -251,6 +251,7 @@ class MY_Upload extends CI_Upload {
 	public function resize_image( $path, $image, $sizes=array() ) {
 		$result=TRUE;
 		$this->file_name=$image;
+    $ext = get_file_extension($this->file_name);
     if (empty($sizes)) $sizes = $this->assets->get_folder_settings($path);
 		$current_size = @getimagesize( $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name);
     
@@ -260,47 +261,53 @@ class MY_Upload extends CI_Upload {
     $this->extraFiles=array();
 		while ( isset($sizes["create_$nr"]) ) {
 			if ( $sizes["create_$nr"] ) {
-        
-				// check if resize is not bigger than original
-				if ($current_size[0]<$sizes["width_$nr"] and $current_size[1]<$sizes["height_$nr"] ) {
-					$sizes["width_$nr"]=$current_size[0];
-					$sizes["height_$nr"]=$current_size[1];
-				}
+
         // Name
-				$prefix = $sizes["prefix_$nr"];
-				$suffix = $sizes["suffix_$nr"];
-				$ext=get_file_extension($this->file_name);
-				$name=str_replace(".$ext","",$this->file_name);
-				$create_name = $prefix.$name.$suffix.".".$ext;
-        
-        // Resize config
-				$resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
-				$resize_config['maintain_ratio'] = TRUE;
-				$resize_config['width']          = $sizes["width_$nr"];
-				$resize_config['height']         = $sizes["height_$nr"];
-				$resize_config['new_image']      = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$create_name;
-				$resize_config['master_dim']     = 'auto';
-        
-        // Zorg voor voldoende geheugen
-				$this->_setMemory($current_size);
-        
-        // Start resize
-				$this->_CI->image_lib->initialize($resize_config);
-				if ( !$this->_CI->image_lib->resize() ) {
-					$this->error=$this->_CI->image_lib->display_errors().' -- '.$nr;
-					$result = FALSE;
-				}
-        else {
-          // add extra files and set if they are visible or not
-          $this->extraFiles[$create_name]=array('file'=>$create_name,'path'=>$path,'hidden'=>substr($prefix,0,1)=='_');
+        $prefix = $sizes["prefix_$nr"];
+        $suffix = $sizes["suffix_$nr"];
+        $name = str_replace(".$ext","",$this->file_name);
+        $create_name = $prefix.$name.$suffix.".".$ext;
+
+        if ($ext=='svg') {
+          @copy( $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name, $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$create_name );
         }
-				$this->_CI->image_lib->clear();
+        else {
+          // check if resize is not bigger than original
+          if ($current_size[0]<$sizes["width_$nr"] and $current_size[1]<$sizes["height_$nr"] ) {
+            $sizes["width_$nr"]=$current_size[0];
+            $sizes["height_$nr"]=$current_size[1];
+          }
+          
+          // Resize config
+          $resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
+          $resize_config['maintain_ratio'] = TRUE;
+          $resize_config['width']          = $sizes["width_$nr"];
+          $resize_config['height']         = $sizes["height_$nr"];
+          $resize_config['new_image']      = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$create_name;
+          $resize_config['master_dim']     = 'auto';
+          
+          // Zorg voor voldoende geheugen
+          $this->_setMemory($current_size);
+          
+          // Start resize
+          $this->_CI->image_lib->initialize($resize_config);
+          if ( !$this->_CI->image_lib->resize() ) {
+            $this->error=$this->_CI->image_lib->display_errors().' -- '.$nr;
+            $result = FALSE;
+          }
+          else {
+            // add extra files and set if they are visible or not
+            $this->extraFiles[$create_name]=array('file'=>$create_name,'path'=>$path,'hidden'=>substr($prefix,0,1)=='_');
+          }
+          $this->_CI->image_lib->clear();
+        }
+
 			}
 			$nr++;
 		}
 
 		// resize original
-		if ( $sizes["resize_img"] and ($sizes['img_width']>0 and $sizes['img_height']>0) ) {
+		if ( $ext!=='svg' and $sizes["resize_img"] and ($sizes['img_width']>0 and $sizes['img_height']>0) ) {
 
 			// check if resize is necessary
 			if ($current_size[0]>$sizes['img_width'] or $current_size[1]>$sizes['img_height'] ) {
@@ -326,20 +333,26 @@ class MY_Upload extends CI_Upload {
 
 		// Create cached thumb
 		if (file_exists($this->_CI->config->item('THUMBCACHE')) ) {
-			$thumbSize=$this->_CI->config->item('THUMBSIZE');
-			$resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
-			$resize_config['maintain_ratio'] = TRUE;
-			$resize_config['width']          = $thumbSize[0];
-			$resize_config['height']         = $thumbSize[1];
-			$resize_config['new_image']      = $this->_CI->config->item('THUMBCACHE').pathencode($path.'/'.$this->file_name,FALSE);
-			$resize_config['master_dim']     = 'auto';
-			$this->_setMemory($current_size);
-			$this->_CI->image_lib->initialize($resize_config);
-			if (!$this->_CI->image_lib->resize()) {
-				$this->error=$this->_CI->image_lib->display_errors().' -- thumb';
-				$result = FALSE;
-			}
-			$this->_CI->image_lib->clear();
+
+      if ($ext=='svg') {
+        @copy( $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name, $this->_CI->config->item('THUMBCACHE').pathencode($path.'/'.$this->file_name,FALSE) );
+      }
+      else {
+        $thumbSize=$this->_CI->config->item('THUMBSIZE');
+        $resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
+        $resize_config['maintain_ratio'] = TRUE;
+        $resize_config['width']          = $thumbSize[0];
+        $resize_config['height']         = $thumbSize[1];
+        $resize_config['new_image']      = $this->_CI->config->item('THUMBCACHE').pathencode($path.'/'.$this->file_name,FALSE);
+        $resize_config['master_dim']     = 'auto';
+        $this->_setMemory($current_size);
+        $this->_CI->image_lib->initialize($resize_config);
+        if (!$this->_CI->image_lib->resize()) {
+          $this->error=$this->_CI->image_lib->display_errors().' -- thumb';
+          $result = FALSE;
+        }
+        $this->_CI->image_lib->clear();
+      }
 		}
 		return $result;
 	}

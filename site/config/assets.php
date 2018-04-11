@@ -47,7 +47,7 @@ $config['assets'] = array(
 
 $config['assets'] = array( 
 
-	'downloads' => array(
+'downloads' => array(
     'types'            => 'pdf,doc,docx,xls,xlsx,png,jpg',
     'encrypt_name'     => 0,
     'autofill'         => '',
@@ -57,8 +57,8 @@ $config['assets'] = array(
     'serve_restricted' => 0
   ),
     
-	'pictures'  => array(
-    'types'            => 'jpg,jpeg,gif,png',
+'pictures'  => array(
+    'types'            => 'jpg,jpeg,gif,png,svg',
     'encrypt_name'     => 0,
     'autofill'         => '',
     'autofill_fields'  => 0,
