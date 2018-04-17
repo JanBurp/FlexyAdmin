@@ -1,6 +1,17 @@
-[BUGS]
-- Frontend assets version number did not work, now uses git hash
+=3.5.0-rc.12
 
+[nl]
+- Enkele fouten opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
+
+[BUGS]
+- force_https = FALSE on default: TRUE could result in bugs on hosting that don't have an SSL certificate
+- Frontend assets version number did not work, now uses git hash
+- Inserting the first item of an ordered table (with order field) gave DB error
+- getting groups when setting user_id resulted in strange behaviour (since 3.5.0.rc10)
 
 =3.5.0-rc.11
 
