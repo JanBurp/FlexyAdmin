@@ -319,7 +319,7 @@ if (!isset($config['base_url'])) {
  *
  * Force https local off.
  */
-$config['force_https'] = TRUE;
+$config['force_https'] = FALSE;
 
 
 /*
