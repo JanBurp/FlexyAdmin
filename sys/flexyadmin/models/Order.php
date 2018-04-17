@@ -102,10 +102,17 @@ class order extends CI_Model {
     $query = $this->db->query($sql);
     $lastrow = $query->row_array();
     if (!$lastrow) {
-      // Geen kinderen in de opgevraagde tree, dan is de order hetzelfde als de parent zelf
-      $sql = "SELECT `order` FROM `$table` WHERE `id`=$parent";
-      $query = $this->db->query($sql);
-      $lastrow = $query->row_array();
+      // Dit is het eerste item
+      if ($parent=='') {
+        $next = 0;
+        return $next;
+      }
+      else {
+        // Geen kinderen in de opgevraagde tree, dan is de order hetzelfde als de parent zelf
+        $sql = "SELECT `order` FROM `$table` WHERE `id`=$parent";
+        $query = $this->db->query($sql);
+        $lastrow = $query->row_array();
+      }
     }
     $next = $lastrow['order'] + 1;
     // Als in een tree, verschuif alles met hogere volgorde dan die van de tree op
