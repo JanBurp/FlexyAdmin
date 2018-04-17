@@ -1005,10 +1005,10 @@ Class Data_Core extends CI_Model {
       }
       else {
         $this->load->library('flexy_auth');
-        $this->user_id    = $this->flexy_auth->get_user(NULL,'id');
-        $groups = $this->flexy_auth->get_user($this->user_id,'groups');
-        if ($groups) {
-          $groups = array_column($groups,'id');
+        $user = $this->flexy_auth->get_user();
+        $this->user_id = $user['id'];
+        if ($user['groups']) {
+          $groups = array_column($user['groups'],'id');
           sort($groups);
           $this->user_groups = $groups;
         }

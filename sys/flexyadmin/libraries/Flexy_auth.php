@@ -295,6 +295,26 @@ class Flexy_auth extends Ion_auth {
     }
     return FALSE;
   }
+
+
+  // public function get_users_groups($id=FALSE) {
+  //   $this->trigger_events('get_users_group');
+
+  //   // if no id was passed use the current users id
+  //   $id || $id = $this->session->userdata('user_id');
+
+  //   $sql =  'SELECT `rel_users__groups`.`id_user_group` as `id`, `cfg_user_groups`.`name`, `cfg_user_groups`.`description` '.
+  //           'FROM `rel_users__groups` '.
+  //           'JOIN `cfg_user_groups` ON `rel_users__groups`.`id_user_group` = `cfg_user_groups`.`id` '.
+  //           'WHERE `rel_users__groups`.`id_user` = '.$id.' ';
+  //   $query = $this->db->query($sql);
+
+  //   if ($query) {
+  //     return $query;
+  //   }
+  //   return null;
+  // }
+
   
   /**
    * Geeft rechten van huidige gebruiker
