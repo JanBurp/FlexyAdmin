@@ -92,14 +92,14 @@ class FrontEndController extends MY_Controller {
     }
     
     // Version timestamp
-    $files=array($this->config->item('ASSETS').'css/styles.min.css',$this->config->item('ASSETS').'js/scripts.min.js');
-    $version=0;
-    foreach ($files as $file) {
-      $time=0;
-      if (file_exists($file)) $time=filemtime($file);
-      if ($time>$version) $version=$time;
+    $version = 0;
+    $build = read_file($this->config->item('SYS').'/build.txt');
+    if ($build) {
+      if (preg_match('/{(.*)}/um', $build,$match)) {
+        $version=$match[1];
+      }
     }
-    $this->site['int_version']=$version;
+    $this->site['int_version'] = $version;
     
     // Is there a library that needs to be run first??
     if (file_exists(SITEPATH.'libraries/Before_controller.php')) {
