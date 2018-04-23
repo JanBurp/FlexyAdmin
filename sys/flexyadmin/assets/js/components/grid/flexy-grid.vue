@@ -196,6 +196,21 @@ export default {
     },
     
   },
+
+  watch : {
+    '$route.params.table' : function(val) {
+      if (val !== this.currentName) {
+        this.loadStart(true);
+      }
+    },
+    '$route.params.path' : function(val) {
+      if (val !== this.currentName) {
+        this.loadStart(true);
+      }
+    }
+
+  },
+
   
   methods:{
 
