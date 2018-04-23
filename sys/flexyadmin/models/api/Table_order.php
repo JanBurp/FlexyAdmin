@@ -72,8 +72,8 @@ class Table_order extends Api_Model {
 
 
 	public function __construct() {
-		parent::__construct();
-	}
+    parent::__construct();
+  }
   
 
   /**
@@ -119,7 +119,8 @@ class Table_order extends Api_Model {
       $new = $this->order->set( $this->args['table'], $this->args['id'], $this->args['from'] );
       return $new;
     }
-    //
+    // Voor de zekerheid:
+    $this->order->reset( $this->args['table'] );
     return FALSE;
   }
   
