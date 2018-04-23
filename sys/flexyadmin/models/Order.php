@@ -257,13 +257,13 @@ class order extends CI_Model {
       $children_ids = $this->_get_children_ids( $table, $id, $old );
       $moved_ids=array_merge($moved_ids,$children_ids);
     }
-    
+
     $log = array(
       'query' =>'',
       'table' => $table,
       'id'    => $id,
     );
-    
+
     // Pas order in item (en kinderen) aan
     $order = $new;
     foreach ($moved_ids as $move_id) {
@@ -280,7 +280,7 @@ class order extends CI_Model {
     // Alles opschuiven
     if ($new>$old) {
       // Schuif alle tussenliggende terug
-      $sql="UPDATE `$table` SET `order`=`order`-".$shifted_count." WHERE `order`>'$old' AND `order`<='$order' AND `id` NOT IN(".implode(',',$moved_ids).")";
+      $sql="UPDATE `$table` SET `order`=`order`-".$shifted_count." WHERE `order`>'$old' AND `order`<='".$order."' AND `id` NOT IN(".implode(',',$moved_ids).")";
       $this->db->query($sql);
       $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
     }

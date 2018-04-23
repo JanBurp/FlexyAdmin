@@ -254,8 +254,7 @@ class MY_Upload extends CI_Upload {
     $ext = get_file_extension($this->file_name);
     if (empty($sizes)) $sizes = $this->assets->get_folder_settings($path);
 		$current_size = @getimagesize( $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name);
-    
-    
+
 		// 1) resize copies
 		$nr=1;
     $this->extraFiles=array();
@@ -281,6 +280,7 @@ class MY_Upload extends CI_Upload {
           // Resize config
           $resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
           $resize_config['maintain_ratio'] = TRUE;
+          if (isset($sizes['quality']))    $resize_config['quality'] = $sizes['quality'];
           $resize_config['width']          = $sizes["width_$nr"];
           $resize_config['height']         = $sizes["height_$nr"];
           $resize_config['new_image']      = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$create_name;
@@ -313,6 +313,7 @@ class MY_Upload extends CI_Upload {
 			if ($current_size[0]>$sizes['img_width'] or $current_size[1]>$sizes['img_height'] ) {
 				$resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
 				$resize_config['maintain_ratio'] = TRUE;
+        if (isset($sizes['quality']))    $resize_config['quality'] = $sizes['quality'];
 				$resize_config['width']          = $sizes['img_width'];
 				$resize_config['height']         = $sizes['img_height'];
 				$resize_config['new_image']      = "";
