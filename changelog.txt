@@ -1,5 +1,12 @@
 =3.5.0-rc.13
 
+[nl]
+- Enkele fouten opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
+
 [BUGS]
 - Reordering bugs solved
 - Changing form views did not refresh form component/data
