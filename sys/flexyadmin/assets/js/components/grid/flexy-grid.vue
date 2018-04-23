@@ -985,35 +985,42 @@ export default {
         this.draggable.newIndex = newIndex;
         
         var items = _.cloneDeep(this.draggable.oldItems);
-        var parent_id = 0; 
+        var number_of_children = 0;
+        var parent = 0; 
         if (this.gridType()==='tree') {
-          var number_of_children = this.draggable.children.length || 0;
+          number_of_children = this.draggable.children.length || 0;
           // Pas parent van verplaatste item aan
           // Bijna altijd 0, behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
-          // Check eerst of het niet de laatste is, want dan hoeven we al niet verder te kijken
-          var plus = 0;
-          if (newIndex>=oldIndex) plus=1;
-          if ( newIndex+plus < self.items.length ) {
-            if (!_.isUndefined(self.items[newIndex+plus])) {
-              parent_id = self.items[newIndex+plus].self_parent.value;
+          var next = newIndex;
+          if (newIndex>oldIndex) {
+            next++;
+          }
+          if ( next < self.dataInfo.num_rows-1 ) {
+            if ( !_.isUndefined( items[next] ) ) {
+              var nextItem = _.cloneDeep( items[next] );
+              parent = nextItem.self_parent.value;
             }
           }
-          items[oldIndex].self_parent.value = parent_id;
-          // Verplaats item & children
-          this.items = jdb.moveMultipleArrayItems( items, oldIndex, number_of_children + 1, newIndex);
+          items[oldIndex].self_parent.value = parent;
         }
+        console.log(oldIndex,newIndex,next,number_of_children);
+
+        // Verplaats item & children
+        if (number_of_children>0 && newIndex>oldIndex) {
+          items = jdb.moveMultipleArrayItems( items, oldIndex, number_of_children + 1, newIndex - number_of_children);
+        } 
         else {
-          // Verplaats item
-          this.items = jdb.moveMultipleArrayItems( items, oldIndex, 1, newIndex);
+          items = jdb.moveMultipleArrayItems( items, oldIndex, number_of_children + 1, newIndex);
         }
         
         // Update 'order'
         var order = this.draggable.orderStart;
-        for (var i = 0; i < this.items.length; i++) {
-          this.items[i].order.value = order;
+        for (var i = 0; i < items.length; i++) {
+          items[i].order.value = order;
           order++;
         }
         // Vernieuw de tree info
+        this.items = _.cloneDeep(items);
         if (this.gridType()=='tree') this.items = this.addInfo(this.items);
         
         if (flexyState.debug) {
@@ -1023,6 +1030,7 @@ export default {
         }
         
         var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
+        console.log(newOrder);
         if (self.draggable.children && newIndex>oldIndex) newOrder = newOrder - self.draggable.children.length;
         self.postNewOrder( newOrder ).then(function(response){
           self.draggable.item = false;
@@ -1053,7 +1061,7 @@ export default {
         if (!error && response.data.data===false) error = true;
         if (error) {
           flexyState.addMessage( self.$lang.grid_order_save_error, 'danger');
-          // Terug naar oude situatie
+          // Bij fout: Terug naar oude situatie
           self.items = self.draggable.oldItems;
         }
         return response;

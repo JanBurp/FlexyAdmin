@@ -1,6 +1,7 @@
 =3.5.0-rc.13
 
 [BUGS]
+- Reordering bugs solved
 - Changing form views did not refresh form component/data
 - Changing grid views (when empty grid) did not refresh grid component/data
 - Changing media views (when empty grid) did not refresh grid component/data
