@@ -76,6 +76,14 @@ export default {
       return types;
     },
   },
+
+  watch : {
+    '$route.params.table' : function(val) {
+      if (val !== this.currentName) {
+        this.reloadForm();
+      }
+    }
+  },
   
   // Copy of props.data (& more)
   data : function() {
@@ -155,6 +163,7 @@ export default {
     }
     this.currentName = this.name;
   },
+
   
   methods:{
     
