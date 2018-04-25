@@ -2162,6 +2162,9 @@ Class Data_Core extends CI_Model {
           if (strpos($field,'.')===false) $field = $this->settings['table'].'.'.$field;
           $this->db->order_by( $field, $split['direction'] );
         }
+        elseif ($field=='RAND()') {
+          $this->db->order_by( 'RAND()' );  
+        }
         elseif ($this->tm_as_grid and isset($this->tm_as_grid['fields']) and in_array($field,$this->tm_as_grid['fields'])) {
           $this->db->order_by( $field, $split['direction'] ); 
         }
@@ -5209,7 +5212,8 @@ Class Data_Core extends CI_Model {
   public function total_rows( $calculate=FALSE, $json=FALSE ) {
     if ($calculate) {
       // perform simple query count
-      $query = $this->db->query( $this->last_clean_query( $json ) );
+      $sql = $this->last_clean_query( $json );
+      $query = $this->db->query( $sql );
       $total_rows = $query->num_rows();
       return $total_rows;
     }
@@ -5270,6 +5274,7 @@ Class Data_Core extends CI_Model {
     // $query = preg_replace("/(WHERE.*)LIMIT/uUs", " LIMIT", $query);
     $query = preg_replace("/SELECT.*FROM/uUs", 'SELECT `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'` FROM', $query, 1);
     $query = preg_replace("/LIMIT\s+\d*/us", " ", $query);
+    $query = preg_replace("/ORDER\sBY\sRAND\(\)*/us", "", $query);
     $query = preg_replace("/ORDER\sBY[^)]*/us", "", $query);
     if ($groupby and strpos($query,'GROUP BY')===FALSE) {
       $query.=' GROUP BY `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`';
