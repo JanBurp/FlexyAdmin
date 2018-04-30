@@ -2162,6 +2162,9 @@ Class Data_Core extends CI_Model {
           if (strpos($field,'.')===false) $field = $this->settings['table'].'.'.$field;
           $this->db->order_by( $field, $split['direction'] );
         }
+        elseif (strpos($field,'.')!==false) {
+          $this->db->order_by( $field, $split['direction'] );
+        }
         elseif ($field=='RAND()') {
           $this->db->order_by( 'RAND()' );  
         }
@@ -2187,7 +2190,7 @@ Class Data_Core extends CI_Model {
   }
   
   /**
-   * Split één order item in veld en direction
+   * Split één order item in table.veld en direction
    *
    * @param string $order 
    * @return array ['field'=>'...','direction'=>['ASC','DESC']] 
@@ -2201,7 +2204,7 @@ Class Data_Core extends CI_Model {
     $order     = trim($order[0]);
     // Relations?
     if (has_string('.',$order) and !has_string('.abstract',$order)) {
-      $order = str_replace('.','`.`',$order);
+      $order = '`'.str_replace('.','`.`',$order).'`';
     }
     return array('field'=>$order,'direction'=>$direction);
   }
