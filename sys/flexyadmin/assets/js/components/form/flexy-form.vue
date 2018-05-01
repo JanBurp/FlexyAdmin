@@ -48,6 +48,10 @@ export default {
       type:[Boolean,Object],
       default:false,
     },
+    'disabled':{
+      type:Boolean,
+      default:true,
+    },
   },
     
   
@@ -97,7 +101,7 @@ export default {
       validationErrors : {},
       isSaving         : false,
       subForm          : {},
-      isEdited         : false,
+      isEdited         : !this.disabled,
       wysiwygJustReady : false,
     }
   },
