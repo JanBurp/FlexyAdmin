@@ -753,12 +753,12 @@ function sort_by($array,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 	// DESC
 	if ($desc) {
 		if ($case) {
-			uasort($array, function($a,$b){
+			uasort($array, function($a,$b) use($key) {
 				return strcasecmp($a[$key],$b[$key]);
 			});	
 		}
 		else {
-			uasort($array, function($a,$b) {
+			uasort($array, function($a,$b) use($key) {
 				return strnatcmp($a[$key],$b[$key]);
 			});	
 		}
@@ -766,12 +766,12 @@ function sort_by($array,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 	// ASC
 	else {
 		if ($case) {
-			uasort($array, function($a,$b){
+			uasort($array, function($a,$b) use($key) {
 				return strcasecmp($b[$key],$a[$key]);
 			});	
 		}
 		else {
-			uasort($array, function($a,$b) {
+			uasort($array, function($a,$b) use($key) {
 				return strnatcmp($b[$key],$a[$key]);
 			});	
 		}

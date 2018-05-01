@@ -11,4 +11,7 @@
   <?php if (isset($id)): ?>
   :primary="<?=$id?>"
   <?php endif ?>
+  <?php if (isset($disabled)): ?>
+  :disabled="<?=$disabled?'true':'false';?>"
+  <?php endif ?>
 ></flexy-form>

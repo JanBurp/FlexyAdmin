@@ -1,3 +1,22 @@
+=3.5.0-rc.14
+
+[nl]
+- Enkele fouten opgelost en verbeteringen gedaan
+[/nl]
+[en]
+- Some bugs solved and improvements added
+[/en]
+
+[FEATURES]
+- Plugin: Move old site optimized
+- Save/Submit button on FlexyForm (Vue) can be enabled by setting
+
+[BUGS]
+- Problem solved when using RAND() in data->order_by()
+- Problem solved when ordering by an relation field when using data->order_by()
+- Arrays sort_by() did not work with custom key
+- Wizard get_next_step() did not worked when more than 2 steps
+
 =3.5.0-rc.13
 
 [nl]

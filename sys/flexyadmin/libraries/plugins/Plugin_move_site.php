@@ -99,9 +99,11 @@ class Plugin_move_site extends Plugin {
     $tables = $this->CI->data->list_tables();
     $old_tables = $this->oldDB->list_tables();
     $missing_tables = array_diff($old_tables,$tables);
-    // only 'tbl_' tables
+    // only 'tbl_' and 'rel_' tables
     $old_media = in_array('res_media_files',$missing_tables);
-    $missing_tables = filter_by($missing_tables,'tbl');
+    $missing_tables_tbl = filter_by($missing_tables,'tbl');
+    $missing_tables_rel = filter_by($missing_tables,'rel');
+    $missing_tables = array_merge($missing_tables_tbl,$missing_tables_rel);
     if ($old_tables and !$this->CI->db->table_exists('res_media_files')) $missing_tables[] = 'res_media_files';
 
     // create them
@@ -357,8 +359,8 @@ class Plugin_move_site extends Plugin {
         foreach ($move_files as $from => $to) {
           $li=str_replace($this->new,'',$to);
           $dir=remove_suffix($to,'/');
-          if (!file_exists($dir)) mkdir($dir,0777,true);
-          if (file_exists($from) and copy($from,$to)) {
+          if ( !file_exists($dir) ) mkdir($dir,0777,true);
+          if ( file_exists($from) and !file_exists($to) and copy($from,$to) ) {
             $moved[]=$li;
           }
           else {

@@ -157,11 +157,13 @@ class Wizard {
   public function get_next_step() {
     $steps=$this->steps;
     reset($steps);
-    $step=current($steps);
-    while (key($steps)!=$this->step) {
-      $step=next($steps);
+    $step = next($steps);
+    $key = key($steps);
+    while ($key==$this->step) {
+      $step = next($steps);
+      $key = key($steps);
     }
-    return key($steps);
+    return $key;
   }
   
   /**
