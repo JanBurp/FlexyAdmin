@@ -110,8 +110,9 @@ Class Core_res_assets extends Data_Core {
   public function _create_assets_settings($old=FALSE, $DB = NULL) {
     if ($DB===NULL) $DB = $this->db;
 
-    $select = '`path`,`str_types` AS `types`,`b_encrypt_name` AS `encrypt_name`,`fields_media_fields` AS `media_fields`,`str_autofill` AS `autofill`,`fields_autofill_fields` AS `autofill_fields`,`b_in_link_list` AS `in_link_list`,`b_user_restricted` AS `user_restricted`';
+    $select = '`path`,`str_types` AS `types`,`b_encrypt_name` AS `encrypt_name`,`fields_media_fields` AS `media_fields`,`fields_autofill_fields` AS `autofill_fields`,`b_in_link_list` AS `in_link_list`,`b_user_restricted` AS `user_restricted`';
     if ($DB->field_exists('b_serve_restricted','cfg_media_info')) $select .= ',`b_serve_restricted` AS `serve_restricted`';
+    if ($DB->field_exists('str_autofill','cfg_media_info')) $select .= ',`str_autofill` AS `autofill`';
     $info = $DB->select($select)
                 ->get('cfg_media_info')
                 ->result_array();

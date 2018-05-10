@@ -116,12 +116,16 @@ Class Data_Core extends CI_Model {
    */
   protected $tm_select  = FALSE;
   protected $tm_select_include_primary  = TRUE;
-  
-  
+
   /**
    * Eventuele velden die niet in SELECT mogen voorkomen
    */
   protected $tm_unselect = FALSE;
+
+  /**
+   * Hou JOIN bij
+   */
+  protected $tm_join = FALSE;
 
   
   /**
@@ -942,6 +946,7 @@ Class Data_Core extends CI_Model {
     $this->tm_select_include_primary = TRUE;
     $this->tm_unselect               = FALSE;
     $this->tm_from                   = '';
+    $this->tm_join                   = FALSE;
     $this->tm_tree                   = FALSE;
     $this->tm_where_tree             = array();
     $this->tm_order_by               = array();
@@ -2135,7 +2140,7 @@ Class Data_Core extends CI_Model {
 
     // bouw select query op
     $this->_select();
-        
+
     // bouw relatie queries
     $this->_with();
     
@@ -2173,6 +2178,9 @@ Class Data_Core extends CI_Model {
         }
       }
     }
+
+    // JOIN
+    $this->_join();    
 
     // FROM
     $this->_from();
@@ -2973,6 +2981,40 @@ Class Data_Core extends CI_Model {
     }
     else {
       $this->tm_hidden_passwords = $hidden_passwords;
+    }
+    return $this;
+  }
+
+
+
+  /**
+   * Join, zoals query_builder
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function join($table, $cond, $type = '', $escape = NULL) {
+    if (!$this->tm_join) $this->tm_join = array();
+    $this->tm_join[] = array(
+      'table'   => $table,
+      'cond'    => $cond,
+      'type'    => $type,
+      'escape'  => $escape,
+    );
+    return $this;
+  }
+
+  /**
+   * Bouw de JOIN op
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  private function _join() {
+    if ($this->tm_join) {
+      foreach ($this->tm_join as $join) {
+        $this->db->join($join['table'],$join['cond'],$join['type'],$join['escape']);
+      }
     }
     return $this;
   }
