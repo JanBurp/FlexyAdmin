@@ -1,5 +1,14 @@
 =3.5.0-rc.16
 
+[nl]
+- Update naar laatste CodeIgniter library
+- Enkele fouten opgelost en verbeteringen gedaan
+[/nl]
+[en]
+- Update to latest CodeIgniter library
+- Some bugs solved and improvements added
+[/en]
+
 [FEATURES]
 - Keep JOINS
 
@@ -7,6 +16,13 @@
 - CodeIgniter 3.1.8 (CI)
 
 =3.5.0-rc.15
+
+[nl]
+- Enkele fouten opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
 
 [FEATURES]
 - Plugin: Move old site optimized
