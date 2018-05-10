@@ -1,3 +1,12 @@
+=3.5.0-rc.15
+
+[FEATURES]
+- Plugin: Move old site optimized
+
+[BUGS]
+- Redirecting needs a full_uri check
+- Forms merges settings wrong way
+
 =3.5.0-rc.14
 
 [nl]
