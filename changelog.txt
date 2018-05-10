@@ -3,6 +3,9 @@
 [FEATURES]
 - Keep JOINS
 
+[UPDATE]
+- CodeIgniter 3.1.8 (CI)
+
 =3.5.0-rc.15
 
 [FEATURES]
