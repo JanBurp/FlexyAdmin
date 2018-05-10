@@ -1,3 +1,8 @@
+=3.5.0-rc.16
+
+[FEATURES]
+- Keep JOINS
+
 =3.5.0-rc.15
 
 [FEATURES]
