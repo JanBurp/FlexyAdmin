@@ -93,7 +93,7 @@ class Forms extends Module {
       }
       // Extra settings instellen
       if (isset($args[0])) {
-        $this->settings=array_merge_recursive($this->settings,$args[0]);
+        $this->settings = array_replace_recursive($this->settings,$args[0]);
       }
       // Laad eventueel benodigde libraries
   		$this->CI->load->library('form');

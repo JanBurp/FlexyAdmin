@@ -187,8 +187,12 @@ class Main extends FrontEndController {
 	 */
 	private function _redirect($page) {
 		if ( el('b_redirect',$page,false) or el('link_redirect',$page,'') or (el('txt_text',$page,'')=='' and el('str_module',$page,'')=='') ) {
-      if (el('link_redirect',$page,'')) {
+		  if (el('link_redirect',$page,'')) {
         $newUri = $page['link_redirect'];
+      }
+      elseif (isset($page['full_uri']) and !empty($page['full_uri'])) {
+        $subItem = $this->data->table('tbl_menu')->get_first_child( $page['full_uri'],true );
+  			if ($subItem) $newUri=$this->site['uri'].'/'.$subItem['uri'];
       }
       elseif (!empty($page['uri'])) {
         $subItem = $this->data->table('tbl_menu')->get_first_child( $page['uri'],true );
