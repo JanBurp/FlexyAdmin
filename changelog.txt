@@ -1,3 +1,15 @@
+=3.5.0-rc.17
+
+[nl]
+- Fout opgelost: Op sommige websites werden alle wachtwoorden gereset (naar random waarde) bij een vergeten wachtwoord proces. Dit zorgde niet voor veiligheidsprobleem, maar wel vervelend voor de gebruikers.
+[/nl]
+[en]
+- Bug solved: On some websites all password where reset (to a random value) by a forgotten password process. There was no safety issue, but all users need a new password.
+[/en]
+
+[BUG]
+- When a site uses flexy_auth->send_new_password() All passwords could be reset. Nobody can login anymore, but there was no safety problem.
+
 =3.5.0-rc.16
 
 [nl]
