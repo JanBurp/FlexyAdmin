@@ -619,7 +619,10 @@ class Flexy_auth extends Ion_auth {
   		   'gpw_password'  => $password_info['password'], // Hash gebeurt in data
   		   'remember_code' => NULL,
   		);
-      $successfully_changed_password_in_db = $this->data->table('cfg_users')->where('id',$user['user_id'])->set($set)->update();
+      $successfully_changed_password_in_db = FALSE;
+      if (isset($user['user_id']) and $user['user_id']) {
+        $successfully_changed_password_in_db = $this->data->table('cfg_users')->update($set,$user['user_id']);
+      }
     }
     // Stuur mail
 		if ($successfully_changed_password_in_db) {
