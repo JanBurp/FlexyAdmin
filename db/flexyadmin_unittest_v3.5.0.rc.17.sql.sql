@@ -7,7 +7,7 @@
 #
 # Host: localhost (MySQL 5.6.38)
 # Database: flexyadmin_test
-# Generation Time: 2018-04-06 15:24:59 +0000
+# Generation Time: 2018-05-16 12:31:57 +0000
 # ************************************************************
 
 
@@ -167,7 +167,7 @@ LOCK TABLES `cfg_version` WRITE;
 
 INSERT INTO `cfg_version` (`id`, `str_version`)
 VALUES
-	(1,'3.5.0-rc.10');
+	(1,'3.5.0-rc.17');
 
 /*!40000 ALTER TABLE `cfg_version` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -316,6 +316,7 @@ DROP TABLE IF EXISTS `log_stats`;
 CREATE TABLE `log_stats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tme_date_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ip_address` varchar(15) NOT NULL DEFAULT '',
   `str_uri` varchar(100) NOT NULL,
   `str_browser` varchar(20) NOT NULL,
   `str_version` varchar(8) NOT NULL,
