@@ -1,5 +1,10 @@
 =3.5.0-rc.17
 
+[FEATURES]
+- Logging subject & body of send emails
+
+=3.5.0-rc.17
+
 [nl]
 - Fout opgelost: Op sommige websites werden alle wachtwoorden gereset (naar random waarde) bij een vergeten wachtwoord proces. Dit zorgde niet voor veiligheidsprobleem, maar wel vervelend voor de gebruikers.
 [/nl]

@@ -84,7 +84,7 @@ class MY_Email extends CI_Email {
 
     $this->CI->load->model('log_activity');
     if ($send) {
-      $this->CI->log_activity->email( implode_assoc( PHP_EOL, $this->_headers) ,'to', implode(',',$this->_to) );
+      $this->CI->log_activity->email( 'Subject: '.$this->subject."\n\nBody: ".$this->body."\n\n".implode_assoc( PHP_EOL, $this->_headers) ,'to', implode(',',$this->_to) );
     }
     else {
       $this->CI->log_activity->email( $this->print_debugger('headers') ,'error', implode(',',$this->_to) );
