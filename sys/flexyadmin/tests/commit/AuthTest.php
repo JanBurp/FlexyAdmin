@@ -203,8 +203,24 @@ class AuthTest extends CITestCase {
         $this->assertTrue( $this->CI->flexy_auth->send_new_account( $user_id ), 'New user should get a `new account` email '.$identity);
         // Send new password mail
         $this->assertTrue( $this->CI->flexy_auth->send_new_password( $user_id ), 'New user should get a `new password` email '.$identity);
+
+        // Test if users has unique passwords
+        $query = $this->CI->db->get('cfg_users');
+        $user_count = $query->num_rows();
+        $query = $this->CI->db->query('SELECT DISTINCT `gpw_password` FROM `cfg_users`');
+        $distinct_count = $query->num_rows();
+        $this->assertEquals($user_count,$distinct_count,'Users should have `unique` passwords');
+
         // Send new forgotten password mail
         $this->assertTrue( $this->CI->flexy_auth->forgotten_password( $email ), 'New user should get a `forgotten_password` email '.$identity);
+
+        // Test if users has unique passwords
+        $query = $this->CI->db->get('cfg_users');
+        $user_count = $query->num_rows();
+        $query = $this->CI->db->query('SELECT DISTINCT `gpw_password` FROM `cfg_users`');
+        $distinct_count = $query->num_rows();
+        $this->assertEquals($user_count,$distinct_count,'Users should have `unique` passwords');
+
       }
       // Remove user
       $this->assertTrue( $this->CI->flexy_auth->delete_user($user_id) );
