@@ -85,13 +85,27 @@ class Stats {
 		
 			// only insert a known (mobile) browser
 			if ($AGENT->is_browser() or $AGENT->is_mobile()) {
+
+				// standard PHP database connect
+				include(SITEPATH.'/config/database.php');
+				$db=$db[$active_group];
+        $mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
+        if ($mysqli->connect_errno) {
+          echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+				
 				$set=array();
-				$set['tme_date_time']=date('Y-m-d H:i:s');
-				$set['str_uri']=$uri;
+				$set['tme_date_time']	=	date('Y-m-d H:i:s');
+				$set['str_uri']				=	$uri;
+
+				$result = $mysqli->query("SHOW COLUMNS FROM `".$this->table."` LIKE 'ip_address'");
+				if ($result->num_rows>=1) $set['ip_address'] = $this->CI->input->ip_address();
+				
 				if ($AGENT->is_browser())
-					$set['str_browser']=$AGENT->browser();
+					$set['str_browser']	=	$AGENT->browser();
 				else
-					$set['str_browser']=$AGENT->mobile();
+					$set['str_browser']	=	$AGENT->mobile();
+
 				// nicer version info
 				$version=substr($AGENT->version(),0,3);
 				if (strpos($version,'.')===false) $version=substr($version,0,1);
@@ -99,13 +113,7 @@ class Stats {
 				$set['str_referrer']=$AGENT->referrer();
 				$set['str_platform']=$AGENT->platform();
 
-				// standard PHP database connect
-				include(SITEPATH.'/config/database.php');
-				$db=$db[$active_group];
-        $mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
-        if ($mysqli->connect_errno) {
-            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-        }
+				// Insert
 				$sql="INSERT INTO `$this->table` (";
 				$values='VALUES (';
 				foreach ($set as $key => $value) {
