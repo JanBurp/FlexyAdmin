@@ -391,16 +391,26 @@ class FrontEndController extends MY_Controller {
    * @author Jan den Besten
    */
   public function show_404() {
-    $this->site['title'].=' - Error 404';
-    $page=array();
-    $page['str_title']=' ';
-    $page['txt_text']=$this->view('error','',true);
-    if ($this->config->item('error404_module')) $page['str_module']=$this->config->item('error404_module');
+    $page404=array();
+    $page404['str_title']=' ';
+    $page404['txt_text']=$this->view('error','',true);
+    if ($this->config->item('error404_module')) $page404['str_module']=$this->config->item('error404_module');
   	// Load and call modules
-    $page=$this->_module($page);
+    $page=$this->_module(array());
+    if ($page) {
+      $page404 = array_merge($page404,$page);
+      // Add extra title and keywords, replace description (if any)
+      if (isset($page404['str_title']))     $this->add_title($page404['str_title']);
+      if (isset($page404['str_keywords']))  $this->add_keywords($page404['str_keywords']);
+      if (isset($page404['stx_description']) and !empty($page['stx_description'])) $this->site['description']=$page['stx_description'];
+    }
+    else {
+      $this->add_title(' - Error 404');
+    }
 		// Add page content (if no break)
-    $page['show_page']=!$this->site['break'];
-    $this->add_content( $this->view($this->config->item('page_view'),$page,true) );
+    $page404['show_page']=!$this->site['break'];
+    $this->add_content( $this->view('page',$page404,true) );
+    return $page404;
 	}
   
   /**
