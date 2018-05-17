@@ -836,9 +836,13 @@ Class Data_Core extends CI_Model {
   protected function get_other_table_settings( $table ) {
     $settings = NULL;
 
-    $current_table = $this->settings['table'];
-    $settings = $this->data->table($table)->get_settings();
-    $this->data->table( $current_table );
+    // Load cache settings first
+    $settings = $this->cache->get( 'data_settings_'.$table );
+    if (!$settings) {
+      $current_table = $this->settings['table'];
+      $settings = $this->data->table($table)->get_settings();
+      $this->data->table( $current_table );
+    }
 
     return $settings;
   }
