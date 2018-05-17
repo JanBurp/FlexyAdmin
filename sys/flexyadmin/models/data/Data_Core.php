@@ -2148,9 +2148,6 @@ Class Data_Core extends CI_Model {
     // bouw relatie queries
     $this->_with();
     
-    // bouw find query op
-    $this->_find();
-    
     // maak select concreet
     $this->db->select( $this->tm_select, FALSE );
     
@@ -2188,6 +2185,9 @@ Class Data_Core extends CI_Model {
 
     // FROM
     $this->_from();
+
+    // bouw find query op
+    $this->_find();
     
     // limit & offset
     $this->query_info = array();
@@ -3527,7 +3527,7 @@ Class Data_Core extends CI_Model {
    */
   private function _find() {
     if (!$this->tm_find) return $this;
-    
+
     $terms    = el('terms',$this->tm_find,'');
     $fields   = el('fields',$this->tm_find,array());
     $settings = el('settings',$this->tm_find,array());
@@ -3537,7 +3537,7 @@ Class Data_Core extends CI_Model {
     // Settings
     $with = $this->tm_with;
     if ($this->tm_as_grid) {
-      $with = el('with',$this->tm_as_grid );
+      $with = el(array('grid_set','with'),$this->settings );
       if (empty($with)) $with = array('many_to_one','one_to_many','many_to_many');
     }
     $defaults = array(
@@ -3605,7 +3605,7 @@ Class Data_Core extends CI_Model {
     if ( is_string($fields) ) $fields = array($fields);
     // Geen velden meegegeven, gebruik dan alle velden van deze tabel, of van de grid_set (zoals ingesteld).
     if ( empty($fields) ) {
-      if ($this->tm_as_grid) $fields = el('fields',$this->tm_as_grid, array() );
+      if ($this->tm_as_grid) $fields = el(array('grid_set','fields'),$this->settings, array() );
       if (empty($fields)) $fields = $this->settings['fields'];
     }
     // Inclusief result_name van de meegegeven relaties (word later omgezet in velden van die tabel)
