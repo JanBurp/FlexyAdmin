@@ -3647,7 +3647,9 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   private function _create_complete_search( $search ) {
-    $this->db->group_start();
+    $grouped = $this->tm_has_condition;
+    if ($grouped) $this->db->group_start();
+
     foreach ( $search as $item) {
 
       // Splits termen als er meerdere door spaties zijn gescheiden (rekening houdend met quotes)
@@ -3708,7 +3710,8 @@ Class Data_Core extends CI_Model {
       }
       
     }
-    $this->db->group_end();
+
+    if ($grouped) $this->db->group_end();
   }
   
   private function _protect_field($field,$table='') {
