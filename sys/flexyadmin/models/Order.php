@@ -144,13 +144,14 @@ class order extends CI_Model {
       $ids = array_keys($result);
       $this->set_all($table,$ids,$from);
       return count($ids);
-
     }
 
     // Complexer: met self_parent
-    // - Groupeer per parent
-    // - Sub results per parent
-    // - Voeg ze samen in nieuwe volgorde
+    // 1) Reset verwijzingen naar zichzelf
+    $this->data->update( array('self_parent'=>0), '`self_parent`=`id`' );
+
+    // 2) Groupeer per parent
+    // 3) Sub results per parent
     $parents = $this->data->select('self_parent,uri')->order_by('order')->set_result_key('self_parent')->get_result();
     foreach ($parents as $parent_id => $items) {
       $parents[$parent_id] = $this->data->select('order,self_parent,uri')->order_by('order')->where('self_parent',$parent_id)->get_result();
@@ -158,7 +159,7 @@ class order extends CI_Model {
     $merged = $parents[0];
     unset($parents[0]);
 
-    // Voeg samen ('recursive')
+    // 4) Voeg ze samen in nieuwe volgorde
     $depth = 10;
     while (count($parents)>0 and $depth>0 ) {
       $offset = 0;
