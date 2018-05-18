@@ -1,11 +1,24 @@
-=3.5.0-rc.17
+=3.5.0-rc.18
+
+[nl]
+- Verbeterde logging
+- Fout opgelost waarbij de site 'hing' als de menustructuur niet in orde was
+- Fout opgelost waarbij de menu-structuur door de war kon raken
+- Fout opgelost (in backend) waarbij de zoekterm bleef staan als je naar ander item ging
+[/nl]
+[en]
+- Better logging
+- Bug solved where the site gave an error when the menustructure was wrong
+- Bug solved where the menu-structure could go wrong
+- Bug solved (in backend) where the searchquery kept visible when moving to another item
+[/en]
 
 [FEATURES]
 - Logging subject & body of send emails
 - Logging ip addess with stats
 - Unittests on unique passwords in cfg_users
 [SQL UPDATE]
-- update_v3.5.0-rc.17.sql
+- update_v3.5.0-rc.18.sql
 [BUGS]
 - (Data->find had wrong starting/closing brackets)
 - Vueform had no clean data for multiple selects
