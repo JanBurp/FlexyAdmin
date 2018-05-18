@@ -7,7 +7,7 @@
  * @copyright (c) Jan den Besten
  */
 
-class order extends CI_Model {
+class Order extends CI_Model {
 
   private $table;
   private $order;
@@ -144,13 +144,14 @@ class order extends CI_Model {
       $ids = array_keys($result);
       $this->set_all($table,$ids,$from);
       return count($ids);
-
     }
 
     // Complexer: met self_parent
-    // - Groupeer per parent
-    // - Sub results per parent
-    // - Voeg ze samen in nieuwe volgorde
+    // 1) Reset verwijzingen naar zichzelf
+    $this->data->update( array('self_parent'=>0), '`self_parent`=`id`' );
+
+    // 2) Groupeer per parent
+    // 3) Sub results per parent
     $parents = $this->data->select('self_parent,uri')->order_by('order')->set_result_key('self_parent')->get_result();
     foreach ($parents as $parent_id => $items) {
       $parents[$parent_id] = $this->data->select('order,self_parent,uri')->order_by('order')->where('self_parent',$parent_id)->get_result();
@@ -158,7 +159,7 @@ class order extends CI_Model {
     $merged = $parents[0];
     unset($parents[0]);
 
-    // Voeg samen ('recursive')
+    // 4) Voeg ze samen in nieuwe volgorde
     $depth = 10;
     while (count($parents)>0 and $depth>0 ) {
       $offset = 0;
@@ -245,6 +246,7 @@ class order extends CI_Model {
    */
   public function set( $table,$id,$new ) {
     $is_tree=$this->is_a_tree($table);
+    
     // Wat is de huidige order?
     $old=(int)$this->_get_order($table,$id);
     // Is dat hetzelfde, dan hoeft er niets te gebeuren
@@ -311,7 +313,7 @@ class order extends CI_Model {
     $log['query'] .= $this->data->last_query().';'.PHP_EOL.PHP_EOL;
     
     if ($log['query']) {
-      $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
+      $this->log_activity->add('order', $log['query'], $log['table'], $log['id'] );
     }
     return $new;
   }
@@ -326,25 +328,14 @@ class order extends CI_Model {
    * @author Jan den Besten
    */
   private function _get_children_ids( $table, $id, $order ) {
-    $parent = $this->_get_parent( $table,$id );
-    // Zoek de eerstvolgende met zelfde parent, alles ertussen is een kind
     $children_ids = array();
-    $childrenOrder = $order + 1;
-    do {
-      $next = $this->data->table($table)
-              ->select('id,self_parent,order')
-              ->where( 'order', $childrenOrder )
-              ->get_row();
-      if ($next) {
-        if ($next['self_parent']===$parent) {
-          $next=false;
-        }
-        else {
-          array_push($children_ids,$next['id']);
-        }
-      }
-      $childrenOrder++;
-    } while ($next);
+    $children = $this->data->table($table)
+                            ->select('id,self_parent,order')
+                            ->where( 'self_parent', $id )
+                            ->get_result();
+    if ($children) {
+      $children_ids = array_keys($children);
+    }   
     return $children_ids;
   }
   
