@@ -9,9 +9,10 @@
 [BUGS]
 - (Data->find had wrong starting/closing brackets)
 - Vueform had no clean data for multiple selects
-- Zoekterm bleef in grid staan bij switchen naar andere tabel
+- Searchterm stayed in grid while switching to other table
 - Wrong menu tables did break complete website, now it's will give a menu result
 - Order->reset() now also resets wrong parents (self_parent=id)
+- Order had a bug where it did not get childrens
 
 =3.5.0-rc.17
 

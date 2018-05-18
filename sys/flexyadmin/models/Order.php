@@ -7,7 +7,7 @@
  * @copyright (c) Jan den Besten
  */
 
-class order extends CI_Model {
+class Order extends CI_Model {
 
   private $table;
   private $order;
@@ -246,6 +246,7 @@ class order extends CI_Model {
    */
   public function set( $table,$id,$new ) {
     $is_tree=$this->is_a_tree($table);
+    
     // Wat is de huidige order?
     $old=(int)$this->_get_order($table,$id);
     // Is dat hetzelfde, dan hoeft er niets te gebeuren
@@ -312,7 +313,7 @@ class order extends CI_Model {
     $log['query'] .= $this->data->last_query().';'.PHP_EOL.PHP_EOL;
     
     if ($log['query']) {
-      $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
+      $this->log_activity->add('order', $log['query'], $log['table'], $log['id'] );
     }
     return $new;
   }
@@ -327,25 +328,14 @@ class order extends CI_Model {
    * @author Jan den Besten
    */
   private function _get_children_ids( $table, $id, $order ) {
-    $parent = $this->_get_parent( $table,$id );
-    // Zoek de eerstvolgende met zelfde parent, alles ertussen is een kind
     $children_ids = array();
-    $childrenOrder = $order + 1;
-    do {
-      $next = $this->data->table($table)
-              ->select('id,self_parent,order')
-              ->where( 'order', $childrenOrder )
-              ->get_row();
-      if ($next) {
-        if ($next['self_parent']===$parent) {
-          $next=false;
-        }
-        else {
-          array_push($children_ids,$next['id']);
-        }
-      }
-      $childrenOrder++;
-    } while ($next);
+    $children = $this->data->table($table)
+                            ->select('id,self_parent,order')
+                            ->where( 'self_parent', $id )
+                            ->get_result();
+    if ($children) {
+      $children_ids = array_keys($children);
+    }   
     return $children_ids;
   }
   
