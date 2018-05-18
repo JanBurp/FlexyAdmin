@@ -222,6 +222,8 @@ export default {
       this.actions           = [];
       this.items             = [];
       this.dataInfo          = {};
+      this.findTerm          = '';
+      this.extendedFind      = false;
     },
 
     dataName : function() {
