@@ -81,7 +81,10 @@ class Vueform {
     // array?
     foreach ($this->data as $field => $value) {
       if ( el('multiple',$this->settings['fields'][$field]) ) {
-        $this->data[$field] = explode(',',$value);
+        if ($value) {
+          $value = explode(',',$value);
+        }
+        $this->data[$field] = $value;
       }
     }
     return $this->data;

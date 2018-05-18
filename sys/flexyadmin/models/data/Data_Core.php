@@ -836,9 +836,13 @@ Class Data_Core extends CI_Model {
   protected function get_other_table_settings( $table ) {
     $settings = NULL;
 
-    $current_table = $this->settings['table'];
-    $settings = $this->data->table($table)->get_settings();
-    $this->data->table( $current_table );
+    // Load cache settings first
+    $settings = $this->cache->get( 'data_settings_'.$table );
+    if (!$settings) {
+      $current_table = $this->settings['table'];
+      $settings = $this->data->table($table)->get_settings();
+      $this->data->table( $current_table );
+    }
 
     return $settings;
   }
@@ -2144,9 +2148,6 @@ Class Data_Core extends CI_Model {
     // bouw relatie queries
     $this->_with();
     
-    // bouw find query op
-    $this->_find();
-    
     // maak select concreet
     $this->db->select( $this->tm_select, FALSE );
     
@@ -2184,6 +2185,9 @@ Class Data_Core extends CI_Model {
 
     // FROM
     $this->_from();
+
+    // bouw find query op
+    $this->_find();
     
     // limit & offset
     $this->query_info = array();
@@ -2426,7 +2430,7 @@ Class Data_Core extends CI_Model {
   protected function _fill_tree( &$result, $key, $tree_info, $counter=0 ) {
     $value = '';
     $parent = el( array($key,'self_parent'), $result, 0 );
-    if ( $parent>0 and $counter<20) {
+    if ( $parent>0 and $counter<10) {
       // Counter voorkomt onneindige recursieve aanroep in het geval er een fout is ontstaan in de tabel.
       $value .= $this->_fill_tree( $result, $parent, $tree_info, $counter+1) . $tree_info['split'];
     }
@@ -2439,12 +2443,12 @@ Class Data_Core extends CI_Model {
         $split = $this->_split_order($order_by);
         $order[]='`'.$split['field'].'` '.$split['direction'];
       }
-      $sql = 'SELECT `self_parent`,`'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
+      $sql = 'SELECT `'.$this->settings['primary_key'].'`,`self_parent`,`'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
       $query = $this->db->query($sql);
       if ($query) {
         $row = $query->unbuffered_row('array'); ;
         $part = el( $tree_info['original_field'],$row );
-        if ($row['self_parent']>0) {
+        if ($row['self_parent']>0 and $row['self_parent']!==$row[$this->settings['primary_key']]) {
           $part = $this->_fill_tree($result,$row['self_parent'],$tree_info,$counter+1) . $tree_info['split'] . $part;
         }
       }
@@ -3523,7 +3527,7 @@ Class Data_Core extends CI_Model {
    */
   private function _find() {
     if (!$this->tm_find) return $this;
-    
+
     $terms    = el('terms',$this->tm_find,'');
     $fields   = el('fields',$this->tm_find,array());
     $settings = el('settings',$this->tm_find,array());
@@ -3533,7 +3537,7 @@ Class Data_Core extends CI_Model {
     // Settings
     $with = $this->tm_with;
     if ($this->tm_as_grid) {
-      $with = el('with',$this->tm_as_grid );
+      $with = el(array('grid_set','with'),$this->settings );
       if (empty($with)) $with = array('many_to_one','one_to_many','many_to_many');
     }
     $defaults = array(
@@ -3601,7 +3605,7 @@ Class Data_Core extends CI_Model {
     if ( is_string($fields) ) $fields = array($fields);
     // Geen velden meegegeven, gebruik dan alle velden van deze tabel, of van de grid_set (zoals ingesteld).
     if ( empty($fields) ) {
-      if ($this->tm_as_grid) $fields = el('fields',$this->tm_as_grid, array() );
+      if ($this->tm_as_grid) $fields = el(array('grid_set','fields'),$this->settings, array() );
       if (empty($fields)) $fields = $this->settings['fields'];
     }
     // Inclusief result_name van de meegegeven relaties (word later omgezet in velden van die tabel)
@@ -3643,7 +3647,9 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   private function _create_complete_search( $search ) {
-    $this->db->group_start();
+    $grouped = $this->tm_has_condition;
+    if ($grouped) $this->db->group_start();
+
     foreach ( $search as $item) {
 
       // Splits termen als er meerdere door spaties zijn gescheiden (rekening houdend met quotes)
@@ -3704,7 +3710,8 @@ Class Data_Core extends CI_Model {
       }
       
     }
-    $this->db->group_end();
+
+    if ($grouped) $this->db->group_end();
   }
   
   private function _protect_field($field,$table='') {
@@ -4823,6 +4830,7 @@ Class Data_Core extends CI_Model {
           $this->query_info = array(
             'affected_rows' => 0,
             'affected_ids'  => $ids,
+            'last_query'    => $log['query'],
           );
         }
       }
@@ -4845,6 +4853,7 @@ Class Data_Core extends CI_Model {
           $this->query_info = array(
             'insert_id'     => $id,
             'affected_rows' => 1,
+            'last_query'    => $log['query'],
           );
   			}
       	else {
@@ -4860,6 +4869,7 @@ Class Data_Core extends CI_Model {
           $this->query_info = array(
             'affected_rows' => $this->db->affected_rows(),
             'affected_ids'  => $ids,
+            'last_query'    => $log['query'],
           );
           $log['id']=implode(',',$ids);
   			}
@@ -4977,6 +4987,7 @@ Class Data_Core extends CI_Model {
         }
         
         $this->query_info['affected_rel_rows'] = $affected;
+        $this->query_info['last_query']        = $log['query'];
 			}
       $this->db->trans_complete();
 		}
