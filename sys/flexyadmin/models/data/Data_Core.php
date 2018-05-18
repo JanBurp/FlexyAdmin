@@ -4830,6 +4830,7 @@ Class Data_Core extends CI_Model {
           $this->query_info = array(
             'affected_rows' => 0,
             'affected_ids'  => $ids,
+            'last_query'    => $log['query'],
           );
         }
       }
@@ -4852,6 +4853,7 @@ Class Data_Core extends CI_Model {
           $this->query_info = array(
             'insert_id'     => $id,
             'affected_rows' => 1,
+            'last_query'    => $log['query'],
           );
   			}
       	else {
@@ -4867,6 +4869,7 @@ Class Data_Core extends CI_Model {
           $this->query_info = array(
             'affected_rows' => $this->db->affected_rows(),
             'affected_ids'  => $ids,
+            'last_query'    => $log['query'],
           );
           $log['id']=implode(',',$ids);
   			}
@@ -4984,6 +4987,7 @@ Class Data_Core extends CI_Model {
         }
         
         $this->query_info['affected_rel_rows'] = $affected;
+        $this->query_info['last_query']        = $log['query'];
 			}
       $this->db->trans_complete();
 		}
