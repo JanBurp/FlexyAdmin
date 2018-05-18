@@ -2430,7 +2430,7 @@ Class Data_Core extends CI_Model {
   protected function _fill_tree( &$result, $key, $tree_info, $counter=0 ) {
     $value = '';
     $parent = el( array($key,'self_parent'), $result, 0 );
-    if ( $parent>0 and $counter<20) {
+    if ( $parent>0 and $counter<10) {
       // Counter voorkomt onneindige recursieve aanroep in het geval er een fout is ontstaan in de tabel.
       $value .= $this->_fill_tree( $result, $parent, $tree_info, $counter+1) . $tree_info['split'];
     }
@@ -2443,12 +2443,12 @@ Class Data_Core extends CI_Model {
         $split = $this->_split_order($order_by);
         $order[]='`'.$split['field'].'` '.$split['direction'];
       }
-      $sql = 'SELECT `self_parent`,`'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
+      $sql = 'SELECT `'.$this->settings['primary_key'].'`,`self_parent`,`'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
       $query = $this->db->query($sql);
       if ($query) {
         $row = $query->unbuffered_row('array'); ;
         $part = el( $tree_info['original_field'],$row );
-        if ($row['self_parent']>0) {
+        if ($row['self_parent']>0 and $row['self_parent']!==$row[$this->settings['primary_key']]) {
           $part = $this->_fill_tree($result,$row['self_parent'],$tree_info,$counter+1) . $tree_info['split'] . $part;
         }
       }

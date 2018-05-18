@@ -10,6 +10,8 @@
 - (Data->find had wrong starting/closing brackets)
 - Vueform had no clean data for multiple selects
 - Zoekterm bleef in grid staan bij switchen naar andere tabel
+- Wrong menu tables did break complete website, now it's will give a menu result
+- 
 
 =3.5.0-rc.17
 
