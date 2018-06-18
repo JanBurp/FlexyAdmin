@@ -435,6 +435,10 @@ Class Core_tbl_menu extends Data_Core {
     foreach ($data_items as $key => $row) {
       $data_items[$key]['_table'] = $table;
 
+      if (isset($item['item'])) {
+        $data_items[$key] = array_merge($data_items[$key],$item['item']);
+      }
+
       if (isset($item['inherit'])) {
         foreach($item['inherit'] as $inherit) {
           if ( !isset($row[$inherit]) or empty($row[$inherit]) ) {
@@ -498,12 +502,12 @@ Class Core_tbl_menu extends Data_Core {
     else {
       $this->data->set_result_key('uri');
     }
-    
+
     // Add Grouped data
     foreach ($this->_menu as $menu_item) {
       $place = false;
       foreach ($item['place'] as $key => $value) {
-        if ($menu_item[$key]==$value) $place = $menu_item['full_uri'];
+        if ($menu_item[$key]==$value) $place = el('full_uri',$menu_item,el('uri',$menu_item));
       }
       if ($place!==false) {
         foreach ($item['grouped_by'] as $key => $field) {
