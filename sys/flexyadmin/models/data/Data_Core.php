@@ -3148,7 +3148,7 @@ Class Data_Core extends CI_Model {
         $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
         
         // Limit in subquery alleen als de volgorde géén invloed heeft op resultaat. (met limit is wel sneller)
-        if ( $order_on_self AND !$has_where AND $this->tm_limit>0) {
+        if ( $order_on_self AND !$has_where AND !$this->tm_find AND $this->tm_limit>0) {
           if ($this->tm_offset===FALSE) $this->tm_offset=0;
           $this->tm_where_limit = $this->tm_limit;
           $this->tm_where_offset = $this->tm_offset;
