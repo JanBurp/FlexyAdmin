@@ -1,3 +1,19 @@
+=3.5.0-rc.19
+
+[nl]
+- Fout opgelost waarbij zoeken niet goed samenging met pagination
+- Kleine aanpassing aan opbouwen van menu
+[/nl]
+[en]
+- Bug solved where searching and pagination did not work together
+- Small adjusted to menu building
+[/en]
+
+[FEATURES]
+- Small improvements to menu
+[BUGS]
+- Data->find subselect did not properly used LIMIT and OFFSET
+
 =3.5.0-rc.18
 
 [nl]
