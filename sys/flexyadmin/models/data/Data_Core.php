@@ -4060,6 +4060,7 @@ Class Data_Core extends CI_Model {
 		$set = $this->tm_set;
     $id = NULL;
     $this->clear_cache();
+
     
     /**
      * Als een UPDATE check of er wel een WHERE is om te voorkomen dat een hele tabel wordt overschreven.
@@ -4069,9 +4070,9 @@ Class Data_Core extends CI_Model {
     }
     
 
-		/**
-		 * Stel nieuwe volgorde van een item in, indien nodig
-		 */
+    /**
+     * Stel nieuwe volgorde van een item in, indien nodig
+     */
     if ( $type=='INSERT' and isset( $set["order"]) ) {
       $this->load->model('order','_order');
       if ( isset( $set["self_parent"]) ) { 
@@ -4148,6 +4149,11 @@ Class Data_Core extends CI_Model {
     foreach ( $set as $key => $value ) {
       if ( !isset($value) or !$this->field_exists( $key) ) unset( $set[$key] );
     }
+
+    if (isset($set['self_parent']) and empty($set['self_parent'])) {
+      $set['self_parent'] = 0;
+    }
+
     
     /**
      * Ga door als de set niet leeg is
@@ -4190,8 +4196,8 @@ Class Data_Core extends CI_Model {
          * INSERT of UPDATE doen
          */
         if ($type=='INSERT') {
-  				$this->db->insert( $this->settings['table'] );
-  				$id = $this->db->insert_id();
+          $this->db->insert( $this->settings['table'] );
+          $id = $this->db->insert_id();
       
           $log = array(
             'query' => $this->db->last_query(),
@@ -4202,10 +4208,10 @@ Class Data_Core extends CI_Model {
             'insert_id'     => $id,
             'affected_rows' => 1,
           );
-  			}
-      	else {
+        }
+        else {
           $sql = $this->db->get_compiled_update( $this->settings['table'], FALSE );
-  				$this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
+          $this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
           $log = array(
             'query' => $this->db->last_query(),
             'table' => $this->settings['table'],
@@ -4218,7 +4224,7 @@ Class Data_Core extends CI_Model {
             'affected_ids'  => $ids,
           );
           $log['id']=implode(',',$ids);
-  			}
+        }
       }
       
       /**
@@ -4330,7 +4336,7 @@ Class Data_Core extends CI_Model {
 			}
       $this->db->trans_complete();
 		}
-    
+        
     if (isset($log)) {
       $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
     }
