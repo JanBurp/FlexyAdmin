@@ -89,7 +89,7 @@ function get_full_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
 
   if ($type!='dir' AND $getInfo) {
     $info['alt']     = get_prefix($name,".");
-  	$info['size']    = sprintf("%d k",filesize($file)/1024);
+  	$info['size']    = sprintf("%d",filesize($file)/1024);
   	$info['rawdate'] = date("Y m d",filemtime($file));
   	$info['date']    = date("j M Y",filemtime($file));
   
