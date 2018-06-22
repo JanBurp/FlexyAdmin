@@ -1,0 +1,8 @@
+# Redirect to /public/ if hosting does not provide this
+# Replace flexyadmin.com with your domain
+#
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^flexyadmin.com$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^www.flexyadmin.com$
+RewriteCond %{REQUEST_URI} !public/
+RewriteRule (.*) /public/$1 [L]
