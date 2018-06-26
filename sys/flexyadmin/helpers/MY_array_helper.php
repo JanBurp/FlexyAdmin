@@ -26,6 +26,25 @@ function el($name,$arr,$default=NULL) {
 	return $arr;
 }
 
+
+/**
+ * Net als el() (van CodeIgniter) maar $default wordt nu ook teruggegeven als het element empty is
+ * 
+ * @param mixed $name
+ * @param array $arr
+ * @param mixed $default default=NULL
+ * @return mixed
+ */
+function elm($name,$arr,$default=NULL) {
+  if (!is_array($name)) $name=array($name);
+  foreach ($name as $key) {
+    if (!is_array($arr)) break;
+    $arr=element($key,$arr,$default);
+  }
+  if ($arr===null or empty($arr)) $arr=$default;
+	return $arr;
+}
+
 /**
  * Zet een item in een (multidimensionele) array
  *
