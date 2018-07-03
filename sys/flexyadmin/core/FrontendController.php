@@ -409,7 +409,12 @@ class FrontEndController extends MY_Controller {
     }
 		// Add page content (if no break)
     $page404['show_page']=!$this->site['break'];
-    $this->add_content( $this->view('page',$page404,true) );
+    if (isset($page404['_view'])) {
+      $this->add_content( $this->view($page404['_view'],$page404,true) );
+    }
+    else {
+      $this->add_content( $this->view('page',$page404,true) );
+    }
     return $page404;
 	}
   

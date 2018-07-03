@@ -1,3 +1,21 @@
+=3.5.0-rc.20
+
+[nl]
+- Fout opgelost waarbij sorteren van arrays niet goed ging
+- Enkele technische verbeteringen
+[/nl]
+[en]
+- Bug solved where ordering arrays did not work
+- Small technical improvements
+[/en]
+
+[FEATURES]
+- New function elm() same as el() but default value is also empty value
+- htaccess voor redirect to public file added (for hostings that don't have this standard)
+- alternative 404 view possible
+[BUGS]
+- array_helper sort_by (wrong order with DESC)
+
 =3.5.0-rc.19
 
 [nl]
