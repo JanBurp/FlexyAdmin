@@ -182,7 +182,7 @@ Class Core_res_assets extends Data_Core {
           $existingInfo = $this->get_file_info($path,$name);
           if ($existingInfo) $file = array_merge($file,$existingInfo);
           $file['path'] = $path;
-          $file['file'] = str_replace($path,'',$name);
+          $file['file'] = str_replace($path.'/','',$name);
           $file['b_exists'] = true;
           $file['date'] = str_replace(' ','-',$file['rawdate']);
           if ($hasMetaInfo and isset($file['meta'])) $file['meta'] = json_encode($file['meta']);
