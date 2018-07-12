@@ -97,6 +97,20 @@ Class Core_tbl_menu extends Data_Core {
     // trace_( array_column($menu_result, 'uri','full_uri') );
     return $menu_result;
   }
+
+
+  /**
+   * Geeft submenu van (samengesteld) menu
+   *
+   * @param string $uri 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_sub_items( $uri ) {
+    $items = $this->get_menu_result();
+    $items = filter_by_prefix( $items, $uri.'/' );
+    return $item;
+  }
   
   
   /**
