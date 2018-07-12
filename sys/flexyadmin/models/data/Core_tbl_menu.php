@@ -109,7 +109,7 @@ Class Core_tbl_menu extends Data_Core {
   public function get_sub_items( $uri ) {
     $items = $this->get_menu_result();
     $items = filter_by_prefix( $items, $uri.'/' );
-    return $item;
+    return $items;
   }
   
   
