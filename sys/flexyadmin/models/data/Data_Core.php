@@ -3287,7 +3287,7 @@ Class Data_Core extends CI_Model {
     // where of like
     if (isset($key)) {
       // LIKE
-      if (strpos($key,' LIKE')!==false) {
+      if (is_string($key) and strpos($key,' LIKE')!==false) {
         $key = trim(str_replace(' LIKE','',$key));
         $side = 'both';
         if ( substr($value,0,1)!='%' ) $side = 'after';
