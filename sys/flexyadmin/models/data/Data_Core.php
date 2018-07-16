@@ -3187,6 +3187,7 @@ Class Data_Core extends CI_Model {
   /**
    * Zelfde als 'where' van Query Builder, met deze uitbreidingen:
    * - Je kunt als enig argument de primary_key meegeven of de strings 'first'
+   * - Je kunt ook LIKE statements hiermee aanroepen
    * - Als $value een array is wordt 'where_in' aangeroepen.
    * - Je kunt ook where statements voor relaties aangeven.
    * 
@@ -3195,6 +3196,9 @@ Class Data_Core extends CI_Model {
    * ->where( 2 );        // Zoekt naar het resultaat met de primary_key 2
    * ->where( 'first' );  // Zoekt naar het eerste resultaat
    * 
+   * like
+   * ----
+   * ->where( 'str_title LIKE', '%test%' );
    * 
    * many_to_one
    * -----------
@@ -3280,12 +3284,27 @@ Class Data_Core extends CI_Model {
       $this->tm_where_primary_key = $value;
     }
 
-    // where
+    // where of like
     if (isset($key)) {
-      if ($type=='AND')
-        $this->db->where($key,$value);
-      else
-        $this->db->or_where($key,$value);
+      // LIKE
+      if (strpos($key,' LIKE')!==false) {
+        $key = trim(str_replace(' LIKE','',$key));
+        $side = 'both';
+        if ( substr($value,0,1)!='%' ) $side = 'after';
+        if ( substr($value,-1,1)!='%' ) $side = 'before';
+        $value = trim($value,'%');
+        if ($type=='AND')
+          $this->db->like($key,$value,$side);
+        else
+          $this->db->or_like($key,$value,$side);
+      }
+      // WHERE
+      else {
+        if ($type=='AND')
+          $this->db->where($key,$value);
+        else
+          $this->db->or_where($key,$value);
+      }
     }
     return $this;
   }
