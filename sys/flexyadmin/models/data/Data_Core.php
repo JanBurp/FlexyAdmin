@@ -13,10 +13,10 @@
  * 
  * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan, of analyseert de tabel en genereerd settings)
  * 
- * ->get( $limit=0, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
- * ->get_where( $where=NULL, $limit=0, $offset=0) // Geeft een $query object (zoals in Query Builder)
+ * ->get( $limit=NULL, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
+ * ->get_where( $where=NULL, $limit=NULL, $offset=0) // Geeft een $query object (zoals in Query Builder)
  * 
- * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array: - key ingesteld als result_key (standaard zelfde als primary_key) - inclusief relatie data als subarray per item
+ * ->get_result( $limit=NULL, $offset=0 )         // Geeft een aangepaste $query->result_array: - key ingesteld als result_key (standaard zelfde als primary_key) - inclusief relatie data als subarray per item
  * ->get_row( $where = NULL )                     // Idem, maar dan maar één item (de eerste in het resultaat)
  * ->get_field( $field, $where = NULL )           // Idem, maar dan van één item alleen de waarde van het gevraagde veld
  * ->set_result_key( $key='' )                    // Hiermee kan voor ->get_result() de key van de array ingesteld worden op een ander (uniek) veld. Standaard is dat de primary_key
@@ -176,7 +176,7 @@ Class Data_Core extends CI_Model {
    * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
    * En of er naar de pagina moet worden gegaan van het item het dichtsbij vandaag
    */
-  protected $tm_limit         = 0;
+  protected $tm_limit         = NULL;
   protected $tm_offset        = 0;
   protected $tm_jump_to_today = FALSE;
   protected $tm_where_limit   = FALSE;
@@ -954,7 +954,7 @@ Class Data_Core extends CI_Model {
     $this->tm_tree                   = FALSE;
     $this->tm_where_tree             = array();
     $this->tm_order_by               = array();
-    $this->tm_limit                  = 0;
+    $this->tm_limit                  = NULL;
     $this->tm_offset                 = 0;
     $this->tm_where_limit            = FALSE;
     $this->tm_where_offset           = FALSE;
@@ -1685,7 +1685,7 @@ Class Data_Core extends CI_Model {
           // Anders geef gewoon de opties terug
           else {
             $current_table = $this->settings['table'];
-            $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(0,0, $where_primary_key );
+            $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(NULL,0, $where_primary_key );
             // $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
             $this->data->table($current_table);               // Terug naar huidige data table.
             $this->tm_where_primary_key = $where_primary_key; // En dit ook weer terug
@@ -2061,16 +2061,16 @@ Class Data_Core extends CI_Model {
   /**
    * Geeft resultaat als query object. Eventueel beperkt door limit en offset
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0]
    * @param bool $reset [true] als true dan wordt aan het eind alle instellingen gereset (with,)
    * @return object $query
    * @author Jan den Besten
    */
-  public function get( $limit=0, $offset=0, $reset = true ) {
+  public function get( $limit=NULL, $offset=0, $reset = true ) {
     
     $this->_prepare_query($limit,$offset);
-    
+
     // get
     $query = $this->db->get();
     
@@ -2136,11 +2136,13 @@ Class Data_Core extends CI_Model {
    * @return void
    * @author Jan den Besten
    */
-  private function _prepare_query( $limit=0, $offset=0 ) {
+  private function _prepare_query( $limit=NULL, $offset=0 ) {
     if ( $this->tm_query_prepared ) return $this;
     
     // Bewaar limit & offset als ingesteld (overruled eerder ingestelde door ->limit() )
-    if ($limit!=0 or $offset!=0) $this->limit( $limit,$offset );
+    if ( isset($limit) or $offset!=0) {
+      $this->limit( $limit,$offset );
+    }
 
     // bouw select query op
     $this->_select();
@@ -2228,7 +2230,7 @@ Class Data_Core extends CI_Model {
    * Zelfde als bij Query Builder
    *
    * @param mixed $where [NULL]
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0]
    * @return object $query
    * @author Jan den Besten
@@ -2462,12 +2464,12 @@ Class Data_Core extends CI_Model {
   /**
    * Interne method voor get_result(), andere models kunnen zo get_result() zonder problemen aanpassen zoder de interne werking te beinvloeden.
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  protected function _get_result( $limit=0, $offset=0 ) {
+  protected function _get_result( $limit=NULL, $offset=0 ) {
     // First check if there is a cached result
     if ($this->tm_cache_result) {
       $this->_prepare_query($limit,$offset);
@@ -2501,12 +2503,12 @@ Class Data_Core extends CI_Model {
    * Bij voorkeur niet gebruiken als resources belangrijk zijn.
    * Of alleen bij kleine resultaten en/of in combinatie met limit / pagination.
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  public function get_result( $limit=0, $offset=0 ) {
+  public function get_result( $limit=NULL, $offset=0 ) {
     $result = $this->_get_result($limit,$offset);
     return $result;
   }
@@ -2558,12 +2560,12 @@ Class Data_Core extends CI_Model {
   /**
    * Geeft resulaat terug als opties klaar voor gebruik in vue form.
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  public function get_as_options( $limit=0, $offset=0 ) {
+  public function get_as_options( $limit=NULL, $offset=0 ) {
     $this->select_abstract();
     if (empty($this->tm_order_by) and !el('order_by',$this->settings) ) {
       $abstract_fields = $this->settings['abstract_fields'];
@@ -2590,12 +2592,12 @@ Class Data_Core extends CI_Model {
    * - de rijen zijn geen array, maar een abstract (string). Zie select_abstract().
    * - als geen volgorde is aangegeven in de config en niet is ingesteld worden de abstract velden als volgorde gebruikt
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  public function get_result_as_options( $limit=0, $offset=0, $where_primary_key='' ) {
+  public function get_result_as_options( $limit=NULL, $offset=0, $where_primary_key='' ) {
     $this->select_abstract();
     if (empty($this->tm_order_by) and !el('order_by',$this->settings) ) {
       $abstract_fields = $this->settings['abstract_fields'];
@@ -2752,7 +2754,7 @@ Class Data_Core extends CI_Model {
     }
     
     // Pagination
-    if (el('pagination',$grid_set,true) and $limit!==0) {
+    if (el('pagination',$grid_set,true) and isset($limit)) {
       if (is_numeric($offset) or $offset!==TRUE) $this->limit( $limit, $offset );
     }
 
@@ -3119,7 +3121,7 @@ Class Data_Core extends CI_Model {
         $has_where = has_string('WHERE',$sql);
         // Geen exception als de WHERE alleen op id zoekt en limit=1 (->get_row())
         if ($has_where AND $this->tm_limit==1 AND has_string('WHERE `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`',$sql) ) {
-          $this->tm_limit=0;
+          $this->tm_limit=NULL;
         }
         if ($has_where AND $this->tm_limit>0 AND !$this->tm_where_primary_key) {
           $json = TRUE;
@@ -3153,7 +3155,7 @@ Class Data_Core extends CI_Model {
           $this->tm_where_limit = $this->tm_limit;
           $this->tm_where_offset = $this->tm_offset;
           $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
-          $this->tm_limit = 0;
+          $this->tm_limit = NULL;
           $this->tm_offset = 0;
         }
         $this->tm_from .= ') AS '.$this->db->protect_identifiers($table).'';
@@ -4423,7 +4425,7 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-	public function limit( $limit, $offset = 0) {
+	public function limit( $limit = NULL, $offset = 0) {
     $this->tm_limit = $limit;
     $this->tm_offset = $offset;
 		return $this;

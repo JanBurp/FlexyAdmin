@@ -98,8 +98,8 @@ class Table extends Api_Model {
   
   var $needs = array(
     'table'        => '',
-    'limit'        => 0,
-    'offset'       => false, // met false werkt jump_to_today
+    // 'limit'        => 0,
+    // 'offset'       => false, // met false werkt jump_to_today
     // 'order'         => '',
     // 'filter'       => '',
     'as_grid'      => false,
