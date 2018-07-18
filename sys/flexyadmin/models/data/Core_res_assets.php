@@ -841,7 +841,7 @@ Class Core_res_assets extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  public function get_files( $path, $filter=array(), $limit=0, $offset=0, $with_thumb = FALSE ) {
+  public function get_files( $path, $filter=array(), $limit=NULL, $offset=0, $with_thumb = FALSE ) {
     
     // Veldnamen
     if ($with_thumb) {
@@ -879,7 +879,7 @@ Class Core_res_assets extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  public function get_files_abstract( $path,$filter=array(),$limit=0,$offset=0) {
+  public function get_files_abstract( $path,$filter=array(),$limit=NULL,$offset=0) {
     // Veldnamen
     $this->select('file')->select_abstract()->set_result_key('file');
     return $this->_get_files_result($path,$filter,$limit,$offset);
@@ -896,7 +896,7 @@ Class Core_res_assets extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  public function get_files_as_options( $path,$filter=array(), $limit=0, $offset=0 ) {
+  public function get_files_as_options( $path,$filter=array(), $limit=NULL, $offset=0 ) {
     $options = array();
     $order = $this->get_setting('order_by');
     $this->order_by($order);
@@ -920,7 +920,7 @@ Class Core_res_assets extends Data_Core {
    * @return object $query
    * @author Jan den Besten
    */
-  private function _get_files( $path, $filter=array(), $limit=0, $offset=0 ) {
+  private function _get_files( $path, $filter=array(), $limit=NULL, $offset=0 ) {
     // Alleen de bestanden die bestaan
     $this->where( 'b_exists', TRUE );
     // Bestanden van bepaalde map
@@ -958,7 +958,7 @@ Class Core_res_assets extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  private function _get_files_result( $path, $filter=array(), $limit=0, $offset=0 ) {
+  private function _get_files_result( $path, $filter=array(), $limit=NULL, $offset=0 ) {
     $query = $this->_get_files( $path, $filter, $limit, $offset );
     if ($query) {
       $result = $this->_make_result_array( $query );

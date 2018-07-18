@@ -1,3 +1,18 @@
+=3.5.0-rc.21
+
+[BUGS]
+- Showing files with extention same als folder name did not work
+
+[FEATURES]
+- Reset order uses 'dat_date' for ordering rows when 'dat_date' field exists
+- Data where() can call LIKE statements
+- Menu has new method get_sub_items($uri)
+- Plugin for upgrading old site site improved
+- Autocreate _thumbcache folder if not exists (if rights)
+
+[UPDATE]
+- CodeIgniter 3.1.9 (CI)
+
 =3.5.0-rc.20
 
 [nl]
