@@ -169,9 +169,15 @@ class Table extends Api_Model {
         $this->args['filter'] = json2array($this->args['filter']);
       }
     }
-    
     // Grid resultaat?
     if ( el('as_grid',$this->args,false) ) {
+
+      // Reset order (hack)
+      if ($this->data->is_menu_table()) {
+        $this->load->model('order','_order');
+        $this->_order->reset( $this->args['table'] );
+      }
+
       // pagination, order, filter
       $this->args['order']  = el( 'order', $this->args, '' );
       // Where
@@ -182,6 +188,12 @@ class Table extends Api_Model {
       if ($this->args['where']) $this->data->where( $this->args['where'] );
       $this->data->order_by( $this->args['order'] );
       $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'] );
+
+      // trace_($this->args);
+      // trace_sql($this->data->last_query());
+      // trace_($this->data->get_query_info());
+      // trace_($items);
+
     }
     else {
       // Media?
@@ -202,7 +214,7 @@ class Table extends Api_Model {
         }
       }
     }
-    
+
     // Info
     $this->info = $this->data->get_query_info();
     if ($is_media) {
