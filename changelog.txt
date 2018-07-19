@@ -2,6 +2,7 @@
 
 [BUGS]
 - Showing files with extention same als folder name did not work
+- Searching in ordered tables did nog work
 
 [FEATURES]
 - Reset order uses 'dat_date' for ordering rows when 'dat_date' field exists

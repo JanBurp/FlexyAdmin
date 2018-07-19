@@ -1702,15 +1702,33 @@ Class Data_Core extends CI_Model {
             case 'self_parent':
               $first_abstract_field = $this->settings['abstract_fields'];
               $first_abstract_field = current($first_abstract_field);
-              $this->select('id,self_parent,order,'.$first_abstract_field);
-              if ($this->tm_where_primary_key) $this->where( $this->settings['primary_key'].'!=',$this->tm_where_primary_key);
-              $this->tree( $first_abstract_field, '', ' / ' );
-              $this->order_by( 'order,self_parent' );
-              $field_options['data'] = $this->get_result();
-              foreach ($field_options['data'] as $key => $option) {
-                $field_options['data'][$key] = $option[$first_abstract_field];
+
+              $sql = 'SELECT `id`,`self_parent`,`order`,`'.$first_abstract_field.'` FROM `'.$this->settings['table'].'` ';
+              if ($this->tm_where_primary_key) {
+                $sql .= 'WHERE `'.$this->settings['primary_key'].'`!='.$this->tm_where_primary_key.' ';
               }
-              $field_options['data'] = array_unshift_assoc( $field_options['data'], '','');
+              $sql .= 'ORDER BY `order`';
+              $query = $this->db->query($sql);
+              if ($query) {
+                $tree = array();
+                $data = $query->result_array();
+                $field_options['data'] = array();
+                foreach ($data as $key => $option) {
+                  $id = $option[$this->settings['primary_key']];
+                  $field_options['data'][$id] = $option[$first_abstract_field];
+                  // Tree ??
+                  $tree[$id] = array_keep_keys($option,array($first_abstract_field, $this->settings['primary_key'], 'self_parent'));
+                  // Recursive create current tree field
+                  $option = $this->_fill_tree( $tree, $id, array(
+                    'tree_field'      => $first_abstract_field,
+                    'original_field'  => $first_abstract_field,
+                    'split'           => ' / ',
+                    'order'           => '`order`',
+                  ));
+                  $field_options['data'][$id] = $option;
+                }
+                $field_options['data'] = array_unshift_assoc( $field_options['data'], '','');
+              }
               break;
           }
         }
@@ -2114,12 +2132,18 @@ Class Data_Core extends CI_Model {
       $this->query_info['total_rows'] = $query->num_rows();
       if ($this->tm_where_limit)  $this->tm_limit = $this->tm_where_limit;
       if ($this->tm_where_offset) $this->tm_offset = $this->tm_where_offset;
-      if ($this->tm_limit>1) {
+      if ($this->tm_limit) {
         $this->query_info['limit']      = (int) $this->tm_limit;
         $this->query_info['offset']     = $this->tm_offset;
         $this->query_info['page']       = (int) floor($this->tm_offset / $this->tm_limit);
         $this->query_info['total_rows'] = $this->total_rows( true );
         $this->query_info['num_pages']  = (int) ceil($this->query_info['total_rows'] / $this->tm_limit);
+      }
+      else {
+        unset($this->query_info['limit']);
+        unset($this->query_info['offset']);
+        unset($this->query_info['page']);
+        unset($this->query_info['num_pages']);
       }
       $this->query_info['num_fields'] = $query->num_fields();
       $this->query_info['last_query'] = $this->last_query();
@@ -2441,9 +2465,14 @@ Class Data_Core extends CI_Model {
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
     if (is_null($part) and $key!==0) {
       $order = array();
-      foreach ($this->tm_order_by as $order_by) {
-        $split = $this->_split_order($order_by);
-        $order[]='`'.$split['field'].'` '.$split['direction'];
+      if (isset($tree_info['order'])) {
+        $order[] = $tree_info['order'];
+      }
+      else {
+        foreach ($this->tm_order_by as $order_by) {
+          $split = $this->_split_order($order_by);
+          $order[]='`'.$split['field'].'` '.$split['direction'];
+        }
       }
       $sql = 'SELECT `'.$this->settings['primary_key'].'`,`self_parent`,`'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
       $query = $this->db->query($sql);
@@ -5289,9 +5318,12 @@ Class Data_Core extends CI_Model {
   public function total_rows( $calculate=FALSE, $json=FALSE ) {
     if ($calculate) {
       // perform simple query count
+      $total_rows = 0;
       $sql = $this->last_clean_query( $json );
       $query = $this->db->query( $sql );
-      $total_rows = $query->num_rows();
+      if (is_object($query)) {
+        $total_rows = $query->num_rows();
+      }
       return $total_rows;
     }
     return $this->get_query_info('total_rows');
