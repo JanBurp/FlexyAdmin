@@ -123,7 +123,11 @@ Class Core_cfg_users extends Data_Core {
         }
       }
     }
-    
+
+    if (isset($this->tm_set['str_username']) or isset($this->tm_set['gpw_password'])) {
+      $this->loguit = TRUE;
+    }
+
     return parent::_update_insert($type,NULL,$where,$limit);
   }
   

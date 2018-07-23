@@ -52,6 +52,10 @@ export default {
       type:Boolean,
       default:true,
     },
+    'message':{
+      type:[String],
+      default:'',
+    }
   },
     
   
@@ -987,6 +991,8 @@ export default {
   </div>
 
   <div class="card-body">
+
+    <div v-if="message!==''" class="text-danger">{{message}}</div>
     
     <tabs navStyle="tabs" class="tabs" :class="tabsClass()" @tab="selectTab($event)" :value="selectedTab()">
       <tab v-for="(fieldset,name) in fieldsets" :header="name" :headerclass="tabHeaderClass(fieldset)">

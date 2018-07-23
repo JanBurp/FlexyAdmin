@@ -289,6 +289,20 @@ export default {
         self.addMessage(response.data.message,response.data.message_type || 'success');
       }
 
+      // Force Loguit?
+      if (!_.isUndefined(response.data.info) && !_.isUndefined(response.data.info)) {
+        if (response.data.info.logout) {
+          self.addMessage('LOGOUT','warning');
+          var url = '_api/auth/logout';
+          self.api({
+            url : 'auth/logout'
+          }).then(function(response){
+            location.href = '_admin';
+            return response;
+          });
+        }
+      }
+
       return response;
     })
     .catch(function (error) {
