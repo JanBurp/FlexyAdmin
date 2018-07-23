@@ -31,6 +31,8 @@ $lang['vue_grid_search_word']        = 'bevat woord';
 $lang['vue_grid_search_exact']       = 'is gelijk aan';
 $lang['vue_grid_no_result']          = "Zoeken geeft géén resultaten.<br>Reset zoeken?";
 
+$lang['vue_edit_users_warning']      = "LET OP: Als je je gebruikersnaam of wachtwoord aanpast moet je opnieuw inloggen.";
+
 
 $lang['vue_grid_edit_success']       = 'Veld is aangepast';
 

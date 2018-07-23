@@ -215,6 +215,7 @@ Class Data_Core extends CI_Model {
    */
   protected $user_id     = NULL;
   protected $user_groups = array(0);
+  protected $logout      = FALSE; // Force logout?
   
   /**
    * Bewaar de id van opgevraagde row als ->where( id ) wordt gebruikt.
@@ -1039,6 +1040,16 @@ Class Data_Core extends CI_Model {
     return $this->user_id;
   }
   
+
+  /**
+   * TRUE als loguit is forced
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function logout() {
+    return $this->loguit;
+  }
 
 
   /**
