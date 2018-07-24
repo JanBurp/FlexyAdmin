@@ -30,6 +30,10 @@ export default {
       var fields = {
         'type'    : { 'label':'Wat',    'type':'select', 'options':types,  'value':'data' },
         'tables'  : { 'label':'Tables', 'type':'select', 'options':tables, 'multiple':true, 'show':{field:'type',value:'select'} },
+        'file'    : { 'label':'File',   'type':'select', 'value':'zip', 'options': [
+          { 'value':'sql', 'name':'.sql' },
+          { 'value':'zip', 'name':'.zip' },
+        ]},
       };
       self.fields = Object.assign( {}, fields );
     });
@@ -40,12 +44,14 @@ export default {
 
     changed : function(event) {
       var type = 'data';
+      var file = 'zip';
       var tables = [];
       if (!_.isUndefined(event)) {
         type = event.type;
+        file = event.file;
         if (type=='select' && !_.isUndefined(event.tables)) tables = event.tables;
       }
-      this.href = "_admin/load/plugin/db/export/"+type+'/' + tables.join('/');
+      this.href = "_admin/load/plugin/db/export/"+type+'/'+file+'/'+tables.join('/');
       return this.href;
     }
 

@@ -29,26 +29,26 @@ export default {
     restore : function(event) {
       var self=this;
       var input = event.target;
-      var reader = new FileReader();
-      reader.onloadend = function(){
-        if (reader.result) {
-          return flexyState.api({
-            method : 'POST',
-            url    : 'tools/db_restore',
-            data   : { 'sql' : reader.result},
-        }).then(function(response){
-          if (_.isUndefined(response.data) || response.data.data==false) {
-            self.errors = Object.assign( {}, { 0: {'message':'Error'} } );
-          }
-          if (!_.isUndefined(response.data.data.errors) && response.data.data.errors.length>0) {
-            self.errors = Object.assign( {}, response.data.data.errors );
-          }
-          if (!_.isUndefined(response.data.data.comments)) self.message = response.data.data.comments;
-          if (!self.errors) self.message = '<b>Succes!!</b><br><br>' + self.message;
-        });
+      var file = event.file[0];
+      var formData = new FormData();
+      formData.append( 'path', '_thumbcache' );
+      formData.append( 'file', file );
+      formData.append( 'fileName', file.name );
+      flexyState.api({
+        method    : 'POST',
+        url       : 'tools/db_restore/',
+        data      : formData,
+        formData  : true,
+      }).then(function(response){
+        if (_.isUndefined(response.data) || response.data.data==false) {
+          self.errors = Object.assign( {}, { 0: {'message':'Error'} } );
         }
-      };
-      reader.readAsText(event.file[0]);
+        if (!_.isUndefined(response.data.data.errors) && response.data.data.errors.length>0) {
+          self.errors = Object.assign( {}, response.data.data.errors );
+        }
+        if (!_.isUndefined(response.data.data.comments)) self.message = response.data.data.comments;
+        if (!self.errors) self.message = '<b>Succes!!</b><br><br>' + self.message;
+      });
     },
   }
 }

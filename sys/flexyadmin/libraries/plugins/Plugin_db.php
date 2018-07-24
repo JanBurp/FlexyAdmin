@@ -13,6 +13,7 @@ class Plugin_db extends Plugin {
     $this->CI->load->dbutil();
     $this->CI->load->driver('cache', array('adapter' => 'file'));
     $this->CI->load->helper('download');
+    $this->CI->load->library('zip');
 	}
 
   /**
@@ -52,7 +53,8 @@ class Plugin_db extends Plugin {
     $sql = "# FlexyAdmin backup\n# User: '".$this->CI->flexy_auth->get_user(null,'str_username')."'  \n# Date: ".date("d F Y")."\n\n".$sql;
 
     $filename = $this->_filename().'_backup'.'.sql';
-    force_download($filename, $sql);
+    $this->CI->zip->add_data($filename, $sql);
+    $this->CI->zip->download($filename);
 	}
 
 
@@ -62,6 +64,7 @@ class Plugin_db extends Plugin {
     $sql = '';
     $backup_prefs = array('format' => 'sql');
     $type = array_shift($args);
+    $file = array_shift($args);
     switch ($type) {
       case 'complete':
         $sql = $this->CI->dbutil->backup($backup_prefs);
@@ -88,9 +91,17 @@ class Plugin_db extends Plugin {
         break;
     }
     $sql = "# FlexyAdmin backup\n# User: '".$this->CI->flexy_auth->get_user(null,'str_username')."'  \n# Date: ".date("d F Y")."\n\n" . $sql;
+    $filename = $this->_filename().'_'.$type.'.sql';
 
-  	$filename = $this->_filename().'_'.$type.'.sql';
-    force_download($filename, $sql);
+    switch ($file) {
+      case 'zip':
+        $this->CI->zip->add_data($filename, $sql);
+        $this->CI->zip->download($filename);
+        break;
+      case 'sql':
+        force_download($filename, $sql);
+        break;
+    }
   }
 
 
