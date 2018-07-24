@@ -10,6 +10,10 @@ export default {
       type: [Array,Object],
       default: {},
     },
+    'buttons' : {
+      type: [Object],
+      default: {'submit':'Submit'},
+    }
   },
     
   data : function() {
@@ -49,6 +53,17 @@ export default {
       return this.fields[field].multiple;
     },
 
+    show : function(field) {
+      var show = true;
+      if (!_.isUndefined(field.show)) {
+        show = false;
+        if (this.internalValues[field.show.field] == field.show.value) {
+          show = true;
+        }
+      }
+      return show;
+    },
+
   },
 
 }
@@ -57,8 +72,10 @@ export default {
 <template>
   <form @submit.prevent.stop="submit($event)" class="flexy-simple-form">
     <template v-for="(field,name) in fields">
-      <flexy-form-field :name="name" :type="field.type" :label="field.label" :options="field.options" :multiple="isMultiple(name)" v-model="internalValues[name]" @input="changed(name,$event)"></flexy-form-field>
+      <flexy-form-field v-show="show(field)" :name="name" :type="field.type" :label="field.label" :options="field.options" :multiple="isMultiple(name)" v-model="internalValues[name]" @input="changed(name,$event)"></flexy-form-field>
     </template>
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <template v-for="(name,type) in buttons">
+      <button class="btn btn-primary" type="type">{{name}}</button>
+    </template>
   </form>
 </template>
