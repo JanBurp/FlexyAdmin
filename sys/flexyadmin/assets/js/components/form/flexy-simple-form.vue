@@ -12,7 +12,7 @@ export default {
     },
     'buttons' : {
       type: [Object],
-      default: {'submit':'Submit'},
+      default: function(){return {'submit':'Submit'} },
     }
   },
     

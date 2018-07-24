@@ -33,8 +33,51 @@ class Tools extends Api_Model {
     return $result;
   }
 
+  private function _db_restore() {
+    // Upload to cache
+    $this->load->library('upload');
+    $folder = $this->config->item('SITE') . 'cache/';
+    $config = array(
+      'upload_path'   => $folder,
+      'allowed_types' => array('sql','zip','txt'),
+    );
+    $this->upload->config($config);
+    if ($this->upload->upload_file( 'file' )) {
+      $file = $this->upload->get_file();
+    }
+    else {
+      $this->error_message = $this->upload->get_error(); 
+      $this->result['error'] = $this->error_message;
+      return $this->_result_ok();
+    }
+
+    $type = get_suffix($file,'.');
+    if ($type=='zip') {
+      $zip = new ZipArchive;
+      $res = $zip->open($folder.$file);
+      if ($res === TRUE) {
+        $zip->extractTo($folder);
+        $zip->close();
+      }
+      $file = remove_suffix($file,'.');
+      $file = str_replace('_sql','.sql',$file);
+    }
+
+    // Read sql
+    $sql = read_file($folder.$file);
+    if (empty($sql)) return $this->_result_status401();
+
+    $this->result['data'] = $this->_sql($sql,false);
+    return $this->_result_ok();
+  }
+
   public function db_restore() {
     if (!$this->flexy_auth->can_backup()) return $this->_result_status401();
+    return $this->_db_restore();
+  }
+  
+  public function db_import() {
+    if (!$this->flexy_auth->is_super_admin()) return $this->_result_status401();
 
     $sql = $this->args['sql'];
     unset($this->args['sql']);
@@ -43,6 +86,7 @@ class Tools extends Api_Model {
     $this->result['data'] = $this->_sql($sql,false);
     return $this->_result_ok();
   }
+
 
   public function db_export_form() {
     if (!$this->flexy_auth->is_super_admin()) return false;
@@ -63,16 +107,6 @@ class Tools extends Api_Model {
     return $this->_result_ok();
   }
 
-  public function db_import() {
-    if (!$this->flexy_auth->is_super_admin()) return $this->_result_status401();
-
-    $sql = $this->args['sql'];
-    unset($this->args['sql']);
-    if (empty($sql)) return $this->_result_status401();
-
-    $this->result['data'] = $this->_sql($sql,false);
-    return $this->_result_ok();
-  }
 
 
 
