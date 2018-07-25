@@ -505,9 +505,7 @@ Class Core_res_assets extends Data_Core {
       );
 
     }
-
-
-
+    $grid_set['title'] = $this->lang->ui('media_'.$this->media_path);
     return $grid_set;
   }
   
