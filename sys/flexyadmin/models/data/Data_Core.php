@@ -2202,7 +2202,7 @@ Class Data_Core extends CI_Model {
         $split = $this->_split_order($order_by);
         $field = $split['field'];
         if ($this->field_exists($field)) {
-          if (strpos($field,'.')===false) $field = $this->settings['table'].'.'.$field;
+          if (strpos($field,'.')===false AND !$this->get_setting(array('field_info',$field,'encrypted'),false)) $field = $this->settings['table'].'.'.$field;
           $this->db->order_by( $field, $split['direction'] );
         }
         elseif (strpos($field,'.')!==false) {
@@ -2981,6 +2981,10 @@ Class Data_Core extends CI_Model {
           $this->tm_hidden_passwords;
         }
       }
+      // Encrypted?
+      if ($this->get_setting(array('field_info',$field,'encrypted'),false)) {
+        $this->tm_select[$key] = 'AES_DECRYPT('.$this->tm_select[$key].' ,"'.$this->config->item('encryption_key').'")'.' AS `'.$field.'`';
+      }
     }
     return $this;
   }
@@ -3300,6 +3304,7 @@ Class Data_Core extends CI_Model {
     $this->tm_where_primary_key = NULL;
     // Als value een array is, dan ->where_in()
     if (isset($value) and is_array($value)) {
+      $key = $this->_where_decrypt_field($key);
       if ($type=='AND')
         $this->db->where_in($key,$value,$escape);
       else
@@ -3335,6 +3340,7 @@ Class Data_Core extends CI_Model {
         if ( substr($value,0,1)!='%' ) $side = 'after';
         if ( substr($value,-1,1)!='%' ) $side = 'before';
         $value = trim($value,'%');
+        $key = $this->_where_decrypt_field($key);
         if ($type=='AND')
           $this->db->like($key,$value,$side);
         else
@@ -3342,6 +3348,7 @@ Class Data_Core extends CI_Model {
       }
       // WHERE
       else {
+        $key = $this->_where_decrypt_field($key);
         if ($type=='AND')
           $this->db->where($key,$value);
         else
@@ -3349,6 +3356,20 @@ Class Data_Core extends CI_Model {
       }
     }
     return $this;
+  }
+
+  private function _where_decrypt_field($field) {
+    if (is_array($field)) {
+      foreach ($field as $key => $f) {
+        $field[$key] = $this->_where_decrypt_field($f);
+      }
+    }
+    else {
+      if ($this->get_setting(array('field_info',$field,'encrypted'),false)) {
+        $field = 'AES_DECRYPT(`'.$field.'` ,"'.$this->config->item('encryption_key').'")';
+      }
+    }
+    return $field;
   }
   
 
@@ -3793,6 +3814,7 @@ Class Data_Core extends CI_Model {
   private function _find_term( $term, $fields = array(), $equals='like', $many_exists=TRUE ) {
     // Schoon term wat op (geen quotes en spaties)
     $term = trim($term,"\"' ");
+
     
     // Per veld:
     foreach ($fields as $sub_fields) {
@@ -3806,6 +3828,12 @@ Class Data_Core extends CI_Model {
       }
       
       foreach ($sub_fields as $field) {
+
+        // Encrypted field??
+        $real_field = get_suffix(str_replace('`','',$field),'.');
+        if ($this->get_setting(array('field_info',$real_field,'encrypted'),false)) {
+          $field = 'AES_DECRYPT('.$field.' ,"'.$this->config->item('encryption_key').'")';
+        }
         
         // many_to_many exists...
         if ( $many_exists AND $relation==='many_to_many') {
@@ -3825,6 +3853,7 @@ Class Data_Core extends CI_Model {
         else {
           switch ($equals) {
             case 'exact': 
+              if ($this->get_setting(array('field_info',$real_field,'encrypted'),false)) $field.=' = ';
               $this->or_where( $field, $term, FALSE);
               break;
             case 'word':
