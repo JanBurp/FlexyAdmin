@@ -3,8 +3,11 @@
 [BUGS]
 - Showing files with extention same als folder name did not work
 - Searching in ordered tables did nog work
+- Media title did not show
+- Media sorting dropdown did not close after selection
 
 [FEATURES]
+- Better mobile styling
 - Backup/Restore is now encrypted (Restore can use old not incrypted backupfiles)
 - Backup/Restore as .zip file
 - Backup/Restore faster
