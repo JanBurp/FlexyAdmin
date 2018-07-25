@@ -38,13 +38,12 @@ class Plugin_db extends Plugin {
 	private function backup($args=NULL) {
     if (!$this->CI->flexy_auth->can_backup()) return 'No rights';
 
-    $tablesWithRights=$this->CI->flexy_auth->get_table_rights();
-    
-    // select only data (not config)
+    $tablesWithRights=$this->CI->flexy_auth->get_table_rights(RIGHTS_DELETE);
+
+    // select all tbl_, res_ and most of the cfg_ tables
     $tablesWithRights=array_combine($tablesWithRights,$tablesWithRights);
-    $tablesWithRights=not_filter_by($tablesWithRights,"cfg");
     $tablesWithRights=not_filter_by($tablesWithRights,"log");
-    unset($tablesWithRights["rel_users__rights"]);
+    unset($tablesWithRights["cfg_sessions"]);
 
     // create backup
     $prefs = array('tables'=> $tablesWithRights,'format'=>'sql');
@@ -71,7 +70,7 @@ class Plugin_db extends Plugin {
         break;
       case 'all':
         $tables = $this->CI->data->list_tables();
-        $tablesWithData       = not_filter_by($tables,array('log','cfg_sessions'));
+        $tablesWithData = not_filter_by($tables,array('log','cfg_sessions'));
         $backup_prefs = array('tables'=> $tablesWithData, 'format'=>'sql');
         $sql = $this->CI->dbutil->backup($backup_prefs);
         $tablesWithStructure  = array_diff($tables,$tablesWithData);

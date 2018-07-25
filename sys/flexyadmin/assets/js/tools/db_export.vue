@@ -22,13 +22,13 @@ export default {
       var tables = response.data.data.tables;
       self.filename = response.data.data.filename;
       var types = [
-        { 'value':'complete',    'name':'Complete Export     (without Session data)' },
-        { 'value':'all',         'name':'All Export          (without Session & Log data)' },
-        { 'value':'data',        'name':'Data Export         (without Session, Logs & Config)' },
-        { 'value':'select',      'name':'Select              (select tables)' },
+        { 'value':'complete',    'name':'Complete - without session data' },
+        { 'value':'all',         'name':'All - without log_ and session tables' },
+        { 'value':'data',        'name':'Data Only - without log_ and cfg_ tables' },
+        { 'value':'select',      'name':'Select - select tables' },
       ];
       var fields = {
-        'type'    : { 'label':'Wat',    'type':'select', 'options':types,  'value':'data' },
+        'type'    : { 'label':'Wat',    'type':'select', 'options':types,  'value':'all' },
         'tables'  : { 'label':'Tables', 'type':'select', 'options':tables, 'multiple':true, 'show':{field:'type',value:'select'} },
         'file'    : { 'label':'File',   'type':'select', 'value':'zip', 'options': [
           { 'value':'sql', 'name':'.sql' },
@@ -43,7 +43,7 @@ export default {
   methods : {
 
     changed : function(event) {
-      var type = 'data';
+      var type = 'all';
       var file = 'zip';
       var tables = [];
       if (!_.isUndefined(event)) {
