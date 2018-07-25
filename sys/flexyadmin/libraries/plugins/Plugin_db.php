@@ -1,5 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+use Defuse\Crypto\Key;
+use Defuse\Crypto\Crypto;
+
+
 /** \ingroup plugins
  * Backup / Restore database
  * 
@@ -50,8 +54,13 @@ class Plugin_db extends Plugin {
     $sql = $this->CI->dbutil->backup($prefs);
     $sql = $this->CI->dbutil->clean_sql($sql);
     $sql = "# FlexyAdmin backup\n# User: '".$this->CI->flexy_auth->get_user(null,'str_username')."'  \n# Date: ".date("d F Y")."\n\n".$sql;
-
     $filename = $this->_filename().'_backup'.'.sql';
+
+    // Ecnrypt
+    $key = Key::loadFromAsciiSafeString( $this->CI->config->item('encryption_key') );
+    $sql = Crypto::encrypt($sql, $key);
+    $filename .= '.txt';
+
     $this->CI->zip->add_data($filename, $sql);
     $this->CI->zip->download($filename);
 	}
@@ -64,6 +73,7 @@ class Plugin_db extends Plugin {
     $backup_prefs = array('format' => 'sql');
     $type = array_shift($args);
     $file = array_shift($args);
+    $hash = array_shift($args);
     switch ($type) {
       case 'complete':
         $sql = $this->CI->dbutil->backup($backup_prefs);
@@ -91,6 +101,12 @@ class Plugin_db extends Plugin {
     }
     $sql = "# FlexyAdmin backup\n# User: '".$this->CI->flexy_auth->get_user(null,'str_username')."'  \n# Date: ".date("d F Y")."\n\n" . $sql;
     $filename = $this->_filename().'_'.$type.'.sql';
+
+    if ($hash==='true') {
+      $key = Key::loadFromAsciiSafeString( $this->CI->config->item('encryption_key') );
+      $sql = Crypto::encrypt($sql, $key);
+      $filename .= '.txt';
+    }
 
     switch ($file) {
       case 'zip':

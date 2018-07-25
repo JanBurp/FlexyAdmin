@@ -34,6 +34,7 @@ export default {
           { 'value':'sql', 'name':'.sql' },
           { 'value':'zip', 'name':'.zip' },
         ]},
+        'hash'    : { 'label':'Hash', 'type':'checkbox' },
       };
       self.fields = Object.assign( {}, fields );
     });
@@ -45,13 +46,15 @@ export default {
     changed : function(event) {
       var type = 'all';
       var file = 'zip';
+      var hash = 0;
       var tables = [];
       if (!_.isUndefined(event)) {
         type = event.type;
         file = event.file;
+        hash = event.hash;
         if (type=='select' && !_.isUndefined(event.tables)) tables = event.tables;
       }
-      this.href = "_admin/load/plugin/db/export/"+type+'/'+file+'/'+tables.join('/');
+      this.href = "_admin/load/plugin/db/export/"+type+'/'+file+'/'+hash+'/'+tables.join('/');
       return this.href;
     }
 

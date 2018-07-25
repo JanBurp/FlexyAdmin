@@ -362,6 +362,15 @@ $config['force_https'] = FALSE;
 */
 $config['sess_cookie_name'] = 'FlexyAdminDEMO';
 
+/*
+|--------------------------------------------------------------------------
+| Encryption key
+|--------------------------------------------------------------------------
+|
+| - Used for encrypting backup files
+| - Run sys/vendor/bin/generate-defuse-key to generate new key
+*/
+$config['encryption_key'] = 'def0000053155cc71f536a17448460857b88d20462604a844929ef354cee3615d6a1084f55507a19ed4f75b4077c59c86c7225ed517ecdb94695cd706e3e896486a1adfa';
 
 
 /*
