@@ -2,6 +2,7 @@
 	"description" : "Auto update & install CodeIgniter and others",
 	"require": {
     "firebase/php-jwt":"*",
-		"mpdf/mpdf": "^6.1"
+		"mpdf/mpdf": "^6.1",
+		"defuse/php-encryption": "^2.2"
 	}
 }

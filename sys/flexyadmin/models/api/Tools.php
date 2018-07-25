@@ -1,5 +1,9 @@
 <?php
 
+use Defuse\Crypto\Key;
+use Defuse\Crypto\Crypto;
+
+
 /** \ingroup models
  * API user
  * 
@@ -60,11 +64,21 @@ class Tools extends Api_Model {
         $zip->close();
       }
       $file = remove_suffix($file,'.');
-      $file = str_replace('_sql','.sql',$file);
+      $file = str_replace(array('_sql','_txt'),array('.sql','.txt'),$file);
     }
 
-    // Read sql
-    $sql = read_file($folder.$file);
+    // Read file
+    $data = read_file($folder.$file);
+    if (empty($data)) return $this->_result_status401();
+
+    // Encrypt?
+    if (get_suffix($file,'.')=='txt') {
+      $key = Key::loadFromAsciiSafeString( $this->config->item('encryption_key') );
+      $sql = Crypto::decrypt($data, $key);
+    }
+    else {
+      $sql = $data;
+    }
     if (empty($sql)) return $this->_result_status401();
 
     $this->result['data'] = $this->_sql($sql,false);

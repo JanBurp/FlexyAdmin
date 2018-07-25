@@ -20,7 +20,7 @@ export default {
   created : function() {
     var self = this;
     var fields = {
-      'file'    : { 'label':'File', 'type':'file' },
+      'file'    : { 'label':'File (SQL)', 'type':'file' },
       'sql'     : { 'label':'SQL',  'type':'textarea' },
 
     };

@@ -5,6 +5,9 @@
 - Searching in ordered tables did nog work
 
 [FEATURES]
+- Backup/Restore is now encrypted (Restore can use old not incrypted backupfiles)
+- Backup/Restore as .zip file
+- Backup/Restore faster
 - Reset order uses 'dat_date' for ordering rows when 'dat_date' field exists
 - Data where() can call LIKE statements
 - Menu has new method get_sub_items($uri)
