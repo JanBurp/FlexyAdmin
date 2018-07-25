@@ -355,6 +355,13 @@ export default {
     
     reloadPage : function(apiParts) {
       var self = this;
+      // first close dropdown menu
+      var menu = document.getElementById("dropdown-sort");
+      if (menu!==null) {
+        menu.classList.remove("open");
+      }
+
+      //
       flexyState.api({
         url       : self.apiUrl(apiParts),
       })
@@ -1154,8 +1161,8 @@ export default {
                 
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                   <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
-                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
-                  <flexy-button v-if="type!=='mediapicker' && multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
+                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger action-delete-all" />
+                  <flexy-button v-if="type!=='mediapicker' && multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info action-select-all" />
 
                   <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                     <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort" />
