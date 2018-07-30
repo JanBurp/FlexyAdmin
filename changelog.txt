@@ -1,5 +1,18 @@
 =3.5.0-rc.21
 
+[nl]
+- Verbeterde styling, vooral op kleine schermen
+- Verbeterde en veiliger backups
+- Diverse technische verbeteringen
+- Fout opgelost bij zoeken in menu tabellen
+[/nl]
+[en]
+- Better styling for smalle screens
+- Better and safer backups
+- Some smalle technical improvements
+- Bug solved for searching in menu tables
+[/en]
+
 [BUGS]
 - Showing files with extention same als folder name did not work
 - Searching in ordered tables did nog work
