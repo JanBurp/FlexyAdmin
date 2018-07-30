@@ -13,10 +13,10 @@
  * 
  * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan, of analyseert de tabel en genereerd settings)
  * 
- * ->get( $limit=0, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
- * ->get_where( $where=NULL, $limit=0, $offset=0) // Geeft een $query object (zoals in Query Builder)
+ * ->get( $limit=NULL, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
+ * ->get_where( $where=NULL, $limit=NULL, $offset=0) // Geeft een $query object (zoals in Query Builder)
  * 
- * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array: - key ingesteld als result_key (standaard zelfde als primary_key) - inclusief relatie data als subarray per item
+ * ->get_result( $limit=NULL, $offset=0 )         // Geeft een aangepaste $query->result_array: - key ingesteld als result_key (standaard zelfde als primary_key) - inclusief relatie data als subarray per item
  * ->get_row( $where = NULL )                     // Idem, maar dan maar één item (de eerste in het resultaat)
  * ->get_field( $field, $where = NULL )           // Idem, maar dan van één item alleen de waarde van het gevraagde veld
  * ->set_result_key( $key='' )                    // Hiermee kan voor ->get_result() de key van de array ingesteld worden op een ander (uniek) veld. Standaard is dat de primary_key
@@ -176,7 +176,7 @@ Class Data_Core extends CI_Model {
    * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
    * En of er naar de pagina moet worden gegaan van het item het dichtsbij vandaag
    */
-  protected $tm_limit         = 0;
+  protected $tm_limit         = NULL;
   protected $tm_offset        = 0;
   protected $tm_jump_to_today = FALSE;
   protected $tm_where_limit   = FALSE;
@@ -215,6 +215,7 @@ Class Data_Core extends CI_Model {
    */
   protected $user_id     = NULL;
   protected $user_groups = array(0);
+  protected $logout      = FALSE; // Force logout?
   
   /**
    * Bewaar de id van opgevraagde row als ->where( id ) wordt gebruikt.
@@ -954,7 +955,7 @@ Class Data_Core extends CI_Model {
     $this->tm_tree                   = FALSE;
     $this->tm_where_tree             = array();
     $this->tm_order_by               = array();
-    $this->tm_limit                  = 0;
+    $this->tm_limit                  = NULL;
     $this->tm_offset                 = 0;
     $this->tm_where_limit            = FALSE;
     $this->tm_where_offset           = FALSE;
@@ -1039,6 +1040,16 @@ Class Data_Core extends CI_Model {
     return $this->user_id;
   }
   
+
+  /**
+   * TRUE als loguit is forced
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function logout() {
+    return $this->loguit;
+  }
 
 
   /**
@@ -1685,7 +1696,7 @@ Class Data_Core extends CI_Model {
           // Anders geef gewoon de opties terug
           else {
             $current_table = $this->settings['table'];
-            $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(0,0, $where_primary_key );
+            $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(NULL,0, $where_primary_key );
             // $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
             $this->data->table($current_table);               // Terug naar huidige data table.
             $this->tm_where_primary_key = $where_primary_key; // En dit ook weer terug
@@ -1702,15 +1713,33 @@ Class Data_Core extends CI_Model {
             case 'self_parent':
               $first_abstract_field = $this->settings['abstract_fields'];
               $first_abstract_field = current($first_abstract_field);
-              $this->select('id,self_parent,order,'.$first_abstract_field);
-              if ($this->tm_where_primary_key) $this->where( $this->settings['primary_key'].'!=',$this->tm_where_primary_key);
-              $this->tree( $first_abstract_field, '', ' / ' );
-              $this->order_by( 'order,self_parent' );
-              $field_options['data'] = $this->get_result();
-              foreach ($field_options['data'] as $key => $option) {
-                $field_options['data'][$key] = $option[$first_abstract_field];
+
+              $sql = 'SELECT `id`,`self_parent`,`order`,`'.$first_abstract_field.'` FROM `'.$this->settings['table'].'` ';
+              if ($this->tm_where_primary_key) {
+                $sql .= 'WHERE `'.$this->settings['primary_key'].'`!='.$this->tm_where_primary_key.' ';
               }
-              $field_options['data'] = array_unshift_assoc( $field_options['data'], '','');
+              $sql .= 'ORDER BY `order`';
+              $query = $this->db->query($sql);
+              if ($query) {
+                $tree = array();
+                $data = $query->result_array();
+                $field_options['data'] = array();
+                foreach ($data as $key => $option) {
+                  $id = $option[$this->settings['primary_key']];
+                  $field_options['data'][$id] = $option[$first_abstract_field];
+                  // Tree ??
+                  $tree[$id] = array_keep_keys($option,array($first_abstract_field, $this->settings['primary_key'], 'self_parent'));
+                  // Recursive create current tree field
+                  $option = $this->_fill_tree( $tree, $id, array(
+                    'tree_field'      => $first_abstract_field,
+                    'original_field'  => $first_abstract_field,
+                    'split'           => ' / ',
+                    'order'           => '`order`',
+                  ));
+                  $field_options['data'][$id] = $option;
+                }
+                $field_options['data'] = array_unshift_assoc( $field_options['data'], '','');
+              }
               break;
           }
         }
@@ -2061,16 +2090,16 @@ Class Data_Core extends CI_Model {
   /**
    * Geeft resultaat als query object. Eventueel beperkt door limit en offset
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0]
    * @param bool $reset [true] als true dan wordt aan het eind alle instellingen gereset (with,)
    * @return object $query
    * @author Jan den Besten
    */
-  public function get( $limit=0, $offset=0, $reset = true ) {
+  public function get( $limit=NULL, $offset=0, $reset = true ) {
     
     $this->_prepare_query($limit,$offset);
-    
+
     // get
     $query = $this->db->get();
     
@@ -2114,12 +2143,18 @@ Class Data_Core extends CI_Model {
       $this->query_info['total_rows'] = $query->num_rows();
       if ($this->tm_where_limit)  $this->tm_limit = $this->tm_where_limit;
       if ($this->tm_where_offset) $this->tm_offset = $this->tm_where_offset;
-      if ($this->tm_limit>1) {
+      if ($this->tm_limit) {
         $this->query_info['limit']      = (int) $this->tm_limit;
         $this->query_info['offset']     = $this->tm_offset;
         $this->query_info['page']       = (int) floor($this->tm_offset / $this->tm_limit);
         $this->query_info['total_rows'] = $this->total_rows( true );
         $this->query_info['num_pages']  = (int) ceil($this->query_info['total_rows'] / $this->tm_limit);
+      }
+      else {
+        unset($this->query_info['limit']);
+        unset($this->query_info['offset']);
+        unset($this->query_info['page']);
+        unset($this->query_info['num_pages']);
       }
       $this->query_info['num_fields'] = $query->num_fields();
       $this->query_info['last_query'] = $this->last_query();
@@ -2136,11 +2171,13 @@ Class Data_Core extends CI_Model {
    * @return void
    * @author Jan den Besten
    */
-  private function _prepare_query( $limit=0, $offset=0 ) {
+  private function _prepare_query( $limit=NULL, $offset=0 ) {
     if ( $this->tm_query_prepared ) return $this;
     
     // Bewaar limit & offset als ingesteld (overruled eerder ingestelde door ->limit() )
-    if ($limit!=0 or $offset!=0) $this->limit( $limit,$offset );
+    if ( isset($limit) or $offset!=0) {
+      $this->limit( $limit,$offset );
+    }
 
     // bouw select query op
     $this->_select();
@@ -2165,7 +2202,7 @@ Class Data_Core extends CI_Model {
         $split = $this->_split_order($order_by);
         $field = $split['field'];
         if ($this->field_exists($field)) {
-          if (strpos($field,'.')===false) $field = $this->settings['table'].'.'.$field;
+          if (strpos($field,'.')===false AND !$this->get_setting(array('field_info',$field,'encrypted'),false)) $field = $this->settings['table'].'.'.$field;
           $this->db->order_by( $field, $split['direction'] );
         }
         elseif (strpos($field,'.')!==false) {
@@ -2228,7 +2265,7 @@ Class Data_Core extends CI_Model {
    * Zelfde als bij Query Builder
    *
    * @param mixed $where [NULL]
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0]
    * @return object $query
    * @author Jan den Besten
@@ -2439,9 +2476,14 @@ Class Data_Core extends CI_Model {
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
     if (is_null($part) and $key!==0) {
       $order = array();
-      foreach ($this->tm_order_by as $order_by) {
-        $split = $this->_split_order($order_by);
-        $order[]='`'.$split['field'].'` '.$split['direction'];
+      if (isset($tree_info['order'])) {
+        $order[] = $tree_info['order'];
+      }
+      else {
+        foreach ($this->tm_order_by as $order_by) {
+          $split = $this->_split_order($order_by);
+          $order[]='`'.$split['field'].'` '.$split['direction'];
+        }
       }
       $sql = 'SELECT `'.$this->settings['primary_key'].'`,`self_parent`,`'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
       $query = $this->db->query($sql);
@@ -2462,12 +2504,12 @@ Class Data_Core extends CI_Model {
   /**
    * Interne method voor get_result(), andere models kunnen zo get_result() zonder problemen aanpassen zoder de interne werking te beinvloeden.
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  protected function _get_result( $limit=0, $offset=0 ) {
+  protected function _get_result( $limit=NULL, $offset=0 ) {
     // First check if there is a cached result
     if ($this->tm_cache_result) {
       $this->_prepare_query($limit,$offset);
@@ -2501,12 +2543,12 @@ Class Data_Core extends CI_Model {
    * Bij voorkeur niet gebruiken als resources belangrijk zijn.
    * Of alleen bij kleine resultaten en/of in combinatie met limit / pagination.
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  public function get_result( $limit=0, $offset=0 ) {
+  public function get_result( $limit=NULL, $offset=0 ) {
     $result = $this->_get_result($limit,$offset);
     return $result;
   }
@@ -2558,12 +2600,12 @@ Class Data_Core extends CI_Model {
   /**
    * Geeft resulaat terug als opties klaar voor gebruik in vue form.
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  public function get_as_options( $limit=0, $offset=0 ) {
+  public function get_as_options( $limit=NULL, $offset=0 ) {
     $this->select_abstract();
     if (empty($this->tm_order_by) and !el('order_by',$this->settings) ) {
       $abstract_fields = $this->settings['abstract_fields'];
@@ -2590,12 +2632,12 @@ Class Data_Core extends CI_Model {
    * - de rijen zijn geen array, maar een abstract (string). Zie select_abstract().
    * - als geen volgorde is aangegeven in de config en niet is ingesteld worden de abstract velden als volgorde gebruikt
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  public function get_result_as_options( $limit=0, $offset=0, $where_primary_key='' ) {
+  public function get_result_as_options( $limit=NULL, $offset=0, $where_primary_key='' ) {
     $this->select_abstract();
     if (empty($this->tm_order_by) and !el('order_by',$this->settings) ) {
       $abstract_fields = $this->settings['abstract_fields'];
@@ -2752,7 +2794,7 @@ Class Data_Core extends CI_Model {
     }
     
     // Pagination
-    if (el('pagination',$grid_set,true) and $limit!==0) {
+    if (el('pagination',$grid_set,true) and isset($limit)) {
       if (is_numeric($offset) or $offset!==TRUE) $this->limit( $limit, $offset );
     }
 
@@ -2939,6 +2981,10 @@ Class Data_Core extends CI_Model {
           $this->tm_hidden_passwords;
         }
       }
+      // Encrypted?
+      if ($this->get_setting(array('field_info',$field,'encrypted'),false)) {
+        $this->tm_select[$key] = 'AES_DECRYPT('.$this->tm_select[$key].' ,"'.$this->config->item('encryption_key').'")'.' AS `'.$field.'`';
+      }
     }
     return $this;
   }
@@ -3119,7 +3165,7 @@ Class Data_Core extends CI_Model {
         $has_where = has_string('WHERE',$sql);
         // Geen exception als de WHERE alleen op id zoekt en limit=1 (->get_row())
         if ($has_where AND $this->tm_limit==1 AND has_string('WHERE `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`',$sql) ) {
-          $this->tm_limit=0;
+          $this->tm_limit=NULL;
         }
         if ($has_where AND $this->tm_limit>0 AND !$this->tm_where_primary_key) {
           $json = TRUE;
@@ -3153,7 +3199,7 @@ Class Data_Core extends CI_Model {
           $this->tm_where_limit = $this->tm_limit;
           $this->tm_where_offset = $this->tm_offset;
           $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
-          $this->tm_limit = 0;
+          $this->tm_limit = NULL;
           $this->tm_offset = 0;
         }
         $this->tm_from .= ') AS '.$this->db->protect_identifiers($table).'';
@@ -3187,6 +3233,7 @@ Class Data_Core extends CI_Model {
   /**
    * Zelfde als 'where' van Query Builder, met deze uitbreidingen:
    * - Je kunt als enig argument de primary_key meegeven of de strings 'first'
+   * - Je kunt ook LIKE statements hiermee aanroepen
    * - Als $value een array is wordt 'where_in' aangeroepen.
    * - Je kunt ook where statements voor relaties aangeven.
    * 
@@ -3195,6 +3242,9 @@ Class Data_Core extends CI_Model {
    * ->where( 2 );        // Zoekt naar het resultaat met de primary_key 2
    * ->where( 'first' );  // Zoekt naar het eerste resultaat
    * 
+   * like
+   * ----
+   * ->where( 'str_title LIKE', '%test%' );
    * 
    * many_to_one
    * -----------
@@ -3254,6 +3304,7 @@ Class Data_Core extends CI_Model {
     $this->tm_where_primary_key = NULL;
     // Als value een array is, dan ->where_in()
     if (isset($value) and is_array($value)) {
+      $key = $this->_where_decrypt_field($key);
       if ($type=='AND')
         $this->db->where_in($key,$value,$escape);
       else
@@ -3280,14 +3331,45 @@ Class Data_Core extends CI_Model {
       $this->tm_where_primary_key = $value;
     }
 
-    // where
+    // where of like
     if (isset($key)) {
-      if ($type=='AND')
-        $this->db->where($key,$value);
-      else
-        $this->db->or_where($key,$value);
+      // LIKE
+      if (is_string($key) and strpos($key,' LIKE')!==false) {
+        $key = trim(str_replace(' LIKE','',$key));
+        $side = 'both';
+        if ( substr($value,0,1)!='%' ) $side = 'after';
+        if ( substr($value,-1,1)!='%' ) $side = 'before';
+        $value = trim($value,'%');
+        $key = $this->_where_decrypt_field($key);
+        if ($type=='AND')
+          $this->db->like($key,$value,$side);
+        else
+          $this->db->or_like($key,$value,$side);
+      }
+      // WHERE
+      else {
+        $key = $this->_where_decrypt_field($key);
+        if ($type=='AND')
+          $this->db->where($key,$value);
+        else
+          $this->db->or_where($key,$value);
+      }
     }
     return $this;
+  }
+
+  private function _where_decrypt_field($field) {
+    if (is_array($field)) {
+      foreach ($field as $key => $f) {
+        $field[$key] = $this->_where_decrypt_field($f);
+      }
+    }
+    else {
+      if ($this->get_setting(array('field_info',$field,'encrypted'),false)) {
+        $field = 'AES_DECRYPT(`'.$field.'` ,"'.$this->config->item('encryption_key').'")';
+      }
+    }
+    return $field;
   }
   
 
@@ -3732,6 +3814,7 @@ Class Data_Core extends CI_Model {
   private function _find_term( $term, $fields = array(), $equals='like', $many_exists=TRUE ) {
     // Schoon term wat op (geen quotes en spaties)
     $term = trim($term,"\"' ");
+
     
     // Per veld:
     foreach ($fields as $sub_fields) {
@@ -3745,6 +3828,12 @@ Class Data_Core extends CI_Model {
       }
       
       foreach ($sub_fields as $field) {
+
+        // Encrypted field??
+        $real_field = get_suffix(str_replace('`','',$field),'.');
+        if ($this->get_setting(array('field_info',$real_field,'encrypted'),false)) {
+          $field = 'AES_DECRYPT('.$field.' ,"'.$this->config->item('encryption_key').'")';
+        }
         
         // many_to_many exists...
         if ( $many_exists AND $relation==='many_to_many') {
@@ -3764,6 +3853,7 @@ Class Data_Core extends CI_Model {
         else {
           switch ($equals) {
             case 'exact': 
+              if ($this->get_setting(array('field_info',$real_field,'encrypted'),false)) $field.=' = ';
               $this->or_where( $field, $term, FALSE);
               break;
             case 'word':
@@ -4404,7 +4494,7 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-	public function limit( $limit, $offset = 0) {
+	public function limit( $limit = NULL, $offset = 0) {
     $this->tm_limit = $limit;
     $this->tm_offset = $offset;
 		return $this;
@@ -5268,9 +5358,12 @@ Class Data_Core extends CI_Model {
   public function total_rows( $calculate=FALSE, $json=FALSE ) {
     if ($calculate) {
       // perform simple query count
+      $total_rows = 0;
       $sql = $this->last_clean_query( $json );
       $query = $this->db->query( $sql );
-      $total_rows = $query->num_rows();
+      if (is_object($query)) {
+        $total_rows = $query->num_rows();
+      }
       return $total_rows;
     }
     return $this->get_query_info('total_rows');

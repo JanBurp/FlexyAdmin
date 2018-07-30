@@ -930,8 +930,8 @@ class Form {
       case 'captcha':
         $this->CI->load->helper('captcha');
   			$vals = array(
-  							'img_path'	 	=> assets().'_thumbcache/',
-  							'img_url'	 		=> site_url(assets().'_thumbcache').'/',
+  							'img_path'	 	=> $this->CI->config->item('THUMBCACHE'),
+  							'img_url'	 		=> $this->CI->config->item('ASSETS').'_thumbcache/',
   							'img_width'	 	=> '125',
   							'img_height' 	=> '25',
   							'expiration' => '600',

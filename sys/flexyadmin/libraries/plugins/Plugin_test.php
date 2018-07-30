@@ -41,15 +41,10 @@ class Plugin_test extends Plugin {
       }
     }
 
-    $this->CI->data->table('cfg_users');
-    $result         = $this->CI->data->get_grid(1);
+    $this->CI->data->table('tbl_groepen')->with('many_to_many');
+    $result         = $this->CI->data->get_result(3);
     $this->add_trace( $result );
     $this->add_trace_sql( $this->CI->data->last_query() );
-
-    // $this->CI->data->table('cfg_users')->with('one_to_one',array( 'tbl_user_settings' => array('str_newsletter_what','str_newsletter_when','b_show_address','b_show_email','b_show_phone','b_show_kids_photos','b_show_disclaimer') ));
-    // $result         = $this->CI->data->get_grid(1);
-    // $this->add_trace( $result );
-    // $this->add_trace_sql( $this->CI->data->last_query() );
     
     return $this->content;
   }
@@ -120,13 +115,13 @@ class Plugin_test extends Plugin {
 
     $this->CI->load->library('flexy_auth');
     if ($user_id) {
-      $user = $this->flexy_auth->get_user($user_id);
+      $user = $this->CI->flexy_auth->get_user($user_id);
       $users[$user_id] = $user;
     }
     else {
-      $users = $this->flexy_auth->get_users();
+      $users = $this->CI->flexy_auth->get_users();
     }
-    
+
     foreach ($users as $id=>$user) {
       $user['groups.description']='';
       foreach ( $user['groups'] as $group ) {
@@ -134,7 +129,7 @@ class Plugin_test extends Plugin {
       }
       $user['rights.description']='<table>';
       foreach ($user['rights']['items'] as $item=>$rights) {
-        $user['rights.description'] .= '<tr><td><b>'.$item.'<b></td><td>'.$this->flexy_auth->rights_to_string( $rights ). '</td></tr>';
+        $user['rights.description'] .= '<tr><td><b>'.$item.'<b></td><td>'.$this->CI->flexy_auth->rights_to_string( $rights ). '</td></tr>';
       }
       $user['rights.description'] .= '</table>';
       $users[$id] = array_keep_keys( $user, array('id','str_username','groups.description','rights.description'));
@@ -234,7 +229,7 @@ class Plugin_test extends Plugin {
     $menu = $this->CI->data->table('tbl_menu')
                         ->unselect('txt_text')
                         ->tree('full_uri','uri')
-                        ->where_tree( 'full_uri','een_pagina/een_pagina')
+                        ->where_tree( 'full_uri','een_pagina/subpagina')
                         ->get_result();
     trace_($menu);
     trace_($this->CI->data->get_query_info());

@@ -280,9 +280,11 @@ class Row extends Api_Model {
       $data = $this->_after_update( $this->args['table'], $current_data, $data);
       // Save
       $id = $this->data->table($this->args['table'])->with('one_to_one')->validate()->update( $data, $args['where'] );
+      $logout = $this->data->logout();
       if ($id===FALSE) $id = $args['where'];
       $this->info = $this->data->get_query_info();
       $this->info['action'] = 'update';
+      if ($logout) $this->info['logout'] = TRUE;
       // Get data back
       $this->data->table( $args['table'] );
       $new_data = $this->data->get_form( $args['where'] );
