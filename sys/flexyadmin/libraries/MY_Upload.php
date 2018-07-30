@@ -333,8 +333,11 @@ class MY_Upload extends CI_Upload {
 		}
 
 		// Create cached thumb
-		if (file_exists($this->_CI->config->item('THUMBCACHE')) ) {
+    if ( !file_exists($this->_CI->config->item('THUMBCACHE')) ) {
+      @mkdir($this->_CI->config->item('THUMBCACHE'));
+    }
 
+    if (file_exists($this->_CI->config->item('THUMBCACHE')) ) {
       if ($ext=='svg') {
         @copy( $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name, $this->_CI->config->item('THUMBCACHE').pathencode($path.'/'.$this->file_name,FALSE) );
       }
@@ -354,7 +357,8 @@ class MY_Upload extends CI_Upload {
         }
         $this->_CI->image_lib->clear();
       }
-		}
+    }
+
 		return $result;
 	}
   

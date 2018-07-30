@@ -123,7 +123,11 @@ Class Core_cfg_users extends Data_Core {
         }
       }
     }
-    
+
+    if (isset($this->tm_set['str_username']) or isset($this->tm_set['gpw_password'])) {
+      $this->loguit = TRUE;
+    }
+
     return parent::_update_insert($type,NULL,$where,$limit);
   }
   
@@ -133,13 +137,13 @@ Class Core_cfg_users extends Data_Core {
    * - Dat alleen users teruggegeven kunnen worden die dezelfde rechten hebben of meer.
    * - Dat alleen administrators de user_group kunnen inzien.
    *
-   * @param string $limit[0] 
+   * @param string $limit[NULL] 
    * @param string $offset[0] 
    * @param string $reset[true] 
    * @return object $query
    * @author Jan den Besten
    */
-  public function get( $limit=0, $offset=0, $reset = true ) {
+  public function get( $limit=NULL, $offset=0, $reset = true ) {
     
     if ($this->user_id and $this->tm_as_grid) {
 

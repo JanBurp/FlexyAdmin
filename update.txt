@@ -19,6 +19,11 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE 3.5.0-rc.21
+==================
+- Vervang 'limit' = 0, door 'limit' = NULL, in config/menu.php
+
+
 UPDATE 3.5.x
 ============
 - Vervang map sys

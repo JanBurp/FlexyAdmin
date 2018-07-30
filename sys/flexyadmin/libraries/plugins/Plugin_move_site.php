@@ -12,8 +12,26 @@ class Plugin_move_site extends Plugin {
   var $new = '';
   var $oldDB;
 
+  private $ucfirst = array(
+                      'libraries/',
+                      'models/'
+                    );
+  private $dont_move = array(
+                        'libraries/forms.php',
+                        'libraries/ajax_forms.php',
+                        'libraries/plugin_template.php',
+                        'config/plugin_template.php',
+                        'config/plugin_automenu.php',
+                        'config/build.php',
+                        'models/formaction_mail.php',
+                        'models/formaction_database.php',
+                        'models/formaction_upload.php'
+                      );
+
 	public function __construct() {
 		parent::__construct();
+    $this->dont_move = implode('|',$this->dont_move);
+    $this->dont_move = str_replace(array('.php'),array('\.php'),$this->dont_move);
     $this->CI->load->dbforge();
 	}
 
@@ -278,12 +296,12 @@ class Plugin_move_site extends Plugin {
           $data['grid_set'] = $grid_set;
           $data['form_set'] = $form_set;
 
-          // Current data?
+          // Current config
           $data_file = $this->CI->config->item('SITE').'config/data/'.$table.'.php';
           $this->CI->config->load('data/'.$table.'.php',true);
           $current_data = $this->CI->config->config['data/'.$table];
           if ($current_data) {
-            $data = array_merge($current_data,$data);
+            $data = array_merge_recursive_distinct($current_data,$data);
           }
 
           // Write
@@ -390,6 +408,7 @@ class Plugin_move_site extends Plugin {
     $copied=array();
     $replaced=array();
     $error=array();
+
     foreach ($paths as $path) {
       $old = $this->old.'site/'.$path;
       $new = '../site/'.$path;
@@ -400,9 +419,19 @@ class Plugin_move_site extends Plugin {
         // Files in (sub)folder
         $files=read_map($old,'',TRUE,FALSE,FALSE,FALSE);
         foreach ($files as $file) {
-          if (is_file($file['path'])) {
-            $full_name=str_replace($old,'',$file['path']);
-            $move_files[$old.$full_name] = $new.$full_name;
+          // Do not move these
+          if ( !preg_match( '#'.$this->dont_move.'#ui', $file['path']) ) {
+            // Only if it is a file
+            if (is_file($file['path'])) {
+              // UC first?
+              if (in_array($path,$this->ucfirst)) {
+                $name = explode('/',$file['path']);
+                $name[count($name)-1] = ucfirst($name[count($name)-1]);
+                $file['path'] = implode('/',$name);
+              }
+              $full_name = str_replace($old,'',$file['path']);
+              $move_files[$old.$full_name] = $new.$full_name;
+            }
           }
         }
       }

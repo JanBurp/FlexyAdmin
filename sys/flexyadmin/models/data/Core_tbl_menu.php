@@ -97,6 +97,20 @@ Class Core_tbl_menu extends Data_Core {
     // trace_( array_column($menu_result, 'uri','full_uri') );
     return $menu_result;
   }
+
+
+  /**
+   * Geeft submenu van (samengesteld) menu
+   *
+   * @param string $uri 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_sub_items( $uri ) {
+    $items = $this->get_menu_result();
+    $items = filter_by_prefix( $items, $uri.'/' );
+    return $items;
+  }
   
   
   /**
@@ -431,7 +445,8 @@ Class Core_tbl_menu extends Data_Core {
     // get data
     if (isset($item['where']))    $this->data->where($item['where']);
     if (isset($item['order_by'])) $this->data->order_by($item['order_by']);
-    $data_items = $this->data->get_result( el('limit',$item,0), el('offset',$item,0) );
+    $data_items = $this->data->get_result( el('limit',$item,NULL), el('offset',$item,0) );
+
     foreach ($data_items as $key => $row) {
       $data_items[$key]['_table'] = $table;
 
@@ -515,7 +530,7 @@ Class Core_tbl_menu extends Data_Core {
         }
         if (isset($item['where']))    $this->data->where($item['where']);
         if (isset($item['order_by'])) $this->data->order_by($item['order_by']);
-        $data_items = $this->data->get_result( el('limit',$item,0), el('offset',$item,0) );
+        $data_items = $this->data->get_result( el('limit',$item,NULL), el('offset',$item,0) );
 
         // Add
         $nr=1;

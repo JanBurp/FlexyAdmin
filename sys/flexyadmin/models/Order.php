@@ -138,6 +138,8 @@ class Order extends CI_Model {
 	public function reset($table,$from=0) {
     $this->data->table($table);
 
+    $has_date = $this->data->field_exists('dat_date');
+
     // Eenvoudig, geen self_parent
     if ( !$this->is_a_tree($table) ) {
       $result = $this->data->select('order')->order_by('order')->get_result();
@@ -154,7 +156,12 @@ class Order extends CI_Model {
     // 3) Sub results per parent
     $parents = $this->data->select('self_parent,uri')->order_by('order')->set_result_key('self_parent')->get_result();
     foreach ($parents as $parent_id => $items) {
-      $parents[$parent_id] = $this->data->select('order,self_parent,uri')->order_by('order')->where('self_parent',$parent_id)->get_result();
+      $this->data->select('order,self_parent,uri')->where('self_parent',$parent_id);
+      if ($has_date)
+        $this->data->order_by('order,dat_date DESC');
+      else
+        $this->data->order_by('order');
+      $parents[$parent_id] = $this->data->get_result();
     }
     $merged = $parents[0];
     unset($parents[0]);
