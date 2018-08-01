@@ -37,13 +37,17 @@ class Plugin_test extends Plugin {
       $method = array_shift($args);
       if ($method) {
         $method = current($method);
-        return $this->$method($args);
+        return $this->$method(current($args));
       }
     }
 
-    $this->CI->data->table('tbl_groepen')->with('many_to_many');
-    $result         = $this->CI->data->get_result(3);
-    $this->add_trace( $result );
+    $this->CI->data->table('tbl_menu')
+                   ->set(array(
+                      'str_title' => 'TEST PAGINA',
+                      'txt_text'  => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.',
+                    ))
+                   ->insert();
+    $this->add_trace( $this->CI->data->get_query_info() );
     $this->add_trace_sql( $this->CI->data->last_query() );
     
     return $this->content;
@@ -70,7 +74,7 @@ class Plugin_test extends Plugin {
   }
 
 
-  private function validatons() {
+  private function validations() {
     if (!IS_LOCALHOST) return;
     $this->CI->load->library('form_validation');
     
@@ -78,11 +82,11 @@ class Plugin_test extends Plugin {
     $tables = filter_by($tables,'tbl');
     foreach ($tables as $table) {
       echo h($table);
-      $fields = $this->db->list_fields( $table );
+      $fields = $this->CI->db->list_fields( $table );
       // $fields = array_unset_keys($fields,array('id','order','uri','self_parent'));
       foreach ($fields as $field) {
         echo h($field,2);
-        $validations = $this->form_validation->get_rules($table,$field);
+        $validations = $this->CI->form_validation->get_rules($table,$field);
         trace_($validations);
       }
     }
@@ -190,7 +194,7 @@ class Plugin_test extends Plugin {
       $with[$key] = highlight_code( str_replace(')->',")\n->",$value) );
 
       // Get
-      $eval = 'return $this->data'.$value.'->get( 2 );';
+      $eval = 'return $this->CI->data'.$value.'->get( 2 );';
       $query = eval($eval);
       if ($query) {
         $num_rows = $query->num_rows();
@@ -202,7 +206,7 @@ class Plugin_test extends Plugin {
       }
       
       // Result
-      $eval = 'return $this->data'.$value.'->get_result( 2 );';
+      $eval = 'return $this->CI->data'.$value.'->get_result( 2 );';
       $array = eval($eval);
       $num_rows = $this->CI->data->num_rows();
       $result[$key] = 'num_rows = '.$num_rows.' (2)'.br().highlight_code(array2php( array_slice($array,0,2) ));

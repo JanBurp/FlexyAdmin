@@ -253,6 +253,7 @@ Class Data_Core extends CI_Model {
 
 	public function __construct( $table='' ) {
 		parent::__construct();
+    $this->db->query("SET SQL_MODE = ''"); // https://stackoverflow.com/questions/15438840/mysql-error-1364-field-doesnt-have-a-default-values
     $this->settings_caching = $this->config->item('CACHE_DATA_SETTINGS');
     $this->load->model('log_activity');
     $this->lang->load('data');
@@ -4421,7 +4422,9 @@ Class Data_Core extends CI_Model {
     }
 
     // json?
-    if ($json) $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
+    if ($json) {
+      $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
+    }
     
     return $this;
   }
@@ -4787,8 +4790,6 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-
-
     
 
     /**
@@ -4819,7 +4820,39 @@ Class Data_Core extends CI_Model {
         $set = array_merge( $set, $this->form_validation->get_validated_data( array_keys($set)) );
       }
     }
+
+    /**
+     * Defaults van 'lege' velden
+     */
+    foreach ( $set as $key => $value ) {
+      $pre = get_prefix($key);
+      switch ($pre) {
+
+        // case 'id' :
+        //   if ($value=='') $value=0;
+        //   break;
+
+        // case 'uri' :
+        //   if (empty($value)) $set[$key] = $this->settings['field_info'][$key]['default'];
+        //   break;
+
+        case 'dat':
+        case 'date':
+          if (empty($value) or $value=='0000-00-00') {
+            $set[$key] = $this->settings['field_info'][$key]['default'];
+          }
+          break;
+
+        case 'tme':
+        case 'datetime':
+          if (empty($value) or substr($value,0,10)=='0000-00-00') {
+            $set[$key] = $this->settings['field_info'][$key]['default'];
+          }
+          break;
+      }
+    }
     
+
     /**
      * Split eventuele one_to_one data
      */
@@ -4859,7 +4892,7 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
     /**
      * Verwijder onnodige velden
      */
@@ -5120,8 +5153,9 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   private function _check_other_ids($other_ids) {
-    if (is_string($other_ids)) $other_ids=preg_split('/[|,'.$this->settings['abstract_delimiter'].']/',$other_ids);
     if (is_null($other_ids)) $other_ids = array();
+    if (empty($other_ids))   $other_ids = array();
+    if (is_string($other_ids)) $other_ids=preg_split('/[|,'.$this->settings['abstract_delimiter'].']/',$other_ids);
     if (!is_array($other_ids)) $other_ids=array($other_ids);
 		foreach ( $other_ids as $okey => $other_id ) {
       if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
