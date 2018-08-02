@@ -123,10 +123,10 @@ Class Data_Core extends CI_Model {
   protected $tm_unselect = FALSE;
 
   /**
-   * Hou JOIN bij
+   * Hou diverse query onderdelen bij
    */
+  protected $tm_where = FALSE;
   protected $tm_join = FALSE;
-
   
   /**
    * Hou de FROM bij, kan aangepast worden om LIMIT bij one_to_many en many_to_many relaties mooi te krijgen
@@ -952,6 +952,7 @@ Class Data_Core extends CI_Model {
     $this->tm_select_include_primary = TRUE;
     $this->tm_unselect               = FALSE;
     $this->tm_from                   = '';
+    $this->tm_where                  = FALSE;
     $this->tm_join                   = FALSE;
     $this->tm_tree                   = FALSE;
     $this->tm_where_tree             = array();
@@ -2224,9 +2225,13 @@ Class Data_Core extends CI_Model {
     // FROM
     $this->_from();
 
+    
     // bouw find query op
     $this->_find();
-    
+
+    // where & like
+    $this->_where();
+
     // limit & offset
     $this->query_info = array();
     $this->db->limit( $this->tm_limit );
@@ -3269,7 +3274,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	public function where($key, $value = NULL, $escape = NULL) {
-    $this->_where($key,$value,$escape,'AND');
+    $this->_wh($key,$value,$escape,'AND');
     return $this;
   }
 
@@ -3284,7 +3289,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	public function or_where($key, $value = NULL, $escape = NULL) {
-    $this->_where($key,$value,$escape,'OR');
+    $this->_wh($key,$value,$escape,'OR');
     return $this;
   }
 
@@ -3300,7 +3305,7 @@ Class Data_Core extends CI_Model {
    */
   public function where_in($key = NULL, $values = NULL, $escape = NULL) {
     if (!is_array($values)) $values = array($values);
-    $this->_where($key,$value,$escape,'AND');
+    $this->_wh($key,$value,$escape,'AND');
     return $this;
   }
 
@@ -3315,7 +3320,7 @@ Class Data_Core extends CI_Model {
    */
   public function or_where_in($key = NULL, $values = NULL, $escape = NULL) {
     if (!is_array($values)) $values = array($values);
-    $this->_where($key,$value,$escape,'OR');
+    $this->_wh($key,$value,$escape,'OR');
     return $this;
   }
 
@@ -3330,7 +3335,7 @@ Class Data_Core extends CI_Model {
    */
   public function where_not_in($key = NULL, $values = NULL, $escape = NULL) {
     if (!is_array($values)) $values = array($values);
-    $this->_where($key,$value,$escape,'AND','NOT');
+    $this->_wh($key,$value,$escape,'AND','NOT');
     return $this;
   }
 
@@ -3345,11 +3350,10 @@ Class Data_Core extends CI_Model {
    */
   public function or_where_not_in($key = NULL, $values = NULL, $escape = NULL) {
     if (!is_array($values)) $values = array($values);
-    $this->_where($key,$value,$escape,'OR','NOT');
+    $this->_wh($key,$value,$escape,'OR','NOT');
     return $this;
   }
 
-  
   /**
    * Maakt ..where..
    *
@@ -3360,29 +3364,10 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  private function _where( $key, $value=NULL, $escape = NULL, $type = 'AND', $not = '') {
-    // Onthou dat er een conditie in de query zit
+  private function _wh( $key, $value=NULL, $escape = NULL, $type = 'AND', $not = '') {
     $this->tm_has_condition = TRUE;
-    
     $this->tm_where_primary_key = NULL;
-    // Als value een array is, dan ->where_in()
-    if (isset($value) and is_array($value)) {
-      $key = $this->_where_decrypt_field($key);
-      if ($type=='AND') {
-        if (empty($not))
-          $this->db->where_in($key,$value,$escape);
-        else
-          $this->db->where_not_in($key,$value,$escape);
-      }
-      else {
-        if (empty($not))
-          $this->db->or_where_in($key,$value,$escape);
-        else
-          $this->db->or_where_not_in($key,$value,$escape);
-      }
-      return $this;
-    }
-    
+
     // Als geen value maar alleen een key (die geen array is), dat wordt alleen op primary_key gevraagd als het een nummer is
     if (!isset($value) and !is_array($key)) {
       // 'first'
@@ -3393,8 +3378,8 @@ Class Data_Core extends CI_Model {
       }
       // primary_key als nummer
       elseif (is_numeric($key)) {
-        $value = $key;
-        $key = $this->settings['table'].'.'.$this->settings['primary_key'];
+        $value  = $key;
+        $key    = $this->settings['table'].'.'.$this->settings['primary_key'];
         $this->tm_where_primary_key = $value;
       }
     }
@@ -3402,33 +3387,108 @@ Class Data_Core extends CI_Model {
       $this->tm_where_primary_key = $value;
     }
 
-    // where of like
+    // LIKE
     if (isset($key)) {
-      // LIKE
-      if (is_string($key) and strpos($key,' LIKE')!==false) {
+      if (is_string($key) and (strpos($key,' LIKE')!==false and strpos($key,'SELECT')===false) ) {
         $key = trim(str_replace(' LIKE','',$key));
         $side = 'both';
         if ( substr($value,0,1)!='%' ) $side = 'after';
         if ( substr($value,-1,1)!='%' ) $side = 'before';
         $value = trim($value,'%');
-        $this->_like($key, $value, $side, $type, '');
+        return $this->_like($key, $value, $side, $type, $not );
       }
-      // WHERE
+    }
+
+    // WHERE
+    if (!is_array($this->tm_where)) $this->tm_where = array();
+    $this->tm_where[] = array(
+      'key'     => $key,
+      'value'   => $value,
+      'escape'  => $escape,
+      'type'    => $type,
+      'not'     => $not,
+    );
+
+    return $this;
+  }
+
+  private function _where() {
+    if (!is_array($this->tm_where)) return $this;
+    foreach ($this->tm_where as $where) {
+
+      if (is_string($where)) {
+        switch ($where) {
+          case 'group_start':
+            $this->db->group_start();
+            break;
+          case 'or_group_start':
+            $this->db->or_group_start();
+            break;
+          case 'group_end':
+            $this->db->group_end();
+            break;
+        }
+
+      }
       else {
-        $key = $this->_where_decrypt_field($key);
-        if ($type=='AND')
-          $this->db->where($key,$value);
-        else
-          $this->db->or_where($key,$value);
+        extract($where);
+
+        if (isset($key)) {
+          // AES decryption?
+          $key = $this->_aes_decrypt_field($key);
+
+          // LIKE ?
+          if (isset($where['side'])) {
+            if ($type=='AND') {
+              if (empty($not))
+                $this->db->like($key,$match,$side,$escape);
+              else
+                $this->db->not_like($key,$match,$side,$escape);
+            }
+            else {
+              if (empty($not))
+                $this->db->or_like($key,$match,$side,$escape);
+              else
+                $this->db->or_not_like($key,$match,$side,$escape);
+            }
+          }
+          else {
+
+            // WHERE IN ?
+            if (isset($value) and is_array($value)) {
+              if ($type=='AND') {
+                if (empty($not))
+                  $this->db->where_in($key,$value,$escape);
+                else
+                  $this->db->where_not_in($key,$value,$escape);
+              }
+              else {
+                if (empty($not))
+                  $this->db->or_where_in($key,$value,$escape);
+                else
+                  $this->db->or_where_not_in($key,$value,$escape);
+              }
+            }
+
+            // WHERE
+            else {
+              if ($type=='AND')
+                $this->db->where($key,$value,$escape);
+              else
+                $this->db->or_where($key,$value,$escape);
+            }
+
+          }
+        }
       }
     }
     return $this;
   }
 
-  private function _where_decrypt_field($field) {
+  private function _aes_decrypt_field($field) {
     if (is_array($field)) {
       foreach ($field as $key => $f) {
-        $field[$key] = $this->_where_decrypt_field($f);
+        $field[$key] = $this->_aes_decrypt_field($f);
       }
     }
     else {
@@ -3451,7 +3511,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function like($field, $match = '', $side = 'both', $escape = NULL) {
-    return $this->_like($field, $match, $side,'AND','');
+    return $this->_like($field, $match, $side,'AND','',$escape);
   }
 
   /**
@@ -3465,7 +3525,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function not_like($field, $match = '', $side = 'both', $escape = NULL) {
-    return $this->_like($field, $match, $side,'AND','NOT');
+    return $this->_like($field, $match, $side,'AND','NOT',$escape);
   }
 
   /**
@@ -3479,7 +3539,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function or_like($field, $match = '', $side = 'both', $escape = NULL) {
-    return $this->_like($field, $match, $side,'OR','');
+    return $this->_like($field, $match, $side,'OR','',$escape);
   }
 
   /**
@@ -3493,7 +3553,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function or_not_like($field, $match = '', $side = 'both', $escape = NULL) {
-    return $this->_like($field, $match, $side,'OR','NOT');
+    return $this->_like($field, $match, $side,'OR','NOT',$escape);
   }
 
 
@@ -3508,26 +3568,19 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  private function _like($field, $match='', $side='both', $type = 'AND', $not = '') {
+  private function _like($field, $match='', $side='both', $type = 'AND', $not = '',$escape = NULL) {
     $this->tm_has_condition = TRUE;
-    $this->tm_where_primary_key = NULL;
-    $field = $this->_where_decrypt_field($field);
-    if ($type=='AND') {
-      if (empty($not))
-        $this->db->like($field,$match,$side,$escape);
-      else
-        $this->db->not_like($field,$match,$side,$escape);
-    }
-    else {
-      if (empty($not))
-        $this->db->or_like($field,$match,$side,$escape);
-      else
-        $this->db->or_not_like($field,$match,$side,$escape);
-    }
+    if (!is_array($this->tm_where)) $this->tm_where = array();
+    $this->tm_where[] = array(
+      'key'   => $field,
+      'match' => $match,
+      'side'  => $side,
+      'type'  => $type,
+      'not'   => $not,
+      'escape' => $escape,
+    );
     return $this;
   }
-
-
 
   /**
    * where_exists zoekt in many_to_many data en toont data waarbinnen de zoekcriteria voldoet maar met de complete many_to_many subdata.
@@ -3615,7 +3668,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _exists( $key, $value = NULL, $side=FALSE, $type = 'AND' ) {
-    // trace_(['_exists',$key,$value,$side,$type]);
+    $this->tm_has_condition = TRUE;
     
     if ( !isset($this->tm_with['many_to_many'])) {
       $this->reset();
@@ -3636,6 +3689,8 @@ Class Data_Core extends CI_Model {
     $rel_table         = $relation['rel_table']; //'rel_'.remove_prefix($this_table).'__'.remove_prefix($other_table);
     $this_foreign_key  = $relation['this_key'];//  $id.'_'.remove_prefix($this_table);
     $other_foreign_key = $relation['other_key'];//$id.'_'.remove_prefix($other_table);
+
+    $key = $this->_aes_decrypt_field($key);
     
     $sql = ' `'.$this_table.'`.`'.$id.'` IN (
     	SELECT `'.$rel_table.'`.`'.$this_foreign_key.'`
@@ -3663,16 +3718,29 @@ Class Data_Core extends CI_Model {
     }
     $sql.='))';
     
-    if ($type=='OR')
-      $this->db->or_where( $sql, NULL, FALSE );
-    else
-      $this->db->where( $sql, NULL, FALSE );
+    $this->_wh($sql,NULL,NULL,$type,'');
     
-    // Onthou dat er een conditie in de query zit
-    $this->tm_has_condition = TRUE;
     return $this;
   }
-  
+
+  public function group_start() {
+    if (!is_array($this->tm_where)) $this->tm_where=array();
+    $this->tm_where[] = 'group_start';
+    return $this;
+  }
+
+  public function or_group_start() {
+    if (!is_array($this->tm_where)) $this->tm_where=array();
+    $this->tm_where[] = 'or_group_start';
+    return $this;
+  }
+
+  public function group_end() {
+    if (!is_array($this->tm_where)) $this->tm_where=array();
+    $this->tm_where[] = 'group_end';
+    return $this;
+  }
+
   
   /**
    * Zoekt de gevraagde zoekterm(en).
@@ -3885,7 +3953,7 @@ Class Data_Core extends CI_Model {
    */
   private function _create_complete_search( $search ) {
     $grouped = $this->tm_has_condition;
-    if ($grouped) $this->db->group_start();
+    if ($grouped) $this->group_start();
 
     foreach ( $search as $item) {
 
@@ -3935,20 +4003,20 @@ Class Data_Core extends CI_Model {
       foreach ($terms as $term) {
         // Begin van deze term
         if ($item['and']==='AND') {
-          $this->db->group_start();
+          $this->group_start();
         }
         else {
-          $this->db->or_group_start();
+          $this->or_group_start();
         }
         // Zoek in de term
         $this->_find_term( $term, $fields, $item['equals'], el('many_exists',$item,TRUE));
         // Einde van deze term
-        $this->db->group_end();
+        $this->group_end();
       }
       
     }
 
-    if ($grouped) $this->db->group_end();
+    if ($grouped) $this->group_end();
   }
   
   private function _protect_field($field,$table='') {
@@ -4012,11 +4080,11 @@ Class Data_Core extends CI_Model {
               $this->or_where( $field, $term, FALSE);
               break;
             case 'word':
-              $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
+              $this->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
               break;
             case 'like':
             default:
-              $this->db->or_like( $field, $term, 'both', FALSE);
+              $this->or_like( $field, $term, 'both', FALSE);
               break;
           }
         }
@@ -4950,6 +5018,7 @@ Class Data_Core extends CI_Model {
      * Query verder opbouwen
      */
     if ($where) $this->where( $where );
+    $this->_where();
     if ($limit) $this->limit( $limit );
 
     /**
@@ -5343,6 +5412,7 @@ Class Data_Core extends CI_Model {
      * Bouw query op, bewaar deze, en reset query
      */
     if ($where) $this->where( $where );
+    $this->_where();
     if ($limit) $this->limit( $limit );
     // Bewaar query en zorg ervoor dat LIMIT mee komt
     if ($this->tm_limit) $limit = $this->tm_limit;
