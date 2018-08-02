@@ -158,7 +158,6 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
   }
 }
 
-
 // Layout
 @include media-breakpoint-down(md) {
   #header .help-button {display:none;}
@@ -177,15 +176,58 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
   }
 }
 @include media-breakpoint-down(xs) {
+  h1,.h1 {font-size: 1.25rem;}
+
+  body {
+    overflow-x:hidden;
+  }
+
+  .container-fluid {
+    padding-left:0px;
+    padding-right:0px;
+  }
+  .card-body {
+    padding:0.5rem 0.25rem .25rem;
+  }
+
   #header {
+    margin:0;
+    max-width:100%;
+    padding:0!important;
+    .col {
+      padding-left:0!important;
+      padding-right:0!important;
+    }
     .flexy-block {
       margin-right:.25rem!important;
-      // font-size:.85rem;
     }
     .nav-link {
       padding:.5rem;
     }
   }
+
+  #row {
+    margin-top:0!important;
+    #flexy-menu-side {
+      padding-right:0;
+    }
+  }
+
+  #content {
+    > .card {
+      margin-top:.5rem!important;
+    }
+  }
+
+  .card {
+    > .card-header > :last-child {
+      .form-group {max-width:8rem;}
+      .btn-group {display:none;}
+      // float:left;
+    }
+  }
+
+
   .grid {
     .pagination-info {display:none;}
   }

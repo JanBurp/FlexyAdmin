@@ -387,5 +387,13 @@ body.mce-fullscreen .mce-tinymce{
 }
 
 
+// RESPONSIVE
+@include media-breakpoint-down(xs) {
+  .form {
+    .card-header {
+      .flexy-button-text {display:none;}
+    }
+  }
+}
 
 
