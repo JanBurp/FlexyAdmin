@@ -2,6 +2,8 @@
 
 import draggable        from 'vuedraggable'
 
+import flexyState       from '../../flexy-state.js'
+
 import flexyButton      from '../flexy-button.vue'
 import flexyThumb       from '../flexy-thumb.vue'
 
@@ -62,6 +64,13 @@ export default {
       // console.log('thumbs',thumbs);
       return thumbs;
     },
+
+    openChoose : function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      this.choose = true;
+      // flexyState.eventbus.$emit('upload-file',event); // Uncomment dit en uploaden start meteen. mediapicker-choose moet dan v-show zijn ipv v-if
+    },
     
     selection : function() {
       var selection = _.trim(this.media,'|').split('|');
@@ -89,6 +98,14 @@ export default {
       if ( !exist ) {
         newMedia.push(item);
       }
+      this.changeMedia(newMedia);
+    },
+
+    addMedia : function(item) {
+      var currentMedia = _.trim(this.media,'|').split('|');
+      var newMedia = _.clone(currentMedia);
+      if (!this.multiple) newMedia = [];
+      newMedia.push(item);
       this.changeMedia(newMedia);
     },
 
@@ -120,7 +137,7 @@ export default {
 </script>
 
 <template>
-  <div class="mediapicker" :data-src="this.media" :data-alt="this.media">
+  <div class="mediapicker" :data-src="this.media" :data-alt="this.media" @drop="openChoose($event)" @dragover.prevent>
     <div class="mediapicker-selection">
       <div class="mediapicker-thumb mediapicker-thumb-button" v-if="!openpicker">
         <flexy-button :icon="{'plus':!choose,'chevron-up':choose}" class="btn-outline-warning" @click.native="choose=!choose" />
@@ -134,7 +151,7 @@ export default {
     </div>
     
     <div class="mediapicker-choose" v-if="choose">
-      <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" :multiple="this.multiple" :autoresize="this.autoresize" @grid-toggle-item="toggleMedia($event)"></flexy-grid>
+      <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" :multiple="this.multiple" :autoresize="this.autoresize" @grid-toggle-item="toggleMedia($event)" @grid-uploaded-item="addMedia($event)"></flexy-grid>
     </div>
     
   </div>

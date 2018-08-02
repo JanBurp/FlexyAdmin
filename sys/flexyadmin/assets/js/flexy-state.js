@@ -4,12 +4,15 @@
  * - messages
  */
 
+import Vue from 'vue';
+
 import Axios from 'axios';
 import jdb   from './jdb-tools.js'
 
 export default {
   name: 'FlexyState',
   debug: false,
+  eventbus : new Vue(),
   state: {
     progress    : 0,
     menu_visible : false,
