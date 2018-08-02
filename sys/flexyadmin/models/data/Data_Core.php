@@ -3288,8 +3288,70 @@ Class Data_Core extends CI_Model {
     return $this;
   }
 
+  
   /**
-   * Maakt where en or_where
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $key 
+   * @param string $value[NULL] 
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function where_in($key = NULL, $values = NULL, $escape = NULL) {
+    if (!is_array($values)) $values = array($values);
+    $this->_where($key,$value,$escape,'AND');
+    return $this;
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $key 
+   * @param string $value[NULL] 
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function or_where_in($key = NULL, $values = NULL, $escape = NULL) {
+    if (!is_array($values)) $values = array($values);
+    $this->_where($key,$value,$escape,'OR');
+    return $this;
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $key 
+   * @param string $value[NULL] 
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function where_not_in($key = NULL, $values = NULL, $escape = NULL) {
+    if (!is_array($values)) $values = array($values);
+    $this->_where($key,$value,$escape,'AND','NOT');
+    return $this;
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $key 
+   * @param string $value[NULL] 
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function or_where_not_in($key = NULL, $values = NULL, $escape = NULL) {
+    if (!is_array($values)) $values = array($values);
+    $this->_where($key,$value,$escape,'OR','NOT');
+    return $this;
+  }
+
+  
+  /**
+   * Maakt ..where..
    *
    * @param string $key 
    * @param string $value 
@@ -3298,7 +3360,7 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  private function _where( $key, $value=NULL, $escape = NULL, $type = 'AND') {
+  private function _where( $key, $value=NULL, $escape = NULL, $type = 'AND', $not = '') {
     // Onthou dat er een conditie in de query zit
     $this->tm_has_condition = TRUE;
     
@@ -3306,10 +3368,18 @@ Class Data_Core extends CI_Model {
     // Als value een array is, dan ->where_in()
     if (isset($value) and is_array($value)) {
       $key = $this->_where_decrypt_field($key);
-      if ($type=='AND')
-        $this->db->where_in($key,$value,$escape);
-      else
-        $this->db->or_where_in($key,$value,$escape);
+      if ($type=='AND') {
+        if (empty($not))
+          $this->db->where_in($key,$value,$escape);
+        else
+          $this->db->where_not_in($key,$value,$escape);
+      }
+      else {
+        if (empty($not))
+          $this->db->or_where_in($key,$value,$escape);
+        else
+          $this->db->or_where_not_in($key,$value,$escape);
+      }
       return $this;
     }
     
@@ -3341,11 +3411,7 @@ Class Data_Core extends CI_Model {
         if ( substr($value,0,1)!='%' ) $side = 'after';
         if ( substr($value,-1,1)!='%' ) $side = 'before';
         $value = trim($value,'%');
-        $key = $this->_where_decrypt_field($key);
-        if ($type=='AND')
-          $this->db->like($key,$value,$side);
-        else
-          $this->db->or_like($key,$value,$side);
+        $this->_like($key, $value, $side, $type, '');
       }
       // WHERE
       else {
@@ -3372,7 +3438,95 @@ Class Data_Core extends CI_Model {
     }
     return $field;
   }
+
   
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $field
+   * @param string $match[''] 
+   * @param string $side['both']
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function like($field, $match = '', $side = 'both', $escape = NULL) {
+    return $this->_like($field, $match, $side,'AND','');
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $field
+   * @param string $match[''] 
+   * @param string $side['both']
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function not_like($field, $match = '', $side = 'both', $escape = NULL) {
+    return $this->_like($field, $match, $side,'AND','NOT');
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $field
+   * @param string $match[''] 
+   * @param string $side['both']
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function or_like($field, $match = '', $side = 'both', $escape = NULL) {
+    return $this->_like($field, $match, $side,'OR','');
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $field
+   * @param string $match[''] 
+   * @param string $side['both']
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function or_not_like($field, $match = '', $side = 'both', $escape = NULL) {
+    return $this->_like($field, $match, $side,'OR','NOT');
+  }
+
+
+  /**
+   * Maakt ..like..
+   *
+   * @param string $field 
+   * @param string $match 
+   * @param string $side 
+   * @param string $type 
+   * @param string $not 
+   * @return $this
+   * @author Jan den Besten
+   */
+  private function _like($field, $match='', $side='both', $type = 'AND', $not = '') {
+    $this->tm_has_condition = TRUE;
+    $this->tm_where_primary_key = NULL;
+    $field = $this->_where_decrypt_field($field);
+    if ($type=='AND') {
+      if (empty($not))
+        $this->db->like($field,$match,$side,$escape);
+      else
+        $this->db->not_like($field,$match,$side,$escape);
+    }
+    else {
+      if (empty($not))
+        $this->db->or_like($field,$match,$side,$escape);
+      else
+        $this->db->or_not_like($field,$match,$side,$escape);
+    }
+    return $this;
+  }
+
 
 
   /**
