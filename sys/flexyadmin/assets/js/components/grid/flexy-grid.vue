@@ -60,6 +60,10 @@ export default {
   beforeCreate: function () {
     this.$options.components.FlexyForm = require('./../form/flexy-form.vue');
   },
+
+  created : function() {
+    flexyState.eventbus.$on('upload-file', this.dropUploadFiles);
+  },
   
   
   mounted : function() {
@@ -911,6 +915,9 @@ export default {
             if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
               flexyState.addMessage( response.data.message, 'danger' );  
             }
+            if (self.type==='mediapicker') {
+              self.$emit('grid-uploaded-item',fileName);
+            }
           }
 
           if (error) {
@@ -920,6 +927,7 @@ export default {
           // Uit de lijst halen
           var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
           self.removeUploadFile(index);
+
           // Als alles uit de lijst is geuploade, reload
           if (self.uploadFiles.length === 0 ) {
             flexyState.addMessage(uploadedFilesCount + self.$lang.upload_count);
