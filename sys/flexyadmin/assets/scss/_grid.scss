@@ -387,12 +387,32 @@
   display:none;
 }
 
-
-
 /* GRAPH */
 .graph {
   .bar {padding:0;}
   .graph-bar {background-color:$warning;}
   .vertical-text {}
+}
+
+
+
+
+// RESPONSIVE
+@include media-breakpoint-down(xs) {
+  .grid {
+    .flexy-button.action-select, .flexy-button.action-select-all, .flexy-button.action-delete-all {
+      display:none;
+    }
+    .table-sm th, .table-sm td {
+      padding: 0.2rem;
+    }
+    .grid-header-type-action {
+      .flexy-button-text {display:none}
+    }
+    td.action {
+      .flexy-button-text {display:none} 
+    }
+  }
+
 }
   

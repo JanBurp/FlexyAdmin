@@ -60,6 +60,10 @@ export default {
   beforeCreate: function () {
     this.$options.components.FlexyForm = require('./../form/flexy-form.vue');
   },
+
+  created : function() {
+    flexyState.eventbus.$on('upload-file', this.dropUploadFiles);
+  },
   
   
   mounted : function() {
@@ -355,6 +359,13 @@ export default {
     
     reloadPage : function(apiParts) {
       var self = this;
+      // first close dropdown menu
+      var menu = document.getElementById("dropdown-sort");
+      if (menu!==null) {
+        menu.classList.remove("open");
+      }
+
+      //
       flexyState.api({
         url       : self.apiUrl(apiParts),
       })
@@ -904,6 +915,9 @@ export default {
             if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
               flexyState.addMessage( response.data.message, 'danger' );  
             }
+            if (self.type==='mediapicker') {
+              self.$emit('grid-uploaded-item',fileName);
+            }
           }
 
           if (error) {
@@ -913,6 +927,7 @@ export default {
           // Uit de lijst halen
           var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
           self.removeUploadFile(index);
+
           // Als alles uit de lijst is geuploade, reload
           if (self.uploadFiles.length === 0 ) {
             flexyState.addMessage(uploadedFilesCount + self.$lang.upload_count);
@@ -1154,8 +1169,8 @@ export default {
                 
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                   <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
-                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
-                  <flexy-button v-if="type!=='mediapicker' && multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info" />
+                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger action-delete-all" />
+                  <flexy-button v-if="type!=='mediapicker' && multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info action-select-all" />
 
                   <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                     <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort" />

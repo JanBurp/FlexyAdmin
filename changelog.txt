@@ -1,10 +1,35 @@
+=3.5.0-rc.22
+
+[BUGS]
+- Email adds empty attachments sometimes
+- On newer MySQL versions default values seems to be needed
+
+[FEATURES]
+- Mediapicker selects uploaded items
+
 =3.5.0-rc.21
+
+[nl]
+- Verbeterde styling, vooral op kleine schermen
+- Verbeterde en veiliger backups
+- Diverse technische verbeteringen
+- Fout opgelost bij zoeken in menu tabellen
+[/nl]
+[en]
+- Better styling for smalle screens
+- Better and safer backups
+- Some smalle technical improvements
+- Bug solved for searching in menu tables
+[/en]
 
 [BUGS]
 - Showing files with extention same als folder name did not work
 - Searching in ordered tables did nog work
+- Media title did not show
+- Media sorting dropdown did not close after selection
 
 [FEATURES]
+- Better mobile styling
 - Backup/Restore is now encrypted (Restore can use old not incrypted backupfiles)
 - Backup/Restore as .zip file
 - Backup/Restore faster
