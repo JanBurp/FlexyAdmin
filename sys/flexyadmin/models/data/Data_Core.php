@@ -3499,6 +3499,12 @@ Class Data_Core extends CI_Model {
     return $field;
   }
 
+  private function _aes_encrypt_value($field,$value) {
+    if ($this->get_setting(array('field_info',$field,'encrypted'),false)) {
+      $value = 'AES_ENCRYPT("'.$value.'" ,"'.$this->config->item('encryption_key').'")';
+    }
+    return $value;
+  }
   
   /**
    * Zelfde als CI QueryBuilder
@@ -5074,7 +5080,6 @@ Class Data_Core extends CI_Model {
           break;
       }
     }
-    
 
     /**
      * Split eventuele one_to_one data
@@ -5141,11 +5146,22 @@ Class Data_Core extends CI_Model {
       }
     }
 
-    
+    /**
+     * AES Encrypt velden
+     */
+    $set_aes = array();
+    foreach ($set as $key => $value) {
+      $aes = $this->_aes_encrypt_value($key,$value);
+      if ($aes!==$value) {
+        $set_aes[$key] = $aes;
+        unset($set[$key]);
+      }
+    }
+
     /**
      * Ga door als de set niet leeg is
      */
-    if (!empty($set) or isset($to_many) or isset($to_one)) {
+    if (!empty($set) or !empty($set_aes) or isset($to_many) or isset($to_one)) {
       
       /**
        * User fields toevoegen aan set?
@@ -5160,7 +5176,7 @@ Class Data_Core extends CI_Model {
       /**
        * Als set leeg is (maar wel relatie data) zoek dan de id en stel WHERE opnieuw in
        */
-      if (empty($set)) {
+      if (empty($set) and empty($set_aes)) {
         $id=-1;
         if ($type=='UPDATE') {
           // WHERE is al ingesteld, dus we kunnen gewoon de id's vinden
@@ -5182,7 +5198,8 @@ Class Data_Core extends CI_Model {
       }
       else {
         
-        $this->db->set($set);
+        if (!empty($set))     $this->db->set($set);
+        if (!empty($set_aes)) $this->db->set($set_aes,'',FALSE);
     
         /**
          * INSERT of UPDATE doen
