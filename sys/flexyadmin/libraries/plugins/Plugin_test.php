@@ -41,12 +41,10 @@ class Plugin_test extends Plugin {
       }
     }
 
-    $this->CI->data->table('tbl_menu')
-                   ->set(array(
-                      'str_title' => 'TEST PAGINA',
-                      'txt_text'  => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.',
-                    ))
-                   ->insert();
+    $this->CI->data->table('tbl_kinderen');
+    $this->CI->data->find('va');
+    $result = $this->CI->data->get_result();
+
     $this->add_trace( $this->CI->data->get_query_info() );
     $this->add_trace_sql( $this->CI->data->last_query() );
     
