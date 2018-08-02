@@ -3305,7 +3305,7 @@ Class Data_Core extends CI_Model {
    */
   public function where_in($key = NULL, $values = NULL, $escape = NULL) {
     if (!is_array($values)) $values = array($values);
-    $this->_wh($key,$value,$escape,'AND');
+    $this->_wh($key,$values,$escape,'AND');
     return $this;
   }
 
@@ -3320,7 +3320,7 @@ Class Data_Core extends CI_Model {
    */
   public function or_where_in($key = NULL, $values = NULL, $escape = NULL) {
     if (!is_array($values)) $values = array($values);
-    $this->_wh($key,$value,$escape,'OR');
+    $this->_wh($key,$values,$escape,'OR');
     return $this;
   }
 
@@ -3335,7 +3335,7 @@ Class Data_Core extends CI_Model {
    */
   public function where_not_in($key = NULL, $values = NULL, $escape = NULL) {
     if (!is_array($values)) $values = array($values);
-    $this->_wh($key,$value,$escape,'AND','NOT');
+    $this->_wh($key,$values,$escape,'AND','NOT');
     return $this;
   }
 
@@ -3350,7 +3350,7 @@ Class Data_Core extends CI_Model {
    */
   public function or_where_not_in($key = NULL, $values = NULL, $escape = NULL) {
     if (!is_array($values)) $values = array($values);
-    $this->_wh($key,$value,$escape,'OR','NOT');
+    $this->_wh($key,$values,$escape,'OR','NOT');
     return $this;
   }
 
