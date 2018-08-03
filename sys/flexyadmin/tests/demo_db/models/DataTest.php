@@ -406,16 +406,16 @@ class DataTest extends CITestCase {
     $this->assertInternalType( 'string', $row['tbl_kinderen.abstract'] );
 
     // tbl_adressen ->get_result()
-    $array = $this->CI->data->select( 'id,str_city')
+    $array = $this->CI->data->select( 'id,str_city,str_address')
                             ->with( 'one_to_many', array('tbl_kinderen'=>'str_first_name') )
                             ->get_result();
     // data, klopt num_rows & num_fields?
     $this->assertEquals( 14, count($array) );
     $row = current($array);
-    $this->assertEquals( 3, count($row) );
+    $this->assertEquals( 4, count($row) );
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
-    $this->assertEquals( array('id','str_city','tbl_kinderen'), $keys );
+    $this->assertEquals( array('id','str_city','str_address','tbl_kinderen'), $keys );
     $this->assertInternalType( 'array', $row['tbl_kinderen'] );
     $this->assertEquals( 11, count($row['tbl_kinderen']) );
 
@@ -551,9 +551,9 @@ class DataTest extends CITestCase {
 
     // tbl_groepen ->where_exists()->get_result()
     $array = $this->CI->data->select('str_title')
-                                  ->with( 'many_to_many', array('rel_groepen__adressen'=>'str_address') )
-                                  ->where_exists( 'tbl_adressen.str_address', 'Schooolstraat 1')
-                                  ->get_result();
+                            ->with( 'many_to_many', array('rel_groepen__adressen'=>'str_address') )
+                            ->where_exists( 'tbl_adressen.str_address', 'Schooolstraat 1')
+                            ->get_result();
     // data, klopt num_rows & num_fields?
     $this->assertLessThan( 8, count($array) );
     $row = current($array);
