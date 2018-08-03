@@ -41,12 +41,13 @@ class Plugin_test extends Plugin {
       }
     }
 
-    $this->CI->data->table('tbl_kinderen');
-    $this->CI->data->find('va');
-    $result = $this->CI->data->get_result();
 
-    $this->add_trace( $this->CI->data->get_query_info() );
+    $this->CI->data->table('tbl_kinderen');
+    $result = $this->CI->data->get_grid();
+
     $this->add_trace_sql( $this->CI->data->last_query() );
+    $this->add_trace( $this->CI->data->get_query_info() );
+    $this->add_trace( current($result) );
     
     return $this->content;
   }
