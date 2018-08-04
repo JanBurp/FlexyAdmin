@@ -34,11 +34,14 @@ class Log_activity extends CI_Model {
     if ( !defined('PHPUNIT_TEST') and $this->db->table_exists('log_activity') ) {
       if (!$user_id) $user_id = $this->session->userdata("user_id");
       if (!$user_id) $user_id = 0;
+      $activity = str_replace( 'AES_ENCRYPT(', '', $activity);
+      $activity = str_replace( ',"'.$this->config->item('encryption_key').'")', '', $activity);
+      $activity = str_replace( $this->config->item('encryption_key'), '***', $activity);
       $this->db->set( 'id_user',$user_id );
       $this->db->set( 'str_activity_type',$type );
       $this->db->set( 'stx_activity',$activity );
-      if ($model)                                               $this->db->set( 'str_model',$model );
-      if ($key)                                                 $this->db->set( 'str_key',$key );
+      $this->db->set( 'str_model',$model );
+      $this->db->set( 'str_key',$key );
       if ($this->db->field_exists('ip_address','log_activity')) $this->db->set( 'ip_address', $this->input->ip_address() );
       $this->db->insert( 'log_activity' );
     }
