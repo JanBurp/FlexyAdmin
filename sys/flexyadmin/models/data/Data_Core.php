@@ -1092,7 +1092,13 @@ Class Data_Core extends CI_Model {
     }
     // Maak de SQL
     $delimiter = $this->get_other_table_setting($table,'abstract_delimiter');
-		$sql = "REPLACE( CONCAT_WS('".$delimiter."',`".$as_table.'`.`' . implode( "`,`".$as_table.'`.`' ,$abstract_fields ) . "`), '".$delimiter.$delimiter."',' ' )  AS `" . $abstract_field_name . "`";
+    $fields = '`'.$as_table.'`.`' . implode( "`,`".$as_table.'`.`' ,$abstract_fields ).'`';
+    $fields = explode(',',$fields);
+    foreach ($fields as $key => $field) {
+      $fields[$key] = $this->_aes_decrypt_field($field);
+    }
+    $fields = implode(',',$fields);
+		$sql = "REPLACE( CONCAT_WS('".$delimiter."',".$fields. "), '".$delimiter.$delimiter."',' ' )  AS `" . $abstract_field_name . "`";
     return $sql;
 	}
   
@@ -2988,8 +2994,9 @@ Class Data_Core extends CI_Model {
         }
       }
       // Encrypted?
-      if ($this->get_setting(array('field_info',$field,'encrypted'),false)) {
-        $this->tm_select[$key] = 'AES_DECRYPT('.$this->tm_select[$key].' ,"'.$this->config->item('encryption_key').'")'.' AS `'.$field.'`';
+      $encrypted = $this->_aes_decrypt_field($this->tm_select[$key]);
+      if ($encrypted!==$this->tm_select[$key]) {
+        $this->tm_select[$key] = $encrypted.' AS `'.$field.'`';
       }
     }
     return $this;
@@ -3434,6 +3441,7 @@ Class Data_Core extends CI_Model {
         extract($where);
 
         if (isset($key)) {
+
           // AES decryption?
           $key = $this->_aes_decrypt_field($key);
 
@@ -3472,6 +3480,7 @@ Class Data_Core extends CI_Model {
 
             // WHERE
             else {
+              if (is_string($key) AND (strpos($key,'AES_')!==false AND strpos($key,'SELECT')===false) ) $key.=' = ';
               if ($type=='AND')
                 $this->db->where($key,$value,$escape);
               else
@@ -3485,20 +3494,47 @@ Class Data_Core extends CI_Model {
     return $this;
   }
 
-  private function _aes_decrypt_field($field) {
+  private function _aes_decrypt_field($field,$other_table='') {
     if (is_array($field)) {
       foreach ($field as $key => $f) {
         $field[$key] = $this->_aes_decrypt_field($f);
       }
     }
     else {
-      if ($this->get_setting(array('field_info',$field,'encrypted'),false)) {
-        $field = 'AES_DECRYPT(`'.$field.'` ,"'.$this->config->item('encryption_key').'")';
+      $encrypted = false;
+      if (!empty($other_table)) $field=$other_table.'.'.$field;
+      $cleanfield = trim(str_replace('`','',$field));
+      if (!is_numeric($cleanfield) AND strpos($cleanfield,'.')!==false AND strpos($cleanfield,' AS ')===false) {
+        $split_field = explode('.',$cleanfield);
+        // this table
+        if ($split_field[0]==$this->settings['table']) {
+          $encrypted = $this->get_setting(array('field_info',$split_field[1],'encrypted'),false);
+        }
+        // other table
+        else {
+          if ($this->table_exists($split_field[0])) $encrypted = $this->get_other_table_setting($split_field[0],array('field_info',$split_field[1],'encrypted'),false); 
+        }
       }
+      // normal
+      else {
+        $encrypted = $this->get_setting(array('field_info',$field,'encrypted'),false);
+      }
+
+      // encrypt if needed
+      if ($encrypted) {
+        $field = 'AES_DECRYPT(`'.str_replace('.','`.`',$cleanfield).'` ,"'.$this->config->item('encryption_key').'")';
+      }
+
     }
     return $field;
   }
 
+  private function _aes_encrypt_value($field,$value) {
+    if ($this->get_setting(array('field_info',$field,'encrypted'),false)) {
+      $value = 'AES_ENCRYPT("'.$value.'" ,"'.$this->config->item('encryption_key').'")';
+    }
+    return $value;
+  }
   
   /**
    * Zelfde als CI QueryBuilder
@@ -3690,13 +3726,19 @@ Class Data_Core extends CI_Model {
     $this_foreign_key  = $relation['this_key'];//  $id.'_'.remove_prefix($this_table);
     $other_foreign_key = $relation['other_key'];//$id.'_'.remove_prefix($other_table);
 
-    $key = $this->_aes_decrypt_field($key);
-    
+    $aeskey = $this->_aes_decrypt_field($key,$other_table);
+    if ($aeskey!=$key) {
+      $key = $aeskey;
+    }
+    else {
+      $key = '`'.$key.'`';
+    }
+
     $sql = ' `'.$this_table.'`.`'.$id.'` IN (
     	SELECT `'.$rel_table.'`.`'.$this_foreign_key.'`
     	FROM `'.$rel_table.'`
     	WHERE `'.$rel_table.'`.`'.$other_foreign_key.'` IN (
-    		SELECT `'.$other_table.'`.`'.$id.'` FROM `'.$other_table.'` WHERE `'.$key.'` ';
+    		SELECT `'.$other_table.'`.`'.$id.'` FROM `'.$other_table.'` WHERE '.$key.' ';
     if ($side) {
       // like_exists
       $sql.=' LIKE ';
@@ -3717,8 +3759,7 @@ Class Data_Core extends CI_Model {
       $sql.='= "'.$value.'"';
     }
     $sql.='))';
-    
-    $this->_wh($sql,NULL,NULL,$type,'');
+    $this->_wh($sql,NULL,FALSE,$type);
     
     return $this;
   }
@@ -4076,7 +4117,7 @@ Class Data_Core extends CI_Model {
         else {
           switch ($equals) {
             case 'exact': 
-              if ($this->get_setting(array('field_info',$real_field,'encrypted'),false)) $field.=' = ';
+              if (strpos($field,'AES')!==false) $field.=' = ';
               $this->or_where( $field, $term, FALSE);
               break;
             case 'word':
@@ -4585,10 +4626,11 @@ Class Data_Core extends CI_Model {
       
       // SELECT normaal
       if (!$json) {
-        // trace_($select_fields);
         foreach ($select_fields as $field => $select_field) {
+          $aes_field = $select_field['select'];
+          $aes_field = $this->_aes_decrypt_field($aes_field);
           if ($type==='one_to_one') {
-            $sub_select = $select_field['select'].' AS `'.$field.'`';
+            $sub_select = $aes_field.' AS `'.$field.'`';
             if (isset($this->tm_select[$field])) {
               $this->tm_select[$field] = $sub_select;
             }
@@ -4597,7 +4639,7 @@ Class Data_Core extends CI_Model {
             }
           }
           else {
-            $sub_select = $select_field['select'].' AS `'.$as_table.'.'.$field.'`';
+            $sub_select = $aes_field.' AS `'.$as_table.'.'.$field.'`';
             $select .= $sub_select.', ';
           }
         }
@@ -5074,7 +5116,6 @@ Class Data_Core extends CI_Model {
           break;
       }
     }
-    
 
     /**
      * Split eventuele one_to_one data
@@ -5141,11 +5182,22 @@ Class Data_Core extends CI_Model {
       }
     }
 
-    
+    /**
+     * AES Encrypt velden
+     */
+    $set_aes = array();
+    foreach ($set as $key => $value) {
+      $aes = $this->_aes_encrypt_value($key,$value);
+      if ($aes!==$value) {
+        $set_aes[$key] = $aes;
+        unset($set[$key]);
+      }
+    }
+
     /**
      * Ga door als de set niet leeg is
      */
-    if (!empty($set) or isset($to_many) or isset($to_one)) {
+    if (!empty($set) or !empty($set_aes) or isset($to_many) or isset($to_one)) {
       
       /**
        * User fields toevoegen aan set?
@@ -5160,7 +5212,7 @@ Class Data_Core extends CI_Model {
       /**
        * Als set leeg is (maar wel relatie data) zoek dan de id en stel WHERE opnieuw in
        */
-      if (empty($set)) {
+      if (empty($set) and empty($set_aes)) {
         $id=-1;
         if ($type=='UPDATE') {
           // WHERE is al ingesteld, dus we kunnen gewoon de id's vinden
@@ -5182,7 +5234,8 @@ Class Data_Core extends CI_Model {
       }
       else {
         
-        $this->db->set($set);
+        if (!empty($set))     $this->db->set($set);
+        if (!empty($set_aes)) $this->db->set($set_aes,'',FALSE);
     
         /**
          * INSERT of UPDATE doen
