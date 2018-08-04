@@ -277,7 +277,9 @@ class MY_Email extends CI_Email {
     if (isset($mail['attachment'])) {
       if (!is_array($mail['attachment'])) $mail['attachment'] = array($mail['attachment']);
       foreach ($mail['attachment'] as $attachment) {
-        $this->attach($attachment);
+        if (file_exists($attachment) and is_file($attachment)) {
+          $this->attach($attachment);
+        }
       }
     }
     return $this;

@@ -119,23 +119,23 @@ $config['FIELDS_prefix'] = array (
 	'dat'				=> array(
     'type'        => 'date',
     'validation'	=> '',
-    'default'     => '0000-00-00',
+    'default'     => '1000-01-01',
   ),
 	'date'			=> array(
     'type'        => 'date',
     'validation'	=> '',
-    'default'     => '0000-00-00',
+    'default'     => '1000-01-01',
   ),
 
 	'tme'				=> array(
     'type'        => 'datetime',
     'validation'	=> '',
-    'default'     => '0000-00-00 00:00',
+    'default'     => '1000-01-01 00:00',
   ),
 	'datetime'	=> array(
     'type'        => 'datetime',
     'validation'	=> '',
-    'default'     => '0000-00-00 00:00',
+    'default'     => '1000-01-01 00:00',
   ),
 	'time'			=> array(
     'type'        => 'time',
@@ -214,6 +214,7 @@ $config['FIELDS_special'] = array(
     'type'        => 'hidden',
     'readonly'    => true,
     'validation'	=> 'prep_uri',
+    'default'     => '',
   ),
   'actions'   => array(
     'type'        => 'input',

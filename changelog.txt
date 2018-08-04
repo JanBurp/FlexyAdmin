@@ -1,3 +1,26 @@
+=3.5.0-rc.22
+
+[nl]
+- Database encryptie mogelijk
+- Werkend voor laatste MySQL versies
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Database encryption possible
+- Tested fot latset MySQL version
+- Some small bugs solved
+[/en]
+
+[BUGS]
+- Email adds empty attachments sometimes
+- On newer MySQL versions default values seems to be needed
+- Plugins loaded twice
+
+[FEATURES]
+- Mediapicker selects uploaded items
+- AES encryption for VARCHAR fields (can be set per field in config/data/.. )
+- ASE encryption plugins for encrypting (and altering field type) and decrypting
+
 =3.5.0-rc.21
 
 [nl]
