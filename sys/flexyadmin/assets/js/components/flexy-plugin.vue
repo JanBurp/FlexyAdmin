@@ -15,10 +15,7 @@ export default {
   },
   
   beforeUpdate : function() {
-    if (this.plugin !== this.currentPlugin) {
-      this.loadPlugin(this.plugin);
-    }
-    this.currentPlugin = this.plugin;
+    this.loadPlugin(this.plugin);
   },
 
 
@@ -35,6 +32,7 @@ export default {
   methods : {
 
   	loadPlugin : function(plugin) {
+      if (this.currentPlugin==plugin) return;
       var self = this;
 
       return flexyState.api({
@@ -44,6 +42,7 @@ export default {
         self.html = response.data.data.html;
         self.list = _.isUndefined(response.data.data.plugin);
         if (self.list) self.plugins = response.data.data.plugins;
+        self.currentPlugin = plugin;
         return response;
       });
 
