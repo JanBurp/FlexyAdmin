@@ -88,7 +88,6 @@ $route['_admin/update/(.+)'] = "_admin/update/index/$1";
  */
 $route['_admin/login'] 				= "_admin/login";
 $route['_admin/login/(.*)'] 	= "_admin/login/$1";
-$route['_admin/logout'] 			= "_admin/logout";
 
 $route['_admin'] 								= "_admin";
 $route['_admin/(.*)'] 					= "_admin";
