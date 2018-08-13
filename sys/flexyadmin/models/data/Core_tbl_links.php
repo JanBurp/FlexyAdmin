@@ -133,7 +133,7 @@ Class Core_tbl_links extends Data_Core {
       $checked_order = 'ASC';
       if (strpos($this->tm_order_by[0],'DESC')>0) $checked_order = 'DESC';
       $this->tm_order_by = array();
-      $result = parent::get_grid(0,0);
+      $result = parent::get_grid(null,0);
       $this->tm_limit = $limit;
       $this->tm_offset = $offset;
     }
