@@ -1,3 +1,23 @@
+=3.5.0-rc.23
+
+[nl]
+- Enkele bugs opgelost
+- Kleine verbeteringen rondom veiligheid
+[/nl]
+[en]
+- Some bugs solved
+- Small security improvements
+[/en]
+
+
+[BUGS]
+- logout plugins (including sitemap) were nog called…
+- links checking did not give result (due to wrong limit since CI update)
+
+[FEATURES]
+- Better robots.txt
+- Safer .htaccess
+
 =3.5.0-rc.22
 
 [nl]

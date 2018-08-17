@@ -177,7 +177,11 @@ class auth extends Api_Model {
    * @author Jan den Besten
    */
   public function logout() {
-    if ($this->flexy_auth->logout()) return null;
+    if ($this->flexy_auth->logout()) {
+      $messages = $this->plugin_handler->call_plugins_logout();
+      return null;
+    }
+
     $this->result['data'] = false;
     return $this->_result_ok();
   }
