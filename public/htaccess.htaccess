@@ -1,3 +1,12 @@
+# Prevent .htaccess access
+<Files ~ "^.*\.([Hh][Tt][Aa])">
+order allow,deny
+deny from all
+satisfy all
+</Files>
+# Disable directory browsing
+Options All -Indexes
+
 # Nice urls (& https on)
 RewriteEngine on
 # RewriteCond %{HTTPS} !=on
