@@ -21,7 +21,7 @@ export default {
 
   data :function(){
     return {
-      currentPlugin : '',
+      currentPlugin : '[index]',
       name          : '',
       html          : '',
       list          : false,
@@ -32,12 +32,13 @@ export default {
   methods : {
 
   	loadPlugin : function(plugin) {
-      if (this.currentPlugin==plugin) return;
+      if (this.currentPlugin==plugin && this.currentPlugin=='') return;
       var self = this;
 
       return flexyState.api({
         url   : 'get_plugin?plugin='+plugin,
       }).then(function(response){
+        console.log(response);
         self.name = response.data.data.title;
         self.html = response.data.data.html;
         self.list = _.isUndefined(response.data.data.plugin);
