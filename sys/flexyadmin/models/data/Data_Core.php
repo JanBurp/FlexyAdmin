@@ -3423,6 +3423,7 @@ Class Data_Core extends CI_Model {
     if (!is_array($this->tm_where)) return $this;
     foreach ($this->tm_where as $where) {
 
+      
       if (is_string($where)) {
         switch ($where) {
           case 'group_start':
@@ -3444,9 +3445,15 @@ Class Data_Core extends CI_Model {
 
           // AES decryption?
           $key = $this->_aes_decrypt_field($key);
+          
+          // Compare case insensitive with AES
+          if (is_string($key) and substr($key,0,4)=='AES_') {
+            $key = 'CONVERT('.$key.' USING latin1) ';
+          }
 
           // LIKE ?
           if (isset($where['side'])) {
+
             if ($type=='AND') {
               if (empty($not))
                 $this->db->like($key,$match,$side,$escape);
