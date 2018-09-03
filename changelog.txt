@@ -1,3 +1,17 @@
+=3.5.0-rc.25
+
+[nl]
+- Kleine bug opgelost bij zoeken in encrypted velden
+[/nl]
+[en]
+- Small bug solved with searching in encrypted fields
+[/en]
+
+[BUGS]
+- home plugins allways called
+- AES encrypted search did it case sensitive
+
+
 =3.5.0-rc.24
 
 [nl]
