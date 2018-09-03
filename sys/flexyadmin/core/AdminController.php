@@ -14,7 +14,7 @@ require_once(APPPATH."core/BasicController.php");
 class AdminController extends BasicController {
 
   protected $view_data            = array();
-  private   $current_uri          = '';
+  protected $current_uri          = '';
   private   $keep_uris            = array(
     '_admin/show/form/tbl_site',
     '_admin/show/form/cfg_users'

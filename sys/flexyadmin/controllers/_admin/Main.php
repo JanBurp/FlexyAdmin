@@ -16,9 +16,12 @@ class Main extends AdminController {
 	}
 
 	public function index() {
-    $data = array(
-      'plugins' => $this->plugin_handler->call_plugins_homepage(),
-    );
+		$data = array();
+		if (trim($this->current_uri,'/')=='_admin') {
+			$data = array(
+			  'plugins' => $this->plugin_handler->call_plugins_homepage(),
+			);
+		}
 		$this->view_admin( 'content_home', $data );
 	}
 
