@@ -13,6 +13,7 @@ import colorpicker      from './colorpicker.vue'
 import mediapicker      from './mediapicker.vue'
 import joinselect       from './joinselect.vue'
 import radioimage       from './radio-image.vue'
+import markdown         from './markdown.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
@@ -21,7 +22,7 @@ import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,joinselect,radioimage,tab,tabs,datepicker,vselect},
+  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,joinselect,radioimage,tab,tabs,datepicker,vselect,markdown},
   props:{
     'name'    :String,
     'primary' :{
@@ -75,6 +76,7 @@ export default {
         joinselect        : ['joinselect'],
         textarea          : ['textarea'],
         wysiwyg           : ['wysiwyg'],
+        markdown          : ['markdown'],
       };
       var defaultTypes = [];
       for(var type in types) {
@@ -1012,6 +1014,11 @@ export default {
                 <template v-if="isType('wysiwyg',field)">
                   <!-- WYSIWYG -->
                   <textarea class="form-control wysiwyg" :id="field" :name="field" :value="row[field]"></textarea>
+                </template>
+
+                <template v-if="isType('markdown',field)">
+                  <!-- MARKDOWN -->
+                  <markdown :id="field" :name="field" :value="row[field]" @input="updateField(field,$event)"></markdown>
                 </template>
 
                 <template v-if="isType('checkbox',field)">
