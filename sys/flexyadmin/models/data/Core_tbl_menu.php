@@ -102,16 +102,16 @@ Class Core_tbl_menu extends Data_Core {
   /**
    * Geeft submenu van (samengesteld) menu
    *
-   * @param string $uri 
+   * @param string $uri ['']
    * @return array
    * @author Jan den Besten
    */
-  public function get_sub_items( $uri ) {
+  public function get_sub_items( $uri='') {
     $items = $this->get_menu_result();
-    $items = filter_by_prefix( $items, $uri.'/' );
+    if (!empty($uri)) $items = filter_by_prefix( $items, $uri.'/' );
     return $items;
   }
-  
+
   
   /**
    * Geeft één item uit (samengesteld) menu
@@ -310,6 +310,11 @@ Class Core_tbl_menu extends Data_Core {
       foreach ($extra_lang_menu as $lang => $lang_menu) {
         $this->_menu = array_merge($this->_menu,$lang_menu);
       }
+    }
+
+    // Add '_level'
+    foreach ($this->_menu as $key => $item) {
+      $this->_menu[$key]['_level'] = substr_count($item['full_uri'],'/');
     }
 
     return $this->_menu;
