@@ -994,7 +994,13 @@ class Form {
 			case 'image_dropdown':
 			case 'image_dragndrop':
         $field['control']='';
-				$extra="";
+        $extra = el('extra',$field);
+        if (!empty($extra)) {
+          $extra = attributes($extra);
+        }
+        else {
+          $extra = '';
+        }
 				$options=el("options",$field);
 				$value=$attr["value"];
         $button=el("button",$field);
