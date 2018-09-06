@@ -86,8 +86,10 @@ $config['FIELDS_prefix'] = array (
 	'stx'				=> array(
     'type'        => 'textarea',
   ),
+
+  // Markdown
 	'md'				=> array(
-    'type'        => 'textarea',
+    'type'        => 'markdown',
   ),
   
   // HTML editor
