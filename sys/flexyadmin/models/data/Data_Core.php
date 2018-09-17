@@ -3504,7 +3504,7 @@ Class Data_Core extends CI_Model {
   private function _aes_decrypt_field($field,$other_table='') {
     if (is_array($field)) {
       foreach ($field as $key => $f) {
-        $field[$key] = $this->_aes_decrypt_field($f);
+        if (is_string($f)) $field[$key] = $this->_aes_decrypt_field($f);
       }
     }
     else {
