@@ -76,6 +76,7 @@ $config['merge'] = array(
   'models/',
   'helpers/',
   'config/',
+  'stats/'
 );
 
 

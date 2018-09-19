@@ -1,6 +1,8 @@
 <?php 
 
 $lang['vue_api_error_401'] = 'You don\'t have rights for this item.';
+$lang['vue_api_timeout'] 	 = "ERROR: Response is slow, check you're internet connection and try again.";
+$lang['vue_api_no_data'] 	 = "ERROR: Server returns without data. Try again.<br>If this error keeps returning contact the developer.";
 
 $lang['vue_cancel']        = "Cancel";
 $lang['vue_submit']        = "Submit";

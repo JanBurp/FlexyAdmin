@@ -27,6 +27,7 @@ url_            |url_link               |VARCHAR      |Een veld met URL.
 link_						|url_pagina							|VARCHAR			|Een veld met een link naar een pagina van de site
 email_          |email_email            |VARCHAR      |Een veld met een emailadres
 txt_            |txt_text               |TEXT         |Een groot tekst veld. In CMS als HTML editor te zien.
+md_             |md_text                |TEXT         |Markdown tekst
 stx_            |stx_description        |TEXT         |Een groot teksveld (geen HTML editor).
 pwd_            |pwd_password           |VARCHAR      |Paswoord veld. Geen zichtbare tekens.
 gpw_            |gpw_password           |VARCHAR      |Idem, maar met een knop ernaast om automatisch paswoord te genereren.
