@@ -276,6 +276,12 @@ export default {
       self.hideProgress();
       self.debug && console.log('api < ',response);
 
+      // No data!
+      if (_.isUndefined(response.data) || response.data==null || response.data=="") {
+        self.addMessage(_flexy.language_keys.api_no_data,'danger');
+        console.log('api ERROR (1) <',error, error.response, error.config);
+      }
+
       // trace/bug?
       if (typeof(response.data)==='string' && response.data.substr(0,1)==='<') {
         self.addMessage(response.data,'danger');
@@ -317,13 +323,23 @@ export default {
           self.addMessage(_flexy.language_keys.api_error_401,'danger');
         }
         else {
-          console.log('api ERROR <',error, error.response, error.config);
+          console.log('api ERROR (2) <',error, error.response, error.config);
           self.addMessage(error.response.data,'danger');
         }
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log('api ERROR <', error.message,error.config);
-        self.addMessage(error.response.data,'danger');
+        if (error.toString().indexOf('timeout')>=0) {
+          self.addMessage(_flexy.language_keys.api_timeout ,'danger');
+        }
+        else {
+          console.log('api ERROR (3) < ', error.toString(), error.message,error.config);
+          if (_.isUndefined(error.response) || _.isUndefined(error.response.data) ) {
+            self.addMessage(_flexy.language_keys.api_no_data ,'danger');
+          }
+          else {
+            self.addMessage(error.response.data,'danger'); 
+          }
+        }
       }
       return {'error':error};
     });
