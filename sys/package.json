@@ -1,6 +1,6 @@
 {
   "name": "FlexyAdmin",
-  "version": "3.5.0-rc.25",
+  "version": "3.5.0-rc.26",
   "description": "== FLEXYADMIN == (c)  Jan den Besten www.flexyadmin.com",
   "author": "Jan den Besen",
   "license": "ISC",
@@ -26,7 +26,7 @@
     "bootstrap-vue": "^0.3.10",
     "font-awesome": "^4.7.0",
     "marked": "^0.5.0",
-    "tinymce": "^4.8.2",
+    "tinymce": "^4.8.3",
     "vue": "^2.5.17",
     "vue-lang": "^0.2.5",
     "vue-router": "^2.7.0",
