@@ -1,3 +1,25 @@
+=3.5.0-rc.26
+
+[nl]
+- Enkele kleine bugs en technische verbeteringen
+- Nieuw 'markdown' veld
+[/nl]
+[en]
+- Some small bugs and improvements
+- New 'markdown' field
+[/en]
+
+[BUGS]
+- 'extra' attributes in form did not work
+- More robust AES encryption
+- Better api responses on timeouts
+
+[FEATURES]
+- New field md markdown
+- Extra field '_level' added in menu results
+- DB export as tool
+- npm update
+
 =3.5.0-rc.25
 
 [nl]

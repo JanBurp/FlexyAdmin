@@ -110,9 +110,11 @@ Class Core_res_assets extends Data_Core {
   public function _create_assets_settings($old=FALSE, $DB = NULL) {
     if ($DB===NULL) $DB = $this->db;
 
-    $select = '`path`,`str_types` AS `types`,`b_encrypt_name` AS `encrypt_name`,`fields_media_fields` AS `media_fields`,`fields_autofill_fields` AS `autofill_fields`,`b_in_link_list` AS `in_link_list`,`b_user_restricted` AS `user_restricted`';
+    $select = '`path`,`str_types` AS `types`,`fields_media_fields` AS `media_fields`,`fields_autofill_fields` AS `autofill_fields`,`b_in_link_list` AS `in_link_list`';
+    if ($DB->field_exists('b_encrypt_name','cfg_media_info')) $select .= ',`b_encrypt_name` AS `encrypt_name`';
     if ($DB->field_exists('b_serve_restricted','cfg_media_info')) $select .= ',`b_serve_restricted` AS `serve_restricted`';
     if ($DB->field_exists('str_autofill','cfg_media_info')) $select .= ',`str_autofill` AS `autofill`';
+    if ($DB->field_exists('b_user_restricted','cfg_media_info')) $select .= ',`b_user_restricted` AS `user_restricted`';
     $info = $DB->select($select)
                 ->get('cfg_media_info')
                 ->result_array();
@@ -122,7 +124,15 @@ Class Core_res_assets extends Data_Core {
       $path = $path_info['path'];
       unset($path_info['path']);
 
-      $img_info = $DB->select('`int_min_width` AS `min_width`,`int_min_height` AS `min_height`,`b_resize_img` AS `resize_img`,`int_img_width` AS `img_width`,`int_img_height` AS `img_height`,`b_create_1` AS `create_1`,`int_width_1` AS `width_1`,`int_height_1` AS `height_1`,`str_prefix_1` AS `prefix_1`,`str_suffix_1` AS `suffix_1`,`b_create_2` AS `create_2`,`int_width_2` AS `width_2`,`int_height_2` AS `height_2`,`str_prefix_2` AS `prefix_2`,`str_suffix_2` AS `suffix_2`')->where('path',$path)->get('cfg_img_info');
+      $select = '`b_resize_img` AS `resize_img`,`int_img_width` AS `img_width`,`int_img_height` AS `img_height`,`b_create_1` AS `create_1`,`int_width_1` AS `width_1`,`int_height_1` AS `height_1`,`str_prefix_1` AS `prefix_1`,`b_create_2` AS `create_2`,`int_width_2` AS `width_2`,`int_height_2` AS `height_2`,`str_prefix_2` AS `prefix_2`';
+      if ($DB->field_exists('int_min_width','cfg_img_info'))  $select .= ',`int_min_width` AS `min_width`';
+      if ($DB->field_exists('int_min_height','cfg_img_info')) $select .= ',`int_min_height` AS `min_height`';
+      if ($DB->field_exists('str_suffix_1','cfg_img_info'))   $select .= ',`str_suffix_1` AS `suffix_1`';
+      if ($DB->field_exists('str_postfix_1','cfg_img_info'))   $select .= ',`str_postfix_1` AS `suffix_1`';
+      if ($DB->field_exists('str_suffix_2','cfg_img_info'))   $select .= ',`str_suffix_2` AS `suffix_2`';
+      if ($DB->field_exists('str_postfix_2','cfg_img_info'))   $select .= ',`str_postfix_2` AS `suffix_2`';
+
+      $img_info = $DB->select($select)->where('path',$path)->get('cfg_img_info');
       if ($img_info) {
         $img_info = $img_info->row_array();
         if (is_array($img_info)) $path_info = array_merge($path_info,$img_info);

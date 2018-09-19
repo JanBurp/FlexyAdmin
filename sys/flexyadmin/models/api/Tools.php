@@ -91,7 +91,7 @@ class Tools extends Api_Model {
   }
   
   public function db_import() {
-    if (!$this->flexy_auth->is_super_admin()) return $this->_result_status401();
+    if (!$this->flexy_auth->can_use_tools()) return $this->_result_status401();
 
     $sql = $this->args['sql'];
     unset($this->args['sql']);
@@ -101,9 +101,8 @@ class Tools extends Api_Model {
     return $this->_result_ok();
   }
 
-
   public function db_export_form() {
-    if (!$this->flexy_auth->is_super_admin()) return false;
+    if (!$this->flexy_auth->can_use_tools()) return false;
 
     $tables = $this->data->list_tables();
     $tables_as_options = array();

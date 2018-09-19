@@ -38,7 +38,7 @@ class Plugin_move_site extends Plugin {
   public function _admin_api($args=false) {
     if ( !$this->CI->flexy_auth->is_super_admin()) return false;
     
-		$this->add_message('<h2>Move Old site (essentials) to Fresh Checkout</h2>');
+		$this->add_message('<h1>Move Old site (essentials) to Fresh Checkout</h1>');
     
     $this->old=$this->config['old'];
     $this->new=$this->config['new'];
@@ -62,7 +62,7 @@ class Plugin_move_site extends Plugin {
       $this->merge();
     }
     
-    $this->add_message('<h2>Merge old database with fresh database</h2>');
+    $this->add_message('<h1>Merge old database with fresh database</h1>');
     $old_db = $this->config['db'];
     if ($old_db) {
       $this->oldDB = $this->CI->load->database( $old_db, TRUE);
@@ -333,7 +333,7 @@ class Plugin_move_site extends Plugin {
       empty_map($map);
       $ul[]=str_replace($this->new,'',$map);
     }
-    $this->add_message('<h3>Paths that are emptied:</h3>');
+    $this->add_message('<h1>Emptied folders:</h1>');
     $this->add_message(ul($ul));
   }
 
@@ -388,11 +388,14 @@ class Plugin_move_site extends Plugin {
       }
     }
 
-    $this->add_message('<h3>Files that are moved:</h3>');
-    $this->add_message('<h4>Moved</h4>');
-    $this->add_message(ul($moved));
-    $this->add_message('<h4>Errors</h4>');
-    $this->add_message(ul($error));
+    if (!empty($moved)) {
+      $this->add_message('<h1>Moved files:</h1>');
+      $this->add_message(ul($moved));
+    }
+    if (!empty($errors)) {
+      $this->add_message('<h1 class="error">Move file errors</h1>');
+      $this->add_message(ul($error));
+    }
   }
   
   
@@ -479,15 +482,23 @@ class Plugin_move_site extends Plugin {
       }
     }
 
-    $this->add_message('<h3>Files that are merged:</h3>');
-    $this->add_message('<h4>Copied</h4>');
-    $this->add_message(ul($copied));
-    $this->add_message('<h4>Replaced</h4>');
-    $this->add_message(ul($replaced));
-    $this->add_message('<h4>Kept</h4>');
-    $this->add_message(ul($kept));
-    $this->add_message('<h4>Errors</h4>');
-    $this->add_message(ul($error));
+    $this->add_message('<h1>Merged files:</h1>');
+    if (!empty($copied)) {
+      $this->add_message('Copied:');
+      $this->add_message(ul($copied));
+    }
+    if (!empty($replaced)) {
+      $this->add_message('Replaced:');
+      $this->add_message(ul($replaced));
+    }
+    // if (!empty($kept)) {
+    //   $this->add_message('Kept:');
+    //   $this->add_message(ul($kept));
+    // }
+    if (!empty($error)) {
+      $this->add_message('Errors:');
+      $this->add_message(ul($error));
+    }
   }
   
   
