@@ -1,6 +1,8 @@
 <?php 
 
 $lang['vue_api_error_401'] = 'Je hebt geen rechten voor dit item';
+$lang['vue_api_timeout'] 	 = "FOUT: De website reageert traag, controleer uw internetverbiding en probeer het nogmaals.";
+$lang['vue_api_no_data'] 	 = "FOUT: Server geef geen data terug. Probeer nogmaals.<br>Als deze fout blijft terugkomen neem dan contact op met de developer.";
 
 $lang['vue_cancel']        = "Annuleer";
 $lang['vue_submit']        = "Invoeren";
