@@ -72,7 +72,7 @@ import {translations} from './utils/utils.js'
 export default {
   props: {
     value: {type: String},
-    format: {default: 'MM/dd/yyyy'},
+    format: {default: 'yyyy-MM-dd'},
     disabledDaysOfWeek: {type: Array, default () { return [] }},
     width: {type: String/*, default: '200px'*/},
     clearButton: {type: Boolean, default: false},
