@@ -1,3 +1,16 @@
+=3.5.0-rc.27
+
+[nl]
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Some small bug solved
+[/en]
+
+[BUGS]
+- Minor bugs for older PHP versions
+- Better api responses on timeouts when saving
+
 =3.5.0-rc.26
 
 [nl]
