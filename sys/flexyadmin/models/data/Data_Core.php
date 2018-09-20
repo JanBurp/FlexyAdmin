@@ -2769,10 +2769,12 @@ Class Data_Core extends CI_Model {
     $cache_filter = 'data_result_';
     $cached_results = $this->cache->cache_info();
     foreach ($cached_results as $cache) {
-      foreach ($this->settings['cache_group'] as $filter) {
-        $filter = $cache_filter.$filter;
-        if ( substr($cache['name'],0,strlen($filter))===$filter ) {
-          $this->cache->delete($cache['name']);
+      if ($this->settings['cache_group']) {
+        foreach ($this->settings['cache_group'] as $filter) {
+          $filter = $cache_filter.$filter;
+          if ( substr($cache['name'],0,strlen($filter))===$filter ) {
+            $this->cache->delete($cache['name']);
+          }
         }
       }
     }
