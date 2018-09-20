@@ -807,6 +807,7 @@ export default {
         }
         else {
           flexyState.addMessage( self.$lang.form_save_error, 'danger');
+          self.isEdited = true;
         }
         return response;
       });
