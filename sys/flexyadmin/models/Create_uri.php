@@ -262,7 +262,9 @@ class Create_uri extends CI_Model {
    */
   private function _freeze_uri($data) {
     // Als nog geen uri, dan geen freeze
-    if ( empty(el('uri',$data,'')) ) return FALSE;
+    $uri = el('uri',$data,'');
+    if (empty($uri)) return FALSE;
+    
     // Standaard instelling
     $freeze = false;
     if (is_bool($this->freeze)) return $this->freeze;
