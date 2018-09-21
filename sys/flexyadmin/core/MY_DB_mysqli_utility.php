@@ -199,17 +199,14 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 			$i = 0;
 			$field_str = '';
 			$is_int = array();
+			$is_hex = array();	// JDB
 			while ($field = $query->result_id->fetch_field())
 			{
 				// Most versions of MySQL store timestamp as a string
-				$is_int[$i] = in_array(strtolower($field->type),
-							array('tinyint', 'smallint', 'mediumint', 'int', 'bigint'), //, 'timestamp'),
-							TRUE);
-              
-        // Added by Jdb
-        $is_blob[$i] = in_array(strtolower($field->type),
-              array('text', 'blob', 'tinytext', 'tinyblob', 'mediumtext', 'mediumblob', 'longtext', 'longblob'),
-              TRUE);
+				$is_int[$i] = in_array($field->type, array(MYSQLI_TYPE_TINY, MYSQLI_TYPE_SHORT, MYSQLI_TYPE_INT24, MYSQLI_TYPE_LONG), TRUE);
+
+				// HEX AES: JDB
+				$is_hex[$i] = ($field->type == 253); // VARBINARY 
 
 				// Create a string of field names
 				$field_str .= $this->db->escape_identifiers($field->name).', ';
@@ -234,24 +231,19 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 					}
 					else
 					{
-            // Escape the data if it's a blob (Added by JdB)
-            if ($is_blob[$i]) {
+
+            // Escape the data if it's hex (JDB)
+            if ($is_hex[$i]) {
               if (empty($v))
-                $val_str.=$this->db->escape($v);
+                $val_str .= $this->db->escape($v);
               else
                 $val_str .= str2hex($v);
             }
-            // Escape the data if it's not an integer
-            elseif ($is_int[$i] == FALSE) {
-              $val_str .= $this->db->escape($v);
+						// Escape the data if it's not an integer
+						else {
+							$val_str .= ($is_int[$i] === FALSE) ? $this->db->escape($v) : $v;
             }
-            // Hex the data if it's a blob (Added by JdB)
-            elseif ($is_blob[$i]) {
-              $val_str .= str2hex($v);
-            }
-            else {
-              $val_str .= $v;
-            }
+
 					}
 
 					// Append a comma
@@ -277,6 +269,8 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 
 		return $output;
 	}
+
+
 
 
 }
