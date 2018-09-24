@@ -193,12 +193,12 @@ class Search_replace extends CI_Model {
     // In txt_ velden
     $search = str_replace(array('/','.'),array('\/','\.'),$search);
     if (empty($replace)) {
-      $search = array( '/<a.*href=\".*'.$search.'.*\".*>(.*)<\/a>/uU');
+      $search = array( '/<a.*href=\"'.$search.'\".*>(.*)<\/a>/uU');
       $replace = array( '$1' );
     }
     else {
-      $search  = array( '/<a(.*)href=\"(.*)'.$search.'(.*)\"(.*)>/uU' );
-      $replace = array( '<a$1href="$2'.$replace.'$3"$4>' );
+      $search  = array( '/<a(.*)href=\"'.$search.'\"(.*)>/uU' );
+      $replace = array( '<a$1href="'.$replace.'"$2>' );
     }
 
     $result_txt = $this->replace_all($search,$replace, $this->field_types, true );
