@@ -22,12 +22,17 @@
 .form-control {
   padding-bottom:.25rem;
 }
+.form-control-file {
+  border:solid $input-btn-border-width $input-border-color;
+  border-radius: $input-border-radius;
+}
+
 .form-control[type='checkbox'] { width:auto; }
 
 .form-group-small {
   margin:0;
   margin-bottom: .5rem;
-  .form-control {
+  .form-control,.form-control-file {
     padding:.25rem .5rem;
   }
 }
@@ -54,14 +59,14 @@
 
 // Input Border color
 .form-group.row {
-  input, select, textarea, .mce-tinymce, .form-control, .mediapicker {
+  input, select, textarea, .mce-tinymce, .form-control, .form-control-file, .mediapicker {
     border-color:$gray-600!important;
   };
 }
 
 .form-group.row:not(.has-danger):hover {
   label {color:$primary;}
-  input, select, textarea, .mce-tinymce, .form-control:focus, .mediapicker {
+  input, select, textarea, .mce-tinymce, .form-control:focus, .form-control-file:focus, .mediapicker {
     border-color:$primary!important;
   };
 }
@@ -90,7 +95,7 @@
     }
     > div {
       padding: 0px 10px;
-      .form-control {
+      .form-control,.form-control-file {
         padding:.35rem .5rem;
       }
     }
@@ -110,7 +115,7 @@
 }
 
 .form-group.has-subform {
-  >div:not(.subform)>div.vselect>.form-control {
+  >div:not(.subform)>div.vselect>.form-control, >div:not(.subform)>div.vselect>.form-control-file  {
     border-bottom-left-radius:0px;
     border-bottom-right-radius:0px;
   }
@@ -135,9 +140,6 @@ select:-moz-focusring {
   text-shadow: 0 0 0 #000!important;
 }
 
-select.form-control:not([size]):not([multiple]) {
-//  height:auto;
-}
 .custom-select {
   height: 2.25rem!important;
   padding-top:0.45rem;
