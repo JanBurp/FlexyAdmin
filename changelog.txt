@@ -1,3 +1,18 @@
+=3.5.1
+
+[nl]
+- Bug waardoor links konden veranderen na een aanpassing opgelost
+- Kleine styling aanpassing bij file velden
+[/nl]
+[en]
+- Bug where links could change after an edit solved
+- Small styling issue solved for file inputs
+[/en]
+
+[BUGS]
+- Search_replace links/uri’s did replace too much!
+- Styling issue since Bootstrap 4.1 (.form-control-file)
+
 =3.5.0-rc.27
 
 [nl]
