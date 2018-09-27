@@ -167,13 +167,15 @@ Class Admin_menu extends CI_Model {
             // Media
             case 'media':
               $path = el('path',$item,$key);
-              $menuItems['media_'.$path] = $this->_process_item('', array(
-                'name'       => el('name',$item,$this->lang->ui('media_'.$path)),
-                'uri'        => 'media/'.$path,
-                'icon'       => el('icon',$item,''),
-                'iconactive' => el('iconactive',$item,''),
-                'class'      => el('class',$item,''),
-              ));
+              if ($this->flexy_auth->has_rights('media_'.$path)) {
+                $menuItems['media_'.$path] = $this->_process_item('', array(
+                  'name'       => el('name',$item,$this->lang->ui('media_'.$path)),
+                  'uri'        => 'media/'.$path,
+                  'icon'       => el('icon',$item,''),
+                  'iconactive' => el('iconactive',$item,''),
+                  'class'      => el('class',$item,''),
+                ));
+              }
               break;
 
             // Multiple media
