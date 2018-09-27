@@ -3391,6 +3391,14 @@ Class Data_Core extends CI_Model {
     $this->tm_has_condition = TRUE;
     $this->tm_where_primary_key = NULL;
 
+    // Als alleen een array, dan recursieve aanroep en stoppen
+    if (!isset($value) and is_array($key)) {
+      foreach ($key as $k => $val) {
+        $this->_wh($k,$val);
+      }
+      return $this;
+    }
+
     // Als geen value maar alleen een key (die geen array is), dat wordt alleen op primary_key gevraagd als het een nummer is
     if (!isset($value) and !is_array($key)) {
       // 'first'
