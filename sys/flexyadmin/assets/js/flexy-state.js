@@ -277,9 +277,11 @@ export default {
       self.debug && console.log('api < ',response);
 
       // No data!
-      if (_.isUndefined(response.data) || response.data==null || response.data=="") {
-        self.addMessage(_flexy.language_keys.api_no_data,'danger');
-        console.log('api ERROR (1) <',error, error.response, error.config);
+      if (request.url.indexOf('auth/logout')==-1 ) {
+        if (_.isUndefined(response.data) || response.data==null || response.data=="") {
+          console.log('api ERROR (1) <',error, error.response, error.config);
+          self.addMessage(_flexy.language_keys.api_no_data,'danger');
+        }
       }
 
       // trace/bug?
