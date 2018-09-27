@@ -1,3 +1,18 @@
+=3.5.2
+
+[nl]
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Some small bug solved
+[/en]
+
+[BUGS]
+- Logout gave nodata error
+- Rights for showing admin menu items
+- data->where( array() ) did not work
+
+
 =3.5.1
 
 [nl]
