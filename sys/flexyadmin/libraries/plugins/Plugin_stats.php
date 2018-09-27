@@ -348,7 +348,7 @@ class Plugin_stats extends Plugin {
 				$this->CI->data->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$this->CI->data->group_by('`day`');
 				$this->CI->data->order_by("`day`");
-				$limit=0;
+				$limit=null;
 				break;
 			case 'top_10_pages':
 				$this->CI->data->select("str_uri as page, COUNT(`str_uri`) as hits");
