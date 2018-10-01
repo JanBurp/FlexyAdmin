@@ -68,7 +68,9 @@ class Plugin_move_site extends Plugin {
       $this->oldDB = $this->CI->load->database( $old_db, TRUE);
       $this->truncate_demo_tables();
       $this->import_database();
+      $this->replace_assets();
       $this->create_data_config();
+      $this->copy_users();
     }
 	
   	return $this->view('admin/plugins/plugin');
@@ -196,6 +198,12 @@ class Plugin_move_site extends Plugin {
     $this->add_message(ul($ul));
   }
 
+  private function replace_assets() {
+    $this->CI->load->model('search_replace');
+    $result = $this->CI->search_replace->replace_all( 'src="site/assets/',    'src="_media/' );
+    $result = $this->CI->search_replace->replace_all( 'href="file/download/', 'href="_media/download/' );
+  }
+
 
   private function create_data_config() {
     // assets (from cfg_media_info & cfg_img_info)
@@ -316,6 +324,27 @@ class Plugin_move_site extends Plugin {
     $this->add_message($ul);
   }
 
+
+  private function copy_users() {
+    // Remove test users
+    $this->CI->data->table('cfg_users')->where( 'id !=',1 )->delete();
+
+    // Move old users
+    $old_users = $this->oldDB->select('id,str_username,email_email')->get('cfg_users')->result_array();
+    foreach ($old_users as $id => $user) {
+
+      if ($id==1) {
+        $user['str_username'] = 'admin';
+        unset($user['email_email']);
+        $this->CI->data->table('cfg_users')->update($user,$id);
+      }
+      else {
+        $this->CI->data->table('cfg_users')->insert($user); 
+      }
+    }
+   
+  }
+
   
   
   
@@ -379,7 +408,7 @@ class Plugin_move_site extends Plugin {
           $dir=remove_suffix($to,'/');
           if ( !file_exists($dir) ) mkdir($dir,0777,true);
           if ( file_exists($from) and !file_exists($to) and copy($from,$to) ) {
-            $moved[]=$li;
+            $moved[] =$li;
           }
           else {
             $error[]='<span class="error">'.$li.'</span>';
