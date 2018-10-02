@@ -1168,9 +1168,9 @@ export default {
               <template v-for="(field,key) in fields">
                 
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
-                  <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
-                  <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger action-delete-all" />
-                  <flexy-button v-if="type!=='mediapicker' && multiple===true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info action-select-all" />
+                  <flexy-button v-if="gridType()!=='media' && dataInfo.rights.insert==true" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
+                  <flexy-button v-if="type!=='mediapicker' && dataInfo.rights.delete==true" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger action-delete-all" />
+                  <flexy-button v-if="type!=='mediapicker' && multiple===true && dataInfo.rights.delete==true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info action-select-all" />
 
                   <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                     <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort" />
