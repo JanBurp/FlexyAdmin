@@ -1,3 +1,19 @@
+=3.5.3
+
+[nl]
+- Enkele kleine verbeteringen en bugs opgelost
+[/nl]
+[en]
+- Some small improvements and bugs solved
+[/en]
+
+[FEATURES]
+- Better plugin move site
+- Local auto base_url
+[BUGS]
+- Message when no rights & Api row did not check rights proparly
+- Better checking rights and visibility in ui
+
 =3.5.2
 
 [nl]
@@ -11,7 +27,6 @@
 - Logout gave nodata error
 - Rights for showing admin menu items
 - data->where( array() ) did not work
-
 
 =3.5.1
 
