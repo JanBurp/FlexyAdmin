@@ -107,6 +107,8 @@ class Table extends Api_Model {
     'txt_abstract' => 0,
     'settings'     => false,
   );
+
+  private $rights = 0;
   
 	public function __construct() {
 		parent::__construct();
@@ -124,15 +126,15 @@ class Table extends Api_Model {
     
     // Check rechten
     if ($this->args['table']==='res_assets' AND isset($this->args['path'])) {
-      if ( !$this->_has_rights('media_'.$this->args['path']) ) {
-        return $this->_result_status401();
-      }
+      $this->rights = $this->_has_rights('media_'.$this->args['path']);
     }
     else {
-      if (!$this->_has_rights($this->args['table'])) {
-        return $this->_result_status401();
-      }
+      $this->rights = $this->_has_rights($this->args['table']);
     }
+    if ( !$this->rights ) {
+      return $this->_result_status401();
+    }
+
     
     // Opties toevoegen bij as_grid en settings
     if ( $this->args['as_grid'] and $this->args['settings'] ) $this->args['options'] = true;
@@ -223,6 +225,14 @@ class Table extends Api_Model {
     else {
       $this->info['count_all'] = $this->data->count_all(); 
     }
+
+    // Rights (can insert, can edit)
+    $this->info['rights'] = array(
+      'show'    => ( $this->rights >= RIGHTS_SHOW ),
+      'edit'    => ( $this->rights >= RIGHTS_EDIT ),
+      'insert'  => ( $this->rights >= RIGHTS_ADD ),
+      'delete'  => ( $this->rights >= RIGHTS_DELETE ),
+    );
     
     return $items;
   }
