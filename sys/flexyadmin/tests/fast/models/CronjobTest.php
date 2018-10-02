@@ -112,27 +112,27 @@ class CronjobTest extends CITestCase {
     }
     
 
-    public function test_calc_next_month()  {
-      $tests = array(
-        // Wanneer is volgende (net geweest)
-        array(
-          'test'  => 'Precies vandaag geweest, moet volgende maand',
-          'every' => 'month '.date('j H:i'),
-          'last'  => time(),
-          'next'  => mktime(date('H'),date('i'),0,date('n'),date('j'),date('Y')) + TIME_DAY * date('t'),
-        ),
-        array(
-          'test'  => 'Vandaag, wat later dan nu geweest, moet volgende maand',
-          'every' => 'month '.date('j H:i'),
-          'last'  => time() + rand(TIME_MINUTE, 2*TIME_HOUR),
-          'next'  => mktime(date('H'),date('i'),0,date('n'),date('j'),date('Y')) + TIME_DAY * date('t'),
-        ),
-      );
-      foreach ($tests as $test) {
-        $result = $this->CI->cronjob->_calc_next( $test['every'], $test['last'] );
-        $this->assertEquals( $test['next'], $result, '['.$test['test'].'] '.unix_to_normal($result). ' zou '. unix_to_normal($test['next']).' moeten zijn. ( every=>`'.$test['every'].'`, last=>'.unix_to_normal($test['last']).')' );
-      }
-    }
+    // public function test_calc_next_month()  {
+    //   $tests = array(
+    //     // Wanneer is volgende (net geweest)
+    //     array(
+    //       'test'  => 'Precies vandaag geweest, moet volgende maand',
+    //       'every' => 'month '.date('j H:i'),
+    //       'last'  => time(),
+    //       'next'  => mktime(date('H'),date('i'),0,date('n'),date('j'),date('Y')) + TIME_DAY * date('t'),
+    //     ),
+    //     array(
+    //       'test'  => 'Vandaag, wat later dan nu geweest, moet volgende maand',
+    //       'every' => 'month '.date('j H:i'),
+    //       'last'  => time() + rand(TIME_MINUTE, 2*TIME_HOUR),
+    //       'next'  => mktime(date('H'),date('i'),0,date('n'),date('j'),date('Y')) + TIME_DAY * date('t'),
+    //     ),
+    //   );
+    //   foreach ($tests as $test) {
+    //     $result = $this->CI->cronjob->_calc_next( $test['every'], $test['last'] );
+    //     $this->assertEquals( $test['next'], $result, '['.$test['test'].'] '.unix_to_normal($result). ' zou '. unix_to_normal($test['next']).' moeten zijn. ( every=>`'.$test['every'].'`, last=>'.unix_to_normal($test['last']).')' );
+    //   }
+    // }
     
     
     public function test_needs_run() {
