@@ -177,8 +177,9 @@ class Row extends Api_Model {
    * @return void
    * @author Jan den Besten
    */
-  public function index($rights=RIGHTS_NO) {
-
+  public function index() {
+    $rights=RIGHTS_NO;
+    
     // Media?
     $is_media = (isset($this->args['path']) and $this->args['table']==='res_assets');
     if (substr($this->args['table'],0,6)==='media_') {
