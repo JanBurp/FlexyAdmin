@@ -794,8 +794,10 @@ export default {
         self.isEdited = false;
         if (!response.error) {
           if ( _.isUndefined(response.data.info) || response.data.info.validation!==false) {
-            flexyState.addMessage('Item saved');
-            self._updateDataAfterPost(response.data.data);
+            if ( !_.isUndefined(response.data.data)) {
+              flexyState.addMessage('Item saved');
+              self._updateDataAfterPost(response.data.data);
+            }
           }
           else {
             // Validation error
