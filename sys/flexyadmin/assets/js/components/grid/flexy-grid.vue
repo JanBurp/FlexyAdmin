@@ -609,6 +609,10 @@ export default {
     hasSelection : function() {
       return this.selected.length>0;
     },
+
+    oneSelected : function() {
+      return this.selected.length==1;
+    },
     
     isSelected : function(id) {
       return this.selected.indexOf(id) > -1;
@@ -672,6 +676,10 @@ export default {
     },
     
     editItem : function(id) {
+      // copy?
+      if (this.oneSelected()) {
+        var id = '_'+this.selected[0];
+      }
       var url = '/edit/'+this.name+'/'+id+'?options='+JSON.stringify(this.urlOptions);
       this.$router.push(url);
     },
@@ -1168,7 +1176,7 @@ export default {
               <template v-for="(field,key) in fields">
                 
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
-                  <flexy-button v-if="gridType()!=='media' && dataInfo.rights.insert==true" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
+                  <flexy-button v-if="gridType()!=='media' && dataInfo.rights.insert==true" @click.native="newItem()" :icon="{'plus':!oneSelected(),'paste':oneSelected()}" class="btn-outline-warning" />
                   <flexy-button v-if="type!=='mediapicker' && dataInfo.rights.delete==true" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger action-delete-all" />
                   <flexy-button v-if="type!=='mediapicker' && multiple===true && dataInfo.rights.delete==true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info action-select-all" />
 

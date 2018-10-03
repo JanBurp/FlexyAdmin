@@ -254,7 +254,16 @@ class Row extends Api_Model {
     if (!isset($args['where'])) $args['where']=null;
     if (isset($args['select'])) $this->data->select($args['select'])->with('one_to_one');
     if (el('as_form',$this->args,false)) {
+      $copy = false;
+      if (is_string($args['where'])) {
+        $id = $args['where'];
+        if (substr($id,0,1)=='_') {
+          $copy = true;
+          $args['where'] = substr($id,1);
+        }
+      }
       $values = $this->data->get_form( $args['where'] );
+      if ($copy) $values['id'] = -1;
     }
     else {
       $values = $this->data->get_row( $args['where'] );
