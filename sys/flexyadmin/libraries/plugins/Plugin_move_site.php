@@ -330,9 +330,14 @@ class Plugin_move_site extends Plugin {
     $this->CI->data->table('cfg_users')->where( 'id !=',1 )->delete();
 
     // Move old users
-    $old_users = $this->oldDB->select('id,str_username,email_email')->get('cfg_users')->result_array();
-    foreach ($old_users as $id => $user) {
-
+    $select = '';
+    if ($this->oldDB->field_exists('str_username','cfg_users'))
+      $select = 'id,str_username,email_email';
+    else
+      $select = 'id,str_user_name AS str_username';
+    $old_users = $this->oldDB->select($select)->get('cfg_users')->result_array();
+    foreach ($old_users as $user) {
+      $id = $user['id'];
       if ($id==1) {
         $user['str_username'] = 'admin';
         unset($user['email_email']);
@@ -472,38 +477,47 @@ class Plugin_move_site extends Plugin {
         $move_files[$old]=$new;
       }
       
-      // Merge them
+      // 'Merge' them
       foreach ($move_files as $from => $to) {
         $li=str_replace($this->new,'',$to);
         if (file_exists($from)) {
-          if (!file_exists($to)) {
+          // if (!file_exists($to)) {
             $dir=remove_suffix($to,'/');
             if (!file_exists($dir)) mkdir($dir,0777,true);
+
+            $to_name = explode('/',$to);
+            $to_name[count($to_name)-1] = '_'.$to_name[count($to_name)-1];
+            $to = implode('/',$to_name);
+
             if (copy($from,$to)) {
               $copied[]=$li;
             }
             else {
               $error[]='<span class="error">'.$li.'</span>';
             }
-          }
-          else {
-            // which one is newest?
-            $from_time = filemtime($from);
-            $to_time = filemtime($to);
-            if ($from_time>$to_time) {
-              $dir=remove_suffix($to,'/');
-              if (!file_exists($dir)) mkdir($dir,0777,true);
-              if (copy($from,$to)) {
-                $replaced[]=$li;
-              }
-              else {
-                $error[]='<span class="error">'.$li.'</span>';
-              }
-            }
-            else {
-              $kept[]=$li;
-            }
-          }
+          // }
+          // else {
+          //   $to_name = explode('/',$to_name);
+          //   $to_name[count($name)-1] = '_'.$to_name[count($name)-1];
+          //   $to = implode('/',$to_name);
+
+          //   // which one is newest?
+          //   // $from_time = filemtime($from);
+          //   // $to_time = filemtime($to);
+          //   // if ($from_time>$to_time) {
+          //   $dir=remove_suffix($to,'/');
+          //   if (!file_exists($dir)) mkdir($dir,0777,true);
+          //   if (copy($from,$to)) {
+          //     $replaced[]=$li;
+          //   }
+          //   else {
+          //     $error[]='<span class="error">'.$li.'</span>';
+          //   }
+          //   // }
+          //   // else {
+          //   //   $kept[]=$li;
+          //   // }
+          // }
         }
         else {
           $error[]='<span class="error">'.$li.'</span>';
