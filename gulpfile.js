@@ -69,6 +69,20 @@ var files = {
     assets+'/less-bootstrap/*'
   ]
 
+  // oude website
+  // 'less'    : assets+'/less-bootstrap/bootstrap.less',
+  // 'css'     : assets+'/css',
+  // 'cssmin'  : [
+  //   assets+'/css/text.css',
+  //   assets+'/css/layout.css'
+  // ],
+  // 'cssdest' : 'styles.min.css',
+  // 'watchcss': [
+  //   assets+'/css/text.css',
+  //   assets+'/css/layout.css',
+  // ]
+
+
 };
 
 
