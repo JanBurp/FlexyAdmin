@@ -319,11 +319,11 @@ export default {
       if (this.primary==-1) {
         return 'fa-plus';
       }
-      if (this.primary>=0) {
-        return 'fa-pencil'; 
-      }
       if (this.primary.substr(0,1)=='_') {
         return 'fa-paste';  
+      }
+      if (this.primary>=0) {
+        return 'fa-pencil'; 
       }
       return '';
     },
