@@ -3191,7 +3191,7 @@ Class Data_Core extends CI_Model {
         $table = $this->settings['table'];
         // als WHERE en LIMIT en één relatie die niet JSON is, dan een Exception
         $sql = $this->db->get_compiled_select('',FALSE);
-        $has_where = has_string('WHERE',$sql);
+        $has_where = (has_string('WHERE',$sql) OR (is_array($this->tm_where) AND count($this->tm_where)>0));
         // Geen exception als de WHERE alleen op id zoekt en limit=1 (->get_row())
         if ($has_where AND $this->tm_limit==1 AND has_string('WHERE `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`',$sql) ) {
           $this->tm_limit=NULL;
@@ -4563,8 +4563,8 @@ Class Data_Core extends CI_Model {
   protected function _with_many_to_many( $tables ) {
     $id = $this->settings['primary_key'];
     foreach ( $tables as $what => $info ) {
-      $fields   = $info['fields'];
-      $json  = $info['json'];
+      $fields = $info['fields'];
+      $json   = $info['json'];
       $rel_table         = $this->settings['relations']['many_to_many'][$what]['rel_table'];
       $this_table        = $this->settings['relations']['many_to_many'][$what]['this_table'];
       $other_table       = $this->settings['relations']['many_to_many'][$what]['other_table'];
