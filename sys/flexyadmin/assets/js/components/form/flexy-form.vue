@@ -315,6 +315,19 @@ export default {
       return this.fieldTypes[type].indexOf(this.form_groups[field]['type']) >= 0;
     },
 
+    editTypeIcon() {
+      if (this.primary==-1) {
+        return 'fa-plus';
+      }
+      if (this.primary>=0) {
+        return 'fa-pencil'; 
+      }
+      if (this.primary.substr(0,1)=='_') {
+        return 'fa-paste';  
+      }
+      return '';
+    },
+
     isRadioImage : function(field) {
       return (this.form_groups[field]['type']=='radio_image');
     },
@@ -985,7 +998,7 @@ export default {
 <template>
 <div class="card form" :class="'form-'+formtype">
   <div v-if="formtype!=='subform'" class="card-header">
-    <h1>{{uiTitle}}</h1>
+    <h1><span class="form-edit-type fa" :class="editTypeIcon()"></span>{{uiTitle}}</h1>
     <div>
       <flexy-button v-if="formtype!=='single'"                 @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
       <flexy-button v-if="formtype!=='subform' && action===''" @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving || !isEdited" class="btn-outline-warning"/>
