@@ -1,3 +1,17 @@
+=3.5.4
+
+[nl]
+- Enkele kleine verbeteringen en bugs opgelost
+[/nl]
+[en]
+- Some small improvements and bugs solved
+[/en]
+
+[FEATURES]
+- Copy of item when one is selected - with visual clue
+[BUGS]
+- DATA subselect on LIMIT on WHERE (wrong detection of has_where)
+
 =3.5.3
 
 [nl]
