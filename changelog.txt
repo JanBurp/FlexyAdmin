@@ -1,3 +1,15 @@
+=3.5.5
+
+[nl]
+- Bug opgelost van te vroeg verwijderde tijdelijke bestanden
+[/nl]
+[en]
+- Bug solved of to early deleted temporary files
+[/en]
+
+[BUGS]
+- Cleanup van tijdelijke bestanden kwam te snel
+
 =3.5.4
 
 [nl]
