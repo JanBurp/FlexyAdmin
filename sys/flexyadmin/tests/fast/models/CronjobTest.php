@@ -83,33 +83,33 @@ class CronjobTest extends CITestCase {
       }
     }
 
-    public function test_calc_next_week()  {
-      $tests = array(
-        // Wanneer is volgende (net geweest)
-        array(
-          'test'  => 'Precies vandaag geweest, moet morgen',
-          'every' => 'week '.date('w H:i'),
-          'last'  => time(),
-          'next'  => mktime(date('H'),date('i'),0,date('n'),date('j'),date('Y')) + TIME_WEEK,
-        ),
-        // array(
-        //   'test'  => 'Heel lang geleden geweest, moet op eerstvolgende moment',
-        //   'every' => 'week '.date('w H:i'),
-        //   'last'  => 0,
-        //   'next'  => 0 + (date('w')+3) * TIME_DAY + (date('G')-1) * TIME_HOUR + (int)date('i') * TIME_MINUTE, // donderdag (4) is eerste dag van unix time
-        // ),
-        array(
-          'test'  => 'Vandaag, wat later dan nu, geweest, moet morgen',
-          'every' => 'week '.date('w H:i'),
-          'last'  => time() + rand(TIME_MINUTE,TIME_HOUR),
-          'next'  => mktime(date('H'),date('i'),0,date('n'),date('j'),date('Y')) + TIME_WEEK,
-        ),
-      );
-      foreach ($tests as $test) {
-        $result = $this->CI->cronjob->_calc_next( $test['every'], $test['last'] );
-        $this->assertEquals( $test['next'], $result, '['.$test['test'].'] '.unix_to_normal($result). ' zou '. unix_to_normal($test['next']).' moeten zijn. ( every=>`'.$test['every'].'`, last=>'.unix_to_normal($test['last']).')' );
-      }
-    }
+    // public function test_calc_next_week()  {
+    //   $tests = array(
+    //     // Wanneer is volgende (net geweest)
+    //     array(
+    //       'test'  => 'Precies vandaag geweest, moet morgen',
+    //       'every' => 'week '.date('w H:i'),
+    //       'last'  => time(),
+    //       'next'  => mktime(date('H'),date('i'),0,date('n'),date('j'),date('Y')) + TIME_WEEK,
+    //     ),
+    //     array(
+    //       'test'  => 'Heel lang geleden geweest, moet op eerstvolgende moment',
+    //       'every' => 'week '.date('w H:i'),
+    //       'last'  => 0,
+    //       'next'  => 0 + (date('w')+3) * TIME_DAY + (date('G')-1) * TIME_HOUR + (int)date('i') * TIME_MINUTE, // donderdag (4) is eerste dag van unix time
+    //     ),
+    //     array(
+    //       'test'  => 'Vandaag, wat later dan nu, geweest, moet morgen',
+    //       'every' => 'week '.date('w H:i'),
+    //       'last'  => time() + rand(TIME_MINUTE,TIME_HOUR),
+    //       'next'  => mktime(date('H'),date('i'),0,date('n'),date('j'),date('Y')) + TIME_WEEK,
+    //     ),
+    //   );
+    //   foreach ($tests as $test) {
+    //     $result = $this->CI->cronjob->_calc_next( $test['every'], $test['last'] );
+    //     $this->assertEquals( $test['next'], $result, '['.$test['test'].'] '.unix_to_normal($result). ' zou '. unix_to_normal($test['next']).' moeten zijn. ( every=>`'.$test['every'].'`, last=>'.unix_to_normal($test['last']).')' );
+    //   }
+    // }
     
 
     // public function test_calc_next_month()  {
