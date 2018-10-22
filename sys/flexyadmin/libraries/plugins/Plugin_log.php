@@ -40,6 +40,7 @@ class Plugin_log extends Plugin {
    */
   public function _home() {
     if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
+    if (IS_LOCALHOST) opcache_reset();
     $this->CI->load->model('log_activity');
     $this->CI->log_activity->clean_up();
     $this->CI->lang->load('home');
