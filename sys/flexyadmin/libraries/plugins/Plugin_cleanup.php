@@ -28,7 +28,7 @@ class Plugin_cleanup extends Plugin {
 		// _tmp keep for 3 months
 		$tmp_dir = $this->CI->config->item('ASSETSFOLDER').'_tmp';
 		if (file_exists($tmp_dir)) {
-			$duetime = time() - 5 * TIME_MINUTE;
+			$duetime = time() - 3 * TIME_MONTH;
 			$files = scan_map($tmp_dir);
 			if ($files) {
 				foreach($files as $file) {
