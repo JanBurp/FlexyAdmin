@@ -55,7 +55,7 @@ class Plugin_uri extends Plugin {
   	
     $this->CI->create_uri->set_table($this->table);
     if ( !isset($this->newData['uri']) and isset($this->oldData['uri']) ) $this->newData['uri'] = $this->oldData['uri'];
-		$uri = $this->CI->create_uri->create( $this->newData );
+		$uri = $this->CI->create_uri->create( array_merge($this->oldData,$this->newData) );
     if ($uri) $this->newData['uri']=$uri;
 		return $this->newData;
 	}

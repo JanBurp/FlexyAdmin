@@ -68,7 +68,7 @@ class Create_uri extends CI_Model {
     $this->table_settings = $this->data->table($table)->get_settings();
     $this->update_uris = el( 'update_uris', $this->table_settings, FALSE );
     if (is_array($this->update_uris)) {
-      $this->source_field = el( 'source', $this->update_uris, '' );
+      $this->source_field = el( 'source', $this->update_uris, 'str_title' );
       $this->prefix = el( 'prefix', $this->update_uris, '' );
       $this->prefix_callback = el( 'prefix_callback', $this->update_uris, false );
       $this->freeze = el( 'freeze', $this->update_uris, '' );
