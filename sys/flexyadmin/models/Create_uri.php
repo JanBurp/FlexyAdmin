@@ -122,7 +122,7 @@ class Create_uri extends CI_Model {
 
     // Uri
     $uri = $this->prefix.$this->cleanup($uri_source);
-    $uri = ltrim($uri,'_');
+    if ($this->prefix!=='_') $uri = ltrim($uri,'_');
 
     // Exists? Add prefix(uri) or a number
 		$postSpace = $this->replaceSpace.$this->replaceSpace;
@@ -149,7 +149,7 @@ class Create_uri extends CI_Model {
    */
   public function cleanup($uri) {
     $uri=preg_replace("/&#?[a-z0-9]+;/i","",$uri); 
-    $uri=trim(strip_tags($uri),' -_');
+    if ($this->prefix!=='_') $uri=trim(strip_tags($uri),' -_');
     $uri=str_replace(" ",$this->replaceSpace,$uri);
 		$uri=clean_string($uri);
     $uri=strtolower($uri);
@@ -194,7 +194,7 @@ class Create_uri extends CI_Model {
    * @author Jan den Besten
    */
   public function is_forbidden($uri) {
-    if (substr($uri,0,1)=='_') return true;
+    if (substr($uri,0,1)=='_' and $this->prefix!=='_') return true;
     $forbidden=$this->config->item('FORBIDDEN_URIS');
     if (!$forbidden) $forbidden=array('site','sys','offset');
     $forbidden[]=$this->config->item('URI_HASH');
