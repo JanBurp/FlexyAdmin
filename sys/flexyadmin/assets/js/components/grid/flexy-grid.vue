@@ -67,17 +67,8 @@ export default {
   
   
   mounted : function() {
-    var options = location.search;
-    if (options!=='' && options.substr(0,9)==='?options=') {
-      options = options.substr(9);
-      options = decodeURIComponent(options);
-      options = JSON.parse(options);
-      // console.log('mounted',options);
-      this.urlOptions = Object.assign(this.urlOptions,options);
-      this.apiParts = Object.assign(this.apiParts,this.urlOptions);
-      this.findTerm = this.apiParts.filter;
-    }
     var self = this;
+    self.setUrlOptions();
     self.calcLimit(); // -> NIET MEER, zodat pagination uit kan
     
     // Bij resize
@@ -108,7 +99,7 @@ export default {
   
   beforeUpdate : function() {
     // Test if (re)load needed
-    if ( this.name!==this.currentName) {
+    if ( this.name!==this.currentName ) {
       this.loadStart(true);
     }
     this.currentName = this.name;
@@ -228,6 +219,19 @@ export default {
       this.dataInfo          = {};
       this.findTerm          = '';
       this.extendedFind      = false;
+      this.selected          = [];
+    },
+
+    setUrlOptions : function() {
+      var options = location.search;
+      if (options!=='' && options.substr(0,9)==='?options=') {
+        options = options.substr(9);
+        options = decodeURIComponent(options);
+        options = JSON.parse(options);
+        this.urlOptions = Object.assign(this.urlOptions,options);
+        this.apiParts = Object.assign(this.apiParts,this.urlOptions);
+        this.findTerm = this.apiParts.filter;
+      }
     },
 
     dataName : function() {
@@ -351,6 +355,8 @@ export default {
       else {
         this.extendedTerm = [_.clone(this.extendedTermDefault)];
       }
+
+      this.setUrlOptions();
     },
     
     reloadPageAfterResize() {
