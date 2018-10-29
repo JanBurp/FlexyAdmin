@@ -1,3 +1,18 @@
+=3.5.6
+
+[nl]
+- Bug opgelost van niet getoonde zoekterm in grid
+- Meer mogelijkheden met uri creatie
+[/nl]
+[en]
+- Bug solved of not visible search term in grid
+- More options for uri creation
+[/en]
+
+[BUGS]
+- plugin_uri ->give complete data and not only the changed fields
+- grid: filter did not show
+
 =3.5.5
 
 [nl]
