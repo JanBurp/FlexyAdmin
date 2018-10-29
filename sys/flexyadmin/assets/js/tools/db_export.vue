@@ -30,7 +30,7 @@ export default {
       var fields = {
         'type'    : { 'label':'Wat',    'type':'select', 'options':types,  'value':'all' },
         'tables'  : { 'label':'Tables', 'type':'select', 'options':tables, 'multiple':true, 'show':{field:'type',value:'select'} },
-        'file'    : { 'label':'File',   'type':'select', 'value':'zip', 'options': [
+        'file'    : { 'label':'File',   'type':'select', 'value':'sql', 'options': [
           { 'value':'sql', 'name':'.sql' },
           { 'value':'zip', 'name':'.zip' },
         ]},
