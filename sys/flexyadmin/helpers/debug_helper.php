@@ -178,7 +178,10 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50,$class='_trace') {
 function trace_sql($sql) {
   $sql = nice_sql($sql);
   echo "<style>._trace,.xdebug-var-dump {position:relative;box-sizing:border-box;width:99%;margin:5px .5%;padding:5px 10px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #696;border-radius:5px;background-color:#DEA;opacity:.9;z-index:99999;} ._trace pre {font-size:10px;border:none;background:transparent;margin:0;padding:2px;}</style>";
-  echo "<pre contenteditable=\"true\" class=\"_trace\">".highlight_code($sql)."</pre>";
+  if (function_exists('highlight_code'))
+    echo "<pre contenteditable=\"true\" class=\"_trace\">".highlight_code($sql)."</pre>";
+  else 
+    echo "<pre contenteditable=\"true\" class=\"_trace\">".$sql."</pre>";
 }
 
 function nice_sql($sql,$eol="\n") {
