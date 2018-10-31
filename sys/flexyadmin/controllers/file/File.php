@@ -45,9 +45,60 @@ class File extends CI_Controller {
           }
         }
         if ( $serve ) {
-          $type=get_suffix($file,'.');
-          $this->output->set_content_type($type);
-          $this->output->set_output(file_get_contents($fullpath));
+          $type = get_suffix($file,'.');
+          $mime = get_mime_by_extension($file);
+          
+          // Hack for audio & video files - taken from - https://github.com/happyworm/smartReadFile/blob/master/smartReadFile.php
+          if ( in_array($type,array_merge($this->config->item('FILE_types_sound'),$this->config->item('FILE_types_movies'))) ) {
+            $size = filesize($fullpath);
+            $time = date('r', filemtime($fullpath));
+            $fm   = @fopen($fullpath, 'rb');
+            if (!$fm) {
+              header ("HTTP/1.1 505 Internal server error");
+              return;
+            }
+            $begin  = 0;
+            $end  = $size - 1;
+
+            if (isset($_SERVER['HTTP_RANGE'])) {
+              if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches)) {
+                $begin  = intval($matches[1]);
+                if (!empty($matches[2])) {
+                  $end  = intval($matches[2]);
+                }
+              }
+            }
+            if (isset($_SERVER['HTTP_RANGE'])) {
+              header('HTTP/1.1 206 Partial Content');
+            }
+            else {
+              header('HTTP/1.1 200 OK');
+            }
+
+            header("Content-Type: $mime"); 
+            header('Cache-Control: public, must-revalidate, max-age=0');
+            // header('Pragma: no-cache');  
+            header('Accept-Ranges: bytes');
+            header('Content-Length:' . (($end - $begin) + 1));
+            if (isset($_SERVER['HTTP_RANGE'])) {
+              header("Content-Range: bytes $begin-$end/$size");
+            }
+            header("Content-Disposition: inline; filename=$file");
+            header("Content-Transfer-Encoding: binary");
+            header("Last-Modified: $time");
+            
+            $cur  = $begin;
+            fseek($fm, $begin, 0);
+            while(!feof($fm) && $cur <= $end && (connection_status() == 0)) {
+              print fread($fm, min(1024 * 16, ($end - $cur) + 1));
+              $cur += 1024 * 16;
+            }
+
+          }
+          else {
+            $this->output->set_content_type($mime);
+            $this->output->set_output(file_get_contents($fullpath));
+          }
           return;
         }
 			}
