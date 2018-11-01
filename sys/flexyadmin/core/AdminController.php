@@ -112,7 +112,8 @@ class AdminController extends BasicController {
     // Editor stuff
     $this->config->load('admin_ui',true);
     $this->view_data['tinymceOptions'] = $this->config->get_item(array('admin_ui','wysiwyg'));
-    $this->view_data['tinymceOptions']['language'] = $this->flexy_auth->get_user()['str_language'];
+    $user = $this->flexy_auth->get_user();
+    $this->view_data['tinymceOptions']['language'] = $user['str_language'];
   }
   
   
