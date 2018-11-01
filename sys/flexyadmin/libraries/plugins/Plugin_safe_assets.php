@@ -59,27 +59,26 @@ class Plugin_safe_assets extends Plugin {
       SITEPATH.'config/database.php'      => 0100440,
       SITEPATH.'cache'                    => 0040774,
       SITEPATH.'stats'                    => 0040774,
-      SITEPATH.'stats/.htaccess'          => 0100644,
     );
-    $media=$this->CI->mediatable->get_media_folders();
-    $media[]=$this->CI->config->item('ASSETSFOLDER').'_thumbcache';
-    $media[]=$this->CI->config->item('ASSETSFOLDER').'lists';             // 0754
+    $media = $this->CI->assets->get_assets_folders();
+    $media[] = SITEPATH.'assets/_thumbcache';
     foreach ($media as $folder) {
       $files[$folder] = 0040776;              // 0776
-      $files[$folder.'/.htaccess'] = 0100644; // 0664
+      // $files[$folder.'/.htaccess'] = 0100644; // 0664
     }
-    $files[$this->CI->config->item('ASSETSFOLDER').'lists'] = 0040754;
     ksort($files);
 
     foreach ($files as $file => $permissions) {
       $current_permissions = @fileperms($file);
       if ($current_permissions!=$permissions) {
-        $out.='<li>Permissions of <strong>'.$file.'</strong> should be '.substr(decoct($permissions),-3,3).' (are now '.substr(decoct($current_permissions),-3,3).')';
+        $out .= '<li>Permissions of <strong>'.$file.'</strong> should be '.substr(decoct($permissions),-3,3).' (are now '.substr(decoct($current_permissions),-3,3).')';
       }
     }
+    
     if (!empty($out)) {
-      $out=h('SAFETY ERROR: Check file permissions!',1,array('class'=>'error')).'<ul>'.$out.'</ul>';
+      $out = br().br().h('SAFETY ERROR: Check file permissions!',1,array('class'=>'text-danger')).'<ul>'.$out.'</ul>';
     }
+    
     return $out;
 	}
 
@@ -133,18 +132,18 @@ class Plugin_safe_assets extends Plugin {
   }
 
 
-  /**
-   * Plugin wordt ook aangeroepen als instellingen van een assets map wijzigen
-   *
-   * @return void
-   * @author Jan den Besten
-   */
-	function _after_update() {
-		$types=$this->newData['str_types'];
-		$map=$this->newData['path'];
-		if ($this->config('create_htaccess')) $this->_create_htaccess($map,$types);
-		return $this->newData;
-	}
+  //   /**
+  //    * Plugin wordt ook aangeroepen als instellingen van een assets map wijzigen
+  //    *
+  //    * @return void
+  //    * @author Jan den Besten
+  //    */
+  // function _after_update() {
+  //   $types=$this->newData['str_types'];
+  //   $map=$this->newData['path'];
+  //   if ($this->config('create_htaccess')) $this->_create_htaccess($map,$types);
+  //   return $this->newData;
+  // }
   
   /**
    * De kern van de plugin
@@ -175,7 +174,7 @@ class Plugin_safe_assets extends Plugin {
 		foreach ($maps as $map => $value) {
 			$path=$assets.$map;
 			if (!isset($mapsToClean[$path])) {
-				$filetypes=str_replace(',','|',$this->CI->cfg->get('cfg_media_info',$map,'str_types'));
+				$filetypes = str_replace(',','|', $this->CI->assets->get_folder_settings(array($path,'types')));
 				$mapsToClean[$path]=$filetypes;
 			}
 		}
@@ -206,7 +205,7 @@ class Plugin_safe_assets extends Plugin {
 	function _create_htaccess($path,$types) {
 		$types=strtolower($types).'|'.strtoupper($types);
     $map=get_suffix($path,'/');
-    $serve_restricted=$this->CI->cfg->get('cfg_media_info',$map,'b_serve_restricted');
+    $serve_restricted = $this->CI->assets->get_folder_settings(array($map,'serve_restricted'));
     if ($serve_restricted) $types='';
 		$htaccess="Order Allow,Deny\nDeny from all\n<Files ~ \"\.(".$types.")$\">\nAllow from all\n</Files>\n";
 		if (has_string('htc',$types)) {

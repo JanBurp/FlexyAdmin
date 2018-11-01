@@ -12,21 +12,6 @@
 $config['admin_api_method']    = '_admin_api';
 $config['home_method']         = '_admin_homepage';
 $config['logout_method']       = '_admin_logout';
-$config['after_update_method'] = '_after_update';
-
-
-/*
-|--------------------------------------------------------------------------
-| Plugin Update/Delete Triggers
-| Here you need to set when the update and delete methods of you're plugin are called
-|--------------------------------------------------------------------------
-|
-*/
-
-$config['trigger'] = array(
-	'tables' 					=> array('cfg_media_info')
-);
-
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +34,6 @@ $config['file_types'] = array(
 	SITEPATH.'stats'				      => 'xml',
 	SITEPATH.'assets'							=> 'css|img|js',
 	SITEPATH.'assets/_thumbcache'	=> 'jpg|jpeg|gif|png|tiff|cur',
-	SITEPATH.'assets/lists'				=> 'js',
 	SITEPATH.'assets/css'					=> 'css|htc|php|eot|svg|ttf|woff|otf|less|map',
 	SITEPATH.'assets/img'					=> 'jpg|jpeg|gif|png|tiff|cur|ico|swf|flv', 
 	SITEPATH.'assets/js'					=> 'js|css|html|swf|jpg|jpeg|gif|png|tiff|cur|map',

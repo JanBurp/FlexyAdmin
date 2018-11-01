@@ -16,7 +16,7 @@ class Documentation {
    * @return array( 'short'=>'', 'full'=>'' )
    * @author Jan den Besten
    */
-  public function get($file) {
+  public function get($file,$eol=PHP_EOL) {
     $doc = FALSE;
     if (file_exists($file)) {
       $text = file_get_contents($file);
@@ -38,11 +38,12 @@ class Documentation {
             }
           }
         }
+        $long = array_slice($long,1);
         // 
         $doc = array(
           'name'  => remove_suffix( get_suffix( $file,'/' ), '.'),
           'short' => $lines[0],
-          'long'  => implode(PHP_EOL,$long),
+          'long'  => trim(trim(trim(implode($eol,$long),$eol)),$eol),
           'full'  => $txt,
           'params'=> $params,
         );

@@ -459,11 +459,11 @@ function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><ital
 		foreach ($matches[0] as $match) {
 			$intro.=$match;
 		}
-		$intro=str_replace('&nbsp;',' ',strip_tags($intro,$strip_tags));
+		$intro=strip_tags($intro,$strip_tags);
 	}
 	// no intro class found, pick an intro by length
 	if ($intro=='') {
-		$intro=max_length(str_replace('&nbsp;',' ',strip_tags($txt,$strip_tags)),$len,$type,true,$strip_tags);
+		$intro=max_length(strip_tags($txt,$strip_tags),$len,$type,true,$strip_tags);
 	}
 	// make sure all tags are closed
   if ($intro!=$txt) $intro.=$ellipses;
@@ -519,7 +519,13 @@ function max_length($txt,$len=100,$type='LINES',$closetags=false,$strip_tags='')
 			$lines=explode('. ',$txt);
       $out='';
       foreach ($lines as $line) {
-        $out.=$line.'. ';
+        if (substr($line,-4)==='</p>') {
+          $line = substr($line,0,strlen($line)-4).'.</p>';
+          $out.=$line;
+        }
+        else {
+          $out.=$line.'. ';
+        }
         if (strlen($out)>$len) break;
       }
       $out=trim($out);
@@ -589,6 +595,21 @@ function restore_tags($input) {
 		foreach($tagstoclose as $tag) $input .= "</$tag>";
 	}
 	return $input;
+}
+
+
+/**
+ * Zorg ervoor dat de tekst altijd met HTML tags is ingesloten (standaard <p>)
+ *
+ * @param      string  $text     text
+ * @param      string  $wrapper  Tag (DEFAULT <p>)
+ * @return     string  string
+ * @author Jan den Besten
+ */
+function must_be_html($text,$wrapper='<p>') {
+  $replace = $wrapper.'$0'.str_replace('<','</',$wrapper);
+  $text = preg_replace('/^[^<].*/ui', $replace, $text);
+  return $text;
 }
 
 /**

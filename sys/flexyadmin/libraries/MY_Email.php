@@ -1,5 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+require_once __DIR__ . '/../../vendor/mpdf/mpdf/mpdf.php';
+
 /** \ingroup libraries
  * Uitbreiding op [CI_Email](http://codeigniter.com/user_guide/libraries/email.html)
  *
@@ -7,6 +9,8 @@
  */
 
 class MY_Email extends CI_Email {
+
+  private $CI;
   
   /**
    * Houdt bij naar hoeveel adressen 
@@ -24,19 +28,45 @@ class MY_Email extends CI_Email {
   private $lang='';
   
   /**
-   * Default replace data
+   * Template van cfg_email
    */
-  private $default_data = array();
+  private $template = false;
+
+  /**
+   * Parse data
+   */
+  private $_parse_data = array();
   
+  /**
+   * Resulting subject
+   */
+  private $subject='';
+
   /**
    * Resulting body
    */
   private $body='';
+
+  /**
+   * Of emails altijd individueel worden verzonden
+   */
+  private $split_send = false;
   
   /**
    * Send with with/as pdf 
    */
-  private $send_with_pdf=FALSE;
+  private $send_with_pdf = false;
+  private $pdf_body = '';
+
+
+  /**
+   * __construct
+   */
+  public function __construct( $config = array() ) {
+    $this->CI = &get_instance();
+    parent::__construct($config);
+  }
+
   
   
 	/**
@@ -48,22 +78,23 @@ class MY_Email extends CI_Email {
   public function send($auto_clear = TRUE) {
     $send = parent::send(FALSE);
     
-    if (empty( $this->_to )) $this->_to = el('To',$this->_headers, 'unknown' );
+    if (empty( $this->_to ))   $this->_to = el('To',$this->_headers, 'unknown' );
     if (!is_array($this->_to)) $this->_to = array($this->_to);
+    if (is_multi($this->_to))  $this->_to = array_keys($this->_to);
 
-    $CI = &get_instance();
-    $CI->load->model('log_activity');
+    $this->CI->load->model('log_activity');
     if ($send) {
-      $CI->log_activity->email( implode_assoc( PHP_EOL, $this->_headers) ,'to', implode(',',$this->_to) );
+      $this->CI->log_activity->email( 'Subject: '.$this->subject."\n\nBody: ".$this->body."\n\n".implode_assoc( PHP_EOL, $this->_headers) ,'to', implode(',',$this->_to) );
     }
     else {
-      $CI->log_activity->email( $this->print_debugger('headers') ,'error', implode(',',$this->_to) );
+      $this->CI->log_activity->email( $this->print_debugger('headers') ,'error', implode(',',$this->_to) );
     }
     $this->_to=array();
     if ($send and $auto_clear) $this->clear();
     return $send;
   }
-  
+
+
   /**
    * to()
    * 
@@ -75,6 +106,9 @@ class MY_Email extends CI_Email {
    */
   public function to($to) {
     $this->add_to($to);
+    if (is_array($to) and is_multi($to)) {
+      $to = array_keys($to);
+    }
     return parent::to($to);
   }
   
@@ -108,6 +142,29 @@ class MY_Email extends CI_Email {
   }
 
   /**
+   * Set Email Subject
+   *
+   * @param string
+   * @return  CI_Email
+   */
+  public function subject($subject) {
+    $this->subject = $subject;
+    return parent::subject($subject);
+  }
+
+  /**
+   * Set Body
+   *
+   * @param string
+   * @return  CI_Email
+   */
+  public function message($body) {
+    $this->body = $body;
+    return parent::message($body);
+  }
+
+
+  /**
    * Zelfde als CI clear(), met wat extra's
    *
    * @param string $clear_attachments 
@@ -116,6 +173,13 @@ class MY_Email extends CI_Email {
    */
 	public function clear($clear_attachments = FALSE) {
     $this->_to=array();
+    $this->template = false;
+    $this->subject = '';
+    $this->message = '';
+    $this->_parse_data = array();
+    $this->split_send = false;
+    $this->send_with_pdf = false;
+    $this->pdf_body = '';
     return parent::clear($clear_attachments);
 	}
   
@@ -136,6 +200,38 @@ class MY_Email extends CI_Email {
     return $this->send();
   }
   
+
+
+  
+  /**
+   * Stel template in
+   *
+   * @param      string  $template      Subject of de key uit cfg_email
+   * @param      string  $body [FALSE]  Body van de template. Als FALSE dan word de template uit cfg_email gehaald en is $template de key
+   */
+  public function set_template( $template, $body=FALSE ) {
+    if (empty($body)) {
+      if (empty($this->lang)) $this->set_language();
+      $this->template = $this->CI->data->table('cfg_email')
+                                      ->select('str_subject_'.$this->lang.' AS `subject`, txt_email_'.$this->lang.' AS `body`')
+                                      ->where('key',$template)
+                                      ->get_row();
+      if (!$this->template) {
+        $this->_set_error_message('email_key_not_found', $key);
+        return false;
+      }
+
+    }
+    else {
+      $this->template = array(
+        'subject' => $template,
+        'body'    => $body,
+      ); 
+    }
+    return $this;
+  }
+
+
 
   /**
    * Stel de email class in één keer in met een array ipv losse methods aanroepen, bijvoorbeeld:
@@ -175,12 +271,15 @@ class MY_Email extends CI_Email {
       $this->bcc($mail['bcc']);
       $this->total_send_addresses += $this->_count_addresses($mail['bcc']);
     }
-		$this->subject($mail['subject']);
-		$this->message($mail['body']);
+    if (isset($mail['template'])) $this->set_template($mail['template']); 
+    if (isset($mail['subject']))  $this->subject($mail['subject']);
+		if (isset($mail['body']))     $this->message($mail['body']);
     if (isset($mail['attachment'])) {
       if (!is_array($mail['attachment'])) $mail['attachment'] = array($mail['attachment']);
       foreach ($mail['attachment'] as $attachment) {
-        $this->attach($attachment);
+        if (file_exists($attachment) and is_file($attachment)) {
+          $this->attach($attachment);
+        }
       }
     }
     return $this;
@@ -196,7 +295,9 @@ class MY_Email extends CI_Email {
   private function add_to( $to ) {
     if (!is_array($to)) $to=explode(',',$to);
     $this->_to = array_merge( $this->_to,$to );
-    $this->_to = array_unique( $this->_to );
+    if (!is_multi($this->_to)) {
+      $this->_to = array_unique( $this->_to );
+    }
     return $this;
   }
   
@@ -238,14 +339,13 @@ class MY_Email extends CI_Email {
    */
   public function set_language($lang='') {
     if (empty($lang)) {
-      $CI = &get_instance();
-      if (isset($CI->session->userdata['language'])) {
+      if (isset($this->CI->session->userdata['language'])) {
         // is set in session?
-        $lang=$CI->session->userdata['language'];
+        $lang=$this->CI->session->userdata['language'];
       }
       else {
         // default from config
-        $lang=$CI->config->item('language');
+        $lang=$this->CI->config->item('language');
       }
     }
     $this->lang=$lang;
@@ -254,19 +354,140 @@ class MY_Email extends CI_Email {
   
   
   /**
-   * Set to send email with body as pdf
+   * Stuur pdf mee van gehele email in de bijlage
    *
    * @param string $pdf Default=TRUE. Kan ook de naam van de pdf bevatten
+   * @param string $pdf_body ['']. Eventueel alternatieve pdf body.
    * @return void
    * @author Jan den Besten
    */
-  public function send_with_pdf($pdf=true) {
-    $this->send_with_pdf=$pdf;
+  public function send_with_pdf($pdf=true, $pdf_body = '') {
+    $this->send_with_pdf = $pdf;
+    if (!empty($pdf_body)) $this->pdf_body = $pdf_body;
+    return $this;
   }
 
 
   /**
-   * Send a mail from cfg_emails
+   * Stuur emails individueel
+   *
+   * @param      boolean  $split  [TRUE]
+   * @return     $this
+   */
+  public function split_send( $split = true ) {
+    $this->split_send = $split;
+    return $this;
+  }
+
+
+  /**
+   * Stel parse data in voor subject & body
+   * 
+   * @param array $data
+   * @return void
+   */
+  public function set_parse_data($data) {
+    $this->_parse_data = array_merge($this->_parse_data,$data);
+    return $this;
+  }
+
+
+  /**
+   * Send email(s) zoals ingesteld:
+   * - Parse subject & body 
+   * - Van template  ->set_template()
+   * - Met PDF in bijlage ->send_with_pdf()
+   * - TODO: individueel
+   * - TODO: distributed 
+   *
+   * @param      bool     $auto_clear  TRUE
+   * @return     integer  Aantal verstuurde emails
+   */
+  public function send_it($auto_clear = TRUE) {
+    if (empty($this->lang)) $this->set_language();
+    $total_send = 0;
+
+    // Template?
+    if ($this->template) {
+      $this->subject = el('subject', $this->template,'');
+      $this->body = el('body', $this->template,'');
+      if (empty($this->subject) or empty($this->body)) {
+        $this->_set_error_message('email_subject_text_empty', $key);
+        return false;
+      }
+    }
+
+    // Parse data
+    $this->_set_default_parse_data();
+    // Parse subject & body
+    $this->CI->load->library('parser');
+    $subject = $this->CI->parser->parse_string($this->subject,$this->_parse_data,true);
+    $body = $this->CI->parser->parse_string($this->body,$this->_parse_data,true);
+
+    // Prepare body (styling and links)
+    $body = $this->prepare_body($body);
+
+       
+    // Create PDF and attach
+    if ($this->send_with_pdf) {
+      $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
+      if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;  
+      $mpdf = new mPDF('utf-8','',0,'',15,60,16,16,9,9,'L');
+      $pdf_body = $this->pdf_body;
+      if (empty($pdf_body)) $pdf_body = $this->body;
+      $pdf_body = $this->prepare_body($pdf_body);
+      $mpdf->writeHTML($pdf_body);
+      $file = __DIR__.'/../../'.SITEPATH.'cache/'.$pdf_name;
+      $mpdf->Output($file,'F');
+      $this->attach($file);
+    }
+
+    // Eén mail verzenden
+    if ( !$this->split_send ) {
+      // Set subject & Body
+      $this->subject( $subject );
+      $this->message( $body );
+      return $this->send($auto_clear);
+    }
+    
+    // Losse mails
+    $to_all = $this->_to;
+    foreach ($to_all as $address) {
+      if (is_array($address)) {
+        if (isset($address['name'])) {
+          $to = $address['name'];
+        }
+        else {
+          $to = $address['email'];
+        }
+        // personal parse
+        $parse_data = array_merge($this->_parse_data,$address);
+        $personal_subject = $this->CI->parser->parse_string($subject,$parse_data,true);
+        $personal_body = $this->CI->parser->parse_string($body,$parse_data,true);
+        $this->subject($personal_subject);
+        $this->message($personal_body);
+      }
+      else {
+        $to = $address;
+      }
+      $this->to($to);
+      if ($this->send(false)) {
+        $total_send++;
+      }
+      else {
+        $this->_set_error_message( $this->print_debugger(), $total_send );
+        return false;
+      }
+    }
+
+    if ($auto_clear) $this->clear();
+    return $total_send;
+  }
+
+
+
+  /**
+   * Stuur een email van een template in cfg_email
    * 
    * Standaard parse data:
    * site_url        => url zoals ingesteld in tbl_site
@@ -284,8 +505,7 @@ class MY_Email extends CI_Email {
     $this->body='';
     
     // Get subject & body
-    $CI = &get_instance();
-    $mail = $CI->data->table('cfg_email')->where('key',$key)->get_row();
+    $mail = $this->CI->data->table('cfg_email')->where('key',$key)->get_row();
     if (!$mail) {
       $this->_set_error_message('email_key_not_found', $key);
       return false;
@@ -300,11 +520,11 @@ class MY_Email extends CI_Email {
     }
     
     // Parse values in subject and body
-    $this->_set_default_data();
-    $data=array_merge($this->default_data,$data);
-    $CI->load->library('parser');
-    $subject = $CI->parser->parse_string($subject,$data,true);
-    $body = $CI->parser->parse_string($body,$data,true);
+    $this->_set_default_parse_data();
+    $data=array_merge($this->_parse_data,$data);
+    $this->CI->load->library('parser');
+    $subject = $this->CI->parser->parse_string($subject,$data,true);
+    $body = $this->CI->parser->parse_string($body,$data,true);
     // Prepare body
     if ($prepare_body) $body = $this->prepare_body($body);
     $this->body=$body;
@@ -314,11 +534,13 @@ class MY_Email extends CI_Email {
       $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
       if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;
       // Create PDF from HTML
-      $CI->load->library('html2pdf/html2pdf');
-      $html2pdf = new HTML2PDF('P', 'A4', 'en');
-      $html2pdf->writeHTML($this->body);
-      $file=SITEPATH.'cache/'.$pdf_name;
-      $html2pdf->Output($file,'F');
+      $mpdf = new mPDF('utf-8','',0,'',15,60,16,16,9,9,'L');
+      $pdf_body = $this->pdf_body;
+      if (empty($pdf_body)) $pdf_body = $this->body;
+      $pdf_body = $this->prepare_body($pdf_body);
+      $mpdf->writeHTML($pdf_body);
+      $file = __DIR__.'/../../'.SITEPATH.'cache/'.$pdf_name;
+      $mpdf->Output($file,'F');
       $this->attach($file);
     }
 
@@ -338,11 +560,10 @@ class MY_Email extends CI_Email {
    * @return void
    * @author Jan den Besten
    */
-  private function _set_default_data() {
-    $CI = &get_instance();
-    if (!isset($this->default_data['site_url']))    $this->default_data['site_url'] = site_url();
-    if (!isset($this->default_data['site_title']))  $this->default_data['site_title'] = $CI->data->table('tbl_site')->get_field('str_title');
-    if (!isset($this->default_data['today']))       $this->default_data['today'] = strftime('%A %e %B %Y');
+  private function _set_default_parse_data() {
+    if (!isset($this->_parse_data['site_url']))    $this->_parse_data['site_url'] = site_url();
+    if (!isset($this->_parse_data['site_title']))  $this->_parse_data['site_title'] = $this->CI->data->table('tbl_site')->get_field('str_title');
+    if (!isset($this->_parse_data['today']))       $this->_parse_data['today'] = strftime('%A %e %B %Y');
     return $this;
   }
   
@@ -356,13 +577,38 @@ class MY_Email extends CI_Email {
    * @author Jan den Besten
    */
   public function prepare_body($body) {
-    // good paths to local images
-    $body=preg_replace('/src=\"(?!https?:\/\/).*?/','src="'.base_url(),$body);
     // good internal links
 		$body=str_replace('href="mailto:','##MAIL##',$body);
 		$body=str_replace('href="undefined/','href="'.base_url(),$body);
 		$body=preg_replace('/href=\"(?!https?:\/\/).*?/','href="'.base_url(),$body);
 		$body=str_replace('##MAIL##','href="mailto:',$body);
+    
+
+    // If restricted image -> copy in _tmp assets folder and serve from there
+    if (preg_match_all('/<img.*src=\".*_media\/(.*)\/(.*)"/iu', $body, $matches)) {
+      foreach ($matches[2] as $key => $src) {
+        $path     = $matches[1][$key];
+        if ( $this->CI->assets->is_restricted($path) ) {
+          // Restriced file
+          $filename = $this->CI->config->item('ASSETSFOLDER').$path.'/'.$src;
+          $temp     = '_tmp/'.$path.'__'.$src;
+          $tempname = $this->CI->config->item('ASSETSFOLDER').$temp;
+          $tempsrc  = $this->CI->config->item('ASSETS').$temp;
+          // copy
+          if (!file_exists($tempname)) {
+            if (!file_exists($this->CI->config->item('ASSETSFOLDER').'_tmp')) mkdir($this->CI->config->item('ASSETSFOLDER').'_tmp');
+            @copy($filename,$tempname);
+          }
+          $body = str_replace( $this->CI->config->item('ASSETS').$path.'/'.$src, $tempsrc, $body );
+        }
+      }
+    }
+
+    // good paths to local images // LET OP: MockSMTP maakt soms een dubbele punt ergens van :-(
+    $body=preg_replace('/src=\"(?!https?:\/\/).*?/iu','src="'.base_url(),$body);
+
+    // good paths to url() in styles
+    $body = preg_replace('/(url\([\'|"])/uU', '$1'.base_url(), $body);
     return $body;
   }
   
@@ -397,11 +643,12 @@ class MY_Email extends CI_Email {
         $class=get_suffix($tag,'.');
         $tag=remove_suffix($tag,'.');
         if ($class==$tag) $class='';
-        // trace_([$tag,$class]);
-        if ($class)
+        if ($class) {
           $body = preg_replace("/<".$tag."(|\s[^>]*)(class=\"".$class."\")(|\s[^>]*)>/uiU", "<".$tag." class=\"".$class."\" style=\"".$style."\"$1$2>", $body);
-        else
+        }
+        else {
           $body = preg_replace("/<".$tag."(|\s[^>]*)>/uiU", "<".$tag." style=\"".$style."\"$1$2>", $body);
+        }
         
       }
     }

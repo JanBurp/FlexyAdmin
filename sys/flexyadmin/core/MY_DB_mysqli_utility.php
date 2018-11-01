@@ -9,62 +9,27 @@
  */
 class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 	
-
-  /**
-   * for add_flexy_field()
-   */
-  private $flexy_types = array(
-    'id'     => array('type' => 'INT','constraint' => 11, 'unsigned' => TRUE,'auto_increment' => TRUE),
-    'uri'    => array('type' => 'VARCHAR','constraint' => 255),
-
-    'id_'    => array('type' => 'INT','constraint' => 11, 'unsigned' => TRUE),
-    'str_'   => array('type' => 'VARCHAR','constraint' => 255),
-    'email_' => array('type' => 'VARCHAR','constraint' => 255),
-    'url_'   => array('type' => 'VARCHAR','constraint' => 255),
-    'txt_'   => array('type' => 'TEXT','null' => true),
-    'stx_'   => array('type' => 'TEXT','null' => true),
-    'tme_'   => array('type' => 'DATETIME'),
-    'b_'     => array('type' => 'TINYINT', 'constraint'=>1 ),
-  );
-
   public function __construct(&$db) {
     parent::__construct($db);
   }
 
-
   /**
-   * undocumented function
+   * Maak ruwe SQL schoon:
+   * - Verwijder alle comments
+   * - DROP TABLE wordt TRUNCATE table
+   * - CREATE TABLE wordt verwijderd (INSERTS blijven)
    *
-   * @param string $fields 
-   * @return void
-   * @author Jan den Besten
+   * @param      string  $sql ruw SQL
+   * @return     string  Schone SQL
    */
-  public function create_forge_fields($fields) {
-    if (!is_array($fields)) $fields=array($fields);
-
-    $forge_fields=array();
-
-    foreach ($fields as $field) {
-      if (is_string($field)) {
-        $pre=get_prefix($field);
-        if (empty($pre)) {
-          $pre=$field;
-        }
-        else {
-          $pre.='_';
-        }
-        $forge_fields[$field] = $this->flexy_types[$pre];
-      }
-    }
-    
-    return $forge_fields;
-    
-    $this->db->forge->add_fields($forge_fields);
+  public function clean_sql($sql) {
+    // $sql=preg_replace("/#(.*?)\n/","",$sql);
+    $sql=preg_replace("/DROP TABLE(.*) (.*?);/","# Empty $2\nTRUNCATE TABLE $2;",$sql);
+    $sql=preg_replace("/CREATE TABLE (.*?) (.|\n)*?;\n/","# Inserts for $1",$sql);
+    return $sql;
   }
-  
-  
-  
-  
+
+
   /**
    * Test of een sql veilig is om te importeren
    *
@@ -83,15 +48,16 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 		if (preg_match("/\b(".$checks.")\b/i",$sql)>0)	$safe=FALSE;
 		// Check on TRUNCATE / CREATE table names, if it has rights for tables
 		if ($safe) {
-      $CI=&get_instance();
-			if (preg_match_all("/(TRUNCATE\sTABLE|CREATE\sTABLE|INSERT\sINTO|DELETE\sFROM|UPDATE)\s(.*?)(;|\s)/i",$sql,$matches)>0) {
+      $CI = &get_instance();
+			if (preg_match_all("/(TRUNCATE\sTABLE|CREATE\sTABLE|INSERT\sINTO|DELETE\sFROM|UPDATE)\s`(.*?)`(;|\s)/i",$sql,$matches)>0) {
 				$tables=$matches[2];
 				$tables=array_unique($tables);
 				$tables=not_filter_by($tables,'rel');
 				// check if rights for found tables
 				foreach ($tables as $table) {
-					if ($CI->flexy_auth->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
+					if ( $CI->flexy_auth->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
 				}
+
 			}
 		}
 		return $safe;
@@ -233,17 +199,14 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 			$i = 0;
 			$field_str = '';
 			$is_int = array();
+			$is_hex = array();	// JDB
 			while ($field = $query->result_id->fetch_field())
 			{
 				// Most versions of MySQL store timestamp as a string
-				$is_int[$i] = in_array(strtolower($field->type),
-							array('tinyint', 'smallint', 'mediumint', 'int', 'bigint'), //, 'timestamp'),
-							TRUE);
-              
-        // Added by Jdb
-        $is_blob[$i] = in_array(strtolower($field->type),
-              array('text', 'blob', 'tinytext', 'tinyblob', 'mediumtext', 'mediumblob', 'longtext', 'longblob'),
-              TRUE);
+				$is_int[$i] = in_array($field->type, array(MYSQLI_TYPE_TINY, MYSQLI_TYPE_SHORT, MYSQLI_TYPE_INT24, MYSQLI_TYPE_LONG), TRUE);
+
+				// HEX AES: JDB
+				$is_hex[$i] = ($field->type == 253); // VARBINARY 
 
 				// Create a string of field names
 				$field_str .= $this->db->escape_identifiers($field->name).', ';
@@ -268,24 +231,19 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 					}
 					else
 					{
-            // Escape the data if it's a blob (Added by JdB)
-            if ($is_blob[$i]) {
+
+            // Escape the data if it's hex (JDB)
+            if ($is_hex[$i]) {
               if (empty($v))
-                $val_str.=$this->db->escape($v);
+                $val_str .= $this->db->escape($v);
               else
                 $val_str .= str2hex($v);
             }
-            // Escape the data if it's not an integer
-            elseif ($is_int[$i] == FALSE) {
-              $val_str .= $this->db->escape($v);
+						// Escape the data if it's not an integer
+						else {
+							$val_str .= ($is_int[$i] === FALSE) ? $this->db->escape($v) : $v;
             }
-            // Hex the data if it's a blob (Added by JdB)
-            elseif ($is_blob[$i]) {
-              $val_str .= str2hex($v);
-            }
-            else {
-              $val_str .= $v;
-            }
+
 					}
 
 					// Append a comma
@@ -311,6 +269,8 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 
 		return $output;
 	}
+
+
 
 
 }

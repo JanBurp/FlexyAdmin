@@ -3,6 +3,7 @@
 /* --- Settings for data model 'cfg_user_groups' --- Created @ Tue 17 May 2016, 17:25 */
 
 $config['table']           = 'cfg_user_groups';
+$config['cache_group']     = array('cfg_users','cfg_user_groups','rel_users__groups');
 $config['fields']          = array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show');
 $config['order_by']        = 'id';
 $config['abstract_fields'] = array('description');

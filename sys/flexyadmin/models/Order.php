@@ -7,7 +7,7 @@
  * @copyright (c) Jan den Besten
  */
 
-class order extends CI_Model {
+class Order extends CI_Model {
 
   private $table;
   private $order;
@@ -96,12 +96,23 @@ class order extends CI_Model {
 	 * @author Jan den Besten
 	 */
 	public function get_next_order($table,$parent="") {
-    $this->data->table($table)->select("order")->order_by("order DESC");
-		if (!empty($parent)) $this->data->where("self_parent",$parent);
-		$lastrow = $this->data->get_row();
+    $sql = "SELECT `order` FROM `$table`";
+    if (!empty($parent)) $sql.=" WHERE `self_parent`=$parent";
+    $sql.=" ORDER BY `order` DESC";
+    $query = $this->db->query($sql);
+    $lastrow = $query->row_array();
     if (!$lastrow) {
-      // Geen kinderen in de opgevraagde tree, dan is de order hetzelfde als de parent zelf
-  		$lastrow = $this->data->select("order")->where($parent)->get_row();
+      // Dit is het eerste item
+      if ($parent=='') {
+        $next = 0;
+        return $next;
+      }
+      else {
+        // Geen kinderen in de opgevraagde tree, dan is de order hetzelfde als de parent zelf
+        $sql = "SELECT `order` FROM `$table` WHERE `id`=$parent";
+        $query = $this->db->query($sql);
+        $lastrow = $query->row_array();
+      }
     }
     $next = $lastrow['order'] + 1;
     // Als in een tree, verschuif alles met hogere volgorde dan die van de tree op
@@ -115,34 +126,86 @@ class order extends CI_Model {
   
 
   /**
-   * Reset volgorde nummering. Volgorde blijft hetzelde, alleen de nummering wordt ververst
+   * Reset volgorde nummering.
+   * Neemt parents als basis, verder blijft volgorde hetzelfde.
+   * De nummering wordt ververst
    *
    * @param string $table 
    * @param int $from default=0, eventueel kan alles worden opgeschoven
-   * @param int $old default=FALSE
    * @return int Aantal geresette items
    * @author Jan den Besten
    */
-	public function reset($table,$from=0,$old=FALSE) {
-    if ($old) {
-      if ($this->is_a_tree($table)) {
-        $this->db->order_as_tree();
-        $this->db->select('self_parent');
-      }
-      $this->db->select('order');
-  		$result=$this->db->get_result($table);
+	public function reset($table,$from=0) {
+    $this->data->table($table);
+
+    $has_date = $this->data->field_exists('dat_date');
+
+    // Eenvoudig, geen self_parent
+    if ( !$this->is_a_tree($table) ) {
+      $result = $this->data->select('order')->order_by('order')->get_result();
+      $ids = array_keys($result);
+      $this->set_all($table,$ids,$from);
+      return count($ids);
     }
-    else {
-      $this->data->table($table);
-      if ($this->is_a_tree($table)) {
-        $this->data->order_by('order')->select('self_parent');
-      }
-      $this->data->select('order');
-  		$result=$this->data->get_result();
+
+    // Complexer: met self_parent
+    // 1) Reset verwijzingen naar zichzelf
+    $this->data->update( array('self_parent'=>0), '`self_parent`=`id`' );
+
+    // 2) Groupeer per parent
+    // 3) Sub results per parent
+    $parents = $this->data->select('self_parent,uri')->order_by('order')->set_result_key('self_parent')->get_result();
+    foreach ($parents as $parent_id => $items) {
+      $this->data->select('order,self_parent,uri')->where('self_parent',$parent_id);
+      if ($has_date)
+        $this->data->order_by('order,dat_date DESC');
+      else
+        $this->data->order_by('order');
+      $parents[$parent_id] = $this->data->get_result();
     }
-		$ids=array_keys($result);
-		$this->set_all($table,$ids,$from);
-    return count($ids);
+    $merged = $parents[0];
+    unset($parents[0]);
+
+    // 4) Voeg ze samen in nieuwe volgorde
+    $depth = 10;
+    while (count($parents)>0 and $depth>0 ) {
+      $offset = 0;
+      foreach ($merged as $parent_id => $item) {
+        $offset++;
+        $id = $item['id'];
+        if (isset($parents[$id])) {
+          array_splice($merged,$offset,0,$parents[$id]);
+          $offset += count($parents[$id]);
+          unset($parents[$id]);
+        }
+      }
+    }
+
+    // Zijn er nog 'verloren' kinderen?
+    if (count($parents)>0) {
+      foreach ($parents as $parent_id => $items) {
+        foreach ($items as $key=>$item) {
+          // Reset parent van verloren kind
+          if ($item['self_parent']==$parent_id) $items[$key]['self_parent'] = 0;
+        }
+        $merged = array_merge($merged,$items);
+        unset($parents[$parent_id]);
+      }
+    }
+    // re-id & reorder
+    $order = $from;
+    $result = array();
+    foreach ($merged as $item) {
+      $result[$item['id']] = $item;
+      $result[$item['id']]['order'] = $order;
+      $order++;
+    }
+
+    // Update all
+    foreach ($result as $id => $row) {
+      $this->data->table($table)->set($row)->where($id)->update();
+    }
+    return count($result);
 	}
   
 
@@ -190,6 +253,7 @@ class order extends CI_Model {
    */
   public function set( $table,$id,$new ) {
     $is_tree=$this->is_a_tree($table);
+    
     // Wat is de huidige order?
     $old=(int)$this->_get_order($table,$id);
     // Is dat hetzelfde, dan hoeft er niets te gebeuren
@@ -202,13 +266,13 @@ class order extends CI_Model {
       $children_ids = $this->_get_children_ids( $table, $id, $old );
       $moved_ids=array_merge($moved_ids,$children_ids);
     }
-    
+
     $log = array(
       'query' =>'',
       'table' => $table,
       'id'    => $id,
     );
-    
+
     // Pas order in item (en kinderen) aan
     $order = $new;
     foreach ($moved_ids as $move_id) {
@@ -225,7 +289,7 @@ class order extends CI_Model {
     // Alles opschuiven
     if ($new>$old) {
       // Schuif alle tussenliggende terug
-      $sql="UPDATE `$table` SET `order`=`order`-".$shifted_count." WHERE `order`>'$old' AND `order`<='$order' AND `id` NOT IN(".implode(',',$moved_ids).")";
+      $sql="UPDATE `$table` SET `order`=`order`-".$shifted_count." WHERE `order`>'$old' AND `order`<='".$order."' AND `id` NOT IN(".implode(',',$moved_ids).")";
       $this->db->query($sql);
       $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
     }
@@ -256,7 +320,7 @@ class order extends CI_Model {
     $log['query'] .= $this->data->last_query().';'.PHP_EOL.PHP_EOL;
     
     if ($log['query']) {
-      $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
+      $this->log_activity->add('order', $log['query'], $log['table'], $log['id'] );
     }
     return $new;
   }
@@ -271,25 +335,14 @@ class order extends CI_Model {
    * @author Jan den Besten
    */
   private function _get_children_ids( $table, $id, $order ) {
-    $parent = $this->_get_parent( $table,$id );
-    // Zoek de eerstvolgende met zelfde parent, alles ertussen is een kind
     $children_ids = array();
-    $childrenOrder = $order + 1;
-    do {
-      $next = $this->data->table($table)
-              ->select('id,self_parent,order')
-              ->where( 'order', $childrenOrder )
-              ->get_row();
-      if ($next) {
-        if ($next['self_parent']===$parent) {
-          $next=false;
-        }
-        else {
-          array_push($children_ids,$next['id']);
-        }
-      }
-      $childrenOrder++;
-    } while ($next);
+    $children = $this->data->table($table)
+                            ->select('id,self_parent,order')
+                            ->where( 'self_parent', $id )
+                            ->get_result();
+    if ($children) {
+      $children_ids = array_keys($children);
+    }   
     return $children_ids;
   }
   

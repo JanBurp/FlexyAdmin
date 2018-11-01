@@ -93,7 +93,7 @@ class Forms extends Module {
       }
       // Extra settings instellen
       if (isset($args[0])) {
-        $this->settings=array_merge($this->settings,$args[0]);
+        $this->settings = array_replace_recursive($this->settings,$args[0]);
       }
       // Laad eventueel benodigde libraries
   		$this->CI->load->library('form');
@@ -131,7 +131,6 @@ class Forms extends Module {
   	*/
 	public function index($page) {
     $this->form_id=$this->name;
-    $formAction=$this->get_action();
     $thanks='';
 		$html='';
     $errors='';
@@ -170,6 +169,10 @@ class Forms extends Module {
       if (!isset($this->CI->$model)) $this->CI->load->model($model);
       $this->CI->$model->initialize($this->settings);
       $formFields=$this->CI->$model->$method();
+      // settings changed?
+      if (method_exists($this->CI->$model, 'get_settings')) {
+        $this->settings = array_merge($this->settings,$this->CI->$model->get_settings());
+      }
     }
     // Geen velden ingesteld, maar wel een tabel: haal ze uit de tabel
     if (!$formFields and $this->settings('table')) {
@@ -180,8 +183,8 @@ class Forms extends Module {
     // Geen velden en geen tabel, maar een flexyform
     if (!$formFields) {
       $this->CI->load->model('getform');
-      $flexyform=str_replace('flexyform_','',$this->name);
-      $formData=$this->CI->getform->by_name($flexyform);
+      $flexyform = str_replace('flexyform_','',$this->name);
+      $formData  = $this->CI->getform->by_name($flexyform);
       if ($formData) {
   			$formFieldSets=$formData['fieldsets'];
   			$formFields=$formData['fields'];
@@ -218,9 +221,15 @@ class Forms extends Module {
     }
     
     // Extra veld toevoegen om op spamrobot te testen (die zal dit veld meestal automatisch vullen)
-    if ($this->settings('check_for_spam')) $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
+    // En een timestamp onthouden (antwoord binnen 5 seconden is een bot)
+    if ($this->settings('check_for_spam')) {
+      $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
+      $timestamp = $this->CI->session->userdata('spamcheck');
+      if (!$timestamp) $this->CI->session->set_userdata('spamcheck',time());
+    }
     
-		$form=new form($formAction,$this->form_id);
+    $formAction = $this->get_action();
+		$form = new form($formAction,$this->form_id);
     
     $framework=$this->CI->config->item('framework');
     if (isset($this->settings['framework'])) $framework=$this->settings('framework','default');
@@ -236,7 +245,7 @@ class Forms extends Module {
     if ($formButtons) $form->set_buttons($formButtons);
     
 		// Validate, and test filled form
-    $this->validated=$form->validation($this->form_id);
+    $this->validated = $form->validation($this->form_id);
     $this->spam=false;
   
     $result = true;
@@ -246,21 +255,22 @@ class Forms extends Module {
       // Spamcheck?
       if ($this->settings('check_for_spam')) {
         $this->CI->load->library('spam');
-        $this->spam=$this->CI->spam->check($data,'__test__');
-        $this->settings['spam_rapport']=$this->CI->spam->get_rapport();
-        $data['int_spamscore']=$this->CI->spam->get_score();
+        $this->spam                     = $this->CI->spam->check($data,'__test__');
+        $this->settings['spam_rapport'] = $this->CI->spam->get_rapport();
+        $data['int_spamscore']          = $this->CI->spam->get_score();
         unset($formFields['__test__']);
         unset($data['__test__']);
       }
     
       if (!$this->spam) {
         // Do the Action(s)
+        $this->CI->session->unset_userdata('spamcheck');
 
         if ($this->settings('restrict_this_ip_days')) {
           // remove (old) entries
           $this->CI->data->table('log_forms_submit')
                           ->where('ip',$ip)->where('str_form',$this->form_id)
-                          ->delete('log_forms_submit');
+                          ->delete();
           $set=array(
             'str_form'  => $this->form_id,
             'ip'        => $this->CI->input->ip_address(),
@@ -298,7 +308,7 @@ class Forms extends Module {
         if ($result) {
           if ($this->settings('prevend_double_submit',false)) {
             $this->CI->session->set_flashdata($this->form_id.'__thanks', $this->_view_thanks($result) );
-            redirect($formAction,'refresh');
+            redirect($formAction,REDIRECT_METHOD);
           }
           $html.=$this->_view_thanks($result);
         }
@@ -365,7 +375,8 @@ class Forms extends Module {
    * @author Jan den Besten
    */
   private function get_action() {
-    $action=$this->CI->uri->get();
+    $action = el('action',$this->settings,'');
+    if (empty($action)) $action = $this->CI->uri->get();
     if (isset($this->settings['action_query'])) $action.=$this->settings('action_query');
     return $action;
   }

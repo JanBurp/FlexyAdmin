@@ -92,14 +92,14 @@ class FrontEndController extends MY_Controller {
     }
     
     // Version timestamp
-    $files=array($this->config->item('ASSETS').'css/styles.min.css',$this->config->item('ASSETS').'js/scripts.min.js');
-    $version=0;
-    foreach ($files as $file) {
-      $time=0;
-      if (file_exists($file)) $time=filemtime($file);
-      if ($time>$version) $version=$time;
+    $version = 0;
+    $build = read_file($this->config->item('SYS').'/build.txt');
+    if ($build) {
+      if (preg_match('/{(.*)}/um', $build,$match)) {
+        $version=$match[1];
+      }
     }
-    $this->site['int_version']=$version;
+    $this->site['int_version'] = $version;
     
     // Is there a library that needs to be run first??
     if (file_exists(SITEPATH.'libraries/Before_controller.php')) {
@@ -123,9 +123,9 @@ class FrontEndController extends MY_Controller {
 		/**
 		 * Set global site info from tbl_site (if it doesn't exist, put some standard info)
 		 */
-    if ($this->data->table_exists("tbl_site")) {
+    if ( $this->data->table_exists("tbl_site") ) {
 			$stdFields=array("str_title","str_author","url_url","email_email","stx_description","stx_keywords");
-      $this->site = $this->data->table('tbl_site')->get_row();
+      $this->site = $this->data->table('tbl_site')->cache()->get_row();
 			unset($this->site['id']);
 			// rename standard fields
 			foreach ($stdFields as $f) {
@@ -177,18 +177,8 @@ class FrontEndController extends MY_Controller {
    		 * Set home uri (top from tbl_menu) if content comes from database
    		 */
       if ( $this->config->item('menu_autoset_home')) {
-   			$menuTable = get_menu_table();
-   			if ( ! empty($menuTable)) {
-          $this->data->table( $menuTable );
-   				if ( $this->data->field_exists( 'uri') ) {
-   					$this->data->select('uri');
-   					$top = $this->data->get_row();
-   					$this->uri->set_home( $top['uri'] );
-   				}
-   				else {
-   					$this->uri->set_home('');
-   				}
-   			}
+        $top = $this->data->table('tbl_menu')->get_first_child();
+				$this->uri->set_home( $top['uri'] );
    		}
    		elseif ($this->config->item('menu_homepage_uri')) {
    			$this->uri->set_home($this->config->item('menu_homepage_uri'));
@@ -401,16 +391,31 @@ class FrontEndController extends MY_Controller {
    * @author Jan den Besten
    */
   public function show_404() {
-    $this->site['title'].=' - Error 404';
-    $page=array();
-    $page['str_title']=' ';
-    $page['txt_text']=$this->view('error','',true);
-    if ($this->config->item('error404_module')) $page['str_module']=$this->config->item('error404_module');
+    $page404=array();
+    $page404['str_title']=' ';
+    $page404['txt_text']=$this->view('error','',true);
+    if ($this->config->item('error404_module')) $page404['str_module']=$this->config->item('error404_module');
   	// Load and call modules
-    $page=$this->_module($page);
+    $page=$this->_module(array());
+    if ($page) {
+      $page404 = array_merge($page404,$page);
+      // Add extra title and keywords, replace description (if any)
+      if (isset($page404['str_title']))     $this->add_title($page404['str_title']);
+      if (isset($page404['str_keywords']))  $this->add_keywords($page404['str_keywords']);
+      if (isset($page404['stx_description']) and !empty($page['stx_description'])) $this->site['description']=$page['stx_description'];
+    }
+    else {
+      $this->add_title(' - Error 404');
+    }
 		// Add page content (if no break)
-    $page['show_page']=!$this->site['break'];
-    $this->add_content( $this->view($this->config->item('page_view'),$page,true) );
+    $page404['show_page']=!$this->site['break'];
+    if (isset($page404['_view'])) {
+      $this->add_content( $this->view($page404['_view'],$page404,true) );
+    }
+    else {
+      $this->add_content( $this->view('page',$page404,true) );
+    }
+    return $page404;
 	}
   
   /**

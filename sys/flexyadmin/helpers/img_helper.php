@@ -138,8 +138,11 @@ function thumb($attr) {
  */
 function get_img_size($file) {
   $CI=&get_instance();
-  $CI->load->model('mediatable');
-  return $CI->mediatable->get_img_size($file);
+  $CI->load->model('assets');
+  $file = remove_assets($file);
+  $path = get_prefix($file,'/');
+  $file = remove_prefix($file,'/');
+  return $CI->assets->get_img_size($path,$file);
 }
 
 /**
@@ -164,8 +167,11 @@ function is_wider_than($i,$w) {
  */
 function portrait_or_landscape($file) {
   $CI=&get_instance();
-  $CI->load->model('mediatable');
-  return $CI->mediatable->portrait_or_landscape($file);
+  $CI->load->model('assets');
+  $file = remove_assets($file);
+  $path = get_prefix($file,'/');
+  $file = remove_prefix($file,'/');
+  return $CI->assets->portrait_or_landscape($path,$file);
 }
 
 /**
@@ -177,6 +183,9 @@ function portrait_or_landscape($file) {
  */
 function get_img_title($file) {
   $CI=&get_instance();
-  $CI->load->model('mediatable');
-  return $CI->mediatable->get_img_title($file);
+  $CI->load->model('assets');
+  $file = remove_assets($file);
+  $path = get_prefix($file,'/');
+  $file = remove_prefix($file,'/');
+  return $CI->assets->get_img_title($path,$file);
 }

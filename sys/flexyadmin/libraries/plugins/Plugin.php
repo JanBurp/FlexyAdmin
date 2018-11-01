@@ -12,7 +12,6 @@ class Plugin extends Parent_module_plugin {
 	
   /**
    * Eventuele output van de plugin komt hier.
-   * @deprecated
    */
 	protected $content;
   
@@ -108,7 +107,15 @@ class Plugin extends Parent_module_plugin {
 		$this->content.=$content;
 		return $this->content;
 	}
+
+  protected function add_trace($content) {
+    return $this->add_content(str_replace("\n",'<br>',trace_($content,false)));
+  }
 	
+  protected function add_trace_sql($content) {
+    return $this->add_content('<pre class="_trace">'.str_replace("\n",'<br>',highlight_code(nice_sql($content))).'</pre>');
+  }
+
   /**
    * Voegt een bericht toe wat naar de output kan worden gestuurd
    *
@@ -126,8 +133,18 @@ class Plugin extends Parent_module_plugin {
    * @return array
    * @author Jan den Besten
    */
-  protected function get_messages() {
+  public function get_messages() {
     return $this->messages;
+  }
+  
+  /**
+   * Geeft alle berichten terug als HTML
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  public function show_messages() {
+    return implode($this->messages);
   }
 
   
@@ -147,19 +164,6 @@ class Plugin extends Parent_module_plugin {
     return $this->CI->load->view($view,$args,$hide);
   }
   
-  
-	/**
-	 * Depricated
-	 *
-	 * @return void
-	 * @author Jan den Besten
-   * @internal
-	 */
-	function get_show_type() {
-		return '';
-	}
-
-
 }
 
 /**

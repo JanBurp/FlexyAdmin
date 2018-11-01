@@ -4,6 +4,7 @@ Class Data_Create extends CI_Model {
   
   
   private $paths = array();
+  private $default_data = array();
   
   protected $site_models = array('tbl','rel');
   // protected $show_always = array('id','order','self_parent');
@@ -29,8 +30,11 @@ Class Data_Create extends CI_Model {
     
     $this->load->library('parser');
     $this->load->library('form_validation');
-    $this->load->model('cfg');
     $this->load->model( 'data/data', 'data' );
+
+    $default_data_file = $this->paths['sys_config'].'data.php';
+    $this->config->load($default_data_file,true);
+    $this->default_data = $this->config->config['data/data'];
 	}
   
   
@@ -135,6 +139,29 @@ Class Data_Create extends CI_Model {
   }
   
   
+  public function save_config( $name, $template, $file, $config, $replace=array()) {
+    $config_template= file_get_contents( $template );
+    
+    // Remove all comments from config_template
+    $config_template = preg_replace("~/\*\*.*\/\n~uUs", "", $config_template);
+    
+    // All data to template and save this table model
+    $replace['NAME'] = $name;
+    $replace['DATE'] = date('D j F Y, H:i');
+
+    // Remove defaults from config
+    foreach ($config as $key => $item) {
+      if ($config[$key]==$this->default_data[$key]) {
+        unset($config[$key]);
+      }
+    }
+      
+    $config = $this->replace_config($config_template,$config);
+    $config = $this->parser->parse_string( $config, $replace, true );
+    
+    file_put_contents( $file, $config );
+  }
+  
   
   
   /**
@@ -146,9 +173,15 @@ Class Data_Create extends CI_Model {
    * @author Jan den Besten
    */
   private function replace_config( $template, $config ) {
+    $config = array_merge_recursive_distinct($this->default_data,$config);
     foreach ($config as $key => $value) {
-      $value = $this->value_to_string($value);
-      $template = preg_replace("/(config\['".$key."']\s?).*;/um", "$1= ".$value.";", $template);
+      if (is_null($value) or $value=='NULL' or $value==='' or $value==$this->default_data[$key]) {
+        $template = preg_replace("/(.config\['".$key."']\s?).*;\n*/um", '', $template);
+      }
+      else {
+        $value = $this->value_to_string($value);
+        $template = preg_replace("/(config\['".$key."']\s?).*;/um", "$1= ".$value.";", $template);
+      }
     }
     return $template;
   }

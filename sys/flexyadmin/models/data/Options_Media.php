@@ -15,12 +15,7 @@ Class Options_Media extends CI_Model {
   
   
   public function get_options( $info=array() ) {
-    $options=array();
-    $path = $info['path'];
-    $media = new Data();
-    $media->table( 'res_media_files' );
-    $options = $media->get_files_as_options($path);
-    return $options;
+    return array();
   }
   
 

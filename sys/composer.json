@@ -1,7 +1,8 @@
 {
 	"description" : "Auto update & install CodeIgniter and others",
 	"require": {
-    "benedmunds/CodeIgniter-Ion-Auth":"*",
-    "firebase/php-jwt":"*"
+    "firebase/php-jwt":"*",
+		"mpdf/mpdf": "^6.1",
+		"defuse/php-encryption": "^2.2"
 	}
 }

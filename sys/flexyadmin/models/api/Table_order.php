@@ -72,8 +72,8 @@ class Table_order extends Api_Model {
 
 
 	public function __construct() {
-		parent::__construct();
-	}
+    parent::__construct();
+  }
   
 
   /**
@@ -106,18 +106,21 @@ class Table_order extends Api_Model {
    */
   private function _set_order() {
     $this->load->model('order');
+    if ( !is_numeric($this->args['id']))   return FALSE;
+    if ( !is_numeric($this->args['from'])) return FALSE;
     // Zet er meerdere
-    if (count($this->args['id'])>1) {
+    if (is_array($this->args['id']) and count($this->args['id'])>1) {
       $items = $this->order->set_all( $this->args['table'], $this->args['id'], $this->args['from']);
       return $items;
     }
     // Of één
-    if (count($this->args['id'])===1) {
+    if (!is_array($this->args['id']) or count($this->args['id'])===1) {
       if (is_array($this->args['id'])) $this->args['id']=current($this->args['id']);
       $new = $this->order->set( $this->args['table'], $this->args['id'], $this->args['from'] );
       return $new;
     }
-    //
+    // Voor de zekerheid:
+    $this->order->reset( $this->args['table'] );
     return FALSE;
   }
   

@@ -59,8 +59,7 @@ function set_language_neutral_fields($item,$fields=array('str_title','txt_text')
  * @author Jan den Besten
  */
 function langp($s1="",$sn="") {
-	$CI =& get_instance();
-  $CI->load->model('ui');
+	$CI=&get_instance();
 	$args=func_get_args();
 	$line=array_shift($args);
 	$line=$CI->lang->line($line);
@@ -82,7 +81,7 @@ function langp($s1="",$sn="") {
     default:
       $out=$line;
   }
-  $out=$CI->ui->replace_ui_names($out);
+  $out=$CI->lang->replace_ui($out);
 	return $out;
 }
 

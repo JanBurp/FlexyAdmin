@@ -15,15 +15,9 @@ class AuthTest extends CITestCase {
         'backup'    => true,
         'tools'     => true,
         'items'     => array(
-          'cfg_admin_menu'        => 15,
-          'cfg_configurations'    => 15,
+          'cfg_version'           => 15,
           'cfg_email'             => 15,
-          'cfg_field_info'        => 15,
-          'cfg_img_info'          => 15,
-          'cfg_media_info'        => 15,
           'cfg_sessions'          => 15,
-          'cfg_table_info'        => 15,
-          'cfg_ui'                => 15,
           'cfg_user_groups'       => 15,
           'cfg_users'             => 15,
           'log_activity'          => 15,
@@ -32,12 +26,13 @@ class AuthTest extends CITestCase {
           'rel_crud__crud2'       => 15,
           'rel_groepen__adressen' => 15,
           'rel_users__groups'     => 15,
-          'res_media_files'       => 15,
+          'res_assets'            => 15,
           'tbl_adressen'          => 15,
+          'tbl_blog'              => 15,
           'tbl_crud'              => 15,
           'tbl_crud2'             => 15,
           'tbl_groepen'           => 15,
-          'tbl_kinderen'    => 15,
+          'tbl_kinderen'          => 15,
           'tbl_links'             => 15,
           'tbl_menu'              => 15,
           'tbl_site'              => 15,
@@ -54,15 +49,9 @@ class AuthTest extends CITestCase {
         'backup'    => false,
         'tools'     => false,
         'items'     => array(
-          'cfg_admin_menu'        => 0,
-          'cfg_configurations'    => 0,
+          'cfg_version'           => 0,
           'cfg_email'             => 0,
-          'cfg_field_info'        => 0,
-          'cfg_img_info'          => 0,
-          'cfg_media_info'        => 0,
           'cfg_sessions'          => 0,
-          'cfg_table_info'        => 0,
-          'cfg_ui'                => 0,
           'cfg_user_groups'       => 0,
           'cfg_users'             => 0,
           'log_activity'          => 0,
@@ -71,12 +60,13 @@ class AuthTest extends CITestCase {
           'rel_crud__crud2'       => 0,
           'rel_groepen__adressen' => 0,
           'rel_users__groups'     => 0,
-          'res_media_files'       => 0,
+          'res_assets'            => 0,
           'tbl_adressen'          => 15,
+          'tbl_blog'              => 15,
           'tbl_crud'              => 15,
           'tbl_crud2'             => 15,
           'tbl_groepen'           => 15,
-          'tbl_kinderen'    => 15,
+          'tbl_kinderen'          => 15,
           'tbl_links'             => 15,
           'tbl_menu'              => 15,
           'tbl_site'              => 15,
@@ -93,15 +83,9 @@ class AuthTest extends CITestCase {
         'backup'    => true,
         'tools'     => true,
         'items'     => array(
-          'cfg_admin_menu'        => 0,
-          'cfg_configurations'    => 0,
+          'cfg_version'           => 0,
           'cfg_email'             => 0,
-          'cfg_field_info'        => 0,
-          'cfg_img_info'          => 0,
-          'cfg_media_info'        => 0,
           'cfg_sessions'          => 0,
-          'cfg_table_info'        => 0,
-          'cfg_ui'                => 0,
           'cfg_user_groups'       => 0,
           'cfg_users'             => 15,
           'log_activity'          => 0,
@@ -110,12 +94,13 @@ class AuthTest extends CITestCase {
           'rel_crud__crud2'       => 0,
           'rel_groepen__adressen' => 0,
           'rel_users__groups'     => 0,
-          'res_media_files'       => 0,
+          'res_assets'            => 0,
           'tbl_adressen'          => 15,
+          'tbl_blog'              => 15,
           'tbl_crud'              => 15,
           'tbl_crud2'             => 15,
           'tbl_groepen'           => 15,
-          'tbl_kinderen'    => 15,
+          'tbl_kinderen'          => 15,
           'tbl_links'             => 15,
           'tbl_menu'              => 15,
           'tbl_site'              => 15,
@@ -218,8 +203,24 @@ class AuthTest extends CITestCase {
         $this->assertTrue( $this->CI->flexy_auth->send_new_account( $user_id ), 'New user should get a `new account` email '.$identity);
         // Send new password mail
         $this->assertTrue( $this->CI->flexy_auth->send_new_password( $user_id ), 'New user should get a `new password` email '.$identity);
+
+        // Test if users has unique passwords
+        $query = $this->CI->db->get('cfg_users');
+        $user_count = $query->num_rows();
+        $query = $this->CI->db->query('SELECT DISTINCT `gpw_password` FROM `cfg_users`');
+        $distinct_count = $query->num_rows();
+        $this->assertEquals($user_count,$distinct_count,'Users should have `unique` passwords');
+
         // Send new forgotten password mail
         $this->assertTrue( $this->CI->flexy_auth->forgotten_password( $email ), 'New user should get a `forgotten_password` email '.$identity);
+
+        // Test if users has unique passwords
+        $query = $this->CI->db->get('cfg_users');
+        $user_count = $query->num_rows();
+        $query = $this->CI->db->query('SELECT DISTINCT `gpw_password` FROM `cfg_users`');
+        $distinct_count = $query->num_rows();
+        $this->assertEquals($user_count,$distinct_count,'Users should have `unique` passwords');
+
       }
       // Remove user
       $this->assertTrue( $this->CI->flexy_auth->delete_user($user_id) );

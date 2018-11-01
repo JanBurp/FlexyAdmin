@@ -15,7 +15,7 @@
 <div id="wrapper">
 
 	<div id="dialog">
-		<form action="<?=site_url("admin/login/forgot_password")?>" method="post" class="login">
+		<form action="<?=site_url("_admin/login/forgot_password")?>" method="post" class="login">
 			<h2>FlexyAdmin login</h2>
 			<p>Type you're email address and you will get an email to reset you're password</p>
 			<?php if (isset($message) and !empty($message)): ?>

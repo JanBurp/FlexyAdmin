@@ -9,7 +9,7 @@
 |
 */
 
-$config['admin_api_method'] = '_admin_api';
+$config['admin_api_method']    = '_admin_api';
 $config['after_update_method'] = '_after_update';
 
 
@@ -22,19 +22,8 @@ $config['after_update_method'] = '_after_update';
 */
 
 $config['trigger'] = array(
-	'fields'					=> array('uri')
+	'fields' => array('uri')
 );
-
-
-/*
-|--------------------------------------------------------------------------
-| Prefix per table
-|--------------------------------------------------------------------------
-*/
-
-$config['prefix'] = array(
-  // 'tbl_menu'  => 'menu_'
-)
 
 
 ?>

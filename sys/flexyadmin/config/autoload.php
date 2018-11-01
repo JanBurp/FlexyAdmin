@@ -122,7 +122,7 @@ $autoload['language'] = array();
 */
 
 // Also 'data/Data' is autoloaded in MY_Controller
-$autoload['model'] = array('mediatable');
+$autoload['model'] = array('assets');
 
 
 

@@ -113,7 +113,7 @@ function array2formfields($array,$validation_rules_prefixes=array(),$validation_
 
     $pre=get_prefix($field);
     $validation=trim(el($pre,$validation_rules_prefixes,'').'|'.el($field,$validation_rules_fields,''),'|');
-    $validation=$CI->form_validation->combine_validations($validation);
+    $validation=$CI->form_validation->combine_rules($validation);
 		switch ($pre) {
 			case 'id':
 				$type='hidden';

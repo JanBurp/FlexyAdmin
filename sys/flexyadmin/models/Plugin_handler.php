@@ -10,6 +10,8 @@ class Plugin_handler extends CI_Model {
 	var $plugins=array();
 	var $trigger_methods;
 	var $data;
+  
+  private $messages = array();
 
 	public function __construct() {
 		parent::__construct();
@@ -74,7 +76,7 @@ class Plugin_handler extends CI_Model {
 				if (isset($this->plugins[$pluginName]['config'][$method])) {
 					$this->trigger_methods[$method][$pluginName] = $this->plugins[$pluginName]['config'][$method];
 					if ($method=='admin_api_method') {
-						$this->config->set_item( 'API_'.$pluginName, '/admin/plugin/'.str_replace('plugin_','',$pluginName) );
+						$this->config->set_item( 'API_'.$pluginName, $this->config->item('API_plugin').str_replace('plugin_','',$pluginName) );
 					}
 				}
 			}
@@ -124,7 +126,7 @@ class Plugin_handler extends CI_Model {
 
 
 
-	public function call_plugin($plugin,$method,$args=NULL) {
+	public function call_plugin($plugin,$method,$args=NULL,$help='') {
 		$return = FALSE;
 		// Plugin exists?
 		if (isset($this->plugins[$plugin])) {
@@ -134,8 +136,7 @@ class Plugin_handler extends CI_Model {
   		}
   		// call
   		if (method_exists($plugin,$method)) {
-        // strace_("Call Plugin: $plugin->$method");
-  			$return = $this->$plugin->$method($args);
+  			$return = $this->$plugin->$method($args,$help);
   		}
     }
 		return $return;
@@ -148,13 +149,13 @@ class Plugin_handler extends CI_Model {
 		return '';
 	}
 
-	public function call_plugin_admin_api($plugin,$args) {
+	public function call_plugin_admin_api($plugin,$args,$help='') {
 		if (isset($this->plugins[$plugin]['config']['admin_api_method'])) {
-			return $this->call_plugin($plugin,$this->plugins[$plugin]['config']['admin_api_method'],$args);
+			return $this->call_plugin($plugin,$this->plugins[$plugin]['config']['admin_api_method'],$args,$help);
 		}
 		return '';
 	}
-
+  
 	public function call_plugin_ajax_api($plugin,$args) {
 		if (isset($this->plugins[$plugin]['config']['ajax_api_method'])) {
 			return $this->call_plugin($plugin,$this->plugins[$plugin]['config']['ajax_api_method'],$args);
@@ -232,29 +233,34 @@ class Plugin_handler extends CI_Model {
 		return $this->data['new'];
 	}
 
-
-
 	public function call_plugins_after_update_trigger() {
 		$this->_set_additional_data();
-		// strace_($this->data);
+    // trace_($this->data);
 		if (isset($this->trigger_methods['after_update_method'])) {
+      $this->messages = array();
 			foreach ($this->trigger_methods['after_update_method'] as $plugin => $method) {
 				if ($this->is_triggered($plugin)) {
 					$this->_give_data_to_plugin($plugin);
-          $result=$this->call_plugin($plugin,$method,$this->data['new']);
+          $result = $this->call_plugin($plugin,$method,$this->data['new']);
           if (is_array($result)) {
             $this->data['new']=$result;
           }
           else {
             $this->message->add_error($result);
           }
+          $message = $this->call_plugin($plugin,'show_messages');
+          if ($message) $this->messages[]=$message;
 				}
 			}
 		}
 		if (!isset($this->data['new'])) return NULL;
-		// strace_($this->data);
 		return $this->data['new'];
 	}
+  
+  public function get_plugins_messages() {
+    return $this->messages;
+  }
+  
 
 	public function call_plugins_after_delete_trigger() {
 		$delete=TRUE;

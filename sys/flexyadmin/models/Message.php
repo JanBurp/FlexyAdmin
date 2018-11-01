@@ -68,7 +68,7 @@ class Message extends CI_Model {
     if (!empty($message)) {
       $messages=$this->get($type);
       if (!is_array($messages)) $messages=array();
-      // if ($this->uiNames) $message=$this->ui->replace_ui_names($message);
+      // if ($this->uiNames) $message=$this->lang->replace_ui($message);
       array_unshift($messages, $message );
   		$this->session->set_userdata($type,$messages);
     }

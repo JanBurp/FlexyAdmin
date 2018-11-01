@@ -25,7 +25,7 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except soms system uri's
  */
-$route['(?!__api|admin|_rss|file|_media|_admin|_admin_assets|_cronjob|_unittest|_ajax|_api|_cli)(.*)'] = "";
+$route['(?!__api|_rss|_media|_admin|_admin_assets|_cronjob|_unittest|_ajax|_api|_cli)(.*)'] = "";
 
 /**
  * RSS feed(s)
@@ -60,31 +60,39 @@ $route['_cli/(.*)'] = 'cli/index/$1';
  */
 $route['_media/download/(.*)/(.*)'] = "file/file/download/$1/$2";
 $route['_media/serve/(.*)/(.*)']    = "file/file/serve/$1/$2";
+$route['_media/thumb/(.*)/(.*)']    = "file/file/thumb/$1/$2";
 $route['_media/(.*)/(.*)']          = "file/file/serve/$1/$2";
-
-$route['file/serve/(.*)/(.*)']      = "file/file/serve/$1/$2";
-$route['file/download/(.*)/(.*)']   = "file/file/download/$1/$2";
-$route['file/(.*)/(.*)']            = "file/file/download/$1/$2";
-
+$route['_admin_assets/(.*)']   			= "file/file/admin_assets/$1";
 $route['_admin_assets/(.*)/(.*)']   = "file/file/admin_assets/$1/$2";
+
+/**
+ * Editor Popup
+ */
+$route['_admin/load/editor'] 				= "_admin/editor";
+$route['_admin/load/editor/image'] 	= "_admin/editor/image";
 
 
 /**
  * This routing reroutes plugin calls
  */
-$route['admin/plugin']      = "admin/plugin_controller";
-$route['admin/plugin/(.+)'] = "admin/plugin_controller/call/$1";
-
-/**
- * This routing reroutes help subpages
- */
-$route['admin/help/(.+)'] = "admin/help/index/$1";
-
+$route['_admin/load/plugin']      = "_admin/plugin_controller";
+$route['_admin/load/plugin/(.+)'] = "_admin/plugin_controller/call/$1";
 
 /**
  * Update actions
  */
-$route['admin/update/(.+)'] = "admin/update/index/$1";
+$route['_admin/update/(.+)'] = "_admin/update/index/$1";
+
+/**
+ * Other Admin Routes
+ */
+$route['_admin/login'] 				= "_admin/login";
+$route['_admin/login/(.*)'] 	= "_admin/login/$1";
+
+$route['_admin'] 								= "_admin";
+$route['_admin/(.*)'] 					= "_admin";
+$route['_admin/(.*)/(.*)'] 			= "_admin";
+// $route['_admin/(.*)/(.*)/(*.)'] = "_admin";
 
 
 // Reserved routes

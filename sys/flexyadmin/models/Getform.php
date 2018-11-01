@@ -8,12 +8,17 @@
 
  class Getform extends CI_Model {
 
+ 	private $exists = FALSE;
+
    /**
      */
   public	function __construct() {
     $this->lang->load('update_delete');
     $this->lang->load('form');
     $this->lang->load('form_validation');
+    if ( $this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields') ) {
+    	$this->exists = true;
+    }
     parent::__construct();
   }
 
@@ -26,7 +31,7 @@
    * @deprecated
    */
 	public function by_module($module) {
-		$this->db->where('str_module',$module);
+    if ($this->exists) $this->data->table('tbl_forms')->where('str_module',$module);
 		return $this->_get_form();
 	}
 
@@ -38,7 +43,7 @@
    * @author Jan den Besten
    */
 	public function by_name($title) {
-		$this->db->where('LOWER(`str_name`) = LOWER("'.$title.'")');
+    if ($this->exists) $this->data->table('tbl_forms')->where('LOWER(`str_name`) = LOWER("'.$title.'")');
 		return $this->_get_form();
 	}
 
@@ -51,7 +56,7 @@
    * @author Jan den Besten
    */
 	public function by_title($title) {
-		$this->db->where('LOWER(`str_title_'.$this->site['language'].'`) = LOWER("'.$title.'")');
+    if ($this->exists) $this->data->table('tbl_forms')->where('LOWER(`str_title_'.$this->site['language'].'`) = LOWER("'.$title.'")');
 		return $this->_get_form();
 	}
 
@@ -63,7 +68,7 @@
    * @author Jan den Besten
    */
 	public function by_id($id) {
-		$this->db->where('id',$id);
+    if ($this->exists) $this->data->table('tbl_forms')->where('id',$id);
 		return $this->_get_form();
 	}
 	
@@ -77,12 +82,13 @@
 	private function _get_form() {
 		$form=false;
     $lang=$this->site['language'];
-		if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) {
+
+		if ($this->exists) {
 			$form=array();
-      $row=$this->data->table('tbl_forms')->get_row();
+      $row = $this->data->get_row();
 			if ($row) {
         $form['form']=$row;
-				$fields = $this->data->table('tbl_formfields')->where('id_form',$form['form']['id'])->get_result();
+				$fields = $this->data->table('tbl_formfields')->where('id_forms',$form['form']['id'])->get_result();
 				array_push($fields,array('str_type'=>'##END##','str_label'=>'##END##','str_name'=>'','str_validation'=>'','str_validation_parameters'=>''));
 				if ($fields) {
 					$options=false;
@@ -128,7 +134,7 @@
                 $value['options']=$opts;
               }
               // validation
-							$value['validation']=$this->form_validation->combine_validations( array(array('rules'=>$value['validation'],'params'=>$value['validation_parameters'])) );
+							$value['validation']=$this->form_validation->combine_rules( array(array('rules'=>$value['validation'],'params'=>$value['validation_parameters'])) );
 							unset($value['validation_parameters']);
               
               // value?

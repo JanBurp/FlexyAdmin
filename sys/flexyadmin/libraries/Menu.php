@@ -126,7 +126,7 @@ class Menu {
 
   var $settings = array(
     'current'         => '',
-    'menu_table'      => '',
+    'menu_table'      => 'tbl_menu',
     'fields'          => array(
       'uri'         => 'uri',
       'url'         => '',
@@ -139,7 +139,7 @@ class Menu {
       'extra'       => '',
     ),
     'multilang_title' => FALSE,
-    'framework'       => 'default',             // 'default', 'bootstrap'
+    'framework'       => 'bootstrap',             // 'default', 'bootstrap'
     'attributes'      => array('class'=>''),
     'full_uris'       => false,
     'ordered_titles'  => '',   // NUMBERS geeft 1,2,3,4 etc., ALFA geeft A,B,C,D etc, ROMAN geeft I,II,III,IV etc.
@@ -161,7 +161,7 @@ class Menu {
       'first'   => 'first',
       'last'    => 'last',
       'has_sub' => 'dropdown-menu',
-      'is_sub'  => 'sub'
+      'is_sub'  => 'dropdown'
     )
     
     
@@ -247,9 +247,9 @@ class Menu {
       return $this->$method($value);
     }
     if (is_array($value))
-      $this->settings[$name]=array_merge($this->settings[$name],$value);
+      $this->settings[$name] = array_merge( el($name,$this->settings,array()), $value);
     else
-      $this->settings[$name]=$value;
+      $this->settings[$name] = $value;
     return $this;
   }
 
@@ -306,12 +306,11 @@ class Menu {
   /**
    * Stelt menu tabel in
    *
-   * @param string $table[''] Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu of res_menu_result)
+   * @param string $table[''] Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu)
    * @return object this
    * @author Jan den Besten
    */
-	public function set_menu_table($table='') {
-		if (empty($table)) $table=get_menu_table();
+	public function set_menu_table($table='tbl_menu') {
 		$this->settings['menu_table']=$table;
 		return $this;
 	}
@@ -320,40 +319,17 @@ class Menu {
    * Zet menu tabel en laad menu in vanuit die tabel en creert het menu
    *
    * @param string $table default='' Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu of res_menu_result)
-   * @param string $foreign default=false Eventuele foreign data die meegenomen moet worden in resultaat (zie bij db->add_foreign())
    * @return array het menu als de interne menu array
    * @author Jan den Besten
    */
-	public function set_menu_from_table($table="",$foreign=false) {
+	public function set_menu_from_table($table='') {
     if (!empty($table) or empty($this->settings['menu_table'])) $this->set('menu_table',$table);
     $table=$this->settings['menu_table'];
     
     if ($table) {
-      
       $this->CI->data->table( $table );
-      $fields = $this->CI->data->list_fields();
-      
-  		// select fields
-  		foreach ($fields as $key=>$f) {
-  			if (!in_array($f,$this->settings['fields']) and !isset($this->settings['fields']['extra'][$f])) unset($fields[$key]);
-  		}
-  		if (is_array($foreign)) {
-  			foreach ($foreign as $t => $ff) {
-  				$fields[]='id_'.remove_prefix($t);
-  				foreach ($ff as $f) {
-  					$fields[]=$t.'.'.$f;
-  				}
-  			}
-  		}
-      
-  		// get data from table
-      $this->CI->data->select( $fields );
-  		if ($foreign) $this->CI->data->with('many_to_one',$foreign);
-  		if (in_array($this->settings['fields']['parent'],$fields)) {
-        $this->CI->data->path('full_uri','uri');
-  		}
-      $data=$this->CI->data->get_result();
-  		return $this->set_menu_from_table_data($data,$foreign);
+      $data=$this->CI->data->get_menu_result();
+  		return $this->set_menu_from_table_data($data);
     }
     
     return array();
@@ -373,40 +349,52 @@ class Menu {
 	 * Maakt menu van array uit database resultaat
 	 *
 	 * @param array $items database resultaat
-	 * @param string $foreign default=false TODO
 	 * @return array het menu als de interne menu array
 	 * @author Jan den Besten
 	 */
-	public function set_menu_from_table_data($items="",$foreign=false) {
-    
+	public function set_menu_from_table_data($items="") {
 		$counter=1;
 		$menu=array();
 		
-		$boolFields=$this->settings['fields'];
-		$boolFields=filter_by_key($boolFields,'b_');
+		$boolFields = $this->settings['fields'];
+		$boolFields = filter_by_key($boolFields,'b_');
 
 		foreach($items as $item) {
 			if (!isset($item[$this->settings['fields']["visible"]]) or ($item[$this->settings['fields']["visible"]]) ) {
-				$thisItem=array();
-				$thisItem["id"]=$item[PRIMARY_KEY];
-				$uri=$item[$this->settings['fields']["uri"]];
-				$thisItem["uri"]=$uri;
-				if (isset($item['full_uri']))	$thisItem["full_uri"]=$item['full_uri'];
-				
+				$thisItem                                           = array();
+
+        // id & uri
+				$thisItem["id"]           = el(PRIMARY_KEY,$item);
+				$uri                      = $item[$this->settings['fields']["uri"]];
+				$thisItem["uri"]          = $uri;
+        $thisItem["full_uri"]     = isset($item["full_uri"])?$item["full_uri"]:$uri;
+
+        // Redirect URL?
+        if ( el('url_redirect',$item,false) ) {
+          $thisItem["uri"]          = $item['url_redirect'];
+        }
+
+        // name
 				if (empty($thisItem['name'])) {
-					if (isset($item[$this->settings['fields']["title"]])) {
-					  $thisItem['name']=$item[$this->settings['fields']["title"]];
+					if (isset($item[$this->settings['fields']["title"]]) and !empty($item[$this->settings['fields']["title"]])) {
+					  $thisItem['name'] = $item[$this->settings['fields']["title"]];
 					}
 					else {
-					  $thisItem['name']=$uri;
+					  $thisItem['name'] = $uri;
 					}
 				}
+
+        // class
         $thisItem['class']='';
 				if (isset($item[$this->settings['fields']["class"]])) 	    $thisItem["class"]=str_replace(array('|',',','.','/'),array(' ',' ','_','_'),$item[$this->settings['fields']["class"]]);
 				if (isset($item[$this->settings['fields']["bool_class"]]) and ($item[$this->settings['fields']["bool_class"]]))	$thisItem["class"].=' '.$this->settings['fields']["bool_class"];
-				if (isset($item[$this->settings['fields']["parent"]])) 	    $parent=$item[$this->settings['fields']["parent"]]; else $parent="";
 				if (isset($item[$this->settings['fields']["clickable"]]) && !$item[$this->settings['fields']["clickable"]]) $thisItem["uri"]='';
         
+        // parent
+        $parent = remove_suffix($thisItem['full_uri'],'/');
+        if ($parent==$thisItem['full_uri']) $parent = '';
+        // if (isset($item[$this->settings['fields']["parent"]]))       $parent=$item[$this->settings['fields']["parent"]]; else $parent="";
+
 				// classbooleans
 				if (!empty($boolFields)) {
 					foreach ($boolFields as $boolField) {
@@ -421,27 +409,28 @@ class Menu {
 						}
 					}
 				}
+        
 				$menu[$parent][$uri]=$thisItem;
 			}
 		}
-		
+    
 		// Set submenus on right place in array
-		$item=end($menu);
+		$item = end($menu);
 		while ($item) {
-			$id=key($menu);
+			$full_uri = key($menu);
 			foreach($item as $name=>$value) {
-				$sub_id=$value["id"];
-				if (isset($menu[$sub_id])) {
-					$menu[$id][$name]["sub"]=$menu[$sub_id];
-					unset($menu[$sub_id]);
+				$sub_uri = $value["full_uri"];
+				if (isset($menu[$sub_uri])) {
+					$menu[$full_uri][$name]["sub"] = $menu[$sub_uri];
+					unset($menu[$sub_uri]);
 				}
 			}
 			$item=prev($menu);
-		}
-		
-		// set first
-		reset($menu);
-		$menu=current($menu);
+    }
+    
+    // set first
+    reset($menu);
+    $menu=current($menu);
 		$this->set_menu($menu);
 		return $menu;
 	}
@@ -495,9 +484,25 @@ class Menu {
    * @author Jan den Besten
    */
 	public function add($item) {
+    if (empty($item) or $item==='seperator') return $this->add_seperator();
+    if ($item==='split') return $this->add_split();
 		$this->menu[$item['uri']]=$item;
     return $this;
 	}
+
+  /**
+   * Voeg één of meerdere menu items toe aan het eind van het huidige menu
+   *
+   * @param array $items array( "uri"=>uri, "name"=>name, "class"=>class ) 
+   * @return object this
+   * @author Jan den Besten
+   */
+  public function add_items($items) {
+    foreach ($items as $item) {
+      $this->add($item);
+    }
+    return $this;
+  }
   
   /**
    * Voeg seperator toe aan menu
@@ -735,11 +740,11 @@ class Menu {
 		if (!isset($menu)) $menu=$this->menu;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
-
+    
     $styles=$this->styles[$this->settings['framework']];
     
     $html='';
-		if ($menu) {
+		if ($menu and is_array($menu)) {
   		$pos=1;
       $_pos=count($menu);
 			foreach($menu as $uri=>$item) {
@@ -747,9 +752,9 @@ class Menu {
         // create uri
         if (isset($item['uri'])) $uri=$item['uri'];
         $thisUri=el($this->settings['fields']['url'],$item,$uri);
-        if (!el('unique_uri',$item,false) and !empty($thisUri)) $thisUri=$preUri."/".$thisUri;
+        if (!el('unique_uri',$item,false) and !empty($thisUri) and strpos($thisUri,'http')===FALSE) $thisUri=$preUri."/".$thisUri;
         $thisUri=trim($thisUri,'/');
-				$cleanUri=remove_suffix($thisUri,$this->CI->config->item('URI_HASH'));
+        $cleanUri=remove_suffix($thisUri,$this->CI->config->item('URI_HASH'));
         $classUri=str_replace('/','',get_suffix(str_replace(array('?','='),'_',$cleanUri),'/'));
         
         // title
@@ -789,6 +794,16 @@ class Menu {
         if ($pos==count($menu)) $order_style.='last';
         $order_style=trim($order_style);
         
+        // Current
+        $current = ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:''));
+        
+        // Icon
+        $icon = el('icon',$item,'');
+        $iconactive = el('iconactive',$item);
+        if ($iconactive and $current) {
+          $icon = $iconactive;
+        }
+        
         // render item
         $item_html=$this->CI->load->view($this->settings['view_path'].'/'.$view.'.php',array(
           'title'       => $title,
@@ -799,13 +814,15 @@ class Menu {
           '_pos'        => $_pos,
 					'order'       => $order_style,
 					'sub'         => (isset($item['sub']))?$styles['is_sub']:'',
-          'current'     => ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:'')),
+          'current'     => $current,
           'class_uri'   => $classUri,
           'class'       => el('class',$item,' '),
           'attr'        => attributes(el('attr',$item,'')),
           'clickable'   => (!empty($thisUri)),
           'submenu'     => $submenu,
-          'icon'        => el('icon',$item),
+          'icon'        => $icon,
+          'active_icon' => el('active_icon',$item,false),
+          'html'        => el('html',$item,''),
         ),true);
 
         $html.=$item_html;
@@ -825,39 +842,13 @@ class Menu {
    * Als je het menu aanmaakt vanuit een menu tabel dan kun je dit gebruiken om niet nogmaals de database aan te spreken als je een item uit die menu tabel wilt. Dat kun je dan hiermee doen.
    *
    * @param string $uri[''] Uri van te verkrijgen item, als leeg dan wordt current uri gebruikt
-   * @param string $foreigns default=FALSE Moeten foreign tabels ook meegenomen worden
-   * @param string $many default=FALSE Idem voor Many relaties
    * @return array database item
    * @author Jan den Besten
    */
-	public function get_item($uri='',$foreigns=false,$many=false) {
-		$item=array('uri'=>'');
+	public function get_item($uri='') {
+    $table = el('menu_table',$this->settings,'tbl_menu');
     if (empty($uri)) $uri=$this->settings['current'];
-    
-    $table = el('menu_table',$this->settings );
-    if (empty($table)) $table=get_menu_table();
-    $this->CI->data->table( $table );
-    $this->CI->data->path('full_uri','uri');
-    // Zoek in simpel uri veld, of naar gehele pad?
-    if (strpos($uri,'/')!==FALSE) {
-      $this->CI->data->where_path( 'full_uri', $uri );
-    }
-    else {
-      $this->CI->data->where( 'uri', $uri );
-      if ($this->CI->data->field_exists('self_parent')) $this->CI->data->where( 'self_parent', 0 );
-    }
-    // Relaties?
-    if ($foreigns) $this->data->with('many_to_one');
-    if ($many)     $this->data->with('many_to_many');
-    // Resultaat
-    $items=$this->CI->data->get_result();
-    if ($items) {
-      $item=current($items);
-    }
-    else {
-      $item=FALSE;
-    }
-		return $item;
+    return $this->CI->data->table( $table )->get_menu_item($uri);
 	}
 	
   
@@ -1072,15 +1063,16 @@ class Menu {
 		if ($ParentUri) {
 			$ParentMenu=$this->_get_submenu($ParentUri);
 			$ParentShortUri=get_suffix($ParentUri,'/');
-			do {
-				$current=each($ParentMenu);
-			} while ($current and $current['key']!=$ParentShortUri );
+      $current=current($ParentMenu);
+      while ($current and key($ParentMenu)!=$ParentShortUri ) {
+				$current=next($ParentMenu);
+      }
 			if ($current) {
-				$next=each($ParentMenu);
+				$next = next($ParentMenu);
 				if ($next) {
-					$branch=$next['value']['sub'];
+					$branch=$next['sub'];
 					$branch=current($branch);
-					$branch['full_uri']=remove_suffix($ParentUri,'/').'/'.$next['value']['uri'].'/'.$branch['uri'];
+					$branch['full_uri']=remove_suffix($ParentUri,'/').'/'.$next['uri'].'/'.$branch['uri'];
 				}
 			}
 		}

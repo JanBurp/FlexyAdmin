@@ -1,7 +1,5 @@
 <?php
 
-use \Firebase\JWT\JWT;
-
 /** \ingroup models
  * API auth. Hiermee kan worden ingelogd of uitgelogd.
  * 
@@ -88,8 +86,8 @@ class auth extends Api_Model {
   );
   
 	public function __construct() {
-		parent::__construct();
-    $this->load->library('flexy_auth');
+    $loginRequest = $this->uri->get(3)==='login';
+    parent::__construct( $loginRequest );
 	}
   
   public function index() {
@@ -118,24 +116,21 @@ class auth extends Api_Model {
    * @author Jan den Besten
    */
   protected function _check() {
+    // Double check if realy logged in
+    $user = $this->flexy_auth->get_user();
+    if ( !isset($user['groups']) or !$user['groups'] or empty($user['groups']) ) {
+      $this->flexy_auth->logout();
+      return null;
+    }
+
     // if not logged in status = 401
-    if ( !$this->logged_in() ) return null;
+    $logged_in = $this->logged_in();
+    if ( !$logged_in ) return null;
     
     // Give back user info
     $data = $this->flexy_auth->get_user();
     if (el('user_id',$data)) {
-      $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language'),false);
-    }
-    
-    // create JWT token bij login
-    if (isset($this->args['password'])) {
-      $this->cors = '*';
-      $token = array(
-        'username' => el('username',$data,''),
-        'password' => $this->args['password'],
-        'email'    => el('email',$data,''),
-      );
-      $this->jwt_token = JWT::encode( $token, $this->jwt_key );
+      $data = array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language','auth_token'=>'token'),false);
     }
     
     return $data;
@@ -162,8 +157,11 @@ class auth extends Api_Model {
    * @author Jan den Besten
    */
   public function login() {
+    // First logout if there is a login
+    if ( $this->flexy_auth->logged_in() ) $this->flexy_auth->logout();
+    
     // Has POST args?
-    if ($this->args['type']!='POST' or !isset($this->args['username']) or !isset($this->args['password']) ) {
+    if ($this->args['type']!=='POST' or !isset($this->args['username']) or !isset($this->args['password']) ) {
       return $this->_result_wrong_args();
     }
 
@@ -179,41 +177,12 @@ class auth extends Api_Model {
    * @author Jan den Besten
    */
   public function logout() {
-    $this->flexy_auth->logout();
-    return $this->check();
-  }
-  
-  
-  /**
-   * Send a new password to the given emailadress
-   *
-   * @return mixed
-   * @author Jan den Besten
-   */
-  public function send_new_password() {
-    $email = $this->args['email'];
-    $user  = $this->flexy_auth->get_user_by_email($email);
-    // No user found
-    if (!$user) {
-      $this->result['data']=FALSE;
-      $this->_set_error('NO USER FOUND');
+    if ($this->flexy_auth->logout()) {
+      $messages = $this->plugin_handler->call_plugins_logout();
+      return null;
     }
-    else {
-      // User found
-      $send=$this->flexy_auth->send_new_password( $user );
-      // Error when sending
-      if (!$send) {
-        $this->result['data']=FALSE;
-        $this->_set_error('COULD NOT SEND EMAIL');
-      }
-      else {
-        $data=array(
-          'username' => $user['username'],
-          'email'    => $user['email_email']
-        );
-        $this->result['data']=$data;
-      }
-    }
+
+    $this->result['data'] = false;
     return $this->_result_ok();
   }
   

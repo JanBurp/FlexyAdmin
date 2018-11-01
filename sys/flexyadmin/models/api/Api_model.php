@@ -1,7 +1,5 @@
 <?php
 
-use \Firebase\JWT\JWT;
-
 /** \ingroup models
  * Core API model: Roept de opgevraagde API aan en verzorgt het resultaat
  * 
@@ -46,73 +44,76 @@ class Api_Model extends CI_Model {
   protected $settings=array();
 
   /**
-   * Authentication token
-   */
-  protected $jwt_key   = '';  // See $config['sess_cookie_name']
-  protected $jwt_token = '';
-  
-  /**
    * Eventueel cors domeinen, of FALSE als cors niet is toegestaan
    * http://www.html5rocks.com/en/tutorials/cors/#toc-adding-cors-support-to-the-server
    */
   protected $cors = FALSE;
 
-
-  private $error='';
-  private $message='';
+  private $error        = '';
+  private $message      = '';
+  private $message_type = '';
   
   
   /**
    */
-	public function __construct() {
-		parent::__construct();
-
-    // Token secret
-    if (empty($this->jwt_key)) {
-      $this->jwt_key = $this->config->item('sess_cookie_name');
-    }
-    // Expiration of auth_token: each day a new one, add 'unixday' to key
-    $this->jwt_key.= ceil((date('U') - (3*TIME_DAY)) / TIME_DAY);
+	public function __construct( $loginRequest = FALSE) {
+    parent::__construct();
+    $this->load->library('flexy_auth');
     
+    // OPTIONS - preflight
+    if ($this->input->server('REQUEST_METHOD')==='OPTIONS') {
+      // $loginRequest word bij preflight niet goed meegegeven.. dus nog een keer.
+      $loginRequest = $this->uri->get(3)==='login';
+      $uri = $this->uri->uri_string();
+      $origin = $this->input->get_request_header('Origin',TRUE);
+      header("HTTP/1.1 200 OK");
+      header("Access-Control-Allow-Origin: ".$origin);
+      if (!$loginRequest) {
+        header("Access-Control-Allow-Methods: GET, POST");
+      }
+      else {
+        header("Access-Control-Allow-Methods: POST"); 
+      }
+      header("Access-Control-Allow-Credentials: true");
+      if (!$loginRequest) {
+        header("Access-Control-Allow-Headers: Authorization");
+      }
+      echo '';
+      die();
+    }
+
     // Get arguments
     $this->args=$this->_get_args($this->needs);
-    
-    // Standard result
-    $this->result['args']=$this->args;
-    $this->result['api']=__CLASS__;
 
-    // Check Authentication and Rights if not api/auth/login
-    $api_login = ($this->uri->get(3)==='login');
-    
-    // Always remove session based loggedin
-    $loggedIn=$this->flexy_auth->logged_in();
-    if ($loggedIn) $this->flexy_auth->logout();
+    // Standard result
+    $this->result['args'] = $this->args;
+    $this->result['api']  = __CLASS__;
+
     $loggedIn = FALSE;
 
-    // Check authentication header, and if its set login that way
-    $jwt_header = $this->input->get_request_header('Authorization', TRUE);
-
-    if (!empty($jwt_header)) {
-      
-      $jwt_decoded = (array) JWT::decode( $jwt_header, $this->jwt_key, array('HS256') );
-      if (isset($jwt_decoded['username']) and isset($jwt_decoded['password']) ) {
-        $loggedIn = $this->flexy_auth->login( $jwt_decoded['username'], $jwt_decoded['password'] );
-      }
-
-      // Set CORS
-      if ($loggedIn) $this->cors = '*';
+    if ( $loginRequest ) {
+      unset($_POST['_authorization']);
+      unset($_GET['_authorization']);
     }
-    
-    if (!$api_login) {
-      if (!$loggedIn) {
-        return $this->_result_status401();
-      }
+    else {
+      $loggedIn = $this->flexy_auth->login_with_authorization_header();
+      // Set CORS
+      $this->cors = '*';     
+      // Rights for given table?
       if (isset($this->args['table']) and !$this->_has_rights($this->args['table'])) {
         return $this->_result_norights();
       }
     }
-    
-	}
+
+    // Always remove session when no authentication, and return 401
+    if ( !$loggedIn and !defined('PHPUNIT_TEST')) {
+      $this->flexy_auth->logout();
+      return $this->_result_status401();
+    }
+
+    $this->load->model('plugin_handler');
+    $this->plugin_handler->init_plugins();
+  }
   
   /**
    * Geeft terug of er is ingelogd of niet
@@ -157,10 +158,11 @@ class Api_Model extends CI_Model {
    * @author Jan den Besten
    */
   protected function _result_norights() {
+    $this->lang->load('vue');
     log_message('info', 'API NO RIGHTS : '.array2json($this->args));
     $this->result=array(
       'success' => false,
-      'error' => 'NO RIGHTS',
+      'error'   => lang('vue_api_error_401'),
     );
     return $this->result;
   }
@@ -178,9 +180,9 @@ class Api_Model extends CI_Model {
     if (empty($args['settings'])) unset($args['settings']);
     $this->result['success'] = false;
     $this->result['error']   = 'WRONG ARGUMENTS';
-    // $this->result['needs']   = $this->needs;
     unset($this->result['status']);
     unset($this->result['message']);
+    unset($this->result['args']['_authorization']);
     return $this->result;
   }
   
@@ -193,66 +195,87 @@ class Api_Model extends CI_Model {
    */
   protected function _result_ok() {
     log_message('info', 'API OK : '.array2json($this->args));
+    $this->load->model('log_activity');
+    $log_args = $this->args;
+    if (isset($log_args['_authorization'])) $log_args['_authorization'] = '...';
+    if (isset($log_args['password']))       $log_args['password'] = '***';
+    $this->log_activity->api($log_args,$this->flexy_auth->get_user(null,'id'));
+
+
     // Add settings
-    if (el('settings',$this->args,false)) {
-      if (isset($this->args['table'])) {
-        $this->result['settings'] = $this->_get_settings( $this->args['table'], 'table' );
-        if ($this->args['table']==='res_media_files' and isset($this->args['path'])) {
-          $this->result['settings']['media_info'] = $this->_get_settings( $this->args['path'], 'path' );
+    if (el('settings',$this->args,false) and isset($this->args['table'])) {
+
+      // Init table & settings
+      $this->data->table($this->args['table']);
+      if (isset($this->args['path']) && $this->args['table']==='res_assets') {
+        $this->data->set_path($this->args['path']);
+      }
+      
+      // Haal alle gevraagde settings op (enkele afzonderlijk, of alles)
+      if ( $this->args['settings']!==true and $this->args['settings']!=='true') {
+        $this->result['settings'] = array();
+        $types = explode('|',$this->args['settings']);
+        foreach ($types as $type) {
+          $this->result['settings'][$type] = $this->data->get_setting( $type );
         }
       }
-      if (isset($this->args['path'])) {
-        $this->result['settings']['media_info'] = $this->_get_settings( $this->args['path'], 'path' );
+      else {
+        $this->result['settings'] = $this->data->get_settings();
       }
     }
+
     // Prepare end result
     $this->result['success'] = true;
-    // args
-    $this->result['args'] = $this->args;
-    if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
-    if (empty($this->result['args']['config'])) unset($this->result['args']['config']);
-    // unset some
+
+    // Add args
+    if (is_array($this->args)) {
+      $this->result['args'] = $this->args;
+      if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
+      if (empty($this->result['args']['config'])) unset($this->result['args']['config']);
+      unset($this->result['args']['_authorization']);
+    }
+
+    // cleanup result
+    // unset($this->result['args']);
     unset($this->result['status']);
     unset($this->result['error']);
     unset($this->result['message']);
-    // error/succes
+    unset($this->result['message_type']);
+
+    // Set error/succes 
     if ($this->error) {
-      $this->result['error']=$this->error;
-      $this->result['success']=false;
+      $this->result['error']   = $this->error;
+      $this->result['success'] = false;
     }
-    // message
+    
+    // Add message
     if ($this->message) {
-      $this->result['message']=$this->message;
+      $this->result['message'] = $this->message;
+      if (!empty($this->message_type)) $this->result['message_type'] = $this->message_type;
     }
-    // format
-    if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
-    // info
+    
+    // Add info
     if (isset($this->info) and $this->info) $this->result['info']=$this->info;
-    // // options
-    // if (isset($this->args['options'])) $this->result['options']=$this->_add_options();
-    // user
+    
+    // Add user
     $this->result['user'] = FALSE;
     $user = $this->flexy_auth->get_user();
     if ($user) {
       $this->result['user'] = array(
-        'username'    => $user['username'],
-        // 'group_id'    => $user['group_id'],
-        // 'group_name'  => $user['group_name'],
+        'username'    => el('str_username',$user,el('username',$user)),
+        // 'auth_token'  => $user['auth_token'],
       );
     }
-    // jwt token
-    if (!empty($this->jwt_token)) {
-      $this->result['data']['auth_token'] = $this->jwt_token;
-    }
+    
     // cors
     if (!empty($this->cors)) {
       $this->result['cors'] = $this->cors;
     }
     
-    if (DEBUGGING) {
-      $this->result['server'] = $_SERVER;
-      $this->result['headers'] = $this->input->request_headers();
-    }
+    // if (DEBUGGING) {
+    //   $this->result['server'] = $_SERVER;
+    //   $this->result['headers'] = $this->input->request_headers();
+    // }
     
     return $this->result;
   }
@@ -281,6 +304,18 @@ class Api_Model extends CI_Model {
     return $this;
   }
 
+  /**
+   * Sets message type
+   *
+   * @param string $type 
+   * @return this
+   * @author Jan den Besten
+   */
+  protected function _set_message_type($type) {
+    $this->message_type = $type;
+    return $this;
+  }
+
   
 
   /**
@@ -294,18 +329,6 @@ class Api_Model extends CI_Model {
     $keys=array_keys($defaults);
     $keys=array_merge($keys,array('settings','format'));
     $args=array();
-    
-    // OPTIONS - preflight
-    if ($this->input->server('REQUEST_METHOD')==='OPTIONS') {
-      $origin = $this->input->get_request_header('Origin',TRUE);
-      header("HTTP/1.1 200 OK");
-      header("Access-Control-Allow-Origin: ".$origin);
-      header("Access-Control-Allow-Methods: GET, POST");
-      header("Access-Control-Allow-Credentials: true");
-      header("Access-Control-Allow-Headers: Authorization");
-      echo '';
-      die();
-    }
     
     // GET
     if (!$args and (!empty($_SERVER['QUERY_STRING']) or !empty($_GET))) {
@@ -321,7 +344,7 @@ class Api_Model extends CI_Model {
     }
     
     // table=_media_ ?
-    if (isset($args['table']) and $args['table']==='_media_') $args['table'] = 'res_media_files';
+    if (isset($args['table']) and $args['table']==='_media_') $args['table'] = 'res_assets';
     
     // merge with defaults
     $args=array_merge($this->needs,$args);
@@ -400,14 +423,23 @@ class Api_Model extends CI_Model {
   
   
   /**
-   * Gives clean args
+   * Gives clean args and decodes (array) data if needed
    *
    * @param array $keep  default=array('table','where','data') of keys that needs to be kept
    * @return array
    * @author Jan den Besten
    */
   protected function _clean_args($keep=array('table','where','data')) {
-    return array_keep_keys($this->args,$keep);
+    $data = array_keep_keys($this->args,$keep);
+    if (isset($data['data'])) {
+      foreach ($data['data'] as $field => $value) {
+        if (get_suffix($field,'__')==='array') {
+          $data['data'][remove_suffix($field,'__')] = json2array($value);
+          unset($data['data'][$field]);
+        }
+      }
+    }
+    return $data;
   }
   
   
@@ -440,72 +472,42 @@ class Api_Model extends CI_Model {
   
   
   /**
-   * Returns settings for table of path
-   * 
-   * @param string $what table_name or path
-   * @param string $type [table|path]
-   * @return array
-   * @author Jan den Besten
+   * PLUGIN STUFF
    */
-  protected function _get_settings( $what, $type = 'table' ) {
-    $settings = null;
-    if ($type == 'table' and !empty($what) ) {
-      $settings = $this->_get_table_settings( $what );
-    }
-    elseif ($type == 'path' and !empty($what) ) {
-      $settings = $this->_get_path_settings( $what );
-    }
-    return $settings;
-  }
-  
-  /**
-   * Returns settings for table
-   * 
-   * @param string $table table_name or path
-   * @return array
-   * @author Jan den Besten
-   */
-  protected function _get_table_settings( $table ) {
-    $this->data->table( $table );
-    $settings = $this->data->get_settings();
-    $settings['options'] = $this->data->get_options();
+	protected function _init_plugin($table,$oldData=NULL,$newData=NULL) {
+		$this->plugin_handler->set_data('old',$oldData);
+		$this->plugin_handler->set_data('new',$newData);
+		$this->plugin_handler->set_data('table',$table);
+	}
 
-    $this->load->model('ui');
-    // field ui_names
-    if (isset($settings['field_info'])) {
-      foreach ($settings['field_info'] as $field => $info) {
-        $settings['field_info'][$field]['ui_name'] = $this->ui->get( $field, $settings['table'] );
-      }
-    }
-    $table_info = array();
-    // table ui_name
-    $table_info['ui_name']  = $this->ui->get( $settings['table'] );
-    // sortable | tree
-    $table_info['sortable'] = !in_array('order',$settings['fields']);
-    $table_info['tree']     = in_array('self_parent',$settings['fields']);
-    $settings = array_add_after( $settings, 'table', array('table_info'=>$table_info) );
-    return $settings;
+	protected function _before_grid($table) {
+		$this->_init_plugin($table,NULL,NULL);
+		return $this->plugin_handler->call_plugins_before_grid_trigger();
+	}
+
+	protected function _after_delete($table,$oldData=NULL) {
+		$this->_init_plugin($table,$oldData,NULL);
+		return $this->plugin_handler->call_plugins_after_delete_trigger();
+	}
+	
+  protected function _before_form($table,$data) {
+		$this->_init_plugin($table,$data,NULL);
+		$data=$this->plugin_handler->call_plugins_before_form_trigger();
+    return $data;
   }
   
-  /**
-   * Returns settings for path
-   * 
-   * @param string $path path
-   * @return array
-   * @author Jan den Besten
-   */
-  protected function _get_path_settings( $path ) {
-    $this->load->model('ui');
-    $settings['ui_name'] = $this->ui->get( $path );
-    $settings['str_types'] = $this->cfg->get('cfg_media_info',$path,'str_types');
-    // $settings = array_keep_keys( $settings, array('str_types') );
-    $img_info = $this->cfg->get('cfg_img_info',$path);
-    if ($img_info) {
-      $img_info = array_keep_keys( $img_info, array('int_min_width','int_min_height') );
-      $settings = array_merge( $settings,$img_info );
+	protected function _after_update($table,$oldData=NULL,$newData=NULL) {
+		$this->_init_plugin($table,$oldData,$newData);
+		$newData = $this->plugin_handler->call_plugins_after_update_trigger();
+    $messages = $this->plugin_handler->get_plugins_messages();
+    if ($messages) {
+      if (is_array($messages)) $messages = implode($messages);
+      $this->message = $messages;
+      $this->message_type = 'popup';
     }
-    return $settings;
-  }
+		return $newData;
+	}
+  
   
 }
 

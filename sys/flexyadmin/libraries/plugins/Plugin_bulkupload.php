@@ -1,14 +1,10 @@
 <?php require_once(APPPATH."core/AdminController.php");
 
 /**
- * Special Controller Class
+ * Bulkupload
  *
- * This Controller shows a grid or form
- *
- * @package FlexyAdmin V1
- * @author Jan den Besten
- * @version V1 0.1
- *
+ * Verplaats bestanden van speciale bulkupload map.
+ * Handig voor bestanden die te groot zijn om normaal te uploaden.
  */
 
 class Plugin_bulkupload extends Plugin {
@@ -19,71 +15,69 @@ class Plugin_bulkupload extends Plugin {
 	public function __construct() {
 		parent::__construct();
 		$this->CI->load->library('session');
-    $this->CI->load->model('mediatable');
+    // $this->CI->load->model('mediatable');
     $this->CI->load->model('actiongrid');
 		$this->resetRenameCount();
 	}
 
 	public function _admin_api() {
+		if ( !$this->CI->flexy_auth->can_use_tools() ) return false;
+    
     $this->doAction=false;
-		if ($this->CI->flexy_auth->can_use_tools()) {
 
-			$mediaCfg=$this->CI->cfg->get('CFG_media_info');
+    // Collect files
+		$bulkMap=$this->config['folder'];
+		$files=scan_map($bulkMap);
+		if (empty($files)) {
+			$this->add_message(p()."No files found in '".$bulkMap."'."._p());
+      return;
+		}
+		asort($files);
 
-      // Collect files
-			$bulkMap=$this->config['folder'];
-			$files=scan_map($bulkMap);
-			if (empty($files)) {
-				$this->add_message(p()."No files found in '".$bulkMap."'."._p());
-        return $this->view();
-			}
-			asort($files);
+		// is form submitted?
+		$path=$this->CI->input->post('path');
+		$rename=$this->CI->input->post('rename');
+		
+		// FORM
+		if (empty($path)) {
 
-			// is form submitted?
-			$path=$this->CI->input->post('path');
-			$rename=$this->CI->input->post('rename');
-			
-			// FORM
-			if (empty($path)) {
-
-				// create form
-				$this->CI->lang->load('form');
-				$this->CI->load->library('form');
-				$form=new form();
-				$options=array();
-				foreach ($mediaCfg as $info) {
-					$options[$info['path']]=$info['path'];
-				}
-				$form_fields=array(
-          "path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options),
-					"rename"			=> array('label'=>"Autorename"),
-				);
-				$form->set_data($form_fields,'Bulk upload settings');
-				$this->add_message($form->render());			
-				$this->add_message(p().nbs()._p().p().nbs()._p());
-        
-        $this->doAction=true;
-			}
-			
-      // Create GRID
-			$grid=new actiongrid();
-      $grid->caption = 'Files';
-			$this->resetRenameCount();
-			
-			foreach ($files as $file) {
-        $file=str_replace($bulkMap.'/','',$file);
-				$renameThis='';
-				if (!empty($path)) $renameThis=$this->_newName($path,$file,$rename);
-        $grid->add_action(array(
-          'action_url' => 'admin/ajax/plugin/bulkupload/'.pathencode($path).'/'.$file.'/'.$renameThis,
-          'title'      => $file,
-        ));
-			}
+			// create form
+			$this->CI->lang->load('form');
+			$this->CI->load->library('form');
+			$form=new form();
+			$options=array();
+      // TODO: check if this works
+      $options=$this->CI->assets->get_assets_folders( FALSE );
+      $options = array_combine($options,$options);
+			$form_fields=array(
+        "path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options),
+				"rename"			=> array('label'=>"Autorename"),
+			);
+			$form->set_data($form_fields,'Bulk upload settings');
+			$this->add_message($form->render());			
+			$this->add_message(p().nbs()._p().p().nbs()._p());
       
-			$this->add_message( $grid->view() );
-			$this->CI->session->set_userdata('fileRenameCount',-1);
+      $this->doAction=true;
+		}
+		
+    // Create GRID
+		$grid=new actiongrid();
+    $grid->caption = 'Files';
+		$this->resetRenameCount();
+		
+		foreach ($files as $file) {
+      $file=str_replace($bulkMap.'/','',$file);
+			$renameThis='';
+			if (!empty($path)) $renameThis=$this->_newName($path,$file,$rename);
+      $grid->add_action(array(
+        'action_url' => $this->config->item('API_home').'ajax/plugin/bulkupload/'.pathencode($path).'/'.$file.'/'.$renameThis,
+        'title'      => $file,
+      ));
 		}
     
+		$this->add_message( $grid->view() );
+		$this->CI->session->set_userdata('fileRenameCount',-1);
+		
     return $this->view();
 	}
 
@@ -144,27 +138,25 @@ class Plugin_bulkupload extends Plugin {
     $config['allowed_types'] = implode("|",$this->CI->config->item('FILE_types_img'));
     $this->CI->upload->config($config);
     
-    $mediaCfg=$this->CI->cfg->get('CFG_media_info');
+    // $mediaCfg=$this->CI->cfg->get('CFG_media_info');
     $bulkMap=$this->config['folder'];
     $saveFile=$this->_newName($path,$file,$rename,TRUE);
 
     $moved=copy_file($bulkMap.'/'.$file, $map.'/'.$saveFile);
     if ($moved) {
       // resize
-      $resized=$this->CI->upload->resize_image($saveFile,$map);
-      // autofill
-      $cfg=$mediaCfg[str_replace(SITEPATH.'assets/','',$path)];
-      if (!isset($cfg['str_autofill']) or $cfg['str_autofill']=='bulk upload' or $cfg['str_autofill']=='both') {
-        $autoFill=$this->CI->upload->auto_fill_fields($saveFile,$path);
-      }
-      // fill in media table
-      if ($this->CI->mediatable->exists()) {
-        $userRestricted=$this->CI->cfg->get('CFG_media_info',$path,'b_user_restricted');
-        if ($userRestricted)
-          $this->CI->mediatable->add($saveFile,$path,$userRestricted);
-        else
-          $this->CI->mediatable->add($saveFile,$path);
-      }
+      $resized=$this->CI->upload->resize_image($path,$saveFile);
+      // TODO: autofill
+      // $cfg=$mediaCfg[str_replace(SITEPATH.'assets/','',$path)];
+      // if (!isset($cfg['str_autofill']) or $cfg['str_autofill']=='bulk upload' or $cfg['str_autofill']=='both') {
+      //   $autoFill=$this->CI->upload->auto_fill_fields($saveFile,$path);
+      // }
+      // TODO: $userRestricted... fill in media table
+      $userRestricted = FALSE; //$this->CI->cfg->get('CFG_media_info',$path,'b_user_restricted');
+      if ($userRestricted)
+        $this->CI->assets->insert_file($path,$saveFile,$userRestricted);
+      else
+        $this->CI->assets->insert_file($path,$saveFile);
       // delete original from Bulk map
       unlink($bulkMap.'/'.$file);
     }

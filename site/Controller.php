@@ -84,7 +84,7 @@ class Main extends FrontEndController {
 		 * Redirect to a page down in the menu tree, if current page is empty.
 		 * If needed, set the redirect config to TRUE in config.php
 		 */
-		if ($this->config->item('redirect') or el('b_redirect',$page,false)) $this->_redirect($page);
+		if ($this->config->item('redirect') or el('b_redirect',$page,false) or el('link_redirect',$page,'')) $this->_redirect($page);
 
 
 		/***********************************************
@@ -96,7 +96,8 @@ class Main extends FrontEndController {
 		/**
 		 * Rendering Menu and show site view
 		 */
-		$this->site['menu']=$this->menu->render();
+		$this->site['menu'] 		= $this->menu->render();
+		if (count($this->site['languages'])>1) $this->site['submenu'] = $this->menu->render_branch($this->uri->get(1));
 
 
 		/**********************************************
@@ -169,7 +170,7 @@ class Main extends FrontEndController {
 		$this->site['language']=$lang;
 		$this->add_class('language_'.$lang);
     $this->config->set_item('language',$lang);
-		return $lang;
+  	return $lang;
 	}
 	
 	// Test if language is set to a possible language (and not empty)
@@ -185,24 +186,23 @@ class Main extends FrontEndController {
 	 * Redirect to a (set) page (and anchor), or down in the menu tree if current page is empty
 	 */
 	private function _redirect($page) {
-    $text = trim(el( 'txt_text',$page, el('txt_text_'.$this->site['language'],$page,'') ));
-		if (empty($text) or el('b_redirect',$page,false)) {
-      if (el('list_redirect',$page,'')) {
-        $newUri=$page['list_redirect'];
+		if ( el('b_redirect',$page,false) or el('link_redirect',$page,'') or (el('txt_text',$page,'')=='' and el('str_module',$page,'')=='') ) {
+		  if (el('link_redirect',$page,'')) {
+        $newUri = $page['link_redirect'];
       }
-      else {
-        $this->data->table( get_menu_table() );
-  			$this->data->select('uri');
-  			$this->data->where('self_parent',$page['id']);
-  			if (isset($page['b_visible'])) $this->data->where('b_visible','1');
-  			$subItem = $this->data->get_row();
+      elseif (isset($page['full_uri']) and !empty($page['full_uri'])) {
+        $subItem = $this->data->table('tbl_menu')->get_first_child( $page['full_uri'],true );
+  			if ($subItem) $newUri=$this->site['uri'].'/'.$subItem['uri'];
+      }
+      elseif (!empty($page['uri'])) {
+        $subItem = $this->data->table('tbl_menu')->get_first_child( $page['uri'],true );
   			if ($subItem) $newUri=$this->site['uri'].'/'.$subItem['uri'];
       }
       if (isset($newUri)) {
         if (el('str_anchor',$page,'')) {
           $newUri.='#'.$page['str_anchor'];
         }
-				redirect($newUri);
+				redirect($newUri,REDIRECT_METHOD);
 			}
 		}
 	}
