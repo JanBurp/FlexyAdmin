@@ -1,3 +1,21 @@
+=3.5.7
+
+[nl]
+- Verbeteringen in het downloaden vanaudio & video bestanden
+- Enkele fouten opgelost als gebruik wordt gemaakt van PHP 5.3
+[/nl]
+[en]
+- Better serving of audio & video files
+- Some bugs when using PHP 5.3
+[/en]
+
+[BUGS]
+- Some bugs when using PHP 5.3 (which is too old to use safely...)
+
+[FEATURES]
+- debughelper improvements
+- Better serving of audio & video files
+
 =3.5.6
 
 [nl]
