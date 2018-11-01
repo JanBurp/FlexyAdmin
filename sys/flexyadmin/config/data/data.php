@@ -8,6 +8,11 @@
  */
 $config['table']            = NULL;
 
+/**
+ * De tabellen die tegelijk met deze tabel verwijderd moeten worden uit de cache als één van die tabellen een update heeft gekregen.
+ */
+$config['cache_group']			= NULL;
+
 
 /**
  * Primary key, standaard 'id'
@@ -31,11 +36,33 @@ $config['fields']           = NULL;
 
 /**
  * Per veld mogelijk meer informatie:
+ * - type               - form input type
+ * - grid-type          - grid cell type
  * - default            - defaultwaarde
+ * - readonly           - of het aangepast mag worden
+ * - sortable           - of het in een grid een sorteerbare kolom word
  * - validation         - array met validation rules
  * - path               - als het een media veld is dan komt hier het assets pad
  */
 $config['field_info']       = NULL;
+
+
+/**
+ * Per veld is het mogelijk om het aanpassen alleen voor bepaalde usergroups toe te laten.
+ * Verwacht word een array met als key de veldnaam en als value een array met:
+ * - 'types' 	- een array met edit types (INSERT,UPDATE,DELETE) - NB Werkt nu alleen nog met UPDATE #TODO#
+ * - 'groups'	- een array met ids van de usergroups die dit veld mogen aanpassen
+ * - 'where'	- hiermee kan nog een voorwaarde worden gesteld dmv een SQL WHERE. Zodat deze extra rechten alleen voor bepaalde items uit de tabel geld.
+ */
+/**
+ * $config['restricted_rights'] = array(
+ *   'b_restricted' => array(
+ *     'groups' 	=> array(1),													// b_restricted mag alleen door super_admins(1) worden aangepast
+ *     'where'  	=> '`str_module`="example"',					// dit geld alleen in het geval dat str_module="example", voor andere gevallen gelden de normale rechten
+ *   ),
+ * );
+ */
+
 
 /**
  * Per veld informatie over mogelijk opties
@@ -50,6 +77,7 @@ $config['field_info']       = NULL;
  *  - array(
  *    'data' => array()         - Array met opties (zie hierboven), of:
  *    'table' => ''             - naam van andere tabel waar de opties worden opgevraagd, of:
+ *    'path'  => ''             - naam van map waar de opties worden opgevraagd (bestanden)
  *    'model' => ''             - naam van model waar de opties worden opgevraagd.
  *    'multiple' => TRUE/FALSE  - of het meerkeuze is
  * )
@@ -74,9 +102,31 @@ $config['max_rows']         = NULL;
 /**
  * Als een tabel een uri veld bevat kan deze automatisch worden aangepast na een update.
  * Hiermee kan dat aan of uit worden gezet.
- * Standaard staat deze optie aan (door _autoset)
+ * Standaard staat deze optie aan [TRUE] (door _autoset)
+ * 
+ * Er kunnen ook opties in een array meegegeven worden in plaats van een TRUE:
+ * - source           - Geef hier het veld aan dat gebruikt wordt als bron. Standaard is dat het eerste str veld wat gevonden kan worden. ['str_title']
+ * - prefix           - Geef hier een eventuele prefix aan waarmee de uri altijd moet beginnen. ['']
+ * - prefix_callback  - Geef hier een eventuele prefix callback method aan die de prefix bepaald. [object->method]
+ * - freeze					  - Geef hier (in een array) eventuele items aan waarvan de uri niet mag worden aangepast. Bijvoorbeeld:
+ * 	'uri' => 'freeze',
+ * 	'uri' => array('freeze','keep','always_the_same'),
+ * 	'id'	=> 2,
+ * 	'id'	=> array(2,5,6),
+ * 	
+ * 	Als uris aangepast moeten kunnen worden, dan de volgende instellingen:
+ * 	$config['field_info']['uri']['type'] = 'input';
+ * 	$config['field_info']['uri']['readonly'] = false;
+ * 	$config['update_uris'] = FALSE;
  */
 $config['update_uris']      = NULL;
+
+/**
+ * NB Als uris aangepast moeten kunnen worden, dan de volgende instellingen:
+ * $config['update_uris'] = FALSE;
+ * $config['field_info']['uri']['type'] = 'input';
+ * $config['field_info']['uri']['readonly'] = false;
+ */
 
 
 /**
@@ -86,6 +136,11 @@ $config['update_uris']      = NULL;
  * Dat laatste kost extra resources.
  */
 $config['abstract_fields']  = NULL;
+
+/**
+ * Karakter(s) die de diverse abstract_fields van elkaar scheiden.
+ */
+$config['abstract_delimiter']  = ' | ';
 
 
 /**

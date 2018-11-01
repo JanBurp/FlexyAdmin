@@ -57,9 +57,9 @@ class FormValidationTest extends CITestCase {
     foreach ($tests as $test) {
       $result=array_pop($test);
 
-      $validated = $this->CI->form_validation->validate_data(array($test[0]=>$test[1]),'tbl_menu');
+      $validated = $this->CI->form_validation->validate_data( array($test[0]=>$test[1]), 'tbl_menu' );
       $errors    = $this->CI->form_validation->get_error_messages();
-
+      
       if ($result) {
         $this->assertTrue($validated);
         $this->assertInternalType('array',$errors);

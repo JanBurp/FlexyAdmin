@@ -93,13 +93,24 @@ class Wizard {
    */
   public function render() {
     $this->get_step();
-    $out='';
-		foreach ($this->steps as $key=>$s) {
-      $thisOut=$s['label'];
-			if ($this->step==$key) $thisOut='<strong>'.$thisOut.'</strong>';
-      $out=add_string($out,$thisOut,' | ');
+    $out = h($this->title,1);
+    $out .= '<div class="btn-group" role="group">';
+    $link = true;
+    $class = 'btn-warning';
+    foreach ($this->steps as $key=>$s) {
+			if ($this->step==$key) {
+        $class = 'btn-primary';
+        $link  = false;
+      }
+      if ($link) {
+        $out .= '<a href="'.$this->get_step_uri($key).'" class="btn '.$class.'">'.$s['label'].'</a>';
+      }
+      else {
+        $out .= '<button class="btn '.$class.'">'.$s['label'].'</button>';
+        $class = 'btn-secondary';
+      }
 		}
-		$out=h($this->title,1).p().$out._p();
+    $out .= '</div>';
     return $out;
   }
 
@@ -118,6 +129,24 @@ class Wizard {
     $this->step=$step;
     return $this->step;
   }
+
+  /**
+   * Geeft uri van (mee te geven) step
+   *
+   * @param string $extra[''] eventuele argumenten (extra uri-parts)
+   * @return string
+   * @author Jan den Besten
+   */
+  public function get_step_uri($step='',$extra='') {
+    $uri=explode('/',uri_string());
+    $uri=array_slice($uri,0,$this->uri_segment-1);
+    $uri=implode('/',$uri);
+    $uri=$uri.'/'.$step;
+    if ($extra) $uri.='/'.$extra;
+    return $uri;
+  }
+
+
   
   /**
    * Geeft volgende step
@@ -128,12 +157,13 @@ class Wizard {
   public function get_next_step() {
     $steps=$this->steps;
     reset($steps);
-    do {
-      $step=each($steps);
+    $step = next($steps);
+    $key = key($steps);
+    while ($key==$this->step) {
+      $step = next($steps);
+      $key = key($steps);
     }
-    while ($step['key']!=$this->step);
-    $step=each($steps);
-    return $step['key'];
+    return $key;
   }
   
   /**

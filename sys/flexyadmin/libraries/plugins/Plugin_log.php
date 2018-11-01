@@ -8,11 +8,7 @@
  * - Je kunt de logfile filteren op tijd: een dagdeel of een uur. Alleen entries in dat tijdsbestek worden getoond.
  * - Je kunt een filter term meegeven. Alleen log entries waar de term in voorkomt worden getoond.
  * 
- * ##Logging
- * 
  * Er wordt gebruik gemaakt van de logbestanden van CodeIgniter, die aangevuld zijn met FlexyAdmin en eventueel eigen entries.
- * Zie [CodeIgniter Error handling](http://ellislab.com/codeigniter/user-guide/general/errors.html) bij `log_message()`.
- * 
  * - Standaard worden logfiles in de map SITEPATH.cache geplaatst. Deze moet schrijfbaar zijn.
  * - Logging staat standaard uit en kun je aanzetten door:
  *    - in de index.php deze code te uncommenten: `define('ENVIRONMENT','testing');`
@@ -43,23 +39,27 @@ class Plugin_log extends Plugin {
    * @author Jan den Besten
    */
   public function _home() {
+    if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
     $this->CI->load->model('log_activity');
     $this->CI->log_activity->clean_up();
-    
+    $this->CI->lang->load('home');
     $log = $this->CI->log_activity->get_grouped_user_activity();
-		$grid=new grid();
+    if (empty($log)) return '';
 		foreach($log as $k=>$d) {
       $log[$k]['id_user'] = $this->CI->data->table('cfg_users')->where('id',$d['id_user'])->get_field('str_username');
 		}
     $log=array_slice($log,0,10);
-		$grid->set_data($log,langp("home_activity"));
-    $grid->set_headings(array(
-      'id_user'       => lang('home_user'),
-      'tme_timestamp' => lang('home_date'),
-      'str_model'     => lang('home_changes'),
-    ));
-		$renderGrid=$grid->render("html","","grid home");
-    return $this->CI->load->view("admin/grid",$renderGrid,true) ;
+    $gridData = array(
+      'title'   => langp("home_activity"),
+      'class'   => '',
+      'headers' => array(
+        'id_user'       => lang('home_user'),
+        'tme_timestamp' => lang('home_date'),
+        'str_model'     => lang('home_changes'),
+      ),
+      'data'    => $log,
+    );
+    return $this->CI->load->view("admin/grid",$gridData,true) ;
   }
   
   
@@ -118,7 +118,7 @@ class Plugin_log extends Plugin {
 			$this->add_message($form->render());
 			$this->add_message(div('after_form').h($file,1).'<pre>'.$currentLog.'<pre>'._div());
 		}
-		return $this->view('admin/plugins/plugin');
+		return $this->show_messages();
 	}
   
   

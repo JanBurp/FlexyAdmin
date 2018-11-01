@@ -2,6 +2,8 @@
 
 require_once(APPPATH."libraries/Ion_auth.php");
 
+use \Firebase\JWT\JWT;
+
 
 /** \ingroup libraries
  * Class voor het inloggen, aanmaken etc van gebruikers
@@ -42,6 +44,13 @@ class Flexy_auth extends Ion_auth {
   private $forgotten_password_uri = '';
   
   /**
+   * Authentication token
+   */
+  protected $auth_key              = '';  // See $config['sess_cookie_name']
+  protected $auth_token            = '';
+  
+  
+  /**
    * construct
    */
   public function __construct() {
@@ -53,6 +62,7 @@ class Flexy_auth extends Ion_auth {
     $site_config=$this->db->get('tbl_site')->row_array();
     $this->set_config( $site_config );
     $this->tables = $this->config->item( 'tables', 'ion_auth');
+    if (empty($this->auth_key)) $this->auth_key = $this->config->item('sess_cookie_name');
 	}
 
   
@@ -81,14 +91,65 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
 	public function login($identity, $password, $remember=false) {
-		if (parent::login($identity, $password, $remember)) {
-      if (!$this->current_user) $this->_set_current_user();
-      $this->load->model('log_activity');
-      $this->log_activity->auth();
-			return TRUE;
-		}
+    if (!empty($identity) and !empty($password)) {
+  		if (parent::login($identity, $password, $remember)) {
+        // Token aanmaken en toevoegen aan sessie
+        if (empty($this->auth_token)) {
+          $token = array(
+            'username' => $identity,
+            'password' => $password,
+          );
+          $this->auth_token = JWT::encode( $token, $this->auth_key );
+        }
+        $currentSession = $this->session->userdata();
+        $currentSession['auth_token'] = $this->auth_token;
+        $this->session->set_userdata($currentSession);
+        if (!$this->current_user) $this->_set_current_user();
+        $this->load->model('log_activity');
+  			return TRUE;
+  		}
+      else {
+        $this->log_activity->auth();
+      }
+    }
 		return FALSE;
 	}
+  
+  /**
+   * Login by checking the authorization header (for API/AJAX calls)
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function login_with_authorization_header() {
+    $loggedIn = FALSE;
+    
+    // Van header
+    $this->auth_token = $this->input->get_request_header('Authorization', TRUE);
+    
+    // Van GET of GET
+    if (empty($this->auth_token) or $this->auth_token==='undefined') {
+      $this->auth_token = $this->input->post_get('_authorization', TRUE);
+    }
+      
+    if (!empty($this->auth_token) and $this->auth_token!=='undefined') {
+      $error_reporting = error_reporting();
+      error_reporting(0);
+      try {
+        $auth_data = (array) JWT::decode( $this->auth_token, $this->auth_key, array('HS256') );
+      } catch (Exception $e) {
+        $auth_data = array();
+      }      
+      error_reporting($error_reporting);
+      if (isset($auth_data['username']) and isset($auth_data['password']) ) {
+        $loggedIn = $this->login( $auth_data['username'], $auth_data['password'] );
+      }
+    }
+    // Always remove session when no authentication
+    if ( !$loggedIn ) $this->flexy_auth->logout();
+    // Return if logged_in
+    return $loggedIn;
+  }
   
   
   /**
@@ -98,11 +159,12 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   public function logout() {
-    $user_id = el('id',$this->current_user);
-    $logout = parent::logout();
+    $user_id    = el('id',$this->current_user);
+    $logout     = parent::logout();
     if ($logout) {
-      $this->load->model('log_activity');
-      $this->log_activity->auth('logout',$user_id);
+      // $this->load->model('log_activity');
+      // $this->log_activity->auth('logout',$user_id);
+      $logout = ! $this->logged_in();
     }
     return $logout;
   }
@@ -133,6 +195,11 @@ class Flexy_auth extends Ion_auth {
   private function _set_current_user() {
     $user = $this->user()->row_array();
     $this->current_user = $this->_create_nice_user($user);
+    if (empty($this->auth_token)) {
+      $currentSession = $this->session->userdata();
+      $this->auth_token = $currentSession['auth_token'];
+    }
+    $this->current_user['auth_token'] = $this->auth_token;
     if ( isset($this->current_user['id']) AND $this->in_group( 1, $this->current_user['id'] )) $this->current_user['is_super_admin'] = TRUE;
   }
   
@@ -161,7 +228,7 @@ class Flexy_auth extends Ion_auth {
   private function _create_nice_user($user) {
     // Alleen zinvolle velden
     if (!is_array($user)) return FALSE;
-    $user = array_keep_keys( $user, array( 'id','str_username', 'email_email', 'str_language','str_filemanager_view','b_active') );
+    $user = array_keep_keys( $user, array( 'id', 'str_username','username', 'email_email','email', 'str_language','str_filemanager_view', 'b_active','auth_token') );
     // Voeg groepen toe
     $groups = $this->get_users_groups($user['id'])->result_array();
     $user['groups']=array();
@@ -212,17 +279,42 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   public function get_user( $user_id=NULL, $field='' ) {
-    if (is_null($user_id) and is_array($this->current_user))
+    $user = FALSE;
+    if (is_null($user_id) and is_array($this->current_user)) {
       $user = $this->current_user;
-    else
+    }
+    else {
       $user = $this->user( $user_id )->row_array();
+      if ($user) {
+        $user = $this->_create_nice_user($user);
+      }
+    }
     if ($user) {
-      $user = $this->_create_nice_user($user);
       if (!empty($field)) return el($field,$user);
       return $user;
     }
     return FALSE;
   }
+
+
+  // public function get_users_groups($id=FALSE) {
+  //   $this->trigger_events('get_users_group');
+
+  //   // if no id was passed use the current users id
+  //   $id || $id = $this->session->userdata('user_id');
+
+  //   $sql =  'SELECT `rel_users__groups`.`id_user_group` as `id`, `cfg_user_groups`.`name`, `cfg_user_groups`.`description` '.
+  //           'FROM `rel_users__groups` '.
+  //           'JOIN `cfg_user_groups` ON `rel_users__groups`.`id_user_group` = `cfg_user_groups`.`id` '.
+  //           'WHERE `rel_users__groups`.`id_user` = '.$id.' ';
+  //   $query = $this->db->query($sql);
+
+  //   if ($query) {
+  //     return $query;
+  //   }
+  //   return null;
+  // }
+
   
   /**
    * Geeft rechten van huidige gebruiker
@@ -295,6 +387,43 @@ class Flexy_auth extends Ion_auth {
   }
   
   
+  /**
+   * Maakt nieuwe gebruiker aan
+   *
+   * @param array $data (in ieder geval email_email & str_username)
+   * @param array $groups (eventueel mee te geven groepen, als ids)
+   * @return int $id
+   * @author Jan den Besten
+   */
+  public function insert_user($data,$groups=array()) {
+    // Check of noodzakelijk velden bestaan
+    if (!isset($data['email_email']) or !isset($data['str_username'])) return FALSE;
+    if ($groups and !is_array($groups)) $groups = array($groups);
+    // Voeg eventueel random password toe
+    if (!isset($data['gpw_password'])) $data['gpw_password'] = random_string('alnum',12);
+    // Additional data
+    $additional_data = array_unset_keys($data,array('str_username','gpw_password','email_email'));
+    // Insert
+    $id = parent::register( $data['str_username'], $data['gpw_password'], $data['email_email'], $additional_data, $groups);
+    // Log als gelukt
+    if ($id) $this->log_activity->database( $this->db->last_query(), 'cfg_users', $id );
+    return $id;
+  }
+  
+  /**
+   * Verwijderd gebruiker
+   *
+   * @param string $user_id 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function delete_user($user_id) {
+    $success = parent::delete_user($user_id);
+    // Log als gelukt
+    if ($success) $this->log_activity->database( $this->db->last_query(), 'cfg_users', $user_id );
+    return $success;
+  }
+  
   
   /**
    * Pas gebruikers(data) aan.
@@ -354,7 +483,7 @@ class Flexy_auth extends Ion_auth {
 	 * @param string $email Emailadres van gebruiker
 	 * @param string $uri 
 	 * @param string $subject default='Forgotten Password Verification' Onderwerp van de te sturen email 
-	 * @return bool TRUE als proces is gelukt, FALS als gebruiker niet bekent is
+	 * @return bool TRUE als proces is gelukt, FALSE als gebruiker niet bekent is
 	 * @author Jan den Besten
 	 */
 	public function forgotten_password_send($email,$uri,$subject='Forgotten Password Verification') {
@@ -418,7 +547,7 @@ class Flexy_auth extends Ion_auth {
 	 */
   public function forgotten_password( $email ) {
     $user = $this->get_user_by_email( $email );
-    if ( !$user ) FALSE;
+    if ( !$user ) return FALSE;
     $mail_info = parent::forgotten_password( $user['username'] );
     $mail_info['forgotten_password_uri'] = $this->forgotten_password_uri;
     return $this->_mail( 'login_forgot_password', $user, $mail_info );
@@ -436,6 +565,7 @@ class Flexy_auth extends Ion_auth {
     if (!$mail_info) return FALSE;
     $user = $this->get_user_by_name($mail_info['identity']);
     $mail_info['password'] = $mail_info['new_password'];
+    if (!empty($mail_info['password'])) $mail_info['password'] = htmlentities($mail_info['password']); // Zorg ervoor dat password goed is te zien in html view
     $send = $this->_mail( 'login_new_password', $user, $mail_info );
     if ($send!==true) $this->set_error('password_change_unsuccessful');
     return $send;
@@ -450,7 +580,12 @@ class Flexy_auth extends Ion_auth {
    */
   private function _create_new_password( $user_id ) {
     $sql = 'SELECT `salt` FROM `cfg_users` WHERE `id` = "'.$user_id.'"';
-    $salt = $this->db->query($sql)->row_object()->salt;
+    $query = $this->db->query($sql);
+    if ($query) {
+      $row = $query->row_object();
+    }
+    if (!isset($row)) return false;
+    $salt = $row->salt;
     $password = $this->salt();
     $hashed_password = $this->hash_password( $password, $salt);
     return array(
@@ -475,11 +610,19 @@ class Flexy_auth extends Ion_auth {
     if (!isset($data['password'])) {
       // Create random password and save it to user
       $password_info = $this->_create_new_password($user['user_id']);
+      if ($password_info===false) {
+        $this->trigger_events(array('post_change_password', 'post_change_password_unsuccessful'));
+        $this->set_error('password_change_unsuccessful');
+        return FALSE;
+      }
   		$set = array(
-  		   'gpw_password'  => $password_info['hash_password'],
+  		   'gpw_password'  => $password_info['password'], // Hash gebeurt in data
   		   'remember_code' => NULL,
   		);
-      $successfully_changed_password_in_db = $this->data->table('cfg_users')->where('id',$user['user_id'])->set($set)->update();
+      $successfully_changed_password_in_db = FALSE;
+      if (isset($user['user_id']) and $user['user_id']) {
+        $successfully_changed_password_in_db = $this->data->table('cfg_users')->update($set,$user['user_id']);
+      }
     }
     // Stuur mail
 		if ($successfully_changed_password_in_db) {
@@ -490,6 +633,7 @@ class Flexy_auth extends Ion_auth {
         $data['password'] = $password_info['password'];
       }
       $data['identity'] = $user['username'];
+      if (!empty($data['password'])) $data['password'] = htmlentities($data['password']); // Zorg ervoor dat password goed is te zien in html view
       return $this->_mail($template, $user, $data);
 		}
 		else {
@@ -504,10 +648,11 @@ class Flexy_auth extends Ion_auth {
    *
    * @param mixed $user user array of id
    * @param array $data[null] 
+   * @param array $template ['login_new_account'] 
    * @return bool
    * @author Jan den Besten
    */
-  public function send_new_account( $user, $data=array() ) {
+  public function send_new_account( $user, $data=array(), $template='login_new_account' ) {
     return $this->send_new_password($user,$data,'login_new_account');
   }
 
@@ -693,20 +838,29 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   public function allowed_to_use_cms() {
-    $rights = $this->current_user['rights'];
-    //return (( el('b_edit',$rights,FALSE) or el('b_add',$rights,FALSE) or el('b_delete',$rights,FALSE) or el('b_all_users',$rights,FALSE)) and !empty($rights['rights']));
-    return TRUE;
+    $most_item_rights = 0;
+    $items = $this->current_user['rights']['items'];
+    if ($items) {
+      rsort($items);
+      $most_item_rights = current($items);
+      if ($most_item_rights > RIGHTS_SHOW) return TRUE;
+    }
+    return FALSE;
   }
   
   /**
    * Test of gebruiker op z'n minst in deze groep zit (of een groep die meer rechten heeft)
    * TODO: werkt nu alleen op de volgorde van groepen, wordt alleen gebruikt in AdminMenu
    *
-   * @param int $group_id 
+   * @param mixed $group_id [or group name]
    * @return bool
    * @author Jan den Besten
    */
   public function at_least_in_group( $group_id ) {
+    if (is_string($group_id)) {
+      $group_id = $this->data->table('cfg_user_groups')->select('id')->where('name',$group_id)->get_row();
+      $group_id = el('id',$group_id,false);
+    }
     $yes = FALSE;
     if (is_array($this->current_user['groups'])) {
       foreach ($this->current_user['groups'] as $id => $group) {
@@ -747,7 +901,7 @@ class Flexy_auth extends Ion_auth {
 		if ($this->current_user['rights']['tools']) return TRUE;
 		return FALSE;
 	}
-  
+
 
   /**
    * Geeft de rechten in een array terug van de meegegeven gebruiker
@@ -768,13 +922,11 @@ class Flexy_auth extends Ion_auth {
 		if (!$groups) return FALSE;
     
     $tables = $this->db->list_tables();
-    $medias = array();
-    $sql = 'SELECT `path` FROM `cfg_media_info`';
-    $query = $this->db->query($sql);
-    if ($query) {
-      foreach ($query->result() as $row) {
-        $medias[] = 'media_'.$row->path;
-      }
+    
+    $this->config->load('assets',true);
+    $medias = array_keys($this->config->get_item(array('assets','assets')));
+    foreach ($medias as $key=>$path) {
+      $medias[$key] = 'media_'.$path;
     }
     $items  = array_merge($tables,$medias);
     
@@ -791,7 +943,6 @@ class Flexy_auth extends Ion_auth {
       $rights['tools']     = ($rights['tools'] OR $group['b_tools']);
       $rights['items']     = $this->_combine_item_rights( $rights['items'], $group );
     }
-    
 		return $rights;
 	}
   
@@ -859,12 +1010,14 @@ class Flexy_auth extends Ion_auth {
     else
       $user_info = $this->get_user($user_id);
   
-    $rights = $user_info['rights'];
+    $rights = el('rights',$user_info);
+    if (!$rights) return RIGHTS_NO;
 
     // Rechten voor aanpassen van zichzelf als:
     // - cfg_users
     // - user_id === id van huidige user
-    if (  $item===$this->tables['users'] and $id===$user_info['user_id'] ) return RIGHTS_EDIT;
+    if ($id==='current') $id = $user_info['user_id'];
+    if ($item==$this->tables['users'] and $id==$user_info['user_id'] ) return RIGHTS_EDIT;
 
     // Anders normale rechten:
     return el( array('items',$item), $rights, RIGHTS_NO );

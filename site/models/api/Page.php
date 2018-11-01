@@ -1,5 +1,4 @@
-<?
-
+<?php 
 
 /**
  * \ingroup models

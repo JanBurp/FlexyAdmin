@@ -1,6 +1,17 @@
-# Nice urls
+# Prevent .htaccess access
+<Files ~ "^.*\.([Hh][Tt][Aa])">
+order allow,deny
+deny from all
+satisfy all
+</Files>
+# Disable directory browsing
+Options All -Indexes
+
+# Nice urls (& https on)
 RewriteEngine on
-RewriteCond $1 !^(index\.php|site/assets|sys/flexyadmin/assets|sys/tinymce|sys/jquery|sitemap\.xml|robots\.txt)
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+RewriteCond $1 !^(index\.php|assets|sitemap\.xml|robots\.txt)
 RewriteRule ^(.*)$ index.php/$1 [L]
 
 # gzip content

@@ -13,60 +13,55 @@ class Plugin_uri extends Plugin {
 
   public function __construct() {
     parent::__construct();
+    $this->CI->load->model('create_uri');
   }
 
 	public function _admin_api($args=NULL) {
-		if (isset($args)) {
-			if (isset($args[0])) {
-				$this->table=$args[0];
-				if ($this->CI->db->table_exists($this->table) and $this->CI->db->field_exists('uri',$this->table)) {
-          $this->CI->create_uri->set_table($this->table);
-          $prefix=el(array('prefix',$this->table),$this->config,'');
-          $this->CI->create_uri->set_prefix($prefix);
-          $prefix_callback=el(array('prefix_callback',$this->table),$this->config,false);
-          if ($prefix_callback) $this->CI->create_uri->set_prefix_callback($prefix_callback);
-					// reset all uris of this table
-					$allData = $this->CI->data->table($this->table)->get_result();
-					foreach ($allData as $id => $data) {
-						$this->id=$id;
-						$this->oldData=$data;
-						$this->newData=$data;
-            // if (!isset($field)) $field=$this->_get_uri_field();
-						$uri=$data['uri'];
-						$newUri=$this->CI->create_uri->create($data,el(1,$args,false)); // reset
-						if ($uri!=$newUri) {
-              $this->CI->data->table($this->table);
-							$this->CI->data->set('uri',$newUri);
-							$this->CI->data->where('id',$id);
-							$this->CI->data->update();
-						}
+		if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
+
+		if (isset($args[0])) {
+			$this->table=$args[0];
+			$reset = el(1,$args,false);
+			if ($this->CI->db->table_exists($this->table) and $this->CI->db->field_exists('uri',$this->table)) {
+
+        $this->CI->create_uri->set_table($this->table);
+
+				// reset all uris of this table
+				$this->CI->data->table($this->table);
+				$order = 'id';
+				if ($this->CI->data->field_exists('order')) $order = 'order';
+				if ($this->CI->data->field_exists('self_parent')) $order = 'self_parent,order';
+				$allData = $this->CI->data->order_by($order)->get_result();
+
+				foreach ($allData as $id => $data) {
+					$uri    = $data['uri'];
+					$newUri = $this->CI->create_uri->create($data,$reset);
+					if ($uri!==$newUri) {
+            $this->CI->data->table($this->table);
+						$this->CI->data->set('uri',$newUri);
+						$this->CI->data->where('id',$id);
+						$this->CI->data->update();
 					}
-          $this->add_message("All uri's in <b>$this->table</b> are (re)set.</p><p>Just change one in this table to make sure all other plugins did there work.");
 				}
+        $this->add_message("All uri's in <b>$this->table</b> are (re)set.</p><p>Just change one in this table to make sure all other plugins did there work.");
 			}
-			else {
-        $this->CI->load->library('documentation');
-        $help=$this->CI->documentation->get('sys/flexyadmin/libraries/plugins/Plugin_uri.php');
-				$this->add_message( $help['html_long'] );
-      }
 		}
-    
-    return $this->view('admin/plugins/plugin');
+    return $this->show_messages();
 	}
-
-
-
-	public function _after_update() {
+  
+  
+  public function _after_update() {
+  	if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
+  	
     $this->CI->create_uri->set_table($this->table);
-    $prefix=el(array('prefix',$this->table),$this->config,'');
-    $this->CI->create_uri->set_prefix($prefix);
-    $prefix_callback=el(array('prefix_callback',$this->table),$this->config,false);
-    if ($prefix_callback) $this->CI->create_uri->set_prefix_callback($prefix_callback);
-		$uri=$this->CI->create_uri->create($this->newData);
-		$this->newData['uri']=$uri;
+    if ( !isset($this->newData['uri']) and isset($this->oldData['uri']) ) $this->newData['uri'] = $this->oldData['uri'];
+		$uri = $this->CI->create_uri->create( array_merge($this->oldData,$this->newData) );
+    if ($uri) $this->newData['uri']=$uri;
 		return $this->newData;
 	}
-	
+  
+
+
 }
 
 ?>

@@ -9,7 +9,7 @@
  * - default - the basic and light flexyadmin template
  * - bootstrap - use bootstrap as a start
  */
-$config['framework']='default';
+$config['framework']='bootstrap';
 
 
 /**
@@ -39,6 +39,7 @@ elseif (isset($_SERVER['HTTP_HOST']) and isset($_SERVER['SCRIPT_NAME'])) {
   if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
     $protocol = 'https';
   }
+  define('PROTOCOL', $protocol);
   $config['base_url']=$protocol."://".$_SERVER['HTTP_HOST'];
   $config['base_url'].=str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
 }
@@ -73,6 +74,20 @@ $config['index_page'] = "";
 |
 */
 $config['uri_protocol']	= "PATH_INFO";
+
+
+/*
+|--------------------------------------------------------------------------
+| REDIRECT METHOD
+|--------------------------------------------------------------------------
+|
+| See CodeIgniter redirect()
+| ‘auto’, ‘location’ or ‘refresh’
+| This allows you to force a particular redirection method: location being faster but less reliable on IIS servers.
+*/
+
+$config['redirect_method'] = 'auto';
+define('REDIRECT_METHOD', 'auto');
 
 /*
 |--------------------------------------------------------------------------
@@ -160,7 +175,7 @@ $config['subclass_prefix'] = 'MY_';
 if (SAFE_INSTALL)
   $config['composer_autoload'] = '../sys/vendor/autoload.php';
 else
-  $config['composer_autoload'] = '/sys/vendor/autoload.php';
+  $config['composer_autoload'] = 'sys/vendor/autoload.php';
   
 
 
@@ -338,7 +353,6 @@ $config['encryption_key'] = "pfny9WkeCN4pWU2wr6UsTfvzNBomWxxh";
 $config['sess_driver']            = 'database';
 $config['sess_cookie_name']       = 'FlexyAdminDEMO';    // This will be replaced at install, see SITEPATH.config/config.php
 $config['sess_expiration']		    = 86400;               // 24 uur
-$config['sess_expiration']		    = 86400;               // 24 uur;
 $config['sess_save_path']         = 'cfg_sessions';
 $config['sess_match_ip']		      = FALSE;
 $config['sess_time_to_update'] 		= 300;

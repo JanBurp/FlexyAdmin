@@ -1,25 +1,21 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-/*
- *--------------------------------------------------------------------------
- * Multi file-upload for modern browsers (HTML5 browsers and IE9 and up)
- *--------------------------------------------------------------------------
- *
+/**
+ * Cache de settings van Data models.
+ * Maakt alles sneller.
+ * Tijdens development is het soms handiger om uit te zetten.
+ * Zeker als je veel aan de database of de data settings aanpast (config/data/...)
  */
-$config['MULTIPLE_UPLOAD'] = TRUE;
+$config['CACHE_DATA_SETTINGS'] = TRUE;
 
-/*
- *--------------------------------------------------------------------------
- * URI Plugin: Replace spaces with character
- *--------------------------------------------------------------------------
- *
- * Character to replace a space with when creating URI's.
- * Default: '_'.
- * Other nice options: '-' or ''.
- *
+
+
+/**
+ * Public folder staat default op 'public'.
+ * Hier kun je die eventueel hernoemen als de server dat verlangt.
  */
-// $config['PLUGIN_URI_REPLACE_CHAR']  = '_';
+// $config['PUBLICFOLDER']        = 'public_html';
 
 
 

@@ -135,7 +135,7 @@ class Graph extends CI_Model {
 		if (!empty($type)) $this->set_type($type);
 		
 		$table=array();
-		$table["class"]="$tableClass $extraClass";
+    $table['title']=current($this->captions)['cell'];
 
 		$table["caption"]["class"]="$tableClass $extraClass";
 		$table["caption"]["row"]=$this->captions;
@@ -159,9 +159,12 @@ class Graph extends CI_Model {
         if (is_array($cell)) break;
 				$pre=get_prefix($name);
 				if ($pre==$name) $pre="";
-				$tableCells[]=array(	"class"				=> "$tableClass $name $extraClass nr$cn ".alternator("oddcol","evencol"),
-															"value"				=> $cell,
-															"percentage" 	=> round(($cell/$max)*100) );
+        $percentage = 0;
+        if (is_numeric($cell) and is_numeric($max)) $percentage = round(($cell/$max)*100);
+        $tableCells[]=array(  "class"       => "$tableClass $name $extraClass nr$cn ".alternator("oddcol","evencol"),
+                              "value"       => $cell,
+                              "percentage"  => $percentage,
+                            );
 				$cn++;
 			}
 

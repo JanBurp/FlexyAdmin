@@ -88,45 +88,49 @@ class Form {
 	private $buttons;
   private $validation_error = false;
   // private $validation_error_class = 'error';
-  private $framework = 'default';
+  private $framework = 'bootstrap';
   private $view_path='admin/form';
   
   private $styles=array(
     'default'   => array(
-      'form'                  => '',
-      'fieldset'              => 'flexyFormFieldset',
-      'fieldset_buttons'      => 'flexyFormButtons',
-      'fieldset_info'         => true,
-      'field_container'       => 'flexyFormField',
-      'field_html'            => 'flexyFormHtml',
-      'field_container_info'  => true,
-      'label'                 => '',
-      'field'                 => '',
-      'field_info'            => true,
-      'button'                => 'button',
-      'validation_error_class'=> 'error',
-      'status_default'        => '',
-      'status_success'        => 'has-success',
-      'status_warning'        => 'has-warning',
-      'status_error'          => 'has-error',
+      'form'                     => '',
+      'fieldset'                 => 'flexyFormFieldset',
+      'fieldset_buttons'         => 'flexyFormButtons',
+      'fieldset_info'            => true,
+      'field_container'          => 'flexyFormField',
+      'field_html'               => 'flexyFormHtml',
+      'field_container_info'     => true,
+      'label'                    => '',
+      'field'                    => '',
+      'field_info'               => true,
+      'radio_option_class'       => 'radioOption',
+      'radio_option_label_class' => 'optionLabel',
+      'button'                   => 'button',
+      'validation_error_class'   => 'error',
+      'status_default'           => '',
+      'status_success'           => 'has-success',
+      'status_warning'           => 'has-warning',
+      'status_error'             => 'has-error',
     ),
     'bootstrap' => array(
-      'form'                  => '',
-      'fieldset'              => '',
-      'fieldset_buttons'      => '',
-      'fieldset_info'         => false,
-      'field_html'            => '',
-      'field_container'       => 'form-group',
-      'field_container_info'  => false,
-      'label'                 => 'control-label',
-      'field'                 => 'form-control',
-      'field_info'            => false,
-      'button'                => 'btn btn-primary',
-      'validation_error_class'=> 'alert alert-danger',
-      'status_default'        => '',
-      'status_success'        => 'has-success',
-      'status_warning'        => 'has-warning',
-      'status_error'          => 'has-error',
+      'form'                     => '',
+      'fieldset'                 => '',
+      'fieldset_buttons'         => '',
+      'fieldset_info'            => false,
+      'field_html'               => '',
+      'field_container'          => 'form-group',
+      'field_container_info'     => false,
+      'label'                    => 'control-label',
+      'field'                    => 'form-control',
+      'field_info'               => false,
+      'radio_option_class'       => '',
+      'radio_option_label_class' => 'radio-inline',
+      'button'                   => 'btn btn-primary col-lg-offset-2 col-sm-offset-3',
+      'validation_error_class'   => 'alert alert-danger',
+      'status_default'           => '',
+      'status_success'           => 'has-success',
+      'status_warning'           => 'has-warning',
+      'status_error'             => 'has-error',
     ),
     
   );
@@ -149,6 +153,7 @@ class Form {
    * @author Jan den Besten
    */
 	public function init($action="",$form_id='') {
+    $this->set_framework();
     $this->set_form_id($form_id);
 		$this->set_action($action);
 		$this->set_caption();
@@ -196,8 +201,9 @@ class Form {
    * @return void
    * @author Jan den Besten
    */
-  public function set_framework($style="default") {
-    $this->framework=$style;
+  public function set_framework($style="bootstrap") {
+    if ($this->CI->config->item('IS_ADMIN')) $style = 'bootstrap';
+    $this->framework = $style;
     return $this;
   }
   
@@ -569,15 +575,6 @@ class Form {
         }
 			}
 
-			// set extra validation rules for passwords if new (required)
-      if ($field['type']=='password' and !isset($field['matches'])) {
-        $id=el(array('id','value'),$data,-1);
-        if ($id<0) {
-          // if new 'user' password is required
-          $field['validation']='required|'.$field['validation'];
-        }
-      }
-      
       // captcha
 			if ($field['type']=='captcha') {
         $this->CI->load->helper('captcha');
@@ -818,7 +815,6 @@ class Form {
 		// fieldsets with fields
 		$nr=1;
     $fieldsets=array();
-    
 		foreach ($this->fieldsets as $title) {
       $fieldsets[$nr]=array(
         'title'  => ($title=='fieldset'?$this->caption:trim($title)),
@@ -855,7 +851,6 @@ class Form {
       'method'    => 'POST',
       'fieldsets' => $fieldsets
     );
-    // trace_($form);
     $render=$this->CI->load->view($this->view_path.'/form',$form,true);
 
 		// prepare javascript for conditional field showing
@@ -910,7 +905,7 @@ class Form {
     $attr["class"] = $class;
     $attr["value"] = $field["value"];
     if (isset($field['placeholder'])) $attr['placeholder']=$field['placeholder'];
-    if (isset($field['readonly'])) $attr['readonly']=$field['readonly'];
+    if (el('readonly',$field)) $attr['readonly'] = 'readonly';
     if (isset($field['disabled'])) $attr['disabled']=$field['disabled'];
 
     // Status / Validation error
@@ -935,8 +930,8 @@ class Form {
       case 'captcha':
         $this->CI->load->helper('captcha');
   			$vals = array(
-  							'img_path'	 	=> assets().'_thumbcache/',
-  							'img_url'	 		=> site_url(assets().'_thumbcache').'/',
+  							'img_path'	 	=> $this->CI->config->item('THUMBCACHE'),
+  							'img_url'	 		=> $this->CI->config->item('ASSETS').'_thumbcache/',
   							'img_width'	 	=> '125',
   							'img_height' 	=> '25',
   							'expiration' => '600',
@@ -965,15 +960,21 @@ class Form {
 				$options=$field['options'];
 				$value=$field['value'];
         $field['control']='';
+        $field['container_class'] .= ' radio';
 				foreach ($options as $option => $optLabel) {
 					$attr['value']=$option;
 					if ($value==$option) $attr['checked']='checked'; else $attr['checked']='';
 					$attr['id']=str_replace('.','_',$name.'__'.$option);
-          $for=$attr['id'];
+          $for = $attr['id'];
           $labelAttr=$attr;
-          $labelAttr['class'].=' optionLabel';
+          $labelAttr['class'] .= ' '.$this->styles[$this->framework]['radio_option_class'];
           unset($labelAttr['id']);
-          $field['control'].=div('radioOption '.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div();
+          if ($this->framework==='bootstrap') {
+            $field['control'] .= '<label><input type="radio" name="'.$field['name'].'" value="'.$option.'" '.$attr['checked'].'>'.$optLabel.'</label>';
+          }
+          else {
+            $field['control'].=div($this->styles[$this->framework]['radio_option_label_class'].' option-'.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div(); 
+          }
 				}
 				break;
 
@@ -993,12 +994,18 @@ class Form {
 			case 'image_dropdown':
 			case 'image_dragndrop':
         $field['control']='';
-				$extra="";
+        $extra = el('extra',$field);
+        if (!empty($extra)) {
+          $extra = attributes($extra);
+        }
+        else {
+          $extra = '';
+        }
 				$options=el("options",$field);
 				$value=$attr["value"];
         $button=el("button",$field);
 				if (isset($field["path"])) 	$extra.=" path=\"".$field["path"]."\"";
-				if (isset($field["multiple"]) or is_array($value)) {
+				if (el('multiple',$field)!='' or is_array($value)) {
 					$extra.=" multiple=\"multipe\" ";
 					$name.="[]";
 					if (is_array($value)) {
@@ -1088,48 +1095,6 @@ class Form {
         }
 				break;
 				
-			// #BUSY Form->Subfields
-      // case "subfields":
-      //   $out.=icon('new');
-      //   $out.=div('sub');
-      //   foreach ($field['value'] as $id => $subfields) {
-      //     $first=true;
-      //     foreach ($subfields as $subfieldName => $subfieldValue) {
-      //       $preSub=get_prefix($subfieldName);
-      //       $subAttr['name']=$name.'___'.$subfieldName.'[]';
-      //       $subAttr['value']=$subfieldValue;
-      //       switch ($preSub) {
-      //         case 'id':
-      //           if ($subfieldName=='id') {
-      //             $out.=form_hidden($subAttr['name'],$subAttr['value']);
-      //           }
-      //           break;
-      //         default:
-      //           $labelClass=array();
-      //           if ($first) {
-      //             $labelClass=array('class'=>'first');
-      //             $out.=icon('delete');
-      //             $first=FALSE;
-      //           }
-      //           $out.=form_label($this->CI->ui->get($subfieldName),$subAttr['name'],$labelClass);
-      //           if ($preSub=='txt') {
-      //             $this->hasHtmlField=true;
-      //             $subAttr["rows"]=5;
-      //             $subAttr["cols"]=60;
-      //             $subAttr['class']='htmleditor';
-      //             $out.=form_textarea($subAttr);
-      //           }
-      //           else {
-      //             $out.=form_input($subAttr);
-      //           }
-      //           break;
-      //       }
-      //     }
-      //     $out.=br(2);
-      //   }
-      //   $out.=_div();
-      //   break;
-
 			case "file":
 				$attr["class"].=" browse";
 				$field['control']=form_upload($attr);
@@ -1169,7 +1134,7 @@ class Form {
 				break;
 
 			case "password":
-				if (substr($this->action,0,12)=='/admin/show/') {
+				if (substr($this->action,0,13)=='/_admin/show/') {
 					$attr['value']='';
 					$field['control']=form_input($attr);
 				}
@@ -1190,10 +1155,8 @@ class Form {
 				$field['control']=form_input($attr);
 		endswitch;
     
-    // trace_($field);
-    
 		if ($field["type"]=="hidden") return $field['control'];
-    $field['horizontal_bootstrap']=($this->framework=='bootstrap' and has_string('form-horizontal',$form_class));
+    $field['horizontal_bootstrap'] = ($this->framework=='bootstrap');
     $attributes=implode_attributes(el('attributes',$field,array()));
     $rendered_field=$this->CI->load->view($this->view_path.'/field',array('field'=>$field,'styles'=>$this->styles[$this->framework],'attributes'=>$attributes),true);
 		return $rendered_field;

@@ -1,4 +1,7 @@
 $(document).ready(function() {
+  // Menu dropdown hack voor iPhone etc
+  $('.navbar-toggle').click(function(){ });
+
 
 });
 

@@ -67,14 +67,14 @@
 		* _admin_api
 		*
 		* Standaard method die wordt aangeroepen als de plugin actief wordt via een URL (of menu-item) in het admin deel.
-		* De url is: /admin/plugin/NAAM_PLUGIN/EVENTUELE_PARAMETERS
+		* De url is: /_admin/plugin/NAAM_PLUGIN/EVENTUELE_PARAMETERS
 		*
 		* @return string HTML output van de plugin
 		* @author Jan den Besten
 		*/
 	public function _admin_api($args=NULL) {
     $this->add_message('Use this template as a base for your plugins.');
-    return $this->view();
+    return $this->show_messages();
 	}
 
 
@@ -82,7 +82,7 @@
 		* _ajax_api
 		*
 		* Standaard method om de plugin met een ajax aanroep aan te roepen
-		* De ajax url is: /admin/ajax/plugin/NAAM_PLUGIN/EVENTUELE_PARAMETERS
+		* De ajax url is: /_admin/ajax/plugin/NAAM_PLUGIN/EVENTUELE_PARAMETERS
 		*
 		* @return array result array die als JSON wordt teruggegeven
 		* @author Jan den Besten

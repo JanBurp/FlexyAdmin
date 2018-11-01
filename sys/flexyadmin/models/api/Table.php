@@ -6,17 +6,17 @@
  * ###Parameters:
  * 
  * - `table`                    // De gevraagde tabel
- * - `[path]`                   // Eventueel op te vragen map voor media/assets (bij table='res_media_files')
+ * - `[path]`                   // Eventueel op te vragen map voor media/assets (bij table='res_assets')
  * - `[limit=0]`                // Aantal rijen dat het resultaat moet bevatten. Als `0` dan worden alle rijen teruggegeven.
  * - `[offset=0]`               // Hoeveel rijen vanaf de start worden overgeslagen.
- * - `[sort='']`                // De volgorde van het resultaat, geef een veld, bijvoorbeeld `str_title` of `_str_title` voor DESC
+ * - `[order='']`               // De volgorde van het resultaat, geef een veld, bijvoorbeeld `str_title` of `_str_title` voor DESC
  * - `[filter='']`              // Eventuele string waarop alle data wordt gefilterd
  * - `[as_grid=FALSE]`          // Als `TRUE`, dan wordt de data als specifieke grid formaat teruggegeven zoals het de backend van de CMS wordt getoond. NB Kan onderstaande opties overrulen!
  * - `[txt_abstract=0]`         // Als `TRUE`, dan bevatten velden met de `txt_` prefix een ingekorte tekst zonder HTML tags. Of een integer waarde voor de lengte.
+
  * - `[as_options=FALSE]`       // Als `TRUE`, dan wordt de data als opties teruggegeven die gebruikt kunnen worden in een dropdown field bijvoorbeeld. (`limit` en `offset` werken dan niet)
  * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
  * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
- * - `[schemaform=FALSE]`       // Als TRUE dan wordt een json schemaform van het formulier toegevoegd (zie http://schemaform.io)
  * 
  * 
  * ###Voorbeelden:
@@ -98,21 +98,21 @@ class Table extends Api_Model {
   
   var $needs = array(
     'table'        => '',
-    'limit'        => 0,
-    'offset'       => false, // met false werkt jump_to_today
-    // 'sort'         => '',
+    // 'limit'        => 0,
+    // 'offset'       => false, // met false werkt jump_to_today
+    // 'order'         => '',
     // 'filter'       => '',
     'as_grid'      => false,
     'as_options'   => false,
     'txt_abstract' => 0,
     'settings'     => false,
-    'schemaform'   => false,
   );
+
+  private $rights = 0;
   
 	public function __construct() {
 		parent::__construct();
-    $this->load->model('ui');
-	}
+  }
   
   /**
    * Gets the data and information and returns it
@@ -125,16 +125,16 @@ class Table extends Api_Model {
     if (!$this->has_args()) return $this->_result_wrong_args(); 
     
     // Check rechten
-    if ($this->args['table']==='res_media_files' AND isset($this->args['path'])) {
-      if ( !$this->_has_rights('media_'.$this->args['path']) ) {
-        return $this->_result_status401();
-      }
+    if ($this->args['table']==='res_assets' AND isset($this->args['path'])) {
+      $this->rights = $this->_has_rights('media_'.$this->args['path']);
     }
     else {
-      if (!$this->_has_rights($this->args['table'])) {
-        return $this->_result_status401();
-      }
+      $this->rights = $this->_has_rights($this->args['table']);
     }
+    if ( !$this->rights ) {
+      return $this->_result_status401();
+    }
+
     
     // Opties toevoegen bij as_grid en settings
     if ( $this->args['as_grid'] and $this->args['settings'] ) $this->args['options'] = true;
@@ -158,35 +158,81 @@ class Table extends Api_Model {
    * @author Jan den Besten
    */
   private function _get_data() {
-    
     $this->data->table( $this->args['table'] );
-    
-    // Normaal resultaat, of grid resultaat
+
+    $is_media = ($this->args['table'] === 'res_assets' AND isset($this->args['path']));
+
+    // Filter?
+    $this->args['filter'] = el( 'filter', $this->args, '' );
+    if (!empty($this->args['filter'])) {
+      $this->args['filter'] = trim($this->args['filter'],'{}');
+      $this->args['filter'] = html_entity_decode($this->args['filter']);
+      if (substr($this->args['filter'],0,1)==='[') {
+        $this->args['filter'] = json2array($this->args['filter']);
+      }
+    }
+    // Grid resultaat?
     if ( el('as_grid',$this->args,false) ) {
-      // Grid, pagination, sort
-      $this->args['sort'] = el( 'sort', $this->args, '' );
-      $this->args['filter'] = el( 'filter', $this->args, '' );
-      // Media?
-      if ( $this->args['table'] === 'res_media_files' AND isset($this->args['path']) ) $this->args['where'] = array( 'path' => $this->args['path'] );
-      // Where?
+
+      // Reset order (hack)
+      if ($this->data->is_menu_table()) {
+        $this->load->model('order','_order');
+        $this->_order->reset( $this->args['table'] );
+      }
+
+      // pagination, order, filter
+      $this->args['order']  = el( 'order', $this->args, '' );
+      // Where
       if (!isset($this->args['where'])) $this->args['where'] = '';
-      $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'], $this->args['where'] );
+      // txt_abstract, options
+      if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
+      $this->data->find( $this->args['filter'] );
+      if ($this->args['where']) $this->data->where( $this->args['where'] );
+      $this->data->order_by( $this->args['order'] );
+      $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'] );
+
+      // trace_($this->args);
+      // trace_sql($this->data->last_query());
+      // trace_($this->data->get_query_info());
+      // trace_($items);
+
     }
     else {
-      // Normaal: where, txt_abstract, options
-      if ( isset($this->args['where']) ) $this->data->where( $this->args['where'] );
-      if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
-      if ( el('as_options',$this->args,false) ) $this->data->select_abstract( TRUE );
-      $items = $this->data->get_result( $this->args['limit'], $this->args['offset'] );
+      // Media?
+      if ( $is_media ) {
+        $this->data->order_by( $this->args['order'] );
+        $items = $this->data->get_files( $this->args['path'], $this->args['filter'], $this->args['limit'], $this->args['offset'], TRUE );
+      }
+      else {
+        // Geen grid & geen media - where, txt_abstract, options
+        if ( el('as_options',$this->args,false) ) {
+          $items = $this->data->get_options('', array('many_to_one','many_to_many','one_to_many') );
+        }
+        else {
+          if ( isset($this->args['where']) ) $this->data->where( $this->args['where'] );
+          if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
+          $this->data->order_by( $this->args['order'] );
+          $items = $this->data->get_result( $this->args['limit'], $this->args['offset'] );
+        }
+      }
     }
-    
+
     // Info
     $this->info = $this->data->get_query_info();
-    
-    // Schemaform
-    if ( el('schemaform',$this->args,false) ) {
-      $this->result['schemaform'] = $this->data->schemaform( current($items), el('table',$this->args) );
+    if ($is_media) {
+      $this->info['count_all'] = $this->data->count_all($this->args['path']);
     }
+    else {
+      $this->info['count_all'] = $this->data->count_all(); 
+    }
+
+    // Rights (can insert, can edit)
+    $this->info['rights'] = array(
+      'show'    => ( $this->rights >= RIGHTS_SHOW ),
+      'edit'    => ( $this->rights >= RIGHTS_EDIT ),
+      'insert'  => ( $this->rights >= RIGHTS_ADD ),
+      'delete'  => ( $this->rights >= RIGHTS_DELETE ),
+    );
     
     return $items;
   }

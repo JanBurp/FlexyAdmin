@@ -26,6 +26,25 @@ function el($name,$arr,$default=NULL) {
 	return $arr;
 }
 
+
+/**
+ * Net als el() (van CodeIgniter) maar $default wordt nu ook teruggegeven als het element empty is
+ * 
+ * @param mixed $name
+ * @param array $arr
+ * @param mixed $default default=NULL
+ * @return mixed
+ */
+function elm($name,$arr,$default=NULL) {
+  if (!is_array($name)) $name=array($name);
+  foreach ($name as $key) {
+    if (!is_array($arr)) break;
+    $arr=element($key,$arr,$default);
+  }
+  if ($arr===null or empty($arr)) $arr=$default;
+	return $arr;
+}
+
 /**
  * Zet een item in een (multidimensionele) array
  *
@@ -175,23 +194,32 @@ function array2json($arr) {
 			}
 		else {
 			$str = '';
-			if(!$is_list) $str = '"' . $key . '":';
-			//Custom handling for multiple data types
+			if (!$is_list) $str = '"' . $key . '":';
+			
+			// Custom handling for multiple data types:
       // Booleans
-      if (in_array($prefix,array('b','is','has'))) {
+      if (in_array($prefix,array('b','is','has')) and (is_bool($value) or (is_numeric($value) and $value>=0 and $value<=1) or in_array($value,array('true','false'))) ) {
   			if ($value == false)
           $str.= 'false';
   			else
-          $str.= 'true';
-        
+          $str.= 'true';       
       }
       // Numbers
-      elseif(is_numeric($value)) $str.= $value;
-      // The booleans
-			elseif($value === false) $str.= 'false';
-			elseif($value === true) $str.= 'true';
+      elseif( is_numeric($value) and preg_match('/[^\d]/u',$value)===0 and (substr($value,0,1)!=='0' or $value==0)) {
+      	$str.= $value;
+      }
+      // Other booleans
+			elseif($value === false) {
+				$str.= 'false';
+			}
+			elseif($value === true) {
+				$str.= 'true';
+			}
       // Strings - Default
-      else $str.='"'.addcslashes ($value, '"'."\n\r".chr(92)).'"'; // All other things: escape double quotes, backslash and newlines
+      else {
+      	$value = preg_replace('/[\x00-\x09\x0B-\x1F\x7F]/u', '', $value);
+      	$str.='"'.addcslashes ($value, '"'."\n\r".chr(92)).'"'; // All other things: escape double quotes, backslash and newlines
+      }
 			$parts[] = $str;
 		}
 	}
@@ -581,18 +609,23 @@ function filter_by_prefix( $a, $prefix ) {
 
 
 /**
- * Geeft alle elemeten uit de associatieve array die NIET de meegegeven (prefix van de) key hebben.
+ * Geeft alle elemeten uit de associatieve array die NIET de meegegeven (prefix van de) key(s) hebben.
  *
  * @param string $a 
- * @param string $preKey 
+ * @param mixed $keys string of arrat van strings
  * @return array
  * @author Jan den Besten
  */
-function not_filter_by_key($a,$preKey) {
+function not_filter_by_key($a,$keys) {
 	$arr=array();
-	$len=strlen($preKey);
-	foreach ($a as $key => $value) {
-		if (substr($key,0,$len)!==$preKey) $arr[$key]=$value;
+  if (!is_array($keys)) $keys = array($keys);
+	foreach ($a as $arrkey => $value) {
+    $found = false;
+    foreach ($keys as $key) {
+      $len = strlen($key);
+      if (substr($arrkey,0,$len)===$key) $found = true;
+    }
+    if (!$found) $arr[$arrkey] = $value;
 	}
 	return $arr;
 }
@@ -721,7 +754,7 @@ function ignorecase_ksort(&$a) {
 
 
 /**
- * Sorteerd een associatieve array met de values van een bepaalde key
+ * Sorteert een associatieve array met de values van een bepaalde key
  * 
  * Hiermee kun je het een resultaat array van de database opnieuw sorteren (anders dan op de key)
  *
@@ -733,25 +766,42 @@ function ignorecase_ksort(&$a) {
  * @return array
  * @author Jan den Besten
  */
-function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
+function sort_by($array,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 	if (!is_array($keys)) $keys=array($keys);
-	if ($case) $comparefunction='strcasecmp'; else $comparefunction='strnatcmp';
-	$key=array_shift($keys);
+	$key = array_shift($keys);
+	// DESC
 	if ($desc) {
-		$f = "return $comparefunction(\$b['$key'], \$a['$key']);";
-		uasort($a, create_function('$a,$b', $f));
+		if ($case) {
+			uasort($array, function($a,$b) use($key) {
+				return strcasecmp($b[$key],$a[$key]);
+			});	
+		}
+		else {
+			uasort($array, function($a,$b) use($key) {
+				return strnatcmp($b[$key],$a[$key]);
+			});	
+		}
 	}
+	// ASC
 	else {
-		$f = "return $comparefunction(\$a['$key'], \$b['$key']);";
-		uasort($a, create_function('$a,$b', $f));
+		if ($case) {
+			uasort($array, function($a,$b) use($key) {
+				return strcasecmp($a[$key],$b[$key]);
+			});	
+		}
+		else {
+			uasort($array, function($a,$b) use($key) {
+				return strnatcmp($a[$key],$b[$key]);
+			});	
+		}
 	}
 	// slice
-	if ($max>0) $a=array_slice($a,0,$max);
+	if ($max>0) $array=array_slice($array,0,$max);
 	// subsort
 	if (count($keys)>0) {
 		$nr=0;
-		array_push($a,array());
-		foreach ($a as $k => $val) {
+		array_push($array,array());
+		foreach ($array as $k => $val) {
 			if (isset($v)) {
 				if (!empty($val) and $val[$key]==$v) {
 					// add to sub
@@ -762,7 +812,7 @@ function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 					if (count($b)>1) {
 						// subsort
 						$b=sort_by($b,$keys,FALSE,$case); // $desc standard
-						$a=array_merge( array_slice($a,0,$start), $b, array_slice($a,$start+count($b)) );
+						$array=array_merge( array_slice($array,0,$start), $b, array_slice($array,$start+count($b)) );
 					}
 					unset($b);
 					unset($v);
@@ -776,9 +826,9 @@ function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 			}
 			$nr++;
 		}
-		array_pop($a);
+		array_pop($array);
 	}
-	return $a;
+	return $array;
 }
 
 
@@ -823,15 +873,21 @@ function array_sort_length($a) {
  *
  * @param string $v Te zoeken waarde
  * @param string $a Array
+ * @param int $offset [startpunt van te zoeken 'like' string]
  * @return mixed FALSE of gevonden key
  * @author Jan den Besten
  */
-function in_array_like($v,$a) {
+function in_array_like($v,$a,$offset=false) {
 	$in=false;
-	$i=each($a);
-	while (!empty($i['value']) and !$in) {
-		if (strpos($i['value'],$v)!==false) $in=$i['key'];
-		$i=each($a);
+	$i=current($a);
+	while (!empty($i) and !$in) {
+		$pos = strpos($i,$v);
+		if ($pos!==false) {
+			if ($offset===false or $pos===$offset) {
+				$in=key($a);
+			}
+		}
+		$i=next($a);
 	}
 	return $in;
 }
@@ -842,7 +898,7 @@ function in_array_like($v,$a) {
  * @param array $a array waarin gezocht wordt
  * @param mixed $v waarde die gezocht wordt
  * @param string $key[''] Eventueel mee te geven key waarin gezoch moet worden
- * @param bool $like default=FALSE als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is
+ * @param bool $like default=FALSE als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is, of een vaste positie
  * @return array
  * 
  * @author Jan den Besten
@@ -851,24 +907,30 @@ function find_row_by_value($a,$v,$key='',$like=false) {
 	$found=array();
 	foreach ($a as $id=>$row) {
 		if (empty($key) and is_array($row)) {
-			if ($like) {
-				if (in_array_like($v,$row)) $found[$id]=$row;
+			if ($like!==false) {
+				if (in_array_like($v,$row,$like)) $found[$id]=$row;
 			}
 			else {
 				if (in_array($v,$row)) $found[$id]=$row;
 			}
 		}
 		elseif (is_array($row)) {
-			if ($like) {
+			if ($like===true) {
 				if (isset($row[$key]) and has_string($v,$row[$key])) $found[$id]=$row;
+			}
+			elseif ($like!==false) {
+				if (isset($row[$key]) and strpos($row[$key],$v)===$like) $found[$id]=$row;	
 			}
 			else {
 				if (isset($row[$key]) and $row[$key]==$v) $found[$id]=$row;
 			}
 		}
     else {
-			if ($like) {
+			if ($like!==false) {
 				if (has_string($v,$row)) $found[$id]=$row;
+			}
+			elseif ($like!==false) {
+				if (isset($row) and strpos($row,$v)===$like) $found[$id]=$row;	
 			}
 			else {
 				if ($row==$v) $found[$id]=$row;
@@ -1010,20 +1072,17 @@ function array_last($a) {
  * @author Jan den Besten
  */
 function array_add_after($a,$key,$row) {
-	if (!is_array($row)) $row=array($row);
-	$firstslice=array();
-	$k='';
-	reset($a);
-	$item=each($a);
-	while ( $item and $item['key']!=$key ) {
-		$firstslice[$item['key']]=$item['value'];
-		array_shift($a);
-		$item=each($a);
+	// normal
+	if (!is_assoc($a)) {
+		$offset = array_search($key, $a) + 1;
+		$row = array($row);
+	  return array_merge( array_slice($a, 0, $offset, true), $row, array_slice($a, $offset, NULL, true) );
 	}
-	$firstslice[$item['key']]=$item['value'];
-	array_shift($a);
-	$item=each($a);
-	return array_merge($firstslice,$row,$a);
+	// assoc
+	$offset = array_search($key, array_keys($a)) + 1;
+	return array_slice($a, 0, $offset, true)
+					+ $row
+					+ array_slice($a, $offset, NULL, true);
 }
 
 /**
@@ -1036,20 +1095,17 @@ function array_add_after($a,$key,$row) {
  * @author Jan den Besten
  */
 function array_add_before($a,$key,$row) {
-	if (!is_array($row)) $row=array($row);
-	$firstslice=array();
-	$k='';
-	reset($a);
-	$item=each($a);
-	while ( $item and $item['key']!=$key ) {
-		$firstslice[$item['key']]=$item['value'];
-		array_shift($a);
-		$item=each($a);
+	// normal
+	if (!is_assoc($a)) {
+		$offset = array_search($key, $a);
+		$row = array($row);
+	  return array_merge( array_slice($a, 0, $offset, true), $row, array_slice($a, $offset, NULL, true) );
 	}
-	// $firstslice[$item['key']]=$item['value'];
-	// array_shift($a);
-	// $item=each($a);
-	return array_merge($firstslice,$row,$a);
+	// assoc
+	$offset = array_search($key, array_keys($a));
+	return array_slice($a, 0, $offset, true)
+					+ $row
+					+ array_slice($a, $offset, NULL, true);
 }
 
 
@@ -1161,6 +1217,7 @@ function explode_attributes($s) {
  * @author Jan den Besten
  */
 function array_keep_keys($a,$keep) {
+  if (!is_array($a) or !is_array($keep)) return $a;
   foreach ($a as $key => $value) {
     if (!in_array($key,$keep)) unset($a[$key]);
   }

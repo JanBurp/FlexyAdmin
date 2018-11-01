@@ -10,6 +10,9 @@
  * @author			Jan den Besten
 **/
 
+
+$config['CACHE_DATA_SETTINGS']    = TRUE;
+$config['USE_OLD_DB']             = FALSE;
 $config['PROFILER']               = FALSE;
 
 $config['PHP_version']						= substr(phpversion(),0,1);
@@ -17,13 +20,18 @@ $config['LOCAL']									= IS_LOCALHOST;
 $config['IS_AJAX']								= IS_AJAX;
 $config['AJAX_MODULE']						= IS_AJAX;
 $config['IS_ADMIN']               = FALSE;
-if (isset($_SERVER['PATH_INFO']) and strpos($_SERVER['PATH_INFO'],'admin')!==false) $config['IS_ADMIN'] = TRUE;
-$config['LANGUAGES']							= array('nl','en','de','es','fr');
+if (isset($_SERVER['PATH_INFO']) and strpos($_SERVER['PATH_INFO'],'_admin')!==false) $config['IS_ADMIN'] = TRUE;
+
+$config['LANGUAGES']							= array('en','nl');
+$config['ADMIN_LANGUAGES']        = array('en','nl');
+
 $config['MENU_TABLES']						= array('res_menu_result','tbl_menu');
 
 // Directories
 $config['SITE']										= SITEPATH;
-$config['ADMINASSETS']						= "sys/flexyadmin/assets/";
+$config['SYS']										= 'sys/';
+$config['ADMINASSETS']						= $config['SYS'].'flexyadmin/assets/dist/';
+$config['PUBLICFOLDER']           = 'public';
 $config['PUBLICASSETS']						= $config['SITE'].'assets/';
 $config['ASSETS']									= $config['PUBLICASSETS'];
 $config['ASSETSFOLDER']						= $config['ASSETS'];
@@ -31,7 +39,7 @@ $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'stats/';
 $config['PLUGINS']								= $config['SITE'].'plugins';
 if (SAFE_INSTALL) {
-  $config['SITE']        = SITEPATH;
+  $config['SYS']				 = '../sys/';
   $config['ADMINASSETS'] = "_admin_assets/";
   $config['PUBLICASSETS']= 'assets/';
   $config['ASSETS']      = '_media/';
@@ -41,18 +49,8 @@ if (SAFE_INSTALL) {
   $config['PLUGINS']     = $config['SITE'].'plugins';
 }
 
-/*
-| UI settings
-*/
-$config['THUMBSIZE']							= array(100,100);
-$config['FORM_NICE_DROPDOWNS']		= TRUE;
-$config['MULTIPLE_UPLOAD']		    = TRUE;
-$config['PAGINATION']             = TRUE;
-$config['GRID_EDIT']              = TRUE;
-$config['GRID_WHERE']             = FALSE;
-
+$config['THUMBSIZE']							= array(200,200);
 $config['IGNORE_MIME']						= FALSE;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -60,22 +58,11 @@ $config['IGNORE_MIME']						= FALSE;
 |--------------------------------------------------------------------------
 |
 */
-
 $config['PLUGIN_ORDER']							= array('first'=>array('uri','links','striptags'),'last' =>array('automenu'));
 $config['PLUGIN_URI_REPLACE_CHAR']	= '_';
 $config['URI_HASH']                 = ':';  // possible other value: ~
 $config['PLUGIN_URI_ARGS_CHAR']     = $config['URI_HASH'];
 $config['FORBIDDEN_URIS']           = array("site","sys","admin","rss","file",'offset','_cronjob','_unittest');
-
-  
-/*
-|--------------------------------------------------------------------------
-| Custom form validation rules (in MY_Form_validation)
-|--------------------------------------------------------------------------
-|
-*/
-
-$config['CUSTOM_VALIDATION_RULES']            = 'valid_rgb|valid_google_analytics|valid_password|valid_regex|valid_model_method';
 
 
 /*
@@ -101,55 +88,17 @@ $config['DEEP_FOREIGNS']  = array(
 | URI to FlexyAdmin controllers.
 |
 */
-$config['API_home']									= "/admin/";
-$config['API_user']									= "/admin/show/user/";
-$config['API_login']								= "/admin/login/";
-$config['API_logout']								= "/admin/logout/";
+$config['API_home']   = "_admin/";
+$config['API_login']  = "_admin/login/";
+$config['API_logout'] = "_admin/logout/";
+$config['API_plugin'] = "_admin/plugin/";
+$config['API_db']     = "_admin/db/";
+$config['API_search'] = '_admin/search/';
+$config['API_fill']   = '_admin/fill/';
 
-$config['API_view_order']						= "/admin/show/order/";
-$config['API_view_grid']						= "/admin/show/grid/";
-$config['API_view_tree']						= "/admin/show/tree/";
-$config['API_view_form']						= "/admin/show/form/";
-
-$config['API_filemanager']					= "/admin/filemanager/";
-$config['API_filemanager_set_view']	= "/admin/filemanager/setview";
-$config['API_filemanager_view']			= "/admin/filemanager/show/";
-$config['API_filemanager_edit']			= "/admin/filemanager/edit/";
-$config['API_filemanager_delete']		= "/admin/filemanager/delete/";
-$config['API_filemanager_confirm']	= "/admin/filemanager/confirm/";
-$config['API_filemanager_upload']		= "/admin/filemanager/upload/";
-
-$config['API_popup_img']						= "/admin/popup/img/";
-
-$config['API_delete']								= "/admin/edit/delete/";
-$config['API_confirm']							= "/admin/edit/confirm/";
-
-$config['API_db']										= "/admin/db/";
-$config['API_db_backup']						= "/admin/db/backup/";
-$config['API_db_restore']						= "/admin/db/restore/";
-$config['API_db_export']						= "/admin/db/export/";
-$config['API_db_import']						= "/admin/db/import/";
-$config['API_db_sql']								= "/admin/db/sql/";
-
-$config['API_search']								= '/admin/search/';
-$config['API_fill']									= '/admin/fill/';
-$config['API_help']									= '/admin/help/';
-
-// $config['API_stats']								= '/admin/stats/show';
-$config['API_info']									= '/admin/info/';
-
-$config['AJAX']											= "/admin/ajax/";
-
-$config['FILES_view_types']					= array("list","icons");
-
-
+$config['FILES_view_types']					= array("list","thumbs");
 $config['FILES_thumb_path']					= "/thumb/";
 $config['FILES_big_path']						= "/big/";
-
-
-
-
-
 
 
 /*
@@ -214,7 +163,7 @@ $config['FILE_types_img']							= array('jpg','jpeg','gif','png','tiff','cur','t
 $config['FILE_types_mp3']							= array('mp3','wav','wma','aiff','ogg');
 $config['FILE_types_sound']					  = $config['FILE_types_mp3'];
 $config['FILE_types_flash']						= array('swf','flv');
-$config['FILE_types_movies'] 					= array('mov','mp4','wmv');
+$config['FILE_types_movies'] 					= array('mov','mp4','wmv','m4v','mp4','webm','ogv');
 $config['FILE_types_pdf']							= array('pdf');
 $config['FILE_types_docs']						= array('doc','docx','odt');
 $config['FILE_types_xls']							= array('xls','xlsx','ods');
@@ -227,770 +176,13 @@ $config['CFG_field_name']							= "field_field";
 
 /*
 |--------------------------------------------------------------------------
-| CFG_table_info AND cfg_field_info for cfg_tables
-|--------------------------------------------------------------------------
-|
-*/
-
-
-$config["CFG_"]=array(
-  
-/**
- * UI
- */
-  
-	"cfg_ui" => array(
-    
-		"cfg_ui"=>array(
-			"table"=>'cfg_ui',
-			"txt_help_nl"=>'<p>Maak hier teksten en help voor de backend userinterface.</p>',
-			"txt_help_en"=>'<p>Create texts and help for the backend userinterface.</p>'
-			),
-		"cfg_configurations"=>array(
-			"table"=>'cfg_configurations',
-			"txt_help_nl"=>'<p>Globale instellingen</p>',
-			"txt_help_en"=>'<p>Common settings</p>'
-			),
-		"cfg_auto_menu"=>array(
-			"table"=>'cfg_auto_menu',
-			"txt_help_nl"=>'<p>Instellingen voor een samengesteld menu. Heeft res_menu_result nodig.</p>',
-			"txt_help_en"=>'<p>Settings for creating an automatic menu. Needs a res_menu_result table.</p>'
-			),
-		"cfg_admin_menu"=>array(
-			"table"=>'cfg_admin_menu',
-			"txt_help_nl"=>'<p>Pas het admin menu hier aan.</p>',
-			"txt_help_en"=>'<p>Change your admin menu here.</p>'
-			),
-		"cfg_media_info"=>array(
-			"table"=>'cfg_media_info',
-			"txt_help_nl"=>'<p>Instellingen voor bestandsmappen.</p>',
-			"txt_help_en"=>'<p>Settings for Files.</p>'
-			),
-		"cfg_img_info"=>array(
-			"table"=>'cfg_img_info',
-			"txt_help_nl"=>'<p>Instellingen voor resizen van afbeeldingen na uploaden.</p>',
-			"txt_help_en"=>'<p>Settings for image resizing after uploading.</p>'
-			),
-		"cfg_table_info"=>array(
-			"table"=>'cfg_table_info',
-			"txt_help_nl"=>'<p>Instellingen voor tabellen.</p>',
-			"txt_help_en"=>'<p>Settings for tables.</p>'
-			),
-		"cfg_field_info"=>array(
-			"table"=>'cfg_field_info',
-			"txt_help_nl"=>'<p>Instellingen voor velden.</p>',
-			"txt_help_en"=>'<p>Settings for fields.</p>'
-			),
-		"cfg_rss"=>array(
-			"table"=>'cfg_rss',
-			"txt_help_nl"=>'<p>Instellingen voor RSS feeds.</p>',
-			"txt_help_en"=>'<p>Settings for RSS feeds.</p>',
-			),
-		"cfg_lang"=>array(
-			"table"         => 'cfg_lang',
-      'str_title_nl'  => 'Algemene teksten',
-      'str_title_en'  => 'Language keys',
-			"txt_help_nl"   => '<p>Teksten die op diverse plaatsen in de site of het CMS gebruikt worden.</p>',
-			"txt_help_en"   => '<p>Langage keys.</p>'
-			),
-		"cfg_email"=>array(
-			"table"         => 'cfg_email',
-      'str_title_nl'  => 'Email templates',
-      'str_title_en'  => 'Email templates',
-			"txt_help_nl"   => '<p>Email templates die door de site verstuurd worden of het CMS gebruikt worden.</p>',
-			"txt_help_en"   => '<p>Email templates.</p>'
-			),
-
-		"cfg_users"=>array(
-			"table"=>'cfg_users',
-			"txt_help_nl"=>'<p>Maak hier gebruikers aan.</p>',
-			"txt_help_en"=>'<p>Create users here.</p>'
-			),
-		"cfg_users.email_email"=>array(
-			"field_field"=>'cfg_users.email_email',
-			"txt_help_nl"=>'<p>Dit email adres kan oa gebruikt worden om een nieuw wachtwoord op te sturen.</p>',
-    ),
-		"cfg_users.rel_users__groups"=>array(
-			"field_field"=>'cfg_users.rel_users__groups',
-			"txt_help_nl"=>'<p>Kies hier de groep. Dit bepaald welke rechten een gebruiker heeft.</p>',
-			"txt_help_en"=>'<p>Choose e group. This will determine the rights of a user.</p>'
-			),
-		"cfg_users.last_login"=>array(
-			"field_field"=>'cfg_users.last_login',
-			"str_title_nl"=>'Laatste login',
-			"str_title_en"=>'Last login'
-			),
-
-		"cfg_user_groups"=>array(
-			"table"=>'cfg_user_groups',
-			"txt_help_nl"=>'<p>Maak hier usergroups aan voor gebruik bij Users.</p>',
-			"txt_help_en"=>'<p>Create groups of rights here. For use in Users.</p>'
-			),
-
-		"cfg_configurations.str_class"=>array(
-			"field_field"=>'cfg_configurations.str_class',
-			"str_title_nl"=>'Omvang editor',
-			"str_title_en"=>'Editor size'
-			),
-		"cfg_configurations.table"=>array(
-			"field_field"=>'cfg_configurations.table',
-			"str_title_nl"=>'Links Tabel',
-			"str_title_en"=>'Links Table'
-			),
-		"cfg_field_info.str_validation_parameters"=>array(
-			"field_field"=>'cfg_field_info.str_validation_parameters',
-			"str_title_nl"=>'Val. Parameters',
-			"str_title_en"=>'Val. Parameters'
-			),
-		"cfg_field_info.table"=>array(
-			"field_field"=>'cfg_field_info.table',
-			"str_title_nl"=>'Foreigntable',
-			"str_title_en"=>'Foreigntable'
-			)
-	),
-
-/**
- * TABLE INFO
- */
-	
-	"cfg_table_info" => array(
-		"cfg_ui"=>array(
-			"order"=>'100',
-			"table"=>'cfg_ui',
-			'str_fieldsets'=>'English',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'field_field,table,path',
-			),
-		"cfg_configurations"=>array(
-			"order"=>'101',
-			"table"=>'cfg_configurations',
-			'str_fieldsets'=>'Editor',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			'int_max_rows'=>1
-			),
-		"cfg_auto_menu"=>array(
-			"order"=>'102',
-			"table"=>'cfg_auto_menu',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'str_description',
-			"str_order_by"=>'',
-			),
-		"cfg_admin_menu"=>array(
-			"order"=>'103',
-			"table"=>'cfg_admin_menu',
-			"b_grid_add_many"=>'0',
-      'b_pagination' => '0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			),
-		"cfg_media_info"=>array(
-			"order"=>'104',
-			"table"=>'cfg_media_info',
-			'str_fieldsets'=>'More',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			),
-		"cfg_img_info"=>array(
-			"order"=>'106',
-			"table"=>'cfg_img_info',
-			'str_fieldsets'=>'Size 1,Size 2',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			),
-		"cfg_lang"=>array(
-			"order"=>'107',
-			"table"=>'cfg_lang',
-      'str_order_by'=>'key',
-    ),
-		"cfg_email"=>array(
-			"order"=>'108',
-			"table"=>'cfg_email',
-      "str_order_by"=>'key'
-    ),
-		"cfg_table_info"=>array(
-			"order"=>'110',
-			"table"=>'cfg_table_info',
-			'str_fieldsets'=>'Dropdown,More',
-			"b_grid_add_many"=>'0',
-      'b_pagination' => '0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			),
-		"cfg_field_info"=>array(
-			"order"=>'111',
-			"table"=>'cfg_field_info',
-			'str_fieldsets'=>'Options,Validation',
-			"b_grid_add_many"=>'0',
-      'b_pagination' => '0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'field_field',
-			),
-		"cfg_rss"=>array(
-			"order"=>'112',
-			"table"=>'cfg_rss',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'id',
-			),
-		"cfg_plugins"=>array(
-			"order"=>'115',
-			"table"=>'cfg_plugins',
-			"b_single_row"=>'',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			),
-		"cfg_users"=>array(
-			"order"=>'120',
-			"table"=>'cfg_users',
-      'b_pagination'=>true,
-			"b_grid_add_many"=>'1',
-			"str_abstract_fields"=>'str_username',
-			"str_order_by"=>'b_active,str_username',
-      'b_add_empty_choice' => true,
-			),
-		"cfg_user_groups"=>array(
-			"order"=>'121',
-			"table"=>'cfg_groups',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'description',
-			"str_order_by"=>'id',
-			"b_add_empty_choice"=>'1',
-			),
-
-		"log_stats"=>array(
-			"order"=>'130',
-			"table"=>'log_stats',
-			'b_pagination'=>true,
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			),
-
-		"log_activity"=>array(
-			"order"=>'131',
-			"table"=>'log_activity',
-			'b_pagination'=>true,
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			),
-
-		"log_login_attempts"=>array(
-			"order"=>'132',
-			"table"=>'log_login_attempts',
-			'b_pagination'=>true,
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			),
-        
-    "res_menu_result"=>array(
-      'table'=>'res_menu_result',
-      'order'=>0,
-      'b_pagination'=>false
-    ),
-    
-    "res_media_files"=>array(
-      'table'=>'res_media_files',
-      'order'=>10,
-      'b_pagination'=>true,
-    )
-    
-	),
-
-
-/**
- * FIELD INFO
- */
-
-	"cfg_field_info" => array(
-    
-    '*.tme_last_changed' => array(
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'0'
-    ),
-    '*.user_changed' => array(
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'0'
-    ),
-    '*.id_user' => array(
-      'str_validation_rules' => 'required'
-    ),
-    
-		"cfg_ui.path"=>array(
-			"b_editable_in_grid"=>1
-			),
-		"cfg_ui.table"=>array(
-			"b_editable_in_grid"=>1
-			),
-		"cfg_ui.field_field"=>array(
-			"b_editable_in_grid"=>1
-			),
-		"cfg_ui.str_title_nl"=>array(
-			"b_editable_in_grid"=>1
-			),
-		"cfg_ui.str_title_en"=>array(
-			"b_editable_in_grid"=>1,
-			"str_fieldset"=>'English'
-			),
-		"cfg_ui.txt_help_en"=>array(
-			"str_fieldset"=>'English'
-			),
-
-
-		"cfg_admin_menu.str_ui_name"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_admin_menu.path"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_admin_menu.table"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_admin_menu.str_table_where"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_admin_menu.str_type"=>array(
-			"field"=>'cfg_admin_menu.str_type',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"str_options"=>'api|tools|table|all_tbl_tables|all_cfg_tables|all_res_tables|media|all_media|seperator',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-
-		"cfg_auto_menu.str_type"=>array(
-			"field"=>'cfg_auto_menu.str_type',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"str_options"=>'menu item|from menu table|from submenu table|from category table|from table group by category|split by language|by module',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-
-		"cfg_configurations.b_use_editor"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.str_valid_html"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.table"=>array(
-			"str_ui_name"=>'Links Table',
-			"str_fieldset"=>'Editor',
- 			),
-		"cfg_configurations.b_add_internal_links"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.str_class"=>array(
-			"str_ui_name"=>'Editor size',
-			"str_fieldset"=>'Editor',
-			"str_options"=>'normal|high|wide|big',
- 			),
-		"cfg_configurations.str_buttons1"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.str_buttons2"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.str_buttons3"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.int_preview_width"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.int_preview_height"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.str_formats"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.str_styles"=>array(
-			"str_fieldset"=>'Editor'
- 			),
-		"cfg_configurations.str_revision"=>array(
-      'b_show_in_form'=>'0',
-      'b_show_in_grid'=>'0'
- 			),
-
-		"cfg_field_info.field_field"=>array(
-			"b_editable_in_grid"=>1,
-			"b_multi_options"=>'1',
-			"str_validation_rules"=>'required',
- 			),
-		"cfg_field_info.str_show_in_form_where"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_field_info.str_fieldset"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_field_info.str_options"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Options'
- 			),
-		"cfg_field_info.b_multi_options"=>array(
-			'str_fieldset'=>'Options'
- 			),
-		"cfg_field_info.b_ordered_options"=>array(
-			'str_fieldset'=>'Options'
- 			),
-		"cfg_field_info.str_options_where"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Options'
- 			),
-
-		"cfg_field_info.str_validation_rules"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Validation',
-			"str_options"=>'|required|matches|min_length[]|max_length[]|exact_length[]|greater_than[]|less_than[]|alpha|alpha_numeric|alpha_dash|numeric|integer|decimal|is_natural|is_natural_no_zero|valid_email|valid_emails|valid_ip|valid_base64|prep_url|prep_url_mail|'.$config['CUSTOM_VALIDATION_RULES'],
-			"b_multi_options"=>'1',
- 			),
-		"cfg_field_info.str_validation_parameters"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Validation'
- 			),
-
-		"cfg_table_info.table"=>array(
-			"b_editable_in_grid"=>1,
-			"str_validation_rules"=>'required',
- 			),
-		"cfg_table_info.str_order_by"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_table_info.str_fieldsets"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_table_info.str_abstract_fields"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Dropdown'
- 			),
-		"cfg_table_info.str_options_where"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Dropdown'
- 			),
-		"cfg_table_info.b_add_empty_choice"=>array(
-			'str_fieldset'=>'Dropdown'
- 			),
-		"cfg_table_info.str_form_many_type"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Dropdown',
-			"str_options"=>'dropdown|ordered_list', //'|subfields',
- 			),
-		"cfg_table_info.str_form_many_order"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Dropdown',
-			"str_options"=>'first|last',
- 			),
-		"cfg_table_info.int_max_rows"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'More'
- 			),
-		"cfg_table_info.b_grid_add_many"=>array(
-			'str_fieldset'=>'More'
- 			),
-		"cfg_table_info.b_freeze_uris"=>array(
-			'str_fieldset'=>'More'
- 			),
-      
-    'cfg_lang.key'=>array(
-			"str_validation_rules"=>'required|is_unique[cfg_lang.key.id]'
-    ),
-    'cfg_lang.lang_uk'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_en'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_nl'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_de'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_fr'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_it'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_es'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_fi'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_pl'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_dk'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_pt'=>array(
-      'b_editable_in_grid' => true
-    ),
-    'cfg_lang.lang_no'=>array(
-      'b_editable_in_grid' => true
-    ),
-      
-    'res_media_files.b_exists' => array(
-      'b_show_in_grid' => false,
-      'b_show_in_form' => false
-    ),
-    'res_media_files.file' => array(
-      'b_show_in_form' => false
-    ),
-
-
-		"cfg_media_info.str_order"=>array(
-			"field"=>'cfg_media_info.str_order',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'More',
-			"str_options"=>'name|_name|rawdate|_rawdate|type|_type|size|_size|width|_width|height|_height',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_media_info.path"=>array(
-			"field"=>'cfg_media_info.path',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"b_editable_in_grid"=>1,
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>'required',
- 			),
-		"cfg_media_info.str_types"=>array(
-			"field"=>'cfg_media_info.str_types',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"b_editable_in_grid"=>1,
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>'required',
- 			),
-		"cfg_media_info.str_autofill"=>array(
-			"field"=>'cfg_media_info.str_autofill',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'More',
-			"str_options"=>'|single upload|bulk upload|both',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_media_info.fields_media_fields"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_media_info.b_user_restricted"=>array(
-			'str_fieldset'=>'More'
- 			),
-		"cfg_media_info.b_serve_restricted"=>array(
-			'str_fieldset'=>'More'
- 			),
-		"cfg_media_info.fields_autofill_fields"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'More'
- 			),
-		"cfg_media_info.int_last_uploads"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'More'
- 			),
-		"cfg_media_info.fields_check_if_used_in"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'More'
- 			),
-		"cfg_media_info.b_in_media_list"=>array(
-			'str_fieldset'=>'More'
- 			),
-		"cfg_media_info.b_in_img_list"=>array(
-			'str_fieldset'=>'More'
- 			),
-		"cfg_media_info.b_in_link_list"=>array(
-			'str_fieldset'=>'More'
- 			),
-
-		"cfg_img_info.path"=>array(
-			"field"=>'cfg_img_info.path',
-			"b_editable_in_grid"=>1,
-			"str_validation_rules"=>'required',
- 			),
-		"cfg_img_info.b_create_1"=>array(
-			'str_fieldset'=>'Size 1'
- 			),
-		"cfg_img_info.int_min_width"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_img_info.int_min_height"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_img_info.int_img_width"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_img_info.int_img_height"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_img_info.int_width_1"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Size 1'
- 			),
-		"cfg_img_info.int_height_1"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Size 1'
- 			),
-		"cfg_img_info.str_prefix_1"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Size 1'
- 			),
-		"cfg_img_info.str_suffix_1"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Size 1'
- 			),
-		"cfg_img_info.b_create_2"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Size 2'
- 			),
-		"cfg_img_info.int_width_2"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Size 2'
- 			),
-		"cfg_img_info.int_height_2"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Size 2'
- 			),
-		"cfg_img_info.str_prefix_2"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Size 2'
- 			),
-		"cfg_img_info.str_suffix_2"=>array(
-			"b_editable_in_grid"=>1,
-			'str_fieldset'=>'Size 2'
- 			),
-
-
-
-		"cfg_user_groups.rights"=>array(
-			"field"=>'cfg_groups.rights',
-			"str_ui_name"=>'Rights for',
-			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_users.rel_users__groups"=>array(
-			"field"=>'cfg_users.rel_users__groups',
-			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"str_validation_rules"=>'required|valid_options'
- 			),
-		"cfg_users.str_username"=>array(
-			"field"=>'cfg_users.str_username',
-			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"str_validation_rules"=>'required|min_length[4]|alpha_dash|is_unique[cfg_users.str_username.id]'
- 			),
-		"cfg_users.gpw_password"=>array(
-			"field"=>'cfg_users.gpw_password',
-			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'1',
-      // "str_validation_rules"=>'',
-      "str_validation_rules"=>'trim|valid_password'
- 			),
-    "cfg_users.email_email"=>array(
-      "field"=>'cfg_users.email_email',
-      "str_validation_rules"=>'valid_email|required|is_unique[cfg_users.email_email.id]'
-    ),
-		"cfg_users.ip_address"=>array(
-			"field"=>'cfg_users.ip_address',
-			"str_ui_name"=>'IP Address',
-			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'0',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_users.str_salt"=>array(
-			"field"=>'cfg_users.str_salt',
- 			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'0',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_users.str_activation_code"=>array(
-			"field"=>'str_activation_code',
- 			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'0',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_users.str_forgotten_password_code"=>array(
-			"field"=>'str_forgotten_password_code',
- 			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'0',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_users.str_remember_code"=>array(
-			"field"=>'str_remember_code',
- 			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'0',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_users.created_on"=>array(
-			"field"=>'created_on',
- 			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'0',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_users.last_login"=>array(
-			"field"=>'last_login',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'0',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_users.str_filemanager_view"=>array(
-			"field"=>'cfg_users.str_filemanager_view',
- 			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'0',
-			"str_options"=>'icons|list|detailed',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
-		"cfg_users.str_language"=>array(
-			"field"=>'cfg_users.str_language',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"str_options"=>'nl|en',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			)
-	)
-);
-
-
-/*
-|--------------------------------------------------------------------------
 | Other configurations
 |--------------------------------------------------------------------------
 |
 */
 
 $config['UI_required_label_extra']		= "<span class=\"required\"> !</span>";
+
 
 /*
 |--------------------------------------------------------------------------
@@ -1048,11 +240,7 @@ $config['FIELDS_bool_fields']		  = array( "b", "is", "has" );
 $config['FIELDS_number_fields']		= array( 'id', 'int', 'dec','order','self' );
 
 
-require_once(APPPATH."config/schemaform.php");
-
-
 if (file_exists(SITEPATH."config/flexyadmin_config.php")) require_once(SITEPATH."config/flexyadmin_config.php");
-
 
 /* End of file flexyadmin_config.php */
 /* Location: ./system/application/config/flexyadmin_config.php */

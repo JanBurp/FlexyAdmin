@@ -8,10 +8,26 @@
  * URL to your CodeIgniter root. Typically this will be your base URL,
  * WITH a trailing slash: http://example.com/
  */
-if (!isset($config['base_url']) and !is_cli()) {
-	die("sorry no automatic 'base_url', edit '".SITEPATH."config_local.php'.");
-	// $config['base_url']	= "http://localhost/";
+if (defined('PHPUNIT_TEST')) {
+  $config['base_url']='';
 }
+elseif (isset($_SERVER['HTTP_HOST']) and isset($_SERVER['SCRIPT_NAME'])) {
+  $protocol = 'http';
+  $config['base_url']=$protocol."://".$_SERVER['HTTP_HOST'];
+  $config['base_url'].=str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+}
+
+
+/*
+ *--------------------------------------------------------------------------
+ * Force https:// instead of http://
+ *--------------------------------------------------------------------------
+ *
+ * Force https local off.
+ */
+$config['force_https'] = FALSE;
+
+
 
 /*
  *--------------------------------------------------------------------------

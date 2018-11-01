@@ -2,32 +2,36 @@
 <head>
 	<title>Database Error</title>
 	<style type="text/css">
-		body {
-			background-color:	#fff;
-			margin: 4px;
-			font-family: Lucida Grande, Verdana, Sans-serif;
+		.error_content {
+			background-color:	#EEE;
 			font-size: 12px;
-			color: #000;
-		}
-		#content  {
 			border:	#696 1px solid;
-			background-color:	#fff;
-			padding: 10px;
+			border-radius:2px;
+			padding: 8px;
 		}
-		h1 {
+		.error_content h1 {
 			font-weight: bold;
 			font-size: 14px;
 			color: #696;
 		}
+		.error_content pre {
+			background-color:	#CCC;
+			font-size: 10px;
+			border:	#999 1px solid;
+			border-radius:2px;
+			padding: 4px;
+		}
 	</style>
 </head>
 <body>
-	<div id="content">
+	<div class="error_content">
 		<?php if (empty($heading)) $heading='Database Error'?>
 		<h1><?php echo $heading; ?></h1>
-    <?php if (ENVIRONMENT=='development' or ENVIRONMENT=='testing') echo $message; ?>
-		<?php 		$error=explode(' ',$message);
-		$error=substr($error[2],0,4);
+    
+		<?php
+
+		$error = explode(' ',$message);
+		$error = substr($error[2],0,4);
 		if (empty($error) or $error<'0000' or $error>'9999') $error=mysql_errno();
 		switch ($error) {
 			case 1045:
@@ -45,6 +49,16 @@
 				break;
 
 			default:
+				if ( preg_match_all('/<p>([^<]*)/u',$message,$matches) ) {
+					$lines = $matches[1];
+					$error = '';
+					foreach ($lines as $key => $line) {
+						if (is_sql($line)) {
+							$lines[$key] = '<pre><code>'.nice_sql($line).'</code></pre>';
+						}
+						$error.= '<p>'.$lines[$key].'</p>';
+					}
+				}
 				echo "Error: '".$error."'<br/>";
         if (ENVIRONMENT=='development' and function_exists('backtrace_')) backtrace_(10);
 			break;

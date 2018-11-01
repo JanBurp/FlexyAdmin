@@ -18,13 +18,9 @@ $config['testmode'] = false;
  * Styling framework
  *--------------------------------------------------------------------------
  *
- * Set the default frontend framework. This setting affects menu, form and the standard template, possible options:
- * - default - the basic and light flexyadmin template
- * - bootstrap - use bootstrap as a start
- * 
- * Als je gulp gebruikt (in het geval van Bootstrap moet dat, of je moet site.php aanpassen) dan moet je in .gulpfile.js ook het framework nog instellen.
+ * Set the default frontend framework.
  */
-// $config['framework']='bootstrap';
+$config['framework']='bootstrap';
 
 
 /**
@@ -75,6 +71,7 @@ $config['use_minimized'] = TRUE;
  * - compress               - [TRUE] de HTML output wordt gecomprimeerd (overbodige spaties en returns worden verwijderd)
  * - safe_emails            - [TRUE] emaillinks worden vervangen door spambot veilige emaillinks
  * - auto_target_links      - [TRUE] alle link-tags naar externe adressen krijgen de attributen `target="_blank"` en `rel="external"` mee.
+ * - auto_iframe_https      - [TRUE] bij een https website worden alle iframes met http veranderd in http
  * - site_links             - [FALSE] alle link-tags naar interne adressen worden aangepast met site_url(), zodat eventueel index.php ervoor wordt gezet.
  * - add_classes            - [FALSE] alle div, p, en img tags krijgen extra classes: een nr en 'odd' of 'even'
  * - remove_sizes           - [FALSE] Als TRUE dan worden width en height attributen van img tags verwijderd (zodat met css styling kan worden ingegrepen). Je kunt ook alleen de 'width' of 'height' attributen verwijderen door 'width' of 'height' (of 'style').
@@ -307,13 +304,23 @@ $config['simulate_cronjobs'] = FALSE;
  */
 
 if (!isset($config['base_url'])) {
-  if (!isset($config['base_url']) and !is_cli()) {
+  if (!isset($config['base_url']) and !is_cli() and !IS_AJAX) {
   	// If not set automatic: comment this die() statement and set $config['base_url'] manually
   	die("<h3 style=\"color:#F00;\">FlexyAdmin could not set the 'base_url' automatic.</h3><p>See at line #".__LINE__." in '".__FILE__."'.</p>");
   	// $config['base_url']	= "http://www.flexyadmin.com/";
     // $config['base_url']	= "https://www.flexyadmin.com/";
   }
 }
+
+/*
+ *--------------------------------------------------------------------------
+ * Force https:// instead of http://
+ *--------------------------------------------------------------------------
+ *
+ * Force https local off.
+ */
+$config['force_https'] = FALSE;
+
 
 /*
  *--------------------------------------------------------------------------
@@ -355,6 +362,15 @@ if (!isset($config['base_url'])) {
 */
 $config['sess_cookie_name'] = 'FlexyAdminDEMO';
 
+/*
+|--------------------------------------------------------------------------
+| Encryption key
+|--------------------------------------------------------------------------
+|
+| - Used for encrypting backup files
+| - Run sys/vendor/bin/generate-defuse-key to generate new key
+*/
+$config['encryption_key'] = 'def0000053155cc71f536a17448460857b88d20462604a844929ef354cee3615d6a1084f55507a19ed4f75b4077c59c86c7225ed517ecdb94695cd706e3e896486a1adfa';
 
 
 /*

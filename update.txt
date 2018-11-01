@@ -19,6 +19,25 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE 3.5.0-rc.21
+==================
+- Vervang 'limit' = 0, door 'limit' = NULL, in config/menu.php
+
+
+UPDATE 3.5.x
+============
+- Vervang map sys
+- Vervang site/Controller.php
+- Run update script: `admin/update/....` (oa SQL update 3.5.0)
+- Rewrite data->find()
+- Als je plugin_automenu met res_menu_result gebruikte zul je dat op een andere manier moeten doen. Dat kan met site/config/menu.php
+- Cronjob libraries moet worden herschreven als Models (verplaats naar map models & vervang alle $this->CI naar $this->)
+- Links naar file/... werken niet meer, moeten worden aangepast naar: _media/...
+- FlexyAdmin uitbreidingen op ->db-> zijn depricated, en standaard niet meer geladen.
+  - Zet je code om naar ->data->
+  - Of als het niet anders kan, stel in flexyadmin_config $config['USE_OLD_DB'] = TRUE;
+
+
 UPDATE 3.4.x
 ============
 

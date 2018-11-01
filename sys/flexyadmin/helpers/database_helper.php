@@ -80,19 +80,16 @@ function foreign_table_from_key($key,$give_clean=false) {
   if ($key) {
   	$CI =& get_instance();
   	$sFid=rtrim($key,"_");
-    if (isset($CI->cfg)) $s=$CI->cfg->get('cfg_field_info',$key,'table','');
-    if (empty($s)) {
-    	$s=$CI->config->item('TABLE_prefix')."_".remove_prefix($sFid);
-    	if (!$CI->db->table_exists($s)) {
-    		$s=$s."s";
-    		if (!$CI->db->table_exists($s)) {
-    			$s=$CI->config->item('CFG_table_prefix')."_".remove_prefix($sFid);
-    			if (!$CI->db->table_exists($s)) {
-    				$s=$s."s";
-    			}
-    		}
-    	}
-    }
+  	$s=$CI->config->item('TABLE_prefix')."_".remove_prefix($sFid);
+  	if (!$CI->db->table_exists($s)) {
+  		$s=$s."s";
+  		if (!$CI->db->table_exists($s)) {
+  			$s=$CI->config->item('CFG_table_prefix')."_".remove_prefix($sFid);
+  			if (!$CI->db->table_exists($s)) {
+  				$s=$s."s";
+  			}
+  		}
+  	}
   	if (strcmp($key,$sFid)!=0 and !$give_clean) $s.="_";		// for self relations add a _
   }
 	return $s;
@@ -153,34 +150,6 @@ function join_key_from_rel_table($rel) {
 
 
 /**
- * Geeft menu tabel
- * 
- * - = tbl_menu
- * - = res_menu_result als deze bestaat
- *
- * @return string
- * @author Jan den Besten
- */
- function get_menu_table() {
-	static $table='';
-	if (empty($table)) {
-		$CI =& get_instance();
-		$tables=$CI->config->item('MENU_TABLES');
-    if ($tables) {
-  		$next=current($tables);
-  		if ($next) {
-  			$table=$next;
-  			while ( $next and ! $CI->db ->table_exists($table)) {
-  				$next=next($tables);
-  				if ($next) $table=$next;
-  			}
-  		}
-    }
-	}
-	return $table;
-}
-
-/**
  * Test of tabel een tabel is die aangepast mag worden (geen log_ of res_)
  *
  * @param string $table 
@@ -228,58 +197,15 @@ function get_fields_from_input($wildfields,$tables='') {
  * Geeft de uri van een pagina met de gevraagde module
  *
  * @param string $module 
- * @param bool $full_uri default=true
- * @param string $table  default=''
  * @return string uri
  * @author Jan den Besten
  */
-function find_module_uri($module,$full_uri=true,$table='') {
-  $menuTable = get_menu_table();
-  if ($menuTable) {
-    $CI=&get_instance();
-    $CI->data->table($menuTable);
-    if ($full_uri) $full_uri = $CI->data->field_exists('self_parent');
-    
-  	$CI->data->select('id,uri');
-    if ($table) $CI->data->where('str_table',$table);
-  	if ($full_uri) {
-  		$CI->data->select('order,self_parent');
-  		$CI->data->path('uri');
-  	}
-  	if ( get_prefix($CI->config->item('module_field'))==='id' ) {
-  		// Modules from foreign table
-  		$foreign_key=$CI->config->item('module_field');
-  		$foreign_field='str_'.get_suffix($CI->config->item('module_field'));
-  		$foreign_table=foreign_table_from_key($foreign_key);
-  		$CI->data->with('many_to_one');
-  		$like_field = $foreign_table.'__'.$foreign_field;
-  	}
-  	else {
-  		// Modules direct from field
-  		$like_field = $CI->config->item('module_field');
-  	}
-    
-  	$CI->data->like( $CI->config->item('module_field'), $module );
-    if ($full_uri) {
-      $CI->data->order_by('order');
-    }
-    else {
-      $CI->data->order_by('id');
-    }
-  	$items = $CI->data->get_result();
-    
-    // oeps er zijn er meer.... pak dan degene die het hoogts in de menustructuur zit en het eerst voorkomt op dat nivo
-    if (count($items)>1) {
-      foreach ($items as $id => $item) {
-        $items[$id]['_level']=substr_count($item['uri'],'/');
-      }
-      $items=sort_by($items,array('_level','order'));
-    }
-    reset($items);
-    $item=current($items);
-  	return $item['uri'];
-  }
-  return false;
+function find_module_uri($module) {
+  $CI=&get_instance();
+  $menu_items = $CI->data->table('tbl_menu')->get_menu_result();
+  $module_items = find_row_by_value($menu_items,$module,'str_module',true);
+  $item = current($module_items);
+	return $item['full_uri'];
 }
 
 /**

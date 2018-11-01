@@ -1,9 +1,13 @@
 <?php
 
-$lang['help']               = 'Help';
-$lang['logout']             = 'Loguit';
-$lang['settings']           = 'Instellingen';
-$lang['statistics']         = 'Statistieken';
+$lang['help']             = 'Help';
+$lang['logout']           = 'Loguit';
+$lang['settings']         = 'Instellingen';
+$lang['statistics']       = 'Statistieken';
+$lang['watch_help']       = 'Help lezen';
+$lang['watch_statistics'] = 'Statistieken bekijken';
+$lang['edit_user']        = 'Uw profiel aanpassen';
+
 
 $lang['file']								= "Bestand";
 
@@ -25,10 +29,14 @@ $lang['file_list_list'] 		= '<p>Laat bestanden zien als lijst met extra informat
 
 $lang['stats_menu']					= 'Site Statistieken';
 
+$lang['new_links_found']    = '%s nieuwe links toegevoegd:';
+
 $lang['db_export']					= 'Exporteer Database';
 $lang['db_import']					= 'Importeer Database';
 $lang['db_backup']					= 'Maak backup';
 $lang['db_restore']					= 'Zet backup terug';
+
+$lang['plugins']					  = 'Plugins';
 
 $lang['sr_search_replace']	= 'Zoeken/Vervangen';
 $lang['sr_settings']				= 'Instellingen';
@@ -68,12 +76,15 @@ $lang['mail_denied_subject']					= 'Account aanvraag afgewezen.';
 $lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
 $lang['mail_new_subject']				      = 'U krijgt inloggegevens.';
 
-$lang['active_users']				          = 'Stuur nieuw wachtwoord naar bestaande gebruikers';
-$lang['send_new_password']            = 'Stuur&nbsp;(nieuw)&nbsp;wachtwoord';
 $lang['user_send_password']           = 'Gebruiker "%s" heeft een nieuw wachtwoord opgestuurd gekregen.';
+$lang['users_send_passwords']         = 'Geselecteerde gebruikers hebben een nieuw wachtwoord opgestuurd gekregen.';
 $lang['user_send_password_error']     = 'FOUT: Kon geen email met nieuw wachtwoord sturen aan %s.';
 $lang['user_send_error']              = 'FOUT: Kon geen email sturen aan %s.';
 $lang['new_password']                 = 'Nieuw wachtwoord.';
 $lang['selected_users']               = 'Aan geselecteerde gebruikers.';
+
+
+// Plugins / Tools
+$lang['plugin_stats']                 = 'Statistieken';
 
 ?>

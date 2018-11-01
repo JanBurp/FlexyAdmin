@@ -1,37 +1,831 @@
-Changes 3.4.x
-=============
+=3.5.7
+
+[nl]
+- Verbeteringen in het downloaden vanaudio & video bestanden
+- Enkele fouten opgelost als gebruik wordt gemaakt van PHP 5.3
+[/nl]
+[en]
+- Better serving of audio & video files
+- Some bugs when using PHP 5.3
+[/en]
+
+[BUGS]
+- Some bugs when using PHP 5.3 (which is too old to use safely...)
+
+[FEATURES]
+- debughelper improvements
+- Better serving of audio & video files
+
+=3.5.6
+
+[nl]
+- Bug opgelost van niet getoonde zoekterm in grid
+- Meer mogelijkheden met uri creatie
+[/nl]
+[en]
+- Bug solved of not visible search term in grid
+- More options for uri creation
+[/en]
+
+[BUGS]
+- plugin_uri ->give complete data and not only the changed fields
+- grid: filter did not show
+
+=3.5.5
+
+[nl]
+- Bug opgelost van te vroeg verwijderde tijdelijke bestanden
+[/nl]
+[en]
+- Bug solved of to early deleted temporary files
+[/en]
+
+[BUGS]
+- Cleanup van tijdelijke bestanden kwam te snel
+
+=3.5.4
+
+[nl]
+- Enkele kleine verbeteringen en bugs opgelost
+[/nl]
+[en]
+- Some small improvements and bugs solved
+[/en]
+
+[FEATURES]
+- Copy of item when one is selected - with visual clue
+[BUGS]
+- DATA subselect on LIMIT on WHERE (wrong detection of has_where)
+
+=3.5.3
+
+[nl]
+- Enkele kleine verbeteringen en bugs opgelost
+[/nl]
+[en]
+- Some small improvements and bugs solved
+[/en]
+
+[FEATURES]
+- Better plugin move site
+- Local auto base_url
+[BUGS]
+- Message when no rights & Api row did not check rights proparly
+- Better checking rights and visibility in ui
+
+=3.5.2
+
+[nl]
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Some small bug solved
+[/en]
+
+[BUGS]
+- Logout gave nodata error
+- Rights for showing admin menu items
+- data->where( array() ) did not work
+
+=3.5.1
+
+[nl]
+- Bug waardoor links konden veranderen na een aanpassing opgelost
+- Kleine styling aanpassing bij file velden
+[/nl]
+[en]
+- Bug where links could change after an edit solved
+- Small styling issue solved for file inputs
+[/en]
+
+[BUGS]
+- Search_replace links/uri’s did replace too much!
+- Styling issue since Bootstrap 4.1 (.form-control-file)
+
+=3.5.0-rc.27
+
+[nl]
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Some small bug solved
+[/en]
+
+[BUGS]
+- Minor bugs for older PHP versions
+- Better api responses on timeouts when saving
+
+=3.5.0-rc.26
+
+[nl]
+- Enkele kleine bugs en technische verbeteringen
+- Nieuw 'markdown' veld
+[/nl]
+[en]
+- Some small bugs and improvements
+- New 'markdown' field
+[/en]
+
+[BUGS]
+- 'extra' attributes in form did not work
+- More robust AES encryption
+- Better api responses on timeouts
+
+[FEATURES]
+- New field md markdown
+- Extra field '_level' added in menu results
+- DB export as tool
+- npm update
+
+=3.5.0-rc.25
+
+[nl]
+- Kleine bug opgelost bij zoeken in encrypted velden
+[/nl]
+[en]
+- Small bug solved with searching in encrypted fields
+[/en]
+
+[BUGS]
+- home plugins allways called
+- AES encrypted search did it case sensitive
+
+
+=3.5.0-rc.24
+
+[nl]
+- Kleine bug opgelost
+[/nl]
+[en]
+- Small bug solved
+[/en]
+
+[BUGS]
+- plugins did not show
+
+=3.5.0-rc.23
+
+[nl]
+- Enkele bugs opgelost
+- Kleine verbeteringen rondom veiligheid
+[/nl]
+[en]
+- Some bugs solved
+- Small security improvements
+[/en]
+
+
+[BUGS]
+- logout plugins (including sitemap) were nog called…
+- links checking did not give result (due to wrong limit since CI update)
+
+[FEATURES]
+- Better robots.txt
+- Safer .htaccess
+
+=3.5.0-rc.22
+
+[nl]
+- Database encryptie mogelijk
+- Werkend voor laatste MySQL versies
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Database encryption possible
+- Tested fot latset MySQL version
+- Some small bugs solved
+[/en]
+
+[BUGS]
+- Email adds empty attachments sometimes
+- On newer MySQL versions default values seems to be needed
+- Plugins loaded twice
+
+[FEATURES]
+- Mediapicker selects uploaded items
+- AES encryption for VARCHAR fields (can be set per field in config/data/.. )
+- ASE encryption plugins for encrypting (and altering field type) and decrypting
+
+=3.5.0-rc.21
+
+[nl]
+- Verbeterde styling, vooral op kleine schermen
+- Verbeterde en veiliger backups
+- Diverse technische verbeteringen
+- Fout opgelost bij zoeken in menu tabellen
+[/nl]
+[en]
+- Better styling for smalle screens
+- Better and safer backups
+- Some smalle technical improvements
+- Bug solved for searching in menu tables
+[/en]
+
+[BUGS]
+- Showing files with extention same als folder name did not work
+- Searching in ordered tables did nog work
+- Media title did not show
+- Media sorting dropdown did not close after selection
+
+[FEATURES]
+- Better mobile styling
+- Backup/Restore is now encrypted (Restore can use old not incrypted backupfiles)
+- Backup/Restore as .zip file
+- Backup/Restore faster
+- Reset order uses 'dat_date' for ordering rows when 'dat_date' field exists
+- Data where() can call LIKE statements
+- Menu has new method get_sub_items($uri)
+- Plugin for upgrading old site site improved
+- Autocreate _thumbcache folder if not exists (if rights)
+
+[UPDATE]
+- CodeIgniter 3.1.9 (CI)
+
+=3.5.0-rc.20
+
+[nl]
+- Fout opgelost waarbij sorteren van arrays niet goed ging
+- Enkele technische verbeteringen
+[/nl]
+[en]
+- Bug solved where ordering arrays did not work
+- Small technical improvements
+[/en]
+
+[FEATURES]
+- New function elm() same as el() but default value is also empty value
+- htaccess voor redirect to public file added (for hostings that don't have this standard)
+- alternative 404 view possible
+[BUGS]
+- array_helper sort_by (wrong order with DESC)
+
+=3.5.0-rc.19
+
+[nl]
+- Fout opgelost waarbij zoeken niet goed samenging met pagination
+- Kleine aanpassing aan opbouwen van menu
+[/nl]
+[en]
+- Bug solved where searching and pagination did not work together
+- Small adjusted to menu building
+[/en]
+
+[FEATURES]
+- Small improvements to menu
+[BUGS]
+- Data->find subselect did not properly used LIMIT and OFFSET
+
+=3.5.0-rc.18
+
+[nl]
+- Verbeterde logging
+- Fout opgelost waarbij de site 'hing' als de menustructuur niet in orde was
+- Fout opgelost waarbij de menu-structuur door de war kon raken
+- Fout opgelost (in backend) waarbij de zoekterm bleef staan als je naar ander item ging
+[/nl]
+[en]
+- Better logging
+- Bug solved where the site gave an error when the menustructure was wrong
+- Bug solved where the menu-structure could go wrong
+- Bug solved (in backend) where the searchquery kept visible when moving to another item
+[/en]
+
+[FEATURES]
+- Logging subject & body of send emails
+- Logging ip addess with stats
+- Unittests on unique passwords in cfg_users
+[SQL UPDATE]
+- update_v3.5.0-rc.18.sql
+[BUGS]
+- (Data->find had wrong starting/closing brackets)
+- Vueform had no clean data for multiple selects
+- Searchterm stayed in grid while switching to other table
+- Wrong menu tables did break complete website, now it's will give a menu result
+- Order->reset() now also resets wrong parents (self_parent=id)
+- Order had a bug where it did not get childrens
+
+=3.5.0-rc.17
+
+[nl]
+- Fout opgelost: Op sommige websites werden alle wachtwoorden gereset (naar random waarde) bij een vergeten wachtwoord proces. Dit zorgde niet voor veiligheidsprobleem, maar wel vervelend voor de gebruikers.
+[/nl]
+[en]
+- Bug solved: On some websites all password where reset (to a random value) by a forgotten password process. There was no safety issue, but all users need a new password.
+[/en]
+
+[BUG]
+- When a site uses flexy_auth->send_new_password() All passwords could be reset. Nobody can login anymore, but there was no safety problem.
+
+=3.5.0-rc.16
+
+[nl]
+- Update naar laatste CodeIgniter library
+- Enkele fouten opgelost en verbeteringen gedaan
+[/nl]
+[en]
+- Update to latest CodeIgniter library
+- Some bugs solved and improvements added
+[/en]
+
+[FEATURES]
+- Keep JOINS
+
+[UPDATE]
+- CodeIgniter 3.1.8 (CI)
+
+=3.5.0-rc.15
+
+[nl]
+- Enkele fouten opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
+
+[FEATURES]
+- Plugin: Move old site optimized
+
+[BUGS]
+- Redirecting needs a full_uri check
+- Forms merges settings wrong way
+
+=3.5.0-rc.14
+
+[nl]
+- Enkele fouten opgelost en verbeteringen gedaan
+[/nl]
+[en]
+- Some bugs solved and improvements added
+[/en]
+
+[FEATURES]
+- Plugin: Move old site optimized
+- Save/Submit button on FlexyForm (Vue) can be enabled by setting
+
+[BUGS]
+- Problem solved when using RAND() in data->order_by()
+- Problem solved when ordering by an relation field when using data->order_by()
+- Arrays sort_by() did not work with custom key
+- Wizard get_next_step() did not worked when more than 2 steps
+
+=3.5.0-rc.13
+
+[nl]
+- Enkele fouten opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
+
+[BUGS]
+- Reordering bugs solved
+- Changing form views did not refresh form component/data
+- Changing grid views (when empty grid) did not refresh grid component/data
+- Changing media views (when empty grid) did not refresh grid component/data
+
+=3.5.0-rc.12
+
+[nl]
+- Enkele fouten opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
+
+[BUGS]
+- force_https = FALSE on default: TRUE could result in bugs on hosting that don't have an SSL certificate
+- Frontend assets version number did not work, now uses git hash
+- Inserting the first item of an ordered table (with order field) gave DB error
+- getting groups when setting user_id resulted in strange behaviour (since 3.5.0.rc10)
+
+=3.5.0-rc.11
+
+[nl]
+- Uploaden van .svg afbeeldingen is nu mogelijk
+- Enkele fouten opgelost
+[/nl]
+[en]
+- Uploading .svg images possible now
+- Some bugs solved
+[/en]
+
+[BUGS]
+- Restoring DB did not clean cache
+- Redirect sometimes loops
+- Plugin_uri did not get old uri resulting in always creating new uri
+[FEATURES]
+- Uploading .svg images possible now (without scaling, just copy)
+
+=3.5.0-rc.10
+
+[nl]
+- Het is nu mogelijk om extra rechten in te stellen voor specifieke velden
+- Loggen van IP adres van gebruiker
+- Loggen van search_replace acties
+- Submenus kunnen waarden overerven
+- BUG in: Verbeterde meeltaligheid oplossingen
+[/nl]
+[en]
+- It's now possible to restricts updates to a specific field to specific usergroups
+- Log IP adresses from user
+- Log search_replace actions
+- Submenus can inherit fields from parent fields
+- BUG in: Better multilanguage solutions
+[/en]
+
+
+[BUGS]
+- BUG in core menu (since multilang changes)
+- BUG in old (not safe) folder settings (folder to dist)
+[FEATURES]
+- Menu: can inherit fields (example: str_module) from parent fields
+- Log activity logs IP adress
+- Log search_replace actions
+- Data: it's now possible to restricts updates to a specific field to specific usergroups (see config/data.php - 'restricted_rights')
+[SQL UPDATE]
+- update_v3.5.0-rc.10.sql
+
+=3.5.0-rc.9
+
+[nl]
+- Cronjob bugs opgelost
+- Verbeterde meeltaligheid oplossingen
+[/nl]
+[en]
+- Cronjob bugs solved
+- Better multilanguage solutions
+[/en]
+
+[BUGS]
+- Cronjob rewrite,testing and daylightsaving compensation
+[FEATURES]
+- Standard multi-language soltions in menu & frontend-controller
+- better unit testing (frontend & cronjob)
+
+=3.5.0-rc.8
+
+[nl]
+- Enkele bugs opgelost
+- Meer email template mogelijkheden
+[/nl]
+[en]
+- Some bugs solved
+- More email template possibilities
+[/en]
+
+[FEATURES]
+- Email-templates can be set by method (not only from cfg_email)
+
+
+=3.5.0-rc.7
+
+[nl]
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
+
+[FEATURES]
+- Dynamic Show in forms can use more complex functions (reprise)
+[UPDATE]
+- PHP 7.2 ready
+
+=3.5.0-rc.6
+
+[nl]
+- Enkele bugs opgelost
+- Start gemaakt met userguide
+[/nl]
+[en]
+- Some bugs solved
+- Started with userguide
+[/en]
+
+[FEATURES]
+- Dynamic Show in forms can use more complex functions
+[BUGS]
+- url_redirect did not work (http problem)
+- Remove htmlentities from uri source (so &shy; is possible in uri sources)
+[USERGUIDE]
+- Start making userguid with PhpDoc
+
+=3.5.0-rc.5
+
+[nl]
+- Verbeterd tonen van laatste aanpassingen op startscherm
+- Verbeterde spamchecker
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Better last updates messages on homescreen
+- Better spamchecker
+- Some bugs solved
+[/en]
+
+[UPDATE]
+- Better spamchecker
+- Plugin log home activity rewrite - better update log
+
+[BUGS]
+- Old images in editor had wrong path in editor
+- Prepping booleans before UPDATE/INSERTING
+- plugin_update did not compare versions good
+
+=3.5.0-rc.4
+
+[nl]
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Some bugs solved
+[/en]
+
+[FEATURES]
+- Cached Menu extra setting for more fields
+
+[BUGS]
+- radio-image wrong order of images
+- Cached Menu extra setting for more fields
+
+
+=3.5.0-rc.3
+
+[nl]
+- Enkele technische verbeteringen
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Some technical updates
+- Some bugs solved
+[/en]
+
+[UPDATE]
+- PHP 7.2 count() must allways have array (2)
+- TinyMCE 4.7.9
+[BUGS]
+- multiple options (for str fields) came with , but needs |
+- compact cache menu -> get item when item did not came from a table
+- compact cache menu did not have ‘str_module’
+
+=3.5.0-rc.2
+
+[nl]
+- Enkele technische verbeteringen
+- Enkele bugs opgelost
+[/nl]
+[en]
+- Some technical updates
+- Some bugs solved
+[/en]
+
+[FEATURES]
+- Menu compact caching as feature (if menu cache becomes to big)
+- New flexy-form field type: radio_image
+[UPDATE]
+- PHP 7.2 count() must allways have array
+[BUGS]
+- Reloading a saved but new form (id=-1) did create a new entry instead saving the changed item
+- Link checker did not show all pages after checking
+- Link inserting prevent local url's
+
+=3.5.0-rc.1
+
+[nl]
+- Enkele technische verbeteringen
+- Enkele performance en veiligheids verbeteringen
+- Mooiere en meertalige update meldingen
+[/nl]
+[en]
+- Some technical updates
+- Some performance and safety updates
+- Nicer and multi-language update messages
+[/en]
+
+[FEATURES]
+- PHP 7.2.1 ready (each() was depricated)
+- Removed old MY_DB
+- Nicer changelog messages in user language
+- Include more in builds (faster/smaller)
+- Smaller builds (faster/smaller)
+- Split in login.build.js & main.build.js (safer & faster login loading )
+- Only loads main.bundle.js if loggedin and may use cms (safer)
+- build.txt shows only version en commit hash
+
+=3.5.0-beta.61
+
+[nl]
+- Enkele bugs opgelost.
+[/nl]
+[en]
+- Some bus resolved.
+[/en]
+
+[FEATURES]
+- FORMS settings can be changed by form model
+[BUGS]
+- Webkit browsers had a (infinity) bug in progressbar.
+
+=3.5.0-beta.60
+
+[nl]
+- Betere responsive styling
+- Snellere initialisatie editor
+[/nl]
+[en]
+- Better responsive styling
+- Faster initializing editor
+[/en]
+
+[FEATURES]
+- Better responsive styling
+- Faster initializing wysiwyg editor
+
+=3.5.0-beta.59
+
+[nl]
+- Betere responsive styling
+[/nl]
+[en]
+- Better responsive styling
+[/en]
+
+[FEATURES]
+- Better responsive styling
+
+=3.5.0-beta.58
+
+[UPDATE]
+- Bootstrap 4.0.0
+- Vue 2.5.13
+- etc.
+[FEATURES]
+- New (flexy_) config option ‘PUBLICFOLDER’ for changing the 'public' folder (to 'public_html' for example). Note: you need to rename the folder.
+- New config option: ‘force_https’
+[BUGS]
+- PHP long tags instead of short tags (some servers cannot use short tags)
+
+=3.5.0-beta.57
+
+[BUGS]
+- flexy_pagination did not jump to last page
+- MediaGrid: total count gave total of res_assets table instead of total files in folder
+
+=3.5.0-beta.56
+
+[BUGS]
+- flexy_pagination sometimes did not show last page
+- if order_by field does not exist but exists in grid fields, than add to query without table name
+
+=3.5.0-beta.55
+
+[FEATURES]
+- New Form validation rule: required_if[other_field], the field is required if the other_field value is true
+- htaccess redirect option for allways https
+[BUGS]
+- BUG when `str_last_version` did not exist in user table
+
+=3.5.0-beta.54
+
+[UPDATE]
+- CodeIgniter 3.1.7
+[BUGS]
+- Redirect did not work allways with merged menu
+- Form with radio-buttons had no values
+- FlexyForm did not worked well with new Data model
+[SQL]
+- Rename `id_form` to `id_forms` in table `tbl_formfields` if the website uses flexyforms
+
+=3.5.0-beta.53
+
+[FEATURES]
+- New field: 'link_redirect' for redirecting in menu tables
+- New form validation: 'prep_uri'
+- uri field can be eddited now (with some config changes, see config/data/tbl_menu.php)
+- Remember system version on login (per user)
+[SQL]
+- update_v3.5.0-beta.53.sql
+
+=3.5.0-beta.52
+
+[FEATURES]
+- New field: 'video_' can have a youtube video code (or link)
+- New field ‘links_’ for choosing a link (page uri)
+- Adding full_title to menu_result
+- New function find_embedded_video() in video_helper
+
+[BUGS]
+- Replacing links when not a full_uri changed to a suburi
+- Mediapicker used url parts
+- Log media did not used correct model
+- Some images were added to statistics
+
+=3.5.0-beta.51
+
+[BUGS]
+- grid: uploading file error did not check good for changed filename
+- RSS feed seems to have character coding errors
+
+=3.5.0-beta.50
+
+[FEATURES]
+- update script added
+[BUGS]
+- CoreUsersModel: id was not unique (found when changing filemanager view)
+- Reading image size information from file could result in error
+
+=3.5.0-beta.49
+
+[BUGS]
+- Uploading file that was renamed gave an false succes in the API. Now nice with message.
+
+=3.5.0-beta.48
+
+[BUGS]
+- Form/JoinSelect did not keep filled data after wrong validated post
+
+=3.5.0-beta.47
+
+[FEATURES]
+- FormsTabs have danger color when validation errors in that tab
+- JoinSelect only shows remove button when usefull 
+
+=3.5.0-beta.46
+
+[BUGS]
+- Subforms styling
+
+=3.5.0-beta.45
+
+[FEATURES]
+- After reloading page on a form, the chosen form-tab is maintained
+- Subforms are restyled and allways gives information of parent form (table & id) when loading and submitting
+- New form type Joinselect (for Schoool)
+- Added simple plugin for showing changelog (and changed changelog.txt accordingly)
+[BUGS]
+- Mediapicker changed url history - This resulted in returning to grid on wrong place
+- When getting a single row of data (from the data model) the primary key id was not allways remembered
+
+=3.5.0-beta.44
+
+[BUGS]
+- Header action in Form did not get url
+
+=3.5.0-beta.43
+
+[BUGS]
+- Link checker cache remained for one year, now one week
+
+=3.5.0-beta.42
+
+[FEATURES]
+- More userfriendly linkchecker
+- A warning message when an uploaded file is renamed when the filename existed allready
+
+=3.5.0
+
+[UPDATES]
+- Update to CI 3.1.6
+[FEATURES]
+- UI with Vue & Bootstrap
+- Models: Filemanager, Mediatable removed and replaced with Assets
+- DB: FlexyAdmin db-> extensions depricated, and standard not loaded.
+- Rewrite data->find()
+- data->path() renamed to data->tree()
+- data settings has new 'cache_group'
+- URL: /admin changed to /_admin
+- URL: /file/... changed to /_media/...
+- DB: res_media_files removed and replaced with res_assets
+- DB: removed almast all cfg_ tables
+- DB: removed res_menu_result
+- Removed plugin_auto_menu (total rewrite, see site/config/menu.php for new options)
+- Cronjob uses models (method index) instead of libraries
+
+=3.4.x
 
 - Update to CI 3.1.3
 - Safe folder structure
 - Ready for PHP7
 - Tested with SSL Cerfiticates
 
-
-Changes 3.3.0
-=============
+=3.3.0
 
 - Update to CI 3.1.2
 - Split Userguide in andere repo
 - Mogelijk om FlexyAdmin te installeren in submap
 
-
-Changes 3.2.1 (3750)
-=======================
+=3.2.1 (3750)
 
 - Update to CI 3.1.0
 
-
-Changes 3.2.0 (3654)
-=======================
+=3.2.0 (3654)
 
 Breaking changes if you uses ->user or ->ion_auth:
 - Update to latest IonAuth.
 - Removed ->user library
 - Replaced with ->flexy_auth library
 
-
-Changes 3.1.2 (3630)
-=======================
+=3.1.2 (3630)
 
 Breaking changes (if you used Crud):
 - Model ->crud-> removed.
@@ -43,46 +837,35 @@ Breaking changes (if you used data_model):
 - Removed ->with_grouped()
 - Added ->with_json()
 
-
-Changes 3.0.7 (3592...)
-=======================
+=3.0.7 (3592...)
 
 - CodeIgniter 3.0.6
-- Language kan nu ook door ?lang= ingesteld worden
+- Language kan nu ook door ?lang ingesteld worden
 
-
-Changes 3.0.6 (3518...)
-=======================
+=3.0.6 (3518...)
 
 - CodeIgniter 3.0.4
 
-
-Changes 3.0.5 (3505...)
-=======================
+=3.0.5 (3505...)
 
 CHANGED:
 - log_login changed to log_activity
 - log_activity logs all database,media,auth and email activity
 - homescreen changed to statistics
 
-
-Changes 3.0.5 (3501...)
-=======================
+=3.0.5 (3501...)
 
 CHANGED:
-- API versimpeld, standaard format=json
+- API versimpeld, standaard formatjson
 - API werkt nu cross domain met auth token
 
-
-Changes 3.0.4 (3480...)
-=======================
+=3.0.4 (3480...)
 
 CHANGED:
 - thumbcache bestanden hebben nu niet de site/assets in hun naam
 - plugins hebben eigen submap in libraries
 
-Changes 3.0.4 (3460)
-====================
+=3.0.4 (3460)
 
 UPDATE:
 - CodeIgniter 3.0
@@ -112,1493 +895,3 @@ REMOVED:
 - bulk_upload
 - old_menu & old_form
 - old jQuery files
-
-
-Changes 3063
-============
-
-NEW:
-- FlexyAdmin has now a generic API (../_api) for admin and frontend purposes, see the userguide
-- All standard plugins moved to a new folder plugins and updated
-- cfg_email is now standard in de database (and login uses it always now!)
-- new routings: _media/.. & _media/download/.. (.. = path/file)
-- MY_Upload checks orientation of uploaded files and resets them if needed
-
-MYSQL:
-- cfg_email_r2883.sql & update_r2812.sql & update_r2833.sql
-
-PLUGINS:
-- All standard plugins moved to a new folder plugins and updated
-- admin/plugin/install_plugin & admin/plugin/create_plugin changed
-
-UPDATE:
-- CodeIgniter 2.2.2
-
-FRONTEND:
-- Moved module/library methods from controller to MY_frontendcontroller
-- A special module 'before_controller' is set and can be used for code to do on every page
-- mobile theme changed / Fontawsome standard included
-
-USERGUIDE:
-- Jiros aanpassingen
-- Makkelijk Glyphicons in userguide zetten: {glyphicon-type}
-- API
-
-NEW:
-- Form_validation->valid_option(), and added option validation to validate_data()
-- plugin_remove_relation_table
-- Adding MY_form_validation->validate_data() to validate a data array (before inserting/updating with API for example)
-- sort_keys() to MY_array_helper()
-- DB->where() aangepast zodat als tweede argument een array is where_in() wordt aangeroepen
-- db->table_status()
-- FILE_types_sound to config
-- cfg_table_info.b_form_add_many om te kunnen instellen of in een form van een tabel many data getoond mag worden
-- ui->set_item() om een specifiek item in cfg_ui on the fly aan te passen
-- When installing (demodatabase) also $config['sess_cookie_name'] is renamed to the sites upper path
-- Form captcha settings
-- build.cfg default watch=FALSE (was 'dev') // now depricated
-
-BUGS:
-- CI Upload standard counts max 100 same files, FA add timestamp to it so its endless
-- styling of pagination in grid
-- prevend double submit (redirect was not good)
-- form_action_email %URL% replacement was not good
-- path dropdown did show non selectable paths
-- HTML5 FORM novalidate
-- HTML5 Validated
-- plugin_uri reset didn’t work
-- Menu, bool_class
-- On windows servers, all redirect calls must end with ‘refresh’
-- better 404
-- media did not show extra fields in grid
-- media edit nicer label fields
-- image list in editor
-- small bug in views/menu/item.php
-- admin user lang not set
-- Buggy captha-helper resolved: cleanup works now!!
-- form did not always sets attributes
-- menu did not render well bool_class fields
-- User / MY_Email sending from table
-- Search/Replace some non regex was escaped to much
-- media fields did not show nice ERROR
-- updating dropdown values (also doubled last uploaded)
-- getting table from grid (results in order bug)
-- Menu->set_menu_from_table() did always override table even if not set
-- formaction_mail did not replaced URL in subject
-- multiple formactions not possible in combination with setting:   'prevend_double_submit'   => true
-- formfield requered class was not set
-- Language setting in backend was not users language
-- a xdebug_break() statement still existed...
-
-
-
-Changes 2777
-============
-
-Samenvatting:
-- Je kunt nu in plaats van de standaard FlexyAdmin css bestanden ook voor Bootstrap kiezen
-- De ingebouwde build tool (voor LESS en minificeren) is verbeterd. Maar schiet tekort voor Bootstrap->gebruik daarvoor Gulp
-- Een uitgebreide en flexibele Gulp file is toegevoegd. Deze zorgt oa voor LESS compilen (en nog veel meer). Zie gulpfile.js
-- jQuery is nu een onderdeel van de frontend in de map assets/js
-- De map assets/fonts is toegevoegd, met standaard de bootstrap glyphicons daarin http://getbootstrap.com/components/
-- Je kunt nu bestanden restricties geven zodat ze alleen door een ingelogde gebruiker te bekijken zijn.
-- Als een tabel een datumveld heeft kun je nu instellen dat die tabel standaard op de pagina begint met de datum van vandaag (of het dichtste daarbij)
-
-MYSQL:
-- MYSQL: update r2716
-- MYSQL: update r2745
-- MYSQL: update r2750
-- MYSQL: update_r2753
-- MYSQL: cfg_email is nu een standaard tabel van de Demo database
-
-FRONTEND:
-- CHANGED: site.php changed, and jquery in frontend
-- ADDED: $site adds default variables: assets & language
-- ADDED: scripts for node_modules with package.json & bower & gulp
-- ADDED: added assets/fonts
-- ADDED: assets/less-default and assets/less-bootstrap
-
-USERGUIDE:
-- USERGUIDE: setttings & rights
-- USERGUIDE: some small bugs
-- USERGUIDE: gulp, bower, bootstrap etc
-- USERGUIDE: plugin_refresh_media
-
-NEW:
-- Gulp file die alle frontend CSS & JS processing doet. Zie gulpfile.js voor meer info.
-- ADDED: MY_Form_Validation prep_url_mail()
-- ADDED: bootstrap as a framework
-- ADDED: nieuw cfg_table_info : b_jump_to_today, als aan dan springt de grid naar pagina met 1e item van vandaag (als er een datumveld in die tabel bestaat)
-- ADDED: /_ajax -> for testing frontend ajax libraries
-- ADDED: db->last_query_clean()
-- ADDED: MY_date_helper: unix_to_normal()
-- ADD: Frontend unittesting
-- ADD: 2 special database fields: tme_last_changed & user_changed this uses the new plugin: plugin_last_changed
-- CHANGED: plugin_automenu: children nemen status van parent over als !b_visible en b_restricted
-- CHANGED: some mime types
-- CHANGED: set a default css framework in config $config['css_style']
-- CHANGED: rewrite of form.php, and keep old form old_form.php
-- CHANGED: build watch setting is now more generic
-- CHANGED: build process also checks if site.php has changed
-- CHANGED: MY_string_helper get_prefix() je kunt nu ook een array van strings meegeven
-- CHANGED: MY_array_helper one_of_array_in_array() geeft nu FALSE of de key van de eerste die gevonden is
-
-BUGS:
-- BUG: db->order rare situations order_by needs a table.field instead of field
-- BUG/CHANGED: form: if no action is set, current uri is used
-- BUG: cronjob date calculation did not work perfect
-- BUGS: download files in list not ok
-- BUG: filemanager did not sort according to settings in cfg_media_info
-- BUG: db->last_query() result as expected
-- BUG: fill gave an error when random picking a file from an empty folder
-- BUG: crud did not work well with only id in where
-- BUG: global pagination setting did not work
-
-
-Changes 2715
-============
-
-UPDATE:
-- UPDATE to CI 2.2.0
-- CI hack for working with PHP 5.6
-
-USERGUIDE:
-- UPDATE to CI 2.2.0
-- New FlexyAdmin userguide (style)
-
-NEW:
-- /admin/search:
-  - NEW: Nicer styling and results of /admin/search
-  - NEW: /admin/search can nog have settings (for later use), you can add own by creating site/config/search_replace.php see sys/flexyadmin/config/search_replace.php
-  - NEW: added 2 search_replace settings for cleaningup HTML (txt_text fields)
-- rgb_fields:
-  - rgb field same as str field for autofill (so you can use options here)
-  - rgb dropdowns have background colors
-- NEW: cronjob functionality (site/_cronjob)
-- NEW: unittest functionality (site/_unittest)
-- OTHERS:  
-  - CHANGED: create_uri all uri's with a starting _ are forbidden (in future all system uri's will start with _)
-  - CHANGED: utf8 to utf-8 in all headers
-  - CHANGED: added .tif & .tiff to 'FILE_types_img'
-  - CHANGED: added to database_helper find_module_uri();
-  - ADDED: MY_Email.php prepare_body() & add_styles()
-  - ADDED: MY_string_helper strip_ms_word($html)
-  - ADDED: MY_url_helper get_emails($string,$one)
-  - CHANGED: ellipses can be added to MY_string_helper: intro_string()
-  - CHANGED: possible to remove unused files by adding b_used to res_media_files and calling plugin/refresh_media/remove
-  - NEW: Wizard can save data between steps
-  - NEW: img_lib config settins for frontend and new setting sharpen
-  - NEW: new option 'add_captcha' to forms.php
-  - CHANGED: plugin_automenu option 'from menu table' reacts now also on where
-  - CHANGED: faster file_manager
-  - CHANGED: db->has_row() now returns FALSE or the row if it was found
-  - CHANGED: content.php default of site_links = true now, is ok because it first checks if it is needed overall or not
-  - CHANGED: _trace() better for AJAX, and more compact
-
-BUGS:
-- BUG: res_menu_result has always pagination (settings did not work)
-- BUG: plugin_automenu, keep order of items when merging tables more tables on same level
-- BUG: plugin_stats did not get last days of previous if called next month
-- BUG: menu.php didn't show bool_class field correct (showed a 1 instead of the name)
-- BUG: mediatable gives an error when an empty database was selected (before filling the DEMO database)
-- BUG: img_list did not show filenames
-- BUG: DK had a bug when cfg_users.last_login is NULL, DB changed
-- BUG: plugin 'content' did not work as argument of view
-- BUG: content.php did not always turned links to site_url() if needed.
-- BUG: content.php when trying to auto target a link which has an empty href attribute
-- BUG: content.php did also removed sizes in images not within #content. Split the rendering for full site and only content
-- CHANGED: show an error when no AUTOINCREMENT is set on PRIMARY_KEY
-- CHANGED: better error-messages while uploading / resizing
-- CHANGED: an error message will be shown when not entering safe values in cfg_img_size
-- CHANGED: error_php more robust
-- CHANGED: chmod calls supress errors
-
-
-Changes 2551
-============
-
-MYSQL:
-- NEW: forms has a new setting for preventing the filling of a form for same ip addres within a couple of days (needs add_log_forms_submit.sql)
-
-BUGS:
-- BUG: language split in plugin_automenu.php
-- BUG: forms & getform had a bug when using flexyforms
-- BUG: bug in config (testmode) has typo
-
-
-Changes 2543
-============
-
-BUGS:
-- plugin_stats (because id always returns from db)
-
-Changes 2540
-============
-
-BUGS:
-- BUG: menu didn't show bool_class
-- BUG: AjaxController didn't echo
-- BUG: bug with 'bool_class' in new Menu
-
-CHANGED:
-- plugin_safe_assets cleansup maps (captcha's etc.)
-
-
-Changes 2531
-============
-
-MYSQL: update_r2508.sql
-
-FRONTEND:
-- NEW: Automatic frontend building (compiling LESS, combine and minify CSS & JS files, see site/config/build.php and $config['use_minimized'])
-- NEW: frontend styling, with Less and very responsive
-- NEW: HTML output is compressed (see $config['parse_content'])
-- NEW: keep track of frontend build version for stamping latest css/js files
-- NEW: Added rem.min.js for using rem units in css and this will make them work on unsupported browsers (IE8)
-- NEW: Testmode: hides frontend site and deletes sitemap.xml. frontend is only visible for super admin, see $config['testm|ode'] = true;
-
-NEW:
-- NEW: complete rewrite of menu library, it has now its own views and a nice initialize method so you can set a config to change the menu
-- NEW: rewrite of content.php: settings are now CI like
-- CHANGED: .htaccess changed to enable .gzip (2 methods shown)
-- NEW: mimetypes added for vCard files .vcf
-- NEW: html_helper attributes()
-- NEW: cfg_users shows last_login
-- NEW: my_string_helper strip_qoutes()
-- CHANGED: MY_string_helper safe_string() now has new argument for setting case
-- CHANGED: MY_string_helper safe_string() now also strips comma's
-- ADDED: links module as a standard module
-- NEW: forms can add a class to a form now
-- CHANGED: MY_form_helper array2formfields() can add options now
-- NEW: db you can set a foreign table for a foreign key (this will override the automatic found one): ALTER TABLE `cfg_field_info` ADD `table` VARCHAR(255)  NOT NULL  AFTER `str_options`;
-- NEW: db for simple queries more foreign keys to same table are possible
-- CHANGED: db->add_foreigns() fields can now be a comma seperated string
-- NEW: db->add_options(); you can now give an array of fields where you want the options from
-- NEW: ion_auth_model->create_password()
-- CHANGED: in admin: random password button fills also the matching password
-- CHANGED: if exists: site/config/ion_auth.php will override ion_auth settings
-
-BUGS:
-- mediatable, not adding files when refreshing
-- mediatable->refresh did overwrite str_title, now it is always preserved if it exists
-- when frontend lang=en and user_lang=nl it gave a mix of nl & en, now it gets the user lang in admin
-- missing some keys in EN forms language file
-- db small bug when add_many and set_key
-- database_helper foreign_table_from_key() when $key is empty
-- img_lib error was er niet in NL
-- forms - session not ready when ajax call
-- js error in home grid
-- forms - when always showing form and inserting data
-- form, checkbox not rendering unchecked after first time unchecking (only when form is shown always with forms)
-
-
-
-
-
-Changes 2461
-============
-
-BUGS:
-- MY_array_helper() array2json() escape bugs
-
-
-Changes 2459
-============
-
-BUGS:
-- IMPORTANT BUG in User: sending mails with normal views didn't work...
-- form checkbox didn't have normal behaviour (standard CI), now it has. NB If javascript checks checkboxes, test if behaviour is the samen!
-- not existing 'email_new_password' template in ion_auth config
-- db->set_key() in combination with db->uri_as_full_uri() gave problems
-- plugin_automenu, bug in language split
-- MY_array_helper() array2json() escape bugs
-
-Changes 2434
-============
-
-MYSQL:
-- update_r2431.sql
-- add_email_table.sql
-- flexyadmin_demo_r2434.sql
-
-UPDATE:
-- UPDATE: TinyMCE 3.5.11
-- UPDATE: jQuery 1.11.1
-
-NEW:
-- possible to not include media files (per map) in res_media_files: set cfg_media_info.b_in_database to false
-- email address for bug reports can be set in index.php: // define("ERROR_EMAIL","error@flexyadmin.com");
-- in grid edit (can be set in cfg_field_info)
-- Added extra rights and options per user_group
-- MY_Uri->is_admin() // Test if uri is in admin (CMS) part
-- MY_Uri->add_remove() adds a new uripart
-- MY_array_helper flatten_array_by_field($a,$field)
-- MY_array_helper array_group_by()
-- MY_array_helper new function: array_merge_recursive_distinct()
-- MY_Email -> multi language and variable parsing sending from cfg_email
-- MY_Input gives nicer errors
-- db->row_exists()
-- Form_validation: valid_date()
-- CI Profiler can be set on by adding $config['PROFILER'] = TRUE; to site/config/flexyadmin_config.php
-
-BUGS:
-- MY_array_helper: array2json() not single-quotes
-- Setting viewmode in filegrid
-- set rights before deleting file
-- Ajax (while sorting)
-- forms didn't get flexyform right
-- Bulkupload didn't work
-- Slow loading of empty maps (called refresh...)
-- plugin_automenu, when only on item
-- pagination/search bug in grid
-- db->search in foreigns and many
-- login_log didn't set changed item with ajax edit
-- grid column ordering when DESC
-- in mediatable when 'rawdate' is not present
-
-OTHERS:
-- All <? are changed to <?php
-- content, site_links automatically replaced with links processed with site_links() ea added index.php
-- debug_helper length of arrays are shown
-- debug_helper styling and max string length of trace_()
-- standard PAGINATION for admin can be set in flexyadmin_config 'PAGINATION' TRUE/FALSE default is FALSE
-- Multiple upload standard on
-- MY_array_helper find_row_by_value() works now also with one-dimensional arrays
-- MY_array_helper el() can now iterate e multidimensional array
-- file_manager allways checks if a file existst
-- user/cfg_users work now with cfg_email
-- MY_lang empty results will also give the key
-- db->get_field() default $id=1 instead of ''
-- site/libraries/forms thanks_model gets return value of go method
-- More robust language/menu
-- Performance boost when grid ordering on foreign keys
-- Admin menu special items have better classname
-- better merging of config items
-- ordering of fields_
-- res_menu_result never pagination
-- plugin_automenu: keeps order of more menu's (WARNING: keep id's different!)
-
-
-
-Changes 2359
-============
-
-MYSQL:
-- new demo database
-- update_r2354.sql
-
-UPDATE:
-- UPDATE: jQuery 1.11.0
-
-CHANGED:
-- Moved validation rules from controller to MY_Form_validation
-- vaidation rule is_unique() so that it works on updates too, for checking not on own row example [cgf_users.str_username.id] where .id is the unique field for testing the row. It must be present in $_POST
-- lang: if language key doesn't exist:  [key] is returned instead of FALSE
-- standard PAGINATION for admin can be set in flexyadmin_config 'PAGINATION' TRUE/FALSE default is FALSE
-
-
-Changes 2348
-============
-
-FRONTEND:
-- libraries/forms/php & views/forms.php
-
-NEW:
-- cfg_users has now options to actions for users (new password, activation etc)
-- actiongrid model
-
-BUGS:
-- ordering of grid, test if field exists
-- mediatable tries loading exifdate if not needed
-- forms didn't work well with flexy_forms
-- MY_directory_helper count_files()
-- ordering with more fieds gives a bug when a spaces is between comma and fieldname
-
-
-Changes 2330
-============
-
-UPDATE:
-- Make it work for PHP 5.5.3
-
-BUGS:
-- plugin_automenu didn't update (only field) res_menu_result with language split options
-- when using 'url_suffix' some admin links (pagination) gave problems
-- Freeze_uri's didn't work since multi language uri's. Now it does for normal and multilanguage sites
-- create_uri's: now convert_accented_characters() will work!!! (wrong order of strtolower()....)
-- MY_DB_mysql_driver->get_field_where() when empty what or where
-
-OTHERS:
-- checking same uri's is now restricted to same branch in plugin_automenu
-- svn is now a model, to get revision nr
-
-
-Changes 2315
-============
-
-FRONTEND:
-- ajax_modules load automatically config with same name (without the ajax_ prefix)
-
-NEW:
-- Menu->set_create_uri_tree()
-
-BUGS:
-- forms didn't work well with flexy_forms
-- MY_Email.php typfout in variabele naam
-
-CHANGED:
-- flexy_forms has a field 'options' now
-- trace_() nicer output if IS_AJAX
-
-
-Changes 2305
-============
-
-FRONTEND:
-- module forms can now populate fields
-
-NEW:
-- plugin_remove_plugin
-- Niewe flexibele validatie: valid_model_method[model.method]
-- create_uri -> is_forbidden()
-- db->add_foreigns(), you can now specify an ' AS fieldname'
-- md_field
-
-BUGS:
-- MY_directory_helper count_files()
-- plugin_install_plugin - Fout als er mappen nog niet bestaan
-- Styling of edit image thumb
-
-OTHERS:
-- cfg_users => pagination
-- db->unselect() now can have more fields in a comma seperated string or an array of strings
-
-
-Changes 2290
-============
-
-MYSQL:
-- update_r2277.sql
-
-USERGUIDE:
-- updated tinyMCE buttons link
-- Meer uitleg over - plugin_refresh_media
-- more help in samengestelde menu (Emanuel Nervo)
-
-FRONTEND:
-- REMOVED all modules & plugins, these are now external .zips which can be installed
-- REMOVED all third party jquery plugins
-- module forms has a new method: initialize() you can add a form on the fly with this (not needing the config file)
-- module forms: forms dont' need to have a titel now (Dirk Kokx)
-
-NEW & CHANGED:
-- Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
-- user->register always returns id of new user (except when user errors)
-- plugin_refresh_media keeps extra data (as default)
-- Show thumb of image in image edit form
-- Possible to hide media fields (from res_media_files) in FlexyAdmin with cfg_field_info
-- plugin_auto_menu fills the field 'res_menu_result.str_lang' with language code of that page (if the field exists)
-- default value of cfg_auto_menu.b_active =  TRUE
-- mime-types (gpx)
-
-BUGS:
-- show.grid -> form didn't use URI_HASH (so on some sites this page is not reachable)
-- Styling issue fullsize view
-- Frontend title did'n format well
-- Gmap didn't pass a debugger
-- forms showed double errors from formactions
-- when using index.php on some servers, site_url was not given good as js variable (backend)
-
-
-Changes 2289
-============
-
-FRONTEND:
-- REMOVED all modules & plugins, these are now external .zips which can be installed
-- module forms has a new method: initialize() you can add a form on the fly with this (not needing the config file)
-- module comments uses now forms without the forms config, but with the comments config
-- added files in some plugins/modules config for creating the plugin
-- ADDED: missing plugins/modules files
-- module choose_language, een eevoudige module om een taal te kiezen in een 2-talige site
-- login module, redirectting to current page can ben turned off (dont_redirect config)
-- module login, method register can show and store fields from other tables (Dirk Kokx)
-- module forms: forms dont' need to have a titel now (Dirk Kokx)
-
-USERGUIDE:
-- USERGUIDE: Meer uitleg over - plugin_refresh_media
-- USERGUIDE: updated tinyMCE buttons link
-
-NEW:
-- DB: add b_exist to res_media_files
-- Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
-- more help in samengestelde menu (Emanuel Nervo)
-- user->register always returns id of new user (except when user errors)
-
-BUGS:
-- show.grid -> form didn't use URI_HASH (so on some sites this page is not reachable)
-- Styling issue fullsize view
-- title did'n format well
-- Gmap didn't pass a debugger
-- forms showed double errors from formactions
-- when using index.php on some servers, site_url was not given good as js variable (backend)
-
-OTHERS:
-- reset media is now safe and set options for not showing system fields
-- plugin_install_plugin, more robust, doesn't install on bad places
-- reset media is now safe
-- Show thumb of image in image edit form
-- Possible to hide media fields (from res_media_files) in FlexyAdmin with cfg_field_info.
-- CLEANUP: Removed all third party jquery plugins
-- CLEANUP: Moved all own jquery plugins to own map
-- CLEANUP: Removed third party jquery plugins
-- DOC
-- removed plugin views
-- removed login views
-- plugin autolinks complete
-- cleaned up a bit
-- plugin_auto_menu fills the field 'res_menu_result.str_lang' with language code of that page (if the field exists)
-- default value of cfg_auto_menu.b_active =  TRUE
-- mime-types (gpx)
-
-Changes 2248
-============
-
-FRONTEND:
-
-NEW:
-- in Media Info you can use a wildcard '*' to use all possible files.
-- a plugin to create plugin/module .zip file for easy exchange with others
-- er zijn nu ook andere self_ velden mogelijk dan self_parent
-- module login now has a config for not breaking the content
-
-BUGS:
-- plugin_login_active
-- module login didn't remember the current page allways
-- form pakt niet altijd goede data
-
-Changes 2238
-============
-
-NEW:
-- MY_array_helper: array_unshift_assoc() and array_push_assoc()
-
-CHANGED:
-- plugin_safe_assets: the file_types per map are configurable (standard added .less files in css map)
-- added mimetype for docx & config hack to override mime-check
-- passwords are required when new, and not valudated when empty and not new
-- random password button now creates always a good password
-- disclaimer
-
-BUGS:
-- Small styling bug fullsize
-- filemanager doesn't look for used files in multiple fields
-
-
-Changes 2226
-============
-
-FRONTEND:
-- breadcrumb module
-- Totaly rewritten modules blog & comments
-- login module reloads page after login
-- setting to use ajax for modules or not
-
-NEW:
-- plugin_strange_chars
-- MY_array_helper array_rename_keys()
-- forms - Voeg spamrapport toe aan settings, bekend in formaction->go()
-- forms - Extra settings can be set when loading
-- forms - Fields from a model has priority over fields from a table, so the table config setting can be used for the model.
-- better max_length()
-
-BUGS:
-- MY_array_helper is_assoc()
-- $this->CI->db->last_num_rows_no_limit(); didn't count well when full_uris asked
-- user can't edit self
-- user language settings in admin
-
-Changes 2198
-============
-
-BUGS:
-- Small ui bug when adding new item
-- captcha not working -> made better with form validation message
-- BUG filemanager remove files from fields
-
-NEW:
-- form validation callback_valid_same
-- form captcha with validation
-- MY_captcha_helper, changed captcha filenames and removing of them
-
-
-Changes 2192
-============
-
-MYSQL:
-- New demo database
-
-UPDATE:
-- UPDATE: CI 2.1.4 & Userguide
-
-FRONTEND:
-- login module has a new method edit, and a new formaction_login_edit to couple with tha
-- sitemap.xml now with priorities
-- menu->render() has new parameter max_level
-
-NEW:
-- regex_validation via config
-- in Media Info you can set if filenames are encrypted during upload
-- user_group specific MUTLI_UPLOAD setting
-- forms/formaction sets the form_id
-- user->send_new_password_mail()
-- plugin_login_activate can now send new password to existing users
-- plugin_login_activate , set the minimal user group that can call this plugin (default = super_admin)
-- callback_valid_password(), password will be checked everywhere
-- Admin menu items can have a user_group, so the item will only be shown for minimal this group
-- combine validation rules valid_email and valid_emails
-- nicer plugin_newsletter, with styling options
-- MY_DB Deep foreign keys now also shown in options (dropdowns etc.)
-- plugin_automenu, if parent is not b_visible, then also children are not visible, and same for b_restricted
-
-BUGS:
-- plugin_newsletter, when no adresses are selected / Nicer dutch translation of submenu
-- renaming/deteling files will rename/delete files in other wrong fields
-- wrong config for plugin_links
-- better default styling of styleTwitter
-- in spam.php
-- showing cfg_users
-- plugin_auto_menu - Als er veel WHERE statemenst worden gebruikt...
-- error messages not shown when uploading
-- Styling of form when FORM_NICE_DROPDOWNS = FALSE
-- db->last_num_rows_no_limit()
-
-
-Changes 2151
-============
-
-BUGS:
-- Error messages not showing when uploading files, this gave strange effects because flexyadmin tried to check the filesize etc.
-- plugin_newsletter, when no adresses are selected
-
-CHANGED:
-- plugin_newsletter, nicer dutcht translation in submenu
-
-
-Changes 2148
-============
-
-UPDATE:
-- UPDATE: jQuery 1.10.2
-
-FRONTEND:
-- config of search module, so search.form is added to site
-- Module login & plugin_login_active had some bugs & new features
-
-USERGUIDE:
-- USERGUIDE: MY_pagination
-
-NEW:
-- [NEW] MY_DB Replaces deep foreign keys with abstract, to be set in flexyadmin_config: DEEP_FOREIGNS
-- [NEW] - add_title() has now a format argument for a more flexible title - Idea Dirk Kokx
-- [NEW] plugin_db_scheme
-- [BETA] - New validaition rule: valid_regex[] - Idea Dirk Kokx
-- Menu can be rendered without nesting
-- CHANGES to Menu, added get_items() - Geeft alle menu items
-
-BUGS:
-- Styling of form when FORM_NICE_DROPDOWNS = FALSE
-- Some bugs in db...
-- Uploading - didn't show errors
-- Mediatable if stx_meta doesn't exist
-- MY_pagination (open <ul>)
-- Some bugs in login and plugin_login_activate
-
-Changes 2108
-============
-
-MYSQL:
-- update_r2015.sql (_flexy_forms) and new demo database
-
-UPDATE:
-- update to jQuery 1.10.1
-
-FRONTEND:
-- Changes in controller.php:
-  * Line 109: if ($this->no_content()) $this->show_404();
-  * replace: function _module()
-  * replace: function _call_library()
-- Login module remembers page
-- Twitter module
-- new jquery.styleTwitter plugin
-- Added: ->set_page_view() so the page view can be changed within a module
-- new Forms module: a flexible module for all possible forms, all modules with forms can use this
-- all current form modules removed and replaced with forms
-- Added ajax_module.php
-- Improved search module
-- javascript to bottom of site.php
-- added css/ie10.css
-- jquery.clearInput removed, jquery.placeholder added
-
-NEW:
-- New helper: MY_date_helper()
-- add id to form
-- Added plugin: plugin_import_wordpress, you can import a wordpress XML with this
-- added read_file_filter() to MY_file_helper()
-- added MY_string_helper -> safe_quotes()
-- new mime types for .ppt
-- added new plugin_flatten_table
-- added meta/exif data field to res_media_files
-
-BUGS:
-- Bug in mediatable if stx_meta doesn't exist
-- bug in MY_pagination (open <ul>)
-- Some bugs in login and plugin_login_activate
-- bug in MY_array_helper array_unset_keys()
-- bug in auto-opening item in userguide
-- Bug in MY_URI when using :parts
-- Bug in SPAM
-- BUG in MY_array_helper (filter_by)
-- BUG in Spam
-- debug_helper recognises AJAX calls
-
-OTHERS:
-- form can now show inline validation errors
-- count_string() can have empty string now
-- plugin_import_wordpress now load and adss images as well
-- in config base_url is now automatically set
-- file_manager passes config through file upload class, so extra settings are possible
-- plugin_log:
-  * reading and filtering file is per line, so large files can be loaded
-  * more timewindow options
-- nicer/simpler trace
-- open most probable method in userguide when searched
-- message box nicer, and will be shown when hovering over the header
-- content - remove width/height tags
-
-
-
-Changes r1987
-=============
-
-NEW:
-- added Lorum library for random text
-
-CHANGED:
-- faster jquery.styleTwitter.js
-- Nicer autofill option (for administrators)
-- plugin_assets:
-  - renamed setting
-  - only remove executables
-- plugin_sitemap: don't include invisible menu-items in sitemap.xml
-- form: autocreate fieldsets if a fieldset is set in the fielddata
-- some documentation addons (menu, form)
-
-
-
-Changes r1975
-=============
-
-UPDATE:
-- CodeIgniter 2.1.3
-- jQuery 1.9.1
-- jQuery 1.8.24
-- tinyMCE 3.5.8 (jQuery)
-
-NEW:
-- PHP 5.4 notices/warnings have a solution now
-- Help for users (a lot!)
-- Module twitter and jquery.styleTwitter.js
-- Table 'res_media_files' added for keeping all information of all media files, including jpg metadata
-- Multiple Fileupload widget
-- AJAX Modules (and an example)
-- Possibility of using a language table: add 'add_language_table.sql' and set $config['language_table']  = "cfg_lang";
-- Added new plugin_flatten_table
-- modules can now return there data to different places, set in the config of a module (see Module for more info)
-- modules with forms can now send there data to prefab action models
-- two action models added: formaction_mail (sending form data in email), formaction_database (put formdata in table in database)
-- Reservation example module added
-- pie.htc added for css3 in old ie's
-- New jquery plugin template
-- Forms can have a form_id now, so mulitple forms on one page is now an easy job
-- Option to make tables invisible in cfg_table_info
-- added module: upload_demo
-- added option that replaces the target of links automatically (internal links: '_self' external links: '_blank')
-
-UPDATE:
-- More options and nicer plugin_newsletter
-- plugin_sitemap creates smaller sitemap.xml (speed improvement)
-- Improved search module
-- Improved plugin contact_form
-- Improved plugin_autolinks
-- Better recognising intro strings in intro_string()
-- DB export option simplified for faster working with it
-- form, radiolabel is now a normal label field
-- video_helper get_video_code_from_url() works now also with short youtube urls: http://youtu.be/xxxxxxx
-
-BUGS:
-- a very lot of small bugs
-- several bugs in plugin_sitemap
-- bug in plugin_links (replacing renamed pages)
-- SAFETY BUG FROM 1657
-
-
-Changes r1802
-=============
-
-UPDATE:
-- jQuery UI 1.8.23
-
-BUGS:
-- MY_DB->add_many(), now works as manuel says
-- Searchbox in mediagrid in IE
-- plugin_newsletters
-- plugin_uri
-- MY_string_helper:intro_string()
-
-NEW:
-- Help voor gebruikers
-- plugin_safe_assets: Submaps of media maps are kept, and checked for forbidden files
-- plugin_safe_assets: Submaps of assets maps (not set in cfg_media) are left alone
-- plugin_automenu now triggers changed also on dat_date/tme_date fields (for news/blog etc)
-- standard view of plugins
-- .cur extension added for image files
-
-
-Changes r1754
-===============
-
-BUGS:
-- in URL gives problems on some providers, changed to ~ (made it a setting)
-- bug if cfg_media_info.str_order = empty
-- bug in db->_repair_ar()
-- bug multiple dropdown ordering (js)
-- bug in grid search
-- bug in checking rights of user to use admin
-
-
-Changes r1740
-===============
-
-UPDATES
-- CodeIgniter 2.1.2 (IPv6)
-- jQuery 1.8.1
-- jQuery UI 1.8.23
-- tinyMCE 3.5.6 (jQuery)
-
-BUGS
-- bug when creating new user
-- bug in plugin_stats when empty data
-- bug in module comments
-- bug in module login
-- bug in plugin_newsletter
-- bug in MY_directory_helper empty_map()
-- creating a build is now bugfree and much much faster
-
-NEW
-- FlexyAdmin userguide:
-  - All Modules, Plugins and other libraries and helpers are documented
-  - A lot of extra documentation on how to use FlexyAdmin as a developer
-  - Nice lay-out, index and searching for the documentation
-- plugins can use views (and all frontend pulgins use them now)
-- added rewrite_short_tags to config.php
-- hidden & passwords types added to flexy_forms
-- added .ogg and .aiff mimetypes for sound files
-- video_helper can now get code also from https sites
-- added google_map module (and API)
-- added robot test to Spam and make Spam more general (and changes modules which use Spam)
-- added has_row() to DB
-- added copy_directory to MY_directory_helper
-- IonAuth:
-  - remember_code is now a random_string (thanks to Marcel vd Drift)
-  - salt changed in ion_auth
-- Module login has new config:
-  - can use another user table
-  - check existing email can turned off
-- has_string() fro MY_string_helper can now search an array of strings
-
-
-
-Changes r1525
-===============
-
-UPDATES
-- jQuery UI 1.8.20
-- tinyMCE 5.3 jQuery
-
-BUGS:
-- it was possible for lowrights usergroups to add users with higher rights!! (MY_DB_mysql_driver.php)
-- download list didn't use site_url()
-- Content->safe_email had a small bug when a tags had more attributes
-- Filemaneger had an old call to the old message system
-- Bug in plugin_automenu
-- (Styling) issues with multiple dropdown with other than images
-- Styling issue with IE7
-- UI didn't get proper language setting
-
-NEW:
-- don't display Warnings/Notices when getimagesize() can't read for some reasen
-- New model: grid_set, which handels all the uri's for the grid
-- Added grid_set to Filemanager
-- Show trees in res_menu_result (again)
-- UI/field: global settings now possible
-- module_login works now together with caching
-- plugin_newsletter has new config: 'send_one_by_one' for sending newsletters not in bulk.
-- new template for frontend
-- .tiff is added as image file type
-
-
-
-Changes r1490
-===============
-
-UPDATES:
-- jQuery 1.7.2
-- jQuery UI 1.8.18
-
-BUGS:
-- $this->db->order_by(); Works now as expected according to CodeIgniter
-- db->uri_as_full_uri()
-- a bug in RSS
-- several styling bugs
-- plugin_links (when a table has no 'self_parent' field)
-- bug in ajax-editing (not deleting cache and uinames not loaded)
-- remove double results in search
-- site_url() was not used properly in grid pagination (for hosts where index.php must be used in url)
-- ion_auth/user: last_login field now updated at logout instead of login
-- several bugs and performance isseus with plugin_automenu
-- bug in language helper
-
-NEW:
-- Deleting multiple items much much faster!
-- every module has it's own view
-- nicer way of showing modules: in the page view
-- modules have now methods to grab there own part of the uri (split by ':')
-- flexy_forms now are multi-language
-- plugin_automenu: a limit can have an offset now
-- if there are multiple downloads maps sets, those are nicely split in the linkLlist
-- added: content->replace_soft_hyphens() and changed the config settings
-- safe_emails (content) are now created by CodeIgniters build in safe_emailto() function
-- plugin_sitemap doesn't show restricted pages in sitemap.xml
-- forum module (beta)
-- newsletter module (beta) rewritten
-- My_Array_helper: in_array_like() now returns FALSE or the key when something is found (instead of just TRUE)
-- Added Wizard class and Message class
-- plugins can now load languages like modules (language before config so config can hold language specifics)
-- new plugin method: _before_grid()
-- Faster showing of log_ and res_ tables and they are not editable anymore
-
-
-Changes r1437
-===============
-
-UPDATES:
-- jQuery UI 1.8.17
-
-BUGS:
-- some bugs in plugin_automenu
-- some styling issues
-- bugs in Help system
-
-NEW:
-- Minimal img size in cfg_img_info: if set and a image is uploaded which is too small: a messages comes and image is not uploaded
-- jquery.clearInput.js rewritten
-- added form->prepare_for_clearinput()
-- rewritten module contact_form: now possible to add attachments
-- language settings for standard fieldnames
-- modules and plugins tries to load language files with same name
-
-
-Changes r1413
-===============
-
-UPDATES:
-- CodeIgniter 2.1
-- jQuery 1.7.1
-- tinyMCE 3.4.7
-
-CLEANUP:
-- Lot of cfg_ tables are changed/cleaned up:
-	- cfg_editor is removed and put into cfg_configurations
-	- all str_ui_name and txt_help fields from cfg_table_info, cfg_field_info and cfg_media_info are moved to a new table: cfg_ui
-	- removed cfg_table_info.b_single_row, just set int_max_rows to 1 for same result.
-	
-NEW:
-- controller is changed: no need to change code for standard options: just set the options in config (see the userguide)
-- change the variable name $item to $page (in controller and all standard modules): just for easthetics and reflecting more what it is
-- new standard modules:
-	- submenu
-	- login and its views (for authentication in frontend sites, uses the ion_auth/user class)
-- changes to modules:
-	- search: results can be grouped by uri (set in its config)
-- autoload_modules_if option in config: to load modules with a simple if statement (see userguide and config.php)
-- modules and plugins have now the method ->config() to get own config item, second argument is default value (standard NULL)
-- if a form in FlexyAdmin has changed and not saved and the browser leaves the page: a warning will popup to prevent lost changes
-- Admin UI names and help can be in more languages now (see cfg_ui), standard englisch and nederlands.
-- Forms can have tabs (which reflects fieldsets). You can add fieldsets per table at cfg_table_info, and set per field in which fieldset it sits at cfg_field_info (no fieldsets means the standard fieldset)
-	- Where to use?:
-		- With mult-language sites: put every language under a tab
-		- With tables with lots of fields (and options): put the extra's under another tab, or group them logically with tabs.
-- some performance ...
-- you can set FORM_NICE_DROPDOWNS in flexyadmin_config to FALSE if the nice dropdowns has performance issues (if there are realy a lot of options), this will fall back to standard dropdown fields
-- remove the class fields from tinyMCE links popup (is realy not needed since you can use the styles dropdown): if you need it, set in on in site/assets/css/admin.css
-- My_text_helper: added function highlight_code_if_needed()
-- db->get_field_where() can search also with LIKE instead of a normal WHERE = statement
-BUGS:
-- some bugs in the plugin_handler
-- some bugs in plugin_automenu
-- some styling bugs
-- bug in form with password fields
-
-
-
-Changes r1332
-===============
-
-NEW:
-- Added plugin_export (tables can be easy exported to csv,json,xml and as php array)
-- Loading config files: override site config if any
-- Total rewrite of Plugin concept:
-	- Plugins are now Libraries instead of Models (so calls to the CodeIgniter superobject now is $this->CI->...)
-	- Plugins map deleted, plugins moved to libraries map
-	- Plugins needs their onw config file in config map: plugin_name.php
-	- Plugins and Modules have now same parent class (flexy_library)
-- MY_array: added array2csv()
-- new Queu model: to make object calls later
-- new Crud model nice layer above DB classes for updating and deleting data
-- Some changes to Modules:
-	- Modules can have nicer config setting without their own name
-	- Modules set their own name automatically, and if config file exists it is loaded also automatic
-- Standard Modules now have their own language files
-- Cleanup controller and config
-- Controller: rendering of menu's moved to end of controller (makes it possible to change menu)
-- MY_Output: cache now also test if $_GET is empty: if so: no cache
-
-UPDATE:
-- jQuery 1.7
-
-BUGS:
-- Small bug in MY_DB->search() when searching twice in foreign table
-- $this->ci in ion_auth/user changed to $this->CI
-- bug in menu->add_sub() and ... add_help
-- editor_lists now searches more generic to title fields (was a bug when multiple languages without res_menu_result)
-- small bug in Form (loading Validation library)
-
-
-
-Changes r1314
-===============
-
-NEW:
-	- a module can register itself to Menu and can change menu items on the fly (see example.php)
-	- RSS feed can have full uri's now
-	- menu items from a table have full_uri items
-	- res_menu_result can have pagination when using 'from table group by category', set number of items in paramaters (0=no pagination)
-	- site/config/email.php -> global email settings for Email Librabry
-	- small styling changes for trace_() debug_helper
-	
-BUGS:
-- user/ion_auth->reset_password()
-- small bugs in MY_pagination
-- Editor could not be turned off
-
-
-
-Changes r1297
-===============
-
-CHANGED:
-- form is now a library instead of a model (better for multiple forms on one page). UPDATE YOU'RE LOAD STATEMENT!
-- Only users that belongs to user groups (<=3, super_admin, admin, user) can log in admin. Other users can only log in frontend
-
-NEW:
-- new field prefix: is_ same as b_ (boolean)
-- added MY_array_helper: array_merge_strict()
-- added menu: get_next() / get_prev()
-- added img_helper: is_wider_than()
-- MY_DB... search() -  search query now always between () so it's easy to add more criterea
-
-BUGS:
-- Several small bugs in DB... (MY_DB...) (due to abstract fields, where/many...)
-- now it's possible to use assets maps with underscores (MY_url_helper linkencode/decode)
-- menu name now always as html entities (menu)
-
-
-Changes r1280
-===============
-
-UPDATE:
-- CodeIgniter 2.0.3
-- jQuery 1.6.4
-- jQuery UI 1.8.16
-- tinyMCE 3.4.5 (jQuery)
-
-NEW:
-- Renamed site/views/home.php to site.php (can now be set in config.php)
-- Language settings now in config.php
-- New way of implementing modules: by a special Libary called Module. Also helpers and models can be loaded from site
-	- deleted map: site/modules
-	- adding map: site/models, site/helpers and site/libraries
-	- changing existing modules (also added config files for some)
-	- also possible to load modules direct from the uri by a setting in site/config.php
-- changes to controller/site (for models, adding class, adding methods for language settings and redirect)
-- New authentication system Ion Auth:
-	- Simpler user groups
-	- Safer (hashed) passwords
-	- new passwords: double check
-	- Ready for some future authentication handling
-	- Possible to use in FrontEnd
-- Nicer dropdown styling
-- Big CSS controls in other browsers (FF/Webkit/Opera/IE9,8,7 IE6 is now depricated)
-- Ordering and Searching in foreign and many data from Grid view
-- Better spamchecker
-- MY_URI: get_next_()  and get_prev_uri() now possible to get full uri
-- Drag n Drop selecting images, now also with a click
-- Added font files to safe_asset to site/assets/css
-- MY_Pagination, default configs and automatic settings
-- New plugins: add_relation_table, create_indexes
-- Video_helper
-- Safer Plugins
-- Longer session times
-
-BUGS:
-- bulk_upload (lowercase extensions)
-- lots of small bugs
-
-
-
-
-Changes r1068
-===============
-
-UPDATE:
-- jQuery 1.6.1
-- jQuery UI 1.8.12
-- tinyMCE 3.9.4
-- IE9 styling
-BUGS:
-- Grid: drag n drop sorting bug with pagination
-- AutoMenu some bugs
-- DB->where_uri()
-- bulk_upload: copy didn't work with new safe rights
-- MyArray: several bugs
-NEW:
-- Controller: checks if description exists and is not empty
-- Controller: more lines to uncheck: language switch, redirect code
-- Controller: rewritten module loading (+experimental model loading)
-- FileHelper: new copy_file()
-- DirHelper: new empty_map()
-- MyStrHelper: max_lenght() now has option 'WORDS'
-- MyStrHelper: added intro_string()
-- MyStrHelper: added restore_tags()
-- auto_fill: now you can create new rows
-- tinyMCE charmap: more exotic chars
-- SafeAssets: added .ico for assets/img
-
-Changes r1017
-===============
-
-BUGS:
-- flexy_field: media_dropdown, add_empty_choice
-NEW:
-- menu->get_next_uri() and menu->get_prev_uri()
-  
-
-Changes r1014
-===============
-
-NEW:
-- site: redirect code in controller
-- site: add jquery.corner.js
-- site: some styling changes
-- site: site.js simple again
-- site: added template.js for own jquery plugin
-- menu->set_current_class_active(); // gives all current classes also the active class
-- changes to plugin->safe_assets: in css map, php files are ok now (for dynamic css), in img flash files are ok.
-- FrontEndController: menu->set_home() checks if res_menu_result is used.
-BUGS:
-- db->where_uri() // ambigious id
-- rename bugs in bulk_upload
-- sorting tables when pagination has one page
-- plugin->automenu language split
-- plugin->automenu subcategory
-- DB->many_options (where_options)
-- form_fields: bug when using select as last field
-
-
-
-Changes r998
-===============
-
-NEW:
-- plugin->safe_assets: now also for bulk_upload and site/stats
-- more options for MY_string_helper:max_length()
-
-UPDATE:
-- jQuery 1.5.1
-- jQuery UI 1.8.11
-
-
-Changes r990
-===============
-
-NEW:
-- Safer upload directories:
-. Creates automatically .htaccess files to prevend showing the directory and to hide forbidden (executable) filetypes
-. On Logout, checks all upload directories for executable files and removes them
-. Running the plugin, creates .htaccess files for all assets folders
-
-BUGS:
-- FORM: Multiple media(s) fields gives problems
-- FORM: multiple list order doesn't work (at least with self relations)
-- FORM: img dropdown: big when last_uploads=0
-- Getting menu-item with same uri's (ie:  item/item)
-- Double uri numbering bug (now with __#)
-- Search&Replace: sometimes a bug when no results
-
-
-Changes r981
-=============== 
-
-UPDATE:
-- jQuery UI 1.8.9
-
-NEW:
-- colorPicker
-- new pdf mime
-- Flexy Forms: user can edit/create own forms
-- autoloading latest demodatabase (if database login correct and no tables found)
-- content->safe_email now adds original class and id
-- content->render also adds classes to divs
-
-BUGS:
-- sitemap bugs
-- content->safe_email (bug when more than one email address)
-- small styling bugs in IE
-- DB->search
-- automenu submenu's without self_parent now possible
-- grid order bug
-- bulkupload order
-
-
-
-Changes r940
-===============
-
-
-BUGS:
-- Sitemap order
-- Stats, order of years
-- db->search (smarter)
-- user restriction in file-manager
-
-
-Changes r931
-===============
-
-
-BUGS:
-- Backup DB
-- sitemap XML (non ascii characters)
-
-UPDATES:
-- CodeIginter 1.7.3
-- jQuery 1.4.4
-- jQuery UI 1.8.7
-- tinyMCE 3.3.9.3
-
-NEW:
-- HTML doctype
-- Pagination for tables/media (set in TableInfo & MediaInfo)
-- AJAX action for bulk upload (so no server time-outs are generated when uploading los of files)
-
-
-
-Changes r899
-===============
-
-
-BUGS:
-- .htacces didn't show sitemap.xml
-- small bugs in menu (classes)
-
-NEW:
-- more complete sitemap.xml
-
-
-Changes r887
-===============
-
-
-BUGS:
-- some menu bugs (new code for class generating)
-- bug in db->where_uri
-- bug in linklists
-
-UPDATE:
-- jQuery 1.4.4
-
-
-Changes r848
-===============
-
-NEW:
-- more modules can be set in a page and they can also be ordered
-- content -> spamfriendly mail now also creates a <NOSCRIPT> part
-BUGS:
-- some bugs in menu
-- uploading of .sql files in db import (mime added)
-
-
-
-Changes r840
-===============
-
-
-NEW:
-- sitemap.xml automatic creation on logout
-- frontend controller changed: now possible to load external module files
-- nice path for download files (100% automatic) so original path is not known to user
-- tinyMCE fullscreen & preview plugins
-- easy run SQL updates
-- form library is now easy to use in frontend:
-- nice classes in form library
-- cleanup fomr library and autoload necessary helpers
-- added int_id to res_menu_result in plugin_automenu, for remembering original id
-- content library: now spamfriendly mail can also include HTML (images for example)
-- content library: adds now classes to headers
-- now possible to include javascript to admin with site/assets/js/admin.js
-- form library: includes hidden field and hidden passwords on frontend
-
-BUGS:
-- some bugs in plugin_stats
-- small bug in spam library
-- help popup: if no help is known, popup isn't shown anymore
-- some bugs in library menu & plugin_automenu
-- error/warnings if no database is selected
-- language files english to en
-- small styling bugs in IE8/7
-- uri creating: better counting if double uri's
-
-UPDATE:
-- jQuery 1.4.3
-- jQuery UI 1.8.6
-- tinyMCE 3.3.9.2
-
-
-
-
-Changes r801
-===============
-
-
-BUGS:
-- Problems with PHP 5.3 (CI database extending), Solved, works still on PHP 4
-- Render branch in Menu class had some problmens
-- Uri/Automenu: languages are now reserved uri's (are automatically checked)
-
-UPDATE:
-- jQuery UI 1.8.5
-
-
-
-Changes r788
-===============
-
-
-BUGS:
-- tinyMCE styles dropdown didn't work
-- styling of img popup wasn't nice
-- db->where_uri(): had a bug when branches are up to 3 levels of more are the same. Now it's working!
-- Statistics: a bug when counting several IE versions
-- Statistics: now only records known (mobile)browsers (to prevent robots)
-
-NEW:
-- added: site/config/flexyadmin_config.php, for specific flexyadmin config options such as:
-- Possible to set uri space replace character (if SEO wishes it)
-- added Google Analytics to tbl_site and to site/views/home.php
-- favicon added
-- title added
-- # between main and sub title if FlexyAdmin is working local
-- Statistics: added some new browsers and OS: Chrome, Windows 7 etc.
-- Plugin->Automenu: it's now possible to make a language split
-- Form, a field attr or attributes are now rendered for special attributes when needed
-- Content->ReplaceLanguagLinks(s,r); You can replace the first uri part of a (internal) link. For multi-language sites
-
-UPDATES:
-- tinyMCE 3.3.9
-- jQuery UI 1.8.4
-
-
-
-Changes r766
-===============
-
-
-BUGS:
-- small bugs in automenu
-- dropdown field, add button, didn't work anymore
-- db->where works now better for many options
-NEW:
-- dropdown table options, also works now on many options
-- possible to set many dropdowns to top instead of bottom
-- added sql for standard newsletter table
-
-
-Changes r758
-===============
-
-
-BUGS:
-- bug if multiple deleting of items/files.
-- bug in tinyMCE embed plugin, showed allways the list, even if there's not any
-- typobug in home.php, js loading adres.
-- typobug in frontend controller for localisation
-- some other styling bugs in frontend demo
-NEW:
-- new option for media pulldowns: add an empty choice (needs: db/update_r756.sql)
-- it's now possible to freeze individual uri's (needs: b_freeze_uri in same table as uri)
-- added some standard sql files to add extra functionality (ie rss_feeds etc)
-
-Changes r745
-===============
-
-- updated to tinyMCE 3.2.8
-- better MY_string_helper get_suffix()
-- bug in showing wide/big editors (sinces r720)
-- bug in importing SQL (since removing license key from db)
-
-
-Changes r740
-===============
-
-- CodeIgniter 1.7.2 security patch for Upload class
-- updated to jQuery UI 1.8
-- other time widget (needed due to upgrade to jQuery UI 1.8)
-- some styling (needed due to upgrade to jQuery UI 1.8)
-- class sub added to menu items that have subitems
-- MY_Uri, added get_to() for getting a part of the URI
-- AutoMenu, now possible to add same categories as submenu under more menus
-
-
-
-Update from r622 to r723
-========================
-
-BUGS/CHANGES:
-- some styling (table, thumbs, hoverthumbs etc.)
-- some bugs (DB import,editor list order)
-- upload new file types (pdf,flv,sql)
-- Table: delete only visible/filtered items
-- cleaner controller/page view
-- new demo site/database
-
-UPGRADED:
-- jQuery 1.4.2 (1.3.2 is still there for compatibility when updating)
-
-NEW:
-- RSS feeds possible
-- embed plugin for tinyMCE
-- auto-fill option
-- ordering of drag'n'drop images possible
-- show a field in a form optionally
-- automatic validation of formfields (info from DB)

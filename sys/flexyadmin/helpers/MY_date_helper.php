@@ -127,10 +127,12 @@ function get_next_workday($unix,$holidays) {
  */
 function unixdate_is_holiday($unix,$holidays=array()) {
   $holiday=false;
-  while (!$holiday and $h=each($holidays)) {
-    $h = strtotime($h['key']);
+  $h=current($holidays);
+  while (!$holiday and $h) {
+    $h = strtotime(key($holidays));
     $next = unixdate_add_days($h,1);
     $holiday=($unix>=$h and $unix<$next);
+    $h=next($holidays);
   }
   return $holiday;
 }

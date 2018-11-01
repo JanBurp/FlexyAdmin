@@ -13,6 +13,19 @@ class MY_Controller extends CI_Controller {
 
 	public function __construct($isAdmin=false) {
 		parent::__construct();
+
+    /**
+     * Force https?
+     */
+    if ($this->config->item('force_https')) {
+      if( empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off" ){
+        $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: ' . $redirect);
+        exit();
+      }
+    }
+
     
     /**
      * Load extra's needed for front,back & ajax
@@ -29,7 +42,7 @@ class MY_Controller extends CI_Controller {
     $this->load->helper('language');
     
     /**
-     * Load Data Model
+     * Load Data Model & Core tables
      */
     $this->load->model( 'data/Data_Core','data_core' );
     $this->load->model( 'data/Data','data' );
@@ -112,7 +125,7 @@ class MY_Controller extends CI_Controller {
             // Other Install options
             $this->_install();
             // Redirect
-						redirect('admin','refresh');
+            redirect($this->config->item('API_home'),REDIRECT_METHOD);
 					}
 				}
 			}
@@ -124,14 +137,11 @@ class MY_Controller extends CI_Controller {
 	}
 
 	private function _check_if_flexy_database_exists() {
-		return ($this->data->table_exists('cfg_configurations') and $this->data->table_exists('cfg_sessions'));
+		return ($this->data->table_exists('cfg_version') and $this->data->table_exists('cfg_sessions'));
 	}
 
 	private function _init_flexy_admin($isAdmin=false) {
     if ($this->config->item('PROFILER')) $this->output->enable_profiler(TRUE);
-    // load db config
-		$this->load->model('cfg');
-		$this->cfg->set_if_admin($isAdmin);
 	}
   
   /**
@@ -176,8 +186,8 @@ class MY_Controller extends CI_Controller {
    * @return string uri
    * @author Jan den Besten
    */
-	public function find_module_uri($module,$full_uri=true) {
-    find_module_uri($module,$full_uri);
+	public function find_module_uri($module) {
+    find_module_uri($module);
 	}
   
 

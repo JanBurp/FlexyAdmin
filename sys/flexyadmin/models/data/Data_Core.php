@@ -13,10 +13,10 @@
  * 
  * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan, of analyseert de tabel en genereerd settings)
  * 
- * ->get( $limit=0, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
- * ->get_where( $where=NULL, $limit=0, $offset=0) // Geeft een $query object (zoals in Query Builder)
+ * ->get( $limit=NULL, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
+ * ->get_where( $where=NULL, $limit=NULL, $offset=0) // Geeft een $query object (zoals in Query Builder)
  * 
- * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array: - key ingesteld als result_key (standaard zelfde als primary_key) - inclusief relatie data als subarray per item
+ * ->get_result( $limit=NULL, $offset=0 )         // Geeft een aangepaste $query->result_array: - key ingesteld als result_key (standaard zelfde als primary_key) - inclusief relatie data als subarray per item
  * ->get_row( $where = NULL )                     // Idem, maar dan maar één item (de eerste in het resultaat)
  * ->get_field( $field, $where = NULL )           // Idem, maar dan van één item alleen de waarde van het gevraagde veld
  * ->set_result_key( $key='' )                    // Hiermee kan voor ->get_result() de key van de array ingesteld worden op een ander (uniek) veld. Standaard is dat de primary_key
@@ -27,7 +27,7 @@
  * 
  * ->select( $select = '*' )                      // Maak SELECT deel van de query (zoals in Query Builder)
  * ->select_abstract()                            // Maak SELECT deel van de query door alle abstract_fields te gebruiken (en als die niet zijn ingesteld zelf te genereren)
- * ->path( $path_field, $original_field = '' )    // Geeft een veld aan dat een geheel pad aan waarden moet bevatten in een tree table (bijvoorbeeld een menu)
+ * ->tree( $tree_field, $original_field = '' )    // Geeft een veld aan dat een geheel pad aan waarden moet bevatten in een tree table (bijvoorbeeld een menu)
  * 
  * ->with( $type='', $what=array() )              // Voeg relaties toe (many_to_one, many_to_many) en specificeer eventueel welke tabellen en hun velden. Zie bij ->with()
  * ->with_json( $type='', $what=array() )         // Idem, maar dan komt de data in één JSON veld
@@ -47,7 +47,7 @@ Class Data_Core extends CI_Model {
   /**
    * Set off while developing
    */
-  private $settings_cachning = TRUE;
+  private $settings_caching = TRUE;
 
   /**
    * Testing this
@@ -65,18 +65,20 @@ Class Data_Core extends CI_Model {
    * Noodzakelijk instellingen die automatisch worden ingesteld als ze niet bekend zijn.
    */
   protected $autoset = array(
-    'table'           => '',
-    'fields'          => array(),
-    'abstract_fields' => array(),
-    'abstract_filter' => '',
-    'relations'       => array(),
-    'field_info'      => array(),
-    'options'         => array(),
-    'order_by'        => 'id',
-    'max_rows'        => 0,
-    'update_uris'     => true,
-    'grid_set'        => array(),
-    'form_set'        => array(),
+    'table'              => '',
+    'fields'             => array(),
+    'abstract_fields'    => array(),
+    'abstract_filter'    => '',
+    'abstract_delimiter' => ' | ',
+    'relations'          => array(),
+    'field_info'         => array(),
+    'options'            => array(),
+    'order_by'           => '',
+    'max_rows'           => 0,
+    'update_uris'        => true,
+    'grid_set'           => array(),
+    'form_set'           => array(),
+    'cache_group'        => array(),
   );
   
   /**
@@ -88,6 +90,11 @@ Class Data_Core extends CI_Model {
    * Onthoud eventueel al opgezochte relatie tabellen
    */
   protected $relation_tables = array();
+  
+  /**
+   * Onthoud eventueel array van result_name met bijbehorende velden van de andere tabel
+   */
+  protected $relation_result_fields = FALSE;
   
   /**
    * Set to TRUE if a query has been prepared
@@ -109,13 +116,17 @@ Class Data_Core extends CI_Model {
    */
   protected $tm_select  = FALSE;
   protected $tm_select_include_primary  = TRUE;
-  
-  
+
   /**
    * Eventuele velden die niet in SELECT mogen voorkomen
    */
   protected $tm_unselect = FALSE;
 
+  /**
+   * Hou diverse query onderdelen bij
+   */
+  protected $tm_where = FALSE;
+  protected $tm_join = FALSE;
   
   /**
    * Hou de FROM bij, kan aangepast worden om LIMIT bij one_to_many en many_to_many relaties mooi te krijgen
@@ -128,16 +139,28 @@ Class Data_Core extends CI_Model {
   protected $tm_has_condition = FALSE;
   
   /**
+   * Hier komen grid_set instellingen als het om een grid resultaat gaat
+   */
+  protected $tm_as_grid = FALSE;
+  
+  /**
    * Een eventueel veld dat een compleet pad moet bevatten in een tree table
    */
-  protected $tm_path       = FALSE;
-  protected $tm_where_path = array();
+  protected $tm_tree       = FALSE;
+  protected $tm_where_tree = array();
   
   /**
    * Maximale lengte van txt velden.
    * Als groter dan 0 dan worden txt_ velden gemaximaliseerd op aantal karakters en gestript van html tags
    */
   protected $tm_txt_abstract = 0;
+  
+  /**
+   * Maak wachtwoord velden onzichtbaar: lege strings.
+   * Kan handig zijn als je een formulier met wachtwoord wilt laten zien om eventueel aan te kunnen passen.
+   * Kan TRUE zijn, of array van wachtwoord velden.
+   */
+  protected $tm_hidden_passwords = FALSE;
   
   /**
    * Of de result_array in het geval van ->select_abstract() plat moet worden. Zie bij ->select_abstract()
@@ -153,10 +176,11 @@ Class Data_Core extends CI_Model {
    * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
    * En of er naar de pagina moet worden gegaan van het item het dichtsbij vandaag
    */
-  protected $tm_limit         = 0;
+  protected $tm_limit         = NULL;
   protected $tm_offset        = 0;
   protected $tm_jump_to_today = FALSE;
-
+  protected $tm_where_limit   = FALSE;
+  protected $tm_where_offset  = FALSE;
 
   /**
    * Welke relaties mee moeten worden genomen en op welke manier
@@ -164,12 +188,14 @@ Class Data_Core extends CI_Model {
   protected $tm_with    = array();
   
   /**
-   * Wat er gezocht gaat woren
-   * - terms
-   * - with
-   * - settings
+   * Wat er gezocht gaat woren, de argumenten die meegegeven worden aan ->find()
+   * - terms (string, array van strings, of assoc array met multiple finds)
+   * - fields (array)
+   * - settings (array)
    */
-  protected $tm_find      = FALSE;
+  protected $tm_find                      = FALSE;
+  private $forbidden_find_fields          = array('id','order','self_parent','uri');
+  private $forbidden_find_relation_fields = array('user_changed','tme_last_changed');
 
   /**
    * Set array voor insert/update
@@ -185,8 +211,11 @@ Class Data_Core extends CI_Model {
   /**
    * Is nodig om eventueel te kunnen instellen in de database wie iets heeft aangepast.
    * En om eventueel alleen rijen terug te geven waarvoor de gebruiker rechten heeft.
+   * En om eventueel op minimal rights te controleren.
    */
-  protected $user_id    = NULL;
+  protected $user_id     = NULL;
+  protected $user_groups = array(0);
+  protected $logout      = FALSE; // Force logout?
   
   /**
    * Bewaar de id van opgevraagde row als ->where( id ) wordt gebruikt.
@@ -224,6 +253,8 @@ Class Data_Core extends CI_Model {
 
 	public function __construct( $table='' ) {
 		parent::__construct();
+    $this->db->query("SET SQL_MODE = ''"); // https://stackoverflow.com/questions/15438840/mysql-error-1364-field-doesnt-have-a-default-values
+    $this->settings_caching = $this->config->item('CACHE_DATA_SETTINGS');
     $this->load->model('log_activity');
     $this->lang->load('data');
     $this->load->driver('cache', array('adapter' => 'file'));
@@ -269,9 +300,10 @@ Class Data_Core extends CI_Model {
       $this->settings = $cached;
     }
     else {
-      // Haal de default settings op
+      // Default settings
       $this->config->load( 'data/data', true);
       $default = $this->config->item( 'data/data' );
+      $default = array_merge($default,$this->settings); // Default aanpassen met eventueel al eerder ingesteld settings
       $this->settings = $default;
       // Stel eventueel de tabel in als die is meegegeven
       if ($table) $this->settings['table'] = $table;
@@ -283,6 +315,9 @@ Class Data_Core extends CI_Model {
         if ($load) {
           $this->config->load( 'data/'.$table, true);
           $settings = $this->config->item( 'data/'.$table );
+          // Options even apart zodat iig ook de autoset option werkt
+          $options = el('options',$settings,array());
+          unset($settings['options']);
           // Merge met default samen tot settings
           if ( $settings ) {
             $this->settings = array_merge( $default, $settings );
@@ -290,10 +325,23 @@ Class Data_Core extends CI_Model {
         }
         // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
         $this->_autoset( );
+        // En options er weer bij...
+        $this->settings['options'] = array_merge($this->settings['options'],$options);
       }
-      if ($this->settings_cachning) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
+
+      // Zorg ervoor dat eventuele options voor media het pad bij field_info aanpassen
+      if (isset($this->settings['options'])) {
+        foreach ($this->settings['options'] as $field => $info) {
+          if (isset($info['path'])) {
+            $this->settings['field_info'][$field]['path'] = $info['path'];
+          }
+        }
+      }
+
+      // Cache 
+      if ($this->settings_caching) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
-    // if ($table==='tbl_links')  trace_($this->settings['abstract_fields']);
+
     return $this->settings;
   }
   
@@ -339,6 +387,36 @@ Class Data_Core extends CI_Model {
   }
 
 
+  /**
+   * Autoset cache_group
+   * 
+   * Standaard wordt dit de tabel zelf en de relatie tabellen.
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _autoset_cache_group() {
+    $cache_group = array();
+    // Eigen tabel
+    array_unshift($cache_group, $this->settings['table']);
+    // Relatie tabellen
+    if (!empty($this->settings['relations'])) {
+      foreach ($this->settings['relations'] as $type => $relations) {
+        foreach ($relations as $key => $relation) {
+          if (isset($relation['other_table'])) {
+            if (in_array(get_prefix($relation['other_table']),array('tbl','rel'))) array_unshift($cache_group, $relation['other_table']);
+          }
+          if (isset($relation['rel_table']))   array_unshift($cache_group, $relation['rel_table']);
+        }
+      }
+    }
+    // Menu tabellen
+    $this->load->model('data/Core_tbl_menu');
+    $menu_tables = $this->Core_tbl_menu->get_menu_tables();
+    if (in_array($this->settings['table'],$menu_tables)) $cache_group = array_merge($cache_group,$menu_tables);
+    return array_unique($cache_group);
+  }
+
+
 
   /**
    * Autoset fields
@@ -362,60 +440,45 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_field_info( $table='', $fields=array() ) {
-
-    $this->load->model('cfg');
+    $this->config->load('field_info',true);
+    $field_info_config = $this->config->item('field_info');
     $this->load->library('form_validation');
     if (empty($table)) $table = $this->settings['table'];
     if (empty($fields)) $fields = $this->settings['fields'];
 
-    $fields_info = array();
-    $settings_fields_info = array();
+    $field_info = array();
     foreach ($fields as $field) {
-      $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
+      $info = array();
       
       /**
-       * Default, eerst uit schemaform, dan uit database
+       * Default, eerst uit field_info_config, dan uit database
        */
-      $schemaform = $this->config->item('FIELDS_special');
-      $field_info['default'] = el(array($field,'default'),$schemaform);
-      // Uit database
-      if ( !isset($field_info['default'])) {
-        $field_info['default'] = $this->field_data( $field, 'default' );
+      $info['default'] = el(array('FIELDS_special',$field,'default'),$field_info_config);
+      if ( !isset($info['default']) ) {
+        $pre = get_prefix($field);
+        $info['default'] = el(array('FIELDS_prefix',$pre,'default'),$field_info_config);
       }
       
-      // Verzamal de rest van de field info, eerst uit depricated cfg_field_info en uit de db
-      // $field_info_db = $this->db->where('field_field',$table.'.'.$field)->get_row('cfg_field_info');
-      // if (is_array($field_info) and is_array($field_info_db)) {
-      //   $field_info = array_merge($field_info,$field_info_db);
-      // }
-      // else {
-      //   if (!is_array($field_info)) $field_info=$field_info_db;
-      //   if (!is_array($field_info)) $field_info=NULL;
-      // }
-      $fields_info[$field] = $field_info;
-      // Combineer, met oa de default waarde
-      $settings_fields_info[$field] = array('default'=>$field_info['default']);
+      // Uit database
+      if ( !isset($info['default'])) {
+        $info['default'] = $this->field_data( $field, 'default' );
+      }
       
       /**
        * Validation
        */
-      $settings_fields_info[$field]['validation'] = explode('|',$this->form_validation->get_validations( $table, $field ));
+      $info['validation'] = explode('|',$this->form_validation->get_rules( $table, $field ));
       
       /**
        * Media path
        */
       if (in_array(get_prefix($field),array('media','medias'))) {
-        // find in (depricated) media_info
-        $full_field=$table.'.'.$field;
-        $media_info = $this->db->like('fields_media_fields',$full_field)->get_row('cfg_media_info');
-        $settings_fields_info[$field]['path'] = $media_info['path'];
-        // trace_($media_info);
-        // $media_info = $this->db->like('fields_media_fields',$full_field)->get_row('cfg_media_info');
-        // $settings_fields_info[$field]['path'] = 'test';
+        $info['path'] = 'pictures';
       }
       
+      $field_info[$field] = $info;
     }
-    return $settings_fields_info;
+    return $field_info;
   }
   
   /**
@@ -427,16 +490,9 @@ Class Data_Core extends CI_Model {
     $fields = $this->settings['fields'];
     foreach ($fields as $field) {
       $options = array();
-      
-      // 1) Uit (depricated) cfg_field_info
-      $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
-      if (!empty($field_info['str_options'])) {
-        $data = explode('|',$field_info['str_options']);
-        $options['data'] = array_combine($data,$data);
-        $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
-        // if ($options['multiple']===FALSE) $options=$options['data'];
-      }
 
+      $field_info = array();
+      
       // Via many_to_one
       if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
         $other_table = el( array('relations','many_to_one',$field,'other_table'), $this->settings);
@@ -458,6 +514,10 @@ Class Data_Core extends CI_Model {
         case 'fields':
           $options['model'] = 'fields';
           if ($type=='fields') $options['multiple']=true;
+          break;
+
+        case 'link':
+          $options['model'] = 'links';
           break;
       }
       
@@ -499,28 +559,23 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_order_by( $fields=array() ) {
-    $this->load->model('cfg');
     if (empty($fields)) $fields = $this->settings['fields'];
     $order_by = '';
     
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $order_by = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_order_by');
-    
     // Zoek mogelijke standaard order fields
-    if (empty($order_by)) {
-        $order_fields = $this->config->item( 'ORDER_default_fields' );
-        do {
-          $possible_order_field = each( $order_fields );
-          if ($possible_order_field) {
-            $possible_order_field = explode( ' ', $possible_order_field['value'] ); // split DESC/ASC
-            $possible_field = $possible_order_field[0];
-            if ( $key=in_array_like($possible_field, $fields) ) {
-              $order_by = $fields[$key];
-              if ( isset($possible_order_field[1]) ) $order_by .= ' ' . $possible_order_field[1]; // add DESC/ASC
-            }
-          }
-        } while (empty($order_by) and $possible_order_field);
-    }
+    $order_fields = $this->config->item( 'ORDER_default_fields' );
+    $possible_order_field = current( $order_fields );
+    do {
+      if ($possible_order_field) {
+        $possible_order_field = explode( ' ', $possible_order_field ); // split DESC/ASC
+        $possible_field = $possible_order_field[0];
+        if ( $key=in_array_like($possible_field, $fields) ) {
+          $order_by = $fields[$key];
+          if ( isset($possible_order_field[1]) ) $order_by .= ' ' . $possible_order_field[1]; // add DESC/ASC
+        }
+      }
+      $possible_order_field = next( $order_fields );
+    } while (empty($order_by) and $possible_order_field);
 
     // Als leeg: Pak dat het laatste standaard order veld ('id')
     if (empty($order_by)) $order_by = $order_fields[count($order_fields)-1];
@@ -536,14 +591,8 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_max_rows() {
-    $this->load->model('cfg');
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $max_rows = $this->cfg->get( 'cfg_table_info',$this->settings['table'], 'int_max_rows');
-    // Anders is het gewoon standaard 0
-    return intval($max_rows);
+    return 0;
   }
-  
-
 
   /**
    * Autoset update_uris
@@ -552,14 +601,8 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_update_uris() {
-    // Heeft alleen maar nu als een 'uri' veld bestaat
-    $this->load->model('cfg');
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $update_uris = ! $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'b_freeze_uris');
-    return settype($update_uris,'bool');
+    return true;
   }
-
-
 
   /**
    * Autoset abstract fields
@@ -574,26 +617,18 @@ Class Data_Core extends CI_Model {
     if (empty($fields)) $fields = $this->settings['fields'];
     if ( !is_array($fields) ) $fields = explode( ',', $fields );
     
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $this->load->model('cfg');
-    $this->cfg->load( 'cfg_table_info' );
-    $abstract_fields = $this->cfg->get( 'cfg_table_info', $table, 'str_abstract_fields');
-    if ($abstract_fields) {
-      $abstract_fields = explode(',',$abstract_fields);
-      if (is_string($abstract_fields)) $abstract_fields = explode('|',$abstract_fields);
-    }
-
     // Als leeg zoek op type velden
 		if (empty($abstract_fields)) {
       $abstract_fields=array();
   		$abstract_field_types = $this->config->item('ABSTRACT_field_pre_types');
       $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
-  		while ( list($key,$field) = each( $fields ) and $max_abstract_fields>0) {
+  		while ( $field = current( $fields ) and $max_abstract_fields>0) {
   			$pre = get_prefix($field);
   			if ( in_array( $pre, $abstract_field_types ) ) {
   				array_push( $abstract_fields, $field );
   				$max_abstract_fields--;
   			}
+        next($fields);
   		}
     }
     
@@ -609,6 +644,17 @@ Class Data_Core extends CI_Model {
   }
   
 
+  /**
+   * Autoset abstract_delimiter
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function _autoset_abstract_delimiter() {
+    return ' | ';
+  }
+
+
 
   /**
    * Autoset abstract_filter
@@ -617,10 +663,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_abstract_filter() {
-    $this->load->model('cfg');
-    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $abstract_filter = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_options_where');
-    return $abstract_filter;
+    return '';
   }
   
   
@@ -695,7 +738,7 @@ Class Data_Core extends CI_Model {
         $rel_table = 'rel_'.remove_prefix($this->settings['table']).'__'.remove_prefix($other_table);
         $this_key  = $this->settings['primary_key'].'_'.remove_prefix($this->settings['table']);
         $other_key = $this->settings['primary_key'].'_'.remove_prefix($other_table);
-        $name  = $other_table;
+        $name      = $other_table;
         if (in_array($name,$names)) {
           echo( 'Double many_to_many relations, name conflict ');
         }
@@ -711,7 +754,6 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    // trace_([$this->settings['table'],$relations]);
     return $relations;
   }
 
@@ -723,18 +765,12 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_grid_set() {
-    $this->load->model('cfg');
-    $table_info = $this->cfg->get( 'cfg_table_info',$this->settings['table'] );
     $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
 
-    $grid_set['fields'] = $this->settings['fields'];
-    foreach ($grid_set['fields'] as $key => $field) {
-      $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
-      if ( !in_array($field,$show_always) and !el('b_show_in_grid',$field_info,TRUE) ) unset($grid_set['fields'][$key]);
-    }
+    $grid_set['fields']        = $this->settings['fields'];
     $grid_set['fields']        = array_values($grid_set['fields']); // reset keys
     $grid_set['order_by']      = $this->settings['order_by'];
-    $grid_set['jump_to_today'] = (el('b_jump_to_today',$table_info,TRUE)?true:false);
+    $grid_set['jump_to_today'] = false;
     if ($grid_set['jump_to_today']) {
       // Kan het wel? Is er een veld waarmee het zinvol is?
       $possible_jump = FALSE;
@@ -748,26 +784,11 @@ Class Data_Core extends CI_Model {
       }
       $grid_set['jump_to_today'] = $possible_jump;
     }
-    $grid_set['pagination']    = (el('b_pagination',$table_info,TRUE)?true:false);
+    $grid_set['pagination']    = true;
 
-    // Relaties
-    // $grid_set['with'] = array();
-    // // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
-    // $many_to_one = el( array('relations','many_to_one'), $this->settings );
-    // if ($many_to_one) $grid_set['with']['many_to_one']=$many_to_one;
-    // // many_to_many, als in oude instellingen gevraagd is
-    // if (el('b_grid_add_many',$table_info)) {
-    //   $many_to_many = el( array('relations','many_to_many'), $this->settings );
-    //   if ($many_to_many) $grid_set['with']['many_to_many'] = $many_to_many;
-    // }
+    // relaties, default
+    $grid_set['with']  = array('many_to_one');
     
-    // relaties?
-    $grid_set['with']      = array();
-    // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
-    if (isset($this->settings['relations']['many_to_one'])) $grid_set['with']['many_to_one']=array();
-    // many_to_many, als in oude instellingen gevraagd is
-    if (el('b_grid_add_many',$table_info)) $grid_set['with']['many_to_many']=array();
-
     return $grid_set;
   }
 
@@ -780,18 +801,12 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_form_set() {
-    $this->load->model('cfg');
-    $table_info = $this->cfg->get( 'cfg_table_info',$this->settings['table'] );
     $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
     $main_fieldset = $this->settings['table'];
     $fieldsets = array($main_fieldset=>array());
     
-    // relaties?
-    $form_set['with']      = array();
-    // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
-    if (isset($this->settings['relations']['many_to_one'])) $form_set['with']['many_to_one']=array();
-    // many_to_many, als in oude instellingen gevraagd is
-    if (el('b_form_add_many',$table_info)) $form_set['with']['many_to_many']=array();
+    // relaties default
+    $form_set['with']      = array('many_to_one','many_to_many');
     
     // fields / formset
     $form_set['fields'] = $this->settings['fields'];
@@ -806,19 +821,10 @@ Class Data_Core extends CI_Model {
     }
     
     foreach ($form_set['fields'] as $key => $field) {
-      $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
-      // Show?
-      if ( !in_array($field,$show_always) and !el('b_show_in_form',$field_info,TRUE) ) {
-        unset($form_set['fields'][$key]);
-      }
-      // in which fieldset/tab?
-      else {
-        $fieldset = el('str_fieldset',$field_info );
-        if (!$fieldset) $fieldset=$main_fieldset;
-        // trace_([$fieldset,$main_fieldset]);
-        if (!isset($fieldsets[$fieldset])) $fieldsets[$fieldset]=array();
-        array_push( $fieldsets[$fieldset], $field );
-      }
+      $fieldset=$main_fieldset;
+      // trace_([$fieldset,$main_fieldset]);
+      if (!isset($fieldsets[$fieldset])) $fieldsets[$fieldset]=array();
+      array_push( $fieldsets[$fieldset], $field );
     }
     $form_set['fields'] = array_values($form_set['fields']); // reset keys
     $form_set['fieldsets'] = $fieldsets;
@@ -831,17 +837,15 @@ Class Data_Core extends CI_Model {
   
   protected function get_other_table_settings( $table ) {
     $settings = NULL;
-    // Probeer eerst of het table model bestaat
-    // $settings = $this->data_core->table( $table )->get_settings();
-    // $this->data_core->table($this->settings['table']); // Terug naar huidige data table.
-    if ( method_exists( $table, 'get_setting' ) ) {
-      $settings = $this->$table->get_settings();
+
+    // Load cache settings first
+    $settings = $this->cache->get( 'data_settings_'.$table );
+    if (!$settings) {
+      $current_table = $this->settings['table'];
+      $settings = $this->data->table($table)->get_settings();
+      $this->data->table( $current_table );
     }
-    // Laad anders de config van die tabel/model
-    else {
-      $this->config->load( 'data/'.$table, true);
-      $settings = $this->config->item( 'data/'.$table );
-    }
+
     return $settings;
   }
   
@@ -948,16 +952,23 @@ Class Data_Core extends CI_Model {
     $this->tm_select_include_primary = TRUE;
     $this->tm_unselect               = FALSE;
     $this->tm_from                   = '';
-    $this->tm_path                   = FALSE;
-    $this->tm_where_path             = array();
+    $this->tm_where                  = FALSE;
+    $this->tm_join                   = FALSE;
+    $this->tm_tree                   = FALSE;
+    $this->tm_where_tree             = array();
     $this->tm_order_by               = array();
-    $this->tm_limit                  = 0;
+    $this->tm_limit                  = NULL;
     $this->tm_offset                 = 0;
+    $this->tm_where_limit            = FALSE;
+    $this->tm_where_offset           = FALSE;
     $this->tm_jump_to_today          = FALSE;
     $this->tm_find                   = FALSE;
     $this->tm_has_condition          = FALSE;
+    $this->tm_as_grid                = FALSE;
+    $this->tm_set                    = array();
     $this->with(FALSE);
     $this->db->reset_query();
+    $this->set_result_key();
     return $this;
   }
   
@@ -1001,11 +1012,18 @@ Class Data_Core extends CI_Model {
     if ( $user_id === FALSE ) {
       $this->user_id = FALSE; // we hebben het iig gebrobeerd in te stellen
       if (defined('PHPUNIT_TEST')) {
-        $this->user_id = 0; // TESTER
+        $this->user_id     = 0; // TESTER
+        $this->user_groups = array(0);
       }
       else {
         $this->load->library('flexy_auth');
-        $this->user_id = $this->flexy_auth->get_user(NULL,'id');
+        $user = $this->flexy_auth->get_user();
+        $this->user_id = $user['id'];
+        if ($user['groups']) {
+          $groups = array_column($user['groups'],'id');
+          sort($groups);
+          $this->user_groups = $groups;
+        }
       }
     }
     return $this;
@@ -1025,6 +1043,16 @@ Class Data_Core extends CI_Model {
   }
   
 
+  /**
+   * TRUE als loguit is forced
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function logout() {
+    return $this->loguit;
+  }
+
 
   /**
    * Geeft abstract_fields
@@ -1043,13 +1071,15 @@ Class Data_Core extends CI_Model {
 	 *
 	 * @param string $table [''] als leeg dan wordt de table uit de settings gehaald
 	 * @param array  $abstract_fields [''] als leeg dan worden de abstract_fields uit de 'settings' gehaald
-	 * @param string $abstract_prefix [''] een eventuele prefix string die voor de veldnaam 'abstract' wordt geplakt
+	 * @param string $as_table [''] een eventuele prefix string die voor de veldnaam 'abstract' wordt geplakt
 	 * @return string
 	 * @author Jan den Besten
 	 */
-  public function get_compiled_abstract_select( $table='', $abstract_fields='', $abstract_prefix = '' ) {
-    $abstract_field_name = $abstract_prefix . $this->config->item('ABSTRACT_field_name');
+  public function get_compiled_abstract_select( $table='', $abstract_fields='', $as_table = '' ) {
+    $abstract_field_name = $this->config->item('ABSTRACT_field_name');
+    if ($as_table) $abstract_field_name = $as_table.'.'.$abstract_field_name;
 		if (empty($table)) $table = $this->settings['table'];
+    if (empty($as_table)) $as_table = $table;
 		if (empty($abstract_fields)) $abstract_fields = $this->get_abstract_fields();
     $deep_foreigns = $this->config->item('DEEP_FOREIGNS');
     if ($deep_foreigns )  {
@@ -1061,7 +1091,14 @@ Class Data_Core extends CI_Model {
       }
     }
     // Maak de SQL
-		$sql = "CONCAT_WS('|',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`) AS `" . $abstract_field_name . "`";
+    $delimiter = $this->get_other_table_setting($table,'abstract_delimiter');
+    $fields = '`'.$as_table.'`.`' . implode( "`,`".$as_table.'`.`' ,$abstract_fields ).'`';
+    $fields = explode(',',$fields);
+    foreach ($fields as $key => $field) {
+      $fields[$key] = $this->_aes_decrypt_field($field);
+    }
+    $fields = implode(',',$fields);
+		$sql = "REPLACE( CONCAT_WS('".$delimiter."',".$fields. "), '".$delimiter.$delimiter."',' ' )  AS `" . $abstract_field_name . "`";
     return $sql;
 	}
   
@@ -1168,21 +1205,6 @@ Class Data_Core extends CI_Model {
     return $this;
   }
   
-
-
-  /**
-   * Geeft een setting. Als deze niet bestaan dan wordt eerste geprobeerd een autoset waarde te geven, anders default [NULL].
-   *
-   * @param mixed $key een met de gevraagde key, of array van gevraagde keys
-   * @param mixed $default [null]
-   * @return mixed
-   * @author Jan den Besten
-   */
-  public function get_setting( $key, $default=null ) {
-    return el( $key, $this->settings, el( $key, $this->autoset, $default ) );
-  }
-  
-
   /**
    * Geeft alle settings
    *
@@ -1191,6 +1213,377 @@ Class Data_Core extends CI_Model {
    */
   public function get_settings() {
     return $this->settings;
+  }
+
+  /**
+   * Geeft een gevraagde setting.
+   * - Werkt zoals el(), dus de key kan een array zijn van keys om dieper in de settings array iets op te graven
+   * - Als de gevraagde setting niet bestaat dan wordt eerste geprobeerd een autoset waarde te geven, als dat niet lukt wordt default [NULL] teruggegeven.
+   * - Als voor de gevraagde key(s) een method bestaat (get_setting_{key}) dan wordt die aangeroepen om de setting op te vragen.
+   *
+   * @param mixed $key een met de gevraagde key, of array van gevraagde keys
+   * @param mixed $default [null]
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function get_setting( $key, $default=null ) {
+    if (is_string($key) and method_exists($this,'get_setting_'.$key)) {
+      $method = 'get_setting_'.$key;
+      $arguments = func_get_args();
+      return call_user_func_array( array($this,$method), $arguments );
+    }
+    return el( $key, $this->settings, el( $key, $this->autoset, $default ) );
+  }
+  
+  
+  /**
+   * Geeft $settings['field_info'] Met alse extra:
+   * - Standaard informatie uit config field_info_config voor het veld
+   * - 'label'      - de ui name van het veld
+   * - ['options']  - Als het veld options heeft, wordt hier de informatie ingestopt
+   * - ['path']     - Als het een media veld betreft
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_field_info_extended($fields=array(),$extra=array(),$include_options=FALSE) {
+    $this->config->load('field_info',true);
+    $field_info_config = $this->config->item('field_info');
+    
+    // Standaard velden, of meegegeven (met mogelijk extra) velden
+    if (!$fields) $fields = $this->settings['fields'];
+    $fields = array_combine($fields,$fields);
+    // Vul field_info aan met eventuele extra velden
+    $field_info = $this->settings['field_info'];
+    $field_info = array_merge($fields,$field_info);
+    // Alleen de meegegeven velden
+    $field_info = array_keep_keys($field_info,$fields);
+    
+    // Loop alle velden en vul informatie aan
+    $found_first_str_field = false;
+    foreach ($field_info as $field => $info) {
+      if (!is_array($info)) $info=array();
+      // UI name
+      $info['label'] = $this->lang->ui($this->settings['table'].'.'.$field);
+      
+      // Schema: default
+      $schema       = $field_info_config['FIELDS_default'];
+      // Schema: from prefix
+      $fieldPrefix  = get_prefix($field);
+      $schema       = array_merge($schema, el(array('FIELDS_prefix',$fieldPrefix),$field_info_config,array()) );
+      // Schema: from fieldname
+      $schema       = array_merge($schema, el(array('FIELDS_special',$field),$field_info_config,array()) );
+      // Grid-type?
+      if (!isset($schema['grid-type'])) $schema['grid-type'] = $schema['type'];
+
+      if ($fieldPrefix=='str' and !$found_first_str_field) {
+        $found_first_str_field = $field;
+        $schema['is_tree_field'] = true;
+      }
+
+      
+      // Combineer
+      $info = array_merge($info,$schema,$extra);
+      
+      // Validation als string
+      $info['validation'] = is_array($info['validation']) ? implode('|',$info['validation']) : $info['validation'];
+      
+      // Options
+      $options = $this->get_options($field,array('many_to_many','one_to_many','one_to_one'));
+      if ($options) {
+        $info['type'] = 'select';
+        if ($fieldPrefix==='media' or $fieldPrefix==='medias') {
+          $info['path'] = $options['path'];
+          $info['type'] = 'media';
+          unset($options['path']);
+        }
+        if ($include_options) {
+          $options = array_keep_keys($options,array('table','data','multiple','api','insert_rights','settings'));
+          $options['multiple'] = el('multiple',$options,FALSE)?'multiple':'';
+          $info['options'] = $options;
+        }
+      }
+      $field_info[$field] = $info;
+    }
+    
+
+    // Overschrijf los ingestelde settings
+    if (isset($this->settings['field_info'])) {
+      foreach ($field_info as $key => $info) {
+        if (isset($this->settings['field_info'][$key])) {
+          $field_info[$key] = array_merge_recursive_distinct($field_info[$key],$this->settings['field_info'][$key]);
+          // Validation als string
+          $field_info[$key]['validation'] = is_array($field_info[$key]['validation']) ? implode('|',$field_info[$key]['validation']) : $field_info[$key]['validation'];
+        }
+      }
+    }
+    return $field_info;
+  }
+  
+  // /**
+  //  * Geeft form_fields terug, klaar voor gebruik in een formulier
+  //  *
+  //  * @param array $fields
+  //  * @param array $extra
+  //  * @param bool $include_options
+  //  * @return array
+  //  * @author Jan den Besten
+  //  */
+  // public function get_field_info_as_formfields($fields=array(),$extra=array(),$include_options=TRUE) {
+  //   $field_info = $this->get_setting_field_info_extended($fields,$extra,$include_options);
+  //   $form_fields = array();
+  //   foreach ($field_info as $field => $info) {
+  //     // $form_fields[$field] = array(
+  //     //   'label'      => $info['label'],
+  //     //   'validation' => is_array($info['validation'])?implode('|',$info['validation']):$info['validation'],
+  //     //   'type'       => $info['type'],
+  //     // );
+  //
+  //     if (isset($info['options'])) {
+  //       $options = el('data',$info['options']);
+  //       if ($options) {
+  //         $options = array_column($options,'name','value');
+  //         $form_fields[$field]['options']  = $options;
+  //         $form_fields[$field]['multiple'] = el('multiple',$info['options'],FALSE)?'multiple':'';
+  //       }
+  //     }
+  //   }
+  //   return $form_fields;
+  // }
+  
+  /**
+   * Geeft de grid_set settings, met als extra:
+   * - field_info_extended
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_grid_set() {
+    $grid_set = el('grid_set',$this->settings);
+    if (!isset($grid_set['pagination'])) $grid_set['pagination'] = true;
+    $grid_set = $this->_complete_relations_of_set($grid_set,'grid_set');
+
+    $field_info = $this->get_setting_field_info_extended($grid_set['fields']);
+    $grid_set['field_info'] = $field_info;
+
+    $searchable_fields = array_combine($grid_set['fields'],$grid_set['fields']);
+    $searchable_fields = array_unset_keys($searchable_fields,array('id','order','self_parent','uri'));
+    $searchable_fields = not_filter_by_key($searchable_fields,array('b','action'));
+    $grid_set['searchable_fields'] = array_values($searchable_fields);
+
+    $grid_set['title'] = $this->lang->ui($this->settings['table']);
+    return $grid_set;
+  }
+  
+  /**
+   * Geeft de form_set settings, met als extra:
+   * - field_info_extended
+   * - options
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_form_set() {
+    $form_set = el('form_set',$this->settings);
+    
+    // Fields
+    $fields = el('fields',$form_set);
+    // Als fields niet bestaat, haal die uit de fieldsets
+    if (!$fields) {
+      $fields=array();
+      foreach($form_set['fieldsets'] as $fieldsetfields) {
+        $fields=array_merge($fields,$fieldsetfields);
+      }
+      $form_set['fields'] = $fields;
+    }
+    // Hernoem fieldset keys
+    $fieldset_keys = array_keys($form_set['fieldsets']);
+    $fieldset_keys = $this->lang->ui($fieldset_keys);
+    $form_set['fieldsets'] = array_combine($fieldset_keys,$form_set['fieldsets']);
+
+    // Relaties
+    $form_set = $this->_complete_relations_of_set($form_set,'form_set');
+
+    // Field info
+    $form_set['field_info'] = $this->get_setting_field_info_extended($form_set['fields'],array(),true);
+
+    $form_set['title'] = $this->lang->ui($this->settings['table']);
+    return $form_set;
+  }
+  
+
+  /**
+   * Maak relatie settings compleet (en default) voor grid_set en form_set
+   *
+   * @param array $set 
+   * @param string $set_type 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _complete_relations_of_set($set,$set_type) {
+    // Default
+    if (!isset($set['with'])) {
+      if ($set_type==='grid_set') 
+        $set['with'] = array('many_to_one');
+      else 
+        $set['with'] = array('many_to_one','many_to_many');
+    }
+
+
+    // Relaties
+    if ( $set['with']!==FALSE ) {
+      foreach ($set['with'] as $type => $relations) {
+        if ($type!=='one_to_one') {
+
+          // trace_([$this->settings['table']=>[$type=>$relations]]);
+          
+          // Vul aan als alleen maar de types zijn ingesteld
+          if (is_numeric($type)) {
+            unset($set['with'][$type]);
+            $type = $relations;
+            $relations = $this->get_setting(array('relations',$type));
+          }
+          elseif (is_string($relations)) {
+            unset($set['with'][$type]);
+            $relations = $this->get_setting(array('relations',$type));
+          }
+          else {
+            $original_relations = $relations;
+            $complete_relations = $this->get_setting(array('relations',$type));
+            $relations = array_keep_keys($complete_relations,array_keys($relations));
+            // Als er velden zijn ingesteld, neem die mee.
+            foreach ($set['with'][$type] as $key => $fields) {
+              if (is_array($fields)) $relations[$key]['fields'] = $fields;
+            }
+            $set['with'][$type] = $relations;
+          }
+
+          // Loop alle relaties langs en complementeer die
+          if ($relations) {
+            foreach ($relations as $what => $info) {
+              unset($relation_fields);
+
+              // Velden
+              $field = 'abstract';
+              if (isset($info['fields'])) $field=$info['fields'];
+              if ($type==='one_to_one' and isset($info['other_table'])) {
+                if (isset($original_relations[$what])) {
+                  $field = $original_relations[$what];
+                }
+                else {
+                  $field = $this->get_other_table_abstract_fields($info['other_table']);
+                }
+                $relation_fields = $field;
+                // if (!is_array($relation_fields)) $relation_fields = array($relation_fields);
+                // foreach ($relation_fields as $key => $value) {
+                //   $relation_fields[$key] = $info['other_table'].'.'.$value;
+                // }
+              }
+              $set['with'][$type][$what] = $field;
+
+              // Vul ook de velden aan als relatie veld er nog niet instaat
+              if (!isset($relation_fields)) {
+                $relation_fields = $what;
+                if ($type==='many_to_many' and isset($info['result_name'])) $relation_fields = $info['result_name'];
+              }
+              if (!is_array($relation_fields)) $relation_fields = array($relation_fields);
+
+              foreach ($relation_fields as $key => $relation_field) {
+                if ($set_type==='grid_set') {
+                  // if (!in_array($relation_field,$set['fields'])) $set['fields'][] = $relation_field;
+                }
+                if ($set_type==='form_set') {
+                  $in_field_set = false;
+                  foreach ($set['fieldsets'] as $fieldset) {
+                    if (in_array($relation_field,$fieldset)) $in_field_set = true;
+                  }
+                  if (!$in_field_set) {
+                    $first_fieldset = array_keys($set['fieldsets']);
+                    $first_fieldset = current($first_fieldset);
+                    $set['fieldsets'][$first_fieldset][] = $relation_field;
+                  }
+                  if (!in_array($relation_field,$set['fields'])) $set['fields'][] = $relation_field;
+                }
+              }
+            }
+          }
+
+        }
+      }
+    }
+    
+    // trace_($set);
+    // trace_($set['with']);
+
+    return $set;
+  }
+  
+  /**
+   * Maak een handige array van [result_name => ['type'=>'',fields'=>[other_table_fields],'other_table'=>'']] voor intern gebruik
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _set_relation_result_fields() {
+    $this->relation_result_fields = array();
+    foreach ($this->settings['relations'] as $type => $relations) {
+      foreach ($relations as $key => $relation) {
+        if (isset($relation['result_name']) and isset($relation['other_table'])) {
+          $this->relation_result_fields[ $relation['result_name'] ] = array(
+            'relation'        => $type,
+            'other_table'     => $relation['other_table'],
+            'result_name'     => $relation['result_name'],
+            'fields'          => $this->get_other_table_fields( $relation['other_table'] ),
+            'abstract_fields' => $this->get_other_table_abstract_fields( $relation['other_table'] ),
+          );
+        }
+      }
+    }
+    return $this;
+  }
+  
+  /**
+   * Geeft de result_name informatie van een result_name
+   *
+   * @param string $result_name 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _get_relation_result($result_name,$with=NULL) {
+    if ( !$this->relation_result_fields ) $this->_set_relation_result_fields();
+    $result = el($result_name,$this->relation_result_fields);
+    if (isset($with)) {
+      if ($with) {
+        $relation = $result['relation'];
+        if (!isset($with[$relation])) $result = FALSE;
+      }
+      else {
+        $result = FALSE;
+      }
+    }
+    return $result;
+  }
+  
+  /**
+   * Test of string is een result_name van een (ingestelde) relatie
+   *
+   * @param string $name
+   * @return bool
+   * @author Jan den Besten
+   */
+  private function _is_result_name($name,$with=NULL) {
+    if ( !$this->relation_result_fields ) $this->_set_relation_result_fields();
+    $is_result_name = isset($this->relation_result_fields[$name]);
+    if (isset($with)) {
+      if ($with) {
+        $relation = el($name,$this->relation_result_fields);
+        if (!isset($relation['relation'],$with)) $is_result_name = FALSE;
+      }
+      else {
+        $is_result_name = FALSE;
+      }
+    }
+    return $is_result_name;
   }
   
   
@@ -1292,8 +1685,10 @@ Class Data_Core extends CI_Model {
     // Alle opties van de velden verzamelen
     $options=array();
     $where_primary_key = $this->tm_where_primary_key; // Bewaar dit voor opties uit andere tabellen
+
     foreach ($fields as $field) {
-      $field_options = el( array($field), $this->settings['options'] );
+
+      $field_options  = $this->get_setting( array('options',$field) );
       $field_options['field'] = $field;
       
       if ($field_options) {
@@ -1308,9 +1703,15 @@ Class Data_Core extends CI_Model {
           }
           // Anders geef gewoon de opties terug
           else {
-            $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(0,0, $where_primary_key );
-            $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
-            $this->data->table($this->settings['table']); // Terug naar huidige data table.
+            $current_table = $this->settings['table'];
+            $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(NULL,0, $where_primary_key );
+            // $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
+            $this->data->table($current_table);               // Terug naar huidige data table.
+            $this->tm_where_primary_key = $where_primary_key; // En dit ook weer terug
+          }
+          // Rechten om nieuwe aan te maken?
+          if ($this->flexy_auth->has_rights($other_table)) {
+            $field_options['insert_rights'] = TRUE;
           }
         }
         
@@ -1320,49 +1721,74 @@ Class Data_Core extends CI_Model {
             case 'self_parent':
               $first_abstract_field = $this->settings['abstract_fields'];
               $first_abstract_field = current($first_abstract_field);
-              $this->select('id,self_parent,order,'.$first_abstract_field);
-              if ($this->tm_where_primary_key) $this->where( $this->settings['primary_key'].'!=',$this->tm_where_primary_key);
-              $this->path( $first_abstract_field, '', ' / ' );
-              $this->order_by( 'order,self_parent' );
-              $field_options['data'] = $this->get_result();
-              foreach ($field_options['data'] as $key => $option) {
-                $field_options['data'][$key] = $option[$first_abstract_field];
+
+              $sql = 'SELECT `id`,`self_parent`,`order`,`'.$first_abstract_field.'` FROM `'.$this->settings['table'].'` ';
+              if ($this->tm_where_primary_key) {
+                $sql .= 'WHERE `'.$this->settings['primary_key'].'`!='.$this->tm_where_primary_key.' ';
               }
-              $field_options['data'] = array_unshift_assoc( $field_options['data'], '','');
+              $sql .= 'ORDER BY `order`';
+              $query = $this->db->query($sql);
+              if ($query) {
+                $tree = array();
+                $data = $query->result_array();
+                $field_options['data'] = array();
+                foreach ($data as $key => $option) {
+                  $id = $option[$this->settings['primary_key']];
+                  $field_options['data'][$id] = $option[$first_abstract_field];
+                  // Tree ??
+                  $tree[$id] = array_keep_keys($option,array($first_abstract_field, $this->settings['primary_key'], 'self_parent'));
+                  // Recursive create current tree field
+                  $option = $this->_fill_tree( $tree, $id, array(
+                    'tree_field'      => $first_abstract_field,
+                    'original_field'  => $first_abstract_field,
+                    'split'           => ' / ',
+                    'order'           => '`order`',
+                  ));
+                  $field_options['data'][$id] = $option;
+                }
+                $field_options['data'] = array_unshift_assoc( $field_options['data'], '','');
+              }
               break;
           }
         }
         
         // model (external)
         if ( isset($field_options['model']) ) {
+          $current_table = $this->settings['table'];
           $model = 'Options_'.ucfirst($field_options['model']);
           $this->load->model( 'data/'.$model );
           $field_options['table'] = $this->settings['table'];
           $field_options['data'] = $this->$model->get_options( $field_options );
+          $this->data->table($current_table);
+          $this->tm_where_primary_key = $where_primary_key;
         }
       }
       $options[$field] = $field_options;
     }
     
     // one_to_one opties: die opties toevoegen
-    if ( in_array('one_to_one',$with) ) {
+    if ( in_array('one_to_one',$with) and !$this->tm_as_grid ) {
       $relations = $this->settings['relations']['one_to_one'];
-      foreach ($relations as $relation) {
-        $other_table = $relation['other_table'];
-        $other_options = $this->data->table( $other_table )->get_options();
-        $this->data->table($this->settings['table']); // Terug naar huidige data table.
-        unset($other_options[$relation['foreign_key']]);
-        if ($other_options) {
-          foreach ($other_options as $field => $info) {
-            $options[$other_table.'.'.$field] = $info;
+      if ($relations) {
+        foreach ($relations as $relation) {
+          $other_table   = $relation['other_table'];
+          $table = $this->settings['table'];
+          $other_options = $this->data->table( $other_table )->get_options();
+          $this->data->table($table); // Terug naar huidige data table.
+          unset($other_options[$relation['foreign_key']]);
+          if ($other_options) {
+            foreach ($other_options as $field => $info) {
+              $info['data'] = array_column($info['data'],'name','value');;
+              $options[$field] = $info;
+            }
           }
         }
       }
     }
-    
-    
+
     // ..._to_many opties
     if ( in_array('many_to_many',$with) or in_array('one_to_many',$with) ) {
+      if (!isset($this->flexy_auth)) $this->load->library('flexy_auth');
       foreach ($with as $type) {
         $relations = $this->get_setting(array('relations',$type));
         if ($relations) {
@@ -1371,8 +1797,14 @@ Class Data_Core extends CI_Model {
               $other_table = $relation['other_table'];
               $result_name = $relation['result_name'];
               $this->data->table($other_table);
-              $options[$result_name] = array( 'table'=>$other_table, 'data'=>$this->data->get_result_as_options(), 'multiple'=>true );
+              $options[$result_name] = array(
+                'table'         => $other_table,
+                'data'          => $this->data->get_result_as_options(),
+                'multiple'      => true,
+                'insert_rights' => $this->flexy_auth->has_rights($other_table),
+              );
               $this->data->table($this->settings['table']); // Weer terug naar huidige tabel
+              $this->tm_where_primary_key = $where_primary_key;
             }
           }
         }
@@ -1390,6 +1822,11 @@ Class Data_Core extends CI_Model {
           $options[$key]['data'] = $data;
         }
       }
+    }
+    
+    foreach ($options as $field => $row) {
+      // Empty?
+      if (count($row)===1 && isset($row['field'])) $options[$field] = FALSE;
     }
     
     if ($one!==FALSE) return $options[$one];
@@ -1424,8 +1861,15 @@ Class Data_Core extends CI_Model {
       $fields = $this->settings['fields'];
     }
     
+    if ($this->tm_select) {
+      $fields = array_intersect($fields,$this->tm_select);
+    }
+
 		foreach ($fields as $field) {
-      $defaults[$field] = $this->field_data( $field, 'default' );
+      // Default from field_info/field_info_config
+      $defaults[$field] = $this->get_setting( array('field_info',$field,'default') );
+      // Default from database?
+      if (is_null($defaults[$field])) $defaults[$field] = $this->field_data( $field, 'default' );
 		}
     $defaults[$this->settings['primary_key']] = -1;
     
@@ -1433,7 +1877,21 @@ Class Data_Core extends CI_Model {
     if (isset($defaults['user'])) {
       $defaults['user'] = $this->get_user_id();
     }
-    
+
+    // Datum/Tijd defaults:
+    foreach ($fields as $field) {
+      $pre = get_prefix($field);
+      switch ($pre) {
+        case 'date':
+        case 'dat':
+          $defaults[$field] = date('Y-m-d');
+          break;
+        case 'datetime':
+        case 'tme':
+          $defaults[$field] = date('Y-m-d 00:00:00');
+          break;
+      }
+    }
     
     // Relaties
     if (is_array($this->tm_with)) {
@@ -1469,6 +1927,182 @@ Class Data_Core extends CI_Model {
     }
     return $defaults;
   }
+  
+  
+  
+  /**
+   * Geeft random waarden voor een row, eventueel voor gespecificeerde velden
+   *
+   * @param array $fields
+   * @return array $result
+   * @author Jan den Besten
+   */
+  public function get_random( $fields=array() ) {
+    if (empty($fields)) $fields = $this->settings['fields'];
+    $result = array();
+    foreach ($fields as $field) {
+      if ($field!==$this->settings['primary_key']) $result[$field] = $this->random_field_value( $field );
+    }
+    return $result;
+  }
+
+  /**
+   * Geeft random waarde voor gegeven veld
+   *
+   * @param string $field
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function random_field_value($field,$id=FALSE) {
+    $value = NULL;
+    $type  = get_prefix($field,'_');
+
+    // Option?
+    $options = $this->get_options($field);
+    if ($options and $type!=='media' and $type!=='medias') {
+      $values = random_element($options['data']); 
+      $value = $values['value'];
+      if (el('multiple',$options) and rand(0,1)>.7) {
+        $value.='|'.$value;
+      }
+      return $value;
+    }
+
+    // Normaal random
+    switch($type) {
+      case 'id' :
+        if ($field!==$this->settings['primary_key']) {
+          $relation = $this->get_setting(array('relations','many_to_one',$field));
+          if ($relation) {
+            $other_table = $relation['other_table'];
+            $sql = "SELECT `id` FROM `".$other_table."`";
+            $query = $this->db->query($sql);
+            if ($query) {
+              $results = $query->result_array();
+              $value = random_element($results);
+              $value = $value['id'];
+            }
+          }
+        }
+        break;
+      case 'rel':
+        if ($id) {
+          $field = remove_prefix($field);
+          $relation = $this->get_setting(array('relations','many_to_many',$field));
+          if ($relation) {
+            $other_table = $relation['other_table'];
+            $sql = "SELECT `id` FROM `".$other_table."`";
+            $query = $this->db->query($sql);
+            if ($query) {
+              $results = $query->result_array();
+              shuffle($results);
+              $max = count($results);
+              if ($max>4) $max = 4;
+              $results = array_slice($results,0,rand(1,$max));
+              $ids = array();
+              foreach ($results as $item) {
+                $ids[] = $item['id'];
+              }
+              // Remove
+              $sql = "DELETE FROM `".$relation['rel_table']."` WHERE `".$relation['this_key']."` = ".$id;
+              $this->db->query($sql);
+              // Add Random items
+              foreach ($ids as $other_id) {
+                $sql = "INSERT INTO `".$relation['rel_table']."` (`".$relation['this_key']."`, `".$relation['other_key']."`) VALUES ('".$id."', '".$other_id."')";
+                $this->db->query($sql);
+              }
+              $value = implode($this->settings['abstract_delimiter'],$ids);
+            }
+          }
+        }
+        break;
+      case 'int':
+        $value = rand(0,100);
+        break;
+      case 'dec':
+        $value = rand(10,99).'.'.rand(10,99);
+        break;
+      case 'b':
+      case 'is':
+      case 'has':
+        $value = false;
+        if (rand(0,1)==1) $value = true;
+        break;
+      case 'txt':
+        $this->load->library('Lorem');
+        $value = $this->lorem->getContent(rand(50,500),'html');
+        break;
+      case 'stx':
+        $this->load->library('Lorem');
+        $value = $this->lorem->getContent(rand(10,50),'plain');
+        break;
+      case 'medias':
+      case 'media':
+        $files = $this->assets->get_files('pictures');
+        shuffle($files);
+        if ($type==='media') {
+          $value = current($files);
+          $value = $value['file'];
+        }
+        else {
+          $files = array_slice($files,0,rand(1,4));
+          foreach ($files as $file) {
+            $value[] = $file['file'];
+          }
+          $value = implode('|',$value);
+        }
+        break;
+      case 'url' :
+        $value='';
+        if (rand(1,4)>2) {
+          // Link from link table
+          if (!isset($links_table)) $links_table=$this->get_result('tbl_links');
+          $url=random_element($links_table);
+          $value=$url['url_url'];
+        }
+        break;
+      case 'email':
+        $value = strtolower(random_string('alpha',rand(2,8)).'@'.random_string('alpha',rand(2,8)).'.'.random_string('alpha',rand(2,3)));
+        break;
+      case 'date':
+      case 'dat':
+        $year = (int) date('Y');
+        $value = rand($year-5,$year+5).'-'.rand(1,12).'-'.rand(1,31);
+        break;
+      case 'tme':
+        $year = (int) date('Y');
+        $value = rand($year-5,$year+5).'-'.rand(1,12).'-'.rand(1,31). ' '.rand(0,23).':'.rand(0,59).':'.rand(0,59);
+        break;
+      case 'time':
+        $value = rand(0,23).':'.rand(0,59).':'.rand(0,59);
+        break;
+      case 'rgb':
+      case 'str':
+        $value='';
+        if ($field=='str_video') {
+          if (rand(1,4)>2) {
+            // Get youtube homepage, and all the youtube links from them
+            if (!isset($YouTubeHTML)) {
+              $YouTubeHTML = file_get_contents('https://www.youtube.com/');
+              if (preg_match_all("/href=\"\\/watch\\?v=(.*)\"/uiUsm", $YouTubeHTML,$matches)) {
+                $YouTubeCodes=$matches[1];
+              }
+            }
+            $value = random_element($YouTubeCodes);
+          }
+        }
+        else {
+          $this->load->library('Lorem');
+          $value = str_replace(array('.',','),'',$this->lorem->getContent(rand(1,5),'plain'));
+        }
+        break;
+      default:
+        $value = random_string();
+        break;
+    }
+    return $value;
+  }
+  
 
   
   
@@ -1479,16 +2113,16 @@ Class Data_Core extends CI_Model {
   /**
    * Geeft resultaat als query object. Eventueel beperkt door limit en offset
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0]
    * @param bool $reset [true] als true dan wordt aan het eind alle instellingen gereset (with,)
    * @return object $query
    * @author Jan den Besten
    */
-  public function get( $limit=0, $offset=0, $reset = true ) {
-
-    $this->_prepare_query($limit,$offset);
+  public function get( $limit=NULL, $offset=0, $reset = true ) {
     
+    $this->_prepare_query($limit,$offset);
+
     // get
     $query = $this->db->get();
     
@@ -1517,24 +2151,33 @@ Class Data_Core extends CI_Model {
           $page = (int) floor($jump_offset / $this->tm_limit);
           $this->tm_offset = $page * $this->tm_limit;
           $sql = str_replace( 'LIMIT '.$this->tm_limit, 'LIMIT '.$this->tm_offset.','.$this->tm_limit, $last_full_sql);
-          $this->_create_cache_name($sql);
+          $this->create_cache_name($sql,true);
           $query = $this->db->query( $sql );
           $this->query_info['today'] = true;
         }
       }
     }
+
     
     // Query Info Complete
     if ($query) {
       $this->query_info['from_cache'] = FALSE;
       $this->query_info['num_rows']   = $query->num_rows();
       $this->query_info['total_rows'] = $query->num_rows();
-      if ($this->tm_limit>1) {
+      if ($this->tm_where_limit)  $this->tm_limit = $this->tm_where_limit;
+      if ($this->tm_where_offset) $this->tm_offset = $this->tm_where_offset;
+      if ($this->tm_limit) {
         $this->query_info['limit']      = (int) $this->tm_limit;
         $this->query_info['offset']     = $this->tm_offset;
-        $this->query_info['page']       = $this->tm_offset / $this->tm_limit;
+        $this->query_info['page']       = (int) floor($this->tm_offset / $this->tm_limit);
         $this->query_info['total_rows'] = $this->total_rows( true );
         $this->query_info['num_pages']  = (int) ceil($this->query_info['total_rows'] / $this->tm_limit);
+      }
+      else {
+        unset($this->query_info['limit']);
+        unset($this->query_info['offset']);
+        unset($this->query_info['page']);
+        unset($this->query_info['num_pages']);
       }
       $this->query_info['num_fields'] = $query->num_fields();
       $this->query_info['last_query'] = $this->last_query();
@@ -1551,52 +2194,79 @@ Class Data_Core extends CI_Model {
    * @return void
    * @author Jan den Besten
    */
-  private function _prepare_query( $limit=0, $offset=0 ) {
+  private function _prepare_query( $limit=NULL, $offset=0 ) {
     if ( $this->tm_query_prepared ) return $this;
     
     // Bewaar limit & offset als ingesteld (overruled eerder ingestelde door ->limit() )
-    if ($limit!=0 or $offset!=0) $this->limit( $limit,$offset );
+    if ( isset($limit) or $offset!=0) {
+      $this->limit( $limit,$offset );
+    }
 
     // bouw select query op
     $this->_select();
-    
-    // bouw find query op
-    if ($this->tm_find) $this->_find();
-    
+
     // bouw relatie queries
-    if ( !empty( $this->tm_with ) ) $this->_with( $this->tm_with );
+    $this->_with();
     
     // maak select concreet
     $this->db->select( $this->tm_select, FALSE );
     
     // order_by
-    if ( empty($this->tm_order_by) and !empty($this->settings['order_by']) ) {
-      $this->order_by( $this->settings['order_by'] );
+    if (empty($this->tm_order_by)) {
+      if ($this->tm_as_grid and isset($this->tm_as_grid['order_by'])) {
+        $this->order_by( $this->tm_as_grid['order_by'] );  
+      }
+      else {
+        $this->order_by( $this->settings['order_by'] );
+      }
     }
     if ( !empty($this->tm_order_by) ) {
       foreach ($this->tm_order_by as $order_by) {
         $split = $this->_split_order($order_by);
-        $this->db->order_by( $split['field'], $split['direction'] );
+        $field = $split['field'];
+        if ($this->field_exists($field)) {
+          if (strpos($field,'.')===false AND !$this->get_setting(array('field_info',$field,'encrypted'),false)) $field = $this->settings['table'].'.'.$field;
+          $this->db->order_by( $field, $split['direction'] );
+        }
+        elseif (strpos($field,'.')!==false) {
+          $this->db->order_by( $field, $split['direction'] );
+        }
+        elseif ($field=='RAND()') {
+          $this->db->order_by( 'RAND()' );  
+        }
+        elseif ($this->tm_as_grid and isset($this->tm_as_grid['fields']) and in_array($field,$this->tm_as_grid['fields'])) {
+          $this->db->order_by( $field, $split['direction'] ); 
+        }
       }
     }
 
+    // JOIN
+    $this->_join();    
+
     // FROM
     $this->_from();
+
     
+    // bouw find query op
+    $this->_find();
+
+    // where & like
+    $this->_where();
+
     // limit & offset
     $this->query_info = array();
     $this->db->limit( $this->tm_limit );
     $this->db->offset( $this->tm_offset );
     
     // Cache name
-    $this->_create_cache_name( $this->db->get_compiled_select( '',FALSE ) );
+    $this->create_cache_name( $this->db->get_compiled_select( '',FALSE ), true );
     
     $this->tm_query_prepared = TRUE;
     return $this;
   }
   
   /**
-   * Split één order item in veld en direction
+   * Split één order item in table.veld en direction
    *
    * @param string $order 
    * @return array ['field'=>'...','direction'=>['ASC','DESC']] 
@@ -1610,7 +2280,7 @@ Class Data_Core extends CI_Model {
     $order     = trim($order[0]);
     // Relations?
     if (has_string('.',$order) and !has_string('.abstract',$order)) {
-      $order = str_replace('.','`.`',$order);
+      $order = '`'.str_replace('.','`.`',$order).'`';
     }
     return array('field'=>$order,'direction'=>$direction);
   }
@@ -1622,7 +2292,7 @@ Class Data_Core extends CI_Model {
    * Zelfde als bij Query Builder
    *
    * @param mixed $where [NULL]
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0]
    * @return object $query
    * @author Jan den Besten
@@ -1652,10 +2322,10 @@ Class Data_Core extends CI_Model {
     $result    = array();
     $with_data = array();
     
-    // Pad fields
-    if ($this->tm_path) {
-      $paths=array();
-      $needed_path_fields = array_merge(array_keys($this->tm_path),array($this->settings['primary_key'],'self_parent'));
+    // Tree fields
+    if ($this->tm_tree) {
+      $tree = array();
+      $needed_tree_fields = array_merge(array_keys($this->tm_tree),array($this->settings['primary_key'],'self_parent'));
     }
     
     // Eventuele defaults bewaren bij een niet bestaanden one_to_one
@@ -1665,29 +2335,42 @@ Class Data_Core extends CI_Model {
     while ( $row = $query->unbuffered_row('array') ) {
     // foreach ( $query->result_array() as $row) {
 
-      // keys
+      // primary_key
       if ($this->tm_select_include_primary) {
         $id = $row[$this->settings['primary_key']];
       }
       else {
         $id++;
       }
-      $result_key = el($key,$row,$id);
       
       // defaults bij niet bestaande one_to_one
       if ($one_to_one and in_array(NULL,$row)) {
         foreach ($row as $field => $value) {
-          if (is_null($value)) {
-            $other_table = get_prefix($field,'.');
-            if (!isset($one_to_one_defaults[$other_table])) {
+          $other_table = get_prefix($field,'.');
+          $other_field = remove_prefix($field,'.');
+          if (is_null($value) and $this->db->table_exists($other_table) and $this->data->table($other_table)->field_exists($other_field)) {
+            if ($other_table and !isset($one_to_one_defaults[$other_table])) {
               $one_to_one_defaults[$other_table] = $this->data->table($other_table)->get_defaults();
               $this->data->table($this->settings['table']); // Terug naar huidige data table.
+              $value       = el(array($other_table,get_suffix($field,'.')),$one_to_one_defaults,'DEFAULT');
+              $row[$field] = $value;
             }
-            $value = el(array($other_table,get_suffix($field,'.')),$one_to_one_defaults,'DEFAULT');
-            $row[$field] = $value;
           }
         }
       }
+      
+      // tree
+      if ($this->tm_tree)  {
+        // Remember current row with necessary fields
+        $tree[$id] = array_keep_keys($row,$needed_tree_fields);
+        // Recursive create current tree field
+        foreach ($this->tm_tree as $field => $tree_info) {
+          $row[$tree_info['tree_field']] = $this->_fill_tree( $tree, $id, $tree_info );
+        }
+      }
+      
+      // result_key
+      $result_key = el($key,$row,$id);
       
       // Voeg relatie data aan row
       if ($this->tm_with) {
@@ -1756,17 +2439,7 @@ Class Data_Core extends CI_Model {
           }
         }
       }
-      
-      // path
-      if ($this->tm_path)  {
-        // Remember current row with necessary fields
-        $paths[$id] = array_keep_keys($row,$needed_path_fields);
-        // Recursive create current path field
-        foreach ($this->tm_path as $field => $path_info) {
-          $row[$path_info['path_field']] = $this->_fill_path( $paths, $id, $path_info );
-        }
-      }
-      
+            
       // tm_txt_abstract
       if ($this->tm_txt_abstract>0) {
         $txt_row = $row;
@@ -1774,6 +2447,7 @@ Class Data_Core extends CI_Model {
         $txt_row = array_keys($txt_row);
         foreach ($txt_row as $txt_field) {
           $row[$txt_field] = preg_replace( "/[\n\r]/"," ", strip_tags($row[$txt_field]));
+          $row[$txt_field] = str_replace( "&nbsp;"," ", $row[$txt_field]);
         }
       }
       
@@ -1788,18 +2462,18 @@ Class Data_Core extends CI_Model {
     
     // pas query info aan
     $this->query_info['num_rows']     = count($result);
-    $this->query_info['num_fields']   = count(current($result));
+    $this->query_info['num_fields']   = (is_array(current($result))?count(current($result)):false);
     if ( isset($this->tm_with['many_to_many']) or isset($this->tm_with['one_to_many']) ) {
       $this->query_info['total_rows'] = $this->total_rows(true,true);
     }
     
-    // where paths?
-    if ( !empty($this->tm_where_path) and !empty($result) ) {
-      if (!$this->tm_path) {
-        throw new ErrorException( __CLASS__.'->where_path() You need to set ->path() when using ->where_path()' );
+    // where tree?
+    if ( !empty($this->tm_where_tree) and !empty($result) ) {
+      if (!$this->tm_tree) {
+        throw new ErrorException( __CLASS__.'->where_tree() You need to set ->tree() when using ->where_tree()' );
       }
-      foreach ($this->tm_where_path as $where_path) {
-        $result = find_row_by_value( $result, $where_path['value'], $where_path['field'] );
+      foreach ($this->tm_where_tree as $where_tree) {
+        $result = find_row_by_value( $result, $where_tree['value'], $where_tree['field'] );
       }
       $this->query_info['num_rows'] = count($result);
     }
@@ -1809,36 +2483,46 @@ Class Data_Core extends CI_Model {
   
   
   /**
-   * Vul een path veld recursief
+   * Vul een tree veld recursief
    *
    * @param array $result 
    * @param int $key
-   * @param array $path_info 
+   * @param array $tree_info 
    * @return string
    * @author Jan den Besten
    */
-  protected function _fill_path( &$result, $key, $path_info, $counter=0 ) {
+  protected function _fill_tree( &$result, $key, $tree_info, $counter=0 ) {
     $value = '';
     $parent = el( array($key,'self_parent'), $result, 0 );
-    if ( $parent>0 and $counter<20) {
+    if ( $parent>0 and $counter<10) {
       // Counter voorkomt onneindige recursieve aanroep in het geval er een fout is ontstaan in de tabel.
-      $value .= $this->_fill_path( $result, $parent, $path_info, $counter+1) . $path_info['split'];
+      $value .= $this->_fill_tree( $result, $parent, $tree_info, $counter+1) . $tree_info['split'];
     }
-    $part = el( array($key,$path_info['original_field']), $result );
+    $part = el( array($key,$tree_info['original_field']), $result );
+    
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
     if (is_null($part) and $key!==0) {
       $order = array();
-      foreach ($this->tm_order_by as $order_by) {
-        $split = $this->_split_order($order_by);
-        $order[]='`'.$split['field'].'` '.$split['direction'];
+      if (isset($tree_info['order'])) {
+        $order[] = $tree_info['order'];
       }
-      $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
+      else {
+        foreach ($this->tm_order_by as $order_by) {
+          $split = $this->_split_order($order_by);
+          $order[]='`'.$split['field'].'` '.$split['direction'];
+        }
+      }
+      $sql = 'SELECT `'.$this->settings['primary_key'].'`,`self_parent`,`'.$tree_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
       $query = $this->db->query($sql);
       if ($query) {
         $row = $query->unbuffered_row('array'); ;
-        $part = el( $path_info['original_field'],$row );
+        $part = el( $tree_info['original_field'],$row );
+        if ($row['self_parent']>0 and $row['self_parent']!==$row[$this->settings['primary_key']]) {
+          $part = $this->_fill_tree($result,$row['self_parent'],$tree_info,$counter+1) . $tree_info['split'] . $part;
+        }
       }
     }
+
     $value .= $part;
     return $value;
   }
@@ -1847,16 +2531,16 @@ Class Data_Core extends CI_Model {
   /**
    * Interne method voor get_result(), andere models kunnen zo get_result() zonder problemen aanpassen zoder de interne werking te beinvloeden.
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  private function _get_result( $limit=0, $offset=0 ) {
+  protected function _get_result( $limit=NULL, $offset=0 ) {
     // First check if there is a cached result
     if ($this->tm_cache_result) {
       $this->_prepare_query($limit,$offset);
-      $result = $this->_get_cached_result();
+      $result = $this->get_cached_result();
       if ($result) {
         $this->reset();
         return $result;
@@ -1868,7 +2552,7 @@ Class Data_Core extends CI_Model {
     $query = $this->get( $limit, $offset, FALSE );
     if ($query) {
       $result = $this->_make_result_array( $query );
-      if ($this->tm_cache_result) $this->_cache_result($result);
+      if ($this->tm_cache_result) $this->cache_result($result);
       $query->free_result();
     }
 
@@ -1886,12 +2570,12 @@ Class Data_Core extends CI_Model {
    * Bij voorkeur niet gebruiken als resources belangrijk zijn.
    * Of alleen bij kleine resultaten en/of in combinatie met limit / pagination.
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  public function get_result( $limit=0, $offset=0 ) {
+  public function get_result( $limit=NULL, $offset=0 ) {
     $result = $this->_get_result($limit,$offset);
     return $result;
   }
@@ -1911,6 +2595,7 @@ Class Data_Core extends CI_Model {
     if ($where==-1) {
       return $this->get_defaults($set);
     }
+    if (is_numeric($where)) $this->tm_where_primary_key = $where;
     
     if ($where) $this->where( $where );
     // Als er many_to_many data is die niet JSON is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
@@ -1938,6 +2623,35 @@ Class Data_Core extends CI_Model {
 		return $row[$field];
 	}
   
+
+  /**
+   * Geeft resulaat terug als opties klaar voor gebruik in vue form.
+   *
+   * @param int $limit [NULL]
+   * @param int $offset [0] 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_as_options( $limit=NULL, $offset=0 ) {
+    $this->select_abstract();
+    if (empty($this->tm_order_by) and !el('order_by',$this->settings) ) {
+      $abstract_fields = $this->settings['abstract_fields'];
+      $this->order_by( $abstract_fields );
+    }
+    $query = $this->get( $limit,$offset );
+    $options = array();
+    if ($query) {
+      foreach ( $query->result_array() as $row ) {
+        $options[] = array(
+          'value' => $row[$this->settings['result_key']],
+          'name'  => $row['abstract'],
+        );
+      }
+      $query->free_result();
+    }
+    return $options;
+  }
+
   
   /**
    * Geeft resulaat terug als opties. Een resultaat is combinatie van hetvolgende:
@@ -1945,20 +2659,23 @@ Class Data_Core extends CI_Model {
    * - de rijen zijn geen array, maar een abstract (string). Zie select_abstract().
    * - als geen volgorde is aangegeven in de config en niet is ingesteld worden de abstract velden als volgorde gebruikt
    *
-   * @param int $limit [0]
+   * @param int $limit [NULL]
    * @param int $offset [0] 
    * @return array
    * @author Jan den Besten
    */
-  public function get_result_as_options( $limit=0, $offset=0, $where_primary_key='' ) {
+  public function get_result_as_options( $limit=NULL, $offset=0, $where_primary_key='' ) {
     $this->select_abstract();
     if (empty($this->tm_order_by) and !el('order_by',$this->settings) ) {
       $abstract_fields = $this->settings['abstract_fields'];
       $this->order_by( $abstract_fields );
     }
     $query = $this->get( $limit,$offset );
-    $options = $this->_make_options_result($query);
-    $query->free_result();
+    $options = array();
+    if ($query) {
+      $options = $this->_make_options_result($query);
+      $query->free_result();
+    }
     return $options;
   }
   
@@ -1991,11 +2708,16 @@ Class Data_Core extends CI_Model {
    * Maakt naam voor cache bestand specifiek voor deze query
    *
    * @param string $sql 
+   * @param bool $hash[false]
    * @return string
    * @author Jan den Besten
    */
-  private function _create_cache_name($sql) {
-    $this->tm_cache_name = 'data_result_'.$this->settings['table'].'_'.md5($sql);
+  public function create_cache_name($name,$hash=false) {
+    $this->tm_cache_name = 'data_result_'.$this->settings['table'].'_';
+    if ($hash)
+      $this->tm_cache_name .= md5($name);
+    else
+      $this->tm_cache_name .= $name;
     return $this->tm_cache_name;
   }
   
@@ -2003,11 +2725,18 @@ Class Data_Core extends CI_Model {
    * Bewaar huidige resultaat in de cache
    *
    * @param string $result 
+   * @param string $name [default = tm_cache_name] 
+   * @param int $time [default = TIME_YEAR] 
    * @return this
    * @author Jan den Besten
    */
-  private function _cache_result($result) {
-    $this->cache->save( $this->tm_cache_name, $result, TIME_YEAR );
+  public function cache_result($result,$name='',$time=TIME_YEAR) {
+    if (empty($name)) $name = $this->tm_cache_name;
+    $cache = array(
+      'query_info'  => $this->get_query_info(),
+      'result'      => $result,
+    );
+    $this->cache->save( $name, $cache, $time );
     return $this;
   }
   
@@ -2017,23 +2746,37 @@ Class Data_Core extends CI_Model {
    * @return mixed
    * @author Jan den Besten
    */
-  private function _get_cached_result() {
-    $cached = $this->cache->get( $this->tm_cache_name );
-    if ($cached) $this->query_info['from_cache'] = TRUE;
+  public function get_cached_result($name='') {
+    if (empty($name)) $name = $this->tm_cache_name;
+    $cached = $this->cache->get( $name );
+    if ($cached) {
+      if (isset($cached['query_info'])) {
+        $this->query_info = $cached['query_info'];
+        $cached = $cached['result'];
+      }
+      $this->query_info['from_cache'] = TRUE;
+    }
     return $cached;
   }
   
   /**
-   * Verwijder alle result caches
+   * Verwijder result caches (van meegegeven table)
    *
+   * @param string $table [''] 
    * @return void
    * @author Jan den Besten
    */
-  public function clear_cache() {
+  public function clear_cache($table='') {
+    $cache_filter = 'data_result_';
     $cached_results = $this->cache->cache_info();
     foreach ($cached_results as $cache) {
-      if ( substr($cache['name'],0,12)==='data_result_' ) {
-        $this->cache->delete($cache['name']);
+      if ($this->settings['cache_group']) {
+        foreach ($this->settings['cache_group'] as $filter) {
+          $filter = $cache_filter.$filter;
+          if ( substr($cache['name'],0,strlen($filter))===$filter ) {
+            $this->cache->delete($cache['name']);
+          }
+        }
       }
     }
     return $this;
@@ -2050,83 +2793,37 @@ Class Data_Core extends CI_Model {
    *
    * @param mixed $limit [20] 
    * @param mixed $offset [FALSE] De start van het resultaat, als FALSE dan is jump_to_today aktief, anders niet.
-   * @param string $sort [''] Veld dat de volgorde van het resultaat bepaalt, als het DESC moet, dan beginnen met een '_'
-   * @param mixed $find [''] Een string waarde die gevonden moet worden, of een array met alle parameters van ->find()
-   * @param mixed $where [''] Een where statement zoals aan de eerste paramater van ->where() gegeven kan worden.
    * @return array
    * @author Jan den Besten
    */
-  public function get_grid( $limit = 20, $offset = FALSE, $sort = '', $find = '', $where = '' ) {
-    $grid_set = $this->settings['grid_set'];
-    
+  public function get_grid( $limit = 20, $offset = FALSE ) {
+    $this->tm_as_grid = true; // Alvast, zodat daarop gecheck kan worden
+    $grid_set = $this->get_setting_grid_set();
+    $this->tm_as_grid = $grid_set;
+
     // Select
     $this->select( $grid_set['fields'] );
     
     // Relations
-    if (isset($grid_set['with'])) {
-      foreach ($grid_set['with'] as $type => $relations) {
-        if (empty($relations)) $grid_set['with'][$type] = $this->get_setting(array('relations',$type));
-      }
-      foreach ($grid_set['with'] as $type => $relations) {
-        if ($relations) {
-          foreach ($relations as $what => $info) {
-            $json = (in_array($type,array('one_to_many','many_to_many')));
-            $fields='abstract';
-            if ($type==='one_to_one') $fields=$info;
-            $this->with( $type, array( $what=>$fields), $json, FALSE );
-          }
+    $flatten_fields = array();
+    foreach ($grid_set['with'] as $type => $relations) {
+      if ($relations) {
+        foreach ($relations as $what => $fields) {
+          $json = (in_array($type,array('one_to_many','many_to_many')));
+          $this->with( $type, array( $what=>$fields), $json, FALSE );
         }
-      }
-      if (isset($grid_set['with']['many_to_one'])) $many_to_one_fields = array_keys($grid_set['with']['many_to_one']);
-    }
-    
-    // Order_by
-    if (empty($sort)) {
-      if (!empty($this->tm_order_by)) {
-        $sort=$this->tm_order_by;
-        $this->tm_order_by = array();
-      }
-      else {
-        $sort = el('order_by',$grid_set,$this->settings['order_by']);
+        if ($type==='many_to_one') $flatten_fields = array_merge($flatten_fields, array_keys($grid_set['with'][$type]) );
       }
     }
-    $this->order_by( $sort );
     
-    // Paths als menu tabel
+    // Tree als menu tabel
     if ( $this->is_menu_table() ) {
       $title_field = $this->list_fields( 'str',1 );
-      $this->path( 'uri' )->path( $title_field );
-    }
-    
-    // Where
-    if ( $where ) {
-      $this->where( $where );
-    }
-    
-    // Find
-    if ( $find ) {
-      if ( !isset($find['terms']))  {
-        $fields = $grid_set['fields'];
-        if (isset($grid_set['with'])) {
-          foreach ($grid_set['with'] as $type => $with) {
-            foreach ($with as $with_info) {
-              $other_fields = $this->get_other_table_abstract_fields( $with_info['other_table'] );
-              if ($other_fields) {
-                foreach ($other_fields as $other_field) {
-                  $fields[] = '`'.$with_info['result_name'].'`.`'.$other_field.'`';
-                }
-              }
-            }
-          }
-        }
-        $find=array( 'terms'=>$find, 'fields'=>$fields, 'settings'=>array() );
-      }
-      // trace_($find);
-      $this->find( $find['terms'], $find['fields'], $find['settings'] );
+      $this->tree( 'uri' );//->tree( $title_field );
     }
     
     // Pagination
-    if (el('pagination',$grid_set,true) and $limit!==0) {
+    if (el('pagination',$grid_set,true) and isset($limit)) {
       if (is_numeric($offset) or $offset!==TRUE) $this->limit( $limit, $offset );
     }
 
@@ -2135,16 +2832,25 @@ Class Data_Core extends CI_Model {
       $this->tm_jump_to_today = TRUE;
     }
 
-    // prepare as grid result (foreign keys include abstract and foreign data in a json)
     $result = $this->_get_result();
+
+    // Prepare as grid result, flatten (foreign keys include abstract and foreign data in a json)
     if (isset($grid_set['with']['many_to_one'])) {
       foreach ($result as $id => $row) {
         foreach ($row as $field => $value) {
-          if (in_array($field,$many_to_one_fields)) {
-            $abstract_field = $grid_set['with']['many_to_one'][$field]['result_name'].'.abstract';
-            if (isset($row[$abstract_field])) {
-              $result[$id][$field] = '{"'.$value.'":"'.$row[$abstract_field].'"}';
-              unset($result[$id][$abstract_field]);
+          if (in_array($field,$flatten_fields)) {
+            $result_name = $this->settings['relations']['many_to_one'][$field]['result_name'];
+            if (!isset($row[$result_name])) {
+              $result_name .= '.abstract';
+            }
+            if (isset($row[$result_name])) {
+              $result_value = $row[$result_name];
+              if (is_array($result_value)) {
+                array_shift($result_value);
+                $result_value = implode($this->settings['abstract_delimiter'],$result_value);
+              }
+              $result[$id][$field] = '{"'.$value.'":"'.trim(trim($result_value,$this->settings['abstract_delimiter'])).'"}';
+              unset($result[$id][$result_name]);
             }
           }
         }
@@ -2163,158 +2869,31 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_form( $where = '' ) {
-    $form_set = $this->settings['form_set'];
-    
-    // Haal fields uit fieldset als niet gegeven
-    if (!isset($form_set['fields']) and isset($form_set['fieldsets'])) {
-      $fields=array();
-      foreach($form_set['fieldsets'] as $fieldsetfields) {
-        $fields=array_merge($fields,$fieldsetfields);
-      }
-      $form_set['fields'] = $fields;
-    }
+    if (is_numeric($where)) $this->tm_where_primary_key = $where;
+    $form_set = $this->get_setting_form_set();
 
     // Select
     if (empty($this->tm_select)) $this->select( $form_set['fields'] );
     
     // Relations
-    if (isset($form_set['with'])) {
-      foreach ($form_set['with'] as $type => $relations) {
-        if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
-        if ($relations) {
-          foreach ($relations as $what => $info ) {
-            if (is_numeric($what) and is_string($info)) $what=$info;
-            $fields='abstract';
-            if ($type==='one_to_one' and is_array($info)) $fields=$info;
-            if ( in_array($what,$form_set['fields']) or $what!=='user_changed') {
+    foreach ($form_set['with'] as $type => $relations) {
+      if ($type!=='many_to_one') {
+        if (is_array($relations)) {
+          foreach ($relations as $what => $fields ) {
+            if ( $what!=='user_changed') {
               $this->with( $type, array( $what=>$fields) );
             }
           }
         }
       }
     }
-    
-    // Paths als menu tabel
-    // if ( $this->is_menu_table() ) {
-    //   $title_field = $this->list_fields( 'str',1 );
-    //   // $this->path( 'uri' );//->path( $title_field );
-    // }
-    
-    return $this->get_row( $where, 'form' );
+
+    $result = $this->get_row( $where, 'form' );
+    // trace_sql($this->last_query());
+    // trace_($result);
+    return $result;
   }
   
-  
-  
-  /**
-   * Creert schemaform van een standaard row uit de database
-   *
-   * @param array $row 
-   * @param string $name 
-   * @return array $schemaform
-   * @author Jan den Besten
-   */
-  public function schemaform( $row, $name='row' ) {
-    if (!is_array($row)) $row=array();
-    $this->config->load('schemaform');
-    $this->load->model('ui');
-    
-    // Alleen de rijen die in form_set ingesteld zijn
-    $row = array_keep_keys($row, $this->settings['form_set']['fields'] );
-    
-    // Default schema
-    $sf  = array(
-      'schema' => array(
-        'type'       => 'object',
-        'title'      => $name,
-        'properties' => array(),
-        'required'   => array(),
-      ),
-      'form'  => array(),
-    );
-    // Load schemaform config
-    $cfgDefault = $this->config->item('FIELDS_default');
-    $cfgPrefix  = $this->config->item('FIELDS_prefix');
-    $cfgSpecial = $this->config->item('FIELDS_special');
-    
-    foreach ($row as $name => $value) {
-      // default
-      $fieldProperties = $cfgDefault;
-      
-      // from prefix
-      $prefix = get_prefix($name);
-      if (el($prefix,$cfgPrefix)) {
-        $fieldProperties = array_merge($fieldProperties,el($prefix,$cfgPrefix));
-      }
-      // special
-      if (el($name,$cfgSpecial)) {
-        $fieldProperties = array_merge($fieldProperties,el($name,$cfgSpecial));
-      }
-      // keep only the needed info
-      $fieldProperties=array_unset_keys($fieldProperties,array('grid','form','default' )); // TODO kan (deels) weg als oude ui weg is
-      
-      // name
-      $fieldProperties['title'] = $name;
-      
-      // type (maak select als er opties zijn)
-      if (isset($this->settings['field_info'][$name]['options'])) {
-        $fieldProperties['form-type'] = 'select';
-      }
-
-      // get validation (set in field_info)
-      $validation = el( array('field_info',$name,'validation'), $this->settings, array() );
-      // split validation / required
-      $key = array_search('required',$validation);
-      if ( $key!==false ) {
-        unset($validation[$key]);
-        // Add requered
-        $sf['schema']['required'][]=$name;
-      }
-      
-      $fieldProperties['validation']=$validation;
-      
-      // Put in Schema
-      $sf['schema']['properties'][$name] = $fieldProperties;
-    }
-    
-    // FIELDSETS / TABS
-    $tabs = array();
-
-    // Prepare fieldsets
-    $default_fieldset = array( $this->settings['table'] => $this->settings['form_set']['fields'] );
-    $fieldsets = el(array('form_set','fieldsets'), $this->settings, $default_fieldset );
-    foreach ($fieldsets as $tabtitle => $items) {
-      foreach ($items as $i=>$item) {
-        $items[$i] = array(
-          'key'  => el( array('schema','properties',$item,'title'), $sf ),
-          'type' => el( array('schema','properties',$item,'form-type'), $sf ),
-        );
-      }
-      $tabs[]=array(
-        'title' => $this->ui->get($tabtitle),
-        'items' => $items,
-      );
-    }
-    // Tabs
-    if (count($tabs)>1) {
-      $sf['form'][] = array(
-        'type' => 'tabs',
-        'tabs' => $tabs,
-      );
-    }
-    // No tabs -> keep order of fields in form
-    else {
-      foreach ($sf['schema']['properties'] as $key => $item) {
-        $sf['form'][] = array(
-          'key'  => $key,
-          'type' => $item['form-type'],
-        );
-      }
-    }
-
-    return $sf;
-  }
-  
-
 
   
   /* --- Methods om de query te vormen --- */
@@ -2413,13 +2992,28 @@ Class Data_Core extends CI_Model {
     }
     // Maak de SELECT query
     foreach ( $this->tm_select as $key => $field ) {
+      $prefix = get_prefix($field);
       // Zorg ervoor dat alle velden geprefixed worden door de eigen tabelnaam om dubbelingen te voorkomen
       if (in_array($field,$this->settings['fields'])) {
         $this->tm_select[$key] = '`'.$this->settings['table'].'`.`'.$field.'`';
       }
       // tm_txt_abstract?
-      if ( $this->tm_txt_abstract and get_prefix($field)=='txt' ) {
+      if ( $this->tm_txt_abstract and $prefix=='txt' ) {
         $this->tm_select[$key] = 'SUBSTRING(`'.$this->settings['table'].'`.`'.$field.'`,1,'.$this->tm_txt_abstract.') AS `'.$field.'`';
+      }
+      // Onzichtbare wachtwoorden
+      if ( $this->tm_hidden_passwords and in_array($prefix,array('gpw','pwd'))) {
+        if (is_array($this->tm_hidden_passwords) and in_array($field,$this->tm_hidden_passwords)) {
+          $this->tm_select[$key] = 'SPACE(0) AS `'.$field.'`';
+        }
+        else {
+          $this->tm_hidden_passwords;
+        }
+      }
+      // Encrypted?
+      $encrypted = $this->_aes_decrypt_field($this->tm_select[$key]);
+      if ($encrypted!==$this->tm_select[$key]) {
+        $this->tm_select[$key] = $encrypted.' AS `'.$field.'`';
       }
     }
     return $this;
@@ -2453,6 +3047,58 @@ Class Data_Core extends CI_Model {
     return $this;
   }
   
+  /**
+   * Verander alle wachtwoord velden (pwd_.. en gpw_..) in onzichtbare velden: het resultaat is een lege string.
+   *
+   * @param mixed $hidden_passwords [boolean of string van wachtwoord veld of array van wachtwoord velden]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function select_hidden_password( $hidden_passwords = TRUE ) {
+    if (is_string($hidden_passwords)) $hidden_passwords = array($hidden_passwords);
+    if (is_array($this->tm_hidden_passwords) and is_array($hidden_passwords)) {
+      $this->tm_hidden_passwords = array_merge($this->tm_hidden_passwords,$hidden_passwords);
+    }
+    else {
+      $this->tm_hidden_passwords = $hidden_passwords;
+    }
+    return $this;
+  }
+
+
+
+  /**
+   * Join, zoals query_builder
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function join($table, $cond, $type = '', $escape = NULL) {
+    if (!$this->tm_join) $this->tm_join = array();
+    $this->tm_join[] = array(
+      'table'   => $table,
+      'cond'    => $cond,
+      'type'    => $type,
+      'escape'  => $escape,
+    );
+    return $this;
+  }
+
+  /**
+   * Bouw de JOIN op
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  private function _join() {
+    if ($this->tm_join) {
+      foreach ($this->tm_join as $join) {
+        $this->db->join($join['table'],$join['cond'],$join['type'],$join['escape']);
+      }
+    }
+    return $this;
+  }
+  
   
   /**
    * Selecteert een veld waarvan de waarde een samengevoegde string is van alle waarden in een pad van een tree table.
@@ -2461,31 +3107,31 @@ Class Data_Core extends CI_Model {
    * 
    * Voorbeeld:
    * 
-   * ->path( 'uri' )
+   * ->tree( 'uri' )
    * 
    * Een andere optie is om het originele veld te behouden en een extra veld toe te voegen met het hele pad.
-   * In het voorbeeld hieronder zal het veld 'path' worden toegevoegd en dezefde waarden hebben als het veld 'uri' in het voorbeeld hierboven.
+   * In het voorbeeld hieronder zal het veld 'tree' worden toegevoegd en dezefde waarden hebben als het veld 'uri' in het voorbeeld hierboven.
    * 
-   * ->path( 'path', 'uri' );
+   * ->tree( 'tree', 'uri' );
    * 
    * NB Kan alleen gebruikt worden in combinate met ->get_result() en varianten.
    * NB2 In combinatie met een ->where() statement kan het zijn dat de resultaten niet compleet zijn omdat rijen kunnen ontbreken die een tak in een tree zijn.
    *
-   * @param string $path_field Het veld wat een pad moet worden
-   * @param string $original_field [''] Je kunt bij bij $path_field ook een andere naam geven voor het pad, en hier de naam van het originele veld.
+   * @param string $tree_field Het veld wat een pad moet worden
+   * @param string $original_field [''] Je kunt bij bij $tree_field ook een andere naam geven voor het pad, en hier de naam van het originele veld.
    * @param string $split ['/'] Eventueel kan een andere string worden meegegeven die tussen de diverse paden in komt.
    * @return $this
    * @author Jan den Besten
    */
-  public function path( $path_field, $original_field = '', $split = '/' ) {
+  public function tree( $tree_field, $original_field = '', $split = '/' ) {
     if ( !$this->field_exists('order') and !$this->field_exists('self_parent') ) {
       $this->reset();
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'() table is not a tree table. (tables whith the fields `order` and `self_parent`)' );
       return $this;
     }
-    if (empty($original_field)) $original_field = $path_field;
-    $this->tm_path[$original_field] = array(
-      'path_field'      => $path_field,
+    if (empty($original_field)) $original_field = $tree_field;
+    $this->tm_tree[$original_field] = array(
+      'tree_field'      => $tree_field,
       'original_field'  => $original_field,
       'split'           => $split
     );
@@ -2493,7 +3139,7 @@ Class Data_Core extends CI_Model {
   }
   
   /**
-   * Speciaal where method voor het zoeken in path velden. Kan alleen in combinatie met ->get_result() en ->path()
+   * Speciaal where method voor het zoeken in tree velden. Kan alleen in combinatie met ->get_result() en ->tree()
    * 
    * NB Dit gebeurt niet met de database, maar wordt aan het eind van een volledige result nog gefilterd:
    * - Het is daarom niet erg snel.
@@ -2505,8 +3151,8 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  public function where_path( $field, $value ) {
-    $this->tm_where_path[$field]=array(
+  public function where_tree( $field, $value ) {
+    $this->tm_where_tree[$field]=array(
       'field' => $field,
       'value' => $value,
     );
@@ -2546,12 +3192,12 @@ Class Data_Core extends CI_Model {
         $table = $this->settings['table'];
         // als WHERE en LIMIT en één relatie die niet JSON is, dan een Exception
         $sql = $this->db->get_compiled_select('',FALSE);
-        $has_where = has_string('WHERE',$sql);
+        $has_where = (has_string('WHERE',$sql) OR (is_array($this->tm_where) AND count($this->tm_where)>0));
         // Geen exception als de WHERE alleen op id zoekt en limit=1 (->get_row())
         if ($has_where AND $this->tm_limit==1 AND has_string('WHERE `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`',$sql) ) {
-          $this->tm_limit=0;
+          $this->tm_limit=NULL;
         }
-        if ($has_where AND $this->tm_limit>0) {
+        if ($has_where AND $this->tm_limit>0 AND !$this->tm_where_primary_key) {
           $json = TRUE;
           foreach ($this->tm_with as $type => $with) {
             if ($type==='one_to_many' or $type==='many_to_many') {
@@ -2576,11 +3222,14 @@ Class Data_Core extends CI_Model {
         $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table);
         if (!empty($where)) $this->tm_from.= ' WHERE ('.$where.') ';
         $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
+        
         // Limit in subquery alleen als de volgorde géén invloed heeft op resultaat. (met limit is wel sneller)
-        if ( $order_on_self AND !$has_where AND $this->tm_limit>0) {
+        if ( $order_on_self AND !$has_where AND !$this->tm_find AND $this->tm_limit>0) {
           if ($this->tm_offset===FALSE) $this->tm_offset=0;
+          $this->tm_where_limit = $this->tm_limit;
+          $this->tm_where_offset = $this->tm_offset;
           $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
-          $this->tm_limit = 0;
+          $this->tm_limit = NULL;
           $this->tm_offset = 0;
         }
         $this->tm_from .= ') AS '.$this->db->protect_identifiers($table).'';
@@ -2614,6 +3263,7 @@ Class Data_Core extends CI_Model {
   /**
    * Zelfde als 'where' van Query Builder, met deze uitbreidingen:
    * - Je kunt als enig argument de primary_key meegeven of de strings 'first'
+   * - Je kunt ook LIKE statements hiermee aanroepen
    * - Als $value een array is wordt 'where_in' aangeroepen.
    * - Je kunt ook where statements voor relaties aangeven.
    * 
@@ -2622,6 +3272,9 @@ Class Data_Core extends CI_Model {
    * ->where( 2 );        // Zoekt naar het resultaat met de primary_key 2
    * ->where( 'first' );  // Zoekt naar het eerste resultaat
    * 
+   * like
+   * ----
+   * ->where( 'str_title LIKE', '%test%' );
    * 
    * many_to_one
    * -----------
@@ -2645,7 +3298,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	public function where($key, $value = NULL, $escape = NULL) {
-    $this->_where($key,$value,$escape,'AND');
+    $this->_wh($key,$value,$escape,'AND');
     return $this;
   }
 
@@ -2660,12 +3313,73 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	public function or_where($key, $value = NULL, $escape = NULL) {
-    $this->_where($key,$value,$escape,'OR');
+    $this->_wh($key,$value,$escape,'OR');
+    return $this;
+  }
+
+  
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $key 
+   * @param string $value[NULL] 
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function where_in($key = NULL, $values = NULL, $escape = NULL) {
+    if (!is_array($values)) $values = array($values);
+    $this->_wh($key,$values,$escape,'AND');
     return $this;
   }
 
   /**
-   * Maakt where en or_where
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $key 
+   * @param string $value[NULL] 
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function or_where_in($key = NULL, $values = NULL, $escape = NULL) {
+    if (!is_array($values)) $values = array($values);
+    $this->_wh($key,$values,$escape,'OR');
+    return $this;
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $key 
+   * @param string $value[NULL] 
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function where_not_in($key = NULL, $values = NULL, $escape = NULL) {
+    if (!is_array($values)) $values = array($values);
+    $this->_wh($key,$values,$escape,'AND','NOT');
+    return $this;
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $key 
+   * @param string $value[NULL] 
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function or_where_not_in($key = NULL, $values = NULL, $escape = NULL) {
+    if (!is_array($values)) $values = array($values);
+    $this->_wh($key,$values,$escape,'OR','NOT');
+    return $this;
+  }
+
+  /**
+   * Maakt ..where..
    *
    * @param string $key 
    * @param string $value 
@@ -2674,20 +3388,18 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  private function _where( $key, $value=NULL, $escape = NULL, $type = 'AND') {
-    // Onthou dat er een conditie in de query zit
+  private function _wh( $key, $value=NULL, $escape = NULL, $type = 'AND', $not = '') {
     $this->tm_has_condition = TRUE;
-    
     $this->tm_where_primary_key = NULL;
-    // Als value een array is, dan ->where_in()
-    if (isset($value) and is_array($value)) {
-      if ($type=='AND')
-        $this->db->where_in($key,$value,$escape);
-      else
-        $this->db->or_where_in($key,$value,$escape);
+
+    // Als alleen een array, dan recursieve aanroep en stoppen
+    if (!isset($value) and is_array($key)) {
+      foreach ($key as $k => $val) {
+        $this->_wh($k,$val);
+      }
       return $this;
     }
-    
+
     // Als geen value maar alleen een key (die geen array is), dat wordt alleen op primary_key gevraagd als het een nummer is
     if (!isset($value) and !is_array($key)) {
       // 'first'
@@ -2698,25 +3410,249 @@ Class Data_Core extends CI_Model {
       }
       // primary_key als nummer
       elseif (is_numeric($key)) {
-        $value = $key;
-        $key = $this->settings['table'].'.'.$this->settings['primary_key'];
+        $value  = $key;
+        $key    = $this->settings['table'].'.'.$this->settings['primary_key'];
         $this->tm_where_primary_key = $value;
       }
     }
-    // where
+    if ($key==$this->settings['primary_key'] and is_numeric($value)) {
+      $this->tm_where_primary_key = $value;
+    }
+
+    // LIKE
     if (isset($key)) {
-      if ($type=='AND')
-        $this->db->where($key,$value);
-      else
-        $this->db->or_where($key,$value);
+      if (is_string($key) and (strpos($key,' LIKE')!==false and strpos($key,'SELECT')===false) ) {
+        $key = trim(str_replace(' LIKE','',$key));
+        $side = 'both';
+        if ( substr($value,0,1)!='%' ) $side = 'after';
+        if ( substr($value,-1,1)!='%' ) $side = 'before';
+        $value = trim($value,'%');
+        return $this->_like($key, $value, $side, $type, $not );
+      }
+    }
+
+    // WHERE
+    if (!is_array($this->tm_where)) $this->tm_where = array();
+    $this->tm_where[] = array(
+      'key'     => $key,
+      'value'   => $value,
+      'escape'  => $escape,
+      'type'    => $type,
+      'not'     => $not,
+    );
+
+    return $this;
+  }
+
+  private function _where() {
+    if (!is_array($this->tm_where)) return $this;
+    foreach ($this->tm_where as $where) {
+
+      
+      if (is_string($where)) {
+        switch ($where) {
+          case 'group_start':
+            $this->db->group_start();
+            break;
+          case 'or_group_start':
+            $this->db->or_group_start();
+            break;
+          case 'group_end':
+            $this->db->group_end();
+            break;
+        }
+
+      }
+      else {
+        extract($where);
+
+        if (isset($key)) {
+
+          // AES decryption?
+          $key = $this->_aes_decrypt_field($key);
+          
+          // Compare case insensitive with AES
+          if (is_string($key) and substr($key,0,4)=='AES_') {
+            $key = 'CONVERT('.$key.' USING latin1) ';
+          }
+
+          // LIKE ?
+          if (isset($where['side'])) {
+
+            if ($type=='AND') {
+              if (empty($not))
+                $this->db->like($key,$match,$side,$escape);
+              else
+                $this->db->not_like($key,$match,$side,$escape);
+            }
+            else {
+              if (empty($not))
+                $this->db->or_like($key,$match,$side,$escape);
+              else
+                $this->db->or_not_like($key,$match,$side,$escape);
+            }
+          }
+          else {
+
+            // WHERE IN ?
+            if (isset($value) and is_array($value)) {
+              if ($type=='AND') {
+                if (empty($not))
+                  $this->db->where_in($key,$value,$escape);
+                else
+                  $this->db->where_not_in($key,$value,$escape);
+              }
+              else {
+                if (empty($not))
+                  $this->db->or_where_in($key,$value,$escape);
+                else
+                  $this->db->or_where_not_in($key,$value,$escape);
+              }
+            }
+
+            // WHERE
+            else {
+              if (is_string($key) AND (strpos($key,'AES_')!==false AND strpos($key,'SELECT')===false) ) $key.=' = ';
+              if ($type=='AND')
+                $this->db->where($key,$value,$escape);
+              else
+                $this->db->or_where($key,$value,$escape);
+            }
+
+          }
+        }
+      }
     }
     return $this;
   }
+
+  private function _aes_decrypt_field($field,$other_table='') {
+    if (is_array($field)) {
+      foreach ($field as $key => $f) {
+        if (is_string($f)) $field[$key] = $this->_aes_decrypt_field($f);
+      }
+    }
+    else {
+      $encrypted = false;
+      if (!empty($other_table)) $field=$other_table.'.'.$field;
+      $cleanfield = trim(str_replace('`','',$field));
+      if (!is_numeric($cleanfield) AND strpos($cleanfield,'.')!==false AND strpos($cleanfield,' AS ')===false) {
+        $split_field = explode('.',$cleanfield);
+        // this table
+        if ($split_field[0]==$this->settings['table']) {
+          $encrypted = $this->get_setting(array('field_info',$split_field[1],'encrypted'),false);
+        }
+        // other table
+        else {
+          if ($this->table_exists($split_field[0])) $encrypted = $this->get_other_table_setting($split_field[0],array('field_info',$split_field[1],'encrypted'),false); 
+        }
+      }
+      // normal
+      else {
+        $encrypted = $this->get_setting(array('field_info',$field,'encrypted'),false);
+      }
+
+      // encrypt if needed
+      if ($encrypted) {
+        $field = 'AES_DECRYPT(`'.str_replace('.','`.`',$cleanfield).'` ,"'.$this->config->item('encryption_key').'")';
+      }
+
+    }
+    return $field;
+  }
+
+  private function _aes_encrypt_value($field,$value) {
+    if ($this->get_setting(array('field_info',$field,'encrypted'),false)) {
+      $value = 'AES_ENCRYPT("'.$value.'" ,"'.$this->config->item('encryption_key').'")';
+    }
+    return $value;
+  }
   
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $field
+   * @param string $match[''] 
+   * @param string $side['both']
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function like($field, $match = '', $side = 'both', $escape = NULL) {
+    return $this->_like($field, $match, $side,'AND','',$escape);
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $field
+   * @param string $match[''] 
+   * @param string $side['both']
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function not_like($field, $match = '', $side = 'both', $escape = NULL) {
+    return $this->_like($field, $match, $side,'AND','NOT',$escape);
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $field
+   * @param string $match[''] 
+   * @param string $side['both']
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function or_like($field, $match = '', $side = 'both', $escape = NULL) {
+    return $this->_like($field, $match, $side,'OR','',$escape);
+  }
+
+  /**
+   * Zelfde als CI QueryBuilder
+   *
+   * @param string $field
+   * @param string $match[''] 
+   * @param string $side['both']
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function or_not_like($field, $match = '', $side = 'both', $escape = NULL) {
+    return $this->_like($field, $match, $side,'OR','NOT',$escape);
+  }
 
 
   /**
+   * Maakt ..like..
+   *
+   * @param string $field 
+   * @param string $match 
+   * @param string $side 
+   * @param string $type 
+   * @param string $not 
+   * @return $this
+   * @author Jan den Besten
+   */
+  private function _like($field, $match='', $side='both', $type = 'AND', $not = '',$escape = NULL) {
+    $this->tm_has_condition = TRUE;
+    if (!is_array($this->tm_where)) $this->tm_where = array();
+    $this->tm_where[] = array(
+      'key'   => $field,
+      'match' => $match,
+      'side'  => $side,
+      'type'  => $type,
+      'not'   => $not,
+      'escape' => $escape,
+    );
+    return $this;
+  }
+
+  /**
    * where_exists zoekt in many_to_many data en toont data waarbinnen de zoekcriteria voldoet maar met de complete many_to_many subdata.
+   * In tegenstelling tot where() waar bij zoeken in 'many_to_many' alleen de subdate worden meegegeven die aan de zoekcriteria voldoen.
    * 
    * many_to_many
    * ------------
@@ -2800,7 +3736,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _exists( $key, $value = NULL, $side=FALSE, $type = 'AND' ) {
-    // trace_(['_exists',$key,$value,$side,$type]);
+    $this->tm_has_condition = TRUE;
     
     if ( !isset($this->tm_with['many_to_many'])) {
       $this->reset();
@@ -2808,8 +3744,8 @@ Class Data_Core extends CI_Model {
       return $this;
     }
     
-    $other_table = get_prefix($key,'.');
-    $key         = get_suffix($key,'.');
+    $other_table = trim(get_prefix($key,'.'),'` ');
+    $key         = trim(get_suffix($key,'.'),'` ');
     if (empty($other_table) or empty($key) or $key==$other_table) {
       $this->reset();
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): First argument of `..._exists` needs to be of this format: `table.field`.' );
@@ -2821,12 +3757,20 @@ Class Data_Core extends CI_Model {
     $rel_table         = $relation['rel_table']; //'rel_'.remove_prefix($this_table).'__'.remove_prefix($other_table);
     $this_foreign_key  = $relation['this_key'];//  $id.'_'.remove_prefix($this_table);
     $other_foreign_key = $relation['other_key'];//$id.'_'.remove_prefix($other_table);
-    
+
+    $aeskey = $this->_aes_decrypt_field($key,$other_table);
+    if ($aeskey!=$key) {
+      $key = $aeskey;
+    }
+    else {
+      $key = '`'.$key.'`';
+    }
+
     $sql = ' `'.$this_table.'`.`'.$id.'` IN (
     	SELECT `'.$rel_table.'`.`'.$this_foreign_key.'`
     	FROM `'.$rel_table.'`
     	WHERE `'.$rel_table.'`.`'.$other_foreign_key.'` IN (
-    		SELECT `'.$other_table.'`.`'.$id.'` FROM `'.$other_table.'` WHERE `'.$key.'` ';
+    		SELECT `'.$other_table.'`.`'.$id.'` FROM `'.$other_table.'` WHERE '.$key.' ';
     if ($side) {
       // like_exists
       $sql.=' LIKE ';
@@ -2847,17 +3791,29 @@ Class Data_Core extends CI_Model {
       $sql.='= "'.$value.'"';
     }
     $sql.='))';
+    $this->_wh($sql,NULL,FALSE,$type);
     
-    if ($type=='OR')
-      $this->db->or_where( $sql, NULL, FALSE );
-    else
-      $this->db->where( $sql, NULL, FALSE );
-    
-    // Onthou dat er een conditie in de query zit
-    $this->tm_has_condition = TRUE;
     return $this;
   }
-  
+
+  public function group_start() {
+    if (!is_array($this->tm_where)) $this->tm_where=array();
+    $this->tm_where[] = 'group_start';
+    return $this;
+  }
+
+  public function or_group_start() {
+    if (!is_array($this->tm_where)) $this->tm_where=array();
+    $this->tm_where[] = 'or_group_start';
+    return $this;
+  }
+
+  public function group_end() {
+    if (!is_array($this->tm_where)) $this->tm_where=array();
+    $this->tm_where[] = 'group_end';
+    return $this;
+  }
+
   
   /**
    * Zoekt de gevraagde zoekterm(en).
@@ -2886,9 +3842,10 @@ Class Data_Core extends CI_Model {
    * Er zijn nog diverse instellingen om de zoekfunctie verder te verfijnen:
    * 
    * - 'and'         - ['OR'] Als er meerdere zoekopdrachten worden gegeven kun je hier aangeven of ze AND of OR moeten worden gekoppeld. Default is 'OR' (wat afwijkt van ->where(), maar voor zoeken logischer).
-   * - 'word'        - [FALSE] Geef aan of de zoekterm als geheel woord moet worden gevonden, of als een reeks karakters.
-   * - 'exact'       - [FALSE] Geef aan of de zoekterm exact in het gezochte veld moet voorkomen.
-   * 
+   * - 'equals'      - [like|exact|word] Default [like]. Hiermee kun je aangeven hoe precies er gezocht moet worden:
+   *                   - 'like'  - In het veld wordt op een willekeurige plaats de zoekterm te vinden zijn.
+   *                   - 'word'  - In het veld moet de zoekterm als afgezonderd geheeld (een woord) worden gezocht.
+   *                   - 'exact' - Het veld moet precies hetzelfde zijn als de zoekterm.
    * - 'with'        - [array('many_to_one','one_to_many','many_to_many')] Geef aan welke relaties mee moeten worden genomen.
    * - 'many_exists' - [TRUE] Net als where_exists()
    * 
@@ -2901,6 +3858,26 @@ Class Data_Core extends CI_Model {
    * - Automatisch wordt in alle 'many_to_many' en 'one_to_many' relaties gezocht (zoals bij like_exists())
    * - Je kunt specifieker instellen met $settings['with'] welke relaties mee moeten worden genomen met het zoeken
    * 
+   * Verfijnd zoeken
+   * ---------------
+   * 
+   * Je kunt ook verfijnder zoeken door een array mee te geven waarin de zoektermen, velden en settings gespecificeerd zijn.
+   * Daarmee kun je termen in specifieke velden zoeken.
+   * 
+   * Die array ziet er dan zo uit:
+   * 
+   * array(
+   *  array(
+   *    'term'    => '',       // Zoekterm (string, of array van strings)
+   *    'fields'  => array(),  // Array van velden waarin term gezocht moet worden. Ook result_name's van relaties kunnen meegegeven worden.
+   *    'and'     => 'AND|OR'
+   *    'equals'  => ['like'|'word'|'exact']
+   *  ),
+   *  ...
+   *  ...
+   * )
+   * 
+   * 
    * @param mixed $terms Zoekterm(en) als een string of array van strings. Letterlijk zoeken kan door termen tussen "" te zetten.
    * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden (behalve id,order,self_parent). Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
    * @param array $settings [array()] Extra instelingen.
@@ -2909,204 +3886,42 @@ Class Data_Core extends CI_Model {
    */
   public function find( $terms, $fields = array(), $settings = array() ) {
     if (empty($terms)) return $this;
-    
-    // settings
-    $defaults = array(
-      'and'             => 'OR',
-      'word'            => FALSE,
-      'exact'           => FALSE,
-      'with'            => array('many_to_one','one_to_many','many_to_many'),
-      'many_exists'     => TRUE,
-    );
-    $settings = array_merge( $defaults,$settings );
-    if (!is_string($settings['and']) or is_numeric($settings['and']) or empty($settings['and'])) {
-      if ($settings['and']==TRUE)  $settings['and'] = 'AND';
-      if ($settings['and']==FALSE) $settings['and'] = 'OR';
-    }
-    $settings['and'] = strtoupper( $settings['and'] );
-    
-    // In welke velden zoeken?
-    if ( is_string($fields) ) $fields = array($fields);
 
-    // Geen velden meegegeven, gebruik dan alle velden van deze tabel (zoals ingesteld).
-    if ( empty($fields) ) {
-      $fields = $this->settings['fields'];
-      // Inclusief die van de meegegeven relaties
-      if ($this->tm_with) {
-        foreach ($this->tm_with as $type => $with) {
-          foreach ($with as $what => $info) {
-            // // trace_([$type,$what,$info]);
-            // if (in_array($type,array('one_to_many','many_to_many'))) {
-              foreach ($info['fields'] as $field) {
-                $fields[]=$info['as'].'.'.$field;
-              }
-            // }
-          }
-        }
-      }
-    }
-    // Sommige velden hoeft zowiezo niet in gezocht te worden:
-    $forbidden_fields = array('id','order','self_parent');
-    foreach ($forbidden_fields as $forbidden_field) {
-      if ( $found_key=array_search($forbidden_field,$fields) ) {
-        unset($fields[$found_key]);
-      }
-    }
-    
-    // Splits terms
-    if ( is_array($terms) ) $terms = implode(' ',$terms);
-    $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
-    
-    // Bewaar zoekvraag per zoekterm
-    if ($this->tm_find===FALSE) $this->tm_find = array(
-      'search'=>array(),
-      'settings'=>$settings
-    );
-    $this->tm_find['settings'] = array_merge($this->tm_find['settings'],$settings);
-
-    if (empty($this->tm_find)) $this->tm_find['search']=array();
-    
-    foreach($terms as $term) {
-      $search=array();
-      if (el('and',$settings)==='OR')
-        $search['group'] = 'group_start';
-      else
-        $search['group'] = 'and_group_start';
-      foreach ($fields as $field) {
-        $search[] = array(
-          'field'       => $field,
-          'term'        => $term,
-          'and'         => el('and',$settings,'OR'),
-          'word'        => el('word',$settings,FALSE),
-          'exact'       => el('exact',$settings,FALSE),
-          'settings'    => array()
-        );
-      }
-      $this->tm_find['search'][] = $search;
-    }
-    
-    return $this;
-  }
-  
-  /**
-   * Hiermee kun je meerdere zoekopdrachten in één keer meegeven.
-   * Een uitgebreide versie van ->find() dus.
-   * 
-   * Je moet een array meegeven met per veld de te zoeken waarden en instellingen:
-   * 
-   * array(
-   * 
-   *    array(
-   *      'field' => veld waarin gezocht moet worden.
-   *      'term'  => te zoeken term, zie bij ->find() voor alle opties hier.
-   *      'and'   => ["OR"] Zie ->find() settings.
-   *      'word'  => [FALSE] (idem)
-   *      'exact' => [FALSE] (idem)
-   *    ),
-   * 
-   *    array(
-   *      'field' => ...
-   *      'term'  => ...
-   *      'and'   => ...
-   *      'word'  => ...
-   *      'exact' => ...
-   *    ),
-   * 
-   *    ...etc...
-   * 
-   * )
-   * 
-   * 
-   * groups
-   * ------
-   * 
-   * Je kunt het zoeken onderverdelen in groepen door meerdere aanroepen van find_multiple() te doen.
-   * Maar je kunt het ook in de $search array al meegeven door subarrays.
-   * De groepsnaam kan van alles zijn (heeft geen functie) als het maar uniek is.
-   * In de array moet dan de key 'group' bestaan met daarin de standaard CodeIgniter group methods met één afwijking: group_start is OR en or_group_start is vervangen door and_group_start.
-   * 
-   * Bijvoorbeeld:
-   * 
-   * array(
-   * 
-   *    array(
-   *      'group' => 'group_start',
-   *      array(
-   *        'field' => veld waarin gezocht moet worden.
-   *        'term'  => te zoeken term, zie bij ->find() voor alle opties hier.
-   *        'and'   => ["OR"] Zie ->find() settings.
-   *        'word'  => [FALSE] (idem)
-   *        'exact' => [FALSE] (idem)
-   *      )
-   *      array(
-   *        'field' => ...
-   *        'term'  => ...
-   *        'and'   => ...
-   *        'word'  => ...
-   *        'exact' => ...
-   *      ),
-   *      array(
-   *        'group' => 'or_group_start'   // geneste group
-   *        array(
-   *          'field' => ...
-   *          'term'  => ...
-   *          'and'   => ...
-   *          'word'  => ...
-   *          'exact' => ...
-   *        )
-   *        array(
-   *          'field' => ...
-   *          'term'  => ...
-   *          'and'   => ...
-   *          'word'  => ...
-   *          'exact' => ...
-   *        )
-   *      ),
-   *    ),
-   * 
-   *    array(
-   *      'field' => ...
-   *      'term'  => ...
-   *      'and'   => ...
-   *      'word'  => ...
-   *      'exact' => ...
-   *    ),
-   * 
-   *    ...etc...
-   * 
-   * )
-   * 
-   *
-   * @param array $search Hier geef je een array met alle zoektermen per veld.
-   * @param array $settings [array()] Extra instelingen, de meeste zitten al in $search, hier alleen 'with' en 'many_exists'. Zie verder bij ->find()
-   * @return $this
-   * @author Jan den Besten
-   */
-  public function find_multiple( $search, $settings = array() ) {
     $this->tm_find = array(
-      'search'   =>$search,
-      'settings' =>$settings
+      'terms'    => $terms,
+      'fields'   => $fields,
+      'settings' => $settings,
     );
+    
     return $this;
   }
-  
+    
 
   /**
-   * Bouw de query van een zoekterm op
+   * Bouw een gehele zoekquery op aan de hand van ingestelde ->tm_find
    *
-   * @param array $terms 
-   * @param arrat $fields 
-   * @param array $settings 
    * @return void
    * @author Jan den Besten
    */
-  private function _find_term( $terms, $fields = array(), $settings = array() ) {
-    // settings
+  private function _find() {
+    if (!$this->tm_find) return $this;
+
+    $terms    = el('terms',$this->tm_find,'');
+    $fields   = el('fields',$this->tm_find,array());
+    $settings = el('settings',$this->tm_find,array());
+    
+    if (empty($terms)) return $this;
+    
+    // Settings
+    $with = $this->tm_with;
+    if ($this->tm_as_grid) {
+      $with = el(array('grid_set','with'),$this->settings );
+      if (empty($with)) $with = array('many_to_one','one_to_many','many_to_many');
+    }
     $defaults = array(
       'and'             => 'OR',
-      'word'            => FALSE,
-      'exact'           => FALSE,
-      'with'            => array('many_to_one','one_to_many','many_to_many'),
+      'equals'          => 'like',
+      'with'            => $with,
       'many_exists'     => TRUE,
     );
     $settings = array_merge( $defaults,$settings );
@@ -3115,185 +3930,244 @@ Class Data_Core extends CI_Model {
       if ($settings['and']==FALSE) $settings['and'] = 'OR';
     }
     $settings['and'] = strtoupper( $settings['and'] );
-    // trace_(['find',$terms,$fields,$settings]);
-    
-    // In welke velden zoeken?
-    if ( is_string($fields) ) $fields = array($fields);
-    
-    // Geen velden meegegeven, gebruik dan alle velden van deze tabel (zoals ingesteld).
-    if ( empty($fields) ) {
-      $fields = $this->settings['fields'];
-    }
-    
-    // Sommige velden nooit in zoeken:
-    $forbidden_fields = array('id','order','self_parent');
-    foreach ($forbidden_fields as $forbidden_field) {
-      if ( $found_key=array_search($forbidden_field,$fields) ) {
-        unset($fields[$found_key]);
-      }
-    }
-    
-    // Ook nog in relaties zoeken?
-    if ( isset($this->tm_with) and !empty($this->tm_with) ) {
-      foreach ($this->tm_with as $type => $tm_with) {
-        if ( in_array($type,$settings['with']) ) {
-          foreach ($tm_with as $what => $with) {
 
-            // Alleen relaties die in de velden staan
-            if ( !in_array($what,$fields) ) continue;
+    // De complete zoek array
+    $search = array();
 
-            $other_table  = $this->settings['relations'][$type][$what]['other_table'];
-            $as           = $this->settings['relations'][$type][$what]['result_name'];
-            $other_fields = $with['fields'];
-            
-            
-            if ($other_fields==='abstract') $other_fields = $this->get_other_table_abstract_fields( $other_table );
-            
-            if (!is_array($other_fields)) $other_fields = explode(',',$other_fields);
-            foreach ($other_fields as $other_field) {
-              switch ($type) {
-                case 'many_to_one':
-                  array_push( $fields, array(
-                    'relation' => 'many_to_one',
-                    'field'    => $as.'.'.$other_field,
-                  ));
-                  break;
-                case 'one_to_many':
-                  array_push( $fields, array(
-                    'relation' => 'one_to_many',
-                    'field'    => $other_table.'.'.$other_field,
-                  ));
-                  break;
-                case 'many_to_many':
-                  array_push( $fields, array(
-                    'relation' => 'many_to_many',
-                    'field'    => $other_table.'.'.$other_field,
-                  ));
-                  break;
+    // Is het een verfijnde zoekopdracht? Dan zijn we al klaar.
+    if (is_array($terms) and is_multi($terms)) {
+      $search = $this->_add_result_names_find($terms,$settings);
+    }
+    // Zo niet, maak van de simpele zoekopdracht een verfijnde zoekopdracht
+    else {
+      $search = $this->_create_splitted_find($terms,$fields,$settings);
+    }
+    $this->_create_complete_search( $search );
+    return $this;
+  }
+  
+  private function _add_result_names_find($search,$settings) {
+    foreach ($search as $key => $find) {
+      $fields = $find['field'];
+      if (!is_array($fields)) $fields = array($fields);
+      // Inclusief result_name van de meegegeven relaties (word later omgezet in velden van die tabel)
+      if (is_array($settings['with'])) {
+        foreach ($settings['with'] as $type => $with) {
+          if (is_string($type)) $with = $type;
+          if ($type==='many_to_one') {
+            $relations = el(array('relations',$with), $this->settings, FALSE);
+            if ($relations) {
+              foreach ($relations as $what => $info) {
+                if (in_array($info['foreign_key'],$fields)) array_push($fields,$info['result_name']);
               }
             }
           }
         }
       }
+      $search[$key]['field'] = $fields;
+    };
+    return $search;
+  }
+  
+  /**
+   * Maak van een eenvoudig zoekopdracht een verfijnde zoekopdracht
+   *
+   * @param mixed $terms 
+   * @param array $fields 
+   * @param array $settings 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _create_splitted_find($terms,$fields,$settings) {
+    // Welke velden?
+    if ( is_string($fields) ) $fields = array($fields);
+    // Geen velden meegegeven, gebruik dan alle velden van deze tabel, of van de grid_set (zoals ingesteld).
+    if ( empty($fields) ) {
+      if ($this->tm_as_grid) $fields = el(array('grid_set','fields'),$this->settings, array() );
+      if (empty($fields)) $fields = $this->settings['fields'];
     }
-    
-    // Plak tabelnaam voor elk veld, als dat nog niet zo is, en escape
-    foreach ( $fields as $key => $field ) {
-      if (is_array($field)) {
-        if (strpos($field['field'],'.')===FALSE) $fields[$key]['field'] = $this->db->protect_identifiers($this->settings['table'].'.'.$field['field']);
-      }
-      else {
-        if (strpos($field,'.')===FALSE) $fields[$key] = $this->db->protect_identifiers($this->settings['table'].'.'.$field);
-      }
-    }
-    
-    // trace_([$terms,$fields]);
-
-    // Splits terms
-    if ( is_array($terms) ) $terms = implode(' ',$terms);
-    $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
-    
-    // Bouw 'query' op voor elke term
-    $tm_find=array();
-    
-    foreach ($terms as $terms) {
-      $terms = trim($terms,'"');
-      
-      // Start term query AND/OR?
-      if ($settings['and']==='AND') {
-        $this->db->group_start();
-      }
-      else {
-        $this->db->or_group_start();
-      }
-      
-      // Per veld:
-      foreach ($fields as $field) {
-        $relation=FALSE;
-        if (is_array($field)) {
-          $relation=$field['relation'];
-          $field=$field['field'];
+    // Inclusief result_name van de meegegeven relaties (word later omgezet in velden van die tabel)
+    if (is_array($settings['with'])) {
+      foreach ($settings['with'] as $type => $with) {
+        $relation_type = $with;
+        if (is_string($type)) $relation_type = $type;
+        $relations = el(array('relations',$relation_type), $this->settings, FALSE);
+        if (is_array($with)) $relations = array_keep_keys($relations,array_keys($with));
+        if ($relations) {
+          foreach ($relations as $what => $info) {
+            array_push($fields,$info['result_name']);
+          }
         }
-        if ( $settings['many_exists'] AND $relation=='many_to_many') {
-          // 'many_to_many' => ..._exists()
-          if ( $settings['exact'] ) {
-            $this->or_where_exists( $field, $terms );
+      }
+    }
+  
+    // Zet om naar (complete) zoekopdracht
+    if (!is_array($terms)) $terms=array($terms);
+    foreach($terms as $term) {
+      $search[] = array(
+        'term'        => $terms,
+        'field'       => $fields,
+        'and'         => $settings['and'],
+        'equals'      => $settings['equals'],
+        // ??
+        'with'        => $settings['with'],
+        'many_exists' => $settings['many_exists'],
+      );
+    }
+    return $search;
+  }
+  
+  /**
+   * Zet verfijnde zoekopdracht per term om naar SQL
+   *
+   * @param array $search 
+   * @return $this
+   * @author Jan den Besten
+   */
+  private function _create_complete_search( $search ) {
+    $grouped = $this->tm_has_condition;
+    if ($grouped) $this->group_start();
+
+    foreach ( $search as $item) {
+
+      // Splits termen als er meerdere door spaties zijn gescheiden (rekening houdend met quotes)
+      $terms = $item['term'];
+      if ( is_array($terms) ) $terms = implode(' ',$terms);
+      $terms = preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
+      
+      $fields = $item['field'];
+      if (!is_array($fields)) $fields = array($fields);
+      // Sommige velden hoeft nooit in gezocht te worden:
+      $fields = array_diff($fields,$this->forbidden_find_fields);
+      
+      // Verwijder niet bestaande velden, TODO: of vervang ze door de velden uit een relatietabel array('relation'=>'','fields'=>array())
+      foreach ($fields as $key => $field) {
+        if (!in_array($field,$this->settings['fields'])) {
+          if ( !$this->_is_result_name($field,$this->tm_with) ) {
+            unset($fields[$key]);
           }
           else {
-            $this->or_like_exists( $field, $terms, 'both' );
+            $fields[$key] = $this->_get_relation_result($field,$this->tm_with);
+            if ($fields[$key]) {
+              $fields[$key]['fields'] = $fields[$key]['abstract_fields'];
+              $fields[$key]['fields'] = array_diff($fields[$key]['fields'],$this->forbidden_find_fields);
+              $fields[$key]['fields'] = array_diff($fields[$key]['fields'],$this->forbidden_find_relation_fields);
+            }
+            else {
+              unset($fields[$key]);
+            }
+          }
+        }
+      }
+
+      // Plak tabelnaam voor elk veld, als dat nog niet zo is, en escape
+      foreach ( $fields as $key => $field ) {
+        if (is_array($field)) {
+          foreach ($field['fields'] as $k=>$other_field) {
+            $fields[$key]['fields'][$k] = $this->_protect_field($other_field,$field['result_name']);
           }
         }
         else {
-          // Normal fields, or 'many_to_one'
-          if ( $settings['exact'] ) {
-            $this->or_where( $field, $terms, FALSE);
+          $fields[$key] = $this->_protect_field($field,$this->settings['table']);
+        }
+      }
+
+      // Zoek in alle termen
+      foreach ($terms as $term) {
+        // Begin van deze term
+        if ($item['and']==='AND') {
+          $this->group_start();
+        }
+        else {
+          $this->or_group_start();
+        }
+        // Zoek in de term
+        $this->_find_term( $term, $fields, $item['equals'], el('many_exists',$item,TRUE));
+        // Einde van deze term
+        $this->group_end();
+      }
+      
+    }
+
+    if ($grouped) $this->group_end();
+  }
+  
+  private function _protect_field($field,$table='') {
+    if (strpos($field,'.')===FALSE and isset($table)) $field = $table.'.'.$field;
+    return $this->db->protect_identifiers($field);
+  }
+  
+  
+  /**
+   * Bouw de query van een zoekterm op
+   *
+   * @param array $term
+   * @param arrat $fields 
+   * @param array $settings 
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _find_term( $term, $fields = array(), $equals='like', $many_exists=TRUE ) {
+    // Schoon term wat op (geen quotes en spaties)
+    $term = trim($term,"\"' ");
+
+    
+    // Per veld:
+    foreach ($fields as $sub_fields) {
+      $relation = FALSE;
+      if (is_array($sub_fields)) {
+        $relation   = $sub_fields['relation'];
+        $sub_fields = $sub_fields['fields'];
+      }
+      else {
+        $sub_fields = array($sub_fields);
+      }
+      
+      foreach ($sub_fields as $field) {
+
+        // Encrypted field??
+        $real_field = get_suffix(str_replace('`','',$field),'.');
+        if ($this->get_setting(array('field_info',$real_field,'encrypted'),false)) {
+          $field = 'AES_DECRYPT('.$field.' ,"'.$this->config->item('encryption_key').'")';
+        }
+        
+        // many_to_many exists...
+        if ( $many_exists AND $relation==='many_to_many') {
+          switch ($equals) {
+            case 'exact':
+              $this->or_where_exists( $field, $term );
+              break;
+            case 'word':
+            case 'like':
+            default:
+              $this->or_like_exists( $field, $term, 'both' );
+              break;
           }
-          elseif ( $settings['word'] ) {
-            $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$terms.'[[:>:]]\'', NULL, FALSE);
-          }
-          else {
-            $this->db->or_like( $field, $terms, 'both', FALSE);
+        }
+
+        // Normaal
+        else {
+          switch ($equals) {
+            case 'exact': 
+              if (strpos($field,'AES')!==false) $field.=' = ';
+              $this->or_where( $field, $term, FALSE);
+              break;
+            case 'word':
+              $this->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
+              break;
+            case 'like':
+            default:
+              $this->or_like( $field, $term, 'both', FALSE);
+              break;
           }
         }
       }
-      
-      // End of term query
-      $this->db->group_end();
     }
     
     return $this;
   }
   
-  /**
-   * Bouw een gehele zoekquery op
-   *
-   * @return void
-   * @author Jan den Besten
-   */
-  private function _find( $search=NULL, $settings=NULL ) {
-    if (is_null($search))   $search = $this->tm_find['search'];
-    if (is_null($settings)) $settings = $this->tm_find['settings'];
-    
-    // Loop alle search termen langs
-    $this->db->group_start();
-    foreach ( $search as $key => $item) {
-      // GROUP
-      if ( isset($item['group']) and in_array(strtoupper($item['group']),array('GROUP_START','AND_GROUP_START','NOT_GROUP_START','AND_NOT_GROUP_START')) ) {
-        $group=strtolower($item['group']);
-        switch ($group) {
-          case 'group_start':
-            $group='or_group_start';
-            break;
-          case 'and_group_start':
-            $group='group_start';
-            break;
-          case 'not_group_start':
-            $group='or_not_group_start';
-            break;
-          case 'and_not_group_start':
-            $group='not_group_start';
-            break;
-        }
-        $this->db->$group();
-        $items = $item;
-        unset($items['group']);
-        $this->_find( $items, $settings );
-        $this->db->group_end();
-      }
-
-      // ITEM
-      elseif (isset($item['term'])) {
-        $term = $item['term'];
-        $item_settings = array_unset_keys($item,array('term','field','settings'));
-        $item_settings = array_merge( $settings,$item['settings'],$item_settings );
-        $this->_find_term( $term, $item['field'], $item_settings );
-      }
-      
-    }
-    $this->db->group_end();
-    
-    return $this;
-  }
+  
 
 
 
@@ -3303,7 +4177,7 @@ Class Data_Core extends CI_Model {
    * 
    * NB Alleen de relaties die bekend zijn in settings['relations'] worden meegenomen.
    * 
-   * Voorbeelden zijn te vinden in /admin/test/relations (NB als de 'flexyadmin_test' is geselecteerd)
+   * Voorbeelden zijn te vinden in /_admin/test/relations (NB als de 'flexyadmin_test' is geselecteerd)
    * 
    * Reset alle relaties:
    * (wordt automatisch aangeroepen na iedere ->get() variant)
@@ -3315,6 +4189,7 @@ Class Data_Core extends CI_Model {
    * ----------
    * 
    * Wordt niet vaak gebruikt. Maar in sommige gevallen toch handig om data van een tabel in meerdere tabellen te splitsen.
+   * Je kunt het zien als een samenvoeging van twee tabellen.
    * Werkt hetzelfde als many_to_one.
    * 
    * ->with( 'one_to_one' );
@@ -3322,8 +4197,8 @@ Class Data_Core extends CI_Model {
    * one_to_one resultaat
    * --------------------
    * 
-   * De velden uit de extra tabel krijgen de naam: 'extra_tabel.veld' om vewarringen te voorkomen.
-   * Bij ->get_result() varianten wordt niet een mogelijk niet bestaande rij uit de extra tabel vervangen door default data.
+   * De velden uit de extra tabel krijgen de naam van zichzelf. Dus je moet altijd unieke veldnamen hebben.
+   * Bij ->get_result() varianten wordt een mogelijk niet bestaande rij uit de extra tabel vervangen door default data.
    * 
    * 
    * many_to_one
@@ -3502,14 +4377,14 @@ Class Data_Core extends CI_Model {
       if ($abstract) $fields='abstract';
       // bij 'many_to_many' is $what hetzelfde als de tabel, bij 'many_to_one' moet dat uit de relaties settings worden gehaald
       $table = $what;
-      if ($type==='many_to_one') $table = $this->settings['relations']['many_to_one'][$what]['other_table'];
+      if ($type==='many_to_one') $table = $this->settings['relations'][$type][$what]['other_table'];
       // fields moet een (lege) array of een string ('abstract') zijn.
       if (is_string($fields) and $fields!==$this->config->item('ABSTRACT_field_name')) {
         $fields = explode( ',',$fields );
       }
       // Als fields een lege array is, stop dan alle velden van die tabel erin
       if (is_array($fields) and empty($fields)) {
-        if ($type=='one_to_one')   $fields = $this->get_other_table_fields( $table );
+        if ($type=='one_to_one')   $fields = $this->get_other_table_fields( $this->settings['relations']['one_to_one'][$what]['other_table'] );
         if ($type=='many_to_one')  $fields = $this->get_other_table_fields( $table );
         if ($type=='one_to_many')  $fields = $this->get_other_table_fields( $this->settings['relations']['one_to_many'][$what]['other_table'] );
         if ($type=='many_to_many') $fields = $this->get_other_table_fields( $this->settings['relations']['many_to_many'][$what]['other_table'] );
@@ -3584,22 +4459,23 @@ Class Data_Core extends CI_Model {
   /**
    * Bouwt de query op voor relaties, roept voor elke soort relatie een eigen method aan.
    *
-   * @param string $with 
    * @return $this
    * @author Jan den Besten
    */
-  protected function _with( $with ) {
-    // trace_($with);
-    foreach ( $with as $type => $what ) {
-      $method = '_with_'.$type;
-      if ( method_exists( $this, $method ) ) {
-        $this->$method( $what );
-      }
-      else {
-        $this->reset();
-        throw new ErrorException( __CLASS__.'->'.__METHOD__.'() does not exists. The `'.$type.'` relation could not be included in the result.' );
+  protected function _with() {
+    if (!empty($this->tm_with)) {
+      foreach ( $this->tm_with as $type => $what ) {
+        $method = '_with_'.$type;
+        if ( method_exists( $this, $method ) ) {
+          $this->$method( $what );
+        }
+        else {
+          $this->reset();
+          throw new ErrorException( __CLASS__.'->'.__METHOD__.'() does not exists. The `'.$type.'` relation could not be included in the result.' );
+        }
       }
     }
+    
     return $this;
   }
   
@@ -3614,11 +4490,11 @@ Class Data_Core extends CI_Model {
     foreach ($what as $key => $info) {
       $fields      = $info['fields'];
       $json        = el('json',$info,false);
-      $foreign_key = $this->settings['relations']['one_to_one'][$key]['foreign_key'];
       $other_table = $this->settings['relations']['one_to_one'][$key]['other_table'];
+      $foreign_key = $this->settings['relations']['one_to_one'][$key]['foreign_key'];
       $as          = el('as',$info, $other_table);
       // Select fields
-      $this->_select_with_fields( 'one_to_one', $other_table, $as, $fields, $foreign_key, $json );
+      $this->_select_with_fields( 'one_to_one', $other_table, $as, $fields, $id, $json );
       // Join
       $this->join( $other_table.' AS '.$as, $as.'.'.$foreign_key.' = '.$this->settings['table'].".".$id, 'left');
     }
@@ -3688,24 +4564,23 @@ Class Data_Core extends CI_Model {
   protected function _with_many_to_many( $tables ) {
     $id = $this->settings['primary_key'];
     foreach ( $tables as $what => $info ) {
-      $fields   = $info['fields'];
-      $json  = $info['json'];
+      $fields = $info['fields'];
+      $json   = $info['json'];
       $rel_table         = $this->settings['relations']['many_to_many'][$what]['rel_table'];
       $this_table        = $this->settings['relations']['many_to_many'][$what]['this_table'];
       $other_table       = $this->settings['relations']['many_to_many'][$what]['other_table'];
       $this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
       $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
-      $as                = $this->settings['relations']['many_to_many'][$what]['result_name'];
-      $sub_as            = '_'.$as.'_';
+      $result_name       = $this->settings['relations']['many_to_many'][$what]['result_name'];
+      $join_name         = $rel_table;
+      if (isset($this->settings['relations']['many_to_many'][$what]['join_name'])) {
+        $join_name = $this->settings['relations']['many_to_many'][$what]['join_name'];
+      }
       // Select fields
-      $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
+      $this->_select_with_fields( 'many_to_many', $other_table, $result_name, $fields, '', $json );
       // Joins
-      // $this->join( $rel_table.' AS '.$what,    $this_table.'.'.$id.' = '.$what.".".$this_foreign_key,     'left');
-      // $this->join( $other_table,  $what.'.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
-      $this->join( $rel_table.' AS '.$sub_as, $this_table.'.'.$id.' = '.$sub_as.".".$this_foreign_key, 'left');
-      $this->join( $other_table.' AS '.$as,   $sub_as.'.'.$other_foreign_key.' = '.$as.".".$id, 'left');
-      // $this->join( $rel_table.' AS '.'_'.$as,    $this_table.'.'.$id.' = '.'_'.$as.".".$this_foreign_key,     'left');
-      // $this->join( $other_table.' AS '.$as,  $rel_table.'.'.$other_foreign_key.' = '.$as.".".$id,  'left');
+      $this->join( $rel_table.' AS '.$join_name,     $this_table.'.'.$id.' = '.$join_name.".".$this_foreign_key, 'left');
+      $this->join( $other_table.' AS '.$result_name, $join_name.'.'.$other_foreign_key.' = '.$result_name.".".$id, 'left');
     }
     return $this;
   }
@@ -3733,12 +4608,12 @@ Class Data_Core extends CI_Model {
     }
     elseif ( $fields === 'abstract' ) {
       $abstract_fields = $this->get_other_table_abstract_fields( $other_table );
-      // if ($type=='many_to_many') {
-      //   $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table.'.' );
-      // }
-      // else {
-        $abstract = $this->get_compiled_abstract_select( $as_table, $abstract_fields, $as_table.'.' );
-      // }
+      $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table );
+      $other_table_order = $this->get_other_table_setting($other_table,'order_by');
+      if (!is_array($other_table_order)) $other_table_order = explode(',',$other_table_order);
+      $other_table_order = current($other_table_order);
+      $abstract_order = $this->db->protect_identifiers(  $as_table.'.'.$other_table_order );
+      $abstract_order = str_replace(array('`ASC`','`DESC`'),array('ASC','DESC'),$abstract_order);
     }
     
     //
@@ -3748,11 +4623,12 @@ Class Data_Core extends CI_Model {
       $select = $abstract;
       if ($json) {
         $abstract = remove_suffix($abstract,' AS ');
-        $select = 'GROUP_CONCAT( DISTINCT "{",'.$abstract.',"}" ORDER BY '.$abstract.' SEPARATOR ", ") `'.$as_table.'`';
+        if (!isset($abstract_order)) $abstract_order = $abstract;
+        $select = 'GROUP_CONCAT( DISTINCT "{",'.$abstract.',"}" ORDER BY '.$abstract_order.' SEPARATOR ", ") `'.$as_table.'`';
       }
       else {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
-        if ($type!=='many_to_one' ) {
+        if ($type!=='many_to_one' and $type!=='one_to_one') {
           $other_primary_key = $this->get_other_table_setting( $other_table, 'primary_key', PRIMARY_KEY);
           $select = '`'.$as_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
         }
@@ -3776,14 +4652,28 @@ Class Data_Core extends CI_Model {
           'add_slashes' => !in_array($field_type, $this->config->item('FIELDS_number_fields')) and !in_array($field_type, $this->config->item('FIELDS_bool_fields')),
           'field'       => $field,
           'select'      => '`' . $as_table . '`.`'.$field.'`',
-          // 'select'      => '`' . ( $type==='many_to_many' ? $other_table : $as_table) . '`.`'.$field.'`',
+          // 'select'      => ( $type==='one_to_one' ? '' : '`'.$as_table.'`.') .'`'.$field.'`',
         );
       }
       
       // SELECT normaal
       if (!$json) {
         foreach ($select_fields as $field => $select_field) {
-          $select .= $select_field['select'].' AS `'.$as_table.'.'.$field.'`, ';
+          $aes_field = $select_field['select'];
+          $aes_field = $this->_aes_decrypt_field($aes_field);
+          if ($type==='one_to_one') {
+            $sub_select = $aes_field.' AS `'.$field.'`';
+            if (isset($this->tm_select[$field])) {
+              $this->tm_select[$field] = $sub_select;
+            }
+            elseif ($this->tm_select[$as_table]) {
+              $select .= $sub_select.', ';  
+            }
+          }
+          else {
+            $sub_select = $aes_field.' AS `'.$as_table.'.'.$field.'`';
+            $select .= $sub_select.', ';
+          }
         }
         $select = trim($select,',');
       }
@@ -3818,15 +4708,19 @@ Class Data_Core extends CI_Model {
     $select = trim(trim($select),',');
     
     // Stop select in query, als het kan direct na foreign_key
-    if (isset($foreign_key) and isset($this->tm_select[$foreign_key])) {
-      $this->tm_select = array_add_after( $this->tm_select, $foreign_key, array($as_table=>$select) );
-    }
-    else {
-      $this->tm_select[$as_table] = $select;
+    if (!empty($select)) {
+      if (isset($foreign_key) and isset($this->tm_select[$foreign_key]) and $type!=='one_to_one') {
+        $this->tm_select = array_add_after( $this->tm_select, $foreign_key, array($as_table=>$select) );
+      }
+      else {
+        $this->tm_select[$as_table] = $select;
+      }
     }
 
     // json?
-    if ($json) $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
+    if ($json) {
+      $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
+    }
     
     return $this;
   }
@@ -3864,6 +4758,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function order_by( $orderby, $direction = '', $escape = NULL ) {
+    if (empty($orderby)) return $this;
     // Zorg ervoor dat order_by een array is met direction erbij en verder volgens specs van Query Builder
     if (is_string($orderby)) $orderby = explode(',',$orderby);
     if (!empty($direction)) {
@@ -3898,7 +4793,7 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-	public function limit( $limit, $offset = 0) {
+	public function limit( $limit = NULL, $offset = 0) {
     $this->tm_limit = $limit;
     $this->tm_offset = $offset;
 		return $this;
@@ -3918,8 +4813,54 @@ Class Data_Core extends CI_Model {
    */
   public function validate( $validation = true ) {
     $this->validation = $validation;
-    if ( $this->validation ) $this->load->library('form_validation');
     return $this;
+  }
+
+
+  /**
+   * Run validation
+   *
+   * @param      array  $set    De data
+   * @param      string  $table  Table[''] standaard de ingesteld tabel
+   *
+   * @return     bool
+   */
+  protected function run_validation($set,$table='') {
+    if (empty($table)) $table = $this->settings['table'];
+
+    // Alleen op velden die in deze tabel echt bestaan, of extra one_to_one velden die validatie info hebben
+    foreach ($set as $field => $value) {
+      if (!$this->db->field_exists($field,$table) and !isset($this->settings['field_info'][$field]['validation'])) unset($set[$field]);
+    }
+
+    // Prep Booleans
+    foreach ($set as $field => $value) {
+      $prefix = get_prefix($field);
+      if (in_array($prefix,array('b','is','has'))) {
+        if ($value===true) $value = true;
+        if ($value===false) $value = false;
+        if ($value===1) $value = true;
+        if ($value===0) $value = false;
+        if ($value==='1') $value = true;
+        if ($value==='0') $value = false;
+        if (strtolower($value)==='true') $value = true;
+        if (strtolower($value)==='false') $value = false;
+        $set[$field] = $value;
+      }
+    }
+
+    $validated = true;
+    if (!empty($set)) {
+      $this->load->library('form_validation');
+      $validated = $this->form_validation->validate_data( $set, $table );
+      if (!$validated) {
+        $this->query_info['validation'] = FALSE;
+        if (!isset($this->query_info['validation_errors']) or empty($this->query_info['validation_errors'])) $this->query_info['validation_errors'] = array();
+        $this->query_info['validation_errors'] = array_merge( $this->query_info['validation_errors'], $this->form_validation->get_error_messages() );
+      }
+    }
+
+    return $validated;
   }
   
   
@@ -3937,7 +4878,21 @@ Class Data_Core extends CI_Model {
    */
 	public function set($key, $value = '', $escape = NULL) {
 		if ( ! is_array($key)) $key = array($key => $value);
-    $this->tm_set = $key;
+    if ($this->tm_set) {
+      $this->tm_set = array_merge($this->tm_set,$key);
+    }
+    else {
+      $this->tm_set = $key;
+    }
+
+    // Controleer of een veld opties heeft, en zorg dat , worden vervangen door |
+    foreach ($this->tm_set as $key => $item) {
+      if ( el(array('options',$key,'multiple'),$this->settings) and isset($this->settings['options'][$key]['data']) ) {
+        $item = str_replace(',','|',$item);
+        $this->tm_set[$key] = $item;
+      }
+    }
+
 		return $this;
 	}
 
@@ -3948,7 +4903,7 @@ Class Data_Core extends CI_Model {
 	 *
 	 * @param array $set [NULL]
 	 * @param mixed $escape [NULL]
-	 * @return mixed FALSE als niet gelukt, anders de id van het aangepaste item
+	 * @return mixed FALSE als niet gelukt, anders de id van het nieuwe item
 	 * @author Jan den Besten
 	 */
   public function insert( $set = NULL, $escape = NULL ) {
@@ -4028,7 +4983,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	protected function _update_insert( $type, $set = NULL, $where = NULL, $limit = NULL ) {
-    
+
     // Is een type meegegeven?
     $types = array('INSERT','UPDATE');
     if ( ! in_array($type,$types) ) {
@@ -4036,7 +4991,7 @@ Class Data_Core extends CI_Model {
     }
     
     // Is user id nodig?
-    if ( $this->field_exists('user_changed')) {
+    if ( $this->field_exists('user_changed') or isset($this->settings['restricted_rights']) ) {
       if ( !isset( $this->user_id )) {
         $this->set_user_id();
       }
@@ -4051,23 +5006,55 @@ Class Data_Core extends CI_Model {
       return FALSE;
     }
 
-    
     /**
-     * Ok we kunnen! Stel nog even alles in en maak cache leeg
+     * Stel nog alles in.
      */
-    if ($where) $this->where( $where );
-    if ($limit) $this->limit( $limit );
-		$set = $this->tm_set;
+    $set = $this->tm_set;
     $id = NULL;
-    $this->clear_cache();
 
-    
     /**
-     * Als een UPDATE check of er wel een WHERE is om te voorkomen dat een hele tabel wordt overschreven.
+     * Zijn er restricties op rechten?
      */
-    if ( $type=='UPDATE' and !$this->tm_has_condition ) {
-      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): no condition set (WHERE,LIKE etc). Could result in overwriting all rows in `'.$this->settings['table'].'`' );
+    if (isset( $this->settings['restricted_rights'])) {
+      $restricted_rights = $this->settings['restricted_rights'];
+      $restricted_rights_fields = array_keys($restricted_rights);
+      $restricted_rights_fields = array_intersect( $restricted_rights_fields, array_keys($set) );
+      if ($restricted_rights_fields) {
+        foreach ($restricted_rights_fields as $field) {
+          $rights = $restricted_rights[$field];
+          // Check if type is restricted to this type
+          if (in_array($type,el('types',$rights,array('UPDATE')))) {
+            // Check user group
+            $groups = $rights['groups'];
+            if (!array_intersect($groups,$this->user_groups)) {
+              // Alleen in bepaalde gevallen (en where is een id)
+              if (isset($rights['where']) and is_numeric($where)) {
+                $sql = 'SELECT * FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'`="'.$where.'" AND '.$rights['where'];
+                $query = $this->db->query($sql);
+                if ($query->num_rows()>=1) {
+                  $this->query_info['validation'] = FALSE;  
+                }
+              }
+              else {
+                $this->query_info['validation'] = FALSE;                
+              }
+              if (isset($this->query_info['validation']) and $this->query_info['validation']===FALSE) {
+                if (!isset($this->query_info['validation_errors']) or empty($this->query_info['validation_errors'])) $this->query_info['validation_errors'] = array();
+                $this->query_info['validation_errors'] = array_merge( $this->query_info['validation_errors'], array( $field => langp('no_minimal_rights_for',$field)) );
+                return FALSE;
+              }
+            }
+          }
+        }
+      }
     }
+
+
+
+    /**
+     * Maak cache leeg
+     */
+    $this->clear_cache($this->settings['table']);
     
 
     /**
@@ -4075,41 +5062,107 @@ Class Data_Core extends CI_Model {
      */
     if ( $type=='INSERT' and isset( $set["order"]) ) {
       $this->load->model('order','_order');
-      if ( isset( $set["self_parent"]) ) { 
-        $set["order"] = $this->_order->get_next_order( $this->settings['table'], $set["self_parent"]);
+      if ( isset( $set['self_parent']) ) { 
+        $set['order'] = $this->_order->get_next_order( $this->settings['table'], $set['self_parent']);
       }
       else {
-        $set["order"] = $this->_order->get_next_order( $this->settings['table'] );
+        $set['order'] = $this->_order->get_next_order( $this->settings['table'] );
       }
     }
-      
+
+    /**
+     * Als 'self_parent' is aangepast, reset order
+     */
+    if ( $type=='UPDATE' and isset($set['self_parent']) and isset($set[$this->settings['primary_key']]) ) {
+      $key = $set[$this->settings['primary_key']];
+      $sql = 'SELECT `self_parent` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'`="'.$key.'"';
+      $query = $this->db->query($sql);
+      if ($query) {
+        $old_data = $query->row_array();
+        $old_parent = $old_data['self_parent'];
+        if ($old_parent!==$set['self_parent']) {
+          $this->load->model('order','_order');
+          $set['order'] = $this->_order->get_next_order( $this->settings['table'], $set['self_parent']);
+        }
+      }
+    }
+    
+
+    /**
+     * Query verder opbouwen
+     */
+    if ($where) $this->where( $where );
+    $this->_where();
+    if ($limit) $this->limit( $limit );
+
+    /**
+     * Als een UPDATE check of er wel een WHERE is om te voorkomen dat een hele tabel wordt overschreven.
+     */
+    if ( $type=='UPDATE' and !$this->tm_has_condition ) {
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): no condition set (WHERE,LIKE etc). Could result in overwriting all rows in `'.$this->settings['table'].'`' );
+    }
+
     /**
      * Valideer eventueel eerst de set
      */
     if ( $this->validation ) {
-      if ( ! $this->form_validation->validate_data( $set, $this->settings['table'] ) ) {
-        $this->query_info = array(
-          'validation'        => FALSE,
-          'validation_errors' => $this->form_validation->get_error_messages()
-        );
-        // Niet gevalideerd, dus we kunnen geen update doen, dus FALSE
+      // Niet gevalideerd, dus we kunnen geen update doen, FALSE als return
+      if ( ! $this->run_validation( $set ) ) {
         $this->reset();
         return FALSE;
       }
+      // Goed gevalideerd, maar wellicht is de data geprepped
+      else {
+        $this->load->library('form_validation');
+        $set = array_merge( $set, $this->form_validation->get_validated_data( array_keys($set)) );
+      }
     }
-    
+
+    /**
+     * Defaults van 'lege' velden
+     */
+    foreach ( $set as $key => $value ) {
+      $pre = get_prefix($key);
+      switch ($pre) {
+
+        // case 'id' :
+        //   if ($value=='') $value=0;
+        //   break;
+
+        // case 'uri' :
+        //   if (empty($value)) $set[$key] = $this->settings['field_info'][$key]['default'];
+        //   break;
+
+        case 'dat':
+        case 'date':
+          if (empty($value) or $value=='0000-00-00') {
+            $set[$key] = $this->settings['field_info'][$key]['default'];
+          }
+          break;
+
+        case 'tme':
+        case 'datetime':
+          if (empty($value) or substr($value,0,10)=='0000-00-00') {
+            $set[$key] = $this->settings['field_info'][$key]['default'];
+          }
+          break;
+      }
+    }
+
     /**
      * Split eventuele one_to_one data
      */
     if ( isset($this->settings['relations']['one_to_one'])) {
       $to_one = array();
       foreach ($this->settings['relations']['one_to_one'] as $what=>$relation) {
-        // $other_table = $relation['other_table'];
-        // $foreign_key = $relation['foreign_key'];
-        $result_name = $relation['result_name'];
-        $to_one[$what] = filter_by_key($set,$result_name.'.');
-        if ($to_one[$what]) {
-          $set = array_unset_keys($set,array_keys($to_one[$what]));
+        $other_fields = el(array('one_to_one',$what,'fields'),$this->tm_with);
+        if ($other_fields) {
+          $other_fields = array_diff($other_fields,array('id','uri','user_changed','tme_last_changed'));
+          $to_one_keys  = array_intersect(array_keys($set),$other_fields);
+          $to_one[$what] = array_keep_keys($set,$to_one_keys);
+          if ($to_one[$what]) {
+            $set = array_unset_keys($set,$to_one_keys);
+          }
         }
       }
     }
@@ -4135,30 +5188,48 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
     /**
      * Verwijder onnodige velden
      */
     unset($set[$this->settings['primary_key']]);
     unset($set['tme_last_changed']);
 
-        
     /**
      * Verwijder data die NULL is of waarvan het veld niet in de table bestaat.
+     * NB Moet met ->db->field_exists() omdat het om echt bestaande velden gaat ipv om velden die in settings zijn ingesteld
      */
     foreach ( $set as $key => $value ) {
-      if ( !isset($value) or !$this->field_exists( $key) ) unset( $set[$key] );
+      if ( !isset($value) or !$this->db->field_exists( $key, $this->settings['table'] ) ) unset( $set[$key] );
     }
-
-    if (isset($set['self_parent']) and empty($set['self_parent'])) {
-      $set['self_parent'] = 0;
-    }
-
     
+    
+    /**
+     * Maak een hash van wachtwoordvelden
+     */
+    foreach ( $set as $key => $value ) {
+      $pre = get_prefix($key);
+      if (in_array($pre,$this->config->item('PASSWORD_field_types'))) {
+        $set[$key] = $this->flexy_auth->hash_password( $value );
+      }
+    }
+
+    /**
+     * AES Encrypt velden
+     */
+    $set_aes = array();
+    foreach ($set as $key => $value) {
+      $aes = $this->_aes_encrypt_value($key,$value);
+      if ($aes!==$value) {
+        $set_aes[$key] = $aes;
+        unset($set[$key]);
+      }
+    }
+
     /**
      * Ga door als de set niet leeg is
      */
-    if (!empty($set) or $to_many or $to_one) {
+    if (!empty($set) or !empty($set_aes) or isset($to_many) or isset($to_one)) {
       
       /**
        * User fields toevoegen aan set?
@@ -4171,33 +5242,39 @@ Class Data_Core extends CI_Model {
       $this->db->trans_start();
 
       /**
-       * Als set leeg is (maar wel ..to_many) zoek dan de id en stel WHERE opnieuw in
+       * Als set leeg is (maar wel relatie data) zoek dan de id en stel WHERE opnieuw in
        */
-      if (empty($set)) {
-        // WHERE is al ingesteld, dus we kunnen gewoon de id's vinden
-        $result = $this->select( $this->settings['primary_key'] )->get_result();
-        $ids = array_keys($result);
-        $id = current($ids);
-        $log = array(
-          'query' => $this->db->last_query(),
-          'table' => $this->settings['table'],
-          'id'    => $id
-        );
-        $this->query_info = array(
-          'affected_rows' => 0,
-          'affected_ids'  => $ids,
-        );
+      if (empty($set) and empty($set_aes)) {
+        $id=-1;
+        if ($type=='UPDATE') {
+          // WHERE is al ingesteld, dus we kunnen gewoon de id's vinden
+          $this->select( $this->settings['table'].'.'.$this->settings['primary_key']. ' AS `primary_key`' );
+          $result = $this->get_result();
+          $ids = array_column($result,'primary_key');
+          $id = current($ids);
+          $log = array(
+            'query' => $this->db->last_query(),
+            'table' => $this->settings['table'],
+            'id'    => $id
+          );
+          $this->query_info = array(
+            'affected_rows' => 0,
+            'affected_ids'  => $ids,
+            'last_query'    => $log['query'],
+          );
+        }
       }
       else {
         
-        $this->db->set($set);
+        if (!empty($set))     $this->db->set($set);
+        if (!empty($set_aes)) $this->db->set($set_aes,'',FALSE);
     
         /**
          * INSERT of UPDATE doen
          */
         if ($type=='INSERT') {
-          $this->db->insert( $this->settings['table'] );
-          $id = $this->db->insert_id();
+  				$this->db->insert( $this->settings['table'] );
+  				$id = $this->db->insert_id();
       
           $log = array(
             'query' => $this->db->last_query(),
@@ -4207,11 +5284,12 @@ Class Data_Core extends CI_Model {
           $this->query_info = array(
             'insert_id'     => $id,
             'affected_rows' => 1,
+            'last_query'    => $log['query'],
           );
-        }
-        else {
+  			}
+      	else {
           $sql = $this->db->get_compiled_update( $this->settings['table'], FALSE );
-          $this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
+  				$this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
           $log = array(
             'query' => $this->db->last_query(),
             'table' => $this->settings['table'],
@@ -4222,9 +5300,10 @@ Class Data_Core extends CI_Model {
           $this->query_info = array(
             'affected_rows' => $this->db->affected_rows(),
             'affected_ids'  => $ids,
+            'last_query'    => $log['query'],
           );
           $log['id']=implode(',',$ids);
-        }
+  			}
       }
       
       /**
@@ -4236,8 +5315,14 @@ Class Data_Core extends CI_Model {
             $other_table = $this->settings['relations']['one_to_one'][$what]['other_table'];
             $foreign_key = $this->settings['relations']['one_to_one'][$what]['foreign_key'];
             $result_name = $this->settings['relations']['one_to_one'][$what]['result_name'];
-            
             if ( $this->user_id!==FALSE ) $other_set = $this->_add_user_fields_to_set( $other_set,$type,$other_table );
+
+            // only existing keys in set
+            foreach ($other_set as $key => $value) {
+              if ( is_numeric($key) or !$this->db->field_exists( $key, $other_table ) ) {
+                unset( $other_set[$key] );
+              }
+            }
             
             /**
              * INSERT als niet bestaat, anders UPDATE
@@ -4265,7 +5350,7 @@ Class Data_Core extends CI_Model {
 			 */
 			if ( !empty($to_many) ) {
         $affected = 0;
-        
+
         // many_to_many
         if (isset($to_many['many_to_many'])) {
   				foreach( $to_many['many_to_many'] as $what => $other_ids ) {
@@ -4333,10 +5418,12 @@ Class Data_Core extends CI_Model {
         }
         
         $this->query_info['affected_rel_rows'] = $affected;
+        $this->query_info['last_query']        = $log['query'];
 			}
       $this->db->trans_complete();
 		}
-        
+
+    
     if (isset($log)) {
       $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
     }
@@ -4374,8 +5461,9 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   private function _check_other_ids($other_ids) {
-    if (is_string($other_ids)) $other_ids=preg_split('/[|,]/',$other_ids);
     if (is_null($other_ids)) $other_ids = array();
+    if (empty($other_ids))   $other_ids = array();
+    if (is_string($other_ids)) $other_ids=preg_split('/[|,'.$this->settings['abstract_delimiter'].']/',$other_ids);
     if (!is_array($other_ids)) $other_ids=array($other_ids);
 		foreach ( $other_ids as $okey => $other_id ) {
       if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
@@ -4396,18 +5484,20 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	public function delete( $where = '', $limit = NULL, $reset_data = TRUE ) {
-    $this->clear_cache();
+    $this->clear_cache($this->settings['table']);
     
     /**
      * Is het een ordered tabel?
      */
     $is_ordered_table = $this->field_exists( 'order' );
+    $is_tree          = $this->field_exists( 'self_parent' );
     if ($is_ordered_table) $this->load->model('order','_order');
 
     /**
      * Bouw query op, bewaar deze, en reset query
      */
     if ($where) $this->where( $where );
+    $this->_where();
     if ($limit) $this->limit( $limit );
     // Bewaar query en zorg ervoor dat LIMIT mee komt
     if ($this->tm_limit) $limit = $this->tm_limit;
@@ -4446,11 +5536,7 @@ Class Data_Core extends CI_Model {
      */
     $this->db->trans_start();
 		
-    // $is_deleted = $this->db->delete( $this->settings['table'], '', $this->tm_limit, $reset_data );
     $is_deleted = $this->db->query( $compiled_delete );
-    
-    // trace_(['is_deleted' => $is_deleted,'compiled_delete'=>$compiled_delete,'ids'=>$ids,'deleted_data'=>$deleted_data]);
-    
     if ($is_deleted) {
       $log = array(
         'query' => $this->db->last_query(),
@@ -4458,7 +5544,6 @@ Class Data_Core extends CI_Model {
         'id'    => implode(',',$ids),
       );
     }
-    
     
     $this->query_info = array(
       'affected_rows' => $this->db->affected_rows(),
@@ -4471,6 +5556,14 @@ Class Data_Core extends CI_Model {
   		 * Reset volgorde
   		 */
   		if ( $is_ordered_table ) {
+        if ($is_tree) {
+          // Update childrens parent and order
+          $deleted_item = current($deleted_data);
+          $this->db->set('self_parent',$deleted_item['self_parent']);
+          $this->db->set('order',$deleted_item['order']);
+          $this->db->where('self_parent',$deleted_item['id']);
+          $this->db->update($this->settings['table']);
+        }
   		  $this->query_info['moved_rows'] = $this->_order->reset( $this->settings['table'] );
   		}
 
@@ -4608,8 +5701,12 @@ Class Data_Core extends CI_Model {
   public function total_rows( $calculate=FALSE, $json=FALSE ) {
     if ($calculate) {
       // perform simple query count
-      $query = $this->db->query( $this->last_clean_query( $json ) );
-      $total_rows = $query->num_rows();
+      $total_rows = 0;
+      $sql = $this->last_clean_query( $json );
+      $query = $this->db->query( $sql );
+      if (is_object($query)) {
+        $total_rows = $query->num_rows();
+      }
       return $total_rows;
     }
     return $this->get_query_info('total_rows');
@@ -4669,6 +5766,7 @@ Class Data_Core extends CI_Model {
     // $query = preg_replace("/(WHERE.*)LIMIT/uUs", " LIMIT", $query);
     $query = preg_replace("/SELECT.*FROM/uUs", 'SELECT `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'` FROM', $query, 1);
     $query = preg_replace("/LIMIT\s+\d*/us", " ", $query);
+    $query = preg_replace("/ORDER\sBY\sRAND\(\)*/us", "", $query);
     $query = preg_replace("/ORDER\sBY[^)]*/us", "", $query);
     if ($groupby and strpos($query,'GROUP BY')===FALSE) {
       $query.=' GROUP BY `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`';
@@ -4754,7 +5852,7 @@ Class Data_Core extends CI_Model {
 				$type           = sizeof($matches) > 1 ? $matches[1] : NULL;
 				$max_length     = sizeof($matches) > 3 ? $matches[3] : NULL;
         $info=array(
-  				'name'        => $field->Field,
+  				'label'       => $field->Field,
   				'type'        => $type,
   				'default'     => $field->Default,
   				'max_length'  => $max_length,
@@ -4764,7 +5862,7 @@ Class Data_Core extends CI_Model {
         if ( strpos($info['type'],'int')!==FALSE ) {
           $info['default'] = (int) $info['default'];
         }
-        $this->field_data[$info['name']] = $info;
+        $this->field_data[$info['label']] = $info;
 			}
 			$query->free_result();
 		}
@@ -4776,6 +5874,19 @@ Class Data_Core extends CI_Model {
     }
     return $this->field_data;
 	}
+  
+  /**
+   * Geeft database informatie over de tabel
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function table_status() {
+    $query  = $this->query("SHOW TABLE STATUS WHERE NAME = '".$this->settings['table']."'");
+    $status = current($query->result_array());
+    return array_change_key_case($status);
+  }
+  
   
   /**
    * Geeft terug of de tabel een menu-achtige tabel is (met de velden 'order','self_parent' en 'uri')

@@ -12,18 +12,17 @@
  * 
  * - `table`                    // De tabel waar de record van wordt opgevraagd.
  * - `where`                    // Hiermee wordt bepaald welk record wordt opgevraagd.
- * - `options`                  // Hiermee worden opties voor velden toegevoegd (zoals dropdowns etc)
- * - `schemaform`               // Als TRUE dan wordt een json schemaform van het formulier toegevoegd (zie http://schemaform.io)
+ * - `[as_form=FALSE]`          // Als `TRUE`, dan wordt de data als specifiek form formaat teruggegeven zoals het de backend van de CMS wordt getoond.
  * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
  * 
  * ###Voorbeelden:
  * 
  * - `_api/row?table=tbl_menu&where=3`
- * - `_api/row?table=tbl_menu&where=10&options=true`
+ * - `_api/row?table=tbl_menu&where=10`
  * 
  * ###Response:
  * 
- * Voorbeeld response (dump) van `_api/table?row=tbl_menu&where=3&options=true&schemaform=true`:
+ * Voorbeeld response (dump) van `_api/table?row=tbl_menu&where=3`:
  * 
  *     [success] => TRUE
  *     [test] => TRUE
@@ -31,10 +30,6 @@
  *       [table] => 'tbl_menu'
  *       [where] => '3'
  *       [type] => 'GET'
- *      )
- *     [options] => (
- *      )
- *     [schemaform] => (
  *      )
  *     [data] => (
  *       [id] => '3'
@@ -98,7 +93,6 @@
  * - `table`                    // De tabel waar de record aan wordt toegevoegd.
  * - `where`                    // Bepaal hiermee welk record moet worden aangepast
  * - `data`                     // De aangepaste data (hoeft niet compleet, alleen de aan te passen velden meegeven is genoeg).
- * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
  * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
  * 
  * ###Voorbeeld:
@@ -174,8 +168,7 @@ class Row extends Api_Model {
 
 	public function __construct() {
 		parent::__construct();
-    $this->load->model('ui');
-	}
+  }
   
 
   /**
@@ -185,53 +178,61 @@ class Row extends Api_Model {
    * @author Jan den Besten
    */
   public function index() {
+    $rights=RIGHTS_NO;
     
-    // Check rechten
-    if ($this->args['table']==='res_media_files' AND isset($this->args['path'])) {
-      if ( !$this->_has_rights('media_'.$this->args['path']) ) {
-        return $this->_result_status401();
-      }
+    // Media?
+    $is_media = (isset($this->args['path']) and $this->args['table']==='res_assets');
+    if (substr($this->args['table'],0,6)==='media_') {
+      $is_media = true;
+      $this->args['path']  = substr($this->args['table'],6);
+      $this->args['table'] = 'res_assets';
     }
-    else {
-      if (!$this->_has_rights($this->args['table'])) {
-        return $this->_result_status401();
+
+    // Check rechten (als nog niet ingesteld)
+    if ( $rights===RIGHTS_NO ) {
+      if ($is_media) {
+        $rights = $this->_has_rights('media_'.$this->args['path'], el('where',$this->args));
       }
+      else {
+        $rights = $this->_has_rights( $this->args['table'], el('where',$this->args));
+      }
+      if ( $rights==RIGHTS_NO ) return $this->_result_status401();
     }
-    
-    // DEFAULTS
-    $fields=FALSE;
     
     if ( !$this->has_args() ) {
       return $this->_result_wrong_args();
     }
     
+    // DEFAULTS
+    $fields=FALSE;
+    
     // GET
     if ($this->args['type']=='GET') {
+      if ( $rights < RIGHTS_SHOW ) return $this->_result_norights();
       $this->result['data']=$this->_get_row();
-      if (el('schemaform',$this->args,false)==true) {
-        $this->result['schemaform'] = $this->data->schemaform( $this->result['data'],el('table',$this->args) );
-      }
       return $this->_result_ok();
     }
 
     // POST
     if ($this->args['type']=='POST') {
       
-      // UPDATE
-      if (isset($this->args['data']) and isset($this->args['where'])) {
-        if (!$this->_has_rights($this->args['table'])>=RIGHTS_EDIT) return $this->_result_norights();
-        $this->result['data']=$this->_update_row();
-        return $this->_result_ok();
-      }
       // INSERT
       if (isset($this->args['data']) and (!isset($this->args['where']) or $this->args['where']===-1) ) {
-        if (!$this->_has_rights($this->args['table'])>=RIGHTS_ADD) return $this->_result_norights();
+        if ( $rights < RIGHTS_ADD ) return $this->_result_norights();
         $this->result['data']=$this->_insert_row();
         return $this->_result_ok();
       }
+      
+      // UPDATE
+      if (isset($this->args['data']) and isset($this->args['where']) and $this->args['where']!==-1) {
+        if ( $rights < RIGHTS_EDIT ) return $this->_result_norights();
+        $this->result['data']=$this->_update_row();
+        return $this->_result_ok();
+      }
+      
       // DELETE
       if (!isset($this->args['data']) and isset($this->args['where'])) {
-        if (!$this->_has_rights($this->args['table'])>=RIGHTS_DELETE) return $this->_result_norights();
+        if ( $rights < RIGHTS_DELETE ) return $this->_result_norights();
         $this->result['data']=$this->_delete_row();
         return $this->_result_ok();
       }
@@ -248,11 +249,27 @@ class Row extends Api_Model {
    * @author Jan den Besten
    */
   private function _get_row() {
-    $args=$this->_clean_args(array('table','where'));
+    $args=$this->_clean_args(array('table','where','select'));
     $this->data->table( $args['table'] );
     if (!isset($args['where'])) $args['where']=null;
-    $values = $this->data->get_row( $args['where'] );
+    if (isset($args['select'])) $this->data->select($args['select'])->with('one_to_one');
+    if (el('as_form',$this->args,false)) {
+      $copy = false;
+      if (is_string($args['where'])) {
+        $id = $args['where'];
+        if (substr($id,0,1)=='_') {
+          $copy = true;
+          $args['where'] = substr($id,1);
+        }
+      }
+      $values = $this->data->get_form( $args['where'] );
+      if ($copy) $values['id'] = -1;
+    }
+    else {
+      $values = $this->data->get_row( $args['where'] );
+    }
     $this->info=$this->data->get_query_info();
+    $this->info['action'] = 'get';
     return $values;
   }
   
@@ -264,18 +281,26 @@ class Row extends Api_Model {
    */
   private function _update_row() {
     $args=$this->_clean_args(array('table','where','data'));
-    $data=$this->args['data'];
+    $data=$args['data'];
     $fields=array_keys($data);
     $this->data->table( $args['table'] );
     if ($data) {
+      // Call plugins
+      $current_data = $this->data->get_row( $args['where'] );
+      $data = $this->_after_update( $this->args['table'], $current_data, $data);
       // Save
-      $this->data->set( $data );
-      $this->data->where( $args['where'] );
-      $id = $this->data->validate()->update();
+      $id = $this->data->table($this->args['table'])->with('one_to_one')->validate()->update( $data, $args['where'] );
+      $logout = $this->data->logout();
+      if ($id===FALSE) $id = $args['where'];
       $this->info = $this->data->get_query_info();
-      return array('id'=>$id);
+      $this->info['action'] = 'update';
+      if ($logout) $this->info['logout'] = TRUE;
+      // Get data back
+      $this->data->table( $args['table'] );
+      $new_data = $this->data->get_form( $args['where'] );
+      return $new_data;
     }
-    return array('id'=>$old_data['id']);
+    return false;
   }
 
 
@@ -288,10 +313,22 @@ class Row extends Api_Model {
   private function _insert_row() {
     $args=$this->_clean_args(array('table','data'));
     $this->data->table( $args['table'] );
-    if (isset($args['where'])) $this->data->where( $args['where'] );
-    $this->data->set( $args['data'] );
-    $id = $this->data->validate()->insert();
-    $this->info=$this->data->get_query_info();
+    $data=$args['data'];
+    $id = false;
+    if ($data) {
+      // Call plugins
+      $old = $this->data->get_defaults();
+      $data = $this->_after_update( $this->args['table'], $old, $data);
+      // Insert
+      $id = $this->data->table($args['table'])->with('one_to_one')->validate()->insert( $data );
+      if ($id===FALSE) $id=-1;
+      $this->info = $this->data->get_query_info();
+      $this->info['action'] = 'insert';
+      // Get data back
+      $this->data->table( $args['table'] );
+      $new_data = $this->data->get_form( $id );
+      return $new_data;
+    }
     return array('id'=>$id);
   }
 
@@ -304,29 +341,31 @@ class Row extends Api_Model {
    */
   private function _delete_row() {
     $args=$this->_clean_args(array('table','where'));
-    $model='data';
-    // Media?
-    if ($args['table']==='res_media_files') {
-      $this->load->model('data/res_media_files');
-      $model = 'res_media_files';
-    }
-    else {
-      $this->$model->table( $args['table'] );
-    }
+    $this->data->table( $args['table'] );
+
+    $id = false;
     if (isset($args['where'])) {
-      if (is_array($args['where'])) {
-        $primary_key = $this->$model->get_setting( 'primary_key' );
-        $this->$model->where_in( $primary_key, $args['where'] ); 
+      
+      $primary_key = $this->data->get_setting( 'primary_key' );
+      if (!is_array($args['where'])) $args['where'] = array($args['where']);
+      
+      // Plugins
+      $id = current($args['where']);
+			$current_data = $this->data->get_row( $id );
+      if ( $this->_after_delete( $this->args['table'], $current_data) ) {
+        // Delete items
+        $id = $this->data->table( $this->args['table'] )->where_in( $primary_key, $args['where'] )->delete();  
       }
       else {
-        $this->$model->where( $args['where'] ); 
+        // Mag niet verwijderen van een plugin
+        $id = false;
       }
+
     }
-    $id = $this->$model->delete();
-    $this->info=$this->$model->get_query_info();
+    $this->info = $this->data->get_query_info();
+    $this->info['action'] = 'delete';
     return $id;
   }
-
 
 }
 

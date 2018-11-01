@@ -52,7 +52,7 @@ class Version extends CI_Model {
         $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[$key])))));
       }
       // build
-      $this->build = $this->version.' ['.$this->revision.'] {'.$this->hash.'} '.$this->date;
+      $this->build = $this->version.' {'.$this->hash.'} ';
       write_file($this->buildFile, $this->build);
     }
     else {
@@ -98,7 +98,22 @@ class Version extends CI_Model {
     }
     return $tag;
   }
-  
+
+  public function get_changelog($version='') {
+    if (empty($version)) $version=$this->get_version();
+    $changelog = read_file(APPPATH.'../../changelog.txt');
+    if (preg_match_all('/(?m)^\=(\d.*)\s*([^\=]*)/ui', $changelog,$matches)) {
+      $changelog = array();
+      foreach ($matches[1] as $key => $version) {
+        $changelog[]=array(
+          'version' => $version,
+          'log'     => $matches[2][$key],
+        );
+      }
+      return $changelog;
+    }
+    return FALSE;
+  }
 
 }
 

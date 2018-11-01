@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2018, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2018, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 1.0.0
@@ -101,11 +101,11 @@ function &DB($params = '', $query_builder_override = NULL)
 			show_error('You have specified an invalid database connection group ('.$active_group.') in your config/database.php file.');
 		}
 
-    // JDB if phpunit choose other group
-    if (IS_LOCALHOST and defined('PHPUNIT_TEST')) {
-      $active_group = "phpunit";
-    }
-    // end JDB
+		// // JDB if phpunit choose other group
+		// if (IS_LOCALHOST and defined('PHPUNIT_TEST')) {
+		//   $active_group = "phpunit";
+		// }
+		// // end JDB
 
 		$params = $db[$active_group];
 	}
@@ -196,35 +196,15 @@ function &DB($params = '', $query_builder_override = NULL)
 		class CI_DB extends CI_DB_driver { }
 	}
 
-  // JdB, make sure driver is 'mysqli' & pconnect=false
-  $params['dbdriver'] = "mysqli";
-  $params['pconnect'] = FALSE;
-  // end Jdb
-
 	// Load the DB driver
 	$driver_file = BASEPATH.'database/drivers/'.$params['dbdriver'].'/'.$params['dbdriver'].'_driver.php';
 
 	file_exists($driver_file) OR show_error('Invalid DB driver');
 	require_once($driver_file);
 
-  // COMMENT THIS: JdB
 	// Instantiate the DB adapter
-  // $driver = 'CI_DB_'.$params['dbdriver'].'_driver';
-  // $DB = new $driver($params);
-
-  // JdB, changes from here. 2015-05-02
-  $my_driver = config_item('subclass_prefix').'DB_mysqli_driver';
-  $my_driver_file = APPPATH.'core/'.$my_driver.'.php';
-  if (file_exists($my_driver_file)) {
-    require_once($my_driver_file);
-  	$driver = 'MY_DB_'.$params['dbdriver'].'_driver';
-  }
-  else {
-  	$driver = 'CI_DB_'.$params['dbdriver'].'_driver';
-  }
-	// Instantiate the DB adapter
+	$driver = 'CI_DB_'.$params['dbdriver'].'_driver';
 	$DB = new $driver($params);
-  // end JdB
 
 	// Check for a subdriver
 	if ( ! empty($DB->subdriver))
