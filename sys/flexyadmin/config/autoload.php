@@ -72,7 +72,9 @@ $autoload['helper'] = array(
   'array',
   'cache',
   'database',
+  'directory',
   'debug',
+  'html',
   'string',
   'url',
 );
@@ -122,7 +124,7 @@ $autoload['language'] = array();
 */
 
 // Also 'data/Data' is autoloaded in MY_Controller
-$autoload['model'] = array('assets');
+$autoload['model'] = array();
 
 
 
