@@ -1960,9 +1960,10 @@ Class Data_Core extends CI_Model {
     // Option?
     $options = $this->get_options($field);
     if ($options and $type!=='media' and $type!=='medias') {
-      $value = random_element($options['data'])['value'];
+      $values = random_element($options['data']); 
+      $value = $values['value'];
       if (el('multiple',$options) and rand(0,1)>.7) {
-        $value.='|'.random_element($options['data'])['value'];
+        $value.='|'.$value;
       }
       return $value;
     }

@@ -744,7 +744,7 @@ class Menu {
     $styles=$this->styles[$this->settings['framework']];
     
     $html='';
-		if ($menu) {
+		if ($menu and is_array($menu)) {
   		$pos=1;
       $_pos=count($menu);
 			foreach($menu as $uri=>$item) {
