@@ -28,6 +28,8 @@ class Main extends FrontEndController {
     
     if (defined('PHPUNIT_TEST')) return;
 		
+		$this->benchmark->mark('Controller_start');
+
     /********************************************
      * Als een AJAX request binnenkomt, stuur deze door naar de desbetreffende ajax module en roep de desbetreffende method aan.
      * De naam van de AJAX module komt overeen met 'ajax_' + het eerste deel van de uri. Het tweede deel bepaald eventueel de aan te roepen method.
@@ -38,6 +40,7 @@ class Main extends FrontEndController {
       $ajax_method=array_shift($uri);
       if (empty($ajax_method)) $ajax_method='index';
       $ajax_args=$uri;
+      $this->benchmark->mark('Controller_end');
       die($this->_call_library($ajax_module,$ajax_method,$ajax_args));
     }
     
@@ -121,6 +124,8 @@ class Main extends FrontEndController {
 		 * If $_POST or $_GET data are set (not empty) the page is not loaded from cache. So don't worry about forms etc.
 		 */
 		if ($this->config->item('caching')) $this->output->cache( $this->config->item('caching_time') );
+
+		$this->benchmark->mark('Controller_end');
 	}
 
 
