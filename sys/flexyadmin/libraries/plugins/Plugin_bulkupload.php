@@ -14,7 +14,7 @@ class Plugin_bulkupload extends Plugin {
 
 	public function __construct() {
 		parent::__construct();
-		$this->CI->load->library('session');
+		// $this->CI->load->library('session');
     // $this->CI->load->model('mediatable');
     $this->CI->load->model('actiongrid');
 		$this->resetRenameCount();
@@ -26,8 +26,9 @@ class Plugin_bulkupload extends Plugin {
     $this->doAction=false;
 
     // Collect files
-		$bulkMap=$this->config['folder'];
-		$files=scan_map($bulkMap);
+    $root = str_replace('sys/flexyadmin/','',APPPATH);
+		$bulkMap = $root.'/'.$this->config['folder'];
+		$files = scan_map($bulkMap);
 		if (empty($files)) {
 			$this->add_message(p()."No files found in '".$bulkMap."'."._p());
       return;
@@ -70,7 +71,7 @@ class Plugin_bulkupload extends Plugin {
 			$renameThis='';
 			if (!empty($path)) $renameThis=$this->_newName($path,$file,$rename);
       $grid->add_action(array(
-        'action_url' => $this->config->item('API_home').'ajax/plugin/bulkupload/'.pathencode($path).'/'.$file.'/'.$renameThis,
+        'action_url' => $this->CI->config->item('API_home').'ajax/plugin/bulkupload/'.pathencode($path).'/'.$file.'/'.$renameThis,
         'title'      => $file,
       ));
 		}
