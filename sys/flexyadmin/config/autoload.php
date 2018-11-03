@@ -124,7 +124,7 @@ $autoload['language'] = array();
 */
 
 // Also 'data/Data' is autoloaded in MY_Controller
-$autoload['model'] = array();
+$autoload['model'] = array('assets');
 
 
 
