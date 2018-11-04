@@ -954,6 +954,26 @@ export default {
     },
 
     /**
+     * Bulkupload methods
+     */
+    bulkUpload : function() {
+      var self = this;
+      flexyState.api({
+        url : 'media?action=bulkupload&path='+this.name,
+      })
+      .then(function(response){
+        if (!_.isUndefined(response.data.data)) {
+          flexyState.addMessage(response.data.data.message,'popup');
+          self.reloadPage();
+        }
+      });
+    },
+    bulkUploadTitle : function() {
+      return this.dataInfo.bulkupload + ' files for bulkupload';
+    },
+
+
+    /**
      * Dragging methods
      */
     isHiddenChild : function(id) {
@@ -1220,6 +1240,7 @@ export default {
             <tr v-if="gridType()==='media'" class="grid-upload" :class="{'dropping':dropUploadHover}">
               <td colspan="100" class="grid-upload-dropbox">
                 <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
+                <flexy-button v-if="dataInfo.bulkupload>=1" @click.native="bulkUpload()" icon="upload" class="btn-outline-warning action-bulkupload" :title="bulkUploadTitle()" />
                 <span :class="{'show':uploadFiles.length>0}" class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span>
                 {{$lang.upload_choose}}
                 <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">

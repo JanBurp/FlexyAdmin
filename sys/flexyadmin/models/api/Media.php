@@ -181,11 +181,19 @@ class Media extends Api_Model {
     if ( !$this->has_args() ) {
       return $this->_result_wrong_args();
     }
+
     // Does path exists in media_info?
     if ( ! $this->assets->assets_folder_exists($this->args['path']) ) {
       $this->_set_error('PATH NOT FOUND');
       return $this->_result_ok();
     }
+
+    // BULKUPLOAD
+    if ( $this->args['action']==='bulkupload' and $this->assets->has_bulkupload()>=1 ) {
+      $this->result['data'] = $this->_bulkupload();
+      return $this->_result_ok();
+    }
+
     
     // GET
     if ($this->args['type']=='GET') {
@@ -300,6 +308,11 @@ class Media extends Api_Model {
       $this->_set_error('FILE NOT DELETED, MAYBE NOT FOUND OR NO RIGHTS');
     }
     return $result;
+  }
+
+
+  private function _bulkupload() {
+    return $this->assets->bulkupload($this->args['path']);
   }
   
   
