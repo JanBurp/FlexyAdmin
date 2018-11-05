@@ -385,7 +385,7 @@ class Plugin_move_site extends Plugin {
     foreach ($move_paths as $type => $paths) {
       foreach ($paths as $path) {
         $old = $this->old.'site/assets/'.$path;
-        $new = $this->new.$this->CI->config->item('ASSETSFOLDER').$path;
+        $new = $this->CI->config->item('ASSETSFOLDER').$path;
         if ($type=='public') {
           $new = $this->new.$this->CI->config->item('PUBLICFOLDER').'/'.$this->CI->config->item('PUBLICASSETS').$path;
         }
