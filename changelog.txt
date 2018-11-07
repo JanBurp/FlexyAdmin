@@ -1,3 +1,14 @@
+=3.5.8
+
+
+[BUGS]
+- Some bugs in plugin move site
+- Bug when using extra emails with users that are encrypted
+
+[FEATURES]
+- debughelper improvements
+- Better serving of audio & video files
+
 =3.5.7
 
 [nl]
