@@ -803,7 +803,6 @@ class Flexy_auth extends Ion_auth {
     $this->email->to( $to );
     // Naar meerdere emailadressen?
     if (el('extra_email',$user)) {
-      xdebug_break();
       $this->email->cc( el('extra_email',$user) );
     }
     // Naar welke template in cfg_email?
