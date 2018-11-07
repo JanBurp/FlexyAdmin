@@ -247,9 +247,14 @@ class Flexy_auth extends Ion_auth {
     // Kijk in config of er idd extra emails nodig zijn (en van welke tabel)
     $this->config->load('data/cfg_users',true);
     $has_extra_emails = $this->config->get_item(array('data/cfg_users','has_extra_emails'));
-    // Zo ja, haal ze op (zonder data/db model!)
+    // Zo ja, haal ze op (zonder data/db model!, eventueel encypted)
     if ( $has_extra_emails ) {
-      $sql = 'SELECT `email_email` FROM `'.$has_extra_emails.'` WHERE `id_user` = "'.$user['id'].'"';
+      if ($this->config->get_item(array('data/cfg_users','aes_extra_emails'))) {
+        $sql = 'SELECT AES_DECRYPT(`email_email`,"'.$this->config->item('encryption_key').'") AS `email_email` FROM `'.$has_extra_emails.'` WHERE `id_user` = "'.$user['id'].'"';
+      }
+      else {
+        $sql = 'SELECT `email_email` FROM `'.$has_extra_emails.'` WHERE `id_user` = "'.$user['id'].'"';
+      }
       $query=$this->db->query($sql);
       if ($query) {
         $user_emails = $query->result_array();
@@ -798,6 +803,7 @@ class Flexy_auth extends Ion_auth {
     $this->email->to( $to );
     // Naar meerdere emailadressen?
     if (el('extra_email',$user)) {
+      xdebug_break();
       $this->email->cc( el('extra_email',$user) );
     }
     // Naar welke template in cfg_email?
