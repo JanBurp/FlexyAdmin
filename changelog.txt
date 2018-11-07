@@ -1,13 +1,18 @@
 =3.5.8
 
+[nl]
+- Enkele kleine fouten en verbeteringen
+[/nl]
+[en]
+- Some small bugs and improvements
+[/en]
 
 [BUGS]
 - Some bugs in plugin move site
 - Bug when using extra emails with users that are encrypted
 
 [FEATURES]
-- debughelper improvements
-- Better serving of audio & video files
+- hr als standaard plugin in TinyMCE editor
 
 =3.5.7
 
