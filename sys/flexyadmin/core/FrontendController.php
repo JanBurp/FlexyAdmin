@@ -267,12 +267,16 @@ class FrontEndController extends MY_Controller {
 	 * Used for loading and calling modules
 	 */
 	public function _call_library($library,$method='index',$args=NULL) {
+    $this->benchmark->mark('library_'.$library.'_start');
 		if (is_array($library)) {
 			$args=array_slice($library,2);
 			$method=el(2,$library,'index');
 			$library=el(1,$library,'app');
 			// prevent loading hidden modules
-			if (substr($library,0,1)=='_') return FALSE;
+			if (substr($library,0,1)=='_') {
+        $this->benchmark->mark('library_'.$library.'_end');
+        return FALSE;
+      }
 		}
 		if (!empty($library)) {
 			$library_file=str_replace(' ','_',$library);
@@ -283,7 +287,9 @@ class FrontEndController extends MY_Controller {
 			if (file_exists(SITEPATH.'libraries/'.$load_file.'.php') or file_exists(APPPATH.'libraries/'.$load_file.'.php')) {
 				$this->load->library($library_file,array('name'=>$library_name,'file'=>$library_file));
         // $this->$library_name->set_name($library);
-				return $this->$library_name->$method($args);
+				$output = $this->$library_name->$method($args);
+        $this->benchmark->mark('library_'.$library.'_end');
+        return $output;
 			}
 			elseif ($this->config->item('fallback_module')) {
 				$fallback=$this->config->item('fallback_module');
@@ -291,10 +297,13 @@ class FrontEndController extends MY_Controller {
 				if (file_exists(SITEPATH.'libraries/'.ucfirst($fallback_name).'.php')) {
 					$this->load->library($fallback_name);
           $this->$fallback_name->set_name($library);
-					return $this->$fallback_name->index($args);
+					$output = $this->$fallback_name->index($args);
+          $this->benchmark->mark('library_'.$library.'_end');
+          return $output;
 				}
 			}
 		}
+    $this->benchmark->mark('library_'.$library.'_end');
 		return FALSE;
 	}
   
@@ -490,7 +499,9 @@ class FrontEndController extends MY_Controller {
 		}
     $html=$this->load->view($view,$data,TRUE);
     if ($main_view) $html=$this->content->render($html,true);
-    if (!$return) echo $html;
+    if (!$return) {
+      $this->output->set_output($html);
+    }
 		return $html;
 	}
   
