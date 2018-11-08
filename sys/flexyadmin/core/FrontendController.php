@@ -405,7 +405,7 @@ class FrontEndController extends MY_Controller {
     $page404['txt_text']=$this->view('error','',true);
     if ($this->config->item('error404_module')) $page404['str_module']=$this->config->item('error404_module');
   	// Load and call modules
-    $page=$this->_module(array());
+    $page=$this->_module($page404);
     if ($page) {
       $page404 = array_merge($page404,$page);
       // Add extra title and keywords, replace description (if any)
