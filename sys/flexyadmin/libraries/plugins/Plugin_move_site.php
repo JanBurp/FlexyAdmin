@@ -387,7 +387,7 @@ class Plugin_move_site extends Plugin {
         $old = $this->old.'site/assets/'.$path;
         $new = $this->CI->config->item('ASSETSFOLDER').$path;
         if ($type=='public') {
-          $new = $this->CI->config->item('PUBLICASSETS').$path;
+          $new = $this->new.$this->CI->config->item('PUBLICFOLDER').'/'.$this->CI->config->item('PUBLICASSETS').$path;
         }
 
         // Collect files
@@ -412,7 +412,7 @@ class Plugin_move_site extends Plugin {
           $li=str_replace($this->new,'',$to);
           $dir=remove_suffix($to,'/');
           if ( !file_exists($dir) ) mkdir($dir,0777,true);
-          if ( file_exists($from) and !file_exists($to) and copy($from,$to) ) {
+          if ( file_exists($from) and copy($from,$to) ) {
             $moved[] =$li;
           }
           else {
