@@ -49,6 +49,7 @@ import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/charmap';
 import 'tinymce/plugins/code';
 import 'tinymce/plugins/fullscreen';
+import 'tinymce/plugins/hr';
 import 'tinymce/plugins/image';
 import 'tinymce/plugins/imagetools';
 import 'tinymce/plugins/lists';
