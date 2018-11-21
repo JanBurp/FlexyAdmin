@@ -72,6 +72,9 @@ $lang['user_accepted_send']						= 'User "%s" is activated and an email with log
 $lang['mail_denied_subject']					= 'Account registration denied.';
 $lang['mail_accepted_subject']				= 'Account registration accepted.';
 
+$lang['user_setas_visitor']           = 'User "%s" set as `Visitor`.';
+$lang['users_setas_visitor']          = 'Selected users set al `Visitor`.';
+
 $lang['active_users']				          = 'Send new password to existing users';
 $lang['send_new_password']            = 'Send new password';
 $lang['user_send_password']           = 'User "%s" has a got an email with a new password';
