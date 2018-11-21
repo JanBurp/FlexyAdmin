@@ -13,6 +13,7 @@ Class Core_cfg_users extends Data_Core {
   private $groups;
   private $show_groups=FALSE;
   private $only_these_users = array();
+  private $user_action = 'password'; // 'visitor'
   
 
   public function __construct() {
@@ -230,13 +231,29 @@ Class Core_cfg_users extends Data_Core {
     foreach ($result as $key => $user) {
       $id   = $user['id'];
       $email= $user['email_email'];
-      $user = array_add_after($user,'id', array(
-        'action_user_invite' => array(
-          'uri'   => $user['b_active']?'user?action=new&email='.$email:'user?action=invite&email='.$email,
-          'icon'  => 'envelope-o', 
-          'text'  => $user['b_active']?lang('action_user_send_password'):lang('action_user_send_invite'),
-        ))
-      );
+      if (empty($user['cfg_user_groups'])) {
+        $this->user_action = 'visitor';
+        $user = array_add_after($user,'id',
+          array(
+            'action_user_invite' => array(
+              'uri'   => 'user?action=setgroup&email='.$email,
+              'icon'  => 'user', 
+              'text'  => lang('action_user_setas_visitor'),
+            ),
+          )
+        );
+      }
+      else {
+        $user = array_add_after($user,'id',
+          array(
+            'action_user_invite' => array(
+              'uri'   => $user['b_active']?'user?action=new&email='.$email:'user?action=invite&email='.$email,
+              'icon'  => 'envelope-o', 
+              'text'  => $user['b_active']?lang('action_user_send_password'):lang('action_user_send_invite'),
+            ),
+          )
+        );
+      }
       $result[$key] = $user;
     }
     
@@ -255,14 +272,12 @@ Class Core_cfg_users extends Data_Core {
     $grid_set = parent::get_setting_grid_set();
     $grid_set['field_info']['action_user_invite'] = array(
       'type'         => 'action',
-
       'action'       => array(
         'selected_only' => true,
-        'name'          => lang('action_user_send_password_selected'),
-        'url'           => 'user?action=new',
-        'icon'          => 'envelope-o',
+        'name'          => ($this->user_action=='visitor'?lang('action_user_setas_visitor_selected'):lang('action_user_send_password_selected')),
+        'url'           => ($this->user_action=='visitor'?'user?action=setgroup':'user?action=new'),
+        'icon'          => ($this->user_action=='visitor'?'user':'envelope-o'),
       ),
-
       'name'      => lang('action_users'),
       'grid-type' => 'action',
     );
