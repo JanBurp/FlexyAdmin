@@ -32,6 +32,9 @@ export default {
         'wav'   : 'fa-file-audio-o',
         'aiff'  : 'fa-file-audio-o',
 
+        'mid'   : 'fa-music',
+        'midi'  : 'fa-music',
+
         'xls'   : 'fa-file-excel-o',
         'xlsx'  : 'fa-file-excel-o',
         'doc'   : 'fa-file-word-o',
