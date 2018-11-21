@@ -76,6 +76,8 @@ $lang['mail_denied_subject']					= 'Account aanvraag afgewezen.';
 $lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
 $lang['mail_new_subject']				      = 'U krijgt inloggegevens.';
 
+$lang['user_setas_visitor']           = 'Gebruiker "%s" is ingesteld als `Visitor`.';
+$lang['users_setas_visitor']          = 'Geselecteerde gebruikers zijn ingesteld als `Visitor`.';
 $lang['user_send_password']           = 'Gebruiker "%s" heeft een nieuw wachtwoord opgestuurd gekregen.';
 $lang['users_send_passwords']         = 'Geselecteerde gebruikers hebben een nieuw wachtwoord opgestuurd gekregen.';
 $lang['user_send_password_error']     = 'FOUT: Kon geen email met nieuw wachtwoord sturen aan %s.';

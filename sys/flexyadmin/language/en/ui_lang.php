@@ -23,9 +23,11 @@ $lang['self_parent']      = "Subpage of";
 // Fields in cfg_users
 $lang['ip_address']                = 'IP Address';
 $lang['action_users']              = 'Send:';
+$lang['action_user_setas_visitor'] = 'Set as `Visitor`';
 $lang['action_user_send_invite']   = 'Invitation';
 $lang['action_user_send_password'] = 'New password';
 $lang['action_user_send_password_selected'] = 'Send new password to selection';
+$lang['action_user_setas_visitor_selected'] = 'Sen selection as `Visitor`';
 
 
 // USER FIELDS
