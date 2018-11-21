@@ -66,9 +66,12 @@ $lang['gpw_password']              = 'Wachtwoord';
 $lang['ip_address']                = 'IP Adres';
 $lang['str_language']              = 'Taal';
 $lang['action_users']              = 'Stuur:';
+$lang['action_user_setas_visitor'] = 'Stel in als `Visitor`';
 $lang['action_user_send_invite']   = 'Inloggegevens';
 $lang['action_user_send_password'] = 'Nieuw wachtwoord';
 $lang['action_user_send_password_selected'] = 'Stuur nieuw wachtwoord aan selectie';
+$lang['action_user_setas_visitor_selected'] = 'Stel selectie in als `Visitor`';
+
 
 // User fields
 $lang['tme_last_changed'] ='Laatste aanpassing';
