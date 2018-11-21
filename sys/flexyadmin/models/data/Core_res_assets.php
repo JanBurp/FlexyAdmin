@@ -985,8 +985,13 @@ Class Core_res_assets extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  public function bulkupload($path) {
-    $files = $this->_get_bulkpupload_files();
+  public function bulkupload($path,$file='') {
+    if ($file) {
+      $files = array($file);
+    }
+    else {
+      $files = $this->_get_bulkpupload_files();
+    }
     // 'upload' te files
     $added  = array();
     $errors = array();
@@ -999,7 +1004,7 @@ Class Core_res_assets extends Data_Core {
         $errors[] = $this->error_message;
       }
     }
-    return array('path'=>$path,'bulkupload'=>$files,'added'=>$added,'errors'=>$errors,'message'=>$this->load->view('admin/bulkupload',array('added'=>$added,'errors'=>$errors),true) );
+    return array('path'=>$path,'bulkupload'=>$files,'added'=>$added,'errors'=>$errors);
   }
 
   public function bulkupload_file($path,$file) {
@@ -1097,7 +1102,10 @@ Class Core_res_assets extends Data_Core {
     if ( !$this->flexy_auth->can_use_tools() ) return false;
     $files = $this->_get_bulkpupload_files();
     if (!is_array($files)) return false;
-    return count($files);
+    foreach ($files as $key => $file) {
+      $files[$key] = get_suffix($file,'/');
+    }
+    return $files;
   }
 
   /**

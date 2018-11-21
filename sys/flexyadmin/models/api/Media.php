@@ -312,7 +312,7 @@ class Media extends Api_Model {
 
 
   private function _bulkupload() {
-    return $this->assets->bulkupload($this->args['path']);
+    return $this->assets->bulkupload($this->args['path'],$this->args['file']);
   }
   
   

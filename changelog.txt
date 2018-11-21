@@ -2,6 +2,7 @@
 
 [FEATURES]
 - icon for midi files added to flexy_thumb
+- bulk_upload added
 
 =3.5.8
 
