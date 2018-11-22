@@ -1,5 +1,18 @@
 =3.5.9
 
+[nl]
+- Enkele kleine fouten opgelost
+- Enkele bestands-ikonen toegevoegd
+- Foutmelding bij uploaden te grote bestanden 
+- Bulkupload & automatisch vullen in database na uploaden
+[/nl]
+[en]
+- Some small bugs solved
+- Some file-icons added
+- Error messags at uploading files that are too big 
+- Bulkupload & auto fill in database after uploaden
+[/en]
+
 [FEATURES]
 - bulk_upload added
 - autofill assets added
