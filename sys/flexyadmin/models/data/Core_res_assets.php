@@ -416,10 +416,6 @@ Class Core_res_assets extends Data_Core {
     
     // Stop in database
     $this->insert_file($path,$file);
-
-    // Auto fill
-    // $this->upload->auto_fill_fields($file,$this->map);
-
     return $file;
 	}
 
@@ -684,7 +680,25 @@ Class Core_res_assets extends Data_Core {
     // Data
     $data = array_merge($default_data,$data);
     // Insert
-    return $this->set($data)->insert();
+    $id =  $this->set($data)->insert();
+
+    // Auto fill fields
+    if ($id) {
+      $path_settings = $this->get_folder_settings($path);
+      if (isset($path_settings['autofill_fields']) and !empty($path_settings['autofill_fields'])) {
+        $autofill_fields = $path_settings['autofill_fields'];
+        if (!is_array($autofill_fields)) {
+          $autofill_fields = array($autofill_fields);
+        }
+        foreach ($autofill_fields as $key => $field) {
+          $table = get_prefix($field,'.');
+          $field = get_suffix($field,'.');
+          $set = array($field=>$data['file']);
+          $this->data->table($table)->set($set)->insert();
+        }
+      }
+    }
+    return $id;
   }
   
   /**
@@ -975,5 +989,152 @@ Class Core_res_assets extends Data_Core {
     $this->reset();
     return $result;
   }
+
+
+
+  /**
+   * Bulkupload naar map
+   *
+   * @param string $path 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function bulkupload($path,$file='') {
+    if ($file) {
+      $files = array($file);
+    }
+    else {
+      $files = $this->_get_bulkpupload_files();
+    }
+    // 'upload' te files
+    $added  = array();
+    $errors = array();
+    foreach ($files as $key => $file) {
+      $name = get_suffix($file,'/');
+      if ( $name = $this->bulkupload_file($path,$name)) {
+        $added[] = $name;
+      }
+      else {
+        $errors[] = $this->error_message;
+      }
+    }
+    return array('path'=>$path,'bulkupload'=>$files,'added'=>$added,'errors'=>$errors);
+  }
+
+  public function bulkupload_file($path,$file) {
+    $this->load->library('upload');
+    // Initialize
+    $this->error_message = '';
+    $folder = $this->config->item('ASSETSFOLDER') . $path;
+    $allowed_types = explode(',',$this->get_setting(array('assets',$path,'types')));
+    $encrypt_name  = $this->get_setting(array('assets',$path,'encrypt_name'));
+    $path_settings = $this->get_folder_settings($path);
+
+    // Start
+    $root = str_replace('sys/flexyadmin/','',APPPATH);
+    $source = $root.'bulkupload/'.$file;
+
+    // 1) allowed type?    
+    $ext = strtolower(get_suffix($file,'.'));
+    if (!in_array($ext,$allowed_types)) {
+      $this->error_message = $file.' : '.langp('upload_invalid_filetype');
+      return false;
+    }
+
+    // 2) encrypt name?
+    if ($encrypt_name) {
+      $name = md5(uniqid(mt_rand())).'.'.$ext;
+    }
+    else {
+      $name = clean_file_name($file);
+    }
+    $destination = $this->config->item('ASSETSFOLDER').$path.'/'.$name;
+
+    // 3) Existing file?
+    while (file_exists($destination)) {
+      $name = get_prefix($name,'.');
+      if (preg_match('/(\d+)$/u', $name, $matches)!==false) {
+        $number = $matches[1];
+        $name = str_replace($number,'',$name);
+        $name = rtrim($name,'_');
+        $number++;
+        $name = $name.'_'.$number;
+      }
+      else {
+        $name = $name.'_1';
+      }
+      $name = $name.'.'.$ext;
+      $destination = $this->config->item('ASSETSFOLDER').$path.'/'.$name;
+    }
+
+    // 4) Copy
+    if (!copy_file($source,$destination)) {
+      $this->error_message = $name.' : '.langp('upload_destination_error');
+      return false;
+    }
+
+    // 5) Image? Check size
+    if ( in_array(strtolower($ext),$this->config->item('FILE_types_img')) ) {
+
+      // restore orientation
+      $this->upload->restore_orientation($folder,$name);
+
+      // check minimal size, if too small: delete and error
+      if ( !$this->upload->check_size($path,$name,$path_settings) ) {
+        $this->delete_file($path,$name);
+        $this->error_message = langp('upload_img_too_small',$name, $path_settings['min_width'].' x '.$path_settings['min_height']);
+        $this->log_activity->media( array2json($path_settings), $path, 'upload_img_too_small '.$name );
+        return FALSE;
+      }
+
+      // Resize
+      if ( !$this->upload->resize_image( $path,$name,$path_settings ) ) {
+        $this->delete_file($path,$name);
+        $this->error_message = langp('upload_resize_error',$name);
+        $this->log_activity->media( array2json($path_settings),$path,'upload_resize_error '.$name );
+        return FALSE;
+      }
+
+    }
+    
+    // Verwijder bulkupload
+    @unlink($source);
+    
+    // Stop in database
+    $this->insert_file($path,$name);
+    return $name;
+  }
+
+  /**
+   * Test of er bulkuload bestanden klaar staan (en hoeveel)
+   *
+   * @return int
+   * @author Jan den Besten
+   */
+  public function has_bulkupload() {
+    if ( !$this->flexy_auth->can_use_tools() ) return false;
+    $files = $this->_get_bulkpupload_files();
+    if (!is_array($files)) return false;
+    foreach ($files as $key => $file) {
+      $files[$key] = get_suffix($file,'/');
+    }
+    return $files;
+  }
+
+  /**
+   * Haal bulkupload bestanden op
+   *
+   * @return array van bestandsnamen
+   * @author Jan den Besten
+   */
+  private function _get_bulkpupload_files() {
+    $root = str_replace('sys/flexyadmin/','',APPPATH);
+    $map = $root.'bulkupload';
+    $files = scan_map($map);
+    return $files;
+  }
+
+
+
   
 }

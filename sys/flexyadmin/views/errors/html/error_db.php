@@ -32,7 +32,6 @@
 
 		$error = explode(' ',$message);
 		$error = substr($error[2],0,4);
-		if (empty($error) or $error<'0000' or $error>'9999') $error=mysql_errno();
 		switch ($error) {
 			case 1045:
 			case 2005:

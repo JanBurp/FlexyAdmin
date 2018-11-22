@@ -72,7 +72,9 @@ $autoload['helper'] = array(
   'array',
   'cache',
   'database',
+  'directory',
   'debug',
+  'html',
   'string',
   'url',
 );

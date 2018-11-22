@@ -70,6 +70,7 @@ var _flexy = {
   'base_url'      : '<?=preg_replace("/(.*\/_admin).*/u", "$1", $_SERVER["REQUEST_URI"]);?>',
   'auth_token'    : '<?=$user['auth_token']?>',
   'media_view'    : '<?=$user['str_filemanager_view']?>',
+  'max_uploadsize': <?=$this->config->item('MAX_UPLOADSIZE')?>,
   'language'      : '<?=$language?>',
   'language_keys' : JSON.parse('<?=addslashes(array2json($lang_keys))?>'),
   'tinymceOptions': '<?=array2json($tinymceOptions)?>',
