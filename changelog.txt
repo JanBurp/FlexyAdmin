@@ -1,8 +1,12 @@
 =3.5.9
 
 [FEATURES]
-- icon for midi files added to flexy_thumb
-- bulk_upload added
+- icons for midi & video files added to flexy_thumb
+- when files are too big to upload, a messages is shown
+
+[BUGS]
+- cfg_users table not standard visible
+- small update in package.json and gulpfile.js
 
 =3.5.8
 

@@ -10,6 +10,8 @@ $config['side_menu']['tables'] = array(
   'tbl_links' => array( 'type'=>'table' ),
   '-' => array( 'type'=>'seperator' ),
   'tables'    => array( 'type'=>'tables', 'pre'=>'tbl', 'icon'=>'' ),
+  '--' => array( 'type'=>'split' ),
+  'cfg_users' => array( 'type'=>'table', 'user_group'=>'admin', 'icon'=>'users' ),
 );
 
 $config['side_menu']['media'] = array(
