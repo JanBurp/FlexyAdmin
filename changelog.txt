@@ -6,6 +6,7 @@
 
 [BUGS]
 - cfg_users table not standard visible
+- small update in package.json and gulpfile.js
 
 =3.5.8
 
