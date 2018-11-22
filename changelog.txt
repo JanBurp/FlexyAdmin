@@ -1,6 +1,8 @@
 =3.5.9
 
 [FEATURES]
+- bulk_upload added
+- autofill assets added
 - icons for midi & video files added to flexy_thumb
 - when files are too big to upload, a messages is shown
 
