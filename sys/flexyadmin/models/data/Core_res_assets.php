@@ -416,10 +416,6 @@ Class Core_res_assets extends Data_Core {
     
     // Stop in database
     $this->insert_file($path,$file);
-
-    // Auto fill
-    // $this->upload->auto_fill_fields($file,$this->map);
-
     return $file;
 	}
 
@@ -684,7 +680,25 @@ Class Core_res_assets extends Data_Core {
     // Data
     $data = array_merge($default_data,$data);
     // Insert
-    return $this->set($data)->insert();
+    $id =  $this->set($data)->insert();
+
+    // Auto fill fields
+    if ($id) {
+      $path_settings = $this->get_folder_settings($path);
+      if (isset($path_settings['autofill_fields']) and !empty($path_settings['autofill_fields'])) {
+        $autofill_fields = $path_settings['autofill_fields'];
+        if (!is_array($autofill_fields)) {
+          $autofill_fields = array($autofill_fields);
+        }
+        foreach ($autofill_fields as $key => $field) {
+          $table = get_prefix($field,'.');
+          $field = get_suffix($field,'.');
+          $set = array($field=>$data['file']);
+          $this->data->table($table)->set($set)->insert();
+        }
+      }
+    }
+    return $id;
   }
   
   /**
@@ -1088,7 +1102,6 @@ Class Core_res_assets extends Data_Core {
     
     // Stop in database
     $this->insert_file($path,$name);
-
     return $name;
   }
 
