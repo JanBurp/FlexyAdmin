@@ -168,6 +168,7 @@ export default {
       extendedTerm        : [],
       oldExtendedTerm     : [],
       uploadFiles         : [],
+      bulkuploadFiles     : [],
       dropUploadHover     : false,
 
       mouseY              : 0,
@@ -961,6 +962,45 @@ export default {
     },
 
     /**
+     * Bulkupload methods
+     */
+    bulkUpload : function() {
+      var self = this;
+      if (!_.isUndefined(this.dataInfo.bulkupload)) {
+        self.bulkuploadFiles = this.dataInfo.bulkupload;
+        var file = '';
+        for (var i = self.bulkuploadFiles.length - 1; i >= 0; i--) {
+          file = self.bulkuploadFiles[i];
+          flexyState.api({
+            url : 'media?action=bulkupload&path='+this.name+'&file='+file,
+          })
+          .then(function(response){
+            if (!_.isUndefined(response.data.data)) {
+              self.bulkuploadFiles = _.without(self.bulkuploadFiles, response.data.args.file);
+              flexyState.addMessage(response.data.args.file + self.$lang.upload_ready);
+              if (self.bulkuploadFiles.length==0) {
+                self.reloadPage();
+              }
+            }
+          });
+        }
+      }
+    },
+    hasBulkupload : function() {
+      if (!_.isUndefined(this.dataInfo.bulkupload)) {
+        return this.dataInfo.bulkupload.length > 0;
+      }
+      return false;
+    },
+    bulkUploadTitle : function() {
+      if (!_.isUndefined(this.dataInfo.bulkupload)) {
+        return this.dataInfo.bulkupload.length + ' files for bulkupload';
+      }
+      return '';
+    },
+
+
+    /**
      * Dragging methods
      */
     isHiddenChild : function(id) {
@@ -1225,14 +1265,20 @@ export default {
 
             <!-- UPLOAD ROW -->
             <tr v-if="gridType()==='media'" class="grid-upload" :class="{'dropping':dropUploadHover}">
-              <td colspan="100" class="grid-upload-dropbox">
+              <td v-if="bulkuploadFiles==false" colspan="100" class="grid-upload-dropbox">
                 <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
+                <flexy-button v-if="hasBulkupload()" @click.native="bulkUpload()" icon="upload" class="btn-outline-warning action-bulkupload" :title="bulkUploadTitle()" />
                 <span :class="{'show':uploadFiles.length>0}" class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span>
                 {{$lang.upload_choose}}
                 <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
               </td>
             </tr>
-          
+            <!-- BULKUPLOAD ROWS -->
+            <tr v-if="bulkuploadFiles!==false" v-for="file in bulkuploadFiles" class="grid-upload">
+              <td><span class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span></td>
+              <td colspan="100">{{file}}</td>
+            </tr>
+
             <!-- ROW -->
             <template v-for="row in items">
               <tr v-if="row" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">

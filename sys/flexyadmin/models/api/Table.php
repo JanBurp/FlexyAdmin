@@ -219,8 +219,10 @@ class Table extends Api_Model {
 
     // Info
     $this->info = $this->data->get_query_info();
+    $this->info['bulkupload'] = false;
     if ($is_media) {
-      $this->info['count_all'] = $this->data->count_all($this->args['path']);
+      $this->info['count_all']  = $this->data->count_all($this->args['path']);
+      $this->info['bulkupload'] = $this->assets->has_bulkupload();
     }
     else {
       $this->info['count_all'] = $this->data->count_all(); 
