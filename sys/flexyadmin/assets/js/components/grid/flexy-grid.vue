@@ -908,47 +908,54 @@ export default {
         formData.append( 'path', self.name );
         formData.append( 'file', self.uploadFiles[i] );
         formData.append( 'fileName', self.uploadFiles[i].name );
-        flexyState.api({
-          method    : 'POST',
-          url       : 'media',
-          data      : formData,
-          formData  : true,
-        }).then(function(response){
 
-          var error = response.data.error;
-          if (!error && response.data.data===false) {
-            error = self.$lang.upload_error;
-          }
-          else {
-            uploadedFilesCount++;
-          }
+        // Te groot?
+        if ( self.uploadFiles[i].size > flexyState.getState('max_uploadsize') ) {
+          flexyState.addMessage( self.uploadFiles[i].name + self.$lang.upload_too_big, 'danger' );
+        }
+        else {
+          flexyState.api({
+            method    : 'POST',
+            url       : 'media',
+            data      : formData,
+            formData  : true,
+          }).then(function(response){
 
-          var fileName = response.data.data.file;
-          if ( !_.isUndefined(response.data.data.orig_name) ) {
-            var origName = response.data.data.orig_name;
-            if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
-              flexyState.addMessage( response.data.message, 'danger' );  
+            var error = response.data.error;
+            if (!error && response.data.data===false) {
+              error = self.$lang.upload_error;
             }
-            if (self.type==='mediapicker') {
-              self.$emit('grid-uploaded-item',fileName);
+            else {
+              uploadedFilesCount++;
             }
-          }
 
-          if (error) {
-            flexyState.addMessage( error, 'danger' );
-          }
+            var fileName = response.data.data.file;
+            if ( !_.isUndefined(response.data.data.orig_name) ) {
+              var origName = response.data.data.orig_name;
+              if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
+                flexyState.addMessage( response.data.message, 'danger' );  
+              }
+              if (self.type==='mediapicker') {
+                self.$emit('grid-uploaded-item',fileName);
+              }
+            }
 
-          // Uit de lijst halen
-          var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
-          self.removeUploadFile(index);
+            if (error) {
+              flexyState.addMessage( error, 'danger' );
+            }
 
-          // Als alles uit de lijst is geuploade, reload
-          if (self.uploadFiles.length === 0 ) {
-            flexyState.addMessage(uploadedFilesCount + self.$lang.upload_count);
-            self.reloadPage();
-          }
-          return response;
-        });
+            // Uit de lijst halen
+            var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
+            self.removeUploadFile(index);
+
+            // Als alles uit de lijst is geuploade, reload
+            if (self.uploadFiles.length === 0 ) {
+              flexyState.addMessage(uploadedFilesCount + self.$lang.upload_count);
+              self.reloadPage();
+            }
+            return response;
+          });
+        }
       }
       
     },
