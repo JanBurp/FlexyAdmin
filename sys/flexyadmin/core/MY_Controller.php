@@ -15,6 +15,56 @@ class MY_Controller extends CI_Controller {
 		parent::__construct();
 
     /**
+     * Install ??
+     */
+    if ($this->_check_if_flexy_database_exists()) {
+      $this->_init_flexy_admin($isAdmin);
+    }
+    else {
+      // Database login correct, But no database found, Try to load the demodatabase
+      $succes=false;
+
+      // try to load latest demodatabase
+      $dbPath = str_replace('sys/flexyadmin/','',APPPATH).'db';
+      if (file_exists($dbPath)) {
+        $demoDB=scan_map($dbPath,'sql');
+        $demoDB=filter_by($demoDB,$dbPath.'/flexyadmin_demo_');
+        if ($demoDB) {
+          $demoDB=current($demoDB);
+          $SQL=file_get_contents($demoDB);
+          if ($SQL) {
+            $lines=explode("\n",$SQL);
+            $comments="";
+            foreach ($lines as $k=>$l) {
+              if (substr($l,0,1)=="#")  {
+                if (strlen($l)>2)  $comments.=$l.br();
+                unset($lines[$k]);
+              }
+            }
+            $sql=implode("\n",$lines);
+            $lines=preg_split('/;\n+/',$sql); // split at ; with EOL
+
+            foreach ($lines as $key => $line) {
+              $line=trim($line);
+              if (!empty($line)) {
+                $query=$this->db->query($line);
+              }
+            }
+            $succes=TRUE;
+            // Other Install options
+            $this->_install();
+            // Redirect
+            redirect($this->config->item('API_home'),REDIRECT_METHOD);
+          }
+        }
+      }
+
+      if (!$succes) {
+        show_error('Database login: correct.<br/>No tables (for flexyadmin) found.<br/>Tried to load demodatabase, no succes.');
+      }
+    }
+
+    /**
      * Force https?
      */
     if ($this->config->item('force_https')) {
@@ -46,6 +96,7 @@ class MY_Controller extends CI_Controller {
      */
     $this->load->model( 'data/Data_Core','data_core' );
     $this->load->model( 'data/Data','data' );
+    $this->load->model( 'assets' );
       
     if (defined('PHPUNIT_TEST')) {
       if (SAFE_INSTALL) {
@@ -89,55 +140,10 @@ class MY_Controller extends CI_Controller {
       echo "> Cache cleared.\n\n";
       return;
     }
-    
-		if ($this->_check_if_flexy_database_exists())
-			$this->_init_flexy_admin($isAdmin);
-		else {
-			// Database login correct, But no database found, Try to load the demodatabase
-			$succes=false;
-			// try to load latest demodatabase
-			if (file_exists('db')) {
-				$demoDB=read_map('db','sql',FALSE,FALSE);
-				$demoDB=filter_by($demoDB,'flexyadmin_demo_');
-				if ($demoDB) {
-					$demoDB=current($demoDB);
-					$demoDB=$demoDB['path'];
-					$SQL=file_get_contents($demoDB);
-					if ($SQL) {
-            $lines=explode("\n",$SQL);
-            $comments="";
-            foreach ($lines as $k=>$l) {
-              if (substr($l,0,1)=="#")  {
-                if (strlen($l)>2)  $comments.=$l.br();
-                unset($lines[$k]);
-              }
-            }
-            $sql=implode("\n",$lines);
-            $lines=preg_split('/;\n+/',$sql); // split at ; with EOL
-
-            foreach ($lines as $key => $line) {
-              $line=trim($line);
-              if (!empty($line)) {
-                $query=$this->db->query($line);
-              }
-            }
-						$succes=TRUE;
-            // Other Install options
-            $this->_install();
-            // Redirect
-            redirect($this->config->item('API_home'),REDIRECT_METHOD);
-					}
-				}
-			}
-
-			if (!$succes) {
-				show_error('Database login: correct.<br/>No tables (for flexyadmin) found.<br/>Tried to load demodatabase, no succes.');
-			}
-		}
 	}
 
 	private function _check_if_flexy_database_exists() {
-		return ($this->data->table_exists('cfg_version') and $this->data->table_exists('cfg_sessions'));
+		return ($this->db->table_exists('cfg_version') and $this->db->table_exists('cfg_sessions'));
 	}
 
 	private function _init_flexy_admin($isAdmin=false) {
@@ -153,7 +159,7 @@ class MY_Controller extends CI_Controller {
   private function _install() {
     // Replace cookiename
     $sitename = $_SERVER['SCRIPT_FILENAME'];
-    $sitename = str_replace('/index.php','',$sitename);
+    $sitename = str_replace(array('/index.php','/public'),'',$sitename);
     $sitename = get_suffix($sitename,'/');
     $sitename = str_replace('.','_',$sitename);
     if (!empty($sitename)) {
@@ -172,6 +178,19 @@ class MY_Controller extends CI_Controller {
         $result=file_put_contents($file,$new);
         if ($result) {
           log_message('info', 'FlexyAdmin Install: sess_cookie_name = '.$sitename);
+        }
+
+        // Replace encryption_key
+        $root = str_replace('sys/flexyadmin/','',APPPATH);
+        $key = shell_exec($root.'/sys/vendor/bin/generate-defuse-key');
+        if ($key and strlen($key)>=136) {
+          $key=trim($key,"\n");
+          $new = preg_replace("/config\['encryption_key']\s=\s'(.*)';/uU", "config['encryption_key'] = '".$key."';", $new,1,$count);
+          $new = str_replace("\r",'',$new);
+          $result=file_put_contents($file,$new);
+          if ($result) {
+            log_message('info', 'FlexyAdmin Install: encryption_key generated');
+          }
         }
       }
     }
