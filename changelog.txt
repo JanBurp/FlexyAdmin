@@ -1,7 +1,11 @@
 =3.5.9
 
 [FEATURES]
-- icon for midi files added to flexy_thumb
+- icons for midi & video files added to flexy_thumb
+- when files are too big to upload, a messages is shown
+
+[BUGS]
+- cfg_users table not standard visible
 
 =3.5.8
 

@@ -20,6 +20,7 @@ export default {
     help_items  : {},
     messages    : [],
     media_view  : _flexy.media_view,
+    max_uploadsize : _flexy.max_uploadsize,
     _modal      : {
       callback  : undefined,
       state     : undefined,
