@@ -1,7 +1,27 @@
 =3.5.9
 
+[nl]
+- Enkele kleine fouten opgelost
+- Enkele bestands-ikonen toegevoegd
+- Foutmelding bij uploaden te grote bestanden 
+- Bulkupload & automatisch vullen in database na uploaden
+[/nl]
+[en]
+- Some small bugs solved
+- Some file-icons added
+- Error messags at uploading files that are too big 
+- Bulkupload & auto fill in database after uploaden
+[/en]
+
 [FEATURES]
-- icon for midi files added to flexy_thumb
+- bulk_upload added
+- autofill assets added
+- icons for midi & video files added to flexy_thumb
+- when files are too big to upload, a messages is shown
+
+[BUGS]
+- cfg_users table not standard visible
+- small update in package.json and gulpfile.js
 
 =3.5.8
 
