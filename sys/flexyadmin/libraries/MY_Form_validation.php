@@ -521,6 +521,7 @@ class MY_Form_validation extends CI_Form_validation {
     if (empty($options)) return TRUE;
     if (!is_array($options)) $options = explode(',',$options);
     if (empty($str) and empty($options[0])) return TRUE; // mag leeg zijn
+    $str = trim(trim($str),'|');
     $data=explode('|',$str);
     foreach ($data as $value) {
       $result=in_array($value,$options);
