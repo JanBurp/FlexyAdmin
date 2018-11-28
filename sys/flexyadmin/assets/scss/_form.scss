@@ -360,6 +360,13 @@ body.mce-fullscreen .mce-tinymce{
       height:auto;
       font-size:.85rem;
     }
+    .search-totals {
+      font-size:.85rem;
+      margin-top:-1.35rem;
+      margin-right:.5rem;
+      float:right;
+      color:$gray-600;
+    }
   }
   
   button.dropdown-toggle {
