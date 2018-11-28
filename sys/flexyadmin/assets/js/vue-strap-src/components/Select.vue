@@ -17,7 +17,7 @@
     <ul class="dropdown-menu" v-show="show">
       <template v-if="list.length">
         <li v-if="canSearch || multiple" class="search-item">
-          <flexy-button v-if="multiple" icon="check-square-o" class="btn-outline-default" @click.native="invertSelection()"/>
+          <flexy-button v-if="multiple" icon="square-o" class="btn-outline-default" @click.native="invertSelection()"/>
           <input v-if="canSearch" type="text" :placeholder="searchText||text.search" class="form-control" autocomplete="off" ref="search" v-model="searchValue" @keyup.esc="show = false" />
         </li>
         <li v-for="option in filteredOptions" :id="option[optionsValue]">
@@ -386,20 +386,10 @@ button>.close { margin-left: 5px;}
   margin-top:2px;
   border-bottom:solid 1px;
 }
-.search-item input {
-  padding:2px 5px 0px;
-}
 .vselect.multiple .search-item input {
   width: calc(100% - 35px);
   margin-left:35px;
   margin-top:-26px;
 }
-/*.input-option {
-  display: inline-block;
-  width: auto;
-  padding: 3px 4px 0px;
-}
-*/
-
 
 </style>
