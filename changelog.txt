@@ -1,3 +1,22 @@
+=3.5.10
+
+[nl]
+- Enkele fouten opgelost die alleen in uitzonderlijk situaties voorkwamen
+- Flexibele formulieren zijn nu eenvoudiger toe te passen
+[/nl]
+[en]
+- Some rare bugs solved
+- Flexibel forms are easier to include
+[/en]
+
+[FEATURES]
+- Laad flexyforms automatisch (tbl_forms & tbl_formfields)
+
+[BUGS]
+- validation valid_options() gaf soms verkeerd resultaat
+- lang split in core_menu with flat tables
+- one_to_many werd niet goed getoond in forms & test
+
 =3.5.9
 
 [nl]

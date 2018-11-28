@@ -2598,8 +2598,8 @@ Class Data_Core extends CI_Model {
     if (is_numeric($where)) $this->tm_where_primary_key = $where;
     
     if ($where) $this->where( $where );
-    // Als er many_to_many data is die niet JSON is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
-    if ( isset($this->tm_with['many_to_many']) ) {
+    // Als er ..._to_many data is die niet JSON is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
+    if ( isset($this->tm_with['many_to_many']) or isset($this->tm_with['one_to_many']) ) {
       $result = $this->_get_result();
     }
     else {
