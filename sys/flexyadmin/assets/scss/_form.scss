@@ -353,6 +353,14 @@ body.mce-fullscreen .mce-tinymce{
 .vselect {
   position:relative!important;
   margin-left:0;
+
+  .search-item {
+    .form-control {
+      padding:.1rem .5rem 0rem;
+      height:auto;
+      font-size:.85rem;
+    }
+  }
   
   button.dropdown-toggle {
     min-height:2rem;
@@ -367,13 +375,18 @@ body.mce-fullscreen .mce-tinymce{
     width:100%;
     li {padding:.2rem .5rem;overflow:hidden;}
     li:hover {background-color:$warning-light};
-    li.search-item {input:focus;border-bottom:solid 1px $gray-300;}
+    li.search-item {
+      input:focus;border-bottom:solid 1px $gray-300;
+      .flexy-button { color:$gray-600; }
+    }
     li.insert-item {border-top:solid 1px $gray-300;}
     li.insert-item:hover,
     li.search-item:hover {background-color:transparent;}
+
     .flexy-button:hover {
       color:$black;
     }
+
   }
   
 }
