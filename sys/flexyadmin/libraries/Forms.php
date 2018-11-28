@@ -71,6 +71,45 @@ class Forms extends Module {
     $this->CI->load->library('session');
     $this->CI->load->model('formaction');
     if (isset($this->config['_classes'])) $this->classes = array_merge($this->classes,$this->config['_classes']);
+
+    // Laad flexyforms
+    if ($this->CI->db->table_exists('tbl_forms')) {
+      $forms = $this->CI->data->table('tbl_forms')->with('one_to_many')->get_result();
+      foreach ($forms as $id => $form) {
+        // Default form
+        $default = array(
+          'fields'                  => array(),
+          'placeholders_as_labels'  => true,
+          'validation_place'        => 'field',
+          'check_for_spam'          => true,
+          'prevend_double_submit'   => true,
+          'buttons'                 => array( 'submit'=>array('type'=>'submit','value'=>lang('submit')) ),
+          'formaction'              => 'formaction_mail',
+          'from_address_field'      => 'email',
+          '__return'                => '',
+        );
+        // Default override in config/forms.php
+        if (isset($this->config[$form['str_name']])) {
+          $default = array_merge($default,$this->config[$form['str_name']]);
+        }
+        // From tbl_forms & tbl_formfields
+        $flexyform = $default;
+        $flexyform['title'] = $form['str_title'];
+        $flexyform['subject'] = $form['str_subject'];
+        $flexyform['thanks'] = $form['txt_text'];
+        // fields
+        foreach ($form['tbl_formfields'] as $field) {
+          $flexyform['fields'][$field['str_name']] = array('label'=>$field['str_label'],'type'=>$field['str_type'],'validation'=>$field['str_validation']);
+          if (!empty($field['str_options'])) {
+            $options = explode('|',$field['str_options']);
+            $options = array_combine($options,$options);
+            $flexyform['fields'][$field['str_name']]['options'] = $options;
+          }
+        }
+        $this->config[$form['str_name']] = $flexyform;
+      }
+    }
+
 	}
 
 
