@@ -229,6 +229,7 @@ $config['abstract_filter']  = '';
  *  'many_to_many' => array(
  *
  *    'rel_menu__links' => array(
+ *    	'this_table'	=> 'tbl_menu',
  *      'other_table' => 'tbl_links',
  *      'rel_table'   => 'rel_menu__links',
  *      'this_key'    => 'id_menu',
@@ -237,6 +238,7 @@ $config['abstract_filter']  = '';
  *    ),
  *    
  *    'rel_menu__linksextra' => array(
+ *    	'this_table'	=> 'tbl_menu',
  *      'other_table' => 'tbl_links',
  *      'rel_table'   => 'rel_menu__linksextra',
  *      'this_key'    => 'id_menu',
@@ -245,6 +247,7 @@ $config['abstract_filter']  = '';
  *    ),
  * 
  *    'cfg_users_groups' => array(
+ *    	'this_table'	=> 'tbl_menu',
  *      'other_table' => 'cfg_users_groups',
  *      'rel_table'   => 'rel_users__users_groups',
  *      'this_key'    => 'id_user',
