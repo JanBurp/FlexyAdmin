@@ -1,3 +1,15 @@
+=3.5.11
+
+[nl]
+- Een kleine bug opgelost
+[/nl]
+[en]
+- Small bug solved
+[/en]
+
+[BUGS]
+- Select had een maximum van 8
+
 =3.5.10
 
 [nl]
