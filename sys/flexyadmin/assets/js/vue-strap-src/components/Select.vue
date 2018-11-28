@@ -57,7 +57,7 @@ export default {
     closeOnSelect: {type: Boolean, default: false},
     disabled:  {type: Boolean, default: false},
     lang:  {type: String, default: navigator.language},
-    limit: {type: Number, default: 8},
+    limit: {type: Number, default: 999999},
     minSearch: {type: Number, default: 8},
     multiple:  {type: Boolean, default: false},
     name:  {type: String, default: null},
