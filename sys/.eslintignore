@@ -1,0 +1,5 @@
+# /node_modules/* and /bower_components/* ignored by default
+
+# Ignore all files except files in flexyadmin/assets/js
+**/*
+!flexyadmin/assets/js/**/*

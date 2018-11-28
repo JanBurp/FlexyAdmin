@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+  <title>FlexyAdmin Developersguide</title>
+  <parser>
+    <target>data/output</target>
+    <markers>
+      <item>TODO</item>
+      <item>FIXME</item>
+      <item>BUG</item>
+    </markers>
+    <extensions>
+      <extension>php</extension>
+    </extensions>
+  </parser>
+  <transformer>
+    <target>flexyadmin/output</target>
+    <template name="responsive"/>
+  </transformer>
+  <logging>
+    <level>warn</level>
+    <paths>
+      <default>{APP_ROOT}/data/log/{DATE}.log</default>
+      <errors>{APP_ROOT}/data/log/{DATE}.errors.log</errors>
+    </paths>
+</logging>
+  <files>
+    <directory>../sys/flexyadmin/controllers</directory>
+    <directory>../sys/flexyadmin/core</directory>
+    <directory>../sys/flexyadmin/helpers</directory>
+    <directory>../sys/flexyadmin/libraries</directory>
+    <directory>../sys/flexyadmin/models</directory>
+    
+		<ignore>third_party/*</ignore>
+		<ignore>vendor/*</ignore>
+    <ignore>Bcrypt*</ignore>
+    <ignore>Ion_auth*</ignore>
+    <ignore>Jsmin*</ignore>
+    <ignore>Testlang*</ignore>
+  </files>
+</phpdoc>
