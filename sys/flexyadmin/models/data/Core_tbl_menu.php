@@ -132,6 +132,52 @@ Class Core_tbl_menu extends Data_Core {
   }
 
   /**
+   * Geeft volgend item uit (samengesteld) menu
+   *
+   * @param string $uri 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_next_menu_item( $uri ) {
+    $items = $this->get_menu_result();
+    reset($items);
+    $current = current($items);
+    while( $current and  $current['full_uri']!==$uri) {
+      $current = next($items);
+    }
+    if ($current) {
+      $next = next($items);
+      return $next;
+    }
+    return false;
+  }
+
+
+  /**
+   * Geeft vorig item uit (samengesteld) menu
+   *
+   * @param string $uri 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_prev_menu_item( $uri ) {
+    $items = $this->get_menu_result();
+    reset($items);
+    $current = current($items);
+    while( $current and  $current['full_uri']!==$uri) {
+      $current = next($items);
+    }
+    if ($current) {
+      $prev = prev($items);
+      return $prev;
+    }
+    return false;
+  }
+
+
+
+
+  /**
    * Geeft veld uit één item uit (samengesteld) menu
    *
    * @param string $uri 
