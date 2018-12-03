@@ -21,9 +21,9 @@ class Spam {
 		'link_http_weight'=>10,
 		'link_url_weight'=>10,
 		'text_density_limit'=>70,
-		'text_density_weight'=>5,
+		'text_density_weight'=>10,
 		'vowel_density_limit'=>10,
-		'vowel_density_weight'=>7,
+		'vowel_density_weight'=>10,
     'spambody_weight'=>7
   );
 
@@ -95,7 +95,14 @@ class Spam {
   public function check($data,$spamBody='spambody') {
     // collect txt_ fields, pick first one to check
     $fields=array_keys($data);
-    $fields=filter_by($fields,'txt');
+    $check_fields=filter_by($fields,'txt');
+    if (empty($check_fields)) {
+      $check_fields=filter_by($fields,'str');
+    }
+    if (empty($check_fields)) {
+      $check_fields=$fields;
+    }
+    $fields = $check_fields;
     if (!empty($fields)) {
       $textField=current($fields);
   		$this->check_text($data[$textField]);
