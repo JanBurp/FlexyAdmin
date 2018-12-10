@@ -428,7 +428,11 @@ class MY_Form_validation extends CI_Form_validation {
   						case 'min_length':
   							if ($validation[$rule]>$param) $param=$validation[$rule]; // get biggest
   							break;
-  					}
+              case 'valid_option':
+              case 'valid_options':
+                if (strlen($validation[$rule])>strlen($param)) $param=$validation[$rule]; // get most options
+                break;
+              }
   				}
   				$validation[$rule]=$param;
   			}
