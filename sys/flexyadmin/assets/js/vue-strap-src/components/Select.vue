@@ -17,10 +17,11 @@
     <ul class="dropdown-menu" v-show="show">
       <template v-if="list.length">
         <li v-if="canSearch || multiple" class="search-item">
-          <flexy-button v-if="multiple" icon="check-square-o" class="btn-outline-default" @click.native="invertSelection()"/>
+          <flexy-button v-if="multiple" icon="square-o" class="btn-outline-default" @click.native="invertSelection()"/>
           <input v-if="canSearch" type="text" :placeholder="searchText||text.search" class="form-control" autocomplete="off" ref="search" v-model="searchValue" @keyup.esc="show = false" />
+          <span v-if="list.length > minShow" class="search-totals">{{filteredOptions.length}}/{{list.length}}</span>
         </li>
-        <li v-for="option in filteredOptions" :id="option[optionsValue]">
+        <li v-for="(option, index) in filteredOptions" :id="option[optionsValue]" :class="itemClass(index)">
           <flexy-button :icon="{'check-square-o':isSelected(option[optionsValue]),'square-o':!isSelected(option[optionsValue])}" class="btn-outline-default" @click.native="select(option[optionsValue])" />
           <flexy-button v-if="insert" icon="pencil" class="btn-outline-warning" @click.native="startEdit(option)" />
           <select-option :label="option[optionsLabel]" @dblclick.native="startEdit(option)"></select-option>
@@ -57,8 +58,9 @@ export default {
     closeOnSelect: {type: Boolean, default: false},
     disabled:  {type: Boolean, default: false},
     lang:  {type: String, default: navigator.language},
-    limit: {type: Number, default: 8},
+    limit: {type: Number, default: 999999},
     minSearch: {type: Number, default: 8},
+    minShow: {type: Number, default: 12},
     multiple:  {type: Boolean, default: false},
     name:  {type: String, default: null},
     options: {type: Array, default () { return [] }},
@@ -101,11 +103,15 @@ export default {
     filteredOptions () {
       var self = this;
       var search = (self.searchValue || '').toLowerCase()
-      return !search ? self.list : self.list.filter( function(el){
-        var label = el[self.optionsLabel];
-        if (typeof(label)!=='string') label = label.toString();
-        return (label.toLowerCase().search(search) >= 0) ;
-      })
+      var list = self.list;
+      if (search) {
+        list = self.list.filter( function(el){
+          var label = el[self.optionsLabel];
+          if (typeof(label)!=='string') label = label.toString();
+          return (label.toLowerCase().search(search) >= 0) ;
+        })
+      }
+      return list;
     },
     hasParent () { return this.parent instanceof Array ? this.parent.length : this.parent },
     limitText () { return this.text.limit.replace('{{limit}}', this.limit) },
@@ -206,6 +212,9 @@ export default {
     clearSearch () {
       this.searchValue = ''
       this.$refs.search.focus()
+    },
+    itemClass(index) {
+      return 'select-item-'+index;
     },
     isSelected (v) {
       return this.values.indexOf(v) > -1
@@ -386,20 +395,10 @@ button>.close { margin-left: 5px;}
   margin-top:2px;
   border-bottom:solid 1px;
 }
-.search-item input {
-  padding:2px 5px 0px;
-}
 .vselect.multiple .search-item input {
   width: calc(100% - 35px);
   margin-left:35px;
   margin-top:-26px;
 }
-/*.input-option {
-  display: inline-block;
-  width: auto;
-  padding: 3px 4px 0px;
-}
-*/
-
 
 </style>

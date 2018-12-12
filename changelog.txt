@@ -1,3 +1,62 @@
+=3.5.12
+
+[nl]
+- Verbeteringen aan formulieren
+- Strengere spamchecker
+- Enkele verbeteringen en kleine bugs aan het CMS
+[/nl]
+[en]
+- Improved forms
+- Better spamchecker
+- Minor improvements and small bugs
+[/en]
+
+[FEATURES]
+- Verbeteringen aan flexyforms (tbl_forms & tbl_formfields) oa automatisch laden
+- Strengere spamchecker
+- Added get_next_menu_item() and get_prev_menu_item() to Core menu
+- Admin: home_menu automatisch uit
+- Admin: Enkele verbeteringen aan select
+- Admin: b_ fields are also searchable in grid
+
+[BUGS]
+- Form_validation better combing rules (valid_option(s))
+- Loading DemoDB did not work
+- Admin: Select had een maximum van 8
+- Admin: 'in_link_list' werkte niet voor downloads
+
+
+=3.5.11
+
+[nl]
+- Een kleine bug opgelost
+[/nl]
+[en]
+- Small bug solved
+[/en]
+
+[BUGS]
+- Select had een maximum van 8
+
+=3.5.10
+
+[nl]
+- Enkele fouten opgelost die alleen in uitzonderlijk situaties voorkwamen
+- Flexibele formulieren zijn nu eenvoudiger toe te passen
+[/nl]
+[en]
+- Some rare bugs solved
+- Flexibel forms are easier to include
+[/en]
+
+[FEATURES]
+- Laad flexyforms automatisch (tbl_forms & tbl_formfields)
+
+[BUGS]
+- validation valid_options() gaf soms verkeerd resultaat
+- lang split in core_menu with flat tables
+- one_to_many werd niet goed getoond in forms & test
+
 =3.5.9
 
 [nl]

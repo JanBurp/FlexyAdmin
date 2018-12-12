@@ -92,6 +92,7 @@ Class Core_tbl_menu extends Data_Core {
         $this->cache_result($menu_result,$cache_name);
       }
     }
+    // trace_($this->title_field);
     // trace_($menu_result);
     // trace_( array_column($menu_result, 'full_title','full_uri') );
     // trace_( array_column($menu_result, 'uri','full_uri') );
@@ -129,6 +130,52 @@ Class Core_tbl_menu extends Data_Core {
     }
     return $item;
   }
+
+  /**
+   * Geeft volgend item uit (samengesteld) menu
+   *
+   * @param string $uri 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_next_menu_item( $uri ) {
+    $items = $this->get_menu_result();
+    reset($items);
+    $current = current($items);
+    while( $current and  $current['full_uri']!==$uri) {
+      $current = next($items);
+    }
+    if ($current) {
+      $next = next($items);
+      return $next;
+    }
+    return false;
+  }
+
+
+  /**
+   * Geeft vorig item uit (samengesteld) menu
+   *
+   * @param string $uri 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_prev_menu_item( $uri ) {
+    $items = $this->get_menu_result();
+    reset($items);
+    $current = current($items);
+    while( $current and  $current['full_uri']!==$uri) {
+      $current = next($items);
+    }
+    if ($current) {
+      $prev = prev($items);
+      return $prev;
+    }
+    return false;
+  }
+
+
+
 
   /**
    * Geeft veld uit één item uit (samengesteld) menu
@@ -259,7 +306,7 @@ Class Core_tbl_menu extends Data_Core {
 
       // More languages?
       if ($languages) {
-        $this->load->model('create_uri');
+        // $this->load->model('create_uri');
         $base_lang = current($languages);
         // lang_fields in normale item
         foreach ($language_fields as $lang_field) {
@@ -271,7 +318,7 @@ Class Core_tbl_menu extends Data_Core {
         // Extra items
         foreach ($languages as $lang_key => $lang) {
           $lang_item = $item;
-          $full_uri = $lang.'/'.$lang_item['full_uri'];
+          $full_uri = $lang.'/'.el('full_uri',$lang_item,$lang_item['uri']);
           $lang_item['full_uri'] = $full_uri;
           $lang_item['_lang'] = $lang;
           $lang_item['order'] += $lang_key * ($max_order + 1);

@@ -21,6 +21,7 @@ class File extends CI_Controller {
 		parent::__construct();
     $this->load->model( 'data/Data_Core','data_core' );
     $this->load->model( 'data/Data','data' );
+    $this->load->model( 'assets' );
 	}
 
   /**

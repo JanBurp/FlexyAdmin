@@ -4,10 +4,10 @@
 /**
  * Home Wizards
  */
-$config['home_menu'] = array(
-  'statistics' => array( 'name'=>'watch_statistics', 'uri'=>'plugin/stats',                    'icon'=>'bar-chart',         "class"=>"primary" ),
-  'user'       => array( 'name'=>'edit_user',        'uri'=>'edit/cfg_users/{user_id}/single', 'icon'=>'user',              "class"=>"primary" ),
-);
+// $config['home_menu'] = array(
+//   'statistics' => array( 'name'=>'watch_statistics', 'uri'=>'plugin/stats',                    'icon'=>'bar-chart',         "class"=>"primary" ),
+//   'user'       => array( 'name'=>'edit_user',        'uri'=>'edit/cfg_users/{user_id}/single', 'icon'=>'user',              "class"=>"primary" ),
+// );
 
 
 /**
