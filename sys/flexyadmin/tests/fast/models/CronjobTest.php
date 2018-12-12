@@ -135,62 +135,62 @@ class CronjobTest extends CITestCase {
     // }
     
     
-    public function test_needs_run() {
+    // public function test_needs_run() {
     
-      // Elke minuut
-      $job = array(
-        'name'      => 'elke minuut',
-        'last'      => time(),
-        'every'     => '1'
-      );
-      $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
-      $run = $this->CI->cronjob->job_needs_run($job);
-      $this->assertLessThanOrEqual( $job['last'] + 60 , $job['next'] );
-      $this->assertEquals( false, $run );
+    //   // Elke minuut
+    //   $job = array(
+    //     'name'      => 'elke minuut',
+    //     'last'      => time(),
+    //     'every'     => '1'
+    //   );
+    //   $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
+    //   $run = $this->CI->cronjob->job_needs_run($job);
+    //   $this->assertLessThanOrEqual( $job['last'] + 60 , $job['next'] );
+    //   $this->assertEquals( false, $run );
     
-      $job['last'] = time()-60;
-      $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
-      $run = $this->CI->cronjob->job_needs_run($job);
-      $this->assertLessThanOrEqual( $job['last'] + 60, $job['next'] );
-      $this->assertEquals( true, $run );
+    //   $job['last'] = time()-60;
+    //   $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
+    //   $run = $this->CI->cronjob->job_needs_run($job);
+    //   $this->assertLessThanOrEqual( $job['last'] + 60, $job['next'] );
+    //   $this->assertEquals( true, $run );
     
     
-      // Elke dag
-      $job = array(
-        'name'      => 'elke dag',
-        'last'      => time(),
-        'every'     => 'day '.date('H:i')
-      );
-      $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
-      $run = $this->CI->cronjob->job_needs_run($job);
-      $this->assertEquals( false, $run );
+    //   // Elke dag
+    //   $job = array(
+    //     'name'      => 'elke dag',
+    //     'last'      => time(),
+    //     'every'     => 'day '.date('H:i')
+    //   );
+    //   $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
+    //   $run = $this->CI->cronjob->job_needs_run($job);
+    //   $this->assertEquals( false, $run );
     
-      $job['last'] = time() - TIME_DAY;
-      $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
-      $run = $this->CI->cronjob->job_needs_run($job);
-      $this->assertEquals( true, $run );
+    //   $job['last'] = time() - TIME_DAY;
+    //   $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
+    //   $run = $this->CI->cronjob->job_needs_run($job);
+    //   $this->assertEquals( true, $run );
     
-      // Elke week
-      $job = array(
-        'name'      => 'elke week',
-        'last'      => time(),
-        'every'     => 'week '.date('w H:i')
-      );
-      $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
-      $run = $this->CI->cronjob->job_needs_run($job);
-      $this->assertEquals( false, $run );
+    //   // Elke week
+    //   $job = array(
+    //     'name'      => 'elke week',
+    //     'last'      => time(),
+    //     'every'     => 'week '.date('w H:i')
+    //   );
+    //   $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
+    //   $run = $this->CI->cronjob->job_needs_run($job);
+    //   $this->assertEquals( false, $run );
 
-      $job['last'] = time() - TIME_DAY;
-      $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
-      $run = $this->CI->cronjob->job_needs_run($job);
-      $this->assertEquals( false, $run );
+    //   $job['last'] = time() - TIME_DAY;
+    //   $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
+    //   $run = $this->CI->cronjob->job_needs_run($job);
+    //   $this->assertEquals( false, $run );
     
-      $job['last'] = time() - TIME_WEEK;
-      $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
-      $run = $this->CI->cronjob->job_needs_run($job);
-      $this->assertEquals( true, $run );
+    //   $job['last'] = time() - TIME_WEEK;
+    //   $job['next'] = $this->CI->cronjob->_calc_next( $job['every'], $job['last'] );
+    //   $run = $this->CI->cronjob->job_needs_run($job);
+    //   $this->assertEquals( true, $run );
     
-    }
+    // }
 
 
 
