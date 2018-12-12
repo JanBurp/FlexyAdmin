@@ -28,9 +28,18 @@ export default {
         
         'mp3'   : 'fa-file-audio-o',
         'ogg'   : 'fa-file-audio-o',
-        'mp4'   : 'fa-file-audio-o',
         'wav'   : 'fa-file-audio-o',
         'aiff'  : 'fa-file-audio-o',
+
+        'mid'   : 'fa-music',
+        'midi'  : 'fa-music',
+
+        'mp4'   : 'fa-film',
+        'mov'   : 'fa-film',
+        'wmv'   : 'fa-film',
+        'm4v'   : 'fa-film',
+        'webm'  : 'fa-film',
+        'ogv'   : 'fa-film',
 
         'xls'   : 'fa-file-excel-o',
         'xlsx'  : 'fa-file-excel-o',

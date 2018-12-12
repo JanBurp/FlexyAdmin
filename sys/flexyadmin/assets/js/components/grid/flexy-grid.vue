@@ -168,6 +168,7 @@ export default {
       extendedTerm        : [],
       oldExtendedTerm     : [],
       uploadFiles         : [],
+      bulkuploadFiles     : [],
       dropUploadHover     : false,
 
       mouseY              : 0,
@@ -908,50 +909,96 @@ export default {
         formData.append( 'path', self.name );
         formData.append( 'file', self.uploadFiles[i] );
         formData.append( 'fileName', self.uploadFiles[i].name );
-        flexyState.api({
-          method    : 'POST',
-          url       : 'media',
-          data      : formData,
-          formData  : true,
-        }).then(function(response){
 
-          var error = response.data.error;
-          if (!error && response.data.data===false) {
-            error = self.$lang.upload_error;
-          }
-          else {
-            uploadedFilesCount++;
-          }
+        // Te groot?
+        if ( self.uploadFiles[i].size > flexyState.getState('max_uploadsize') ) {
+          flexyState.addMessage( self.uploadFiles[i].name + self.$lang.upload_too_big, 'danger' );
+        }
+        else {
+          flexyState.api({
+            method    : 'POST',
+            url       : 'media',
+            data      : formData,
+            formData  : true,
+          }).then(function(response){
 
-          var fileName = response.data.data.file;
-          if ( !_.isUndefined(response.data.data.orig_name) ) {
-            var origName = response.data.data.orig_name;
-            if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
-              flexyState.addMessage( response.data.message, 'danger' );  
+            var error = response.data.error;
+            if (!error && response.data.data===false) {
+              error = self.$lang.upload_error;
             }
-            if (self.type==='mediapicker') {
-              self.$emit('grid-uploaded-item',fileName);
+            else {
+              uploadedFilesCount++;
             }
-          }
 
-          if (error) {
-            flexyState.addMessage( error, 'danger' );
-          }
+            var fileName = response.data.data.file;
+            if ( !_.isUndefined(response.data.data.orig_name) ) {
+              var origName = response.data.data.orig_name;
+              if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
+                flexyState.addMessage( response.data.message, 'danger' );  
+              }
+              if (self.type==='mediapicker') {
+                self.$emit('grid-uploaded-item',fileName);
+              }
+            }
 
-          // Uit de lijst halen
-          var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
-          self.removeUploadFile(index);
+            if (error) {
+              flexyState.addMessage( error, 'danger' );
+            }
 
-          // Als alles uit de lijst is geuploade, reload
-          if (self.uploadFiles.length === 0 ) {
-            flexyState.addMessage(uploadedFilesCount + self.$lang.upload_count);
-            self.reloadPage();
-          }
-          return response;
-        });
+            // Uit de lijst halen
+            var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
+            self.removeUploadFile(index);
+
+            // Als alles uit de lijst is geuploade, reload
+            if (self.uploadFiles.length === 0 ) {
+              flexyState.addMessage(uploadedFilesCount + self.$lang.upload_count);
+              self.reloadPage();
+            }
+            return response;
+          });
+        }
       }
       
     },
+
+    /**
+     * Bulkupload methods
+     */
+    bulkUpload : function() {
+      var self = this;
+      if (!_.isUndefined(this.dataInfo.bulkupload)) {
+        self.bulkuploadFiles = this.dataInfo.bulkupload;
+        var file = '';
+        for (var i = self.bulkuploadFiles.length - 1; i >= 0; i--) {
+          file = self.bulkuploadFiles[i];
+          flexyState.api({
+            url : 'media?action=bulkupload&path='+this.name+'&file='+file,
+          })
+          .then(function(response){
+            if (!_.isUndefined(response.data.data)) {
+              self.bulkuploadFiles = _.without(self.bulkuploadFiles, response.data.args.file);
+              flexyState.addMessage(response.data.args.file + self.$lang.upload_ready);
+              if (self.bulkuploadFiles.length==0) {
+                self.reloadPage();
+              }
+            }
+          });
+        }
+      }
+    },
+    hasBulkupload : function() {
+      if (!_.isUndefined(this.dataInfo.bulkupload)) {
+        return this.dataInfo.bulkupload.length > 0;
+      }
+      return false;
+    },
+    bulkUploadTitle : function() {
+      if (!_.isUndefined(this.dataInfo.bulkupload)) {
+        return this.dataInfo.bulkupload.length + ' files for bulkupload';
+      }
+      return '';
+    },
+
 
     /**
      * Dragging methods
@@ -1218,14 +1265,20 @@ export default {
 
             <!-- UPLOAD ROW -->
             <tr v-if="gridType()==='media'" class="grid-upload" :class="{'dropping':dropUploadHover}">
-              <td colspan="100" class="grid-upload-dropbox">
+              <td v-if="bulkuploadFiles==false" colspan="100" class="grid-upload-dropbox">
                 <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
+                <flexy-button v-if="hasBulkupload()" @click.native="bulkUpload()" icon="upload" class="btn-outline-warning action-bulkupload" :title="bulkUploadTitle()" />
                 <span :class="{'show':uploadFiles.length>0}" class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span>
                 {{$lang.upload_choose}}
                 <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
               </td>
             </tr>
-          
+            <!-- BULKUPLOAD ROWS -->
+            <tr v-if="bulkuploadFiles!==false" v-for="file in bulkuploadFiles" class="grid-upload">
+              <td><span class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span></td>
+              <td colspan="100">{{file}}</td>
+            </tr>
+
             <!-- ROW -->
             <template v-for="row in items">
               <tr v-if="row" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">

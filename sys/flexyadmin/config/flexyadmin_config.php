@@ -161,12 +161,14 @@ $config['LOG_stats']									= "stats";
 $config['FILE_types_forbidden']				= array('php','php3','php4','phtml','pl','py','jsp','asp','shtml','sh','cgi','js','exe','dmg','app');
 $config['FILE_types_img']							= array('jpg','jpeg','gif','png','tiff','cur','tif','tiff');
 $config['FILE_types_mp3']							= array('mp3','wav','wma','aiff','ogg');
-$config['FILE_types_sound']					  = $config['FILE_types_mp3'];
+$config['FILE_types_sound']           = array_merge($config['FILE_types_mp3'],array('mid','midi'));
 $config['FILE_types_flash']						= array('swf','flv');
-$config['FILE_types_movies'] 					= array('mov','mp4','wmv','m4v','mp4','webm','ogv');
+$config['FILE_types_movies'] 					= array('mov','mp4','wmv','m4v','webm','ogv');
 $config['FILE_types_pdf']							= array('pdf');
 $config['FILE_types_docs']						= array('doc','docx','odt');
 $config['FILE_types_xls']							= array('xls','xlsx','ods');
+
+$config['MAX_UPLOADSIZE']             = 10000000; // 10M
 
 $config['CFG_table']									= "table_info";
 $config['CFG_table_name']							= "table";

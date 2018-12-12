@@ -48,8 +48,15 @@ Class Core_tbl_links extends Data_Core {
       )),
       array( 'title'=>'Pagina\'s',   'menu' => $this->_menu_link_list() ),
       array( 'title'=>'Links',       'menu' => $this->_links_link_list() ),
-      array( 'title'=>'Downloads',   'menu' => $this->_downloads_link_list() ),
     );
+    $downloads = $this->_downloads_link_list();
+    if (count($downloads)==1) {
+      $links[] = current($downloads);
+    }
+    else {
+      $links[] = array( 'title'=>'Bestanden', 'menu' => $downloads );
+    }
+
     $this->data->table('tbl_links');
     return $links;
   }
@@ -93,9 +100,19 @@ Class Core_tbl_links extends Data_Core {
    * @author Jan den Besten
    */
   protected function _downloads_link_list() {
-    $this->data->table('res_assets')->select('CONCAT_WS("/","_media/download",`path`,`file`) AS link, alt AS title')->where('path','downloads');
-    $result = $this->data->cache()->get_result();
-    return $this->_result_as_link_list($result);
+    $settings = $this->data->table('res_assets')->get_setting('assets');
+    $result = array();
+    foreach ($settings as $path => $info) {
+      if (el('in_link_list',$info,FALSE)) {
+        $this->data->table('res_assets')->select('CONCAT_WS("/","_media/download",`path`,`file`) AS link, alt AS title')->where('path',$path);
+        $files = $this->data->cache()->get_result();
+        $result[] = array(
+          'title' => ucfirst($path),
+          'menu'  => $this->_result_as_link_list($files),
+        );
+      }
+    }
+    return $result;
   }
   
 
