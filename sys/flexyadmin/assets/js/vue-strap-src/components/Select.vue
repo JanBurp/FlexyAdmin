@@ -67,7 +67,7 @@ export default {
     maxShow: {type: Number, default: 20},
     multiple:  {type: Boolean, default: false},
     name:  {type: String, default: null},
-    options: {type: Array, default () { return [] }},
+    options: {type: [Array,Object], default () { return [] }},
     optionsLabel:  {type: String, default: 'label'},
     optionsValue:  {type: String, default: 'value'},
     parent:  {default: true},
@@ -250,14 +250,35 @@ export default {
       }
     },
     setOptions (options) {
-      this.list = options.map(el => {
+      var self = this;
+      console.log('Select',self.values);
+      if (!_.isUndefined(options._ajax)) {
+        // Load options
+        flexyState.api({
+          url  : options._ajax,
+        }).then(function(response){
+          if (!_.isUndefined(response.data.data)) {
+            var loadedOptions = response.data.data;
+            self.list = self._mapOptions(loadedOptions);
+            self.$emit('options', self.list);
+            console.log('Select',self.list,self.values);
+          }
+        });
+      }
+      else {
+        this.list = this._mapOptions(options);
+      }
+      this.$emit('options', this.list)
+    },
+    _mapOptions(options) {
+      options.map(el => {
         if (el instanceof Object) { return el }
         let obj = {}
         obj[this.optionsLabel] = el
         obj[this.optionsValue] = el
         return obj
-      })
-      this.$emit('options', this.list)
+      });
+      return options;
     },
     toggle (event) {
       this.show = !this.show

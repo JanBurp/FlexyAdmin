@@ -206,7 +206,8 @@ class Table extends Api_Model {
       else {
         // Geen grid & geen media - where, txt_abstract, options
         if ( el('as_options',$this->args,false) ) {
-          $items = $this->data->get_options('', array('many_to_one','many_to_many','one_to_many') );
+          // $items = $this->data->get_options('', array('many_to_one','many_to_many','one_to_many') );
+          $items = $this->data->get_as_options();
         }
         else {
           if ( isset($this->args['where']) ) $this->data->where( $this->args['where'] );

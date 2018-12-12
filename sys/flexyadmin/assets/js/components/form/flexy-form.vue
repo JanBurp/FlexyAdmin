@@ -370,11 +370,31 @@ export default {
     },
 
     fieldOptions: function(field) {
-      // console.log('fieldOptions',field);
+      var self = this;
+      var options = [];
       if (_.isUndefined(this.form_groups[field])) return [];
       if (_.isUndefined(this.form_groups[field].options)) return [];
-      if (_.isUndefined(this.form_groups[field].options.data)) return [];
-      var options = _.clone(this.form_groups[field].options.data);
+      if (_.isUndefined(this.form_groups[field].options.data)) {
+        if ((_.isUndefined(this.form_groups[field].options.api))) {
+          return [];
+        }
+        // Options loaded with AJAX?
+        var apiCall = this.form_groups[field].options.api;
+        options = {'_ajax':apiCall};
+        return options;
+
+        // flexyState.api({
+        //   url  : apiCall,
+        // }).then(function(response){
+        //   if (!_.isUndefined(response.data.data)) {
+        //     options = response.data.data;
+        //     console.log(options);
+        //   }
+        // });
+
+      }
+
+      options = _.clone(this.form_groups[field].options.data);
       if ( !_.isUndefined(this.form_groups[field]['dynamic']) && !_.isUndefined(this.form_groups[field]['dynamic']['options']) ) {
         var filter_field = this.form_groups[field]['dynamic']['options']['filter_by'];
         var filter = this.row[filter_field];
@@ -394,9 +414,9 @@ export default {
         else {
           options = [];
         }
-        // console.log(filter_field,filter,index);
-        // jdb.vueLog(options);
       }
+      // console.log(filter_field,filter,index);
+      // jdb.vueLog(options);
       return options;
     },
     
@@ -440,6 +460,7 @@ export default {
           }
         }
       }
+      console.log('selectValue',field,value);
       return value;
     },
     

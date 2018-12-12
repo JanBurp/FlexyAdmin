@@ -1298,7 +1298,7 @@ Class Data_Core extends CI_Model {
           unset($options['path']);
         }
         if ($include_options) {
-          $options = array_keep_keys($options,array('table','data','multiple','api','insert_rights','settings'));
+          $options = array_keep_keys($options,array('table','data','multiple','api','total','insert_rights','settings'));
           $options['multiple'] = el('multiple',$options,FALSE)?'multiple':'';
           $info['options'] = $options;
         }
@@ -1694,12 +1694,12 @@ Class Data_Core extends CI_Model {
       if ($field_options) {
         $field_options;
         
-        // table
+        // table (zie ook onderaan bij relaties)
         if ( isset($field_options['table']) ) {
           $other_table = $field_options['table'];
           // Zijn er teveel opties?
           if ($this->db->count_all($other_table)>10000) {
-            $field_options['api'] = '_api/table?table='.$other_table.'&as_options=true';
+            $field_options['api'] = 'table?table='.$other_table.'&as_options=true';
           }
           // Anders geef gewoon de opties terug
           else {
@@ -1796,13 +1796,21 @@ Class Data_Core extends CI_Model {
             if (!isset($options[$what]['data'])) {
               $other_table = $relation['other_table'];
               $result_name = $relation['result_name'];
-              $this->data->table($other_table);
               $options[$result_name] = array(
                 'table'         => $other_table,
-                'data'          => $this->data->get_result_as_options(),
                 'multiple'      => true,
                 'insert_rights' => $this->flexy_auth->has_rights($other_table),
               );
+              // Voeg data of api toe
+              $this->data->table($other_table);
+              if ($this->data->count_all()>50) {
+                $options[$result_name]['total'] = $this->data->total_rows(true);
+                $options[$result_name]['api']   = 'table?table='.$other_table.'&as_options=true';
+              }
+              else {
+                $options[$result_name]['data'] = $this->data->get_result_as_options();
+              }
+
               $this->data->table($this->settings['table']); // Weer terug naar huidige tabel
               $this->tm_where_primary_key = $where_primary_key;
             }
@@ -1826,7 +1834,7 @@ Class Data_Core extends CI_Model {
     
     foreach ($options as $field => $row) {
       // Empty?
-      if (count($row)===1 && isset($row['field'])) $options[$field] = FALSE;
+      if (is_array($row) && count($row)===1 && isset($row['field'])) $options[$field] = FALSE;
     }
     
     if ($one!==FALSE) return $options[$one];
