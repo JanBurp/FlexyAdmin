@@ -71,7 +71,8 @@ $lang['vue_strap_lang'] = array(
   'months'        => array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
   'notSelected'   => 'Nothing selected',
   'required'      => 'Required',
-  'search'        => 'Search'
+  'search'        => 'Search',
+  'show_all'			=> 'Show all {total} items',
 );
 
 

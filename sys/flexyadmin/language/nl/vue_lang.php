@@ -72,7 +72,8 @@ $lang['vue_strap_lang'] = array(
   'months'        => array('Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'),
   'notSelected'   => 'Niets geselecteerd',
   'required'      => 'Verplicht',
-  'search'        => 'Zoek'
+  'search'        => 'Zoek',
+  'show_all'			=> 'Toon alle {total} items',
 );
 
 
