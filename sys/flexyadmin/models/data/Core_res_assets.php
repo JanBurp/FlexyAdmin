@@ -514,6 +514,31 @@ Class Core_res_assets extends Data_Core {
     $grid_set['title'] = $this->lang->ui('media_'.$this->media_path);
     return $grid_set;
   }
+
+  /**
+   * Form set aanpassingen, alleen de velden die zinvol mogen worden aangepast.
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_form_set() {
+    $form_set = parent::get_setting_form_set();
+
+    // Toon thumb in plaats van naam
+    if (isset($form_set['field_info']['path']['type'])) {
+      $form_set['field_info']['path']['type'] = 'hidden';
+    }
+    if (isset($form_set['field_info']['file']['type'])) {
+      $form_set['field_info']['file']['type'] = 'thumb';
+    }
+
+    // Toon naam van path in plaats van res_assets
+    if (isset($this->media_path) and !empty($this->media_path)) {
+      $form_set['title'] = lang('media_'.$this->media_path);
+    }
+
+    return $form_set;
+  }
   
 
   /**

@@ -46,7 +46,7 @@ $config['grid_set'] = array(
 	);
 
 $config['form_set'] = array(
-		'fields'    => array('id','b_exists','file','path','type','alt','date','size','width','height'), 
-    'fieldsets' => array('res_assets' => array('id','b_exists','file','path','type','alt','date','size','width','height') ),
+		'fields'    => array('id','b_exists','file','path','alt'), 
+    'fieldsets' => array('res_assets' => array('id','file','path','alt') ),
 		'with'      => array(), 
 	);
