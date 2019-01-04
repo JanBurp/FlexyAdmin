@@ -19,12 +19,15 @@
         <li v-if="canSearch || multiple" class="search-item">
           <flexy-button v-if="multiple" icon="square-o" class="btn-outline-default" @click.native="invertSelection()"/>
           <input v-if="canSearch" type="text" :placeholder="searchText||text.search" class="form-control" autocomplete="off" ref="search" v-model="searchValue" @keyup.esc="show = false" />
-          <span v-if="list.length > minShow" class="search-totals">{{filteredOptions.length}}/{{list.length}}</span>
+          <span v-if="list.length > minShow" class="search-totals">{{filteredAndMaxedOptions.length}}/{{list.length}}</span>
         </li>
-        <li v-for="(option, index) in filteredOptions" :id="option[optionsValue]" :class="itemClass(index)">
+        <li v-for="(option, index) in filteredAndMaxedOptions" :id="option[optionsValue]" :class="itemClass(index)">
           <flexy-button :icon="{'check-square-o':isSelected(option[optionsValue]),'square-o':!isSelected(option[optionsValue])}" class="btn-outline-default" @click.native="select(option[optionsValue])" />
           <flexy-button v-if="insert" icon="pencil" class="btn-outline-warning" @click.native="startEdit(option)" />
           <select-option :label="option[optionsLabel]" @dblclick.native="startEdit(option)"></select-option>
+        </li>
+        <li v-if="filteredOptions.length > this.showMax" class="pagination-item">
+          <flexy-button :text="paginationText()" class="btn-outline-primary" @click.native="showAll()"/>
         </li>
         <li v-if="insert" class="insert-item">
           <flexy-button @click.native="clickInsert()" icon="plus" class="btn-outline-warning" />{{insertText}}
@@ -60,7 +63,8 @@ export default {
     lang:  {type: String, default: navigator.language},
     limit: {type: Number, default: 999999},
     minSearch: {type: Number, default: 8},
-    minShow: {type: Number, default: 12},
+    minShow: {type: Number, default: 10},
+    maxShow: {type: Number, default: 20},
     multiple:  {type: Boolean, default: false},
     name:  {type: String, default: null},
     options: {type: Array, default () { return [] }},
@@ -83,6 +87,7 @@ export default {
       loading: null,
       searchValue: null,
       show: false,
+      showMax : this.maxShow,
       editing:false,
       notify: false,
       val: null,
@@ -109,9 +114,12 @@ export default {
           var label = el[self.optionsLabel];
           if (typeof(label)!=='string') label = label.toString();
           return (label.toLowerCase().search(search) >= 0) ;
-        })
+        });
       }
       return list;
+    },
+    filteredAndMaxedOptions() {
+      return this.filteredOptions.slice(0,this.showMax);
     },
     hasParent () { return this.parent instanceof Array ? this.parent.length : this.parent },
     limitText () { return this.text.limit.replace('{{limit}}', this.limit) },
@@ -297,6 +305,15 @@ export default {
     //     this.$emit('update', newItem );
     //   }
     // },
+    paginationText() {
+      var total = this.list.length;
+      if (this.filteredOptions.length > this.showMax) total = this.filteredOptions.length;
+      return this.text.show_all.replace('{total}', total);
+    },
+    showAll() {
+      this.showMax = this.list.length;
+    },
+
   },
 
 }
@@ -399,6 +416,9 @@ button>.close { margin-left: 5px;}
   width: calc(100% - 35px);
   margin-left:35px;
   margin-top:-26px;
+}
+.pagination-item {
+  padding-left:4.5rem!important;
 }
 
 </style>

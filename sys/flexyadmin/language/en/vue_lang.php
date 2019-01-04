@@ -39,7 +39,7 @@ $lang['vue_grid_edit_success']       = 'Field is changed';
 
 $lang['vue_file_select']             = 'Select file(s)';
 $lang['vue_upload']                  = 'Upload';
-$lang['vue_upload_choose']           = 'Click of drag new files.';
+$lang['vue_upload_choose']           = 'Drag new files here.';
 $lang['vue_upload_file']             = 'File';
 $lang['vue_upload_size']             = 'Size';
 $lang['vue_upload_progress']         = 'Progress';
@@ -49,6 +49,7 @@ $lang['vue_upload_error']            = 'Unknown error.';
 $lang['vue_upload_ready']            = ' added.';
 $lang['vue_upload_count']            = ' files added';
 $lang['vue_upload_too_big']          = ' is too big to upload.';
+$lang['vue_files_for_bulkupload']    = ' files from bulkupload.';
 
 $lang['vue_grid_total']              = "{0} items";
 $lang['vue_grid_pagination']         = "{0} items / {1} pages";
@@ -71,7 +72,8 @@ $lang['vue_strap_lang'] = array(
   'months'        => array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
   'notSelected'   => 'Nothing selected',
   'required'      => 'Required',
-  'search'        => 'Search'
+  'search'        => 'Search',
+  'show_all'			=> 'Show all {total} items',
 );
 
 
