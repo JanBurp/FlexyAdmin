@@ -168,6 +168,8 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function refresh( $paths='', $clean=FALSE, $remove=FALSE) {
+    ini_set('max_execution_time', 0); // for infinite time of execution 
+
     if (empty($paths)) $paths = $this->get_assets_folders(FALSE);
     if (!is_array($paths)) $paths=array($paths);
     
@@ -548,9 +550,15 @@ Class Core_res_assets extends Data_Core {
    * @return int
    * @author Jan den Besten
    */
-  public function count_all($table='') {
-    $query = $this->db->where('path',$table)->select('id')->get($this->settings['table']);
-    return $query->num_rows();
+  public function count_all($path='') {
+    if ($path=='') {
+      $query = $this->db->select('id')->get($this->settings['table']);  
+    }
+    else {
+      $query = $this->db->where('path',$path)->select('id')->get($this->settings['table']);
+    }
+    $count_all = $query->num_rows();
+    return $count_all;
   }
 
   
