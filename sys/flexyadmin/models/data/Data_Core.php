@@ -4150,7 +4150,7 @@ Class Data_Core extends CI_Model {
           switch ($equals) {
             case 'exact': 
               if (strpos($field,'AES')!==false) $field.=' = ';
-              $this->or_where( $field, $term, FALSE);
+              $this->or_where( $field, '"'.$term.'"', FALSE);
               break;
             case 'word':
               $this->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
