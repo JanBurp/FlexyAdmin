@@ -405,7 +405,7 @@ function strip_ms_word($html) {
  * @author Jan den Besten
  */
 function nice_string($s) {
-	return ucfirst(str_replace("_"," ",$s));
+	return ucfirst(str_replace("_"," ",trim($s)));
 }
 
 /**
