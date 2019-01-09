@@ -1,3 +1,29 @@
+=3.5.14
+
+[nl]
+- Verbeteringen dropdown veld - als er veel opties zijn worden die pas geladen als nodig
+- Enkele kleine verbeteringen
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Better dropdown - load option when needed
+- Some small improvements
+- Some small bugs solved
+[/en]
+
+[FEATURES]
+- Select loads data with ajax (when needed) with more than 50 options
+- Maximum execution time in assets.refresh = infinite
+- Assets: Autofill fields more flexible
+- 'user' field as muted form field (new form_field ‘abstract’ added)
+
+[BUGS]
+- Counting all items in res_assets was wrong
+- LogActivity gave error with old PHP versions
+- data->find() when term could be a field
+- admin menu_items -> rights of folders
+
+
 =3.5.13
 
 [nl]
