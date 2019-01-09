@@ -1703,7 +1703,7 @@ Class Data_Core extends CI_Model {
         if ( isset($field_options['table']) ) {
           $other_table = $field_options['table'];
           // Zijn er teveel opties?
-          if ($this->db->count_all($other_table)>10000) {
+          if ($this->db->count_all($other_table)>50) {
             $field_options['api'] = 'table?table='.$other_table.'&as_options=true';
           }
           // Anders geef gewoon de opties terug

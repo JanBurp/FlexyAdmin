@@ -370,6 +370,13 @@ export default {
       return selected;
     },
 
+    fieldOptionsAjax: function(field) {
+      if (_.isUndefined(this.form_groups[field])) return '';
+      if (_.isUndefined(this.form_groups[field].options)) return '';
+      if (_.isUndefined(this.form_groups[field].options.api)) return '';
+      return this.form_groups[field].options.api;
+    },
+
     fieldOptions: function(field) {
       var self = this;
       var options = [];
@@ -381,18 +388,13 @@ export default {
         }
         // Options loaded with AJAX?
         var apiCall = this.form_groups[field].options.api;
-        options = {'_ajax':apiCall};
+        // Current values as options included
+        var currentOptions = _.clone(this.row[field]);
+        // options['data'] = [];
+        for (var option in currentOptions) {
+          options.push({'name':currentOptions[option]['abstract'],'value':currentOptions[option]['id']});
+        }
         return options;
-
-        // flexyState.api({
-        //   url  : apiCall,
-        // }).then(function(response){
-        //   if (!_.isUndefined(response.data.data)) {
-        //     options = response.data.data;
-        //     console.log(options);
-        //   }
-        // });
-
       }
 
       options = _.clone(this.form_groups[field].options.data);
@@ -474,7 +476,6 @@ export default {
           }
         }
       }
-      console.log('selectValue',field,value);
       return value;
     },
     
@@ -1115,7 +1116,7 @@ export default {
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <vselect :name="field" 
-                    :options="fieldOptions(field)" options-value="value" options-label="name" 
+                    :options="fieldOptions(field)" options-value="value" options-label="name" :options-ajax="fieldOptionsAjax(field)"
                     :value="selectValue(field)" 
                     :multiple="isMultiple(field)"
                     @change="updateSelect(field,$event)"
