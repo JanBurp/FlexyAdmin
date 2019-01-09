@@ -67,9 +67,10 @@ export default {
     maxShow: {type: Number, default: 20},
     multiple:  {type: Boolean, default: false},
     name:  {type: String, default: null},
-    options: {type: Array, default () { return [] }},
+    options: {type: [Array,Object], default () { return [] }},
     optionsLabel:  {type: String, default: 'label'},
     optionsValue:  {type: String, default: 'value'},
+    optionsAjax:  {type: String, default: ''},
     parent:  {default: true},
     placeholder: {type: String, default: null},
     readonly:  {type: Boolean, default: null},
@@ -85,6 +86,7 @@ export default {
     return {
       list: [],
       loading: null,
+      optionsAjaxLoaded: false,
       searchValue: null,
       show: false,
       showMax : this.maxShow,
@@ -132,7 +134,6 @@ export default {
       var labels = this.values.map(val => (this.list.find(o => o[this.optionsValue] === val) || {})[this.optionsLabel]).filter(val => val !== undefined);
       labels.sort();
       return labels;
-      // return '<span class="selected-option">' + labels.join('</span><span class="selected-option">') + '</span>';
     },
     showPlaceholder () { return (this.values.length === 0 || !this.hasParent) ? (this.placeholder || this.text.notSelected) : null },
     text () { return translations(this.lang) },
@@ -141,7 +142,9 @@ export default {
   },
   watch: {
     options (options) {
-      if (options instanceof Array) this.setOptions(options)
+      if (this.optionsAjaxLoaded==false) {
+        if (options instanceof Array) this.setOptions(options)
+      }
     },
     show (val) {
       if (val) {
@@ -249,17 +252,41 @@ export default {
         self.select(self.list[i].value);
       }
     },
+    loadAjaxOptions () {
+      var self = this;
+      if (self.optionsAjax!='') {
+        // Load options
+        flexyState.api({
+          url  : self.optionsAjax,
+        }).then(function(response){
+          if (!_.isUndefined(response.data.data)) {
+            var loadedOptions = response.data.data;
+            self.setOptions(loadedOptions);
+            self.optionsAjaxLoaded = true;
+          }
+        });
+      }
+    },
     setOptions (options) {
-      this.list = options.map(el => {
-        if (el instanceof Object) { return el }
-        let obj = {}
-        obj[this.optionsLabel] = el
-        obj[this.optionsValue] = el
-        return obj
-      })
+      this.list = this._mapOptions(options);
       this.$emit('options', this.list)
     },
+    _mapOptions(options) {
+      var self = this;
+      options.map(el => {
+        if (el instanceof Object) { return el }
+        let obj = {}
+        obj[self.optionsLabel] = el
+        obj[self.optionsValue] = el
+        return obj
+      });
+      return options;
+    },
     toggle (event) {
+      // Load Ajax options?
+      if (this.optionsAjax!=='' && !this.optionsAjaxLoaded) {
+        this.loadAjaxOptions();
+      }
       this.show = !this.show
     },
     urlChanged () {

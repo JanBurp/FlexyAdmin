@@ -370,12 +370,34 @@ export default {
       return selected;
     },
 
+    fieldOptionsAjax: function(field) {
+      if (_.isUndefined(this.form_groups[field])) return '';
+      if (_.isUndefined(this.form_groups[field].options)) return '';
+      if (_.isUndefined(this.form_groups[field].options.api)) return '';
+      return this.form_groups[field].options.api;
+    },
+
     fieldOptions: function(field) {
-      // console.log('fieldOptions',field);
+      var self = this;
+      var options = [];
       if (_.isUndefined(this.form_groups[field])) return [];
       if (_.isUndefined(this.form_groups[field].options)) return [];
-      if (_.isUndefined(this.form_groups[field].options.data)) return [];
-      var options = _.clone(this.form_groups[field].options.data);
+      if (_.isUndefined(this.form_groups[field].options.data)) {
+        if ((_.isUndefined(this.form_groups[field].options.api))) {
+          return [];
+        }
+        // Options loaded with AJAX?
+        var apiCall = this.form_groups[field].options.api;
+        // Current values as options included
+        var currentOptions = _.clone(this.row[field]);
+        // options['data'] = [];
+        for (var option in currentOptions) {
+          options.push({'name':currentOptions[option]['abstract'],'value':currentOptions[option]['id']});
+        }
+        return options;
+      }
+
+      options = _.clone(this.form_groups[field].options.data);
       if ( !_.isUndefined(this.form_groups[field]['dynamic']) && !_.isUndefined(this.form_groups[field]['dynamic']['options']) ) {
         var filter_field = this.form_groups[field]['dynamic']['options']['filter_by'];
         var filter = this.row[filter_field];
@@ -395,9 +417,9 @@ export default {
         else {
           options = [];
         }
-        // console.log(filter_field,filter,index);
-        // jdb.vueLog(options);
       }
+      // console.log(filter_field,filter,index);
+      // jdb.vueLog(options);
       return options;
     },
     
@@ -1094,7 +1116,7 @@ export default {
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <vselect :name="field" 
-                    :options="fieldOptions(field)" options-value="value" options-label="name" 
+                    :options="fieldOptions(field)" options-value="value" options-label="name" :options-ajax="fieldOptionsAjax(field)"
                     :value="selectValue(field)" 
                     :multiple="isMultiple(field)"
                     @change="updateSelect(field,$event)"
