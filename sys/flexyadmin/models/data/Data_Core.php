@@ -522,6 +522,10 @@ Class Data_Core extends CI_Model {
       }
       
       switch ($field) {
+
+        case 'user':
+          $options['table'] = 'cfg_users';
+          break;
         
         // Self parent -> tree options
         case 'self_parent':
@@ -546,6 +550,7 @@ Class Data_Core extends CI_Model {
         $settings_options[$field] = $options;
       }
     }
+    // if ($this->settings['table']=='tbl_fotoarchief') trace_($settings_options);
     return $settings_options;
   }
   
@@ -1291,7 +1296,7 @@ Class Data_Core extends CI_Model {
       // Options
       $options = $this->get_options($field,array('many_to_many','one_to_many','one_to_one'));
       if ($options) {
-        $info['type'] = 'select';
+        if ($field!=='user') $info['type'] = 'select';
         if ($fieldPrefix==='media' or $fieldPrefix==='medias') {
           $info['path'] = $options['path'];
           $info['type'] = 'media';
@@ -4158,7 +4163,7 @@ Class Data_Core extends CI_Model {
           switch ($equals) {
             case 'exact': 
               if (strpos($field,'AES')!==false) $field.=' = ';
-              $this->or_where( $field, $term, FALSE);
+              $this->or_where( $field, '"'.$term.'"', FALSE);
               break;
             case 'word':
               $this->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);

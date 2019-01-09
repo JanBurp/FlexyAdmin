@@ -1,3 +1,21 @@
+=3.5.13
+
+[nl]
+- Verbeteringen dropdown veld
+- Verbeteringen voor aanpassen naam (ed) van bestanden.
+- Verbeteringen aan gebruikersinterface voor uploaden en aanpassen van bestanden.
+[/nl]
+[en]
+- Better dropdown
+- Improved editing of files.
+- Improved userinterface for uploaden and editing files.
+[/en]
+
+[FEATURES]
+- Verbeteringen dropdown veld
+- Verbeteringen voor aanpassen naam (ed) van bestanden.
+- Verbeteringen aan gebruikersinterface voor uploaden en aanpassen van bestanden.
+
 =3.5.12
 
 [nl]

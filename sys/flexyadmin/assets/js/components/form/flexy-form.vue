@@ -65,12 +65,14 @@ export default {
       var types = {
         primary           : ['primary'],
         hidden            : ['hidden','primary','uri','order'],
+        abstract          : ['abstract','show','disabled'],
         checkbox          : ['checkbox'],
         datepicker        : ['date'],
         timepicker        : ['time'],
         datetimepicker    : ['datetime'],
         colorpicker       : ['color','rgb'],
         mediapicker       : ['media','medias'],
+        thumb             : ['thumb'],
         select            : ['select'],
         radio             : ['radio','radio_image'],
         joinselect        : ['joinselect'],
@@ -311,7 +313,6 @@ export default {
       //   }
       //   return false;
       // }
-
       return this.fieldTypes[type].indexOf(this.form_groups[field]['type']) >= 0;
     },
 
@@ -441,6 +442,19 @@ export default {
       };
     },
     
+    thumbValue : function(field) {
+      var value = '_media/'+this.row['path']+'/'+this.row[field];
+      return value;
+    },
+
+    abstractValue : function(field) {
+      if (!_.isUndefined(this.form_groups[field]['options']['data'])) {
+        var index = jdb.indexOfProperty(this.form_groups[field]['options']['data'],'value',this.row[field]);
+        return this.form_groups[field]['options']['data'][index]['name'];
+      }
+      return this.row[field];
+    },
+
     selectValue: function(field) {
       var value = this.row[field];
       if ( this.isMultiple(field) ) {
@@ -667,7 +681,12 @@ export default {
       else {
         if (!this.isSaving) {
           tinyMCE.remove();
-          var url = '/edit/'+this.name + location.search;
+          var name = this.name;
+          var url = '/edit/'+name + location.search;
+          if ( name.match(/^media_(.*?)/i) ) {
+            name = name.replace(/^media_(.*?)/gi, "$1");
+            url = '/media/'+name  + location.search;
+          }
           this.$router.push(url);
         }
       }
@@ -1088,6 +1107,11 @@ export default {
                   <mediapicker :id="field" :name="field" :value="row[field]" :path="form_groups[field].path" :multiple="field.substr(0,7) === 'medias_'" v-on:input="updateField(field,$event)"></mediapicker>
                 </template>
 
+                <template v-if="isType('thumb',field)">
+                  <!-- Thumb -->
+                  <flexyThumb :src="thumbValue(field)" size="lg" :alt="row[field]"></flexyThumb><span>{{row['path']}}/{{row[field]}}</span>
+                </template>
+
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <vselect :name="field" 
@@ -1131,6 +1155,12 @@ export default {
                   <!-- Joinselect -->
                   <joinselect :id="field" :name="field" :value="row[field]" @change="updateJoinSelect(field,$event)"></joinselect>
                 </template>
+
+                <template v-if="isType('abstract',field)">
+                  <!-- Only show -->
+                  <span class="text-muted">{{abstractValue(field)}}</span>
+                </template>
+
               
                 <template v-if="isType('default',field)">
                   <!-- Default -->
