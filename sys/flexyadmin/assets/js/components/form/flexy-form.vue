@@ -65,6 +65,7 @@ export default {
       var types = {
         primary           : ['primary'],
         hidden            : ['hidden','primary','uri','order'],
+        abstract          : ['abstract','show','disabled'],
         checkbox          : ['checkbox'],
         datepicker        : ['date'],
         timepicker        : ['time'],
@@ -312,7 +313,6 @@ export default {
       //   }
       //   return false;
       // }
-
       return this.fieldTypes[type].indexOf(this.form_groups[field]['type']) >= 0;
     },
 
@@ -425,6 +425,14 @@ export default {
     thumbValue : function(field) {
       var value = '_media/'+this.row['path']+'/'+this.row[field];
       return value;
+    },
+
+    abstractValue : function(field) {
+      if (!_.isUndefined(this.form_groups[field]['options']['data'])) {
+        var index = jdb.indexOfProperty(this.form_groups[field]['options']['data'],'value',this.row[field]);
+        return this.form_groups[field]['options']['data'][index]['name'];
+      }
+      return this.row[field];
     },
 
     selectValue: function(field) {
@@ -1126,6 +1134,12 @@ export default {
                   <!-- Joinselect -->
                   <joinselect :id="field" :name="field" :value="row[field]" @change="updateJoinSelect(field,$event)"></joinselect>
                 </template>
+
+                <template v-if="isType('abstract',field)">
+                  <!-- Only show -->
+                  <span class="text-muted">{{abstractValue(field)}}</span>
+                </template>
+
               
                 <template v-if="isType('default',field)">
                   <!-- Default -->
