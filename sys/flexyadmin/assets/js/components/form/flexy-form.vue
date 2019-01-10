@@ -215,12 +215,9 @@ export default {
           var key = _.parseInt(Object.keys(value)[0]);
           value   = Object.values(value)[0];
           if (!_.isUndefined(value) && key>0) {
-            var options = [];
-            options.push({
-              'value' : key,
-              'name'  : value,
-            });
-            // console.log(field,key,value,options);
+            var options = self.form_groups[field]['options']['data'] || [];
+            var index = jdb.indexOfProperty(options,'value',key);
+            if (index==false) options.push({'value' : key,'name'  : value});
             self.form_groups[field]['options']['data'] = options;
             self.row[field] = key;
           }
@@ -441,8 +438,6 @@ export default {
           options = [];
         }
       }
-      // console.log(filter_field,filter,index);
-      // jdb.vueLog(options);
       return options;
     },
     

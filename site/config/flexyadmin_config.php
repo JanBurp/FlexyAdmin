@@ -7,7 +7,7 @@
  * Tijdens development is het soms handiger om uit te zetten.
  * Zeker als je veel aan de database of de data settings aanpast (config/data/...)
  */
-$config['CACHE_DATA_SETTINGS'] = FALSE;
+$config['CACHE_DATA_SETTINGS'] = TRUE;
 
 
 
