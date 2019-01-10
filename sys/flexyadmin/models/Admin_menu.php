@@ -44,7 +44,8 @@ Class Admin_menu extends CI_Model {
     $homeMenu = new Menu();
     $homeMenu->set('view_path','admin/menu-home');
     $homeMenu->set_current($current_uri);
-    if (!empty($this->_get_config_item('home_menu'))) {
+    $cfgHome = $this->_get_config_item('home_menu');
+    if (!empty($cfgHome)) {
       $homeMenu->add_items( $this->_process_items('', $this->_get_config_item('home_menu') ) );
     }
 
