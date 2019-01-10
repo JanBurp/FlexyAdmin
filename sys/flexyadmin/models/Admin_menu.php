@@ -185,13 +185,15 @@ Class Admin_menu extends CI_Model {
               $medias = $this->assets->get_assets_folders(false);
               foreach ($medias as $media) {
                 if (!isset($menuItems['media_'.$media])) {
-                  $menuItems['media_'.$media] = $this->_process_item('', array(
-                    'name'       => $this->lang->ui('media_'.$media),
-                    'uri'        => 'media/'.$media,
-                    'icon'       => el('icon',$item,''),
-                    'iconactive' => el('iconactive',$item,''),
-                    'class'      => el('class',$item,''),
-                  ));
+                  if ($this->flexy_auth->has_rights('media_'.$path)) {
+                    $menuItems['media_'.$media] = $this->_process_item('', array(
+                      'name'       => $this->lang->ui('media_'.$media),
+                      'uri'        => 'media/'.$media,
+                      'icon'       => el('icon',$item,''),
+                      'iconactive' => el('iconactive',$item,''),
+                      'class'      => el('class',$item,''),
+                    ));
+                  }
                 }
               }
               break;
@@ -206,24 +208,37 @@ Class Admin_menu extends CI_Model {
         }
       }
     }
+
     // Cleanup redundant splits & seperators
+
+    // Aan eind    
     end($menuItems);
     $item=current($menuItems);
     while ($item) {
       if ($item=='' or $item=='seperator' or $item=='split') {
-        $key = key($menuItems);
+        $key  = key($menuItems);
+        $item = prev($menuItems);
         unset($menuItems[$key]);
-        $item=prev($menuItems);
       }
       else $item=false;
     }
+    // Aan begin
     reset($menuItems);
-    if (count($menuItems)==1) {
-      $item = current($menuItems);
+    $item=current($menuItems);
+    while ($item) {
       if ($item=='' or $item=='seperator' or $item=='split') {
-        $menuItems = array();
+        $key  = key($menuItems);
+        $item = next($menuItems);
+        unset($menuItems[$key]);
       }
+      else $item=false;
     }
+    // if (count($menuItems)==1) {
+    //   $item = current($menuItems);
+    //   if ($item=='' or $item=='seperator' or $item=='split') {
+    //     $menuItems = array();
+    //   }
+    // }
     reset($menuItems);
     return $menuItems;
   }

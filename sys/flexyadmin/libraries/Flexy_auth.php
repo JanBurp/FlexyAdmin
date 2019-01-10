@@ -74,8 +74,10 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   public function set_config( $config ) {
-    foreach ($config as $key => $value) {
-      $this->config->set_item( array('ion_auth',$key), $value );
+    if (is_array($config)) {
+      foreach ($config as $key => $value) {
+        $this->config->set_item( array('ion_auth',$key), $value );
+      }
     }
     return $this;
   }

@@ -27,7 +27,7 @@ $config['FIELDS_prefix'] = array (
 	'id'				=> array(
     'type'        => 'select',
     'grid-type'   => 'abstract',
-    'validation'	=> 'trim|integer',
+    'validation'	=> 'trim',
     'default'     => 0,
   ),
   
@@ -200,7 +200,8 @@ $config['FIELDS_special'] = array(
 
   // Aangemaakt door:
 	'user'			=> array(
-    'type'         => 'input',
+    'type'         => 'abstract',
+    'grid-type'    => 'abstract',
     'readonly'     => true,
     'validation'   => 'trim|integer|required',
   ),

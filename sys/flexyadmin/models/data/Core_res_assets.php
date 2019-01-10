@@ -168,6 +168,8 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function refresh( $paths='', $clean=FALSE, $remove=FALSE) {
+    ini_set('max_execution_time', 0); // for infinite time of execution 
+
     if (empty($paths)) $paths = $this->get_assets_folders(FALSE);
     if (!is_array($paths)) $paths=array($paths);
     
@@ -548,9 +550,15 @@ Class Core_res_assets extends Data_Core {
    * @return int
    * @author Jan den Besten
    */
-  public function count_all($table='') {
-    $query = $this->db->where('path',$table)->select('id')->get($this->settings['table']);
-    return $query->num_rows();
+  public function count_all($path='') {
+    if ($path=='') {
+      $query = $this->db->select('id')->get($this->settings['table']);  
+    }
+    else {
+      $query = $this->db->where('path',$path)->select('id')->get($this->settings['table']);
+    }
+    $count_all = $query->num_rows();
+    return $count_all;
   }
 
   
@@ -688,7 +696,7 @@ Class Core_res_assets extends Data_Core {
     $default_data = array(
       'path'  => $path,
       'file'  => $file,
-      'alt'   => get_prefix($file,'.'),
+      'alt'   => nice_string(get_prefix($file,'.')),
       'type'  => $ext,
       'size'  => (int) floor($file_stats['size'] / 1024),
       'date'  => unix_to_mysql($file_stats['mtime']),
@@ -712,16 +720,31 @@ Class Core_res_assets extends Data_Core {
       $path_settings = $this->get_folder_settings($path);
       if (isset($path_settings['autofill_fields']) and !empty($path_settings['autofill_fields'])) {
         $autofill_fields = $path_settings['autofill_fields'];
-        if (!is_array($autofill_fields)) {
-          $autofill_fields = array($autofill_fields);
-        }
-        foreach ($autofill_fields as $key => $field) {
+        $sets = array();
+        
+        foreach ($autofill_fields as $field => $value) {
           $table = get_prefix($field,'.');
           $field = get_suffix($field,'.');
-          $set = array($field=>$data['file']);
-          $this->data->table($table)->set($set)->insert();
+
+          if (!isset($sets[$table])) $sets[$table] = array();
+          if (isset($data[$value]))  $sets[$table][$field] = $data[$value];
+          switch ($value) {
+            case 'user':
+              $sets[$table][$field] = $this->get_user_id();
+              break;
+            case 'date':
+              $sets[$table][$field] = date("Y-m-d");
+              break;
+          }
+        }
+
+        if (!empty($sets)) {
+          foreach ($sets as $table => $set) {
+            $this->data->table($table)->set($set)->insert();
+          }
         }
       }
+
     }
     return $id;
   }

@@ -41,7 +41,7 @@ class Log_activity extends CI_Model {
       $this->db->set( 'str_activity_type',$type );
       $this->db->set( 'stx_activity',$activity );
       $this->db->set( 'str_model',$model );
-      $this->db->set( 'str_key',$key );
+      if (!empty($key)) $this->db->set( 'str_key',$key );
       if ($this->db->field_exists('ip_address','log_activity')) $this->db->set( 'ip_address', $this->input->ip_address() );
       $this->db->insert( 'log_activity' );
     }
