@@ -185,7 +185,7 @@ Class Admin_menu extends CI_Model {
               $medias = $this->assets->get_assets_folders(false);
               foreach ($medias as $media) {
                 if (!isset($menuItems['media_'.$media])) {
-                  if ($this->flexy_auth->has_rights('media_'.$path)) {
+                  if ($this->flexy_auth->has_rights('media_'.$media)) {
                     $menuItems['media_'.$media] = $this->_process_item('', array(
                       'name'       => $this->lang->ui('media_'.$media),
                       'uri'        => 'media/'.$media,
