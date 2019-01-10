@@ -478,6 +478,7 @@ Class Data_Core extends CI_Model {
       
       $field_info[$field] = $info;
     }
+    // trace_($field_info);
     return $field_info;
   }
   
@@ -2890,20 +2891,40 @@ Class Data_Core extends CI_Model {
     
     // Relations
     foreach ($form_set['with'] as $type => $relations) {
-      if ($type!=='many_to_one') {
-        if (is_array($relations)) {
-          foreach ($relations as $what => $fields ) {
-            if ( $what!=='user_changed') {
-              $this->with( $type, array( $what=>$fields) );
-            }
+      if (is_array($relations)) {
+        foreach ($relations as $what => $fields ) {
+          if ( $what!=='user_changed') {
+            $this->with( $type, array( $what=>$fields) );
           }
         }
       }
     }
 
     $result = $this->get_row( $where, 'form' );
-    // trace_sql($this->last_query());
-    // trace_($result);
+
+    // Prepare as form result, add 'many_to_one' abstracts as jsons
+    if (isset($form_set['with']['many_to_one'])) {
+      foreach ($result as $field => $value) {
+        if (isset($form_set['field_info'][$field]['options'])) {
+          $result_name = $this->settings['relations']['many_to_one'][$field]['result_name'];
+          if (!isset($result[$result_name])) {
+            $result_name .= '.abstract';
+          }
+          if (isset($result[$result_name])) {
+            $value    = $result[$field];
+            $abstract = $result[$result_name];
+            unset($result[$result_name]);
+            $result[$field] = '{"'.$value.'":"'.trim(trim($abstract,$this->settings['abstract_delimiter'])).'"}';
+          }
+        }
+      }
+    }
+
+    // if ($this->settings['table']=='tbl_fotoarchief') {
+    //   trace_($result);
+    //   trace_($form_set['field_info']['id_land']['options']);
+    //   // trace_sql($this->last_query());
+    // }
     return $result;
   }
   

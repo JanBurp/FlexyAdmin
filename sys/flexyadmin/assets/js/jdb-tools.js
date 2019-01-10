@@ -180,6 +180,24 @@ export default {
     return uuid;
   },
   
+
+  /**
+   * jdb.isJsonString()
+   * 
+   * Test of string JSON is
+   * 
+   * @param string uuid
+   * @return boolena or []
+   */
+  isJsonString: function(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return JSON.parse(str);
+  },
+  
   
   /**
    * jdb.stripHTML()

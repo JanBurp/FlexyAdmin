@@ -196,12 +196,35 @@ export default {
               }
               // Data en die aanvullen met data
               self.row = response.data.data;
+              self.processDataAfterLoad();
             }
           }
           // TinyMCE
           self.createWysiwyg();
           return response;
         });
+      }
+    },
+
+    processDataAfterLoad : function() {
+      var self = this;
+      // Als data foreignkeys met een json bevat, pas dat aan tot een simpele id en voeg de abstract toe aan de opties
+      for(var field in self.row) {
+        var value = _.clone(self.row[field]);
+        if (value = jdb.isJsonString(value)) {
+          var key = _.parseInt(Object.keys(value)[0]);
+          value   = Object.values(value)[0];
+          if (!_.isUndefined(value) && key>0) {
+            var options = [];
+            options.push({
+              'value' : key,
+              'name'  : value,
+            });
+            // console.log(field,key,value,options);
+            self.form_groups[field]['options']['data'] = options;
+            self.row[field] = key;
+          }
+        }
       }
     },
     
@@ -876,6 +899,7 @@ export default {
           self.row[field] = postdata[field];
         }
       }
+      self.processDataAfterLoad();
       // Update url (id)
       var url = location.pathname;
       var newUrl = url.replace( '/'+self.name+'/-1', '/'+self.name+'/'+postdata['id'] ) + location.search;

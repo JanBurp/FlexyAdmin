@@ -27,7 +27,7 @@ $config['FIELDS_prefix'] = array (
 	'id'				=> array(
     'type'        => 'select',
     'grid-type'   => 'abstract',
-    'validation'	=> 'trim|integer',
+    'validation'	=> 'trim',
     'default'     => 0,
   ),
   
