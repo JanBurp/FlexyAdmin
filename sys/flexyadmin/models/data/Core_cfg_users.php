@@ -125,11 +125,16 @@ Class Core_cfg_users extends Data_Core {
       }
     }
 
-    if (isset($this->tm_set['str_username']) or isset($this->tm_set['gpw_password'])) {
-      $this->loguit = TRUE;
+    // Controleer of eigen username/wachtwoord is aangepast, dan moet namenlijk opnieuw worden ingelogd
+    $changedUser = ( isset($this->tm_set['str_username']) or isset($this->tm_set['gpw_password']) );
+    $id = parent::_update_insert($type,NULL,$where,$limit);
+    if ($id and $changedUser) {
+      if ( $id==$this->user_id ) {
+        $this->loguit = TRUE;
+      }
     }
 
-    return parent::_update_insert($type,NULL,$where,$limit);
+    return $id;
   }
   
   
@@ -287,6 +292,7 @@ Class Core_cfg_users extends Data_Core {
 
   /**
    * Zorgt ervoor cfg_user_groups één waarde is (behalve als $config['multiple_groups'] = TRUE)
+   * Als de data van eigen user is, dan een extra waarde erbij _own_user = true
    *
    * @param mixed $where 
    * @return array
@@ -300,6 +306,9 @@ Class Core_cfg_users extends Data_Core {
         $group = $group['id'];
         $row['cfg_user_groups'] = $group;
       }
+    }
+    if ($row['id']==$this->user_id) {
+      $row['_own_user'] = true;
     }
     return $row;
   }

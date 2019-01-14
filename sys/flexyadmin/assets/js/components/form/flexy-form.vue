@@ -54,7 +54,7 @@ export default {
       default:true,
     },
     'message':{
-      type:[String],
+      type:[Object,String],
       default:'',
     }
   },
@@ -111,6 +111,7 @@ export default {
       subForm          : {},
       isEdited         : !this.disabled,
       wysiwygJustReady : false,
+      displayedMessage : '',
     }
   },
   
@@ -174,6 +175,34 @@ export default {
       this.reloadForm();
     }
     this.currentName = this.name;
+
+    // message
+    if (this.message!='') {
+      if (typeof(this.message)=='string') {
+        this.displayedMessage = this.message;
+      }
+      else {
+        if (!_.isUndefined(this.message.message)) {
+          if (!_.isUndefined(this.message.condition)) {
+            var show = false;
+            var condition = this.message.condition;
+            if (condition=='own_user') {
+              show = !_.isUndefined(this.row['_own_user']);
+            }
+            else {
+              condition = this._replace_field_in_func(condition);
+              show = eval(condition);
+            }
+            if (show) {
+              this.displayedMessage = this.message.message;  
+            }
+          }
+          else {
+            this.displayedMessage = this.message.message;   
+          }
+        }
+      }
+    }
   },
 
   
@@ -1070,7 +1099,7 @@ export default {
 
   <div class="card-body">
 
-    <div v-if="message!==''" class="text-danger">{{message}}</div>
+    <div v-if="displayedMessage!==''" class="text-danger">{{displayedMessage}}</div>
     
     <tabs navStyle="tabs" class="tabs" :class="tabsClass()" @tab="selectTab($event)" :value="selectedTab()">
       <tab v-for="(fieldset,name) in fieldsets" :header="name" :headerclass="tabHeaderClass(fieldset)">
