@@ -1,3 +1,16 @@
+=3.5.18
+
+[nl]
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Some small bugs solved
+[/en]
+
+[BUGS]
+- If upload files where to big: ui keeps thinking its uploading
+- uri had max_length validation -> not needed
+
 =3.5.17
 
 [nl]
