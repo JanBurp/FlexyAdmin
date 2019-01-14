@@ -1,3 +1,23 @@
+=3.5.17
+
+[nl]
+- Verbeteringen bij aanpassen wachtwoorden/gebruikersnamen
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Improvements by editing passwords/usernames
+- Some small bugs solved
+[/en]
+
+[FEATURES]
+- Wachtwoord aanpassen logde ook bij andere user uit. Opgelost en verbeterd.
+
+[BUGS]
+- rights of media_assets
+- for PHP5.4 some typo in adminmenu
+- in json formatting in MySQL gave errors when '"' in text
+
+
 =3.5.16
 
 [nl]
