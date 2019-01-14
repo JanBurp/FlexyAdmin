@@ -4723,7 +4723,7 @@ Class Data_Core extends CI_Model {
             $select .= '"\"'.$field.'\":", '  .$select_field['select'].', ",", ';
           }
           else {
-            $select .= '"\"'.$field.'\":\"", '.$select_field['select'].', "\",", ';
+            $select .= '"\"'.$field.'\":\"", REPLACE('.$select_field['select'].',"\"","`"), "\",", ';
           }
         }
         // remove last ","
@@ -4736,7 +4736,7 @@ Class Data_Core extends CI_Model {
           $select .= ', ""';
         }
         // ready
-        $select = 'CONCAT( "{", IFNULL( GROUP_CONCAT( "\"",'.$select_fields['id']['select'].',"\":{", '.$select.', "}" SEPARATOR ", "), ""), "}" ) `'.$as_table.'.json`';
+        $select = 'CONCAT("{",IFNULL(GROUP_CONCAT("\"",'.$select_fields['id']['select'].',"\":{",'.$select.',"}" SEPARATOR ","),""),"}") `'.$as_table.'.json`';
       }
     }
     $select = trim(trim($select),',');

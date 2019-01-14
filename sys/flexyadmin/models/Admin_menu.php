@@ -44,7 +44,8 @@ Class Admin_menu extends CI_Model {
     $homeMenu = new Menu();
     $homeMenu->set('view_path','admin/menu-home');
     $homeMenu->set_current($current_uri);
-    if (!empty($this->_get_config_item('home_menu'))) {
+    $cfgHome = $this->_get_config_item('home_menu');
+    if (!empty($cfgHome)) {
       $homeMenu->add_items( $this->_process_items('', $this->_get_config_item('home_menu') ) );
     }
 
@@ -185,7 +186,7 @@ Class Admin_menu extends CI_Model {
               $medias = $this->assets->get_assets_folders(false);
               foreach ($medias as $media) {
                 if (!isset($menuItems['media_'.$media])) {
-                  if ($this->flexy_auth->has_rights('media_'.$path)) {
+                  if ($this->flexy_auth->has_rights('media_'.$media)) {
                     $menuItems['media_'.$media] = $this->_process_item('', array(
                       'name'       => $this->lang->ui('media_'.$media),
                       'uri'        => 'media/'.$media,
