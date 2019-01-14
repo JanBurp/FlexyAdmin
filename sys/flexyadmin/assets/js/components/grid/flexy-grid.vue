@@ -901,22 +901,28 @@ export default {
       }
     },
     startUpload : function() {
-      this.dropUploadHover = false;
       var self = this;
-      var uploadedFilesCount = 0;
-      for (var i = 0; i < self.uploadFiles.length; i++) {
-        var file = self.uploadFiles[i];
-        var formData = new FormData();
-        // console.log(file,formData);
-        formData.append( 'path', self.name );
-        formData.append( 'file', self.uploadFiles[i] );
-        formData.append( 'fileName', self.uploadFiles[i].name );
+      self.dropUploadHover = false;
 
-        // Te groot?
+      // Test of ze te groot zijn
+      for (var i = 0; i < self.uploadFiles.length; i++) {
         if ( self.uploadFiles[i].size > flexyState.getState('max_uploadsize') ) {
           flexyState.addMessage( self.uploadFiles[i].name + self.$lang.upload_too_big, 'danger' );
+          self.removeUploadFile(i);
         }
-        else {
+      }
+
+      // Upload
+      if (self.uploadFiles.length>0) {
+        var uploadedFilesCount = 0;
+        for (var i = 0; i < self.uploadFiles.length; i++) {
+          var file = self.uploadFiles[i];
+          var formData = new FormData();
+          // console.log(file,formData);
+          formData.append( 'path', self.name );
+          formData.append( 'file', self.uploadFiles[i] );
+          formData.append( 'fileName', self.uploadFiles[i].name );
+
           flexyState.api({
             method    : 'POST',
             url       : 'media',
