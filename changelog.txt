@@ -1,3 +1,15 @@
+=3.5.19
+
+[nl]
+- Kleine zeldzame bug opgelost
+[/nl]
+[en]
+- Small rare bug solved
+[/en]
+
+[BUGS]
+- DATA: Add one_to_one defaults to get_form result
+
 =3.5.18
 
 [nl]
