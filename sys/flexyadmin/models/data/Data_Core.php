@@ -2890,9 +2890,11 @@ Class Data_Core extends CI_Model {
     if (empty($this->tm_select)) $this->select( $form_set['fields'] );
     
     // Relations
+    $one_to_one = [];
     foreach ($form_set['with'] as $type => $relations) {
       if (is_array($relations)) {
         foreach ($relations as $what => $fields ) {
+          if ($type=='one_to_one') $one_to_one[$what] = $fields;
           if ( $what!=='user_changed') {
             $this->with( $type, array( $what=>$fields) );
           }
@@ -2901,6 +2903,18 @@ Class Data_Core extends CI_Model {
     }
 
     $result = $this->get_row( $where, 'form' );
+    
+    // one_to_one defaults?
+    if (!empty($one_to_one)) {
+      foreach ($one_to_one as $what => $fields) {
+        $defaults = $this->data->table($what)->get_defaults();
+        foreach ($fields as $field) {
+          if (is_null($result[$field])) {
+            $result[$field]=$defaults[$field];
+          }
+        }
+      }
+    }
 
     // Prepare as form result, add 'many_to_one' abstracts as jsons
     if (isset($form_set['with']['many_to_one'])) {
