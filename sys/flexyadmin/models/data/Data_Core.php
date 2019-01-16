@@ -5039,7 +5039,7 @@ Class Data_Core extends CI_Model {
     }
     
     // Is user id nodig?
-    if ( $this->field_exists('user_changed') or isset($this->settings['restricted_rights']) ) {
+    if ( $this->field_exists('user') or $this->field_exists('user_changed') or isset($this->settings['restricted_rights']) ) {
       if ( !isset( $this->user_id )) {
         $this->set_user_id();
       }
