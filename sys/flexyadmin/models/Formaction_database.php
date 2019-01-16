@@ -63,9 +63,18 @@
       // save in db
       if ($this->data->field_exists( $key )) $this->data->set($key,$value);
     }
-    // insert in db
-    $this->data->insert);
-    $id=$this->data->insert_id();
+
+    // insert or update in db
+    if (isset($data['id']) and $data['id']>0) {
+      // UPDATE
+      $id = $data['id'];
+      $this->data->where($id)->update();
+    }
+    else {
+      // INSERT
+      $this->data->insert();
+      $id=$this->data->insert_id();
+    }
     
     $this->return_data = array_merge($data,array('id'=>$id));
     
