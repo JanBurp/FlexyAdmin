@@ -100,7 +100,9 @@ export default {
   // Copy of props.data (& more)
   data : function() {
     return {
-      uiTitle          : this.title,
+      uiTitle             : this.title,
+      abstract_fields     : [],
+      abstract_delimiter  : '|',
       currentName      : '',
       activeTab        : 0,
       row              : {},
@@ -219,9 +221,11 @@ export default {
             if (response.data.success) {
               // Zijn er settings meegekomen?
               if ( !_.isUndefined(response.data.settings) ) {
-                self.uiTitle      = response.data.settings.form_set.title;
-                self.form_groups  = Object.assign({},response.data.settings.form_set.field_info);
-                self.fieldsets    = Object.assign({},response.data.settings.form_set.fieldsets);
+                self.uiTitle          = response.data.settings.form_set.title;
+                self.form_groups      = Object.assign({},response.data.settings.form_set.field_info);
+                self.fieldsets        = Object.assign({},response.data.settings.form_set.fieldsets);
+                self.abstract_fields  = response.data.settings.abstract_fields;
+                self.abstract_delimiter = response.data.settings.abstract_delimiter;
               }
               // Data en die aanvullen met data
               self.row = response.data.data;
@@ -291,6 +295,21 @@ export default {
       var url = 'row?table='+this.name + '&where='+this.primary + '&as_form=true&settings=form_set';
       if (this.parent_data) url+='&parent_data='+JSON.stringify(this.parent_data);
       return url;
+    },
+
+    formTitle : function() {
+      var title = this.uiTitle;
+      var itemTitle = [];
+      for (var i in this.abstract_fields) {
+        var field = this.abstract_fields[i];
+        if (!_.isUndefined(this.row[field]) && this.row[field]!='') {
+          itemTitle.push(this.row[field]);
+        }
+      }
+      if (itemTitle) {
+        title += ' - '+itemTitle.join(this.abstract_delimiter);
+      }
+      return title;
     },
     
     label : function(field) {
@@ -1087,7 +1106,7 @@ export default {
 <template>
 <div class="card form" :class="'form-'+formtype">
   <div v-if="formtype!=='subform'" class="card-header">
-    <h1><span class="form-edit-type fa" :class="editTypeIcon()"></span>{{uiTitle}}</h1>
+    <h1><span class="form-edit-type fa" :class="editTypeIcon()"></span>{{formTitle()}}</h1>
     <div>
       <flexy-button v-if="formtype!=='single'"                 @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
       <flexy-button v-if="formtype!=='subform' && action===''" @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving || !isEdited" class="btn-outline-warning"/>

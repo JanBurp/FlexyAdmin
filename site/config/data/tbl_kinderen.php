@@ -4,5 +4,6 @@
 
 $config['table']           = 'tbl_kinderen';
 
-$config['order_by']				 = 'str_first_name, str_last_name';
-$config['abstract_fields'] = array('str_first_name','str_middle_name','str_last_name');
+$config['order_by']				 		= 'str_first_name, str_last_name';
+$config['abstract_fields'] 		= array('str_first_name','str_middle_name','str_last_name');
+$config['abstract_delimiter']	= ' ';
