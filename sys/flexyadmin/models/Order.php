@@ -195,10 +195,12 @@ class Order extends CI_Model {
     // re-id & reorder
     $order = $from;
     $result = array();
-    foreach ($merged as $item) {
-      $result[$item['id']] = $item;
-      $result[$item['id']]['order'] = $order;
-      $order++;
+    if (is_array($merged)) {
+      foreach ($merged as $item) {
+        $result[$item['id']] = $item;
+        $result[$item['id']]['order'] = $order;
+        $order++;
+      }
     }
 
     // Update all
