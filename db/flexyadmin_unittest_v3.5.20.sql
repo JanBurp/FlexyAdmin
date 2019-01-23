@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: localhost (MySQL 5.6.38)
+# Host: localhost (MySQL 5.7.21)
 # Database: flexyadmin_test
-# Generation Time: 2018-05-16 12:31:57 +0000
+# Generation Time: 2019-01-23 09:47:45 +0000
 # ************************************************************
 
 
@@ -45,9 +45,9 @@ VALUES
 	(3,'login_accepted','Account voor {site_title} geaccepteerd','<h1>Account aanvraag voor {identity} is geaccepteerd.</h1>\n<p>U kunt nu inloggen.</p>','Account for {site_title} accepted','<h1>Account registration for {identity} is accepted.</h1>\n<p>You can login now.</p>'),
 	(4,'login_activate','Activeer account voor {site_title}','<h1>Activeer de aanmelding voor {identity}</h1>\n<p>Klik op <a href=\"{site_url}/{activate_uri}?id={user_id}&amp;activation={activation}\">deze link</a> om je account te activeren.</p>','Activate your account for {site_title}','<h1>Activate account for {identity}</h1>\n<p>Please click <a href=\"{site_url}/{activate_uri}?id={user_id}&amp;activation={activation}\">this link</a> to activate your account.</p>'),
 	(5,'login_deny','Account aanvraag voor {site_title} afgewezen','<h1>Afgewezen account voor {identity}</h1>\n<p>Uw aanvraag voor een account is afgewezen.</p>','Account for {site_title} denied','<h1>Denied account for {identity}</h1>\n<p>Your account is denied.</p>'),
-	(6,'login_forgot_password','Nieuw wachtwoord voor {site_title}','<h1>Nieuw wachtwoord aanvragen voor {identity}</h1>\n<p>Klik hier om <a href=\"{site_url}{forgotten_password_uri}?code={forgotten_password_code}\">wachtwoord te resetten</a>.</p>','New password for {site_title}','<h1>New password request for {identity}</h1>\n<p>Click on <a href=\"{site_url}{forgotten_password_uri}?code={forgotten_password_code}\">to restet your password</a>.</p>'),
-	(7,'login_new_password','Nieuwe inloggegevens voor {site_title}','<h1>Je nieuwe inloggevens voor {site_title}:</h1>\n<p>Gebruiker: {identity}<br /> Wachtwoord: {password}</p>','New login for {site_title}','<h3>You got an account.</h3>\n<p>Login with these settings:</p>\n<p>Username : {identity}<br />Password : {password}</p>'),
-	(8,'login_new_account','Welkom en inloggegevens voor {site_title}','<h1>Welkom bij {site_title}</h1>\n<p>Hieronder staan je inloggegevens.</p>\n<p>Gebruiker: {identity}<br /> Wachtwoord: {password}</p>','New login for {site_title}','<h1>Welcome at {site_title}</h1>\n<p>Login with these settings:</p>\n<p>Username : {identity}<br />Password : {password}</p>');
+	(6,'login_forgot_password','Nieuw wachtwoord voor {site_title}','<h1>Nieuw wachtwoord aanvragen voor {identity}</h1>\n<p>&nbsp;</p>\n<p>Klik hier om <a href=\"{site_url}{forgotten_password_uri}?code={forgotten_password_code}\">wachtwoord te resetten</a>.</p>\n<p>Je krijgt na het klikken op de link een nieuwe email met daarin je nieuwe wachtwoord.</p>','New password for {site_title}','<h1>New password request for {identity}</h1>\n<p>Click on <a href=\"{site_url}{forgotten_password_uri}?code={forgotten_password_code}\">to restet your password</a>.</p>'),
+	(7,'login_new_password','Nieuwe inloggegevens voor {site_title}','<h1>Je nieuwe inloggevens voor {site_title}:</h1>\n<p>Gebruiker: {identity}<br />Wachtwoord: {password}</p>\n<p>Let op dat je bij het wachtwoord alle tekens meeneemt, ook eventuele punten aan het einde.</p>','New login for {site_title}','<h3>You got an account.</h3>\n<p>Login with these settings:</p>\n<p>Username : {identity}<br />Password : {password}</p>'),
+	(8,'login_new_account','Welkom en inloggegevens voor {site_title}','<h1>Welkom bij {site_title}</h1>\n<p>Hieronder staan je inloggegevens.</p>\n<p>Gebruiker: {identity}<br />Wachtwoord: {password}</p>\n<p>Let op dat je bij het wachtwoord alle tekens meeneemt, ook eventuele punten aan het einde.</p>','New login for {site_title}','<h1>Welcome at {site_title}</h1>\n<p>Login with these settings:</p>\n<p>Username : {identity}<br />Password : {password}</p>');
 
 /*!40000 ALTER TABLE `cfg_email` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -167,7 +167,7 @@ LOCK TABLES `cfg_version` WRITE;
 
 INSERT INTO `cfg_version` (`id`, `str_version`)
 VALUES
-	(1,'3.5.0-rc.18');
+	(1,'3.5.20');
 
 /*!40000 ALTER TABLE `cfg_version` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1071,9 +1071,9 @@ DROP TABLE IF EXISTS `tbl_adressen`;
 
 CREATE TABLE `tbl_adressen` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `str_address` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `str_zipcode` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `str_city` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `str_address` varbinary(512) NOT NULL DEFAULT '',
+  `str_zipcode` varbinary(512) NOT NULL DEFAULT '',
+  `str_city` varbinary(512) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -1082,20 +1082,20 @@ LOCK TABLES `tbl_adressen` WRITE;
 
 INSERT INTO `tbl_adressen` (`id`, `str_address`, `str_zipcode`, `str_city`)
 VALUES
-	(1,'Schooolstraat 1','1234AB','Schoooldorp'),
-	(2,'Lesbank 12','1234MN','Schoooldorp'),
-	(3,'Taalsteeg 20','1234QR','Schoooldorp'),
-	(4,'Rekenpark 42','1234IJ','Schoooldorp'),
-	(5,'Bibliotheeklaan 36','1234GH','Schoooldorp'),
-	(6,'Schoonschrijfdreef 18','1234OP','Schoooldorp'),
-	(7,'Overblijf 16','1234KL','Schoooldorp'),
-	(8,'Proefwerk 10','1234DK','Schoooldorp'),
-	(9,'Dicteedreef 123','1234CD','Schoooldorp'),
-	(10,'Spiekspui 7','1234EF','Schoooldorp'),
-	(11,'Lessenaar 22','1234ST','Schoooldorp'),
-	(12,'Prikbordlaan 32','1234UV','Schoooldorp'),
-	(13,'Alumnidijk 100','1234WX','Schoooldorp'),
-	(14,'Knikkerplein 21','1234YZ','Schoooldorp');
+	(1,X'30320A23D5C2BD1D3B5D65CED7CFC10A',X'98F5D56A8022C684C89F769AD5973CEF',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(2,X'CAC83B31DD431C7FE0DCD64C8FB13741',X'A99E596A624E023292E3385477760D26',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(3,X'3A4F0E957535D4017AE64580446AE020',X'B7E3E6CFF40EA5B6BF2619012CB1D31C',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(4,X'AB73CB638722A7F401821BDC716DDA92',X'3EB38EDEAB2B1BBA0953957EDD079194',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(5,X'C48E029501ED42DADC1437234E0323CE5BD83704FF6097503757CDFE5147692F',X'25AD076C4C4C6C3B025C43DBAFF46F14',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(6,X'861C387ABEDC4DA3538FA0129E5670ADA9293BC1DA66F174560F4ADBCCF3131D',X'F23AD5CDF8498330E207F6E0589D265F',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(7,X'6CFB1422495EC31A8361C128624A679F',X'D842C8D4BF62C09B89606DC316F0609C',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(8,X'8643615E4C17D9CCE1732A2F97A029DC',X'9C560945FEF871380A7DF94D55485825',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(9,X'5C0FF7DF84043C12182721595C51E199',X'2853675CF5792FA79BB6134EEA790356',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(10,X'D9CD854B30C8476246AE8045158C3FA8',X'95C74A827ADB12760E997E265E22729E',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(11,X'4D4076FBF7CE1B1B0F578DE4AD8349C0',X'E3D3FA813DCD83BD1AF85DD476DB24AF',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(12,X'3896D1F1D058B8B19CF1F514C9CE1DB2',X'B4DFA193C17D0DA6BFC452AC9BF8DEF4',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(13,X'D59EAA244677CB4C6DE66798798E028E',X'7CBC07452B1B138CA888A723A81DA066',X'9AF049E8696434AB311399A2F5FF06B5'),
+	(14,X'81CD0B986AB779CBE1DB3634871F1296',X'F23531D0CDE7B21272A8498DD1E3FCC3',X'9AF049E8696434AB311399A2F5FF06B5');
 
 /*!40000 ALTER TABLE `tbl_adressen` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1713,12 +1713,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-ALTER TABLE `tbl_adressen` CHANGE `str_address` `str_address` VARBINARY(512)  NOT NULL  DEFAULT '';
-ALTER TABLE `tbl_adressen` CHANGE `str_city` `str_city` VARBINARY(512)  NOT NULL  DEFAULT '';
-ALTER TABLE `tbl_adressen` CHANGE `str_zipcode` `str_zipcode` VARBINARY(512)  NOT NULL  DEFAULT '';
-
-UPDATE `tbl_adressen` SET `str_city` = AES_ENCRYPT(`str_city`,'def0000053155cc71f536a17448460857b88d20462604a844929ef354cee3615d6a1084f55507a19ed4f75b4077c59c86c7225ed517ecdb94695cd706e3e896486a1adfa');
-UPDATE `tbl_adressen` SET `str_zipcode` = AES_ENCRYPT(`str_zipcode`,'def0000053155cc71f536a17448460857b88d20462604a844929ef354cee3615d6a1084f55507a19ed4f75b4077c59c86c7225ed517ecdb94695cd706e3e896486a1adfa');
-UPDATE `tbl_adressen` SET `str_address` = AES_ENCRYPT(`str_address`,'def0000053155cc71f536a17448460857b88d20462604a844929ef354cee3615d6a1084f55507a19ed4f75b4077c59c86c7225ed517ecdb94695cd706e3e896486a1adfa');
-

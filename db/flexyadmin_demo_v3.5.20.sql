@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: localhost (MySQL 5.6.38)
-# Database: flexyadmin_test
-# Generation Time: 2018-05-16 12:32:59 +0000
+# Host: localhost (MySQL 5.7.21)
+# Database: flexyadmin_demo
+# Generation Time: 2019-01-23 09:45:35 +0000
 # ************************************************************
 
 
@@ -45,9 +45,9 @@ VALUES
 	(3,'login_accepted','Account voor {site_title} geaccepteerd','<h1>Account aanvraag voor {identity} is geaccepteerd.</h1>\n<p>U kunt nu inloggen.</p>','Account for {site_title} accepted','<h1>Account registration for {identity} is accepted.</h1>\n<p>You can login now.</p>'),
 	(4,'login_activate','Activeer account voor {site_title}','<h1>Activeer de aanmelding voor {identity}</h1>\n<p>Klik op <a href=\"{site_url}/{activate_uri}?id={user_id}&amp;activation={activation}\">deze link</a> om je account te activeren.</p>','Activate your account for {site_title}','<h1>Activate account for {identity}</h1>\n<p>Please click <a href=\"{site_url}/{activate_uri}?id={user_id}&amp;activation={activation}\">this link</a> to activate your account.</p>'),
 	(5,'login_deny','Account aanvraag voor {site_title} afgewezen','<h1>Afgewezen account voor {identity}</h1>\n<p>Uw aanvraag voor een account is afgewezen.</p>','Account for {site_title} denied','<h1>Denied account for {identity}</h1>\n<p>Your account is denied.</p>'),
-	(6,'login_forgot_password','Nieuw wachtwoord voor {site_title}','<h1>Nieuw wachtwoord aanvragen voor {identity}</h1>\n<p>Klik hier om <a href=\"{site_url}{forgotten_password_uri}?code={forgotten_password_code}\">wachtwoord te resetten</a>.</p>','New password for {site_title}','<h1>New password request for {identity}</h1>\n<p>Click on <a href=\"{site_url}{forgotten_password_uri}?code={forgotten_password_code}\">to restet your password</a>.</p>'),
-	(7,'login_new_password','Nieuwe inloggegevens voor {site_title}','<h1>Je nieuwe inloggevens voor {site_title}:</h1>\n<p>Gebruiker: {identity}<br /> Wachtwoord: {password}</p>','New login for {site_title}','<h3>You got an account.</h3>\n<p>Login with these settings:</p>\n<p>Username : {identity}<br />Password : {password}</p>'),
-	(8,'login_new_account','Welkom en inloggegevens voor {site_title}','<h1>Welkom bij {site_title}</h1>\n<p>Hieronder staan je inloggegevens.</p>\n<p>Gebruiker: {identity}<br /> Wachtwoord: {password}</p>','New login for {site_title}','<h1>Welcome at {site_title}</h1>\n<p>Login with these settings:</p>\n<p>Username : {identity}<br />Password : {password}</p>');
+	(6,'login_forgot_password','Nieuw wachtwoord voor {site_title}','<h1>Nieuw wachtwoord aanvragen voor {identity}</h1>\n<p>&nbsp;</p>\n<p>Klik hier om <a href=\"{site_url}{forgotten_password_uri}?code={forgotten_password_code}\">wachtwoord te resetten</a>.</p>\n<p>Je krijgt na het klikken op de link een nieuwe email met daarin je nieuwe wachtwoord.</p>','New password for {site_title}','<h1>New password request for {identity}</h1>\n<p>Click on <a href=\"{site_url}{forgotten_password_uri}?code={forgotten_password_code}\">to restet your password</a>.</p>'),
+	(7,'login_new_password','Nieuwe inloggegevens voor {site_title}','<h1>Je nieuwe inloggevens voor {site_title}:</h1>\n<p>Gebruiker: {identity}<br />Wachtwoord: {password}</p>\n<p>Let op dat je bij het wachtwoord alle tekens meeneemt, ook eventuele punten aan het einde.</p>','New login for {site_title}','<h3>You got an account.</h3>\n<p>Login with these settings:</p>\n<p>Username : {identity}<br />Password : {password}</p>'),
+	(8,'login_new_account','Welkom en inloggegevens voor {site_title}','<h1>Welkom bij {site_title}</h1>\n<p>Hieronder staan je inloggegevens.</p>\n<p>Gebruiker: {identity}<br />Wachtwoord: {password}</p>\n<p>Let op dat je bij het wachtwoord alle tekens meeneemt, ook eventuele punten aan het einde.</p>','New login for {site_title}','<h1>Welcome at {site_title}</h1>\n<p>Login with these settings:</p>\n<p>Username : {identity}<br />Password : {password}</p>');
 
 /*!40000 ALTER TABLE `cfg_email` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -158,7 +158,7 @@ LOCK TABLES `cfg_version` WRITE;
 
 INSERT INTO `cfg_version` (`id`, `str_version`)
 VALUES
-	(1,'3.5.0-rc.18');
+	(1,'3.5.20');
 
 /*!40000 ALTER TABLE `cfg_version` ENABLE KEYS */;
 UNLOCK TABLES;
