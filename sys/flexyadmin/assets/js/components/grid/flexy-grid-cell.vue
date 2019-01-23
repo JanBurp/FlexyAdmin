@@ -1,5 +1,7 @@
 <script>
 
+var he = require('he');
+
 import jdb          from '../../jdb-tools.js'
 import flexyState   from '../../flexy-state.js'
 import flexyThumb   from '../flexy-thumb.vue'
@@ -92,6 +94,13 @@ export default {
         }
       }
       return array;
+    },
+
+    decode : function(item) {
+      if (_.isUndefined(item)) {
+        return item;
+      }
+      return he.decode(item,{});
     },
     
     complementColor : function(color) {
@@ -257,7 +266,7 @@ export default {
     </template>
 
     <template v-if="isType('default',type)">
-      <span v-show="!isEditing" @click="startEdit()">{{item}}</span>
+      <span v-show="!isEditing" @click="startEdit()">{{decode(item)}}</span>
       <input v-if="editable" v-show="isEditing" :id="inputID" :value="item" @change="saveEdit($event.target.value)" @keyup.esc="cancelEdit()"/>
     </template>
 
