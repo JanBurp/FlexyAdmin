@@ -212,9 +212,11 @@ class Api_Model extends CI_Model {
       }
       
       // Haal alle gevraagde settings op (enkele afzonderlijk, of alles)
+      $defaults = array('abstract_fields','abstract_delimiter');
       if ( $this->args['settings']!==true and $this->args['settings']!=='true') {
         $this->result['settings'] = array();
         $types = explode('|',$this->args['settings']);
+        $types = array_merge($defaults,$types);
         foreach ($types as $type) {
           $this->result['settings'][$type] = $this->data->get_setting( $type );
         }

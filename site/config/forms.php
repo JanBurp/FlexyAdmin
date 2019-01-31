@@ -33,9 +33,10 @@ $config['contact'] = array(
   
   // Velden van het formulier. De labels kunnen een verwijzing naar de taalbestanden bevatten.
   'fields'                  => array(
-                                'str_name'		  => array( 'label'=>lang('field__str_name'),     'validation'=>'required' ),
-                                'email_email'	  => array( 'label'=>lang('field__email_email'),  'validation'	=>  'required|valid_email' ),
-                                'txt_text'	    => array( 'label'=>lang('field__txt_text'),     'type'=>'textarea', 'validation'=>'required' )
+                                'str_name'		  => array( 'label'=>lang('field__str_name'),                         'validation'  => 'required' ),
+                                'email_email'	  => array( 'label'=>lang('field__email_email'),                      'validation'	=> 'required|valid_email' ),
+                                'str_telefoon'  => array( 'label'=>lang('field__str_telefoon'),                     'validation'  => 'valid_regex[telefoon]' ),
+                                'txt_text'	    => array( 'label'=>lang('field__txt_text'),     'type'=>'textarea', 'validation'  => 'required' )
                               ),
                             
   // Voegt placeholders toe aan de velden, deze zijn hetzelfde als de labels
@@ -45,7 +46,7 @@ $config['contact'] = array(
   'validation_place'        => 'field',
                   
   // Controleer op spam (Voegt een extra (hidden) veld toe om op spamrobots te testen (veld heeft class='hidden', dit moet je in je stylesheet ook daadwerkelijk onzichtbaar maken))
-  'check_for_spam'          => true,
+  'check_for_spam'          => true, // array('str_name','txt_text'),
   
   // Voorkom dat het formulier meerdere keren kan worden verzonden door een pagina refresh.
   // NB deze optie maakt gebruik van sessions (de session library wordt automatisch geladen).

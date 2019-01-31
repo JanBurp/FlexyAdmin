@@ -14,6 +14,7 @@ $lang['subject']              = "Email van '%str_name%' via %URL% - %MAIL%";
 $lang['contact_title']        = 'Contactformulier';
 $lang['field__str_name']      = 'Naam';
 $lang['field__email_email']   = 'Email';
+$lang['field__str_telefoon']  = 'Telefoon';
 $lang['field__txt_text']      = 'Opmerking';
 $lang['contact_send_text']    = 'Bedankt voor uw mail.';
 

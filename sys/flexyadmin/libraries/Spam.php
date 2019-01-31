@@ -92,20 +92,23 @@ class Spam {
    * @return bool TRUE dan is hoogstwaarschijnlijk spam.
    * @author Jan den Besten
    */
-  public function check($data,$spamBody='spambody') {
+  public function check($data,$spamBody='spambody',$fields=array()) {
     // collect txt_ fields, pick first one to check
-    $fields=array_keys($data);
-    $check_fields=filter_by($fields,'txt');
-    if (empty($check_fields)) {
-      $check_fields=filter_by($fields,'str');
+    if (empty($fields)) {
+      $fields=array_keys($data);
+      // $check_fields=filter_by($fields,'txt');
+      if (empty($check_fields)) {
+        $check_fields=filter_by($fields,'str');
+      }
+      if (empty($check_fields)) {
+        $check_fields=$fields;
+      }
+      $fields = $check_fields;
     }
-    if (empty($check_fields)) {
-      $check_fields=$fields;
-    }
-    $fields = $check_fields;
     if (!empty($fields)) {
-      $textField=current($fields);
-  		$this->check_text($data[$textField]);
+      foreach ($fields as $field) {
+        $this->check_text($data[$field]);
+      }
     }
     // check if robot
     $this->check_if_robot($data,$spamBody);

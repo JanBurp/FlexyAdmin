@@ -1,3 +1,30 @@
+=3.5.20
+
+[nl]
+- Enkele verbeteringen aan de user-interface
+- Enkele kleine technische verbeteringen (oa aan spamchecker)
+- Betere uitleg in 'vergeten wachtwoord' emails
+[/nl]
+[en]
+- Some improvement to the user-interface
+- Some small technical improvements (ie spamchecker)
+[/en]
+
+[FEATURES]
+- Form title show abstract of item
+- html entities worden nu mooier getoond in grid
+- Spamchecker kan ingesteld worden per veld (standaard alleen de required velden)
+- De volgorde van modules kan worden ingestel met ‘module_order’
+- Verbeterde wachtwoord teksten (update_v3.5.20.sql)
+
+[BUGS]
+- Standard formactions better (upload path & update)
+- Data: user field did not fill automatic
+- Robuster order (when no items in menu)
+
+[DB]
+- update_v3.5.20.sql
+
 =3.5.19
 
 [nl]

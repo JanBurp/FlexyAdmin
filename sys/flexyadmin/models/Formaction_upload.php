@@ -33,12 +33,14 @@
     parent::go($data);
     $return=TRUE;
 
+    if (isset($this->settings['attachment_folder'])) $this->settings['upload_path'] = $this->settings['attachment_folder'];
+
     foreach ($data as $key => $value) {
       // Is er een file veld?
       if (get_prefix($key)=='file' or get_prefix($key)=='media') {
         // En is de naam van het bestand bekend?
 				if (isset($_FILES[$key]['name']) and !empty($_FILES[$key]['name']) ) {
-          $file = $this->assets->upload_file('pictures',$key);
+          $file = $this->assets->upload_file($this->settings['upload_path'],$key);
           if (!$file) {
             $this->errors .= '<span class="error">'.$this->assets->get_error().'</span>';
             return false;
@@ -48,6 +50,11 @@
             unset($_FILES[$key]);
           }
 				}
+        else {
+          // Verwijder het veld, is niet nodig, en zo worden eventuele overschrijvingen voorkomen
+          unset($data[$key]);
+          unset($_FILES[$key]);
+        }
       }
     }
     $this->return_data = $data;
