@@ -595,6 +595,18 @@ Class Core_tbl_menu extends Data_Core {
           $row['_table']    = $table;
           $row['self_parent'] = $menu_item['id'];
           if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $row['b_visible'] = FALSE;
+
+          if (isset($item['inherit'])) {
+            foreach($item['inherit'] as $inherit) {
+              if ( !isset($row[$inherit]) or empty($row[$inherit]) ) {
+                $parent_uri = remove_suffix($row['full_uri'],'/');
+                if (isset($this->_menu[$parent_uri])) {
+                  $row[$inherit] = $this->_menu[$parent_uri][$inherit];
+                }
+              }
+            }
+          }
+
           $items[$full_uri] = $row;
           $nr++;
         }
