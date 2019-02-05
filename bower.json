@@ -20,6 +20,7 @@
     "bootstrap": "~3",
     "normalize.css": "~3",
     "jquery-legacy": "jquery#^1",
-    "components-font-awesome": "~4"
+    "components-font-awesome": "~4",
+    "3l": "^1.4.5"
   }
 }
