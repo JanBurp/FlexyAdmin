@@ -248,6 +248,11 @@ Class Data_Core extends CI_Model {
   private $conditional_methods = array( 'where','or_where','get_where','where_in','or_where_in','where_not_in','or_where_not_in','like','not_like','or_like','or_not_like' );
 
 
+  /**
+   * Maximum hoeveelheid optios die meteen wordt meegegeven als form opties worden opgevraagd (get_options())
+   **/
+  private $max_no_api_options = 25;
+
 
   /* --- CONSTRUCT & AUTOSET --- */
 
@@ -1295,8 +1300,9 @@ Class Data_Core extends CI_Model {
       $info['validation'] = is_array($info['validation']) ? implode('|',$info['validation']) : $info['validation'];
       
       // Options
-      $options = $this->get_options($field,array('many_to_many','one_to_many','one_to_one'));
-      if ($options) {
+      $options = $this->get_options(array($field),array('many_to_many','one_to_many','one_to_one')); // LET OP array($field) ipv $field !!!
+      if (isset($options[$field]) and !empty($options[$field])) {
+        $options = $options[$field];
         if ($field!=='user') $info['type'] = 'select';
         if ($fieldPrefix==='media' or $fieldPrefix==='medias') {
           $info['path'] = $options['path'];
@@ -1687,7 +1693,7 @@ Class Data_Core extends CI_Model {
     else {
       $fields = array_keys($this->settings['options']);
     }
-    
+
     // Alle opties van de velden verzamelen
     $options=array();
     $where_primary_key = $this->tm_where_primary_key; // Bewaar dit voor opties uit andere tabellen
@@ -1704,8 +1710,8 @@ Class Data_Core extends CI_Model {
         if ( isset($field_options['table']) ) {
           $other_table = $field_options['table'];
           // Zijn er teveel opties?
-          if ($this->db->count_all($other_table)>50) {
-            $field_options['api'] = 'table?table='.$other_table.'&as_options=true';
+          if ($one===FALSE and $this->db->count_all($other_table)>$this->max_no_api_options) {
+            $field_options['api'] = 'options?table='.$this->settings['table'].'&field='.$field;
           }
           // Anders geef gewoon de opties terug
           else {
@@ -1809,9 +1815,9 @@ Class Data_Core extends CI_Model {
               );
               // Voeg data of api toe
               $this->data->table($other_table);
-              if ($this->data->count_all()>50) {
+              if ($one===FALSE and $this->data->count_all()>$this->max_no_api_options) {
                 $options[$result_name]['total'] = $this->data->total_rows(true);
-                $options[$result_name]['api']   = 'table?table='.$other_table.'&as_options=true';
+                $options[$result_name]['api']   = 'options?table='.$this->settings['table'].'&field='.$other_table;
               }
               else {
                 $options[$result_name]['data'] = $this->data->get_result_as_options();
