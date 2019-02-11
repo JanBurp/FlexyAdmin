@@ -260,7 +260,7 @@ export default {
           url  : self.optionsAjax,
         }).then(function(response){
           if (!_.isUndefined(response.data.data)) {
-            var loadedOptions = response.data.data;
+            var loadedOptions = response.data.data.data;
             self.setOptions(loadedOptions);
             self.optionsAjaxLoaded = true;
           }
