@@ -250,7 +250,7 @@ export default {
           if (!_.isUndefined(value) && key>0) {
             var options = self.form_groups[field]['options']['data'] || [];
             var index = jdb.indexOfProperty(options,'value',key);
-            if (index==false) options.push({'value' : key,'name'  : value});
+            if (index===false) options.push({'value' : key,'name'  : value});
             self.form_groups[field]['options']['data'] = options;
             self.row[field] = key;
           }

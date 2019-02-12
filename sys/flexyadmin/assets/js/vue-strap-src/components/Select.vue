@@ -280,6 +280,10 @@ export default {
     setOptions (options) {
       this.list = this._mapOptions(options);
       this.$emit('options', this.list)
+      // if (this.name=='id_adressen') {
+      //   console.log(this.name);
+      //   jdb.vueLog(this.list);
+      // }
     },
     _mapOptions(options) {
       var self = this;
