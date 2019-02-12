@@ -1,4 +1,4 @@
-=3.5.22
+=3.5.23
 
 [nl]
 - Laden van opties in formulier verbeterd, soms ontstond hierdoor een bug (sinds 3.5.16)
