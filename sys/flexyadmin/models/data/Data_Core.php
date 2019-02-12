@@ -2939,12 +2939,6 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-
-    // if ($this->settings['table']=='tbl_fotoarchief') {
-    //   trace_($result);
-    //   trace_($form_set['field_info']['id_land']['options']);
-    //   // trace_sql($this->last_query());
-    // }
     return $result;
   }
   
