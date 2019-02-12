@@ -6,7 +6,8 @@
  * ###Parameters:
  * 
  * - `table`                    // De gevraagde tabel
- * - `[field]`                   // Eventueel op te vragen map voor media/assets (bij table='res_assets')
+ * - `[where]                   // Eventueel unieke 'id' oid
+ * - `[field]`                  // Eventueel op te vragen map voor media/assets (bij table='res_assets')
  * 
  * ###Response:
  * 
@@ -70,7 +71,7 @@ class Options extends Api_Model {
     }
 
     // GET DATA
-    $options = $this->data->table($this->args['table'])->get_options( el('field',$this->args), array('one_to_one','many_to_one','many_to_many','one_to_many'));
+    $options = $this->data->table($this->args['table'])->where($this->args['where'])->get_options( el('field',$this->args), array('one_to_one','many_to_one','many_to_many','one_to_many'));
     
     // RESULT
     $this->result['data']=$options;

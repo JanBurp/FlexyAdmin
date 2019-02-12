@@ -693,14 +693,21 @@ export default {
       var self = this;
       self.subForm[field].show = false;
       flexyState.api({
-        // TODO: alleen opties van dit veld wellicht?
-        url : 'row?table='+self.name+'&where='+self.primary+'&settings=form_set',
+        url : 'row?table='+self.name+'&where='+self.primary+'&as_form=true&settings=form_set',
       })
       .then(function(response){
         if (!_.isUndefined(response.data)) {
-          // console.log(response.data.settings.form_set.field_info[field]);
+          // Pas huidige 'value' aan
+          self.row[field] = response.data.data[field];
           // Vervang de opties
           self.form_groups[field].options = response.data.settings.form_set.field_info[field].options;
+          // Stamp bij api, zodat reload wordt geforceerd
+          if (!_.isUndefined(self.form_groups[field].options.api)) {
+            var api = self.form_groups[field].options.api;
+            api = api.replace(/&stamp=\d*/g, ""); // oude stamp verwijderen
+            api += '&stamp=' + Date.now(); // nieuwe stamp
+            self.form_groups[field].options.api = api;
+          }
           // Selecteer zojuist toegevoegde/aangepaste item
           self.addToSelect(field,event);
           self.$emit('formclose');
@@ -708,7 +715,7 @@ export default {
         return response;
       });      
     },
-    
+
     cancel : function() {
       var self=this;
       if (this.isEdited && this.formtype!=='subform') {
@@ -1184,6 +1191,7 @@ export default {
                   <!-- Select -->
                   <vselect :name="field" 
                     :options="fieldOptions(field)" options-value="value" options-label="name" :options-ajax="fieldOptionsAjax(field)"
+                    :primary="primary"
                     :value="selectValue(field)" 
                     :multiple="isMultiple(field)"
                     @change="updateSelect(field,$event)"

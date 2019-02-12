@@ -29,10 +29,10 @@
         <li v-if="filteredOptions.length > this.showMax" class="pagination-item">
           <flexy-button :text="paginationText()" class="btn-outline-primary" @click.native="showAll()"/>
         </li>
-        <li v-if="insert" class="insert-item">
-          <flexy-button @click.native="clickInsert()" icon="plus" class="btn-outline-warning" />{{insertText}}
-        </li>
       </template>
+      <li v-if="insert" class="insert-item">
+        <flexy-button @click.native="clickInsert()" icon="plus" class="btn-outline-warning" />{{insertText}}
+      </li>
       <transition v-if="notify && !closeOnSelect" name="fadein"><div class="notify in">{{limitText}}</div></transition>
     </ul>
     <transition v-if="notify && closeOnSelect" name="fadein"><div class="notify out"><div>{{limitText}}</div></div></transition>
@@ -71,6 +71,7 @@ export default {
     optionsLabel:  {type: String, default: 'label'},
     optionsValue:  {type: String, default: 'value'},
     optionsAjax:  {type: String, default: ''},
+    primary:      {type: String, default: ''},
     parent:  {default: true},
     placeholder: {type: String, default: null},
     readonly:  {type: Boolean, default: null},
@@ -87,13 +88,14 @@ export default {
       list: [],
       loading: null,
       optionsAjaxLoaded: false,
+      optionsAjaxApi:this.optionsAjax,
       searchValue: null,
       show: false,
       showMax : this.maxShow,
       editing:false,
       notify: false,
       val: null,
-      valid: null
+      valid: null,
     }
   },
   computed: {
@@ -189,6 +191,12 @@ export default {
   mounted () {
     if (this._parent) this._parent.children.push(this)
   },
+  beforeUpdate() {
+    if (this.optionsAjax!==this.optionsAjaxApi) {
+      this.loadAjaxOptions();
+      this.optionsAjaxApi = this.optionsAjax;
+    }
+  },
   beforeDestroy () {
     if (this._parent) {
       var index = this._parent.children.indexOf(this)
@@ -256,8 +264,10 @@ export default {
       var self = this;
       if (self.optionsAjax!='') {
         // Load options
+        var url = self.optionsAjax;
+        if (self.primary>0) url += '&where='+self.primary;
         flexyState.api({
-          url  : self.optionsAjax,
+          url  : url,
         }).then(function(response){
           if (!_.isUndefined(response.data.data)) {
             var loadedOptions = response.data.data.data;
@@ -309,6 +319,7 @@ export default {
       if (this.insert) {
         this.show = false;
         this.$emit('insert', true);
+        self.optionsAjaxLoaded = false;
       }
     },
     startEdit: function(item) {
@@ -316,6 +327,7 @@ export default {
         this.editing = item.value;
         this.show = false;
         this.$emit('update', item.value );
+        self.optionsAjaxLoaded = false; 
       }
     },
     // cancelEdit: function(item) {
