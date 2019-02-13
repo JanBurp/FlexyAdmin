@@ -97,7 +97,7 @@ export default {
     },
 
     decode : function(item) {
-      if (_.isUndefined(item)) {
+      if (_.isUndefined(item) || typeof(item)!=='string') {
         return item;
       }
       return he.decode(item,{});
