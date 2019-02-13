@@ -2896,7 +2896,7 @@ Class Data_Core extends CI_Model {
     if (empty($this->tm_select)) $this->select( $form_set['fields'] );
     
     // Relations
-    $one_to_one = [];
+    $one_to_one = array();
     foreach ($form_set['with'] as $type => $relations) {
       if (is_array($relations)) {
         foreach ($relations as $what => $fields ) {
