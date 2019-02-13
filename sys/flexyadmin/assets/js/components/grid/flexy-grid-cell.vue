@@ -88,7 +88,7 @@ export default {
         array = media.split('|');
         for (var i = 0; i < array.length; i++) {
           array[i] = {
-            src : '_media/thumb/' + path +'/'+ array[i],
+            src : _flexy.media+'thumb/' + path +'/'+ array[i],
             alt : array[i],
           }
         }

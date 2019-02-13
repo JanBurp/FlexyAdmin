@@ -91,7 +91,9 @@ class AdminController extends BasicController {
     $this->view_data['content'] = '';
 
     // API urls
-    $this->view_data['base_url'] = $this->config->item('API_home');
+    $this->view_data['index_page'] = $this->config->item('index_page');
+    if (!empty($this->view_data['index_page'])) $this->view_data['index_page'].='/';
+    $this->view_data['base_url']   = $this->config->item('API_home');
     
     // Body class
     $this->view_data['class'] = 'uri-'.trim(str_replace('/','__',str_replace($this->config->item('API_home'),'',$this->current_uri)),'_');

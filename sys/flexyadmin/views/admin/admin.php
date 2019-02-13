@@ -67,7 +67,7 @@
 
 <script type="text/javascript" charset="utf-8">
 var _flexy = {
-  'index_page'    : '<?=empty($this->config->item('index_page'))?'':$this->config->item('index_page')."/"?>',         
+  'index_page'    : '<?=$index_page?>',
   'base_url'      : '<?=preg_replace("/(.*\/_admin).*/u", "$1", $_SERVER["REQUEST_URI"]);?>',
   'auth_token'    : '<?=$user['auth_token']?>',
   'media_view'    : '<?=$user['str_filemanager_view']?>',
