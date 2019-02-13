@@ -65,8 +65,9 @@ import '../dist/plugins/flexy_count';
 import '../dist/plugins/flexy_image';
 import '../dist/plugins/flexy_link';
 
-// API url
-_flexy.api = _flexy.index_page + '_api/';
+// URLS
+_flexy.api   = _flexy.index_page + '_api/';
+_flexy.media = _flexy.index_page + '_media/';
 
  // TinyMCE Global & Set extra
 _flexy.tinymceOptions = JSON.parse(_flexy.tinymceOptions);

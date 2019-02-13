@@ -56,7 +56,7 @@ export default {
         if (array[i]!=='') {
           thumbs[i] = {
             value : array[i],
-            src   : '_media/thumb/' + this.path +'/'+ array[i],
+            src   : _flexy.media+'thumb/' + this.path +'/'+ array[i],
             alt   : array[i],
           }
         }

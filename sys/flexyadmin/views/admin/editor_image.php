@@ -52,7 +52,7 @@
 
 <script type="text/javascript" charset="utf-8">
 var _flexy = {
-  'index_page'    : '<?=empty($this->config->item('index_page'))?'':$this->config->item('index_page')."/"?>',
+  'index_page'    : '<?=$index_page?>',
   'auth_token'    : '<?=$user['auth_token']?>',
   'media_view'    : '<?=$user['str_filemanager_view']?>',
   'language'      : '<?=$language?>',

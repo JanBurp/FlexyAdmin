@@ -511,7 +511,7 @@ export default {
     },
     
     thumbValue : function(field) {
-      var value = '_media/'+this.row['path']+'/'+this.row[field];
+      var value = _flexy.media+this.row['path']+'/'+this.row[field];
       return value;
     },
 
