@@ -1,3 +1,19 @@
+=3.5.24
+
+[nl]
+- Enkele kleine verbeteringen en bugs opgelost
+[/nl]
+[en]
+- Some small improvements and busg solved
+[/en]
+
+
+[BUGS]
+- index_page did was not used in backend
+- decoding not html (in flexy-grid-cell)
+- array_add_after() had a bug
+
+
 =3.5.23
 
 [nl]

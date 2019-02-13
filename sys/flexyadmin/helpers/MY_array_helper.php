@@ -1080,9 +1080,10 @@ function array_add_after($a,$key,$row) {
 	}
 	// assoc
 	$offset = array_search($key, array_keys($a)) + 1;
-	return array_slice($a, 0, $offset, true)
-					+ $row
-					+ array_slice($a, $offset, NULL, true);
+  $first_part = array_slice($a, 0, $offset, true);
+  $last_part  = array_slice($a, $offset, NULL, true);
+  $result = array_merge($first_part, $row, $last_part);
+	return $result;
 }
 
 /**
