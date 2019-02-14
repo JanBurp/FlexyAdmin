@@ -87,7 +87,7 @@ export default {
       list: [],
       loading: null,
       optionsAjaxLoaded: false,
-      optionsAjaxApi:this.optionsAjax,
+      optionsAjaxApi:'',
       searchValue: null,
       show: false,
       showMax : this.maxShow,
