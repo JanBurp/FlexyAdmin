@@ -6,7 +6,6 @@
         <span v-show="multiple && selected.length>=2" class="selected-option selected-count">{{$lang.grid_total | replace(selected.length)}}</span>
         <select-option v-for="item in selected" :label="item" extra-class="selected-option"></select-option>
       </span>
-      <!-- <span class="btn-content" v-html="loading ? text.loading : showPlaceholder || selected"></span> -->
       <span v-if="clearButton&&values.length" class="close" @click="clear()">&times;</span>
     </button>
     
@@ -26,7 +25,7 @@
           <flexy-button v-if="insert" icon="pencil" class="btn-outline-warning" @click.native="startEdit(option)" />
           <select-option :label="option[optionsLabel]" @dblclick.native="startEdit(option)"></select-option>
         </li>
-        <li v-if="filteredOptions.length > this.showMax" class="pagination-item">
+        <li v-show="filteredOptions.length > this.showMax" class="pagination-item">
           <flexy-button :text="paginationText()" class="btn-outline-primary" @click.native="showAll()"/>
         </li>
       </template>
@@ -71,7 +70,7 @@ export default {
     optionsLabel:  {type: String, default: 'label'},
     optionsValue:  {type: String, default: 'value'},
     optionsAjax:  {type: String, default: ''},
-    primary:      {type: String, default: ''},
+    primary:      {type: [String,Number], default: ''},
     parent:  {default: true},
     placeholder: {type: String, default: null},
     readonly:  {type: Boolean, default: null},
