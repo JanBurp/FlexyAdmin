@@ -1,3 +1,19 @@
+=3.5.25
+
+[nl]
+- Verbetering aan dropdown
+- Bij Webkit browser kon de volgorde van afbeeldingen niet worden aangepast
+[/nl]
+[en]
+- Improvements to dropdown
+- Webkit browser couldn't change order of images
+[/en]
+
+
+[BUGS]
+- Draggable did not work on Safari
+
+
 =3.5.24
 
 [nl]
