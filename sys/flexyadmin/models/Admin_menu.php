@@ -153,7 +153,7 @@ Class Admin_menu extends CI_Model {
               $tables = $this->data->list_tables();
               $tables = filter_by($tables,$item['pre']);
               foreach ($tables as $table) {
-                if (!in_array($table,$this->hidden_tables)) {
+                if (!in_array($table,$this->hidden_tables) and $this->flexy_auth->has_rights($table) ) {
                   if (!isset($menuItems[$table])) {
                     $menuItems[$table] = $this->_process_item('', array(
                       'name'       => $this->lang->ui($table),
