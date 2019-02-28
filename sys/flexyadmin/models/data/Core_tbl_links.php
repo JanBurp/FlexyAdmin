@@ -57,6 +57,8 @@ Class Core_tbl_links extends Data_Core {
       $links[] = array( 'title'=>'Bestanden', 'menu' => $downloads );
     }
 
+    // trace_($links);
+
     $this->data->table('tbl_links');
     return $links;
   }
@@ -127,8 +129,8 @@ Class Core_tbl_links extends Data_Core {
     $links = array();
     foreach ($result as $id => $item) {
       $links[] = array(
-        'title' => $item['title'],
-        'value' => el('link',$item,el('uri',$item)),
+        'title' => (string)$item['title'],
+        'value' => (string)el('link',$item,el('uri',$item)),
       );
     }
     return $links;

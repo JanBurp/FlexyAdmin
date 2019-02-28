@@ -1,3 +1,16 @@
+=3.5.26
+
+[nl]
+- Bug in link list als een pagina een nummer had als uri
+[/nl]
+[en]
+- Bug in link list when a page has a number as uri
+[/en]
+
+
+[BUGS]
+- Bug in link list when a page has a number as uri
+
 =3.5.25
 
 [nl]
