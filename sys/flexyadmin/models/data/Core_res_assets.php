@@ -339,6 +339,34 @@ Class Core_res_assets extends Data_Core {
     $this->search_replace->media($path,$file,'');
   }
   
+  /**
+   * Verwijder alle ongebruikte bestanden
+   * @return array
+   */
+  public function delete_unused_files() {
+    $paths = $this->get_assets_folders(FALSE);
+    $delete = array();
+    foreach ($paths as $path) {
+      $files = $this->get_files($path);
+      foreach ($files as $key => $file) {
+        if ( $this->is_file_used($path,$file['file']) ) {
+          unset($files[$key]);
+        }
+      }
+      foreach ($files as $file) {
+        $delete[] = array(
+          'path' => $path,
+          'file' => $file['file'],
+          'date' => $file['date'],
+        );
+      }
+    }
+    // Delete echt
+    foreach ($delete as $key => $file) {
+      $this->delete( array('path'=>$file['path'],'file'=>$file['file']) );
+    }
+    return $delete;
+  }
   
   /**
    * Upload file van meegegeven (form) file-veld, ook worden meteen thumbs etc. aangemaakt voor geuploade bestanden en wordt de minimale omvang gecheckt.
@@ -659,6 +687,13 @@ Class Core_res_assets extends Data_Core {
     return $info;
   }
   
+  /**
+   * Geeft aan of het bestand ergens wordt gebruikt in de content
+   * 
+   * @param  string  $path
+   * @param  string  $file
+   * @return boolean
+   */
   public function is_file_used($path,$file) {
     if (empty($this->find_in_fields)) {
       $tables = $this->list_tables();
@@ -676,7 +711,6 @@ Class Core_res_assets extends Data_Core {
     $found = $this->search_replace->has_text($file,$this->find_in_fields);
     return $found;
   }
-  
 
   /**
    * Voeg bestand met info toe aan database
