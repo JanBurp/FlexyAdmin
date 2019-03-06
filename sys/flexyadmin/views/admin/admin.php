@@ -7,7 +7,7 @@
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 
-	<title>FlexyAdmin - <?=$str_title?></title>
+	<title>FlexyAdmin - <?=strip_tags($str_title)?></title>
 	<base href="<?=base_url()?>" />
 
   <link rel="stylesheet" href="<?=admin_assets()?>flexyadmin.css" type="text/css" media="screen">
