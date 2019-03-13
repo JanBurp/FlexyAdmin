@@ -1,4 +1,4 @@
-=3.5.27
+=3.5.28
 
 [nl]
 - Enkele technische verbeteringen
