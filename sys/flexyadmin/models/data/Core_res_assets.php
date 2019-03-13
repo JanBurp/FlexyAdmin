@@ -344,6 +344,7 @@ Class Core_res_assets extends Data_Core {
    * @return array
    */
   public function delete_unused_files() {
+    ini_set('max_execution_time', 0); // for infinite time of execution 
     $paths = $this->get_assets_folders(FALSE);
     $delete = array();
     foreach ($paths as $path) {

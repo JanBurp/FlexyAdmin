@@ -19,6 +19,7 @@ class Plugin_cleanup extends Plugin {
 	
 	public function _admin_api($args=NULL) {
 		$this->_cleanup();
+		// $this->CI->assets->delete_unused_files();
     return $this->show_messages();
 	}
 
