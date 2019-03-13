@@ -66,6 +66,17 @@ class MY_URI extends CI_URI {
 	}
 
   /**
+   * Geeft uri van homepage
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  public function get_home() {
+    return $this->home;
+  }
+  
+
+  /**
    * Stel hiermee uriparts in waarachter de uri niet wordt 'gezien' voor het laden van een pagina.
    * 
    * Wordt bijvoorbeeld gebruikt door auto-pagination met de standaard remove part 'offset'
@@ -79,7 +90,8 @@ class MY_URI extends CI_URI {
 		$this->remove=$remove;
     return $this;
   }
-  
+
+
   /**
    * Voeg een uripart toe waarachter de uri niet wordt 'gezien'
    *

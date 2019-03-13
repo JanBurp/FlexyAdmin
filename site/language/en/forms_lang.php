@@ -15,6 +15,7 @@ $lang['subject']              = "Email from '%str_name%' via %URL%";
 $lang['contact_title']        = 'Contact';
 $lang['field__str_name']      = 'Name';
 $lang['field__email_email']   = 'Email';
+$lang['field__str_telefoon']  = 'Phone';
 $lang['field__txt_text']      = 'Question';
 $lang['contact_send_text']    = "Thanks for you're mail.";
 

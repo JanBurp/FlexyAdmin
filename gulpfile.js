@@ -160,6 +160,13 @@ gulp.task('install', function() {
     .pipe(gulp.dest(assets +'/less-bootstrap/bootstrap/mixins'));
   gulp.src( '' ).pipe(notify("Bootstrap moved"));
 
+  // Verplaatst 3l LESS
+  gulp.src([
+     bower+'/3L/3L/3L.less',
+    ]).pipe(gulp.dest( assets + '/less-bootstrap' ));
+  gulp.src( '' ).pipe(notify("Lots of Love for LESS moved"));
+
+
   // Verplaatst Fontawsome
   gulp.src([
      bower+'/components-font-awesome/fonts/*',
@@ -246,7 +253,7 @@ gulp.task('cssmin',['less'],function(){
   return gulp.src( files['cssmin'] )
         .pipe(sourcemaps.init({loadMaps: true}))
         // .pipe(pixrem())
-        .pipe(cssnano())
+        .pipe(cssnano({safe: true}))
         .pipe(concat(files['cssdest']))
         .pipe(sourcemaps.write('maps'))
         .pipe(gulp.dest( files['css']) )

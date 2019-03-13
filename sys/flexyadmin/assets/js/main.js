@@ -9,7 +9,7 @@
 
 require("babel-polyfill");
 
-var _ = require('lodash');
+var _  = require('lodash');
 
 import Vue              from 'vue'
 import VueRouter        from 'vue-router'
@@ -65,10 +65,14 @@ import '../dist/plugins/flexy_count';
 import '../dist/plugins/flexy_image';
 import '../dist/plugins/flexy_link';
 
+// URLS
+_flexy.api   = _flexy.index_page + '_api/';
+_flexy.media = _flexy.index_page + '_media/';
+
  // TinyMCE Global & Set extra
 _flexy.tinymceOptions = JSON.parse(_flexy.tinymceOptions);
-_flexy.tinymceOptions['link_list'] = '_api/get_link_list?_authorization='+_flexy.auth_token;
-_flexy.tinymceOptions['image_list'] = '_api/get_image_list?_authorization='+_flexy.auth_token;
+_flexy.tinymceOptions['link_list'] = _flexy.api+'get_link_list?_authorization='+_flexy.auth_token;
+_flexy.tinymceOptions['image_list'] = _flexy.api+'get_image_list?_authorization='+_flexy.auth_token;
 tinymce.init( _flexy.tinymceOptions );
 
 // Language settings

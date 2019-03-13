@@ -1,3 +1,198 @@
+=3.5.27
+
+[nl]
+- Enkele technische verbeteringen
+[/nl]
+[en]
+- Some small technical improvements
+[/en]
+
+[BUGS]
+- Strip tags from admin title
+
+[FEATURES]
+- URI->get_home() added
+- Assets->delete_unused_files() added
+
+
+=3.5.26
+
+[nl]
+- Bug in link list als een pagina een nummer had als uri
+[/nl]
+[en]
+- Bug in link list when a page has a number as uri
+[/en]
+
+[BUGS]
+- Bug in link list when a page has a number as uri
+
+=3.5.25
+
+[nl]
+- Verbetering aan dropdown
+- Bij Webkit browser kon de volgorde van afbeeldingen niet worden aangepast
+[/nl]
+[en]
+- Improvements to dropdown
+- Webkit browser couldn't change order of images
+[/en]
+
+
+[BUGS]
+- Draggable did not work on Safari
+
+
+=3.5.24
+
+[nl]
+- Enkele kleine verbeteringen en bugs opgelost
+[/nl]
+[en]
+- Some small improvements and busg solved
+[/en]
+
+
+[BUGS]
+- index_page did was not used in backend
+- decoding not html (in flexy-grid-cell)
+- array_add_after() had a bug
+
+
+=3.5.23
+
+[nl]
+- Laden van opties in formulier verbeterd, soms ontstond hierdoor een bug (sinds 3.5.16)
+- Enkele kleine verbeteringen
+[/nl]
+[en]
+- Options loading in forms better, there could be some bugs (since 3.5.16)
+- Some small improvements
+[/en]
+
+[FEATURES]
+- Better gulp for animations & 3L.less added
+- Menu inherit with 'grouped'
+
+[BUGS]
+- Laden van opties in formulier verbeterd, soms ontstond hierdoor een bug. (sinds 3.5.16)
+
+=3.5.20
+
+[nl]
+- Enkele verbeteringen aan de user-interface
+- Enkele kleine technische verbeteringen (oa aan spamchecker)
+- Betere uitleg in 'vergeten wachtwoord' emails
+[/nl]
+[en]
+- Some improvement to the user-interface
+- Some small technical improvements (ie spamchecker)
+[/en]
+
+[FEATURES]
+- Form title show abstract of item
+- html entities worden nu mooier getoond in grid
+- Spamchecker kan ingesteld worden per veld (standaard alleen de required velden)
+- De volgorde van modules kan worden ingestel met ‘module_order’
+- Verbeterde wachtwoord teksten (update_v3.5.20.sql)
+
+[BUGS]
+- Standard formactions better (upload path & update)
+- Data: user field did not fill automatic
+- Robuster order (when no items in menu)
+
+[DB]
+- update_v3.5.20.sql
+
+=3.5.19
+
+[nl]
+- Kleine zeldzame bug opgelost
+[/nl]
+[en]
+- Small rare bug solved
+[/en]
+
+[BUGS]
+- DATA: Add one_to_one defaults to get_form result
+
+=3.5.18
+
+[nl]
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Some small bugs solved
+[/en]
+
+[BUGS]
+- If upload files where to big: ui keeps thinking its uploading
+- uri had max_length validation -> not needed
+
+=3.5.17
+
+[nl]
+- Verbeteringen bij aanpassen wachtwoorden/gebruikersnamen
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Improvements by editing passwords/usernames
+- Some small bugs solved
+[/en]
+
+[FEATURES]
+- Wachtwoord aanpassen logde ook bij andere user uit. Opgelost en verbeterd.
+
+[BUGS]
+- rights of media_assets
+- for PHP5.4 some typo in adminmenu
+- in json formatting in MySQL gave errors when '"' in text
+
+
+=3.5.16
+
+[nl]
+- Verbeteringen dropdown veld - als er veel opties zijn worden die pas geladen als nodig
+- Enkele kleine verbeteringen
+- Enkele kleine bugs opgelost
+[/nl]
+[en]
+- Better dropdown - load option when needed
+- Some small improvements
+- Some small bugs solved
+[/en]
+
+[FEATURES]
+- Select loads data with ajax (when needed) with more than 50 options
+- Maximum execution time in assets.refresh = infinite
+- Assets: Autofill fields more flexible
+- 'user' field as muted form field (new form_field ‘abstract’ added)
+
+[BUGS]
+- Counting all items in res_assets was wrong
+- LogActivity gave error with old PHP versions
+- data->find() when term could be a field
+- admin menu_items -> rights of folders
+
+
+=3.5.13
+
+[nl]
+- Verbeteringen dropdown veld
+- Verbeteringen voor aanpassen naam (ed) van bestanden.
+- Verbeteringen aan gebruikersinterface voor uploaden en aanpassen van bestanden.
+[/nl]
+[en]
+- Better dropdown
+- Improved editing of files.
+- Improved userinterface for uploaden and editing files.
+[/en]
+
+[FEATURES]
+- Verbeteringen dropdown veld
+- Verbeteringen voor aanpassen naam (ed) van bestanden.
+- Verbeteringen aan gebruikersinterface voor uploaden en aanpassen van bestanden.
+
 =3.5.12
 
 [nl]

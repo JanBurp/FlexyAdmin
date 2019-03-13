@@ -7,7 +7,7 @@
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 
-	<title>FlexyAdmin - <?=$str_title?></title>
+	<title>FlexyAdmin - <?=strip_tags($str_title)?></title>
 	<base href="<?=base_url()?>" />
 
   <link rel="stylesheet" href="<?=admin_assets()?>flexyadmin.css" type="text/css" media="screen">
@@ -24,7 +24,7 @@
     <div id="header" class="navbar navbar-fixed-top row align-items-start">
 
       <div class="col navbar-brand">
-        <a href="<?=$base_url?>" title="FlexyAdmin <?=$build?>">
+        <a href="<?=site_url($base_url)?>" title="FlexyAdmin <?=$build?>">
           <span class="flexy-block home-button btn btn-secondary">
             <span class="fa fa-home fa-lg"></span>
           </span>
@@ -33,7 +33,7 @@
           <span class="fa fa-bars fa-lg"></span>
         </span>
 
-        <flexy-blocks v-once href="<?=$base_url?>" text="<?=$admin_title?>" class="title"></flexy-blocks>
+        <flexy-blocks v-once href="<?=site_url($base_url)?>" text="<?=$admin_title?>" class="title"></flexy-blocks>
       </div>
 
       <div class="col-auto navbar-nav">
@@ -67,6 +67,7 @@
 
 <script type="text/javascript" charset="utf-8">
 var _flexy = {
+  'index_page'    : '<?=$index_page?>',
   'base_url'      : '<?=preg_replace("/(.*\/_admin).*/u", "$1", $_SERVER["REQUEST_URI"]);?>',
   'auth_token'    : '<?=$user['auth_token']?>',
   'media_view'    : '<?=$user['str_filemanager_view']?>',

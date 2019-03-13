@@ -6,12 +6,12 @@
 
 $config['assets'] = array( 
 
-	'pictures'  => array(
+'pictures'  => array(
     'types'            => 'jpg,jpeg,gif,png',
     'encrypt_name'     => false,
-    'media_fields'     => 'tbl_groepen.media_tekening|tbl_menu.medias_fotos',
-    'autofill'         => '',
-    'autofill_fields'  => false,
+    'autofill_fields'  => array(
+                            'tbl_menu.medias_fotos' => 'file', // alt|file|date|user
+                            ),
     'in_link_list'     => false,
     'user_restricted'  => false,
     'serve_restricted' => false,
@@ -33,11 +33,9 @@ $config['assets'] = array(
     'suffix_2'         => ''
   ), 
 
-	'downloads' => array(
+'downloads' => array(
     'types'            => 'pdf,doc,docx,xls,xlsx,png,jpg',
     'encrypt_name'     => false,
-    'media_fields'     => false,
-    'autofill'         => '',
     'autofill_fields'  => false,
     'in_link_list'     => true,
     'user_restricted'  => false,

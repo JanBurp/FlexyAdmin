@@ -159,7 +159,7 @@ class AjaxController extends BasicController {
         if (el('format',$result,'default')==='_json') {
           $output = $this->prettyJSON( $output );
         }
-        @header("Content-Type: application/json");
+        if (ob_get_length()==0) @header("Content-Type: application/json");
         break;
 
       // default:

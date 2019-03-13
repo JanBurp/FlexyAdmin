@@ -168,6 +168,8 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function refresh( $paths='', $clean=FALSE, $remove=FALSE) {
+    ini_set('max_execution_time', 0); // for infinite time of execution 
+
     if (empty($paths)) $paths = $this->get_assets_folders(FALSE);
     if (!is_array($paths)) $paths=array($paths);
     
@@ -337,6 +339,34 @@ Class Core_res_assets extends Data_Core {
     $this->search_replace->media($path,$file,'');
   }
   
+  /**
+   * Verwijder alle ongebruikte bestanden
+   * @return array
+   */
+  public function delete_unused_files() {
+    $paths = $this->get_assets_folders(FALSE);
+    $delete = array();
+    foreach ($paths as $path) {
+      $files = $this->get_files($path);
+      foreach ($files as $key => $file) {
+        if ( $this->is_file_used($path,$file['file']) ) {
+          unset($files[$key]);
+        }
+      }
+      foreach ($files as $file) {
+        $delete[] = array(
+          'path' => $path,
+          'file' => $file['file'],
+          'date' => $file['date'],
+        );
+      }
+    }
+    // Delete echt
+    foreach ($delete as $key => $file) {
+      $this->delete( array('path'=>$file['path'],'file'=>$file['file']) );
+    }
+    return $delete;
+  }
   
   /**
    * Upload file van meegegeven (form) file-veld, ook worden meteen thumbs etc. aangemaakt voor geuploade bestanden en wordt de minimale omvang gecheckt.
@@ -514,6 +544,31 @@ Class Core_res_assets extends Data_Core {
     $grid_set['title'] = $this->lang->ui('media_'.$this->media_path);
     return $grid_set;
   }
+
+  /**
+   * Form set aanpassingen, alleen de velden die zinvol mogen worden aangepast.
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_form_set() {
+    $form_set = parent::get_setting_form_set();
+
+    // Toon thumb in plaats van naam
+    if (isset($form_set['field_info']['path']['type'])) {
+      $form_set['field_info']['path']['type'] = 'hidden';
+    }
+    if (isset($form_set['field_info']['file']['type'])) {
+      $form_set['field_info']['file']['type'] = 'thumb';
+    }
+
+    // Toon naam van path in plaats van res_assets
+    if (isset($this->media_path) and !empty($this->media_path)) {
+      $form_set['title'] = lang('media_'.$this->media_path);
+    }
+
+    return $form_set;
+  }
   
 
   /**
@@ -523,9 +578,15 @@ Class Core_res_assets extends Data_Core {
    * @return int
    * @author Jan den Besten
    */
-  public function count_all($table='') {
-    $query = $this->db->where('path',$table)->select('id')->get($this->settings['table']);
-    return $query->num_rows();
+  public function count_all($path='') {
+    if ($path=='') {
+      $query = $this->db->select('id')->get($this->settings['table']);  
+    }
+    else {
+      $query = $this->db->where('path',$path)->select('id')->get($this->settings['table']);
+    }
+    $count_all = $query->num_rows();
+    return $count_all;
   }
 
   
@@ -626,6 +687,13 @@ Class Core_res_assets extends Data_Core {
     return $info;
   }
   
+  /**
+   * Geeft aan of het bestand ergens wordt gebruikt in de content
+   * 
+   * @param  string  $path
+   * @param  string  $file
+   * @return boolean
+   */
   public function is_file_used($path,$file) {
     if (empty($this->find_in_fields)) {
       $tables = $this->list_tables();
@@ -643,7 +711,6 @@ Class Core_res_assets extends Data_Core {
     $found = $this->search_replace->has_text($file,$this->find_in_fields);
     return $found;
   }
-  
 
   /**
    * Voeg bestand met info toe aan database
@@ -663,7 +730,7 @@ Class Core_res_assets extends Data_Core {
     $default_data = array(
       'path'  => $path,
       'file'  => $file,
-      'alt'   => get_prefix($file,'.'),
+      'alt'   => nice_string(get_prefix($file,'.')),
       'type'  => $ext,
       'size'  => (int) floor($file_stats['size'] / 1024),
       'date'  => unix_to_mysql($file_stats['mtime']),
@@ -687,16 +754,31 @@ Class Core_res_assets extends Data_Core {
       $path_settings = $this->get_folder_settings($path);
       if (isset($path_settings['autofill_fields']) and !empty($path_settings['autofill_fields'])) {
         $autofill_fields = $path_settings['autofill_fields'];
-        if (!is_array($autofill_fields)) {
-          $autofill_fields = array($autofill_fields);
-        }
-        foreach ($autofill_fields as $key => $field) {
+        $sets = array();
+        
+        foreach ($autofill_fields as $field => $value) {
           $table = get_prefix($field,'.');
           $field = get_suffix($field,'.');
-          $set = array($field=>$data['file']);
-          $this->data->table($table)->set($set)->insert();
+
+          if (!isset($sets[$table])) $sets[$table] = array();
+          if (isset($data[$value]))  $sets[$table][$field] = $data[$value];
+          switch ($value) {
+            case 'user':
+              $sets[$table][$field] = $this->get_user_id();
+              break;
+            case 'date':
+              $sets[$table][$field] = date("Y-m-d");
+              break;
+          }
+        }
+
+        if (!empty($sets)) {
+          foreach ($sets as $table => $set) {
+            $this->data->table($table)->set($set)->insert();
+          }
         }
       }
+
     }
     return $id;
   }
