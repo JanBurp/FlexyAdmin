@@ -1,3 +1,20 @@
+=3.5.27
+
+[nl]
+- Enkele technische verbeteringen
+[/nl]
+[en]
+- Some small technical improvements
+[/en]
+
+[BUGS]
+- Strip tags from admin title
+
+[FEATURES]
+- URI->get_home() added
+- Assets->delete_unused_files() added
+
+
 =3.5.26
 
 [nl]
@@ -6,7 +23,6 @@
 [en]
 - Bug in link list when a page has a number as uri
 [/en]
-
 
 [BUGS]
 - Bug in link list when a page has a number as uri
