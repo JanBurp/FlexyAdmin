@@ -4,7 +4,7 @@ require_once(APPPATH.'/tests/CITestCase.php');
 
 class EmailHelperTest extends CITestCase {    
 
-  public function setUp() {
+  protected function setUp() :void  {
     $this->CI->load->helper('email');
   }
 

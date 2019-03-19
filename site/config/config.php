@@ -413,6 +413,7 @@ $config['global_xss_filtering'] = FALSE;
  *--------------------------------------------------------------------------
  *
  * Set validation rules for the valid_regex form validation, error_key is een language key die verwijst naar regex_validation_lang.php
+ * Set validation as 'valid_regex[telefoon]'
  */
 $config['valid_regex_rules'] = array(
   'postcode' => array(
@@ -420,7 +421,7 @@ $config['valid_regex_rules'] = array(
     'error_key' => 'valid_zipcode'
   ),
   'telefoon'  => array(
-    'regex'     => '/^\(?0\d{1,4}\)?[-\s]\d{5,8}$/',
+    'regex'     => '/^\(?0\d{1,4}\)?[-\s]?\d{5,8}$/',
     'error_key' => 'valid_phone'
   )
 );

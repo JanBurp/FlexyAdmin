@@ -9,10 +9,12 @@ export default {
   	message : function() {
   		var message = '';
   		var table = this.$route.params.table;
-      // var id    = this.$route.params.id;
-      // console.log(id);
-  		if (table=='cfg_users') {
-  			message = this.$lang.edit_users_warning;
+      var id    = this.$route.params.id;
+      if (table=='cfg_users') {
+        message = {
+          condition : 'own_user',
+          message   : this.$lang.edit_users_warning,
+        }
   		}
   		return message;
   	},

@@ -29,7 +29,7 @@ class FormValidationTest extends CITestCase {
     ),
   );
   
-  protected function setUp ()  {
+  protected function setUp() :void   {
     $this->CI->load->library('form_validation');
   }
   
@@ -62,12 +62,12 @@ class FormValidationTest extends CITestCase {
       
       if ($result) {
         $this->assertTrue($validated);
-        $this->assertInternalType('array',$errors);
+        $this->assertIsArray($errors);
         $this->assertCount(0,$errors);
       }
       else {
         $this->assertFalse($validated);
-        $this->assertInternalType('array',$errors);
+        $this->assertIsArray($errors);
         $this->assertCount(1,$errors);
       }
 
@@ -83,7 +83,7 @@ class FormValidationTest extends CITestCase {
       $errors    = $this->CI->form_validation->get_error_messages();
       
       $this->assertTrue($validated);
-      $this->assertInternalType('array',$errors);
+      $this->assertIsArray($errors);
       $this->assertCount(0,$errors);
     }
   }
@@ -95,7 +95,7 @@ class FormValidationTest extends CITestCase {
       $validated = $this->CI->form_validation->validate_data($data,'tbl_site');
       $errors    = $this->CI->form_validation->get_error_messages();
       $this->assertFalse($validated);
-      $this->assertInternalType('array',$errors);
+      $this->assertIsArray($errors);
       $this->assertArrayHasKey('email_email',$errors);
     }
   }

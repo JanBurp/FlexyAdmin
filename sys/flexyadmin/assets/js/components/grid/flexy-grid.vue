@@ -687,7 +687,9 @@ export default {
       if (this.oneSelected()) {
         var id = '_'+this.selected[0];
       }
-      var url = '/edit/'+this.name+'/'+id+'?options='+JSON.stringify(this.urlOptions);
+      var name = this.name;
+      if (this.gridType()==='media') name = 'media_'+name;
+      var url = '/edit/'+name+'/'+id+'?options='+JSON.stringify(this.urlOptions);
       this.$router.push(url);
     },
     
@@ -899,22 +901,28 @@ export default {
       }
     },
     startUpload : function() {
-      this.dropUploadHover = false;
       var self = this;
-      var uploadedFilesCount = 0;
-      for (var i = 0; i < self.uploadFiles.length; i++) {
-        var file = self.uploadFiles[i];
-        var formData = new FormData();
-        // console.log(file,formData);
-        formData.append( 'path', self.name );
-        formData.append( 'file', self.uploadFiles[i] );
-        formData.append( 'fileName', self.uploadFiles[i].name );
+      self.dropUploadHover = false;
 
-        // Te groot?
+      // Test of ze te groot zijn
+      for (var i = 0; i < self.uploadFiles.length; i++) {
         if ( self.uploadFiles[i].size > flexyState.getState('max_uploadsize') ) {
           flexyState.addMessage( self.uploadFiles[i].name + self.$lang.upload_too_big, 'danger' );
+          self.removeUploadFile(i);
         }
-        else {
+      }
+
+      // Upload
+      if (self.uploadFiles.length>0) {
+        var uploadedFilesCount = 0;
+        for (var i = 0; i < self.uploadFiles.length; i++) {
+          var file = self.uploadFiles[i];
+          var formData = new FormData();
+          // console.log(file,formData);
+          formData.append( 'path', self.name );
+          formData.append( 'file', self.uploadFiles[i] );
+          formData.append( 'fileName', self.uploadFiles[i].name );
+
           flexyState.api({
             method    : 'POST',
             url       : 'media',
@@ -994,7 +1002,7 @@ export default {
     },
     bulkUploadTitle : function() {
       if (!_.isUndefined(this.dataInfo.bulkupload)) {
-        return this.dataInfo.bulkupload.length + ' files for bulkupload';
+        return this.dataInfo.bulkupload.length + this.$lang.files_for_bulkupload;
       }
       return '';
     },
@@ -1229,7 +1237,7 @@ export default {
               <template v-for="(field,key) in fields">
                 
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
-                  <flexy-button v-if="gridType()!=='media' && dataInfo.rights.insert==true" @click.native="newItem()" :icon="{'plus':!oneSelected(),'paste':oneSelected()}" class="btn-outline-warning" />
+                  <flexy-button v-if="dataInfo.rights.insert==true" @click.native="newItem()" :icon="{'plus':!oneSelected(),'paste':oneSelected()}" class="btn-outline-warning" />
                   <flexy-button v-if="type!=='mediapicker' && dataInfo.rights.delete==true" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger action-delete-all" />
                   <flexy-button v-if="type!=='mediapicker' && multiple===true && dataInfo.rights.delete==true" @click.native="reverseSelection()" icon="check-square-o" class="btn-outline-info action-select-all" />
 
@@ -1266,10 +1274,14 @@ export default {
             <!-- UPLOAD ROW -->
             <tr v-if="gridType()==='media'" class="grid-upload" :class="{'dropping':dropUploadHover}">
               <td v-if="bulkuploadFiles==false" colspan="100" class="grid-upload-dropbox">
-                <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
-                <flexy-button v-if="hasBulkupload()" @click.native="bulkUpload()" icon="upload" class="btn-outline-warning action-bulkupload" :title="bulkUploadTitle()" />
-                <span :class="{'show':uploadFiles.length>0}" class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span>
-                {{$lang.upload_choose}}
+                <span v-if="uploadFiles.length>0" :class="{'show':uploadFiles.length>0}" class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span>
+                <template v-if="hasBulkupload()">
+                  <flexy-button v-if="hasBulkupload()" @click.native="bulkUpload()" icon="upload" class="btn-outline-danger action-bulkupload" :title="bulkUploadTitle()" />
+                  {{bulkUploadTitle()}}
+                </template>
+                <template v-else>
+                  {{$lang.upload_choose}}
+                </template>
                 <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
               </td>
             </tr>
@@ -1286,7 +1298,7 @@ export default {
                 
                   <!-- PRIMARY CELL -->
                   <td v-if="cell.type=='primary'" class="action">
-                    <flexy-button v-if="gridType()!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning action-edit" />
+                    <flexy-button @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning action-edit" />
                     <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger action-remove" />
                     <flexy-button @click.native="select(row.id.value)" :icon="{'square-o':!isSelected(row.id.value),'check-square-o':isSelected(row.id.value)}" class="btn-outline-info action-select" />
                     <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info action-drag" :class="{'active':isDragging(row.id.value)}" />

@@ -9,22 +9,21 @@ class ApiAuthTest extends ApiTestModel {
   }
 
 
-  public function testLoginLogout() {
-
-    // Check if logged out
-    $result=$this->CI->auth->check();
-    $this->assertArrayHasKey( 'status', $result );
-    $this->assertEquals( 401, $result['status'] );
-    // Login as 'admin'
-    $this->CI->auth->set_args(array('POST'=>array('username'=>'admin','password'=>'admin')));
-    $result=$this->CI->auth->login();
-    $this->assertArrayHasKey( 'success', $result );
-    $this->assertEquals( true, $result['success'] );
-    $this->assertEquals( 'admin', $result['user']['username'] );
-    // Logout
-    $result = $this->CI->auth->logout();
-    $this->assertNull( $result );
-  }
+  // public function testLoginLogout() {
+  //   // // Check if logged out
+  //   // $result = $this->CI->auth->check();
+  //   // $this->assertArrayHasKey( 'status', $result );
+  //   // $this->assertEquals( 401, $result['status'] );
+  //   // Login as 'admin'
+  //   $this->CI->auth->set_args(array('POST'=>array('username'=>'admin','password'=>'admin')));
+  //   $result=$this->CI->auth->login();
+  //   $this->assertArrayHasKey( 'success', $result );
+  //   $this->assertEquals( true, $result['success'] );
+  //   $this->assertEquals( 'admin', $result['user']['username'] );
+  //   // Logout
+  //   $result = $this->CI->auth->logout();
+  //   $this->assertNull( $result );
+  // }
 
   public function testWrongLogin() {
 
@@ -87,20 +86,20 @@ class ApiAuthTest extends ApiTestModel {
 
  }
 
-  public function testLogin() {
+  // public function testLogin() {
 
-    foreach ($this->users as $user) {
-      $this->CI->auth->set_args(array('POST'=>array('username'=>$user['username'],'password'=>$user['password'])));
-      $result=$this->CI->auth->login();
-      $this->assertArrayHasKey( 'success', $result );
-      $this->assertEquals( true, $result['success'] );
-      // $this->assertArrayHasKey( 'args', $result );
-      // $this->assertEquals( $user['username'], $result['args']['username'] );
-      // $this->assertEquals( '***', $result['args']['password'] );
-      $this->assertArrayHasKey( 'data', $result );
-      $this->assertEquals( $user['username'], $result['user']['username'] );
-    }
-  }
+  //   foreach ($this->users as $user) {
+  //     $this->CI->auth->set_args(array('POST'=>array('username'=>$user['username'],'password'=>$user['password'])));
+  //     $result=$this->CI->auth->login();
+  //     $this->assertArrayHasKey( 'success', $result );
+  //     $this->assertEquals( true, $result['success'] );
+  //     // $this->assertArrayHasKey( 'args', $result );
+  //     // $this->assertEquals( $user['username'], $result['args']['username'] );
+  //     // $this->assertEquals( '***', $result['args']['password'] );
+  //     $this->assertArrayHasKey( 'data', $result );
+  //     $this->assertEquals( $user['username'], $result['user']['username'] );
+  //   }
+  // }
  
   
 }

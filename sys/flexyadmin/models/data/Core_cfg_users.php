@@ -125,11 +125,16 @@ Class Core_cfg_users extends Data_Core {
       }
     }
 
-    if (isset($this->tm_set['str_username']) or isset($this->tm_set['gpw_password'])) {
-      $this->loguit = TRUE;
+    // Controleer of eigen username/wachtwoord is aangepast, dan moet namenlijk opnieuw worden ingelogd
+    $changedUser = ( isset($this->tm_set['str_username']) or isset($this->tm_set['gpw_password']) );
+    $id = parent::_update_insert($type,NULL,$where,$limit);
+    if ($id and $changedUser) {
+      if ( $id==$this->user_id ) {
+        $this->loguit = TRUE;
+      }
     }
 
-    return parent::_update_insert($type,NULL,$where,$limit);
+    return $id;
   }
   
   
@@ -205,13 +210,23 @@ Class Core_cfg_users extends Data_Core {
   public function get_options( $fields='', $with=array('many_to_many'), $as_object = TRUE ) {
     $options = parent::get_options($fields,$with,$as_object);
     if ($this->user_id and $options) {
-      if (el('table',$options)==='cfg_user_groups') {
-        foreach ($options['data'] as $key=>$option) {
+      $groups_options = $options;
+      if (isset($options['cfg_user_groups'])) {
+        $groups_options = $options['cfg_user_groups'];
+      }
+      if (el('table',$groups_options)==='cfg_user_groups') {
+        foreach ($groups_options['data'] as $key=>$option) {
           if ( !in_array($option['value'],$this->show_groups) ) {
-            unset($options['data'][$key]);
+            unset($groups_options['data'][$key]);
           }
         }
-        $options['multiple'] = $this->get_setting('multiple_groups',FALSE);
+        $groups_options['multiple'] = $this->get_setting('multiple_groups',FALSE);
+        if (isset($options['cfg_user_groups'])) {
+          $options['cfg_user_groups'] = $groups_options;
+        }
+        else {
+          $options = $groups_options;
+        }
       }
     }
     return $options;
@@ -287,6 +302,7 @@ Class Core_cfg_users extends Data_Core {
 
   /**
    * Zorgt ervoor cfg_user_groups één waarde is (behalve als $config['multiple_groups'] = TRUE)
+   * Als de data van eigen user is, dan een extra waarde erbij _own_user = true
    *
    * @param mixed $where 
    * @return array
@@ -297,9 +313,11 @@ Class Core_cfg_users extends Data_Core {
     if ( !el('multiple_groups',$this->settings,FALSE) ) {
       if (isset($row['cfg_user_groups']) and count($row['cfg_user_groups'])<=1) {
         $group = current($row['cfg_user_groups']);
-        $group = $group['id'];
-        $row['cfg_user_groups'] = $group;
+        $row['cfg_user_groups'] = $group['id'];
       }
+    }
+    if ($row['id']==$this->user_id) {
+      $row['_own_user'] = true;
     }
     return $row;
   }

@@ -6,7 +6,6 @@
         <span v-show="multiple && selected.length>=2" class="selected-option selected-count">{{$lang.grid_total | replace(selected.length)}}</span>
         <select-option v-for="item in selected" :label="item" extra-class="selected-option"></select-option>
       </span>
-      <!-- <span class="btn-content" v-html="loading ? text.loading : showPlaceholder || selected"></span> -->
       <span v-if="clearButton&&values.length" class="close" @click="clear()">&times;</span>
     </button>
     
@@ -19,17 +18,20 @@
         <li v-if="canSearch || multiple" class="search-item">
           <flexy-button v-if="multiple" icon="square-o" class="btn-outline-default" @click.native="invertSelection()"/>
           <input v-if="canSearch" type="text" :placeholder="searchText||text.search" class="form-control" autocomplete="off" ref="search" v-model="searchValue" @keyup.esc="show = false" />
-          <span v-if="list.length > minShow" class="search-totals">{{filteredOptions.length}}/{{list.length}}</span>
+          <span v-if="list.length > minShow" class="search-totals">{{filteredAndMaxedOptions.length}}/{{list.length}}</span>
         </li>
-        <li v-for="(option, index) in filteredOptions" :id="option[optionsValue]" :class="itemClass(index)">
+        <li v-for="(option, index) in filteredAndMaxedOptions" :id="option[optionsValue]" :class="itemClass(index)">
           <flexy-button :icon="{'check-square-o':isSelected(option[optionsValue]),'square-o':!isSelected(option[optionsValue])}" class="btn-outline-default" @click.native="select(option[optionsValue])" />
           <flexy-button v-if="insert" icon="pencil" class="btn-outline-warning" @click.native="startEdit(option)" />
           <select-option :label="option[optionsLabel]" @dblclick.native="startEdit(option)"></select-option>
         </li>
-        <li v-if="insert" class="insert-item">
-          <flexy-button @click.native="clickInsert()" icon="plus" class="btn-outline-warning" />{{insertText}}
+        <li v-show="filteredOptions.length > this.showMax" class="pagination-item">
+          <flexy-button :text="paginationText()" class="btn-outline-primary" @click.native="showAll()"/>
         </li>
       </template>
+      <li v-if="insert" class="insert-item">
+        <flexy-button @click.native="clickInsert()" icon="plus" class="btn-outline-warning" />{{insertText}}
+      </li>
       <transition v-if="notify && !closeOnSelect" name="fadein"><div class="notify in">{{limitText}}</div></transition>
     </ul>
     <transition v-if="notify && closeOnSelect" name="fadein"><div class="notify out"><div>{{limitText}}</div></div></transition>
@@ -60,12 +62,15 @@ export default {
     lang:  {type: String, default: navigator.language},
     limit: {type: Number, default: 999999},
     minSearch: {type: Number, default: 8},
-    minShow: {type: Number, default: 12},
+    minShow: {type: Number, default: 10},
+    maxShow: {type: Number, default: 20},
     multiple:  {type: Boolean, default: false},
     name:  {type: String, default: null},
-    options: {type: Array, default () { return [] }},
+    options: {type: [Array,Object], default () { return [] }},
     optionsLabel:  {type: String, default: 'label'},
     optionsValue:  {type: String, default: 'value'},
+    optionsAjax:  {type: String, default: ''},
+    primary:      {type: [String,Number], default: ''},
     parent:  {default: true},
     placeholder: {type: String, default: null},
     readonly:  {type: Boolean, default: null},
@@ -81,12 +86,15 @@ export default {
     return {
       list: [],
       loading: null,
+      optionsAjaxLoaded: false,
+      optionsAjaxApi:'',
       searchValue: null,
       show: false,
+      showMax : this.maxShow,
       editing:false,
       notify: false,
       val: null,
-      valid: null
+      valid: null,
     }
   },
   computed: {
@@ -109,9 +117,12 @@ export default {
           var label = el[self.optionsLabel];
           if (typeof(label)!=='string') label = label.toString();
           return (label.toLowerCase().search(search) >= 0) ;
-        })
+        });
       }
       return list;
+    },
+    filteredAndMaxedOptions() {
+      return this.filteredOptions.slice(0,this.showMax);
     },
     hasParent () { return this.parent instanceof Array ? this.parent.length : this.parent },
     limitText () { return this.text.limit.replace('{{limit}}', this.limit) },
@@ -124,7 +135,6 @@ export default {
       var labels = this.values.map(val => (this.list.find(o => o[this.optionsValue] === val) || {})[this.optionsLabel]).filter(val => val !== undefined);
       labels.sort();
       return labels;
-      // return '<span class="selected-option">' + labels.join('</span><span class="selected-option">') + '</span>';
     },
     showPlaceholder () { return (this.values.length === 0 || !this.hasParent) ? (this.placeholder || this.text.notSelected) : null },
     text () { return translations(this.lang) },
@@ -133,7 +143,9 @@ export default {
   },
   watch: {
     options (options) {
-      if (options instanceof Array) this.setOptions(options)
+      if (this.optionsAjaxLoaded==false) {
+        if (options instanceof Array) this.setOptions(options)
+      }
     },
     show (val) {
       if (val) {
@@ -177,6 +189,12 @@ export default {
   },
   mounted () {
     if (this._parent) this._parent.children.push(this)
+  },
+  beforeUpdate() {
+    if (this.optionsAjax!==this.optionsAjaxApi) {
+      this.loadAjaxOptions();
+      this.optionsAjaxApi = this.optionsAjax;
+    }
   },
   beforeDestroy () {
     if (this._parent) {
@@ -241,17 +259,47 @@ export default {
         self.select(self.list[i].value);
       }
     },
+    loadAjaxOptions () {
+      var self = this;
+      if (self.optionsAjax!='') {
+        // Load options
+        var url = self.optionsAjax;
+        if (self.primary>0) url += '&where='+self.primary;
+        flexyState.api({
+          url  : url,
+        }).then(function(response){
+          if (!_.isUndefined(response.data.data)) {
+            var loadedOptions = response.data.data.data;
+            self.setOptions(loadedOptions);
+            self.optionsAjaxLoaded = true;
+          }
+        });
+      }
+    },
     setOptions (options) {
-      this.list = options.map(el => {
+      this.list = this._mapOptions(options);
+      this.$emit('options', this.list)
+      // if (this.name=='id_adressen') {
+      //   console.log(this.name);
+      //   jdb.vueLog(this.list);
+      // }
+    },
+    _mapOptions(options) {
+      var self = this;
+      options.map(el => {
         if (el instanceof Object) { return el }
         let obj = {}
-        obj[this.optionsLabel] = el
-        obj[this.optionsValue] = el
+        obj[self.optionsLabel] = el
+        obj[self.optionsValue] = el
         return obj
-      })
-      this.$emit('options', this.list)
+      });
+      return options;
     },
     toggle (event) {
+      // Load Ajax options?
+      if (this.optionsAjax!=='' && !this.optionsAjaxLoaded) {
+        this.loadAjaxOptions();
+      }
       this.show = !this.show
     },
     urlChanged () {
@@ -274,6 +322,7 @@ export default {
       if (this.insert) {
         this.show = false;
         this.$emit('insert', true);
+        self.optionsAjaxLoaded = false;
       }
     },
     startEdit: function(item) {
@@ -281,6 +330,7 @@ export default {
         this.editing = item.value;
         this.show = false;
         this.$emit('update', item.value );
+        self.optionsAjaxLoaded = false; 
       }
     },
     // cancelEdit: function(item) {
@@ -297,6 +347,15 @@ export default {
     //     this.$emit('update', newItem );
     //   }
     // },
+    paginationText() {
+      var total = this.list.length;
+      if (this.filteredOptions.length > this.showMax) total = this.filteredOptions.length;
+      return this.text.show_all.replace('{total}', total);
+    },
+    showAll() {
+      this.showMax = this.list.length;
+    },
+
   },
 
 }
@@ -399,6 +458,9 @@ button>.close { margin-left: 5px;}
   width: calc(100% - 35px);
   margin-left:35px;
   margin-top:-26px;
+}
+.pagination-item {
+  padding-left:4.5rem!important;
 }
 
 </style>

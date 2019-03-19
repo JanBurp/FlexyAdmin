@@ -50,10 +50,6 @@
 	</php>
 
 	<filter>
-		<blacklist>
-      <directory suffix=".php">sys/codeigniter</directory>
-      <directory suffix=".php">sys/flexyadmin/libraries</directory>
-		</blacklist>
 	</filter>
 
 </phpunit>

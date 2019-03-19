@@ -46,9 +46,9 @@ class ApiRowTest extends ApiTestModel {
     parent::__construct('row');
   }
 
-  public function testWithoutLogin() {
-    $this->_testWithoutAuth('row');
-  }
+  // public function testWithoutLogin() {
+  //   $this->_testWithoutAuth('row');
+  // }
 
 
   public function testWithLogin() {

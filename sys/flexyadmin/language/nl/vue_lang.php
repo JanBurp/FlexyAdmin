@@ -40,7 +40,7 @@ $lang['vue_grid_edit_success']       = 'Veld is aangepast';
 
 $lang['vue_file_select']             = 'Selecteer bestand(en)';
 $lang['vue_upload']                  = 'Upload';
-$lang['vue_upload_choose']           = 'Klik, of sleep nieuwe bestanden.';
+$lang['vue_upload_choose']           = 'Sleep nieuwe bestanden hier in.';
 $lang['vue_upload_file']             = 'Bestand';
 $lang['vue_upload_size']             = 'Omvang';
 $lang['vue_upload_progress']         = 'Voortgang';
@@ -50,6 +50,8 @@ $lang['vue_upload_error']            = 'Onbekende fout';
 $lang['vue_upload_ready']            = ' is toegevoegd';
 $lang['vue_upload_count']            = ' bestanden toegevoegd';
 $lang['vue_upload_too_big']          = ' is te groot om te uploaden.';
+$lang['vue_files_for_bulkupload']    = ' bestanden van bulkupload toevoegen.';
+
 
 $lang['vue_grid_total']              = "{0} items";
 $lang['vue_grid_pagination']         = "{0} items / {1} pagina's";
@@ -72,7 +74,8 @@ $lang['vue_strap_lang'] = array(
   'months'        => array('Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'),
   'notSelected'   => 'Niets geselecteerd',
   'required'      => 'Verplicht',
-  'search'        => 'Zoek'
+  'search'        => 'Zoek',
+  'show_all'			=> 'Toon alle {total} items',
 );
 
 

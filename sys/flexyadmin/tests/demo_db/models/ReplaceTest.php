@@ -5,7 +5,7 @@ require_once(APPPATH.'/tests/CITestCase.php');
 
 class ReplaceTest extends CITestCase {
   
-  protected function setUp ()  {
+  protected function setUp() :void   {
     $this->CI->load->model('search_replace','SR');
   }
   

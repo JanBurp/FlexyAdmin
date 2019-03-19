@@ -44,7 +44,8 @@ Class Admin_menu extends CI_Model {
     $homeMenu = new Menu();
     $homeMenu->set('view_path','admin/menu-home');
     $homeMenu->set_current($current_uri);
-    if (!empty($this->_get_config_item('home_menu'))) {
+    $cfgHome = $this->_get_config_item('home_menu');
+    if (!empty($cfgHome)) {
       $homeMenu->add_items( $this->_process_items('', $this->_get_config_item('home_menu') ) );
     }
 
@@ -152,7 +153,7 @@ Class Admin_menu extends CI_Model {
               $tables = $this->data->list_tables();
               $tables = filter_by($tables,$item['pre']);
               foreach ($tables as $table) {
-                if (!in_array($table,$this->hidden_tables)) {
+                if (!in_array($table,$this->hidden_tables) and $this->flexy_auth->has_rights($table) ) {
                   if (!isset($menuItems[$table])) {
                     $menuItems[$table] = $this->_process_item('', array(
                       'name'       => $this->lang->ui($table),
@@ -185,13 +186,15 @@ Class Admin_menu extends CI_Model {
               $medias = $this->assets->get_assets_folders(false);
               foreach ($medias as $media) {
                 if (!isset($menuItems['media_'.$media])) {
-                  $menuItems['media_'.$media] = $this->_process_item('', array(
-                    'name'       => $this->lang->ui('media_'.$media),
-                    'uri'        => 'media/'.$media,
-                    'icon'       => el('icon',$item,''),
-                    'iconactive' => el('iconactive',$item,''),
-                    'class'      => el('class',$item,''),
-                  ));
+                  if ($this->flexy_auth->has_rights('media_'.$media)) {
+                    $menuItems['media_'.$media] = $this->_process_item('', array(
+                      'name'       => $this->lang->ui('media_'.$media),
+                      'uri'        => 'media/'.$media,
+                      'icon'       => el('icon',$item,''),
+                      'iconactive' => el('iconactive',$item,''),
+                      'class'      => el('class',$item,''),
+                    ));
+                  }
                 }
               }
               break;
@@ -206,24 +209,37 @@ Class Admin_menu extends CI_Model {
         }
       }
     }
+
     // Cleanup redundant splits & seperators
+
+    // Aan eind    
     end($menuItems);
     $item=current($menuItems);
     while ($item) {
       if ($item=='' or $item=='seperator' or $item=='split') {
-        $key = key($menuItems);
+        $key  = key($menuItems);
+        $item = prev($menuItems);
         unset($menuItems[$key]);
-        $item=prev($menuItems);
       }
       else $item=false;
     }
+    // Aan begin
     reset($menuItems);
-    if (count($menuItems)==1) {
-      $item = current($menuItems);
+    $item=current($menuItems);
+    while ($item) {
       if ($item=='' or $item=='seperator' or $item=='split') {
-        $menuItems = array();
+        $key  = key($menuItems);
+        $item = next($menuItems);
+        unset($menuItems[$key]);
       }
+      else $item=false;
     }
+    // if (count($menuItems)==1) {
+    //   $item = current($menuItems);
+    //   if ($item=='' or $item=='seperator' or $item=='split') {
+    //     $menuItems = array();
+    //   }
+    // }
     reset($menuItems);
     return $menuItems;
   }

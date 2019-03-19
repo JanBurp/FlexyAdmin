@@ -248,6 +248,11 @@ Class Data_Core extends CI_Model {
   private $conditional_methods = array( 'where','or_where','get_where','where_in','or_where_in','where_not_in','or_where_not_in','like','not_like','or_like','or_not_like' );
 
 
+  /**
+   * Maximum hoeveelheid optios die meteen wordt meegegeven als form opties worden opgevraagd (get_options())
+   **/
+  private $max_no_api_options = 25;
+
 
   /* --- CONSTRUCT & AUTOSET --- */
 
@@ -478,6 +483,7 @@ Class Data_Core extends CI_Model {
       
       $field_info[$field] = $info;
     }
+    // trace_($field_info);
     return $field_info;
   }
   
@@ -522,6 +528,10 @@ Class Data_Core extends CI_Model {
       }
       
       switch ($field) {
+
+        case 'user':
+          $options['table'] = 'cfg_users';
+          break;
         
         // Self parent -> tree options
         case 'self_parent':
@@ -546,6 +556,7 @@ Class Data_Core extends CI_Model {
         $settings_options[$field] = $options;
       }
     }
+    // if ($this->settings['table']=='tbl_fotoarchief') trace_($settings_options);
     return $settings_options;
   }
   
@@ -1289,16 +1300,17 @@ Class Data_Core extends CI_Model {
       $info['validation'] = is_array($info['validation']) ? implode('|',$info['validation']) : $info['validation'];
       
       // Options
-      $options = $this->get_options($field,array('many_to_many','one_to_many','one_to_one'));
-      if ($options) {
-        $info['type'] = 'select';
+      $options = $this->get_options(array($field),array('many_to_many','one_to_many','one_to_one')); // LET OP array($field) ipv $field !!!
+      if (isset($options[$field]) and !empty($options[$field])) {
+        $options = $options[$field];
+        if ($field!=='user') $info['type'] = 'select';
         if ($fieldPrefix==='media' or $fieldPrefix==='medias') {
           $info['path'] = $options['path'];
           $info['type'] = 'media';
           unset($options['path']);
         }
         if ($include_options) {
-          $options = array_keep_keys($options,array('table','data','multiple','api','insert_rights','settings'));
+          $options = array_keep_keys($options,array('table','data','multiple','api','total','insert_rights','settings'));
           $options['multiple'] = el('multiple',$options,FALSE)?'multiple':'';
           $info['options'] = $options;
         }
@@ -1681,7 +1693,7 @@ Class Data_Core extends CI_Model {
     else {
       $fields = array_keys($this->settings['options']);
     }
-    
+
     // Alle opties van de velden verzamelen
     $options=array();
     $where_primary_key = $this->tm_where_primary_key; // Bewaar dit voor opties uit andere tabellen
@@ -1694,12 +1706,12 @@ Class Data_Core extends CI_Model {
       if ($field_options) {
         $field_options;
         
-        // table
+        // table (zie ook onderaan bij relaties)
         if ( isset($field_options['table']) ) {
           $other_table = $field_options['table'];
           // Zijn er teveel opties?
-          if ($this->db->count_all($other_table)>10000) {
-            $field_options['api'] = '_api/table?table='.$other_table.'&as_options=true';
+          if ($one===FALSE and $this->db->count_all($other_table)>$this->max_no_api_options) {
+            $field_options['api'] = 'options?table='.$this->settings['table'].'&field='.$field;
           }
           // Anders geef gewoon de opties terug
           else {
@@ -1796,13 +1808,21 @@ Class Data_Core extends CI_Model {
             if (!isset($options[$what]['data'])) {
               $other_table = $relation['other_table'];
               $result_name = $relation['result_name'];
-              $this->data->table($other_table);
               $options[$result_name] = array(
                 'table'         => $other_table,
-                'data'          => $this->data->get_result_as_options(),
                 'multiple'      => true,
                 'insert_rights' => $this->flexy_auth->has_rights($other_table),
               );
+              // Voeg data of api toe
+              $this->data->table($other_table);
+              if ($one===FALSE and $this->data->count_all()>$this->max_no_api_options) {
+                $options[$result_name]['total'] = $this->data->total_rows(true);
+                $options[$result_name]['api']   = 'options?table='.$this->settings['table'].'&field='.$other_table;
+              }
+              else {
+                $options[$result_name]['data'] = $this->data->get_result_as_options();
+              }
+
               $this->data->table($this->settings['table']); // Weer terug naar huidige tabel
               $this->tm_where_primary_key = $where_primary_key;
             }
@@ -1826,7 +1846,7 @@ Class Data_Core extends CI_Model {
     
     foreach ($options as $field => $row) {
       // Empty?
-      if (count($row)===1 && isset($row['field'])) $options[$field] = FALSE;
+      if (is_array($row) && count($row)===1 && isset($row['field'])) $options[$field] = FALSE;
     }
     
     if ($one!==FALSE) return $options[$one];
@@ -2876,21 +2896,49 @@ Class Data_Core extends CI_Model {
     if (empty($this->tm_select)) $this->select( $form_set['fields'] );
     
     // Relations
+    $one_to_one = array();
     foreach ($form_set['with'] as $type => $relations) {
-      if ($type!=='many_to_one') {
-        if (is_array($relations)) {
-          foreach ($relations as $what => $fields ) {
-            if ( $what!=='user_changed') {
-              $this->with( $type, array( $what=>$fields) );
-            }
+      if (is_array($relations)) {
+        foreach ($relations as $what => $fields ) {
+          if ($type=='one_to_one') $one_to_one[$what] = $fields;
+          if ( $what!=='user_changed') {
+            $this->with( $type, array( $what=>$fields) );
           }
         }
       }
     }
 
     $result = $this->get_row( $where, 'form' );
-    // trace_sql($this->last_query());
-    // trace_($result);
+    
+    // one_to_one defaults?
+    if (!empty($one_to_one)) {
+      foreach ($one_to_one as $what => $fields) {
+        $defaults = $this->data->table($what)->get_defaults();
+        foreach ($fields as $field) {
+          if (is_null($result[$field])) {
+            $result[$field]=$defaults[$field];
+          }
+        }
+      }
+    }
+
+    // Prepare as form result, add 'many_to_one' abstracts as jsons
+    if (isset($form_set['with']['many_to_one'])) {
+      foreach ($result as $field => $value) {
+        if (isset($form_set['field_info'][$field]['options'])) {
+          $result_name = $this->settings['relations']['many_to_one'][$field]['result_name'];
+          if (!isset($result[$result_name])) {
+            $result_name .= '.abstract';
+          }
+          if (isset($result[$result_name])) {
+            $value    = $result[$field];
+            $abstract = $result[$result_name];
+            unset($result[$result_name]);
+            $result[$field] = '{"'.$value.'":"'.trim(trim($abstract,$this->settings['abstract_delimiter'])).'"}';
+          }
+        }
+      }
+    }
     return $result;
   }
   
@@ -4150,7 +4198,7 @@ Class Data_Core extends CI_Model {
           switch ($equals) {
             case 'exact': 
               if (strpos($field,'AES')!==false) $field.=' = ';
-              $this->or_where( $field, $term, FALSE);
+              $this->or_where( $field, '"'.$term.'"', FALSE);
               break;
             case 'word':
               $this->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
@@ -4689,7 +4737,7 @@ Class Data_Core extends CI_Model {
             $select .= '"\"'.$field.'\":", '  .$select_field['select'].', ",", ';
           }
           else {
-            $select .= '"\"'.$field.'\":\"", '.$select_field['select'].', "\",", ';
+            $select .= '"\"'.$field.'\":\"", REPLACE('.$select_field['select'].',"\"","`"), "\",", ';
           }
         }
         // remove last ","
@@ -4702,7 +4750,7 @@ Class Data_Core extends CI_Model {
           $select .= ', ""';
         }
         // ready
-        $select = 'CONCAT( "{", IFNULL( GROUP_CONCAT( "\"",'.$select_fields['id']['select'].',"\":{", '.$select.', "}" SEPARATOR ", "), ""), "}" ) `'.$as_table.'.json`';
+        $select = 'CONCAT("{",IFNULL(GROUP_CONCAT("\"",'.$select_fields['id']['select'].',"\":{",'.$select.',"}" SEPARATOR ","),""),"}") `'.$as_table.'.json`';
       }
     }
     $select = trim(trim($select),',');
@@ -4991,7 +5039,7 @@ Class Data_Core extends CI_Model {
     }
     
     // Is user id nodig?
-    if ( $this->field_exists('user_changed') or isset($this->settings['restricted_rights']) ) {
+    if ( $this->field_exists('user') or $this->field_exists('user_changed') or isset($this->settings['restricted_rights']) ) {
       if ( !isset( $this->user_id )) {
         $this->set_user_id();
       }

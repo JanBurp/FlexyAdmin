@@ -292,9 +292,18 @@ class Forms extends Module {
       $data=$form->get_data();
     
       // Spamcheck?
-      if ($this->settings('check_for_spam')) {
+      if ($checkfields = $this->settings('check_for_spam')) {
         $this->CI->load->library('spam');
-        $this->spam                     = $this->CI->spam->check($data,'__test__');
+        if (!is_array($checkfields)) {
+          // Geen velden ingesteld, controleer dan alle 'required' velden
+          $checkfields = array();
+          foreach($formFields as $field => $info) {
+            if (isset($info['validation']) and strpos($info['validation'],'required')!==FALSE) {
+              $checkfields[]=$field;
+            }
+          }
+        }
+        $this->spam                     = $this->CI->spam->check($data,'__test__',$checkfields);
         $this->settings['spam_rapport'] = $this->CI->spam->get_rapport();
         $data['int_spamscore']          = $this->CI->spam->get_score();
         unset($formFields['__test__']);
