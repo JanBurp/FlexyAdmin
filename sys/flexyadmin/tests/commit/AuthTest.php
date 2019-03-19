@@ -123,12 +123,12 @@ class AuthTest extends CITestCase {
     error_reporting($error_reporting);
   }
   
-  protected function setUp() {
+  protected function setUp() :void  {
     // start always with logged out user
     // if ($this->CI->flexy_auth->logged_in()) $this->CI->flexy_auth->logout();
   }
   
-  protected function tearDown() {
+  protected function tearDown() :void  {
     // always logout
     // if ($this->CI->flexy_auth->logged_in()) $this->CI->flexy_auth->logout();
   }
@@ -187,7 +187,7 @@ class AuthTest extends CITestCase {
     $expected_rights = $this->users[1]['rights'];
 
     $user_id = $this->CI->flexy_auth->register( $identity, $password, $email, $additional, $groups);
-    $this->assertInternalType( 'integer', $user_id, 'Attempt to create user `'.$identity.'` Failed');
+    $this->assertIsInt( $user_id, 'Attempt to create user `'.$identity.'` Failed');
     $this->assertGreaterThan( 3, $user_id, 'Attempt to create user `'.$identity.'` Failed');
 
     // Try to login, check rights, logout and remove user

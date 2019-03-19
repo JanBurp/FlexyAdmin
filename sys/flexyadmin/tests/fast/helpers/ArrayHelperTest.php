@@ -4,7 +4,7 @@ require_once(APPPATH.'/tests/CITestCase.php');
 
 class ArrayHelperTest extends CITestCase {
 
-  protected function setUp() {
+  protected function setUp() :void  {
     $this->CI->load->helper('array');
   }
 

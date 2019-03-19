@@ -6,7 +6,7 @@ class URILibraryTest extends CITestCase {
 
   private $uri;
   
-  protected function setUp ()  {
+  protected function setUp() :void   {
     $this->CI->uri->set_uri('_unittest/LibrariesSuite');
   }
   

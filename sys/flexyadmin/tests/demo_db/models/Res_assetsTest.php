@@ -4,10 +4,10 @@ require_once(APPPATH.'/tests/CITestCase.php');
 
 class Res_assetsTest extends CITestCase {
   
-  protected function setUp ()  {
+  protected function setUp() :void   {
   }
   
-  protected function tearDown() {
+  protected function tearDown() :void  {
   }
   
   public function test_config() {

@@ -5,11 +5,11 @@ require_once(APPPATH.'/tests/CITestCase.php');
 
 class DataTest extends CITestCase {
   
-  protected function setUp ()  {
+  protected function setUp() :void   {
     $this->CI->load->model('data/data');
   }
   
-  protected function tearDown() {
+  protected function tearDown() :void  {
   }
   
   
@@ -75,10 +75,10 @@ class DataTest extends CITestCase {
     $this->assertEquals( array(), $form_set['with'] );
     $this->assertEquals( 'select', $form_set['field_info']['str_module']['type'] );
     $this->assertEquals( 'media', $form_set['field_info']['medias_fotos']['type'] );
-    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['options']);
-    $this->assertInternalType( 'array', $form_set['field_info']['str_module']['options']['data']);
-    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['options']);
-    $this->assertInternalType( 'array', $form_set['field_info']['medias_fotos']['options']['data']);
+    $this->assertIsArray( $form_set['field_info']['str_module']['options']);
+    $this->assertIsArray( $form_set['field_info']['str_module']['options']['data']);
+    $this->assertIsArray( $form_set['field_info']['medias_fotos']['options']);
+    $this->assertIsArray( $form_set['field_info']['medias_fotos']['options']['data']);
     $this->assertEquals( 'pictures', $grid_set['field_info']['medias_fotos']['path'] );
   }
 
@@ -109,12 +109,12 @@ class DataTest extends CITestCase {
     // tbl_menu
     $this->CI->data->table( 'tbl_menu' );
     $options = $this->CI->data->get_options();
-    $this->assertInternalType( 'array', $options );
+    $this->assertIsArray( $options );
     $this->assertArrayHasKey( 'str_module', $options );
     $this->assertGreaterThanOrEqual( 3, count($options) );
     // tbl_menu.str_module
     $options = $this->CI->data->get_options( 'str_module' );
-    $this->assertInternalType( 'array', $options );
+    $this->assertIsArray( $options );
     $this->assertArrayHasKey( 'field', $options );
     $this->assertEquals( 'str_module', $options['field'] );
     // $this->assertArrayHasKey( 'multiple', $options );
@@ -125,7 +125,7 @@ class DataTest extends CITestCase {
     $this->assertArrayHasKey( 'name', current($options['data']));
     // tbl_menu.medias_fotos
     $options = $this->CI->data->get_options( 'medias_fotos' );
-    $this->assertInternalType( 'array', $options );
+    $this->assertIsArray( $options );
     $this->assertArrayHasKey( 'field', $options );
     $this->assertEquals( 'medias_fotos', $options['field'] );
     $this->assertArrayHasKey( 'model', $options );
@@ -138,12 +138,12 @@ class DataTest extends CITestCase {
     // $this->assertEquals( 2, count($options['data']) );
     // $current = current($options['data']);
     // $this->assertArrayHasKey( 'name', $current);
-    // $this->assertInternalType( 'array', $current['name']);
+    // $this->assertIsArray( $current['name']);
     // $this->assertArrayHasKey( 'value', $current);
-    // $this->assertInternalType( 'string', $current['value']);
+    // $this->assertIsString( $current['value']);
     // tbl_menu.self_parent
     $options = $this->CI->data->get_options( 'self_parent' );
-    $this->assertInternalType( 'array', $options );
+    $this->assertIsArray( $options );
     $this->assertArrayHasKey( 'field', $options );
     $this->assertEquals( 'self_parent', $options['field'] );
     $this->assertArrayNotHasKey( 'multiple', $options );
@@ -152,17 +152,17 @@ class DataTest extends CITestCase {
     $current = current($options['data']);
     $this->assertArrayHasKey( 'name', $current);
     $this->assertArrayHasKey( 'value', $current);
-    $this->assertInternalType( 'string', $current['name']);
-    $this->assertInternalType( 'string', $current['value']);
+    $this->assertIsString( $current['name']);
+    $this->assertIsString( $current['value']);
 
     // tbl_kinderen
     $this->CI->data->table( 'tbl_kinderen' );
     $options = $this->CI->data->get_options();
-    $this->assertInternalType( 'array', $options );
+    $this->assertIsArray( $options );
     $this->assertEquals( 2, count($options) );
     // tbl_kinderen.id_adressen
     $options = $this->CI->data->get_options('id_adressen');
-    $this->assertInternalType( 'array', $options );
+    $this->assertIsArray( $options );
     $this->assertArrayHasKey( 'field', $options );
     $this->assertEquals( 'id_adressen', $options['field'] );
     $this->assertArrayHasKey( 'table', $options );
@@ -173,11 +173,11 @@ class DataTest extends CITestCase {
     $current = current($options['data']);
     $this->assertArrayHasKey( 'name', $current);
     $this->assertArrayHasKey( 'value', $current);
-    $this->assertInternalType( 'string', $current['name']);
-    // $this->assertInternalType( 'string', $current['value']);
+    $this->assertIsString( $current['name']);
+    // $this->assertIsString( $current['value']);
     // tbl_kinderen.id_groepen
     $options = $this->CI->data->get_options('id_groepen');
-    $this->assertInternalType( 'array', $options );
+    $this->assertIsArray( $options );
     $this->assertArrayHasKey( 'field', $options );
     $this->assertEquals( 'id_groepen', $options['field'] );
     $this->assertArrayHasKey( 'table', $options );
@@ -188,17 +188,17 @@ class DataTest extends CITestCase {
     $current = current($options['data']);
     $this->assertArrayHasKey( 'name', $current);
     $this->assertArrayHasKey( 'value', $current);
-    $this->assertInternalType( 'string', $current['name']);
-    // $this->assertInternalType( 'string', $current['value']);
+    $this->assertIsString( $current['name']);
+    // $this->assertIsString( $current['value']);
     
     // tbl_groepen
     $this->CI->data->table( 'tbl_groepen' );
     $options = $this->CI->data->get_options();
-    $this->assertInternalType( 'array', $options );
+    $this->assertIsArray( $options );
     $this->assertGreaterThanOrEqual( 1, count($options) );
     // tbl_groepen.media_tekening
     $options = $this->CI->data->get_options('media_tekening');
-    $this->assertInternalType( 'array', $options );
+    $this->assertIsArray( $options );
     $this->assertArrayHasKey( 'field', $options );
     $this->assertEquals( 'media_tekening', $options['field'] );
     $this->assertArrayHasKey( 'model', $options );
@@ -211,11 +211,11 @@ class DataTest extends CITestCase {
     // $current = current($options['data']);
     // $this->assertArrayHasKey( 'name', $current);
     // $this->assertArrayHasKey( 'value', $current);
-    // $this->assertInternalType( 'array', $current['name']);
-    // $this->assertInternalType( 'string', $current['value']);
+    // $this->assertIsArray( $current['name']);
+    // $this->assertIsString( $current['value']);
     // tbl_groepen.tbl_adressen
     // $options = $this->CI->data->get_options('tbl_adressen');
-    // $this->assertInternalType( 'array', $options );
+    // $this->assertIsArray( $options );
     // $this->assertArrayHasKey( 'table', $options );
     // $this->assertEquals( 'tbl_adressen', $options['table'] );
     // $this->assertArrayHasKey( 'multiple', $options );
@@ -225,7 +225,7 @@ class DataTest extends CITestCase {
     // $current = current($options['data']);
     // $this->assertArrayHasKey( 'name', $current);
     // $this->assertArrayHasKey( 'value', $current);
-    // $this->assertInternalType( 'string', $current['name']);
+    // $this->assertIsString( $current['name']);
     // $this->assertInternalType( 'integer', $current['value']);
     
     
@@ -306,8 +306,8 @@ class DataTest extends CITestCase {
   public function test_many_to_one_data() {
     $this->CI->data->table( 'tbl_kinderen' );
     $grid_set = $this->CI->data->get_setting('grid_set');
-    $this->assertInternalType( 'array', $grid_set );
-    $this->assertInternalType( 'array', $grid_set['with']['many_to_one'] );
+    $this->assertIsArray( $grid_set );
+    $this->assertIsArray( $grid_set['with']['many_to_one'] );
 
     // tbl_kinderen - abstract
     $query = $this->CI->data->table( 'tbl_kinderen' )
@@ -326,7 +326,7 @@ class DataTest extends CITestCase {
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_first_name','tbl_adressen.abstract'), $keys );
     // klopt abstract?
-    $this->assertInternalType( 'string', $row['tbl_adressen.abstract'] );
+    $this->assertIsString( $row['tbl_adressen.abstract'] );
 
     // tbl_kinderen - full (automatic 'id')
     $query = $this->CI->data->select('str_first_name')->with( 'many_to_one', array('id_adressen'=>'str_address') )->get();
@@ -340,7 +340,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_first_name','tbl_adressen.id','tbl_adressen.str_address'), $keys );
-    $this->assertInternalType( 'string', $row['tbl_adressen.str_address'] );
+    $this->assertIsString( $row['tbl_adressen.str_address'] );
 
     // tbl_kinderen ->get_result()
     $array = $this->CI->data->select('str_first_name')->with( 'many_to_one', array('id_adressen'=>'str_address') )->get_result();
@@ -351,7 +351,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_first_name','tbl_adressen'), $keys );
-    $this->assertInternalType( 'array', $row['tbl_adressen'] );
+    $this->assertIsArray( $row['tbl_adressen'] );
     $this->assertEquals( 2, count($row['tbl_adressen']) );
 
     // tbl_kinderen ->where()->get_result()
@@ -365,7 +365,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_first_name','tbl_adressen'), $keys );
-    $this->assertInternalType( 'array', $row['tbl_adressen'] );
+    $this->assertIsArray( $row['tbl_adressen'] );
     $this->assertEquals( 2, count($row['tbl_adressen']) );
     $this->assertEquals( 'Schooolstraat 1', $row['tbl_adressen']['str_address'] );
     
@@ -403,7 +403,7 @@ class DataTest extends CITestCase {
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_city','tbl_kinderen.id','tbl_kinderen.abstract'), $keys );
     // klopt abstract?
-    $this->assertInternalType( 'string', $row['tbl_kinderen.abstract'] );
+    $this->assertIsString( $row['tbl_kinderen.abstract'] );
 
     // tbl_adressen ->get_result()
     $array = $this->CI->data->select( 'id,str_city,str_address')
@@ -416,7 +416,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_city','str_address','tbl_kinderen'), $keys );
-    $this->assertInternalType( 'array', $row['tbl_kinderen'] );
+    $this->assertIsArray( $row['tbl_kinderen'] );
     $this->assertEquals( 11, count($row['tbl_kinderen']) );
 
     // tbl_adressen ->where()->get_result()
@@ -431,7 +431,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_city','tbl_kinderen'), $keys );
-    $this->assertInternalType( 'array', $row['tbl_kinderen'] );
+    $this->assertIsArray( $row['tbl_kinderen'] );
     $this->assertEquals( 1, count($row['tbl_kinderen']) );
     $this->assertEquals( 'Adam', $row['tbl_kinderen'][2]['str_first_name'] );
 
@@ -486,7 +486,7 @@ class DataTest extends CITestCase {
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_title','tbl_adressen.id','tbl_adressen.abstract'), $keys );
     // klopt abstract?
-    $this->assertInternalType( 'string', $row['tbl_adressen.abstract'] );
+    $this->assertIsString( $row['tbl_adressen.abstract'] );
 
     // tbl_groepen - full
     $query = $this->CI->data->select('str_title')
@@ -502,7 +502,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_title','tbl_adressen.id','tbl_adressen.str_address'), $keys );
-    $this->assertInternalType( 'string', $row['tbl_adressen.str_address'] );
+    $this->assertIsString( $row['tbl_adressen.str_address'] );
 
     // tbl_groepen - grouped
     $query = $this->CI->data->select('str_title')
@@ -518,7 +518,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_title','tbl_adressen.json'), $keys );
-    $this->assertInternalType( 'string', $row['tbl_adressen.json'] );
+    $this->assertIsString( $row['tbl_adressen.json'] );
 
     // tbl_groepen ->get_result()
     $array = $this->CI->data->select('str_title')->with( 'many_to_many', array('rel_groepen__adressen'=>'str_address') )->get_result();
@@ -529,7 +529,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_title','tbl_adressen'), $keys );
-    $this->assertInternalType( 'array', $row['tbl_adressen'] );
+    $this->assertIsArray( $row['tbl_adressen'] );
     $this->assertGreaterThan( 1, count($row['tbl_adressen']) );
 
     // tbl_groepen ->where()->get_result()
@@ -544,7 +544,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_title','tbl_adressen'), $keys );
-    $this->assertInternalType( 'array', $row['tbl_adressen'] );
+    $this->assertIsArray( $row['tbl_adressen'] );
     $this->assertEquals( 1, count($row['tbl_adressen']) );
     $sub=current($row['tbl_adressen']);
     $this->assertEquals( 'Schooolstraat 1', $sub['str_address'] );
@@ -561,7 +561,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_title','tbl_adressen'), $keys );
-    $this->assertInternalType( 'array', $row['tbl_adressen'] );
+    $this->assertIsArray( $row['tbl_adressen'] );
     $this->assertGreaterThan( 1, count($row['tbl_adressen']) );
     $found = find_row_by_value( $row['tbl_adressen'], 'Schooolstraat 1', 'str_address');
     $this->assertGreaterThanOrEqual( 1, count($found) );
@@ -748,7 +748,7 @@ class DataTest extends CITestCase {
       $this->CI->data->set( array('str_update'=>$random_string ) );
       $this->CI->data->update();
     } catch (Exception $ex) {
-      $this->assertContains( "no condition set", $ex->getMessage());
+      $this->assertStringContainsString( "no condition set", $ex->getMessage());
     }
 
     // UPDATE BOTH in een aanroep
@@ -792,10 +792,10 @@ class DataTest extends CITestCase {
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( $nr_others, $info['affected_rel_rows'] );
     $row = $this->CI->data->select('id,str_insert,str_update')->with('many_to_many')->where( 'tbl_crud.id',$insert_id )->get_row();
-    $this->assertInternalType( 'array', $row );
+    $this->assertIsArray( $row );
     $this->assertEquals( $insert_id, $row['id'] );
     $this->assertEquals( $insert_string, $row['str_insert'] );
-    $this->assertInternalType( 'array', $row['tbl_crud2'] );
+    $this->assertIsArray( $row['tbl_crud2'] );
     $this->assertLessThanOrEqual( $nr_others, count($row['tbl_crud2']) );
 
     // DELETE
@@ -815,7 +815,7 @@ class DataTest extends CITestCase {
     $row = $this->CI->data->where( 'str_username', 'test')
                           ->with( 'many_to_many' )
                           ->get_row();
-    $this->assertInternalType( 'array', $row['cfg_user_groups'] );
+    $this->assertIsArray( $row['cfg_user_groups'] );
     $this->assertEquals( 2, current($row['cfg_user_groups'])['id'] );
     $id = $row['id'];
     // Update and check again
@@ -829,7 +829,7 @@ class DataTest extends CITestCase {
                           ->with( 'many_to_many' )
                           ->get_row();
     $this->assertEquals( 3, current($row['cfg_user_groups'])['id'] );
-    $this->assertInternalType( 'array', $row['cfg_user_groups'] );
+    $this->assertIsArray( $row['cfg_user_groups'] );
     // Update and check again
     $result = $this->CI->data->where( 'str_username', 'test')
                              ->with( 'many_to_many' )
@@ -839,7 +839,7 @@ class DataTest extends CITestCase {
                           ->with( 'many_to_many' )
                           ->get_row();
     $this->assertEquals( 2, current($row['cfg_user_groups'])['id'] );
-    $this->assertInternalType( 'array', $row['cfg_user_groups'] );
+    $this->assertIsArray( $row['cfg_user_groups'] );
 
     // Test aanpassen wachtwoord, een leeg wachtwoord mag niet in de set blijven staan
     $this->CI->data->table('cfg_users');
@@ -897,7 +897,7 @@ class DataTest extends CITestCase {
     $this->CI->data->table('tbl_kinderen');
     $page1 = $this->CI->data->get_grid();
     $info = $this->CI->data->get_query_info();
-    $this->assertInternalType( 'array', $page1 );
+    $this->assertIsArray( $page1 );
     $this->assertEquals( 20, count($page1) );
     $this->assertEquals( 20, $info['num_rows'] );
     $this->assertEquals( 92, $info['total_rows'] );
@@ -905,7 +905,7 @@ class DataTest extends CITestCase {
     // Page2
     $page2 = $this->CI->data->get_grid( 20, 20 );
     $info = $this->CI->data->get_query_info();
-    $this->assertInternalType( 'array', $page2 );
+    $this->assertIsArray( $page2 );
     $this->assertEquals( 20, count($page2) );
     $this->assertEquals( 20, $info['num_rows'] );
     $this->assertEquals( 92, $info['total_rows'] );

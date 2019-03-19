@@ -44,10 +44,6 @@
 	</php>
 
 	<filter>
-		<blacklist>
-      <directory suffix=".php">codeigniter</directory>
-      <directory suffix=".php">flexyadmin/libraries</directory>
-		</blacklist>
 	</filter>
 
 </phpunit>

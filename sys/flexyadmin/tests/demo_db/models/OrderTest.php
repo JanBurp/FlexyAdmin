@@ -15,13 +15,13 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='2', `uri`='nog_een_subpagina' 
 UPDATE `tbl_menu` SET `order`='5', `self_parent`='0', `uri`='contact' WHERE `id`='4';
 ";
 
-  protected function setUp ()  {
+  protected function setUp() :void   {
     $this->CI->load->model('order');
     $this->CI->load->dbutil();
     $this->CI->dbutil->import($this->test_sql);
   }
   
-  protected function tearDown() {
+  protected function tearDown() :void  {
     $this->CI->order->reset($this->table);
     $this->CI->load->dbutil();
     $this->CI->dbutil->import($this->test_sql);
