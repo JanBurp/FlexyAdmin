@@ -1,3 +1,15 @@
+=3.5.30
+
+[nl]
+- Update naar CodeIgniter 3.1.10
+[/nl]
+[en]
+- Update to CodeIgniter 3.1.10
+[/en]
+
+[UPDATES]
+- CodeIgniter 3.1.10
+
 =3.5.29
 
 [nl]
