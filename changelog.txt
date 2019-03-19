@@ -1,3 +1,12 @@
+=3.5.29
+
+
+[BUGS]
+- Assets->delete_unused_files() needed more time (since 3.5.27)
+
+[FEATURES]
+- Cleanup unused files added to Assets actions
+
 =3.5.28
 
 [nl]
