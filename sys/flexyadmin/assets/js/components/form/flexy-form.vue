@@ -1,5 +1,7 @@
 <script>
 
+var he = require('he');
+
 import jdb              from '../../jdb-tools.js'
 
 import flexyState       from '../../flexy-state.js'
@@ -309,7 +311,9 @@ export default {
       if (itemTitle) {
         title += ' - '+itemTitle.join(this.abstract_delimiter);
       }
-      return title;
+
+      return he.decode(title,{});
+      // return title;
     },
     
     label : function(field) {
