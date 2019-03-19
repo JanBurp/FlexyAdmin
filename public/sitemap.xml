@@ -26,7 +26,7 @@
 		<content>Een subpagina.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/een_pagina</loc>
+		<loc>http://www.flexyadmin.com/een_pagina/nog_een_subpagina</loc>
 		<priority>0.64</priority>
 		<title>Nog een subpagina</title>
 		<content>Met plaatje:.</content>

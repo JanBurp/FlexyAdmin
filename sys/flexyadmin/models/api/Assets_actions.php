@@ -29,6 +29,11 @@ class Assets_actions extends Api_Model {
       case 'resize':
         $this->resize();
         break;
+
+      case 'cleanup':
+        $this->cleanup();
+        break;
+
     }
 
     return $this->_result_ok();
@@ -48,6 +53,14 @@ class Assets_actions extends Api_Model {
     $this->_set_message( 'Images in: `'.ucwords($paths).'` are resized.' );
     $this->_set_message_type( 'danger' );
   }
+
+  private function cleanup() {
+    $deleted = $this->assets->delete_unused_files();
+    $this->_set_message( '<h2>'.count($deleted) .' files deleted</h2>' );
+    $this->_set_message_type( 'danger' );
+  }
+
+
 
   
   

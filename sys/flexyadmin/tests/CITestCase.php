@@ -1,5 +1,8 @@
 <?php
 
+// use the following namespace
+use PHPUnit\Framework\TestCase;
+
 /**
  * Base class for CodeIgniter unit tests
  * 
@@ -9,7 +12,7 @@
  * @author		Fernando Piancastelli
  * @link		https://github.com/fmalk/codeigniter-phpunit
  */
-abstract class CITestCase extends PHPUnit_Framework_TestCase
+abstract class CITestCase extends TestCase
 {
 	/**
 	 * Reference to CodeIgniter

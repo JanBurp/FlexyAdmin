@@ -344,6 +344,7 @@ Class Core_res_assets extends Data_Core {
    * @return array
    */
   public function delete_unused_files() {
+    ini_set('max_execution_time', 0); // for infinite time of execution 
     $paths = $this->get_assets_folders(FALSE);
     $delete = array();
     foreach ($paths as $path) {
@@ -530,12 +531,18 @@ Class Core_res_assets extends Data_Core {
           'name'  => 'Refresh Assets',
           'icon'  => 'refresh',
           'url'   => 'assets_actions?action=refresh',
-          'class' => 'text-warning',
+          'class' => 'text-success',
         ),
         array(
           'name'  => 'Resize Images',
           'icon'  => 'arrows-alt',
           'url'   => 'assets_actions?action=resize',
+          'class' => 'text-warning',
+        ),
+        array(
+          'name'  => 'Delete Unused Files',
+          'icon'  => 'remove',
+          'url'   => 'assets_actions?action=cleanup',
           'class' => 'text-danger',
         ),
       );

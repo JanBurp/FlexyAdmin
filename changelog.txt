@@ -1,3 +1,22 @@
+=3.5.29
+
+[nl]
+- Enkele technische verbeteringen en bugs
+[/nl]
+[en]
+- Some small technical improvements & bugs
+[/en]
+
+[BUGS]
+- Assets->delete_unused_files() needed more time (since 3.5.27)
+- Form title without html entities
+
+[FEATURES]
+- Cleanup unused files added to Assets actions
+
+[UPDATES]
+- PhpUnit to 8.x
+
 =3.5.28
 
 [nl]

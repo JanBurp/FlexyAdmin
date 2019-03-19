@@ -11,3 +11,4 @@ site/cache/tbl_links_checked
 site/assets/_tmp/*
 userguide/vendor
 .DS_Store
+/public/.phpunit.result.cache
