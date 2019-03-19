@@ -7,7 +7,6 @@
 - Some small technical improvements & bugs
 [/en]
 
-
 [BUGS]
 - Assets->delete_unused_files() needed more time (since 3.5.27)
 - Form title without html entities
