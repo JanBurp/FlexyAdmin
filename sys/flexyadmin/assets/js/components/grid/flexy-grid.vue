@@ -1019,7 +1019,6 @@ export default {
       return this.draggable.item == id;
     },
     draggable_onStart: function(event){
-      // console.log('draggable_onStart',this.altKey);
       var index = event.oldIndex;
       // Onthoud 'id' van draggable item
       this.draggable.item = event.item.dataset.id;
@@ -1045,7 +1044,8 @@ export default {
     },
     draggable_onMove : function(event) {
       this.dragPosition = '';
-      var rect = event.target.getBoundingClientRect();
+      // console.log('draggable_onMove',event);
+      var rect = event.draggedRect;
       if (event.relatedRect.top <= rect.top) this.dragPosition = 'top';
       if (event.relatedRect.top+event.relatedRect.height >= rect.bottom) this.dragPosition = 'bottom';
       // if (this.dragPosition!=='') {
@@ -1089,7 +1089,7 @@ export default {
           }
           items[oldIndex].self_parent.value = parent;
         }
-        console.log(oldIndex,newIndex,next,number_of_children);
+        // console.log(oldIndex,newIndex,next,number_of_children);
 
         // Verplaats item & children
         if (number_of_children>0 && newIndex>oldIndex) {
@@ -1116,7 +1116,7 @@ export default {
         }
         
         var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
-        console.log(newOrder);
+        // console.log(newOrder);
         if (self.draggable.children && newIndex>oldIndex) newOrder = newOrder - self.draggable.children.length;
         self.postNewOrder( newOrder ).then(function(response){
           self.draggable.item = false;

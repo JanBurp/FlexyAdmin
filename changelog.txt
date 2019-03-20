@@ -1,3 +1,16 @@
+=3.5.31
+
+[nl]
+- Enkele technische verbeteringen en bugs
+[/nl]
+[en]
+- Some small technical improvements & bugs
+[/en]
+
+
+[BUGS]
+- Probleem met verplaatsen van (menu)items (sinds 3.5.29)
+
 =3.5.30
 
 [nl]
