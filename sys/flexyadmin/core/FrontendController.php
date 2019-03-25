@@ -224,7 +224,8 @@ class FrontEndController extends MY_Controller {
     // Order modules
     if ($order = $this->config->item('module_order')) {
       foreach ($order as $key=>$item) {
-        if ($found = array_search($item,$modules))
+        $found = array_search($item,$modules);
+        if ($found!==FALSE)
           unset($modules[$found]);
         else
           unset($order[$key]);
