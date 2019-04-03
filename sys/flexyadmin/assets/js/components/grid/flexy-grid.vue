@@ -1269,7 +1269,7 @@ export default {
           </thead>
         
           <!-- GRID BODY -->
-          <draggable v-if="hasData()" :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd" :move="draggable_onMove">
+          <draggable v-if="hasData()" :list="items" tag="tbody" v-bind="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd" :move="draggable_onMove">
 
             <!-- UPLOAD ROW -->
             <tr v-if="gridType()==='media'" class="grid-upload" :class="{'dropping':dropUploadHover}">
