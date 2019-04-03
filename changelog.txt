@@ -1,3 +1,16 @@
+=3.5.32
+
+[nl]
+- Enkele technische verbeteringen en bugs
+[/nl]
+[en]
+- Some small technical improvements & bugs
+[/en]
+
+[BUGS]
+- Ordering of modules
+- Update vuedraggable
+
 =3.5.31
 
 [nl]
