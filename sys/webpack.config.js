@@ -5,6 +5,8 @@ var LiveReloadPlugin  = require('webpack-livereload-plugin');
 // var CompressionPlugin = require("compression-webpack-plugin");
 var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
+process.noDeprecation = true;
+
 module.exports = [];
 
 
