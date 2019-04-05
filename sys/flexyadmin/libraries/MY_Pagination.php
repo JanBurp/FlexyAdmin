@@ -112,6 +112,10 @@ class MY_Pagination extends CI_Pagination {
 	private function _auto_set() {
 		$CI=&get_instance();
 		$uri=$CI->uri->segment_array();
+    // is homepage?
+    if (empty($uri)) {
+      $uri[] = $CI->uri->get_home();
+    }
 		// find segment and base_url
 		$segment=array_search($this->auto_uripart,$uri);
 		if ( ! $segment) $segment=count($uri)+1;
