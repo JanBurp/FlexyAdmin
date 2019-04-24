@@ -21,10 +21,10 @@
 $active_group = "default";
 $query_builder = TRUE;
 
-$db['default']['hostname'] = "";
-$db['default']['username'] = "";
-$db['default']['password'] = "";
-$db['default']['database'] = "";
+$db['default']['hostname'] = "flexya1.sql.ghserv.net";
+$db['default']['username'] = "flexyadmin";
+$db['default']['password'] = "Gong8QuoogByicsilUkunkidCykfot";
+$db['default']['database'] = "flexyadmin_com_demo";
 
 
 /*
