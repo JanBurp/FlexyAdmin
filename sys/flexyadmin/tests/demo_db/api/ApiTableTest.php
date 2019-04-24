@@ -6,10 +6,9 @@ class ApiTableTest extends ApiTestModel {
     parent::__construct('table');
   }
 
-  public function testWithoutLogin() {
-    
-    $this->_testWithoutAuth('table');
-  }
+  // public function testWithoutLogin() {
+  //   $this->_testWithoutAuth('table');
+  // }
   
   public function testWithWrongParameters() {
     

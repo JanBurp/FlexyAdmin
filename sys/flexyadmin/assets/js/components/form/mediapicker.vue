@@ -56,7 +56,7 @@ export default {
         if (array[i]!=='') {
           thumbs[i] = {
             value : array[i],
-            src   : '_media/thumb/' + this.path +'/'+ array[i],
+            src   : _flexy.media+'thumb/' + this.path +'/'+ array[i],
             alt   : array[i],
           }
         }
@@ -142,7 +142,7 @@ export default {
       <div class="mediapicker-thumb mediapicker-thumb-button" v-if="!openpicker">
         <flexy-button :icon="{'plus':!choose,'chevron-up':choose}" class="btn-outline-warning" @click.native="choose=!choose" />
       </div>
-      <draggable :list="thumbs()" :options="draggableOptions" @end="dragEnd($event)">
+      <draggable :list="thumbs()" v-bind="draggableOptions" @end="dragEnd($event)">
         <div v-for="(img,index) in thumbs()" class="mediapicker-thumb">
           <flexy-button icon="remove" class="mediapicker-remove-button btn-danger" @click.native="removeMediaIndex(index)"/>
           <flexy-thumb size="lg" :src="img.src" :alt="img.alt" :value="img.value" />

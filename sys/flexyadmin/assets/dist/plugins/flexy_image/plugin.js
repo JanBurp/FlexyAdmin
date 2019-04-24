@@ -30,7 +30,7 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
           };
         }
       }
-      var url = encodeURI('_admin/load/editor/image?path='+path+'&selected='+JSON.stringify(selectedImage));
+      var url = encodeURI(_flexy.index_page+'_admin/load/editor/image?path='+path+'&selected='+JSON.stringify(selectedImage));
       
       // Open window with a specific url
       editor.windowManager.open({

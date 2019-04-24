@@ -67,7 +67,7 @@ export default {
 </template>
 
 <style>
-  .flexy-modal {display:block;height:auto;background-color:rgba(0,0,0,.5)}
+  .flexy-modal {display:block;height:100%;background-color:rgba(0,0,0,.5)}
   .flexy-modal.hidden {display:block;height:0px;}
   .flexy-modal .modal-header .flexy-button {float:right;}
   .flexy-modal .modal-footer .btn {margin-left:1rem;}

@@ -221,6 +221,17 @@ class FrontEndController extends MY_Controller {
 			$user_modules=explode('|',$user_modules);
 			$modules=array_merge($modules,$user_modules);
 		}
+    // Order modules
+    if ($order = $this->config->item('module_order')) {
+      foreach ($order as $key=>$item) {
+        $found = array_search($item,$modules);
+        if ($found!==FALSE)
+          unset($modules[$found]);
+        else
+          unset($order[$key]);
+      }
+      $modules = array_merge($order,$modules);
+    }
 		// Keep it so modules can check what other modules are called
     $this->site['modules']=array_fill_keys($modules,'');
 		// Loop trough all possible modules, load them, call them, and process return value

@@ -2,6 +2,16 @@
 
 $config['table']           = 'tbl_groepen';
 
+$config['options'] = array(
+	'str_soort' => array(
+		'data' => array(
+			'vak' 	=> 'vak',
+			'groep' => 'groep',
+		),
+	),
+);
+
+
 $config['relations'] = array(
 	'one_to_many' => array(
 		'tbl_kinderen'  => array(

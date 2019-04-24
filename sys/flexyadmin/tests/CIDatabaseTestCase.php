@@ -1,5 +1,9 @@
 <?php
 
+// use the following namespace
+use PHPUnit\Framework\Database_TestCase;
+
+
 /**
  * Base class for CodeIgniter integration tests
  * 
@@ -12,7 +16,7 @@
  * 
  * @property-read resource	$db		Reference to database
  */
-abstract class CIDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
+abstract class CIDatabaseTestCase extends Database_TestCase
 {
 	/**
 	 * Reference to CodeIgniter

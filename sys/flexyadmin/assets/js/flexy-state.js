@@ -257,7 +257,7 @@ export default {
     // Request Options
     var request = _.extend( defaultRequest, options );
     // Standard URL for request
-    request.url = '_api/' + request.url;
+    request.url = _flexy.api + request.url;
     // Default data
     if (_.isUndefined(request.data)) request.data = {};
 
@@ -305,9 +305,9 @@ export default {
       if (!_.isUndefined(response.data.info) && !_.isUndefined(response.data.info)) {
         if (response.data.info.logout) {
           self.addMessage('LOGOUT','warning');
-          var url = '_api/auth/logout';
+          var url = _flexy.api+'auth/logout';
           self.api({
-            url : 'auth/logout'
+            url : url,
           }).then(function(response){
             location.href = '_admin';
             return response;

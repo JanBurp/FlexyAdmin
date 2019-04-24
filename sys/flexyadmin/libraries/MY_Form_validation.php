@@ -267,7 +267,7 @@ class MY_Form_validation extends CI_Form_validation {
 		if (isset($info['type'])) {
   		switch ($info['type']) {
   			case 'varchar':
-  				if (isset($info['max_length'])) {
+  				if (isset($info['max_length']) and $field!='uri') {
   					$validation['rules']='max_length';
   					$validation['params']=$info['max_length'];
   				}

@@ -41,11 +41,11 @@ class ApiMediaTest extends ApiTestModel {
       $this->assertEquals( true, $result['success'] );
       $this->assertArrayNotHasKey( 'error', $result );
       $this->assertArrayHasKey( 'data', $result );
-      $this->assertInternalType( 'array', $result['data'] );
+      $this->assertIsArray($result['data'] );
       // settings
       if ($settings) {
         $this->assertArrayHasKey( 'settings', $result );
-        $this->assertInternalType( 'array', $result['settings'] );
+        $this->assertIsArray($result['settings'] );
         $this->assertArrayHasKey( 'path', $result['settings'] );
         $this->assertArrayHasKey( 'img_info', $result['settings'] );
       }

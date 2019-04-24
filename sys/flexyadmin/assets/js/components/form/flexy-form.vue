@@ -1,5 +1,7 @@
 <script>
 
+var he = require('he');
+
 import jdb              from '../../jdb-tools.js'
 
 import flexyState       from '../../flexy-state.js'
@@ -54,7 +56,7 @@ export default {
       default:true,
     },
     'message':{
-      type:[String],
+      type:[Object,String],
       default:'',
     }
   },
@@ -65,12 +67,14 @@ export default {
       var types = {
         primary           : ['primary'],
         hidden            : ['hidden','primary','uri','order'],
+        abstract          : ['abstract','show','disabled'],
         checkbox          : ['checkbox'],
         datepicker        : ['date'],
         timepicker        : ['time'],
         datetimepicker    : ['datetime'],
         colorpicker       : ['color','rgb'],
         mediapicker       : ['media','medias'],
+        thumb             : ['thumb'],
         select            : ['select'],
         radio             : ['radio','radio_image'],
         joinselect        : ['joinselect'],
@@ -98,7 +102,9 @@ export default {
   // Copy of props.data (& more)
   data : function() {
     return {
-      uiTitle          : this.title,
+      uiTitle             : this.title,
+      abstract_fields     : [],
+      abstract_delimiter  : '|',
       currentName      : '',
       activeTab        : 0,
       row              : {},
@@ -109,6 +115,7 @@ export default {
       subForm          : {},
       isEdited         : !this.disabled,
       wysiwygJustReady : false,
+      displayedMessage : '',
     }
   },
   
@@ -172,6 +179,34 @@ export default {
       this.reloadForm();
     }
     this.currentName = this.name;
+
+    // message
+    if (this.message!='') {
+      if (typeof(this.message)=='string') {
+        this.displayedMessage = this.message;
+      }
+      else {
+        if (!_.isUndefined(this.message.message)) {
+          if (!_.isUndefined(this.message.condition)) {
+            var show = false;
+            var condition = this.message.condition;
+            if (condition=='own_user') {
+              show = !_.isUndefined(this.row['_own_user']);
+            }
+            else {
+              condition = this._replace_field_in_func(condition);
+              show = eval(condition);
+            }
+            if (show) {
+              this.displayedMessage = this.message.message;  
+            }
+          }
+          else {
+            this.displayedMessage = this.message.message;   
+          }
+        }
+      }
+    }
   },
 
   
@@ -188,18 +223,40 @@ export default {
             if (response.data.success) {
               // Zijn er settings meegekomen?
               if ( !_.isUndefined(response.data.settings) ) {
-                self.uiTitle      = response.data.settings.form_set.title;
-                self.form_groups  = Object.assign({},response.data.settings.form_set.field_info);
-                self.fieldsets    = Object.assign({},response.data.settings.form_set.fieldsets);
+                self.uiTitle          = response.data.settings.form_set.title;
+                self.form_groups      = Object.assign({},response.data.settings.form_set.field_info);
+                self.fieldsets        = Object.assign({},response.data.settings.form_set.fieldsets);
+                self.abstract_fields  = response.data.settings.abstract_fields;
+                self.abstract_delimiter = response.data.settings.abstract_delimiter;
               }
               // Data en die aanvullen met data
               self.row = response.data.data;
+              self.processDataAfterLoad();
             }
           }
           // TinyMCE
           self.createWysiwyg();
           return response;
         });
+      }
+    },
+
+    processDataAfterLoad : function() {
+      var self = this;
+      // Als data foreignkeys met een json bevat, pas dat aan tot een simpele id en voeg de abstract toe aan de opties
+      for(var field in self.row) {
+        var value = _.clone(self.row[field]);
+        if (value = jdb.isJsonString(value)) {
+          var key = _.parseInt(Object.keys(value)[0]);
+          value   = Object.values(value)[0];
+          if (!_.isUndefined(value) && key>0) {
+            var options = self.form_groups[field]['options']['data'] || [];
+            var index = jdb.indexOfProperty(options,'value',key);
+            if (index===false) options.push({'value' : key,'name'  : value});
+            self.form_groups[field]['options']['data'] = options;
+            self.row[field] = key;
+          }
+        }
       }
     },
     
@@ -240,6 +297,23 @@ export default {
       var url = 'row?table='+this.name + '&where='+this.primary + '&as_form=true&settings=form_set';
       if (this.parent_data) url+='&parent_data='+JSON.stringify(this.parent_data);
       return url;
+    },
+
+    formTitle : function() {
+      var title = this.uiTitle;
+      var itemTitle = [];
+      for (var i in this.abstract_fields) {
+        var field = this.abstract_fields[i];
+        if (!_.isUndefined(this.row[field]) && this.row[field]!='') {
+          itemTitle.push(this.row[field]);
+        }
+      }
+      if (itemTitle) {
+        title += ' - '+itemTitle.join(this.abstract_delimiter);
+      }
+
+      return he.decode(title,{});
+      // return title;
     },
     
     label : function(field) {
@@ -311,7 +385,6 @@ export default {
       //   }
       //   return false;
       // }
-
       return this.fieldTypes[type].indexOf(this.form_groups[field]['type']) >= 0;
     },
 
@@ -369,12 +442,34 @@ export default {
       return selected;
     },
 
+    fieldOptionsAjax: function(field) {
+      if (_.isUndefined(this.form_groups[field])) return '';
+      if (_.isUndefined(this.form_groups[field].options)) return '';
+      if (_.isUndefined(this.form_groups[field].options.api)) return '';
+      return this.form_groups[field].options.api;
+    },
+
     fieldOptions: function(field) {
-      // console.log('fieldOptions',field);
+      var self = this;
+      var options = [];
       if (_.isUndefined(this.form_groups[field])) return [];
       if (_.isUndefined(this.form_groups[field].options)) return [];
-      if (_.isUndefined(this.form_groups[field].options.data)) return [];
-      var options = _.clone(this.form_groups[field].options.data);
+      if (_.isUndefined(this.form_groups[field].options.data)) {
+        if ((_.isUndefined(this.form_groups[field].options.api))) {
+          return [];
+        }
+        // Options loaded with AJAX?
+        var apiCall = this.form_groups[field].options.api;
+        // Current values as options included
+        var currentOptions = _.clone(this.row[field]);
+        // options['data'] = [];
+        for (var option in currentOptions) {
+          options.push({'name':currentOptions[option]['abstract'],'value':currentOptions[option]['id']});
+        }
+        return options;
+      }
+
+      options = _.clone(this.form_groups[field].options.data);
       if ( !_.isUndefined(this.form_groups[field]['dynamic']) && !_.isUndefined(this.form_groups[field]['dynamic']['options']) ) {
         var filter_field = this.form_groups[field]['dynamic']['options']['filter_by'];
         var filter = this.row[filter_field];
@@ -394,8 +489,6 @@ export default {
         else {
           options = [];
         }
-        // console.log(filter_field,filter,index);
-        // jdb.vueLog(options);
       }
       return options;
     },
@@ -421,6 +514,19 @@ export default {
       };
     },
     
+    thumbValue : function(field) {
+      var value = _flexy.media+this.row['path']+'/'+this.row[field];
+      return value;
+    },
+
+    abstractValue : function(field) {
+      if (!_.isUndefined(this.form_groups[field]['options']['data'])) {
+        var index = jdb.indexOfProperty(this.form_groups[field]['options']['data'],'value',this.row[field]);
+        return this.form_groups[field]['options']['data'][index]['name'];
+      }
+      return this.row[field];
+    },
+
     selectValue: function(field) {
       var value = this.row[field];
       if ( this.isMultiple(field) ) {
@@ -591,14 +697,21 @@ export default {
       var self = this;
       self.subForm[field].show = false;
       flexyState.api({
-        // TODO: alleen opties van dit veld wellicht?
-        url : 'row?table='+self.name+'&where='+self.primary+'&settings=form_set',
+        url : 'row?table='+self.name+'&where='+self.primary+'&as_form=true&settings=form_set',
       })
       .then(function(response){
         if (!_.isUndefined(response.data)) {
-          // console.log(response.data.settings.form_set.field_info[field]);
+          // Pas huidige 'value' aan
+          self.row[field] = response.data.data[field];
           // Vervang de opties
           self.form_groups[field].options = response.data.settings.form_set.field_info[field].options;
+          // Stamp bij api, zodat reload wordt geforceerd
+          if (!_.isUndefined(self.form_groups[field].options.api)) {
+            var api = self.form_groups[field].options.api;
+            api = api.replace(/&stamp=\d*/g, ""); // oude stamp verwijderen
+            api += '&stamp=' + Date.now(); // nieuwe stamp
+            self.form_groups[field].options.api = api;
+          }
           // Selecteer zojuist toegevoegde/aangepaste item
           self.addToSelect(field,event);
           self.$emit('formclose');
@@ -606,7 +719,7 @@ export default {
         return response;
       });      
     },
-    
+
     cancel : function() {
       var self=this;
       if (this.isEdited && this.formtype!=='subform') {
@@ -646,7 +759,12 @@ export default {
       else {
         if (!this.isSaving) {
           tinyMCE.remove();
-          var url = '/edit/'+this.name + location.search;
+          var name = this.name;
+          var url = '/edit/'+name + location.search;
+          if ( name.match(/^media_(.*?)/i) ) {
+            name = name.replace(/^media_(.*?)/gi, "$1");
+            url = '/media/'+name  + location.search;
+          }
           this.$router.push(url);
         }
       }
@@ -835,6 +953,7 @@ export default {
           self.row[field] = postdata[field];
         }
       }
+      self.processDataAfterLoad();
       // Update url (id)
       var url = location.pathname;
       var newUrl = url.replace( '/'+self.name+'/-1', '/'+self.name+'/'+postdata['id'] ) + location.search;
@@ -998,7 +1117,7 @@ export default {
 <template>
 <div class="card form" :class="'form-'+formtype">
   <div v-if="formtype!=='subform'" class="card-header">
-    <h1><span class="form-edit-type fa" :class="editTypeIcon()"></span>{{uiTitle}}</h1>
+    <h1><span class="form-edit-type fa" :class="editTypeIcon()"></span>{{formTitle()}}</h1>
     <div>
       <flexy-button v-if="formtype!=='single'"                 @click.native="cancel()" :icon="{'long-arrow-left':formtype==='normal','':formtype==='subform'}" :text="$lang.cancel" :disabled="isSaving" class="btn-outline-danger"/>
       <flexy-button v-if="formtype!=='subform' && action===''" @click.native="save()"   icon="long-arrow-down" :text="$lang.save" :disabled="isSaving || !isEdited" class="btn-outline-warning"/>
@@ -1010,7 +1129,7 @@ export default {
 
   <div class="card-body">
 
-    <div v-if="message!==''" class="text-danger">{{message}}</div>
+    <div v-if="displayedMessage!==''" class="text-danger">{{displayedMessage}}</div>
     
     <tabs navStyle="tabs" class="tabs" :class="tabsClass()" @tab="selectTab($event)" :value="selectedTab()">
       <tab v-for="(fieldset,name) in fieldsets" :header="name" :headerclass="tabHeaderClass(fieldset)">
@@ -1067,10 +1186,16 @@ export default {
                   <mediapicker :id="field" :name="field" :value="row[field]" :path="form_groups[field].path" :multiple="field.substr(0,7) === 'medias_'" v-on:input="updateField(field,$event)"></mediapicker>
                 </template>
 
+                <template v-if="isType('thumb',field)">
+                  <!-- Thumb -->
+                  <flexyThumb :src="thumbValue(field)" size="lg" :alt="row[field]"></flexyThumb><span>{{row['path']}}/{{row[field]}}</span>
+                </template>
+
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <vselect :name="field" 
-                    :options="fieldOptions(field)" options-value="value" options-label="name" 
+                    :options="fieldOptions(field)" options-value="value" options-label="name" :options-ajax="fieldOptionsAjax(field)"
+                    :primary="primary"
                     :value="selectValue(field)" 
                     :multiple="isMultiple(field)"
                     @change="updateSelect(field,$event)"
@@ -1110,6 +1235,12 @@ export default {
                   <!-- Joinselect -->
                   <joinselect :id="field" :name="field" :value="row[field]" @change="updateJoinSelect(field,$event)"></joinselect>
                 </template>
+
+                <template v-if="isType('abstract',field)">
+                  <!-- Only show -->
+                  <span class="text-muted">{{abstractValue(field)}}</span>
+                </template>
+
               
                 <template v-if="isType('default',field)">
                   <!-- Default -->
