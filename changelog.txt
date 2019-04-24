@@ -1,3 +1,16 @@
+=3.5.33
+
+[nl]
+- Op sommige servers gaf uploaden een rechtenprobleem
+[/nl]
+[en]
+- On some servers uploading of files gave an authorization error
+[/en]
+
+[BUGS]
+- authorization bug while uploading (on some servers)
+
+
 =3.5.32
 
 [nl]
