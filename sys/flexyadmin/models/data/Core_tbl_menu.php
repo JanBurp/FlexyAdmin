@@ -2,17 +2,17 @@
 
 /**
  * tbl_menu - Uitbreiding om samengesteld menu's te maken, zie site/config/data/tbl_menu.php
- * 
- * TODO: 
+ *
+ * TODO:
  * - language split
  * - portfolio sites
- * 
+ *
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
  */
 
 Class Core_tbl_menu extends Data_Core {
-  
+
   /**
    * Bewaar het menu
    */
@@ -33,11 +33,11 @@ Class Core_tbl_menu extends Data_Core {
                                     ),
                                   );
 
-  
+
   public function __construct() {
     parent::__construct();
     $this->config->load('menu',true);
-    
+
     $languages = $this->config->get_item('languages');
     if ( $languages and count($languages)>1 ) {
       $this->title_field = $this->title_field .= '_'.$languages[0];
@@ -66,8 +66,8 @@ Class Core_tbl_menu extends Data_Core {
     }
     return $tables;
   }
-  
-  
+
+
   /**
    * Maak het menu en geef dat als database array terug
    *
@@ -113,11 +113,11 @@ Class Core_tbl_menu extends Data_Core {
     return $items;
   }
 
-  
+
   /**
    * Geeft één item uit (samengesteld) menu
    *
-   * @param string $uri 
+   * @param string $uri
    * @return array
    * @author Jan den Besten
    */
@@ -134,7 +134,7 @@ Class Core_tbl_menu extends Data_Core {
   /**
    * Geeft volgend item uit (samengesteld) menu
    *
-   * @param string $uri 
+   * @param string $uri
    * @return array
    * @author Jan den Besten
    */
@@ -156,7 +156,7 @@ Class Core_tbl_menu extends Data_Core {
   /**
    * Geeft vorig item uit (samengesteld) menu
    *
-   * @param string $uri 
+   * @param string $uri
    * @return array
    * @author Jan den Besten
    */
@@ -180,7 +180,7 @@ Class Core_tbl_menu extends Data_Core {
   /**
    * Geeft veld uit één item uit (samengesteld) menu
    *
-   * @param string $uri 
+   * @param string $uri
    * @return array
    * @author Jan den Besten
    */
@@ -192,7 +192,7 @@ Class Core_tbl_menu extends Data_Core {
   /**
    * Geeft eerste onderliggende item van een parent
    *
-   * @param string $uri 
+   * @param string $uri
    * @return array
    * @author Jan den Besten
    */
@@ -215,11 +215,11 @@ Class Core_tbl_menu extends Data_Core {
     return false;
   }
 
- 
-  
+
+
   /**
    * Maak het menu aan de hand van de 'merged_menu' instellingen in site/config/tbl_menu
-   * 
+   *
    * Resultaat is een array met als key de 'full_uri'
    *
    * @return array
@@ -254,13 +254,13 @@ Class Core_tbl_menu extends Data_Core {
           break;
       }
     }
-    
+
     // - Reorder merged menu
     // - Zorg dat children b_visible en b_restricted overnemen (als nodig)
     // - Language split als nodig
     $order = 0;
     $max_order = count($this->_menu);
-    
+
     $b_visible    = array();
     $b_restricted = array();
 
@@ -283,7 +283,7 @@ Class Core_tbl_menu extends Data_Core {
     }
 
     foreach ($this->_menu as $key => $item) {
-      
+
       // Visible & Restricted
       $item['b_visible']    = el('b_visible',$item,true);
       $item['b_restricted'] = el('b_restricted',$item,false);
@@ -341,13 +341,13 @@ Class Core_tbl_menu extends Data_Core {
             }
           }
           // Add lang item
-          // trace_($lang_item);  
+          // trace_($lang_item);
           $extra_lang_menu[$lang][$full_uri] = $lang_item;
         }
       }
 
       // Add (normal) item
-      $this->_menu[$key] = $item;      
+      $this->_menu[$key] = $item;
 
     }
 
@@ -366,11 +366,11 @@ Class Core_tbl_menu extends Data_Core {
 
     return $this->_menu;
   }
-  
+
   /**
    * Op welke plaats komt het (sub)menu(item)?
    *
-   * @param string $item 
+   * @param string $item
    * @return array
    * @author Jan den Besten
    */
@@ -384,7 +384,7 @@ Class Core_tbl_menu extends Data_Core {
       $found_uris = current($keys);
     }
     else {
-    
+
       // place = [field => value]
       if (is_array($place)) {
         $place_field = key($place);
@@ -392,14 +392,14 @@ Class Core_tbl_menu extends Data_Core {
         $key = find_row_by_value($this->_menu,$place_value,$place_field);
         $found_uris = array_keys($key);
       }
-    
+
       // place =  uri
       else {
         $keys = filter_by_key( $this->_menu, $place );
         end($keys);
         $found_uris = key($keys);
       }
-    
+
     }
 
 
@@ -423,12 +423,12 @@ Class Core_tbl_menu extends Data_Core {
 
     return $result;
   }
-  
-  
+
+
   /**
    * Voeg één item toe aan menu
    *
-   * @param array $item 
+   * @param array $item
    * @return void
    * @author Jan den Besten
    */
@@ -452,12 +452,12 @@ Class Core_tbl_menu extends Data_Core {
         $this->_menu = $menu_item;
     }
   }
-  
-  
+
+
   /**
    * Voeg meerdere items toe aan menu
    *
-   * @param array $item 
+   * @param array $item
    * @return void
    * @author Jan den Besten
    */
@@ -471,17 +471,17 @@ Class Core_tbl_menu extends Data_Core {
     }
   }
 
-  
+
   /**
    * Voeg hele tabel toe aan het menu
    *
-   * @param array $item 
+   * @param array $item
    * @return void
    * @author Jan den Besten
    */
   private function _add_menu_table($item) {
     $table = $item['table'];
-    
+
     $this->data->table($table);
     // Set result_key to full_uri
     $result_key = $this->data->get_setting('result_key');
@@ -493,7 +493,7 @@ Class Core_tbl_menu extends Data_Core {
     else {
       $this->data->set_result_key('uri');
     }
-    
+
     // get data
     if (isset($item['where']))    $this->data->where($item['where']);
     if (isset($item['order_by'])) $this->data->order_by($item['order_by']);
@@ -521,7 +521,7 @@ Class Core_tbl_menu extends Data_Core {
     // restore
     $this->data->set_result_key($result_key);
     $this->data->table('tbl_menu');
-    
+
     // Add
     $places = $this->_determine_menu_item_places($item);
     foreach ($places as $place) {
@@ -547,23 +547,24 @@ Class Core_tbl_menu extends Data_Core {
         $this->_menu = $items;
     }
   }
-  
+
 /**
    * Voeg tabel gegroupeerd als sub-pagina's toe aan het menu
    *
-   * @param array $item 
+   * @param array $item
    * @return void
    * @author Jan den Besten
    */
   private function _add_grouped_table($item) {
     $table = $item['table'];
-    
+
     $this->data->table($table);
 
     // Set result_key to full_uri
     $result_key = $this->data->get_setting('result_key');
     if ($this->data->field_exists('self_parent')) {
       $this->data->tree('full_uri','uri');
+      $this->data->tree('full_title',$this->title_field);
       $this->data->set_result_key('full_uri');
     }
     else {
@@ -591,7 +592,7 @@ Class Core_tbl_menu extends Data_Core {
           if (isset($item['item'])) $row = array_merge($row,$item['item']);
           $full_uri         = $place.'/'.el('full_uri',$row, el('uri',$row));
           $row['full_uri']  = $full_uri;
-          // $row['full_title']= el('full_title',$row, el($this->title_field,$row));
+          $row['full_title']= $menu_item['full_title'].'/'.el('full_title',$row, el($this->title_field,$row));
           $row['_table']    = $table;
           $row['self_parent'] = $menu_item['id'];
           if (isset($item['visible_limit']) and $nr>$item['visible_limit']) $row['b_visible'] = FALSE;
@@ -610,7 +611,7 @@ Class Core_tbl_menu extends Data_Core {
           $items[$full_uri] = $row;
           $nr++;
         }
-        $this->_menu      = array_add_after( $this->_menu, $place, $items ); 
+        $this->_menu      = array_add_after( $this->_menu, $place, $items );
       }
     }
 
@@ -623,7 +624,7 @@ Class Core_tbl_menu extends Data_Core {
 /**
    * Voeg menu items toe dmv extern model
    *
-   * @param array $item 
+   * @param array $item
    * @return void
    * @author Jan den Besten
    */
@@ -631,7 +632,7 @@ Class Core_tbl_menu extends Data_Core {
     $method = get_suffix($item['model'],'.');
     $model = get_prefix($item['model'],'.');
     $this->load->model($model,$model);
-    
+
     // Places
     $this->data->table('tbl_menu');
     $places = $this->_determine_menu_item_places($item);
@@ -662,6 +663,6 @@ Class Core_tbl_menu extends Data_Core {
     }
   }
 
-  
+
 
 }
