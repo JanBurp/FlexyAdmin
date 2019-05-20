@@ -2,13 +2,13 @@
 
 /**
  * tbl_links
- * 
+ *
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
  */
 
 Class Core_tbl_links extends Data_Core {
-  
+
   private $checked_links      = false;
   private $checked_cache_name = 'tbl_links_checked';
   private $cache_expire       = TIME_MINUTE;
@@ -27,12 +27,14 @@ Class Core_tbl_links extends Data_Core {
   public function get_options_link_list() {
     $this->data->table('tbl_menu');
     $links = $this->data->get_menu_result();
-    $links = array_combine(array_keys($links),array_column($links,'full_title'));
+    $keys = array_keys($links);
+    $titles = array_column($links,'full_title');
+    $links = array_combine($keys,$titles);
     $this->data->table('tbl_links');
     return $links;
   }
 
-  
+
   /**
    * Dit geeft de linklijst aan de API call get_link_list
    *
@@ -62,7 +64,7 @@ Class Core_tbl_links extends Data_Core {
     $this->data->table('tbl_links');
     return $links;
   }
-  
+
   /**
    * Link lijst van alle uri's in het menu
    *
@@ -81,7 +83,7 @@ Class Core_tbl_links extends Data_Core {
     }
     return $this->_result_as_link_list($result);
   }
-  
+
   /**
    * Link lijst van alle links uit de tabel tbl_links
    *
@@ -94,7 +96,7 @@ Class Core_tbl_links extends Data_Core {
     $result = $this->data->cache()->get_result();
     return $this->_result_as_link_list($result);
   }
-  
+
   /**
    * Link lijst van alle download bestanden
    *
@@ -116,12 +118,12 @@ Class Core_tbl_links extends Data_Core {
     }
     return $result;
   }
-  
+
 
   /**
    * Maakt een link lijst resultaat
    *
-   * @param array $result 
+   * @param array $result
    * @return array
    * @author Jan den Besten
    */
@@ -135,14 +137,14 @@ Class Core_tbl_links extends Data_Core {
     }
     return $links;
   }
-  
-  
-  
+
+
+
   /**
    * Voeg actie toe om link te checken (aan row)
    *
-   * @param int $limit 
-   * @param int $offset 
+   * @param int $limit
+   * @param int $offset
    * @return $this
    * @author Jan den Besten
    */
@@ -176,7 +178,7 @@ Class Core_tbl_links extends Data_Core {
         }
         else {
           if ($checked_order) $link['_checked'] = -1;
-          $icon = 'chain-broken'; 
+          $icon = 'chain-broken';
           $class = 'btn-outline-danger';
           $text  = lang('link_check_bad');
         }
@@ -184,7 +186,7 @@ Class Core_tbl_links extends Data_Core {
       $link = array_add_after($link,'id', array(
         'action_check_link' => array(
           'uri'     => 'link_checker?where='.$id,
-          'icon'    => $icon, 
+          'icon'    => $icon,
           'text'    => $text,
           'class'   => $class,
           'reload'  => array('offset'=>0,'order'=>'checked'),
@@ -212,13 +214,13 @@ Class Core_tbl_links extends Data_Core {
       $this->query_info['page']       = (int) floor($this->tm_offset / $this->tm_limit);
       $this->query_info['num_pages']  = (int) ceil($this->query_info['total_rows'] / $this->tm_limit);
     }
-    
+
     // Voeg het veld toe
     $this->settings['grid_set']['fields'] = array_add_after($this->settings['grid_set']['fields'],'id','action_check_link');
     return $result;
   }
-  
-  
+
+
   /**
    * Voeg linkchecker actie's toe aan head(er)
    *
@@ -242,7 +244,7 @@ Class Core_tbl_links extends Data_Core {
       'grid-type' => 'action',
       'sortable'  => false,
     );
-    
+
     return $grid_set;
   }
 
@@ -265,11 +267,11 @@ Class Core_tbl_links extends Data_Core {
       foreach ($deleted_items as $item) {
         unset($this->checked_links[$item[$this->settings['primary_key']]]);
       }
-      $this->cache_result($this->checked_links,$this->checked_cache_name,$this->cache_expire); 
+      $this->cache_result($this->checked_links,$this->checked_cache_name,$this->cache_expire);
     }
     return $ids;
   }
-  
+
 
   /**
    * Controleert alle links
@@ -305,7 +307,7 @@ Class Core_tbl_links extends Data_Core {
     $this->checked_links = $result;
     return $result;
   }
-  
+
 
   /**
    * Geeft een leesbaar resulaat terug na check_links
@@ -342,8 +344,8 @@ Class Core_tbl_links extends Data_Core {
     $message .= '<hr>'.langp('link_check_help');
     return $message;
   }
-  
-  
+
+
   /**
    * Controleer één link
    * https://stackoverflow.com/questions/15770903/check-if-links-are-broken-in-php
@@ -365,6 +367,6 @@ Class Core_tbl_links extends Data_Core {
     return $this->set($set)->insert();
   }
 
-  
-  
+
+
 }
