@@ -60,8 +60,8 @@ export default {
       default:'',
     }
   },
-    
-  
+
+
   computed : {
     fieldTypes : function() {
       var types = {
@@ -98,7 +98,7 @@ export default {
       }
     }
   },
-  
+
   // Copy of props.data (& more)
   data : function() {
     return {
@@ -118,7 +118,7 @@ export default {
       displayedMessage : '',
     }
   },
-  
+
   created : function() {
     // Api form
     if ( this.fields===false ) {
@@ -152,7 +152,7 @@ export default {
               optionsArray.push({name:options[key],value:key});
             }
             else {
-              optionsArray.push(options[key]);  
+              optionsArray.push(options[key]);
             }
           });
           this.form_groups[field].options = {};
@@ -198,20 +198,20 @@ export default {
               show = eval(condition);
             }
             if (show) {
-              this.displayedMessage = this.message.message;  
+              this.displayedMessage = this.message.message;
             }
           }
           else {
-            this.displayedMessage = this.message.message;   
+            this.displayedMessage = this.message.message;
           }
         }
       }
     }
   },
 
-  
+
   methods:{
-    
+
     reloadForm : function() {
       if (this.action==='') {
         var self = this;
@@ -259,7 +259,7 @@ export default {
         }
       }
     },
-    
+
     createWysiwyg: function() {
       var self=this;
 
@@ -290,7 +290,7 @@ export default {
         };
       }, 100 );
     },
-    
+
     apiUrl : function() {
       var parts = _.extend( this.apiParts );
       this.apiParts = parts;
@@ -315,7 +315,7 @@ export default {
       return he.decode(title,{});
       // return title;
     },
-    
+
     label : function(field) {
       if (_.isUndefined(this.form_groups[field])) return field;
       return this.form_groups[field].label;
@@ -325,7 +325,7 @@ export default {
       return '';
       // if (this.formtype!=='subform') return '';
       // return this.label(field);
-    },    
+    },
 
     selectTab : function(tab) {
       this.activeTab = tab;
@@ -345,7 +345,7 @@ export default {
     selectedTab : function() {
       return this.activeTab;
     },
-    
+
     tabsClass : function() {
       if (Object.keys(this.fieldsets).length<2) return 'single-tab';
       return '';
@@ -358,7 +358,7 @@ export default {
       }
       return '';
     },
-        
+
     isType : function( type,field ) {
       if (_.isUndefined(this.form_groups[field])) {
         if (type==='default') {
@@ -393,10 +393,10 @@ export default {
         return 'fa-plus';
       }
       if (this.primary.substr(0,1)=='_') {
-        return 'fa-paste';  
+        return 'fa-paste';
       }
       if (this.primary>=0) {
-        return 'fa-pencil'; 
+        return 'fa-pencil';
       }
       return '';
     },
@@ -404,7 +404,7 @@ export default {
     isRadioImage : function(field) {
       return (this.form_groups[field]['type']=='radio_image');
     },
-    
+
     isMultiple : function( field ) {
       var multiple = false;
       if (_.isUndefined(this.form_groups[field])) return false;
@@ -419,7 +419,7 @@ export default {
       if (flexyState.debug) console.log('isMultiple',field,multiple);
       return multiple;
     },
-    
+
     isSelectedOption : function(field,value,option) {
       var selected = '';
       if (typeof(value)!=='object') {
@@ -480,7 +480,7 @@ export default {
             options = [];
             for (var opt in options_object) {
               options.push( {'name':opt,'value':opt} );
-            }         
+            }
           }
           else {
             options = [];
@@ -492,12 +492,12 @@ export default {
       }
       return options;
     },
-    
+
     selectOption: function(field,option) {
       // console.log('selectOption',field,option);
       this.row[field] = option;
     },
-    
+
     selectItem : function (field,value) {
       if (!value) return '';
       value = value.toString();
@@ -513,7 +513,7 @@ export default {
         'height': optionsSettings.height,
       };
     },
-    
+
     thumbValue : function(field) {
       var value = _flexy.media+this.row['path']+'/'+this.row[field];
       return value;
@@ -548,7 +548,7 @@ export default {
       }
       return value;
     },
-    
+
     hasInsertRights : function(field) {
       if ( _.isUndefined(this.form_groups[field]) ) return false;
       if ( _.isUndefined(this.form_groups[field].options) ) return false;
@@ -556,7 +556,7 @@ export default {
       var rights = this.form_groups[field].options.insert_rights;
       return (rights===true || rights>=2);
     },
-    
+
     // Pas kleur van optie aan als het een kleurenveld is
     selectStyle : function(field,option) {
       var style = '';
@@ -565,7 +565,7 @@ export default {
       }
       return style;
     },
-    
+
     dateObject : function(value) {
       if (value==='0000-00-00') {
         var date  = new Date();
@@ -578,7 +578,7 @@ export default {
       }
       return date;
     },
-    
+
     formGroupClass : function(field) {
       var formGroupClass='';
       // type
@@ -596,13 +596,13 @@ export default {
       }
       return formGroupClass.trim();
     },
-    
+
     validationError : function(field) {
       var error = false;
       if (!_.isUndefined(this.validationErrors[field])) error = this.validationErrors[field];
       return error;
     },
-        
+
     isRequired : function(field) {
       if ( _.isUndefined(this.form_groups[field])) return false;
       if ( _.isUndefined(this.form_groups[field].validation)) return false;
@@ -612,7 +612,7 @@ export default {
       }
       return false;
     },
-    
+
     showFormGroup : function(field) {
       var show = true;
       if (_.isUndefined(this.form_groups[field])) return show;
@@ -623,7 +623,7 @@ export default {
       }
       return show;
     },
-    
+
     _replace_field_in_func : function(func) {
       var fields = Object.keys(this.row);
       var normalReplace = true;
@@ -642,7 +642,7 @@ export default {
       }
       return func;
     },
-    
+
     valueFromApi : function(field) {
       var value = this.row[field];
       if (_.isUndefined(this.form_groups[field])) return value;
@@ -652,7 +652,7 @@ export default {
       }
       return value;
     },
-    
+
     toggleSubForm : function(field,id) {
       if (this.showSubForm(field)) {
         this.subForm[field].show = false;
@@ -682,7 +682,7 @@ export default {
     //   if ( !_.isUndefined(this.subForm[field]) ) this.subForm[field].show = false;
     //   return false;
     // },
-    
+
     subFormData : function(field,property) {
       if ( _.isUndefined(this.subForm[field]) ) return '';
       return this.subForm[field][property];
@@ -717,7 +717,7 @@ export default {
           self.$emit('formclose');
         }
         return response;
-      });      
+      });
     },
 
     cancel : function() {
@@ -769,7 +769,7 @@ export default {
         }
       }
     },
-    
+
     submit : function() {
       var self=this;
       if (!self.isSaving) {
@@ -788,7 +788,7 @@ export default {
         }
       }
     },
-    
+
     // add : function() {
     //   var self=this;
     //   if (!this.isSaving) {
@@ -802,17 +802,17 @@ export default {
     //     }
     //   }
     // },
-    
+
     save : function() {
       if (!this.isSaving) {
         this.postForm();
       }
     },
-    
+
     postForm : function() {
       var self=this;
       var data = JSON.parse(JSON.stringify(this.row)); // Deep copy
-      
+
       // Prepare data
       for (var field in data) {
         if (field.indexOf('.abstract')>0) {
@@ -832,13 +832,13 @@ export default {
                   fieldData.push( data[field][i].id );
                 }
                 else {
-                 fieldData.push( data[field][i] ); 
+                 fieldData.push( data[field][i] );
                 }
               }
             }
             data[field] = fieldData;
           }
-          
+
           // Joinselect -> maak een post ready array (en lege items verwijderen)
           if (this.isType('joinselect',field)) {
             // cleanup empty data
@@ -879,7 +879,7 @@ export default {
       if (filled) {
         return self._postForm(data);
       }
-      
+
       // Als niet goed is ingevuld, vraag het
       flexyState.openModal( {'title':'','body':self.$lang.confirm_save_default}, function(event) {
         if ( event.state.type==='ok') {
@@ -889,7 +889,7 @@ export default {
 
       return false;
     },
-    
+
 
     /**
      * Post form door api aan te roepen
@@ -905,7 +905,7 @@ export default {
         jdb.submitWithPost(this.action, data );
         return null;
       }
-      
+
       // Ajax post naar API
       var self = this;
       self.isSaving = true;
@@ -959,11 +959,11 @@ export default {
       var newUrl = url.replace( '/'+self.name+'/-1', '/'+self.name+'/'+postdata['id'] ) + location.search;
       history.pushState( location.search, '', newUrl);
     },
-    
+
     isNewItem : function() {
       return this.row['id'] === -1;
     },
-    
+
     updateField : function( field, value ) {
       // console.log('updateField',field,value);
       // this.validationErrors = {};
@@ -973,7 +973,7 @@ export default {
         this.isEdited = true;
       }
     },
-    
+
     dynamicWatch : function(field,value) {
       var self = this;
       if ( !_.isUndefined(self.fields[field]) && !_.isUndefined(self.fields[field].dynamic) && !_.isUndefined(self.fields[field].dynamic.watch)) {
@@ -1030,7 +1030,7 @@ export default {
       this.isEdited = true;
       return this.updateField(field,value);
     },
-    
+
     updateSelect : function( field, selected ) {
       var value = selected;
       if ( !this.isMultiple(field) ) {
@@ -1064,7 +1064,7 @@ export default {
       }
       if (needsUpdate) this.updateField(field,value);
     },
-    
+
     addToSelect : function( field, value ) {
       if ( this.isMultiple(field) ) {
         var currentSelection = this.row[field];
@@ -1094,7 +1094,7 @@ export default {
       }
       this.updateField(field,value);
     },
-    
+
 
     // TinyMCE changed
     updateText : function(event,editor) {
@@ -1108,9 +1108,9 @@ export default {
         }
       }
     }
-    
+
   }
-  
+
 }
 </script>
 
@@ -1130,12 +1130,12 @@ export default {
   <div class="card-body">
 
     <div v-if="displayedMessage!==''" class="text-danger">{{displayedMessage}}</div>
-    
+
     <tabs navStyle="tabs" class="tabs" :class="tabsClass()" @tab="selectTab($event)" :value="selectedTab()">
-      <tab v-for="(fieldset,name) in fieldsets" :header="name" :headerclass="tabHeaderClass(fieldset)">
+      <tab v-for="(fieldset,name) in fieldsets" :key="fieldset.name" :header="name" :headerclass="tabHeaderClass(fieldset)">
         <template v-for="field in fieldset">
           <template v-if="!isType('hidden',field)">
-          
+
             <div class="form-group row" :class="formGroupClass(field)" v-show="showFormGroup(field)">
               <div v-if="validationError(field)!==false" class="validation-error"><span class="fa fa-exclamation-triangle"></span> {{validationError(field)}}</div>
               <label class="form-control-label col-md-3" :for="field" :title="label(field)">{{label(field)}} <span v-if="isRequired(field)" class="required fa fa-sm fa-asterisk text-warning"></span> </label>
@@ -1145,7 +1145,7 @@ export default {
                   <!-- Textarea -->
                   <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></textarea>
                 </template>
-              
+
                 <template v-if="isType('wysiwyg',field)">
                   <!-- WYSIWYG -->
                   <textarea class="form-control wysiwyg" :id="field" :name="field" :value="row[field]"></textarea>
@@ -1193,10 +1193,10 @@ export default {
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
-                  <vselect :name="field" 
+                  <vselect :name="field"
                     :options="fieldOptions(field)" options-value="value" options-label="name" :options-ajax="fieldOptionsAjax(field)"
                     :primary="primary"
-                    :value="selectValue(field)" 
+                    :value="selectValue(field)"
                     :multiple="isMultiple(field)"
                     @change="updateSelect(field,$event)"
                     :insert="hasInsertRights(field)"
@@ -1241,7 +1241,7 @@ export default {
                   <span class="text-muted">{{abstractValue(field)}}</span>
                 </template>
 
-              
+
                 <template v-if="isType('default',field)">
                   <!-- Default -->
                   <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" :placeholder="placeholder(field)" @keyup.enter="submit">
@@ -1252,9 +1252,9 @@ export default {
                 </div>
 
               </div>
-              
+
             </div>
-            
+
           </template>
         </template>
       </tab>

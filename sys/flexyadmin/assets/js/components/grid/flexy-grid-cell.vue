@@ -11,17 +11,17 @@ export default {
   name: 'VueGridCell',
   components: {flexyThumb,flexyButton},
   props:['type','name','primary','value','level','editable','readonly','options','focus'],
-  
+
   created : function() {
     // console.log('grid-cell',this.name,this.type);
   },
 
   computed:{
-    
+
     inputID : function() {
       return jdb.createUUID();
     },
-    
+
     fieldTypes : function() {
       var types = {
         checkbox  : ['checkbox'],
@@ -39,14 +39,14 @@ export default {
       types.default = defaultTypes;
       return types;
     },
-    
+
     showTreeNode : function() {
       if (_.isUndefined(this.options)) return false;
       if (_.isUndefined(this.options.is_tree_field)) return false;
       return (this.options.is_tree_field===true && this.level>0);
     },
   },
-  
+
   data : function() {
     return {
       item      : this.value,
@@ -55,9 +55,9 @@ export default {
       showAll   : false,
     }
   },
-  
+
   methods : {
-    
+
     cellClass : function() {
       var c = [];
       c.push('grid-cell-type-'+this.type);
@@ -69,7 +69,7 @@ export default {
       if (!_.isUndefined(this.options) && !_.isUndefined(this.options.is_tree_field) && this.options.is_tree_field) c.push('is-tree-field');
       return c;
     },
-    
+
     isType : function( type, fieldType ) {
       var is = false;
       if (type==='default') {
@@ -80,7 +80,7 @@ export default {
       }
       return is;
     },
-    
+
     thumbs : function(media) {
       var path = this.options.path;
       var array = [];
@@ -102,11 +102,11 @@ export default {
       }
       return he.decode(item,{});
     },
-    
+
     complementColor : function(color) {
       return jdb.complementColor(color);
     },
-    
+
     relationItems : function(string) {
       var items = string.split(',');
       for (var i = 0; i < items.length; i++) {
@@ -114,11 +114,11 @@ export default {
       }
       return items;
     },
-    
+
     showAllItemsToggle : function() {
       this.showAll = !this.showAll;
     },
-    
+
     selectItem : function (value) {
       if (!value) return '';
       if (value.substr(0,1)==='{' && value.substr(-1,1)==='}') {
@@ -129,18 +129,18 @@ export default {
       value = value.toString();
       return value;
     },
-    
+
     itemObject : function(item) {
       if (typeof(item)==='string' && item.substr(0,1)==='{') {
         item = JSON.parse(item);
       }
       return item;
     },
-    
+
     select : function() {
       this.$emit('select');
     },
-    
+
     saveEdit : function(value) {
       var self = this;
       self.isEditing = false;
@@ -155,7 +155,7 @@ export default {
         });
       }
     },
-    
+
     startEdit : function() {
       console.log('startEdit');
       if (this.editable && !this.readonly) {
@@ -166,12 +166,12 @@ export default {
         inputEL.focus();
       }
     },
-    
+
     cancelEdit : function() {
       this.item = this.oldItem;
       this.isEditing = false;
     },
-    
+
     clickEdit : function() {
       var self = this;
       var currentValue = self.item;
@@ -185,7 +185,7 @@ export default {
         });
       }
     },
-    
+
     postField : function(value) {
       var self=this;
       var data = {};
@@ -217,11 +217,11 @@ export default {
         }
         return response;
       });
-    },    
-    
-    
+    },
+
+
   },
-  
+
 }
 </script>
 
@@ -242,7 +242,7 @@ export default {
 
     <template v-if="isType('media',type)">
       <template v-if="item !==''">
-        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :src="img.src" :alt="img.alt" />
+        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :key="img.src" :src="img.src" :alt="img.alt" />
       </template>
     </template>
 
@@ -256,11 +256,11 @@ export default {
         <span v-else class="fa fa-minus text-warning" :value="item"></span>
       </div>
     </template>
-    
+
     <template v-if="isType('url',type)">
       <a :href="item" target="_blank">{{item}}</a>
     </template>
-    
+
     <template v-if="isType('select',type)">
       <span v-html="selectItem(item)"></span>
     </template>
