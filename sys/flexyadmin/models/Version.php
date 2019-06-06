@@ -7,7 +7,7 @@
  * @internal
  */
 class Version extends CI_Model {
-  
+
   private $version   = 'unknown';
   private $revision  = '0';
   private $hash      = '0';
@@ -18,7 +18,7 @@ class Version extends CI_Model {
 
 	public function __construct() {
 		parent::__construct();
-    
+
     if (SAFE_INSTALL) {
       $sys = '../sys/';
     }
@@ -65,25 +65,41 @@ class Version extends CI_Model {
         $this->date     = $matches[4];
       }
     }
-    
+
 	}
 
   public function get_version() {
     return $this->version;
   }
 
+  public function get_mix_version($file,$backend=false) {
+    if (substr($file,0,1)!=='/') $file = '/'.$file;
+    $path = $this->config->item('PUBLICFOLDER');
+    if ($backend) $path = $this->config->item('SYS').'flexyadmin/assets/dist/';
+    $manifest = read_file($path.'mix-manifest.json');
+    $manifest = json_decode($manifest);
+    $version = trim($manifest->$file,'/');
+    if ($backend) {
+      $version = $this->config->item('ADMINASSETS').$version;
+    }
+    else {
+      $version = $this->config->item('PUBLICASSETS').$version;
+    }
+    return $version;
+  }
+
   public function get_revision() {
     return $this->revision;
   }
-  
+
   public function get_hash() {
     return $this->hash;
   }
-  
+
   public function get_build() {
     return $this->build;
   }
-  
+
   public function get_latest_remote() {
     $tag = '';
     exec("git ls-remote --tags https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git", $output);

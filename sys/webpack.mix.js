@@ -12,18 +12,17 @@ let mix = require('laravel-mix');
  */
 
 mix
+.setResourceRoot('../_admin_assets/')
+.setPublicPath('flexyadmin/assets/dist')
 .js('flexyadmin/assets/js/login.js', 'flexyadmin/assets/dist/login.build.js')
 .js('flexyadmin/assets/js/main.js', 'flexyadmin/assets/dist/main.build.js')
 .sass('flexyadmin/assets/scss/flexyadmin.scss', 'flexyadmin/assets/dist/flexyadmin.css')
-.sourceMaps()
 .version()
-.setResourceRoot('../_admin_assets/')
-.setPublicPath('flexyadmin/assets/dist')
- .browserSync({
-    proxy: 'http://localhost/FlexyAdmin/FlexyAdmin/public/_admin'
-  })
+.sourceMaps()
+.browserSync({
+  proxy: 'http://localhost/FlexyAdmin/FlexyAdmin/public/_admin'
+})
 ;
-
 
 // Full API
 // mix.js(src, output);
