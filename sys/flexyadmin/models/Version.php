@@ -74,7 +74,7 @@ class Version extends CI_Model {
 
   public function get_mix_version($file,$backend=false) {
     if (substr($file,0,1)!=='/') $file = '/'.$file;
-    $path = $this->config->item('PUBLICFOLDER');
+    $path = $this->config->item('PUBLICASSETS');
     if ($backend) $path = $this->config->item('SYS').'flexyadmin/assets/dist/';
     $manifest = read_file($path.'mix-manifest.json');
     $manifest = json_decode($manifest);
