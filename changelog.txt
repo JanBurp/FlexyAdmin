@@ -1,3 +1,15 @@
+=3.5.34
+
+[nl]
+- Technische verbeteringen
+[/nl]
+[en]
+- Technical improvements
+[/en]
+
+[CHANGES]
+- Backend and Frontend compling now with laravel-mix (webpack)
+
 =3.5.33
 
 [nl]
@@ -327,13 +339,13 @@
 [nl]
 - Enkele kleine fouten opgelost
 - Enkele bestands-ikonen toegevoegd
-- Foutmelding bij uploaden te grote bestanden 
+- Foutmelding bij uploaden te grote bestanden
 - Bulkupload & automatisch vullen in database na uploaden
 [/nl]
 [en]
 - Some small bugs solved
 - Some file-icons added
-- Error messags at uploading files that are too big 
+- Error messags at uploading files that are too big
 - Bulkupload & auto fill in database after uploaden
 [/en]
 
@@ -1113,7 +1125,7 @@
 
 [FEATURES]
 - FormsTabs have danger color when validation errors in that tab
-- JoinSelect only shows remove button when usefull 
+- JoinSelect only shows remove button when usefull
 
 =3.5.0-beta.46
 
