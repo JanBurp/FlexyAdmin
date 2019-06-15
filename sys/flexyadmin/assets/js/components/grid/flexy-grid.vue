@@ -918,10 +918,12 @@ export default {
         for (var i = 0; i < self.uploadFiles.length; i++) {
           var file = self.uploadFiles[i];
           var formData = new FormData();
-          // console.log(file,formData);
           formData.append( 'path', self.name );
           formData.append( 'file', self.uploadFiles[i] );
           formData.append( 'fileName', self.uploadFiles[i].name );
+          // Voor de zekerheid... soms geeft het anders problemen...
+          formData.append( 'Authorization', _flexy.auth_token );
+          formData.append( '_authorization', _flexy.auth_token );
 
           flexyState.api({
             method    : 'POST',
@@ -929,33 +931,34 @@ export default {
             data      : formData,
             formData  : true,
           }).then(function(response){
+            var error = '';
 
-            var error = response.data.error;
-            if (!error && response.data.data===false) {
+            if ( _.isUndefined(response.data) || _.isUndefined(response.data.data) ) {
               error = self.$lang.upload_error;
             }
             else {
-              uploadedFilesCount++;
-            }
-
-            var fileName = response.data.data.file;
-            if ( !_.isUndefined(response.data.data.orig_name) ) {
-              var origName = response.data.data.orig_name;
-              if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
-                flexyState.addMessage( response.data.message, 'danger' );  
+              error = response.data.error;
+              if (error) {
+                flexyState.addMessage( error, 'danger' );
               }
-              if (self.type==='mediapicker') {
-                self.$emit('grid-uploaded-item',fileName);
+              else {
+                uploadedFilesCount++;
+                var fileName = response.data.data.file;
+                if ( !_.isUndefined(response.data.data.orig_name) ) {
+                  var origName = response.data.data.orig_name;
+                  if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
+                    flexyState.addMessage( response.data.message, 'danger' );  
+                  }
+                  if (self.type==='mediapicker') {
+                    self.$emit('grid-uploaded-item',fileName);
+                  }
+                }
+
+                // Uit de lijst halen
+                var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
+                self.removeUploadFile(index);
               }
             }
-
-            if (error) {
-              flexyState.addMessage( error, 'danger' );
-            }
-
-            // Uit de lijst halen
-            var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
-            self.removeUploadFile(index);
 
             // Als alles uit de lijst is geuploade, reload
             if (self.uploadFiles.length === 0 ) {

@@ -15,15 +15,19 @@ In the examples below, replace `<dir>` with the folder you'd like to have FlexyA
 
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>`
 
-### Shallow copy of branch (3.5.0 for example)
+### Shallow copy of branch (latest for example)
 
-`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --branch <branch> --single-branch --depth 10 <dir>`
-`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --branch feature/3.5.0 --single-branch --depth 10 <dir>`
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --branch releases/latest --single-branch --depth 10 <dir>`
     
 ### Shallow repository a branch ###
 
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 -b <branch> <dir>`
+
+### Move to other remote branch
+
+- Rename the old website folder
+- Make a fresh clone (see above)
+- Copy all importane folders from old to new (public, site, db) 
   
 ## More git
 

@@ -31,24 +31,7 @@ class Plugin_test extends Plugin {
 	}
   
   public function _admin_api() {
-    if (!IS_LOCALHOST) return;
-    $args = func_get_args();
-    if ($args) {
-      $method = array_shift($args);
-      if ($method) {
-        $method = current($method);
-        return $this->$method(current($args));
-      }
-    }
-
-
-    $this->CI->data->table('tbl_kinderen');
-    $result = $this->CI->data->get_grid();
-
-    $this->add_trace_sql( $this->CI->data->last_query() );
-    $this->add_trace( $this->CI->data->get_query_info() );
-    $this->add_trace( current($result) );
-    
+    $this->add_trace( phpinfo() );
     return $this->content;
   }
   

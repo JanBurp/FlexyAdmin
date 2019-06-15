@@ -4,15 +4,15 @@
       <span v-if="loading" class="btn-content">{{showPlaceholder}}</span>
       <span v-else class="btn-content">
         <span v-show="multiple && selected.length>=2" class="selected-option selected-count">{{$lang.grid_total | replace(selected.length)}}</span>
-        <select-option v-for="item in selected" :label="item" extra-class="selected-option"></select-option>
+        <select-option v-for="item in selected" :key="item.value" :label="item" extra-class="selected-option"></select-option>
       </span>
       <span v-if="clearButton&&values.length" class="close" @click="clear()">&times;</span>
     </button>
-    
+
     <select ref="sel" v-model="val" v-show="show" :name="name" class="secret" :multiple="multiple" :required="required" :readonly="readonly" :disabled="disabled">
       <option v-for="option in list" :value="option[optionsValue]">{{ option[optionsLabel] }}</option>
     </select>
-    
+
     <ul class="dropdown-menu" v-show="show">
       <template v-if="list.length">
         <li v-if="canSearch || multiple" class="search-item">
@@ -170,7 +170,7 @@ export default {
       if (!_.isUndefined(val)) this.$emit('change', val);
     }
   },
-  
+
   created () {
     this.setOptions(this.options)
     this.val = this.value
@@ -202,7 +202,7 @@ export default {
       this._parent.children.splice(index, 1)
     }
   },
-  
+
   methods: {
     blur () {
       this.show = false
@@ -330,7 +330,7 @@ export default {
         this.editing = item.value;
         this.show = false;
         this.$emit('update', item.value );
-        self.optionsAjaxLoaded = false; 
+        self.optionsAjaxLoaded = false;
       }
     },
     // cancelEdit: function(item) {
@@ -342,7 +342,7 @@ export default {
     //   if (item.value!==event.target.value) {
     //     var newItem = {
     //       'value' : item.value,
-    //       'name'  : event.target.value, 
+    //       'name'  : event.target.value,
     //     }
     //     this.$emit('update', newItem );
     //   }

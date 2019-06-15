@@ -10,7 +10,7 @@
 	<title>Login</title>
 	<base href="<?=base_url()?>" />
 
-  <link rel="stylesheet" href="<?=admin_assets()?>flexyadmin.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="<?=mix_asset('flexyadmin.css',true)?>" type="text/css" media="screen">
 </head>
 
 <body class="login-body bg-primary">
@@ -31,7 +31,7 @@
         <button type="submit" class="btn btn-warning col-12"><?=lang('login_submit')?></button>
         <a v-cloak @click="showForgottenPasswordDialog(true)" id="forgotten-password-link"><?=lang('login_forgot')?></a>
   		</form>
-      
+
   		<form v-cloak v-if="forgottenPasswordDialog" action="<?=site_url("_admin/login/forgot")?>" method="post">
         <div class="form-group row">
           <div class="col-10"><input type="text" class="form-control" id="email" name="email" placeholder="<?=lang('login_email')?>" value=""></div>
@@ -40,7 +40,7 @@
         <button type="submit" class="btn btn-warning col-12"><?=lang('login_send_new_password')?></button>
         <a @click="showForgottenPasswordDialog(false)" id="forgotten-password-link"><?=lang('login_login')?></a>
   		</form>
-      
+
     </div>
   </div>
 </div>
@@ -51,7 +51,7 @@ var _flexy = {
   'message'       : '<?=isset($message)?strip_tags($message):''?>',
 };
 </script>
-<script src="<?=admin_assets()?>login.build.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=mix_asset('login.build.js',true)?>" type="text/javascript" charset="utf-8"></script>
 
 </body>
 </html>
