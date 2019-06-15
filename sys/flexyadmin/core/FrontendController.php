@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /** \ingroup core
  * Dit is de basis voor de controller aan de frontend (SITEPATH/controller.php)
@@ -10,9 +10,9 @@ class FrontEndController extends MY_Controller {
 
   /**
    * Array waar alle onderdelen van de site terechtkomen (zie [Frontend Controller](Frontend-controller))
-   * 
+   *
    * Standaard worden de volgende onderdelen klaargezet:
-   * 
+   *
    *     $this->site              = array(
    *      ['title']                => 'Titel',                          // Titel van de site (= tbl_site.str_title)
    *      ['author']               => 'Jan den Besten',                 // Auteur van de site (= tbl_site.str_author)
@@ -41,9 +41,9 @@ class FrontEndController extends MY_Controller {
     */
 	public function __construct() {
 		parent::__construct();
-    
+
     if (defined('PHPUNIT_TEST')) return;
-    
+
     // In testmode a temp message will be shown (if not logged in as administrator) and sitemap.xml is deleted
     if ($this->config->item('testmode')) {
       $this->load->library('flexy_auth');
@@ -54,9 +54,9 @@ class FrontEndController extends MY_Controller {
         die();
       }
     }
-    
+
     $this->is_ajax_module = $this->config->item('AJAX_MODULE');
-    
+
     if ($this->is_ajax_module) {
       // Load standard Ajax Module Class
       $this->load->library('ajax_module');
@@ -72,25 +72,25 @@ class FrontEndController extends MY_Controller {
   		$this->load->helper("html_helper");
   		$this->load->helper("language");
       $this->load->library("menu");
-      
+
       $framework=$this->config->item('framework');
       $this->menu->set('framework',$framework);
-      
+
       if ($this->config->item('use_parser',false)) $this->load->library('parser');
-      
+
   		$this->load->library("content");
       $this->content->initialize($this->config->item('parse_content'));
   		$this->load->library('form_validation');
     }
 		// Init global site data
 		$this->_init_globals();
-    
+
     // Simulate cronjobs?
     if ($this->config->item('simulate_cronjobs') and $this->uri->segment(1)!='_cronjob') {
       $this->load->model('cronjob');
       $this->cronjob->go();
     }
-    
+
     // Version timestamp
     $version = 0;
     $build = read_file($this->config->item('SYS').'/build.txt');
@@ -100,15 +100,15 @@ class FrontEndController extends MY_Controller {
       }
     }
     $this->site['int_version'] = $version;
-    
+
     // Is there a library that needs to be run first??
     if (file_exists(SITEPATH.'libraries/Before_controller.php')) {
       $this->load->library('module');
       $this->load->library('before_controller');
     }
-    
+
 	}
-	
+
 
 	/**
 	 * Stop alle globale variabelen in $site
@@ -130,7 +130,12 @@ class FrontEndController extends MY_Controller {
 			// rename standard fields
 			foreach ($stdFields as $f) {
 				if (isset($this->site[$f])) {
-					$this->site[remove_prefix($f)]=$this->site[$f];
+          if ($f!=='email_email') {
+            $this->site[remove_prefix($f)] = ascii_to_entities($this->site[$f]);
+          }
+          else {
+            $this->site[remove_prefix($f)] = $this->site[$f];
+          }
 				}
 			}
 		}
@@ -163,7 +168,7 @@ class FrontEndController extends MY_Controller {
   		 * Declare and init some variables
   		 */
   		$declare=array('menu','content','break','class');
-  		if ($this->config->item('site_variables')) $declare=array_merge($declare,$this->config->item('site_variables'));	
+  		if ($this->config->item('site_variables')) $declare=array_merge($declare,$this->config->item('site_variables'));
   		foreach ($declare as $variable) {
   			$this->site[$variable]='';
   		}
@@ -183,15 +188,15 @@ class FrontEndController extends MY_Controller {
    		elseif ($this->config->item('menu_homepage_uri')) {
    			$this->uri->set_home($this->config->item('menu_homepage_uri'));
    		}
-      
+
     }
 	}
-  
-  
-  
+
+
+
 	/*
 	 * function _module($page)
-	 * 
+	 *
 	 * This functions collects all the modules which need to be loaded and called. Then calls them.
 	 * If modules have a return value it will be added to $page['module_content'].
 	 */
@@ -273,7 +278,7 @@ class FrontEndController extends MY_Controller {
 
 	/*
 	 * function _call_library()
-	 * 
+	 *
 	 * This functions loads the given library and calls it.
 	 * Used for loading and calling modules
 	 */
@@ -317,21 +322,21 @@ class FrontEndController extends MY_Controller {
     $this->benchmark->mark('library_'.$library.'_end');
 		return FALSE;
 	}
-  
-  
+
+
 
 
   /**
    * Voeg keywords toe
    *
-   * @param string $words 
+   * @param string $words
    * @return void
    * @author Jan den Besten
    */
 	public function add_keywords($words) {
 		$this->site["keywords"]=add_string(el('keywords',$this->site,''),$words,",");
 	}
-	
+
   /**
    * Voeg achter de titel nog een extra tekst toe
    *
@@ -347,18 +352,18 @@ class FrontEndController extends MY_Controller {
   /**
    * Zet huidige uri in $site['uri']
    *
-   * @param string $uri 
+   * @param string $uri
    * @return void
    * @author Jan den Besten
    */
 	public function set_uri($uri) {
 		$this->site["uri"]=$uri;
 	}
-  
+
   /**
    * Pakt huidige uri uit $site['uri']
    *
-   * @param string $max default=0 Aantal parts 
+   * @param string $max default=0 Aantal parts
    * @return void
    * @author Jan den Besten
    */
@@ -382,7 +387,7 @@ class FrontEndController extends MY_Controller {
 		else
 			$this->site["content"].=$c;
 	}
-	
+
   /**
    * Test of er wel content is
    *
@@ -392,7 +397,7 @@ class FrontEndController extends MY_Controller {
 	public function has_content() {
 		return (isset($this->site["content"]) and !empty($this->site["content"]));
 	}
-	
+
   /**
    * Zelfde als has_content() maar dan omgekeerd
    *
@@ -402,8 +407,8 @@ class FrontEndController extends MY_Controller {
 	public function no_content() {
 		return !$this->has_content();
 	}
-	
-  
+
+
   /**
    * Laad een error 404 pagina zien, met alle modules geladen
    *
@@ -437,7 +442,7 @@ class FrontEndController extends MY_Controller {
     }
     return $page404;
 	}
-  
+
   /**
    * Voegt een class toe aan de body tag ($site['class'])
    *
@@ -448,12 +453,12 @@ class FrontEndController extends MY_Controller {
     $class=str_replace('/','__',$class);
 		$this->site['class']=add_string(el('class',$this->site,''),$class,' ');
 	}
-	
+
   /**
    * Voegt een variabel aan $site toe
    *
-   * @param string $key 
-   * @param string $value 
+   * @param string $key
+   * @param string $value
    * @return void
    * @author Jan den Besten
    */
@@ -464,7 +469,7 @@ class FrontEndController extends MY_Controller {
   /**
    * Pakt bepaalde waarde van $site
    *
-   * @param string $key 
+   * @param string $key
    * @return mixed
    * @author Jan den Besten
    */
@@ -515,20 +520,20 @@ class FrontEndController extends MY_Controller {
     }
 		return $html;
 	}
-  
+
   /**
    * Zelfde als view()
    *
-   * @param string $view 
-   * @param string $data 
-   * @param string $return 
+   * @param string $view
+   * @param string $data
+   * @param string $return
    * @return void
    * @author Jan den Besten
    */
 	public function show($view='',$data='',$return=FALSE) {
 		return $this->view($view,$data,$return);
 	}
-	
+
   /**
    * Geeft de modules die bij huidige pagina horen
    *
@@ -550,8 +555,8 @@ class FrontEndController extends MY_Controller {
 		}
 		return $modules;
 	}
-	
-	
+
+
   /**
    * @author Jan den Besten
    * @deprecated
@@ -576,7 +581,7 @@ class FrontEndController extends MY_Controller {
 		$this->load->module('getform');
 		return $this->getform->by_id($module);
 	}
-	
+
 }
 
 ?>

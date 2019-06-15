@@ -10,7 +10,7 @@
 	<title>FlexyAdmin - <?=strip_tags($str_title)?></title>
 	<base href="<?=base_url()?>" />
 
-  <link rel="stylesheet" href="<?=admin_assets()?>flexyadmin.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="<?=mix_asset('flexyadmin.css',true)?>" type="text/css" media="screen">
 </head>
 
 <body>
@@ -40,7 +40,7 @@
         <?=$headermenu?>
       </div>
     </div>
-    
+
     <div id="row" class="row">
       <div id="flexy-menu-side" class="col-md-2 d-md-block" :class="{'d-none':!global.menuIsVisible()}" @click="global.toggleMenu()">
         <?=$sidemenu?>
@@ -55,11 +55,11 @@
       <span class="spinner fa fa-spinner fa-pulse fa-fw"></span>
     </div>
   </div>
-  
+
   <div id="help" v-cloak v-show="global.helpIsOn()">
     <flexy-accordion :items="state.help_items"></flexy-accordion>
   </div>
-  
+
 </div>
 
 
@@ -77,7 +77,7 @@ var _flexy = {
   'tinymceOptions': '<?=array2json($tinymceOptions)?>',
 };
 </script>
-<script src="<?=admin_assets()?>main.build.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=mix_asset('main.build.js',true)?>" type="text/javascript" charset="utf-8"></script>
 
 </body>
 </html>

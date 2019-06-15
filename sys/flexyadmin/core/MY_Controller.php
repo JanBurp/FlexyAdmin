@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * MY_Controller Class
  *
@@ -76,7 +76,7 @@ class MY_Controller extends CI_Controller {
       }
     }
 
-    
+
     /**
      * Load extra's needed for front,back & ajax
      */
@@ -90,14 +90,14 @@ class MY_Controller extends CI_Controller {
     $this->load->helper('img');
     $this->load->helper('text');
     $this->load->helper('language');
-    
+
     /**
      * Load Data Model & Core tables
      */
     $this->load->model( 'data/Data_Core','data_core' );
     $this->load->model( 'data/Data','data' );
     $this->load->model( 'assets' );
-      
+
     if (defined('PHPUNIT_TEST')) {
       if (SAFE_INSTALL) {
         $buildfile = '../sys/build.txt';
@@ -109,7 +109,7 @@ class MY_Controller extends CI_Controller {
       }
       echo "> FlexyAdmin ". read_file($buildfile) . "\n";
       echo "> Testing on PHP ". phpversion() . "\n";
-      
+
       // Load test database
       $files = directory_map($db_folder);
       $key = in_array_like('unittest_',$files);
@@ -149,7 +149,7 @@ class MY_Controller extends CI_Controller {
 	private function _init_flexy_admin($isAdmin=false) {
     if ($this->config->item('PROFILER')) $this->output->enable_profiler(TRUE);
 	}
-  
+
   /**
    * This installs basic FlexyAdmin config
    *
@@ -196,11 +196,11 @@ class MY_Controller extends CI_Controller {
     }
   }
 
-  
+
   /**
    * Geeft de uri van een pagina met de gevraagde module
    *
-   * @param string $module 
+   * @param string $module
    * @param bool $full_uri default=true
    * @return string uri
    * @author Jan den Besten
@@ -208,7 +208,7 @@ class MY_Controller extends CI_Controller {
 	public function find_module_uri($module) {
     find_module_uri($module);
 	}
-  
+
 
 }
 

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /** \ingroup helpers
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">URL_helper van CodeIgniter</a>.
@@ -51,7 +51,7 @@ function public_assets() {
 /**
  * Geeft pad naar assets map van admin
  *
- * @param string $s[''] 
+ * @param string $s['']
  * @return string
  * @author Jan den Besten
  */
@@ -64,10 +64,16 @@ function admin_assets($s="") {
   return $assets;
 }
 
+function mix_asset($file,$backend=false) {
+  $CI =& get_instance();
+  $CI->load->model('version');
+  return $CI->version->get_mix_version($file,$backend);
+}
+
 /**
  * Remove assets path from path
  *
- * @param string $path 
+ * @param string $path
  * @return string $path
  * @author Jan den Besten
  */
@@ -78,7 +84,7 @@ function remove_assets($path) {
 /**
  * Add assets path to path
  *
- * @param string $path 
+ * @param string $path
  * @return string $path
  * @author Jan den Besten
  */
@@ -131,7 +137,7 @@ function api_uri() {
 /**
  * Zelfde als rawurlencode()
  *
- * @param string $l 
+ * @param string $l
  * @return string
  * @author Jan den Besten
  * @deprecated
@@ -143,7 +149,7 @@ function linkencode($l) {
 /**
  * Zelfde als  rawurldecode()
  *
- * @param string $l 
+ * @param string $l
  * @return string
  * @author Jan den Besten
  * @deprecated
@@ -155,8 +161,8 @@ function linkdecode($l) {
 /**
  * Encode een pad zodat het geschikt is voor een uri
  *
- * @param string $p 
- * @param string $isPath default=TRUE 
+ * @param string $p
+ * @param string $isPath default=TRUE
  * @return string
  * @author Jan den Besten
  */
@@ -169,7 +175,7 @@ function pathencode($p,$isPath=TRUE) {
 /**
  * Decode een pad (uit een uri)
  *
- * @param string $p 
+ * @param string $p
  * @param string $isPath default=TRUE
  * @return string
  * @author Jan den Besten
@@ -218,7 +224,7 @@ function test_url($url) {
   	$CI =& get_instance();
     return $CI->form_validation->valid_email($email);
   }
-  
+
   // local => add site_url()
   if (substr($url,0,4)!=='http') {
     $url=site_url($url);
@@ -238,7 +244,7 @@ function test_url($url) {
     curl_close($handle);
     return TRUE;
   }
-  
+
   return FALSE;
 }
 
@@ -246,7 +252,7 @@ function test_url($url) {
 /**
  * Maakt leesbare string van een url (haalt http:// etc eraf)
  *
- * @param string $s 
+ * @param string $s
  * @return string
  * @author Jan den Besten
  */
