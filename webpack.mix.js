@@ -18,7 +18,7 @@ mix
   .setResourceRoot('../assets/')
   .setPublicPath('public/assets')
   .js('public/assets/js/site.js', 'public/assets/scripts.min.js')
-  .less('public/assets/less/bootstrap.less', 'public/assets/styles.min.css')
+  .less('public/assets/less-bootstrap/bootstrap.less', 'public/assets/styles.min.css')
   .version()
   .sourceMaps()
   .browserSync({
