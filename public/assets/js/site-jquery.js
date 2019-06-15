@@ -3,8 +3,8 @@ import $ from 'jquery';
 import 'bootstrap/dist/js/bootstrap';
 
 $(document).ready(function() {
-  console.log('jQuery Ready..');
-  console.log('Bootstrap Ready..');
+  // console.log('jQuery Ready..');
+  // console.log('Bootstrap Ready..');
 });
 
 // $(window).load(function() {
