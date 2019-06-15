@@ -1,0 +1,54 @@
+//
+// Algemene zaken
+//
+.hidden {display:none;}
+.error {color:$warning;}
+
+
+//
+// Navigatie
+//
+.navbar {
+  .nav-item.dropdown {
+    .nav-link {
+      display: inline-block;
+      padding-right:.5rem;
+    }
+  }
+}
+
+//
+// Layout
+//
+body {
+  background:$body-bg;
+}
+
+.container {
+  .header {
+    .title {
+      font-size:$h1-font-size;
+    }
+  }
+
+	.content {
+    padding:2rem 0 4rem;
+    img {
+      max-width:100%;
+    }
+  }
+}
+
+
+//
+// Formulieren
+//
+.form-group {
+	.alert {
+    display:block;
+    width:100%;
+    margin:0 1rem .5rem;
+    padding:.25rem 1rem;
+  }
+}
+

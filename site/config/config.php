@@ -22,6 +22,10 @@ $config['testmode'] = false;
  */
 $config['framework']='bootstrap';
 
+// $config['views'] = array('site'=>'','menu'=>'');                          // bootstrap 3 & jQuery
+$config['views'] = array('site'=>'-bootstrap4','menu'=>'-bootstrap4');    // bootstrap 4 & jQuery
+// $config['views'] = array('site'=>'-bootstrap4','menu'=>'-vue');           // bootstrap 4 & VueJS
+
 
 /**
  * User Parser for the views
@@ -38,7 +42,7 @@ $config['use_parser'] = FALSE;
  * Set menu config here (see Menu for the options). These will override defaults.
  *
  */
-// $config['menu']=array('fields'=>array(),'view_path'=>'menu');
+$config['menu']=array('fields'=>array(),'view_path'=>'menu'.$config['views']['menu']);
 
 /*
  *--------------------------------------------------------------------------
@@ -67,7 +71,7 @@ $config['use_minimized'] = TRUE;
  *--------------------------------------------------------------------------
  *
  * Set how the content must be parsed, possible settings:
- * 
+ *
  * - compress               - [TRUE] de HTML output wordt gecomprimeerd (overbodige spaties en returns worden verwijderd)
  * - safe_emails            - [TRUE] emaillinks worden vervangen door spambot veilige emaillinks
  * - auto_target_links      - [TRUE] alle link-tags naar externe adressen krijgen de attributen `target="_blank"` en `rel="external"` mee.
@@ -173,10 +177,10 @@ $config['auto_pagination']	= TRUE;
  * - $config['autoload_modules_if'] = array( 'submenu'=>array('str_module'=>'page') );   // Loads module 'submenu' when str_module='page'
  * - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>'') );          // Loads module 'page' when str_module=''
  * - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>''), 'submenu'=>array('str_module'=>'page') );          // Combination
- * 
+ *
  * With 'error404_module' you can set a module if a page is not found
  */
-// $config['autoload_modules'] = array('login');
+$config['autoload_modules'] = array('opengraph');
 // $config['autoload_modules_if'] = array( 'login'=>array('b_restricted'=>'true') );
 // $config['error404_module'] = 'fallback';
 
@@ -230,7 +234,7 @@ $config['menu_autoset_home']=TRUE;
  * The name of the view that the frontend controller will load if no view was given
  *
  */
-$config['main_view']='site';
+$config['main_view']='site'.$config['views']['site'];
 
 /*
  *--------------------------------------------------------------------------
@@ -270,14 +274,14 @@ $config['logout_to_site']=FALSE;
  *
  * Just call the url www.site.com/_cronjobs to run all the set cronjobs.
  * Every cronjob will be checked if it needs to be run at give time.
- * 
+ *
  * If server is not capable of running cronjobs set 'simulate_cronjobs'=TRUE and the site will test if it needs to run cronjobs every get of a frontend page
- * 
+ *
  * array(
  *  'name'  => name of your cronjob
  *  'every' => at wich moments the job should be called
  * );
- * 
+ *
  * every examples:
  * - '5'                // calls the job every 5 minutes
  * - 'day 10:15'        // every day at 10:15

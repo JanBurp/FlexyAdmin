@@ -14,10 +14,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <base href="<?=base_url()?>">
   <!-- <link rel="shortcut icon" href="<?=$publicassets?>img/favicon.ico" type="image/x-icon"> -->
-  <!-- <link rel="alternate" type="application/rss+xml" title="<?=ascii_to_entities($title);?>" href="<?=site_url('_rss');?>" /> -->
+  <!-- <link rel="alternate" type="application/rss+xml" title="<?=$title)?>" href="<?=site_url('_rss');?>" /> -->
 
-  <title><?=ascii_to_entities($title);?></title>
-  <meta name="Description" content="<?=ascii_to_entities($description);?>">
+  <title><?=$title)?></title>
+  <meta name="Description" content="<?=$description?>">
   <meta name="Keywords" content="<?=$keywords;?>">
   <meta name="Author" content="<?=$author;?>">
   <meta name="dcterms.rightsHolder" content="Jan den Besten,<?=$author;?>">

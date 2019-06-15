@@ -1,9 +1,10 @@
 // jQuery based
 import $ from 'jquery';
+import 'bootstrap/dist/js/bootstrap';
 
 $(document).ready(function() {
-  // Menu dropdown hack voor iPhone etc
-  $('.navbar-toggle').click(function(){ });
+  console.log('jQuery Ready..');
+  console.log('Bootstrap Ready..');
 });
 
 // $(window).load(function() {
