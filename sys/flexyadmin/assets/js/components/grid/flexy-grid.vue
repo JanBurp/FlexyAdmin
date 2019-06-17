@@ -55,7 +55,7 @@ export default {
       default:false,
     },
   },
-  
+
   // https://vuejs.org/v2/guide/components.html#Circular-References-Between-Components
   beforeCreate: function () {
     this.$options.components.FlexyForm = require('./../form/flexy-form.vue');
@@ -64,13 +64,13 @@ export default {
   created : function() {
     flexyState.eventbus.$on('upload-file', this.dropUploadFiles);
   },
-  
-  
+
+
   mounted : function() {
     var self = this;
     self.setUrlOptions();
     self.calcLimit(); // -> NIET MEER, zodat pagination uit kan
-    
+
     // Bij resize
     var resizeTimer;
     window.addEventListener('resize', function(event){
@@ -96,7 +96,7 @@ export default {
     this.loadStart();
   },
 
-  
+
   beforeUpdate : function() {
     // Test if (re)load needed
     if ( this.name!==this.currentName ) {
@@ -121,7 +121,7 @@ export default {
         }
         if (key_item) selected.push(key_item);
       }
-      
+
       if ( !_.isEqual(selected,this.selected) ) {
         this.selected = _.clone(selected);
       }
@@ -177,7 +177,7 @@ export default {
     }
   },
 
-  
+
   computed:{
 
     /**
@@ -190,7 +190,7 @@ export default {
         forceFallback : true,
       }
     },
-    
+
   },
 
   watch : {
@@ -207,7 +207,7 @@ export default {
 
   },
 
-  
+
   methods:{
 
     reset : function() {
@@ -243,7 +243,7 @@ export default {
       return name;
     },
 
-    
+
     calcLimit : function( view ) {
       // console.log('calcLimit',this.pagination);
       if (!this.autoresize) return false;
@@ -307,7 +307,7 @@ export default {
           }
           if (new_limit <= 1) new_limit = 1;
       }
-      
+
       var changed = false;
       // Calc new offset
       var new_offset = 0;
@@ -359,11 +359,11 @@ export default {
 
       this.setUrlOptions();
     },
-    
+
     reloadPageAfterResize() {
       this.reloadPage();
     },
-    
+
     reloadPage : function(apiParts) {
       var self = this;
       // first close dropdown menu
@@ -396,7 +396,7 @@ export default {
             }
             // Data en die aanvullen met data
             var data = response.data.data;
-            
+
             // Als data is 0 bij filter, geef een popup
             if (data.length==0 && self.apiParts.filter!=='') {
               // Vraag of filter gereset of niet
@@ -423,7 +423,7 @@ export default {
         return response;
       });
     },
-    
+
     apiUrl : function(parts) {
       parts = _.extend( this.apiParts, parts );
       if (!this.pagination) {
@@ -452,11 +452,11 @@ export default {
       if (this.changeUrlApi) history.pushState(this.urlOptions, '', location.pathname+'?options='+JSON.stringify(this.urlOptions));
       return url;
     },
-    
+
     hasData : function() {
       return (this.items.length>0 || this.gridType()==='media');
     },
-    
+
     /*
       Voeg (tree)info toe aan meegegeven items
     */
@@ -550,7 +550,7 @@ export default {
       }
       return data;
     },
-    
+
     gridType : function() {
       var type = this.type;
       if (type==='mediapicker') {
@@ -569,11 +569,11 @@ export default {
       }
       return c;
     },
-    
+
     needsPagination : function(){
       return (typeof(this.dataInfo.num_pages)!=='undefined' &&  this.dataInfo.num_pages > 1);
     },
-    
+
     isPrimaryHeader : function(field) {
       var headerType = field['grid-type'] || field['type'];
       return (headerType==='primary');
@@ -596,7 +596,7 @@ export default {
     isMediaThumbs : function() {
       return (this.gridType()==='media' && this.getMediaView()!=='list');
     },
-    
+
     getMediaView : function() {
       return flexyState.getMediaView();
     },
@@ -612,7 +612,7 @@ export default {
       if (field['readonly']) c+=' grid-header-muted';
       return c;
     },
-    
+
     hasSelection : function() {
       return this.selected.length>0;
     },
@@ -620,11 +620,11 @@ export default {
     oneSelected : function() {
       return this.selected.length==1;
     },
-    
+
     isSelected : function(id) {
       return this.selected.indexOf(id) > -1;
     },
-    
+
     select: function(id) {
       if (this.multiple===false) {
         this.selected = [];
@@ -640,7 +640,7 @@ export default {
 
       this.emitToggleMedia(id);
     },
-    
+
     reverseSelection:function() {
       var ids = [];
       for (var i = 0; i < this.items.length; i++) {
@@ -648,7 +648,7 @@ export default {
       }
       this.selected = _.difference(ids,this.selected);
     },
-    
+
     emitToggleMedia : function(id) {
       if (this.type==='mediapicker') {
         var media = this.findMediaByIndex(id);
@@ -667,7 +667,7 @@ export default {
       }
       return media;
     },
-    
+
     newItem : function() {
       if (this.gridType()==='media') {
         var event = new MouseEvent('click', {
@@ -681,7 +681,7 @@ export default {
         this.editItem(-1);
       }
     },
-    
+
     editItem : function(id) {
       // copy?
       if (this.oneSelected()) {
@@ -692,7 +692,7 @@ export default {
       var url = '/edit/'+name+'/'+id+'?options='+JSON.stringify(this.urlOptions);
       this.$router.push(url);
     },
-    
+
     removeItems : function(removeIds) {
       var self = this;
       if ( _.isUndefined(removeIds)) {
@@ -706,7 +706,7 @@ export default {
         // Confirm
         var message = this.$lang['confirm_delete_one'];
         if (removeIds.length>1) message = this.$options.filters.replace( this.$lang['confirm_delete_multiple'], removeIds.length );
-        
+
         flexyState.openModal( {'title':'','body':message,'size':'modal-sm'}, function(event) {
           if ( event.state.type==='ok') {
             var data = {
@@ -733,10 +733,10 @@ export default {
             });
           }
         });
-        
+
       }
     },
-    
+
     actionName : function(action) {
       var action_name = '';
       if (!_.isUndefined(action.name))     action_name = action.name;
@@ -779,7 +779,7 @@ export default {
         return response;
       });
     },
-    
+
     // Row action
     action: function(action) {
       var self = this;
@@ -797,25 +797,25 @@ export default {
       if (!_.isUndefined(cell.value.class)) return cell.value.class || 'btn-outline-warning';
       return 'btn-outline-warning';
     },
-        
+
     rowLevel:function(row) {
       if (_.isUndefined(row._info)) return 0;
       return row._info.level;
     },
-    
+
     isEditable : function(name) {
       var editable = false;
       if ( !_.isUndefined(this.fields[name]) ) editable = this.fields[name]['grid-edit'];
       // console.log('isEditable',name,this.fields[name],editable);
       return editable;
     },
-    
+
     isReadonly : function(name) {
       var readonly = false;
       if ( !_.isUndefined(this.fields[name]) ) readonly = this.fields[name]['readonly'];
       return readonly;
     },
-    
+
     startFinding : function(event) {
       if (event) event.preventDefault();
       var self = this;
@@ -835,19 +835,19 @@ export default {
       }
       this.reloadPage({offset:0,filter:find});
     },
-    
+
     findChanged : function() {
       if (this.findTerm==='') this.stopFind();
       this.oldExtendedTerm = [];
     },
-    
+
     stopFind : function() {
       this.findTerm = '';
       this.extendedFind = false;
       this.extendedTerm = [_.clone(this.extendedTermDefault)];
       this.reloadPage({offset:0,filter:''});
     },
-    
+
     toggleExtendedFind : function() {
       if (this.extendedFind) {
         this.extendedFind = false;
@@ -870,7 +870,7 @@ export default {
       }
       this.startFinding();
     },
-    
+
     extendedSearchAdd : function() {
       this.extendedTerm.push( _.clone(this.extendedTermDefault) );
     },
@@ -878,7 +878,7 @@ export default {
       this.extendedTerm.splice(index,1);
       if (this.extendedTerm.length<1) this.extendedTerm = [_.clone(this.extendedTermDefault)];
     },
-    
+
     dropUploadFiles : function(event) {
       event.stopPropagation();
       event.preventDefault();
@@ -947,7 +947,7 @@ export default {
                 if ( !_.isUndefined(response.data.data.orig_name) ) {
                   var origName = response.data.data.orig_name;
                   if (origName !== fileName && response.data.message.indexOf('text-danger')>0 ) { // LET op
-                    flexyState.addMessage( response.data.message, 'danger' );  
+                    flexyState.addMessage( response.data.message, 'danger' );
                   }
                   if (self.type==='mediapicker') {
                     self.$emit('grid-uploaded-item',fileName);
@@ -969,7 +969,7 @@ export default {
           });
         }
       }
-      
+
     },
 
     /**
@@ -1072,10 +1072,10 @@ export default {
       if (oldIndex!==newIndex) {
         this.draggable.oldIndex = oldIndex;
         this.draggable.newIndex = newIndex;
-        
+
         var items = _.cloneDeep(this.draggable.oldItems);
         var number_of_children = 0;
-        var parent = 0; 
+        var parent = 0;
         if (this.gridType()==='tree') {
           number_of_children = this.draggable.children.length || 0;
           // Pas parent van verplaatste item aan
@@ -1097,11 +1097,11 @@ export default {
         // Verplaats item & children
         if (number_of_children>0 && newIndex>oldIndex) {
           items = jdb.moveMultipleArrayItems( items, oldIndex, number_of_children + 1, newIndex - number_of_children);
-        } 
+        }
         else {
           items = jdb.moveMultipleArrayItems( items, oldIndex, number_of_children + 1, newIndex);
         }
-        
+
         // Update 'order'
         var order = this.draggable.orderStart;
         for (var i = 0; i < items.length; i++) {
@@ -1111,13 +1111,13 @@ export default {
         // Vernieuw de tree info
         this.items = _.cloneDeep(items);
         if (this.gridType()=='tree') this.items = this.addInfo(this.items);
-        
+
         if (flexyState.debug) {
           console.log( 'draggable_onEnd ---------' );
           console.log(oldIndex,' => ',newIndex);
           self._log(self.items);
         }
-        
+
         var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
         // console.log(newOrder);
         if (self.draggable.children && newIndex>oldIndex) newOrder = newOrder - self.draggable.children.length;
@@ -1128,7 +1128,7 @@ export default {
       else {
         self.draggable.item = false;
       }
-      
+
       // Laat children weer zien
       this.draggable.children = false;
     },
@@ -1156,8 +1156,8 @@ export default {
         return response;
       });
     },
-    
-    
+
+
     _log : function( items ) {
       var self = this;
       _.forEach(items,function(row){
@@ -1169,14 +1169,14 @@ export default {
         }
       });
     }
-    
+
   }
 }
 </script>
 
 <template>
   <div>
-    
+
     <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
       <!-- MAIN HEADER -->
       <div class="card-header">
@@ -1188,7 +1188,7 @@ export default {
             <flexy-button @click.native="startAction(action)" :icon="action.icon" :text="actionName(action)" class="btn-default text-primary" :class="action.class" />
           </div>
         </div>
-        
+
         <!-- FAST SEARCH -->
         <form class="form-inline" @submit="startFinding($event)">
           <div class="form-group" v-if="!extendedFind">
@@ -1238,7 +1238,7 @@ export default {
           <thead>
             <tr>
               <template v-for="(field,key) in fields">
-                
+
                 <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                   <flexy-button v-if="dataInfo.rights.insert==true" @click.native="newItem()" :icon="{'plus':!oneSelected(),'paste':oneSelected()}" class="btn-outline-warning" />
                   <flexy-button v-if="type!=='mediapicker' && dataInfo.rights.delete==true" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger action-delete-all" />
@@ -1266,11 +1266,11 @@ export default {
                     <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
                   </a>
                 </th>
-                
+
               </template>
             </tr>
           </thead>
-        
+
           <!-- GRID BODY -->
           <draggable v-if="hasData()" :list="items" tag="tbody" v-bind="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd" :move="draggable_onMove">
 
@@ -1298,7 +1298,7 @@ export default {
             <template v-for="row in items">
               <tr v-if="row" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
                 <template v-for="cell in row">
-                
+
                   <!-- PRIMARY CELL -->
                   <td v-if="cell.type=='primary'" class="action">
                     <flexy-button @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning action-edit" />
@@ -1306,12 +1306,12 @@ export default {
                     <flexy-button @click.native="select(row.id.value)" :icon="{'square-o':!isSelected(row.id.value),'check-square-o':isSelected(row.id.value)}" class="btn-outline-info action-select" />
                     <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info action-drag" :class="{'active':isDragging(row.id.value)}" />
                   </td>
-                
+
                   <!-- ACTION CELL -->
                   <td v-else-if="cell.type=='action'" class="action">
                     <flexy-button :icon="cell.value.icon" :class="actionClass(cell)" :text="cell.value.text" @click.native="action(cell.value)" />
                   </td>
-                
+
                   <!-- CELL -->
                   <flexy-grid-cell v-else
                     @select="select(row.id.value)"
@@ -1319,13 +1319,14 @@ export default {
                     :type="cell.type"
                     :name="cell.name"
                     :value="cell.value"
+                    :valuecomplete="row"
                     :level="rowLevel(row)"
                     :primary="{ table:dataName(), id:row.id.value }"
                     :editable="isEditable(cell.name)"
                     :readonly="isReadonly(cell.name)"
                     :options="fields[cell.name]">
                   </flexy-grid-cell>
-                
+
                 </template>
               </tr>
             </template>
@@ -1344,9 +1345,9 @@ export default {
           <span class="pagination-info text-primary">{{$lang.grid_total | replace(dataInfo.total_rows)}}</span>
         </div>
       </div>
-    
+
     </div>
-    
+
   </div>
 
 </template>

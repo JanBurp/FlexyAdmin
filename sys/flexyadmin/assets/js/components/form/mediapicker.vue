@@ -30,24 +30,24 @@ export default {
     },
   },
   computed : {
-    
+
     draggableOptions : function() {
       return {
         forceFallback : true,
       }
     },
-    
+
   },
-  
+
   data : function() {
     return {
       media   : this.value,
       choose  : this.openpicker,
     };
   },
-  
+
   methods : {
-    
+
     thumbs : function() {
       var media = _.trim(this.media,'|');
       var array = media.split('|');
@@ -71,7 +71,7 @@ export default {
       this.choose = true;
       // flexyState.eventbus.$emit('upload-file',event); // Uncomment dit en uploaden start meteen. mediapicker-choose moet dan v-show zijn ipv v-if
     },
-    
+
     selection : function() {
       var selection = _.trim(this.media,'|').split('|');
       // console.log('mediapicker.selection():',selection);
@@ -115,7 +115,7 @@ export default {
       newMedia.splice(index, 1);
       this.changeMedia(newMedia);
     },
-    
+
     dragEnd : function(event) {
       var oldIndex = event.oldIndex;
       var newIndex = event.newIndex;
@@ -124,15 +124,15 @@ export default {
       newMedia.splice(newIndex, 0, newMedia.splice(oldIndex,1)[0] );
       this.changeMedia(newMedia);
     },
-    
+
     changeMedia : function(media) {
       if (typeof(media)!=='string') media = _.join(media,'|');
       this.media = _.trim(media,'|');
       this.$emit('input',this.media);
     },
-    
+
   },
-  
+
 }
 </script>
 
@@ -149,10 +149,10 @@ export default {
         </div>
       </draggable>
     </div>
-    
+
     <div class="mediapicker-choose" v-if="choose">
       <flexy-grid type='mediapicker' api='table' :name="path" :title="$lang.file_select" offset="0" limit="10" :selection="selection()" :multiple="this.multiple" :autoresize="this.autoresize" @grid-toggle-item="toggleMedia($event)" @grid-uploaded-item="addMedia($event)"></flexy-grid>
     </div>
-    
+
   </div>
 </template>

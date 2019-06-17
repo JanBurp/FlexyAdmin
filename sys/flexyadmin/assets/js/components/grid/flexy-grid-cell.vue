@@ -10,7 +10,21 @@ import flexyButton  from '../flexy-button.vue'
 export default {
   name: 'VueGridCell',
   components: {flexyThumb,flexyButton},
-  props:['type','name','primary','value','level','editable','readonly','options','focus'],
+  props:{
+    'type':String,
+    'name':String,
+    'primary':Object,
+    'value':[Number,String,Boolean],
+    'valuecomplete':{
+      type:[Object,Array],
+      default:null,
+    },
+    'level':Number,
+    'editable':Boolean,
+    'readonly':Boolean,
+    'options':Object,
+    'focus':Boolean,
+  },
 
   created : function() {
     // console.log('grid-cell',this.name,this.type);
@@ -84,12 +98,21 @@ export default {
     thumbs : function(media) {
       var path = this.options.path;
       var array = [];
+      var src = '';
+      var alt = '';
       if (typeof(media)=='string') {
         array = media.split('|');
         for (var i = 0; i < array.length; i++) {
+          src = _flexy.media+'thumb/' + path +'/'+ array[i];
+          if ( _.isUndefined(this.valuecomplete) && _.isUndefined(this.valuecomplete.alt)) {
+            alt = this.valuecomplete.alt.value;
+          }
+          else {
+            alt = src;
+          }
           array[i] = {
-            src : _flexy.media+'thumb/' + path +'/'+ array[i],
-            alt : array[i],
+            src : src,
+            alt : alt,
           }
         }
       }
