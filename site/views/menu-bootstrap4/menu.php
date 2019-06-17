@@ -1,1 +1,0 @@
-<ul class="<?=$lev==1?'navbar-nav':''?> lev<?=$lev?> <?=$sub?>"><?=$menu?></ul>

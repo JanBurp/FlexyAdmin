@@ -18,13 +18,11 @@ $config['testmode'] = false;
  * Styling framework
  *--------------------------------------------------------------------------
  *
- * Set the default frontend framework.
+ * Set the default frontend framework, set this also in webpack.mix.js
  */
-$config['framework']='bootstrap';
-
-// $config['views'] = array('site'=>'','menu'=>'');                          // bootstrap 3 & jQuery
-$config['views'] = array('site'=>'-bootstrap4','menu'=>'-bootstrap4');    // bootstrap 4 & jQuery
-// $config['views'] = array('site'=>'-bootstrap4','menu'=>'-vue');           // bootstrap 4 & VueJS
+// $config['framework'] = 'bootstrap3';          // bootstrap 3 & jQuery
+$config['framework'] = 'bootstrap4';          // bootstrap 4 & jQuery [DEFAULT]
+// $config['framework'] = 'bootstrap4vue';       // bootstrap 4 & VueJS
 
 
 /**
@@ -42,7 +40,7 @@ $config['use_parser'] = FALSE;
  * Set menu config here (see Menu for the options). These will override defaults.
  *
  */
-$config['menu']=array('fields'=>array(),'view_path'=>'menu'.$config['views']['menu']);
+// $config['menu']=array('fields'=>array(),'view_path'=>'menu');
 
 /*
  *--------------------------------------------------------------------------
@@ -234,7 +232,7 @@ $config['menu_autoset_home']=TRUE;
  * The name of the view that the frontend controller will load if no view was given
  *
  */
-$config['main_view']='site'.$config['views']['site'];
+$config['main_view']='site';
 
 /*
  *--------------------------------------------------------------------------

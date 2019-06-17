@@ -77,6 +77,7 @@ $autoload['helper'] = array(
   'html',
   'string',
   'url',
+  'video',
 );
 
 

@@ -24,7 +24,7 @@ class FrontEndController extends MY_Controller {
    *      ['assets']               => '',                               // verwijzing naar de assets map
    *      ['admin_assets']         => '',                               // verwijzing naar de flexyadmin assets map
    *      ['use_minimized']        => [true|false]                      // geeft aan of er de geminificeerde js,css bestanden moeten worden gebruikt
-   *      ['framework']            => ['default'|'bootstrap']           // welk frontend framework moet worden geladen
+   *      ['framework']            => ['default'|'bootstrap4' etc]      // welk frontend framework moet worden geladen, zie config.php
    *      ['languages']            => array('nl'),                      // array met mogelijke talen. Zoals ingesteld in _SITEPATH/config/config.php_
    *      ['uri']                  => '',                               // Uri van huidige pagina
    *      ['menu']                 => '',                               // Bij aanvang leeg, wordt gevuld met het menu (HTML)

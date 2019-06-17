@@ -1,16 +1,16 @@
-<?php 
+<?php
 /** \ingroup libraries
  * Form
- * 
+ *
  * Met deze class kun je formulieren maken, valideren en uitlezen.
- * Het combineerd de standaard CodeIgniter [Form Helper](http://codeigniter.com/user_guide/helpers/form_helper.html) en [Form Validation](http://codeigniter.com/user_guide/libraries/form_validation.html) en nog wat extra's. 
- * 
+ * Het combineerd de standaard CodeIgniter [Form Helper](http://codeigniter.com/user_guide/helpers/form_helper.html) en [Form Validation](http://codeigniter.com/user_guide/libraries/form_validation.html) en nog wat extra's.
+ *
  * Voorbeeld
  * =========
- * 
+ *
  * Hieronder een voorbeeld voor een eenvoudig contactformulier:
- * 
- *  
+ *
+ *
  *     // Maak array met de velden voor het formulier
  *     $form_fields = array(
  *       'str_name'		=> array(
@@ -28,11 +28,11 @@
  *                         'validation'=>'required'
  *                        ),
  *     );
- *  
+ *
  *     // Maak formulier
  *     $form=new form( 'contact' );                      // Geef de uri van de action pagina mee
  *     $form->set_data( $form_fields, 'Contact' );       // Stel de velden en de naam van het formulier in
- *  
+ *
  *     // Kijk of formulier is ingevuld en goed door de validatie is gekomen
  *     if ( $form->validation() ) {
  *      // Ja, lees de formulier data uit en doe er iets mee
@@ -45,27 +45,27 @@
  *      $htmlForm=$form->render();
  *      echo $validation_errors . $htmlForm;
  *     }
- * 
+ *
  * Opties voor de velden
  * =====================
- * 
+ *
  * Alle opties zijn optioneel. Default waarden zijn per optie aangegeven.
- * 
+ *
  * - label - Label dat voor het veld komt. Default: het label wordt gemaakt aan de hand van de naam van het veld (zonder prefix)
  * - type - Type veld (zie hieronder). Default: 'input'
  * - options - als het type _select_ is moet je hier een array meegeven van de mogelijke opties
  * - validation - validatie van het veld. Zie de [Form Validation van CodeIgniter](http://codeigniter.com/user_guide/libraries/form_validation.html) voor mogelijke waarden.
  * - html - extra html wat na het veld wordt geplaatst
  * - attributes - extra attributen die aan het form element meegegeven kunnen worden.
- * 
+ *
  * Types velden
  * ============
  * - Alle standaard html form elementen zoals _input_, _textarea_, _checkbox_, etc.
  * - htmleditor - Indien mogelijk wordt hier een htmleditor getoond (uitgebreide textarea zeg maar)
  * - html - Je kunt hiermee extra html in het formulier plaatsen met de optie 'html'=>'hier je html'
- * 
- * 
- * 
+ *
+ *
+ *
  * @author Jan den Besten
  */
 class Form {
@@ -90,7 +90,7 @@ class Form {
   // private $validation_error_class = 'error';
   private $framework = 'bootstrap';
   private $view_path='admin/form';
-  
+
   private $styles=array(
     'default'   => array(
       'form'                     => '',
@@ -132,7 +132,7 @@ class Form {
       'status_warning'           => 'has-warning',
       'status_error'             => 'has-error',
     ),
-    
+
   );
 
   /**
@@ -172,7 +172,7 @@ class Form {
   /**
    * Stelt de id in van deze form. Dit is nodig om meerdere formulieren op eenzelfde pagina te onderscheiden
    *
-   * @param string $form_id 
+   * @param string $form_id
    * @return void
    * @author Jan den Besten
    */
@@ -184,7 +184,7 @@ class Form {
   /**
    * set_action()
    *
-   * @param string $action 
+   * @param string $action
    * @return void
    * @author Jan den Besten
    */
@@ -193,7 +193,7 @@ class Form {
 		$this->action=$action;
     return $this;
 	}
-  
+
   /**
    * Stel de css styling in. Mogelijke opties zijn: default|bootstrap
    *
@@ -201,16 +201,17 @@ class Form {
    * @return void
    * @author Jan den Besten
    */
-  public function set_framework($style="bootstrap") {
-    if ($this->CI->config->item('IS_ADMIN')) $style = 'bootstrap';
-    $this->framework = $style;
+  public function set_framework($framework="bootstrap") {
+    if ($this->CI->config->item('IS_ADMIN')) $framework = 'bootstrap';
+    $this->framework = $framework;
+    $this->framework = substr($this->framework,0,9); // alles na 'bootstrap' mag eraf = hetzelfde
     return $this;
   }
-  
+
   /**
    * Stel het pad in waar de views van de form staan.
    *
-   * @param string $path 
+   * @param string $path
    * @return void
    * @author Jan den Besten
    */
@@ -224,7 +225,7 @@ class Form {
   /**
    * Stel formulier kop in
    *
-   * @param string $caption De kop 
+   * @param string $caption De kop
    * @return void
    * @author Jan den Besten
    */
@@ -236,7 +237,7 @@ class Form {
   /**
    * Hiermee kun je in één keer alle ingesteld labels vervangen
    *
-   * @param array $labels 
+   * @param array $labels
    * @return void
    * @author Jan den Besten
    */
@@ -288,7 +289,7 @@ class Form {
 		}
 		$this->set_caption($caption);
 	}
-  
+
   /**
    * Laat validation error zien bij de velden zelf
    *
@@ -334,7 +335,7 @@ class Form {
       $this->data[$key]['attr']['placeholder']=$label;
     }
   }
-  
+
 
   /**
    * Voeg een extra wachtwoord veld toe zodat een wachtwoord dubbel moet worden ingevoerd. Checkt automatisch of ze overeenkomen.
@@ -350,7 +351,7 @@ class Form {
     $this->add_password_match=$opts;
     if ($this->add_password_match) $this->data=$this->_add_matching_password($this->data);
 	}
-	
+
 	/**
 	 * Stel in dat alle passwords moeten worden gehashed
 	 *
@@ -365,7 +366,7 @@ class Form {
   /**
    * Stel hier de mogelijke captcha woorden in voor het captcha veld
    *
-   * @param string $words 
+   * @param string $words
    * @return void
    * @author Jan den Besten
    */
@@ -376,8 +377,8 @@ class Form {
   /**
    * Voorwaarde wanneer een veld wordt getoond
    *
-   * @param string $when 
-   * @param string $field 
+   * @param string $when
+   * @param string $field
    * @return void
    * @author Jan den Besten
    */
@@ -392,8 +393,8 @@ class Form {
   /**
    * undocumented function
    *
-   * @param string $name 
-   * @param string $field 
+   * @param string $name
+   * @param string $field
    * @return void
    * @author Jan den Besten
    * @internal
@@ -412,14 +413,14 @@ class Form {
   /**
    * Zelfde als set_buttons()
    *
-   * @param array $buttons 
+   * @param array $buttons
    * @return void
    * @author Jan den Besten
    */
 	public function show_buttons($buttons=NULL) {
 		$this->set_buttons($buttons);
 	}
-  
+
   /**
    * Stel de buttons in de getoond moeten worden
    *
@@ -464,7 +465,7 @@ class Form {
 		if (!is_array($fieldsets)) $fieldsets=array($fieldsets);
 		$this->fieldsets=$fieldsets;
 	}
-  
+
   /**
    * Voeg een fieldset toe
    *
@@ -481,7 +482,7 @@ class Form {
   /**
    * Voegt de matching passwords toe
    *
-   * @param string $data 
+   * @param string $data
    * @return void
    * @author Jan den Besten
    * @internal
@@ -506,7 +507,7 @@ class Form {
   /**
    * Checkt of formulier matched met juiste POST data
    *
-   * @param string $form_id 
+   * @param string $form_id
    * @return bool
    * @author Jan den Besten
    * @internal
@@ -529,7 +530,7 @@ class Form {
 	public function validation($form_id='') {
 		$data=$this->data;
     if (!$this->_this_form($form_id)) return FALSE;
-    
+
     // Extra (cloned) fields? Zorg ervoor dat die ook gevalideerd worden.
     $set_fields=array_keys($this->data);
     $post_fields=array_keys($_POST);
@@ -557,12 +558,12 @@ class Form {
         // trace_($cloned_fields);
       }
     }
-    
-    
+
+
 		$hasCaptcha=FALSE;
-    
+
     // trace_($data);
-    
+
 		foreach($data as $name=>$field) {
 
 			// Change multiple data to string (str_, medias_)
@@ -578,12 +579,12 @@ class Form {
       // captcha
 			if ($field['type']=='captcha') {
         $this->CI->load->helper('captcha');
-			  $hasCaptcha=$name; 
+			  $hasCaptcha=$name;
         $cap=get_captcha();
         $code=$cap['word'];
         $field['validation']='required|valid_same['.$code.']';
 			}
-      
+
       $set_rule=true;
       // Check if file and required
       if ($field['type']==='file' and has_string('required',$field['validation'],false)) {
@@ -592,14 +593,14 @@ class Form {
         }
       }
       $field['validation']=trim($field['validation'],'|');
-      
+
       if ($set_rule) $this->CI->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
-			
+
 			$this->data[$name]["repopulate"]=$this->CI->input->post($name);
 		}
 
 		log_('info',"form: validation");
-    
+
 		$this->isValidated=$this->CI->form_validation->run();
 
 		foreach ($data as $name => $field) {
@@ -610,17 +611,17 @@ class Form {
       }
 			$this->data[$name]["repopulate"]=$repopulate;
 		}
-    
+
 		return $this->isValidated;
 	}
 
-  
+
   /**
    * Geeft validation errors van gegeven form id
    *
-   * @param string $form_id 
-   * @param string $open_tag[''] 
-   * @param string $close_tag[''] 
+   * @param string $form_id
+   * @param string $open_tag['']
+   * @param string $close_tag['']
    * @return string
    * @author Jan den Besten
    */
@@ -639,7 +640,7 @@ class Form {
 	public function reset_data() {
 		$this->reset();
 	}
-  
+
   /**
    * Reset alle data (maakt de _value_ en _repopulate_  velden leeg)
    *
@@ -684,8 +685,8 @@ class Form {
   /**
    * Get value from hidden fields
    *
-   * @param string $name 
-   * @param string $value 
+   * @param string $name
+   * @param string $value
    * @return mixed value
    * @author Jan den Besten
    * @internal
@@ -753,7 +754,7 @@ class Form {
 					else
 						$data[$name]=$value;
 				}
-				
+
 				/**
 				 * Normal data
 				 */
@@ -761,10 +762,10 @@ class Form {
 					$data[$name]=$this->prepare_field($name,$value);
 				}
 			}
-			
+
 			$this->post_data=array_merge($data,$joins);
 		}
-    
+
 		return $this->post_data;
 	}
 
@@ -811,7 +812,7 @@ class Form {
     $styles=$this->styles[$this->framework];
 
 		$data=$this->data;
-    
+
 		// fieldsets with fields
 		$nr=1;
     $fieldsets=array();
@@ -842,7 +843,7 @@ class Form {
 			else
 				$fieldsets[$nr]['fields'].=form_reset($button);
 		}
-    
+
     $form=array(
       'id'        => $this->form_id,
       'form_id'   => $this->form_id,
@@ -869,16 +870,16 @@ class Form {
    * @internal
    */
 	private function render_field($name,$field,$form_class="") {
-    
+
     $name=str_replace('.','-',$name);
-    
+
     // HTML?
     if ($field['type']=='html') return $field['html'];
-    
+
 		$pre=get_prefix($name);
 		if ($pre==$name) $pre="";
     $styles=$this->styles[$this->framework];
-    
+
     // field class
     $field['container_class']=$styles['field_container'];
     $field['label_class']=$styles['label'];
@@ -894,10 +895,10 @@ class Form {
     if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
     $field['container_class']=trim($field['container_class'].' '.$class);
     $class=trim($styles['field'].' '.$class);
-    
+
     // class: validation
     if (isset($field['validation']) and has_string('required',$field['validation'])) $class.=" required";
-    
+
     // attributes
     $attr=array_merge( el('attr',$field,array()), el('attributes',$field,array()) );
     $attr["name"]  = $name;
@@ -916,17 +917,17 @@ class Form {
       if ($field['validation_error']) $field['status']=$this->styles[$this->framework]['status_error'];
     }
     if (has_string('required',$field['validation'])) $field['status'].=' required';
-    
+
 		// When (javascript triggers)
 		if (!empty($field['when'])) $this->when($field['when'],$name);
-    
+
 		switch($field["type"]):
-      
+
 			case "hidden":
         $field['container_class'].='hidden';
 				$field['control']='<input type="hidden" '.attributes($attr).'>';
 				break;
-        
+
       case 'captcha':
         $this->CI->load->helper('captcha');
   			$vals = array(
@@ -973,7 +974,7 @@ class Form {
             $field['control'] .= '<label><input type="radio" name="'.$field['name'].'" value="'.$option.'" '.$attr['checked'].'>'.$optLabel.'</label>';
           }
           else {
-            $field['control'].=div($this->styles[$this->framework]['radio_option_label_class'].' option-'.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div(); 
+            $field['control'].=div($this->styles[$this->framework]['radio_option_label_class'].' option-'.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div();
           }
 				}
 				break;
@@ -1055,7 +1056,7 @@ class Form {
   						}
   					}
           }
-					$field['control'].='</ul>';					
+					$field['control'].='</ul>';
 				}
 				//
 				// Normal dropdown (also normal image dropdown)
@@ -1067,7 +1068,7 @@ class Form {
 				// Ordered lists
 				//
 				if ($field['type']=='ordered_list') {
-					// show (ordered) choices	
+					// show (ordered) choices
 					$field['control'].='<ul class="list list_choices">';
 					$value=$field['value'];
 					foreach($options as $id=>$option) {
@@ -1087,19 +1088,19 @@ class Form {
 						}
 					}
 					$field['control'].='</ul>';
-					$field['control'].=form_hidden($field['name'].'__hidden',$hiddenValue);				
+					$field['control'].=form_hidden($field['name'].'__hidden',$hiddenValue);
 				}
         //
         if (isset($button)) {
           $field['control'].=div("add_button").anchor($button,icon("add"))._div();
         }
 				break;
-				
+
 			case "file":
 				$attr["class"].=" browse";
 				$field['control']=form_upload($attr);
 				break;
-				
+
 			case "image":
 				$attr['src']=$attr['value'];
 				$field['control']=img($attr);
@@ -1141,7 +1142,7 @@ class Form {
 				else
 					$field['control']=form_password($attr);
 				break;
-        
+
 			case "input":
 			case "default":
 			default:
@@ -1154,7 +1155,7 @@ class Form {
         }
 				$field['control']=form_input($attr);
 		endswitch;
-    
+
 		if ($field["type"]=="hidden") return $field['control'];
     $field['horizontal_bootstrap'] = ($this->framework=='bootstrap');
     $attributes=implode_attributes(el('attributes',$field,array()));

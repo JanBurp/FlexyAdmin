@@ -30,21 +30,21 @@ $config['FIELDS_prefix'] = array (
     'validation'	=> 'trim',
     'default'     => 0,
   ),
-  
+
   // Actie
 	'action' => array(
     'type'      => 'hidden',
     'grid-type' => 'action',
     'readonly'  => true,
   ),
-  
+
   // Self key
 	'self'			=> array(
     'type'        => 'select',
     'validation'	=> 'trim|integer',
     'default'     => 0,
   ),
-  
+
 	'rel'				=> array(
     'type'        => 'select',
     'grid-type'   => 'relation',
@@ -61,7 +61,7 @@ $config['FIELDS_prefix'] = array (
     'validation'	=> ''
   ),
 
-  // Media/assets				
+  // Media/assets
 	'media'			=> array(
     'type'        => 'media',
     'grid-type'   => 'media',
@@ -72,7 +72,14 @@ $config['FIELDS_prefix'] = array (
     'grid-type'   => 'media',
     'validation'	=> 'trim'
   ),
-  
+
+  // Video
+  'video'     => array(
+    'type'        => 'video',
+    'grid-type'   => 'video',
+    'validation'  => 'trim'
+  ),
+
 	'list'			=> array(
     'type'        => 'select',
     'validation'	=> 'trim'
@@ -81,7 +88,7 @@ $config['FIELDS_prefix'] = array (
     'type'        => 'input',
     'grid-edit'   => false,
   ),
-  
+
   // Large string
 	'stx'				=> array(
     'type'        => 'textarea',
@@ -91,13 +98,13 @@ $config['FIELDS_prefix'] = array (
 	'md'				=> array(
     'type'        => 'markdown',
   ),
-  
+
   // HTML editor
 	'txt'				=> array(
     'type'        => 'wysiwyg',
     'validation'	=> ''
   ),
-  
+
   // Password
 	'pwd'				=> array(
     'type'        => 'password',
@@ -161,7 +168,7 @@ $config['FIELDS_prefix'] = array (
     'type'        => 'color',
     'validation'	=> 'trim|valid_rgb'
   ),
-  
+
   // Booleans
 	'b'					=> array(
     'type'        => 'checkbox',
@@ -184,7 +191,7 @@ $config['FIELDS_prefix'] = array (
 
 /**
  * Special fields
- */               
+ */
 
 $config['FIELDS_special'] = array(
 
@@ -212,7 +219,7 @@ $config['FIELDS_special'] = array(
     'readonly'    => true,
     'validation'	=> 'trim|integer|required',
   ),
-                      
+
 	'uri'				=> array(
     'type'        => 'hidden',
     'readonly'    => true,
@@ -224,7 +231,7 @@ $config['FIELDS_special'] = array(
     'sortable'    => false,
     'validation'	=> '',
   ),
-  
+
   // Order, used for example in menu tables
 	'order'			=> array(
     'type'       => 'hidden',
@@ -240,7 +247,7 @@ $config['FIELDS_special'] = array(
     'validation'	=> 'trim|integer',
     'default'     => 0,
   ),
-  
+
 	'abstract'	=> array(
     'type'        => 'input',
     'validation'	=> '',
@@ -253,20 +260,20 @@ $config['FIELDS_special'] = array(
     'type'        => 'input',
     'validation'	=> 'trim',
   ),
-                      
+
   'last_login'    => array(
     'type'        => 'input',
   ),
-  
+
   // Tijdstip van laatste aanpassing
   'tme_last_changed' => array(
     'type'        => 'hidden',
     'grid-type'   => 'string',
     'readonly'    => true,
   ),
-  
+
   // FILES
-  
+
   'path' => array(
     'type'       => 'select',
     'validation' => 'required|trim',
@@ -311,6 +318,6 @@ $config['FIELDS_special'] = array(
     'grid-type'  => 'text',
     'readonly'   => true,
   ),
-										
+
 );
 
