@@ -5,11 +5,12 @@ var he = require('he');
 import jdb          from '../../jdb-tools.js'
 import flexyState   from '../../flexy-state.js'
 import flexyThumb   from '../flexy-thumb.vue'
+import flexyVideo   from '../flexy-video.vue'
 import flexyButton  from '../flexy-button.vue'
 
 export default {
   name: 'VueGridCell',
-  components: {flexyThumb,flexyButton},
+  components: {flexyThumb,flexyVideo,flexyButton},
   props:{
     'type':String,
     'name':String,
@@ -38,13 +39,14 @@ export default {
 
     fieldTypes : function() {
       var types = {
-        checkbox  : ['checkbox'],
-        media     : ['media','medias'],
-        color     : ['color'],
-        url       : ['url'],
-        relation  : ['relation'],
-        select    : ['select','radio'],
-        abstract  : ['abstract'],
+        checkbox    : ['checkbox'],
+        media       : ['media','medias'],
+        video       : ['video'],
+        color       : ['color'],
+        url         : ['url'],
+        relation    : ['relation'],
+        select      : ['select','radio'],
+        abstract    : ['abstract'],
       };
       var defaultTypes = [];
       for(var type in types) {
@@ -268,6 +270,13 @@ export default {
         <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :key="img.src" :src="img.src" :alt="img.alt" />
       </template>
     </template>
+
+    <template v-if="isType('video',type)">
+      <template v-if="item !==''">
+        <flexy-video :video="item" />
+      </template>
+    </template>
+
 
     <template v-if="isType('color',type)">
       <div class="color-thumb-sm" :style="'color:'+complementColor(item)+';background-color:'+item">{{item}}</div>

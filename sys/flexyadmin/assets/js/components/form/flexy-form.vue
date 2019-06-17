@@ -13,6 +13,7 @@ import timepicker       from './timepicker.vue'
 import datetimepicker   from './datetimepicker.vue'
 import colorpicker      from './colorpicker.vue'
 import mediapicker      from './mediapicker.vue'
+import videopicker      from './videopicker.vue'
 import joinselect       from './joinselect.vue'
 import radioimage       from './radio-image.vue'
 import markdown         from './markdown.vue'
@@ -24,7 +25,7 @@ import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,joinselect,radioimage,tab,tabs,datepicker,vselect,markdown},
+  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,videopicker,joinselect,radioimage,tab,tabs,datepicker,vselect,markdown},
   props:{
     'name'    :String,
     'primary' :{
@@ -74,6 +75,7 @@ export default {
         datetimepicker    : ['datetime'],
         colorpicker       : ['color','rgb'],
         mediapicker       : ['media','medias'],
+        videopicker       : ['video'],
         thumb             : ['thumb'],
         select            : ['select'],
         radio             : ['radio','radio_image'],
@@ -1185,6 +1187,12 @@ export default {
                   <!-- Mediapiacker -->
                   <mediapicker :id="field" :name="field" :value="row[field]" :path="form_groups[field].path" :multiple="field.substr(0,7) === 'medias_'" v-on:input="updateField(field,$event)"></mediapicker>
                 </template>
+
+                <template v-if="isType('videopicker',field)">
+                  <!-- Videopiacker -->
+                  <videopicker :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event)"></videopicker>
+                </template>
+
 
                 <template v-if="isType('thumb',field)">
                   <!-- Thumb -->

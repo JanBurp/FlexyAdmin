@@ -2,6 +2,10 @@
   <h1><?=ascii_to_entities($str_title);?></h1>
   <div class="text"><?=$txt_text?></div>
 
+  <?php if (isset($video_video) and !empty($video_video)): ?>
+    <?=embed_video($video_video)?>
+  <?php endif ?>
+
   <?php if (!empty($media_foto)) $medias_fotos = $media_foto; ?>
   <?php if (!empty($medias_fotos)) : $medias_fotos=explode('|',$medias_fotos) ?>
   <div class="photo_gallery">
@@ -13,8 +17,8 @@
     <?php endforeach ?>
   </div>
   <?php endif; ?>
-  
-  
+
+
 <?php endif ?>
 
 <?php if (isset($module_content)): ?><?=$module_content?><?php endif ?>
