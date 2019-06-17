@@ -9,7 +9,7 @@
  * - default - the basic and light flexyadmin template
  * - bootstrap - use bootstrap as a start
  */
-$config['framework']='bootstrap';
+$config['framework']='bootstrap4';
 
 
 /**
@@ -176,7 +176,7 @@ if (SAFE_INSTALL)
   $config['composer_autoload'] = '../sys/vendor/autoload.php';
 else
   $config['composer_autoload'] = 'sys/vendor/autoload.php';
-  
+
 
 
 

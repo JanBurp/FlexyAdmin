@@ -40,24 +40,24 @@
   *     echo $menu->render();
   *
   * Heeft hetzelfde resultaat als het voorbeeld hierboven.
-  * 
+  *
   * Velden van een menu tabel
   * =========================
-  * 
+  *
   * Als je een menu rechtstreeks vanuit een database tabel aanmaakt zoals hierboven, dan zijn de volgende velden nodig in die tabel:
-  * 
+  *
   * - `id`
   * - `order` - bepaald de volgorde van een item in het menu
   * - `uri` - de uri van het item
   * - `str_title` - de titel die zichtbaar wordt in het menu
-  * 
+  *
   * Optionele velden en hun effect:
-  * 
+  *
   * - `self_parent` - voor menu's met meerdere levels
   * - `str_class` -  CSS class die meegegeven wordt aan het menu-item
   * - `b_visible` - Als TRUE dan wordt het item getoond, anders niet
   * - `b_clickable` - Als TRUE dan wordt het item aanklikbaar, anders bestaat het puur uit tekst
-  * 
+  *
   * Classes en id's van menu elementen
   * ======================================
   *
@@ -81,7 +81,7 @@
   *
   * li
   * ------
-  * 
+  *
   * Classes meegegeven aan een li element:
   *
   * - `lev#` (net als bij ul)
@@ -105,23 +105,23 @@
   * a
   * ------
   * Aan het a element wordt precies dezelfde class meegegeven als aan het li element.
-  * 
-  * 
+  *
+  *
   * Output van het menu aanpassen
   * =============================
-  * 
+  *
   * Het menu maakt gebruik van 3 views die je zelf kunt aanpassen:
-  * 
+  *
   *     - views/menu/menu.php - <ul>
   *     - views/menu/item.php - <li><a>
   *     - views/menu/seperaror.php - een <li> zonder link
-  * 
+  *
   * @author: Jan den Besten
   * @copyright: (c) Jan den Besten
   */
-  
+
 class Menu {
-  
+
   private $CI;
 
   var $settings = array(
@@ -139,13 +139,13 @@ class Menu {
       'extra'       => '',
     ),
     'multilang_title' => FALSE,
-    'framework'       => 'bootstrap',             // 'default', 'bootstrap'
+    'framework'       => 'bootstrap4',             // 'default', 'bootstrap'
     'attributes'      => array('class'=>''),
     'full_uris'       => false,
     'ordered_titles'  => '',   // NUMBERS geeft 1,2,3,4 etc., ALFA geeft A,B,C,D etc, ROMAN geeft I,II,III,IV etc.
     'view_path'       => 'menu'
   );
-  
+
   private $styles = array(
     'default' => array(
       'current' => 'current',
@@ -162,18 +162,17 @@ class Menu {
       'last'    => 'last',
       'has_sub' => 'dropdown-menu',
       'is_sub'  => 'dropdown'
-    )
-    
-    
+    ),
+
   );
-  
+
   private $field_set_methods = array();
 
   /**
    * HTML output
    */
 	var $render;
-  
+
   /**
    * Interne representatie van een menu
    */
@@ -195,9 +194,9 @@ class Menu {
 
   /**
    * Initialiseer (override defaults)
-   * 
+   *
    * Geef een array met alle instellingen, hieronder de defaults:
-   * 
+   *
    *      'current'       => '',                   // Geef hier de huidige url als die afwijkt van standaard
    *      'menu_table'    => '',                   // De db-tabel waar het menu uit wordt gehaald
    *      'fields'        => array(                // Diverse tabel velden die omgezet worden in het menu
@@ -209,7 +208,7 @@ class Menu {
    *        'clickable'    => 'b_clickable',       // - of dit menu-item aanklikbaar is of niet
    *        'parent'       => 'self_parent',       // - parent id
    *        'bool_class'   => '',                  // - als dit veld TRUE is dan wordt de veldnaam toegevoegd als een class aan het menu-item
-   *        'extra'        => '',                  
+   *        'extra'        => '',
    *      ),
    *      'multilang_title' => FALSE,              // Als TRUE, dat wordt aan 'fields'.'title' een language code die bekend is in $this->site['language'] toegevoegd (str_title wordt dan str_title_nl bv)
    *      'framework'     => 'default',            // 'default', 'bootstrap'
@@ -230,6 +229,8 @@ class Menu {
     if ($this->settings['multilang_title'] and isset($this->CI->site['language'])) {
       $this->settings['fields']['title'] .= '_'.$this->CI->site['language'];
     }
+    // Framework styles
+    $this->settings['framework'] = substr($this->settings['framework'],0,9); // alles na 'bootstrap' mag eraf = hetzelfde
     return $this;
   }
 
@@ -257,7 +258,7 @@ class Menu {
    * This makes it possible to use methods set_property(value) instead of set(property,value)
    *
    * @param string $function
-   * @param string $args 
+   * @param string $args
    * @return void
    * @author Jan den Besten
    * @internal
@@ -288,8 +289,8 @@ class Menu {
       $this->settings['fields']['extra'][$extra]=array("name"=>$extra,"start"=>$startTag,"close"=>$closeTag);
     return $this;
   }
-  
-  
+
+
   /**
    * Zet boolean veld van een menu tabel
    *
@@ -325,16 +326,16 @@ class Menu {
 	public function set_menu_from_table($table='') {
     if (!empty($table) or empty($this->settings['menu_table'])) $this->set('menu_table',$table);
     $table=$this->settings['menu_table'];
-    
+
     if ($table) {
       $this->CI->data->table( $table );
       $data=$this->CI->data->get_menu_result();
   		return $this->set_menu_from_table_data($data);
     }
-    
+
     return array();
 	}
-  
+
   /**
    * Geeft alle huidige menu-items
    *
@@ -344,7 +345,7 @@ class Menu {
   public function get_items() {
     return $this->menu;
   }
-  
+
 	/**
 	 * Maakt menu van array uit database resultaat
 	 *
@@ -355,7 +356,7 @@ class Menu {
 	public function set_menu_from_table_data($items="") {
 		$counter=1;
 		$menu=array();
-		
+
 		$boolFields = $this->settings['fields'];
 		$boolFields = filter_by_key($boolFields,'b_');
 
@@ -389,7 +390,7 @@ class Menu {
 				if (isset($item[$this->settings['fields']["class"]])) 	    $thisItem["class"]=str_replace(array('|',',','.','/'),array(' ',' ','_','_'),$item[$this->settings['fields']["class"]]);
 				if (isset($item[$this->settings['fields']["bool_class"]]) and ($item[$this->settings['fields']["bool_class"]]))	$thisItem["class"].=' '.$this->settings['fields']["bool_class"];
 				if (isset($item[$this->settings['fields']["clickable"]]) && !$item[$this->settings['fields']["clickable"]]) $thisItem["uri"]='';
-        
+
         // parent
         $parent = remove_suffix($thisItem['full_uri'],'/');
         if ($parent==$thisItem['full_uri']) $parent = '';
@@ -401,7 +402,7 @@ class Menu {
 						if (isset($item[$boolField]) && $item[$boolField]) $thisItem["class"]=' '.$boolField;
 					}
 				}
-				
+
 				if (!empty($this->extraFields)) {
 					foreach ($this->extraFields as $extraName => $extra) {
 						if (isset($item[$extraName])) {
@@ -409,11 +410,11 @@ class Menu {
 						}
 					}
 				}
-        
+
 				$menu[$parent][$uri]=$thisItem;
 			}
 		}
-    
+
 		// Set submenus on right place in array
 		$item = end($menu);
 		while ($item) {
@@ -427,7 +428,7 @@ class Menu {
 			}
 			$item=prev($menu);
     }
-    
+
     // set first
     reset($menu);
     $menu=current($menu);
@@ -439,7 +440,7 @@ class Menu {
   /**
    * Maakt een menu van een filetree resultaat van read_map()
    *
-   * @param string $files 
+   * @param string $files
    * @return array
    * @author Jan den Besten
    */
@@ -479,7 +480,7 @@ class Menu {
   /**
    * Voeg een menu item toe aan het eind van het huidige menu
    *
-   * @param array $item array( "uri"=>uri, "name"=>name, "class"=>class ) 
+   * @param array $item array( "uri"=>uri, "name"=>name, "class"=>class )
    * @return object this
    * @author Jan den Besten
    */
@@ -493,7 +494,7 @@ class Menu {
   /**
    * Voeg één of meerdere menu items toe aan het eind van het huidige menu
    *
-   * @param array $items array( "uri"=>uri, "name"=>name, "class"=>class ) 
+   * @param array $items array( "uri"=>uri, "name"=>name, "class"=>class )
    * @return object this
    * @author Jan den Besten
    */
@@ -503,7 +504,7 @@ class Menu {
     }
     return $this;
   }
-  
+
   /**
    * Voeg seperator toe aan menu
    *
@@ -526,12 +527,12 @@ class Menu {
     return $this;
 	}
 
-  
+
 
   /**
    * Voegt een menu item toe aan het begin van het huidige menu
    *
-   * @param array $item array( "uri"=>uri, "name"=>name, "class"=>class ) 
+   * @param array $item array( "uri"=>uri, "name"=>name, "class"=>class )
    * @return object this
    * @author Jan den Besten
    */
@@ -544,7 +545,7 @@ class Menu {
   /**
    * Voeg een menu item toe na een ander item
    *
-   * @param string $item  array( "uri"=>uri, "name"=>name, "class"=>class ) 
+   * @param string $item  array( "uri"=>uri, "name"=>name, "class"=>class )
    * @param string $after uri van item waarachter het nieuwe item moet komen
    * @return object this
    * @author Jan den Besten
@@ -564,7 +565,7 @@ class Menu {
   /**
    * Voegt een menu item toe aan het eind van het huidige menu
    *
-   * @param array $item array( "uri"=>uri, "name"=>name, "class"=>class ) 
+   * @param array $item array( "uri"=>uri, "name"=>name, "class"=>class )
    * @return object this
    * @author Jan den Besten
    */
@@ -577,7 +578,7 @@ class Menu {
   /**
    * Voegt submenu toe aan bestaand item
    *
-   * @param array $sub  array( "uri"=>uri, sub=>  array( "uri"=>uri, "name"=>name, "class"=>class )  ) 
+   * @param array $sub  array( "uri"=>uri, sub=>  array( "uri"=>uri, "name"=>name, "class"=>class )  )
    * @return object this
    * @author Jan den Besten
    */
@@ -604,7 +605,7 @@ class Menu {
   /**
    * Stelt de huidige pagina in
    *
-   * @param string $current[''] 
+   * @param string $current['']
    * @return object this
    * @author Jan den Besten
    */
@@ -636,8 +637,8 @@ class Menu {
   /**
    * Verwijderd query-uri's uit uri
    *
-   * @param string $in 
-   * @param string $uri 
+   * @param string $in
+   * @param string $uri
    * @return bool
    * @author Jan den Besten
    * @internal
@@ -697,7 +698,7 @@ class Menu {
 		}
     return $branch;
   }
-  
+
   /**
    * Renderer een submenu
    *
@@ -705,7 +706,7 @@ class Menu {
    * @param string $attr default='' eventueel standaard mee te geven attributen voor menu-items
    * @param string $level default=1 level
    * @param string $preUri default='' een uri die aan de voorkant van alle uri's wordt geplakt
-   * @param string $nobranchUri default=FALSE 
+   * @param string $nobranchUri default=FALSE
    * @return string
    * @author Jan den Besten
    */
@@ -740,15 +741,15 @@ class Menu {
 		if (!isset($menu)) $menu=$this->menu;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
-    
+
     $styles=$this->styles[$this->settings['framework']];
-    
+
     $html='';
 		if ($menu and is_array($menu)) {
   		$pos=1;
       $_pos=count($menu);
 			foreach($menu as $uri=>$item) {
-        
+
         // create uri
         if (isset($item['uri'])) $uri=$item['uri'];
         $thisUri=el($this->settings['fields']['url'],$item,$uri);
@@ -756,7 +757,7 @@ class Menu {
         $thisUri=trim($thisUri,'/');
         $cleanUri=remove_suffix($thisUri,$this->CI->config->item('URI_HASH'));
         $classUri=str_replace('/','',get_suffix(str_replace(array('?','='),'_',$cleanUri),'/'));
-        
+
         // title
         $title=ascii_to_entities(trim(el('name',$item,$uri),'_'));
         // title as ordered chars
@@ -776,7 +777,7 @@ class Menu {
             foreach ($item['extra'] as $extra) {$title.=$item['extra'];}
           }
         }
-        
+
         // heeft submenu?
         $submenu='';
         if (isset($item['sub']) and ($max_level==0 or $level<$max_level)) {
@@ -787,23 +788,23 @@ class Menu {
         $view='item';
         if (empty($item) or $item==='seperator') $view='seperator';
         if ($item==='split') $view='split';
-        
+
         // first / last
         $order_style = '';
         if ($pos==1) $order_style.='first ';
         if ($pos==count($menu)) $order_style.='last';
         $order_style=trim($order_style);
-        
+
         // Current
         $current = ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:''));
-        
+
         // Icon
         $icon = el('icon',$item,'');
         $iconactive = el('iconactive',$item);
         if ($iconactive and $current) {
           $icon = $iconactive;
         }
-        
+
         // render item
         $item_html=$this->CI->load->view($this->settings['view_path'].'/'.$view.'.php',array(
           'title'       => $title,
@@ -830,12 +831,12 @@ class Menu {
         $_pos--;
 			}
 		}
-    
+
     $html=$this->CI->load->view($this->settings['view_path'].'/menu.php',array('lev'=>$level,'uri'=>$uri, 'sub'=>($level>1)?$styles['has_sub']:'', 'menu'=>$html, 'framework' => $this->settings['framework']),true);
 		return $html;
 	}
-	
-	
+
+
   /**
    * Geeft item aan de hand van meegegeven uri (of huidige pagina) als database resultaat
    *
@@ -850,8 +851,8 @@ class Menu {
     if (empty($uri)) $uri=$this->settings['current'];
     return $this->CI->data->table( $table )->get_menu_item($uri);
 	}
-	
-  
+
+
   /**
    * Geeft uri van eerstvolgende item in submenu
    *
@@ -869,7 +870,7 @@ class Menu {
 		}
 		return $sub_uri;
   }
-	
+
 
   /**
    * Geeft item één tak hoger in menu, of false als al op hoogste niveau
@@ -889,7 +890,7 @@ class Menu {
     }
     return $up;
   }
-  
+
   /**
    * Geeft vorig menu-item op hetzelfde nivo
    *
@@ -915,7 +916,7 @@ class Menu {
 		}
 		return $prev;
 	}
-  
+
   /**
    * Geeft uri van vorige pagina op hetzelfde nivo
    *
@@ -937,7 +938,7 @@ class Menu {
    *     een_pagina
    *     FALSE
    *
-   * @param string $uri[''] 
+   * @param string $uri['']
    * @param bool $full default=TRUE als TRUE dan worden full_uri's meegegeven die het hele uri pad representeren
    * @return string
    * @author Jan den Besten
@@ -974,12 +975,12 @@ class Menu {
 			}
 			if ($next_uri) {
 				$next=$submenu[$next_uri];
-				$next['full_uri']=ltrim(remove_suffix('/'.$uri,'/').'/'.$next_uri,'/');;	
+				$next['full_uri']=ltrim(remove_suffix('/'.$uri,'/').'/'.$next_uri,'/');;
 			}
 		}
 		return $next;
 	}
-  
+
   /**
    * Geeft uri van volgende pagina op hetzelfde nivo
    *
@@ -1002,7 +1003,7 @@ class Menu {
   /**
    * Geeft vorig submenu
    *
-   * @param string $uri[''] Als leeg dan wordt current gebruikt 
+   * @param string $uri[''] Als leeg dan wordt current gebruikt
    * @return array
    * @author Jan den Besten
    */
@@ -1029,11 +1030,11 @@ class Menu {
 		}
 		return $branch;
 	}
-  
+
   /**
    * Geeft uri van vorig submenu
    *
-   * @param string $uri[''] Als leeg dan wordt current gebruikt 
+   * @param string $uri[''] Als leeg dan wordt current gebruikt
    * @param string $full_uri default=TRUE Als TRUE dan worden full_uri's meegegeven
    * @return string
    * @author Jan den Besten
@@ -1052,7 +1053,7 @@ class Menu {
   /**
    * Geeft volgend submenu
    *
-   * @param string $uri[''] Als leeg dan wordt current gebruikt 
+   * @param string $uri[''] Als leeg dan wordt current gebruikt
    * @return array
    * @author Jan den Besten
    */
@@ -1078,11 +1079,11 @@ class Menu {
 		}
 		return $branch;
 	}
-  
+
   /**
    * Geeft uri van volgend submenu
    *
-   * @param string $uri[''] Als leeg dan wordt current gebruikt 
+   * @param string $uri[''] Als leeg dan wordt current gebruikt
    * @param string $full_uri default=TRUE Als TRUE dan worden full_uri's meegegeven
    * @return string
    * @author Jan den Besten
@@ -1101,7 +1102,7 @@ class Menu {
 	/**
 	 * Pakt submenu
 	 *
-	 * @param string $uri 
+	 * @param string $uri
 	 * @param bool $current default=TRUE
 	 * @return array
 	 * @author Jan den Besten
@@ -1119,7 +1120,7 @@ class Menu {
 		}
 		return $submenu;
 	}
-  
+
   /**
    * Geeft home item terug
    *

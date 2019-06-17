@@ -1,37 +1,37 @@
-<?php 
+<?php
 /** \ingroup libraries
 	* Formulieren
-	* 
+	*
 	* Deze module maakt formulieren voor je website en regelt meteen de afhandeling.
-	* 
+	*
 	* - Er kunnen meerdere formulieren worden gemaakt
 	* - Met de config kun je de diverse formulieren aanmaken, instellen welke velden ze hebben, en wat de afhandeling van een formulier is
 	* - De verschillende formulieren kunnen aangeroepen worden met hun naam als een submodule bv: forms.contact en forms.reservation.
-	* 
+	*
 	* Aanroepen
 	* ----------------
-	* 
+	*
 	* Je roept een formulier aan zoals een andere module, met als method de naam van je formulier zoals je die hebt ingesteld in de config, bijvoorbeeld:
-	* 
+	*
 	* - forms.contact
 	* - forms.upload_demo
-	* 
+	*
 	* Je kunt forms ook vanuit een andere module aanroepen, je krijgt dan de HTML terug van het formulier, inclusief validatie fouten etc.:
-	* 
+	*
 	* - `$this->CI->_call_library('forms','comments');`
-	* 
+	*
 	* Of:
-	* 
+	*
 	*         $this->CI->load->library('forms');
   *         $this->CI->forms->contact();
-  * 
+  *
   * Je kunt de instellingen ook meegeven met:
-  * 
+  *
   *         $this->CI->forms->initialize('naam_van_form',$config_array);
-	*        
+	*
 	* Instellingen
 	* ----------------
-	* 
+	*
 	* Er zijn veel verschillende instellingen mogelijk. In _SITEPATH/config/forms.php_ vindt je diverse voorbeelden en uitleg bij de diverse instellingen.
 	* Mocht het formulier gebruik maken van een formaction, dan worden alle instellingen ook naar het formaction gestuurd.
 	*
@@ -53,17 +53,17 @@
   * @copyright: (c) Jan den Besten
   */
 class Forms extends Module {
-  
+
   private $form_id='';
   private $settings=array();
   private $spam=false;
   private $validated=false;
-  
+
   private $classes = array(
     'thanks'  => 'message',
     'error'   => 'error'
   );
-  
+
   /**
    */
 	public function __construct() {
@@ -116,8 +116,8 @@ class Forms extends Module {
   /**
    * Hier wordt bepaald welk formulier wordt gevraagd (welke method wordt aangeroepen)
    *
-   * @param string $function 
-   * @param array $args 
+   * @param string $function
+   * @param array $args
    * @return mixed
    * @author Jan den Besten
    */
@@ -164,7 +164,7 @@ class Forms extends Module {
   /**
   	* Hier wordt het formulier gegenereerd
   	*
-  	* @param string $page 
+  	* @param string $page
   	* @return mixed
   	* @author Jan den Besten
   	*/
@@ -173,7 +173,7 @@ class Forms extends Module {
     $thanks='';
 		$html='';
     $errors='';
-    
+
     // Test if allready submitted (and testing for that is possible)
     if ($this->settings('prevend_double_submit',false)) {
       $thanks=$this->CI->session->flashdata($this->form_id.'__thanks');
@@ -183,7 +183,7 @@ class Forms extends Module {
         }
       }
     }
-    
+
     // Test set to not fill again
     if ( $this->settings('restrict_this_ip_days') ) {
       $ip = $this->CI->input->ip_address();
@@ -196,7 +196,7 @@ class Forms extends Module {
         }
       }
     }
-    
+
 		// Welke velden (en buttons): zijn ze los ingesteld?
     $formFields=$this->settings('fields');
     $formButtons=$this->settings('buttons');
@@ -245,7 +245,7 @@ class Forms extends Module {
         $formFields['_captcha']=array('label'=>lang('captcha'),'type'=>'captcha');
       }
     }
-    
+
     // Populate fields
     if (isset($this->settings['populate_fields'])) {
       $method=get_suffix($this->settings['populate_fields'],'.');
@@ -253,12 +253,12 @@ class Forms extends Module {
       if (!isset($this->CI->$model)) $this->CI->load->model($model);
       $formFields=$this->CI->$model->$method($formFields);
     }
-    
+
     if (!$formFields) {
       log_message('error', langp('error_no_fields',$this->name));
       return false;
     }
-    
+
     // Extra veld toevoegen om op spamrobot te testen (die zal dit veld meestal automatisch vullen)
     // En een timestamp onthouden (antwoord binnen 5 seconden is een bot)
     if ($this->settings('check_for_spam')) {
@@ -266,10 +266,10 @@ class Forms extends Module {
       $timestamp = $this->CI->session->userdata('spamcheck');
       if (!$timestamp) $this->CI->session->set_userdata('spamcheck',time());
     }
-    
+
     $formAction = $this->get_action();
 		$form = new form($formAction,$this->form_id);
-    
+
     $framework=$this->CI->config->item('framework');
     if (isset($this->settings['framework'])) $framework=$this->settings('framework','default');
     $form->set_framework($framework);
@@ -282,15 +282,15 @@ class Forms extends Module {
     if ($this->settings('placeholders_as_labels')) $form->add_placeholders();
 		if (isset($formFieldSets)) $form->set_fieldsets($formFieldSets);
     if ($formButtons) $form->set_buttons($formButtons);
-    
+
 		// Validate, and test filled form
     $this->validated = $form->validation($this->form_id);
     $this->spam=false;
-  
+
     $result = true;
 		if ($this->validated) {
       $data=$form->get_data();
-    
+
       // Spamcheck?
       if ($checkfields = $this->settings('check_for_spam')) {
         $this->CI->load->library('spam');
@@ -309,7 +309,7 @@ class Forms extends Module {
         unset($formFields['__test__']);
         unset($data['__test__']);
       }
-    
+
       if (!$this->spam) {
         // Do the Action(s)
         $this->CI->session->unset_userdata('spamcheck');
@@ -327,7 +327,7 @@ class Forms extends Module {
           $this->CI->data->set($set);
           $this->CI->data->insert();
         }
-        
+
         $formaction=$this->settings('formaction');
         if (!is_array($formaction)) $formaction=array($formaction);
         foreach ($formaction as $faction) {
@@ -341,7 +341,7 @@ class Forms extends Module {
       		    $errors.=$this->CI->$action->get_errors();
       			}
             $result=($result AND $this_result);
-            
+
             if ($this_result) {
               if (method_exists($this->CI->$action,'return_data')) {
                 $data=$this->CI->$action->return_data();
@@ -390,12 +390,12 @@ class Forms extends Module {
       return $this->CI->load->view('forms',array('form'=>$html,'errors'=>$errors),true);
     }
 	}
-  
-  
+
+
   /**
    * Toont melding als formulier is ingevuld
    *
-   * @param string $errors 
+   * @param string $errors
    * @return string
    * @author Jan den Besten
    */
@@ -414,8 +414,8 @@ class Forms extends Module {
     }
     return $html;
   }
-  
-  
+
+
   /**
    * Geeft form action
    *
@@ -433,7 +433,7 @@ class Forms extends Module {
   /**
    * Geeft instelling
    *
-   * @param string $item 
+   * @param string $item
    * @param string $default default=NULL
    * @return mixed
    * @author Jan den Besten
@@ -441,19 +441,19 @@ class Forms extends Module {
 	private function settings($item,$default=NULL) {
 		return el($item,$this->settings,$default);
 	}
-  
-  
+
+
   /**
    * Geeft instellingen van een formulier
    *
-   * @param string $form_id 
+   * @param string $form_id
    * @return array
    * @author Jan den Besten
    */
   public function get_settings($form_id) {
     return el($form_id,$this->config,false);
   }
-  
+
   /**
    * Geeft spam status van laatst gebruikte formulier
    *
@@ -463,7 +463,7 @@ class Forms extends Module {
   public function is_spam() {
     return $this->spam;
   }
-  
+
   /**
    * Geeft validation status van laatst gebruikte formulier
    *
@@ -473,7 +473,7 @@ class Forms extends Module {
   public function is_validated() {
     return $this->validated;
   }
-  
+
 }
 
 ?>
