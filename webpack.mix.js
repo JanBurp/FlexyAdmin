@@ -35,6 +35,9 @@ mix
   .browserSync({
     proxy: proxy,
   })
+  .options({
+    processCssUrls: false
+  })
 ;
 
 console.log( 'Building for framework: ' + framework );
