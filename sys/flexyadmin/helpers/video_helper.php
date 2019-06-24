@@ -102,6 +102,29 @@ function get_vimeo_info($id,$var='') {
 	return '';
 }
 
+
+/**
+ * Geeft volledige video info als array
+ *
+ * @author Jan den Besten
+ */
+function get_video_array($code) {
+	$default = array(
+		'platform' => 'youtube',
+		'code'		 => $code,
+		'ratio'		 => '16:9',
+	);
+	if (substr($code,0,1)=='{') {
+		$code = json2array($code);
+		$code = array_merge($default,$code);
+	}
+	else {
+		$code = $default;
+	}
+	return $code;
+}
+
+
 /**
  * Haalt code van een video uit de link
  *
