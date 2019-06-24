@@ -109,12 +109,17 @@ function get_vimeo_info($id,$var='') {
  * @author Jan den Besten
  */
 function get_video_array($code) {
-	$default = array(
-		'platform' => 'youtube',
-		'code'		 => $code,
-		'ratio'		 => '16:9',
-	);
-	if (substr($code,0,1)=='{') {
+	if (is_array($code)) {
+		$default = $code;
+	}
+	else {
+		$default = array(
+			'platform' => 'youtube',
+			'code'		 => $code,
+			'ratio'		 => '16:9',
+		);
+	}
+	if (!is_array($code) and substr($code,0,1)=='{') {
 		$code = json2array($code);
 		$code = array_merge($default,$code);
 	}
