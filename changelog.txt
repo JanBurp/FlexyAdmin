@@ -1,3 +1,17 @@
+=3.5.37
+
+[nl]
+- Video veld & helper
+[/nl]
+[en]
+- Video field & helper
+[/en]
+
+[CHANGES]
+- Better video helper (for bootstrap responsive embed)
+- Video field with ratio settings and thumbnail
+- Better webpack.mix.js (frontend)
+
 =3.5.35
 
 [nl]

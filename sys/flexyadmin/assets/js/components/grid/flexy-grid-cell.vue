@@ -5,12 +5,27 @@ var he = require('he');
 import jdb          from '../../jdb-tools.js'
 import flexyState   from '../../flexy-state.js'
 import flexyThumb   from '../flexy-thumb.vue'
+import flexyVideo   from '../flexy-video.vue'
 import flexyButton  from '../flexy-button.vue'
 
 export default {
   name: 'VueGridCell',
-  components: {flexyThumb,flexyButton},
-  props:['type','name','primary','value','level','editable','readonly','options','focus'],
+  components: {flexyThumb,flexyVideo,flexyButton},
+  props:{
+    'type':String,
+    'name':String,
+    'primary':Object,
+    'value':[Number,String,Boolean],
+    'valuecomplete':{
+      type:[Object,Array],
+      default:null,
+    },
+    'level':Number,
+    'editable':Boolean,
+    'readonly':Boolean,
+    'options':Object,
+    'focus':Boolean,
+  },
 
   created : function() {
     // console.log('grid-cell',this.name,this.type);
@@ -24,13 +39,14 @@ export default {
 
     fieldTypes : function() {
       var types = {
-        checkbox  : ['checkbox'],
-        media     : ['media','medias'],
-        color     : ['color'],
-        url       : ['url'],
-        relation  : ['relation'],
-        select    : ['select','radio'],
-        abstract  : ['abstract'],
+        checkbox    : ['checkbox'],
+        media       : ['media','medias'],
+        video       : ['video'],
+        color       : ['color'],
+        url         : ['url'],
+        relation    : ['relation'],
+        select      : ['select','radio'],
+        abstract    : ['abstract'],
       };
       var defaultTypes = [];
       for(var type in types) {
@@ -84,12 +100,21 @@ export default {
     thumbs : function(media) {
       var path = this.options.path;
       var array = [];
+      var src = '';
+      var alt = '';
       if (typeof(media)=='string') {
         array = media.split('|');
         for (var i = 0; i < array.length; i++) {
+          src = _flexy.media+'thumb/' + path +'/'+ array[i];
+          if ( _.isUndefined(this.valuecomplete) && _.isUndefined(this.valuecomplete.alt)) {
+            alt = this.valuecomplete.alt.value;
+          }
+          else {
+            alt = src;
+          }
           array[i] = {
-            src : _flexy.media+'thumb/' + path +'/'+ array[i],
-            alt : array[i],
+            src : src,
+            alt : alt,
           }
         }
       }
@@ -245,6 +270,13 @@ export default {
         <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :key="img.src" :src="img.src" :alt="img.alt" />
       </template>
     </template>
+
+    <template v-if="isType('video',type)">
+      <template v-if="item !==''">
+        <flexy-video :video="item" />
+      </template>
+    </template>
+
 
     <template v-if="isType('color',type)">
       <div class="color-thumb-sm" :style="'color:'+complementColor(item)+';background-color:'+item">{{item}}</div>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /** \ingroup helpers
  * Een aantal handige functies om met YouTube en Vimeo filmpjes om te gaan
  *
@@ -6,6 +6,36 @@
  * @copyright (c) Jan den Besten
  * @file
  **/
+
+function embed_video($code) {
+	$default = array(
+		'platform' => 'youtube',
+		'code'		 => $code,
+		'ratio'		 => '16:9',
+	);
+	if (substr($code,0,1)=='{') {
+		$code = json2array($code);
+		$code = array_merge($default,$code);
+	}
+	else {
+		$code = $default;
+	}
+
+	// $code['img'] = get_video_thumb($code['code'],'big',$code['platform']);
+
+	$ratio = str_replace(':','by',$code['ratio']);
+	switch ($code['platform']) {
+		case 'vimeo':
+			// $html = '<div class="video embed-responsive embed-responsive-'.$ratio.'"><iframe class="video-player embed-responsive-item" type="text/html" src="https://www.youtube.com/embed/'.$code['code'].'?vq=hd720&showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
+			break;
+		case 'youtube':
+		default:
+			$html = '<div class="video embed-responsive embed-responsive-'.$ratio.'"><iframe class="video-player embed-responsive-item" type="text/html" src="https://www.youtube.com/embed/'.$code['code'].'?vq=hd720&showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
+			break;
+	}
+	return $html;
+}
+
 
  /**
   * Haalt url van de thumbnail van een video op
@@ -34,7 +64,7 @@ function get_video_thumb($code,$size='small',$type='youtube') {
 					break;
 				case 'small':
 				default:
-					$thumb_url='http://img.youtube.com/vi/'.$code.'/2.jpg';
+					$thumb_url='https://i.ytimg.com/vi/'.$code.'/mqdefault.jpg';
 					break;
 			}
 			break;
@@ -45,7 +75,7 @@ function get_video_thumb($code,$size='small',$type='youtube') {
 
 /**
  * Geeft info over vimeo video (o.a. thumb)
- * 
+ *
  * Zie http://www.soapboxdave.com/2010/04/getting-the-vimeo-thumbnail/
  *
  * @author Jan den Besten
@@ -65,21 +95,49 @@ function get_vimeo_info($id,$var='') {
 			curl_close($ch);
 			if (empty($var))
 				return $output;
-			else 
+			else
 				return $output[$var];
 		}
 	}
 	return '';
 }
 
+
+/**
+ * Geeft volledige video info als array
+ *
+ * @author Jan den Besten
+ */
+function get_video_array($code) {
+	if (is_array($code)) {
+		$default = $code;
+	}
+	else {
+		$default = array(
+			'platform' => 'youtube',
+			'code'		 => $code,
+			'ratio'		 => '16:9',
+		);
+	}
+	if (!is_array($code) and substr($code,0,1)=='{') {
+		$code = json2array($code);
+		$code = array_merge($default,$code);
+	}
+	else {
+		$code = $default;
+	}
+	return $code;
+}
+
+
 /**
  * Haalt code van een video uit de link
- * 
+ *
  * - Stel je hebt de volgende youtube link: http://www.youtube.com/watch?v=ICFELTZcON0
  * - Dan geeft deze functie als resultaat: ICFELTZcON0
  *
  * @param string $url
- * @param string $type default='youtube' 'youtube' of 'vimeo' 
+ * @param string $type default='youtube' 'youtube' of 'vimeo'
  * @return string
  * @author Jan den Besten
  */

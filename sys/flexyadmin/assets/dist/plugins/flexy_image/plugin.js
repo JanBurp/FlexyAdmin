@@ -13,7 +13,7 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
       height -= 100;
 
       // Path
-      var path = 'pictures'; 
+      var path = 'pictures';
 
       // Geselecteerde afbeelding?
       var selected = tinymce.activeEditor.selection.getContent();
@@ -31,7 +31,7 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
         }
       }
       var url = encodeURI(_flexy.index_page+'_admin/load/editor/image?path='+path+'&selected='+JSON.stringify(selectedImage));
-      
+
       // Open window with a specific url
       editor.windowManager.open({
         title: 'Insert/edit image',
@@ -52,12 +52,16 @@ tinymce.PluginManager.add('flexy_image', function(editor, url) {
             if ( selectedImg!==null ) {
               var src = selectedImg.getAttribute("data-src");
               var alt = altInput.value;
+              if (src==alt) {
+                var pickerImg = innerDoc.querySelector('.mediapicker tbody img[src="_media/thumb/'+path+'/'+src+'"]');
+                alt = pickerImg.getAttribute('alt');
+              }
               if (alt=='') alt = src;
 
               var img = '<img src="_media/'+path+'/'+src+'" alt="'+alt+'" />';
               editor.insertContent(img);
             }
-            
+
             editor.windowManager.close();
           }
         },

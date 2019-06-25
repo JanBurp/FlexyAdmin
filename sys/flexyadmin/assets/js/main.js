@@ -3,7 +3,7 @@
  * - Import components
  * - Create Vue Instance
  * - Global Vue Settings (Mixins)
- * 
+ *
  * @author: Jan den Besten
  */
 
@@ -146,8 +146,9 @@ var vm = new Vue({
   methods: {
 
     mediaPopupChanged : function(media) {
-      this.mediaPopup.alt = media;
       this.mediaPopup.src = media;
+      var pickerImg = document.querySelector('.mediapicker tbody img[src="_media/thumb/pictures/'+media+'"]');
+      this.mediaPopup.alt = pickerImg.getAttribute('alt') || media;
     },
 
   }
