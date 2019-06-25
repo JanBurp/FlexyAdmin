@@ -31,13 +31,19 @@ switch (framework) {
 
 mix
   .version()
-  .sourceMaps()
   .browserSync({
     proxy: proxy,
   })
   .options({
     processCssUrls: false
-  })
-;
+  });
 
-console.log( 'Building for framework: ' + framework );
+if (process.env.NODE_ENV=='development') {
+  mix
+    .sourceMaps()
+    .webpackConfig({
+      devtool: "inline-source-map"
+    });
+}
+
+console.log( 'Building for framework: ' + framework + ' - Node environment = ' + process.env.NODE_ENV );
