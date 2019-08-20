@@ -1,3 +1,15 @@
+=3.5.38
+
+[nl]
+- Fout in multiple dropdowns opgelost
+[/nl]
+[en]
+- Error with multiple dropdowns solved
+[/en]
+
+[BUGS]
+- api multiple items uitgezet: geeft nog teveel problemen (zeker met eigen models)
+
 =3.5.37
 
 [nl]
