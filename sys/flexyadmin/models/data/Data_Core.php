@@ -1,41 +1,41 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup data
- * 
+ *
  * - Alle query-builder methods (en db methods) kunnen worden gebruikt met het model. Als je CodeIgniter kent, ken je dit model al bijna.
  * - Alle instellingen van een tabel en zijn velden tabel zijn te vinden in config/data/...
  * - Standaard get/crud zit in het model, voor elke tabel hetzelfde.
  * - Iedere tabel kan deze overerven en aanpassen naar wens, de aanroepen blijven hetzelfde voor iedere tabel.
  * - Naast ->get() die een query object teruggeeft ook ->get_result() die een aangepaste result array teruggeeft met relatie data als subarray en mogelijkheid tot caching heeft.
- * 
- * 
+ *
+ *
  * Enkele belangrijke methods (deels overgeerft van Query Builder):
- * 
+ *
  * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan, of analyseert de tabel en genereerd settings)
- * 
+ *
  * ->get( $limit=NULL, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
  * ->get_where( $where=NULL, $limit=NULL, $offset=0) // Geeft een $query object (zoals in Query Builder)
- * 
+ *
  * ->get_result( $limit=NULL, $offset=0 )         // Geeft een aangepaste $query->result_array: - key ingesteld als result_key (standaard zelfde als primary_key) - inclusief relatie data als subarray per item
  * ->get_row( $where = NULL )                     // Idem, maar dan maar één item (de eerste in het resultaat)
  * ->get_field( $field, $where = NULL )           // Idem, maar dan van één item alleen de waarde van het gevraagde veld
  * ->set_result_key( $key='' )                    // Hiermee kan voor ->get_result() de key van de array ingesteld worden op een ander (uniek) veld. Standaard is dat de primary_key
- * 
+ *
  * ->insert( $set = NULL )                        // Als Query Builder, maar met verwijzingen naar bestaande many_to_many data
  * ->update( $set=NULL, $where=NULL, $limit=NULL) // idem
  * ->delete( $where = '', $limit = NULL )         // idem
- * 
+ *
  * ->select( $select = '*' )                      // Maak SELECT deel van de query (zoals in Query Builder)
  * ->select_abstract()                            // Maak SELECT deel van de query door alle abstract_fields te gebruiken (en als die niet zijn ingesteld zelf te genereren)
  * ->tree( $tree_field, $original_field = '' )    // Geeft een veld aan dat een geheel pad aan waarden moet bevatten in een tree table (bijvoorbeeld een menu)
- * 
+ *
  * ->with( $type='', $what=array() )              // Voeg relaties toe (many_to_one, many_to_many) en specificeer eventueel welke tabellen en hun velden. Zie bij ->with()
  * ->with_json( $type='', $what=array() )         // Idem, maar dan komt de data in één JSON veld
  * ->with_flat_many_to_one( $what=array() )       // Idem, maar dan met platte foreign data
- * 
+ *
  * ->where($key, $value = NULL)                   // Zoals in Query Builder. Kan ook zoeken in many_to_many data (waar de many_to_many data ook gefilterd is)
  * ->where_exists( $key, $value = NULL )          // Idem met als resultaat dezelfde items maar met complete many_to_many data van dat item (ongefilterd)
- * 
+ *
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
  */
@@ -80,27 +80,27 @@ Class Data_Core extends CI_Model {
     'form_set'           => array(),
     'cache_group'        => array(),
   );
-  
+
   /**
    * Onthoud eventueel opgevraagde field_data
    */
   protected $field_data = NULL;
-  
+
   /**
    * Onthoud eventueel al opgezochte relatie tabellen
    */
   protected $relation_tables = array();
-  
+
   /**
    * Onthoud eventueel array van result_name met bijbehorende velden van de andere tabel
    */
   protected $relation_result_fields = FALSE;
-  
+
   /**
    * Set to TRUE if a query has been prepared
    */
   protected $tm_query_prepared = FALSE;
-  
+
   /**
    * Of huidig resultaat moet worden gecached of niet
    */
@@ -127,41 +127,41 @@ Class Data_Core extends CI_Model {
    */
   protected $tm_where = FALSE;
   protected $tm_join = FALSE;
-  
+
   /**
    * Hou de FROM bij, kan aangepast worden om LIMIT bij one_to_many en many_to_many relaties mooi te krijgen
    */
   protected $tm_from = '';
-  
+
   /**
    * Hou bij of er een WHERE of LIKE statement is
    */
   protected $tm_has_condition = FALSE;
-  
+
   /**
    * Hier komen grid_set instellingen als het om een grid resultaat gaat
    */
   protected $tm_as_grid = FALSE;
-  
+
   /**
    * Een eventueel veld dat een compleet pad moet bevatten in een tree table
    */
   protected $tm_tree       = FALSE;
   protected $tm_where_tree = array();
-  
+
   /**
    * Maximale lengte van txt velden.
    * Als groter dan 0 dan worden txt_ velden gemaximaliseerd op aantal karakters en gestript van html tags
    */
   protected $tm_txt_abstract = 0;
-  
+
   /**
    * Maak wachtwoord velden onzichtbaar: lege strings.
    * Kan handig zijn als je een formulier met wachtwoord wilt laten zien om eventueel aan te kunnen passen.
    * Kan TRUE zijn, of array van wachtwoord velden.
    */
   protected $tm_hidden_passwords = FALSE;
-  
+
   /**
    * Of de result_array in het geval van ->select_abstract() plat moet worden. Zie bij ->select_abstract()
    */
@@ -171,7 +171,7 @@ Class Data_Core extends CI_Model {
    * Hou ORDER BY bij als array van strings per veld en DESC eventueel achter het veld, met name 'jump_to_today' maakt daar gebruik van
    */
   protected $tm_order_by = array();
-  
+
   /**
    * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
    * En of er naar de pagina moet worden gegaan van het item het dichtsbij vandaag
@@ -186,7 +186,7 @@ Class Data_Core extends CI_Model {
    * Welke relaties mee moeten worden genomen en op welke manier
    */
   protected $tm_with    = array();
-  
+
   /**
    * Wat er gezocht gaat woren, de argumenten die meegegeven worden aan ->find()
    * - terms (string, array van strings, of assoc array met multiple finds)
@@ -202,12 +202,12 @@ Class Data_Core extends CI_Model {
    */
   protected $tm_set     = NULL;
 
-  
+
   /**
    * Moet de data voor een insert/update eerste gevalideerd worden?
    */
   protected $validation = FALSE;
-  
+
   /**
    * Is nodig om eventueel te kunnen instellen in de database wie iets heeft aangepast.
    * En om eventueel alleen rijen terug te geven waarvoor de gebruiker rechten heeft.
@@ -216,24 +216,24 @@ Class Data_Core extends CI_Model {
   protected $user_id     = NULL;
   protected $user_groups = array(0);
   protected $logout      = FALSE; // Force logout?
-  
+
   /**
    * Bewaar de id van opgevraagde row als ->where( id ) wordt gebruikt.
    */
   protected $tm_where_primary_key = NULL;
 
-  
+
   /**
    * Bewaart informatie van bepaalde methods
-   * 
+   *
    * ->get_result() (en varianten):
-   * ------------------------------  
+   * ------------------------------
    * - num_rows           - Zelfde als $query->num_rows()
    * - total_rows         - Idem, maar nu zonder limit
    * - num_fields         - Zelfde als $query->num_fields()
    * (- last_query)       - Alleen als nodig is geweest voor het berekenen van total_rows
    * (- last_clean_query) - Alleen als nodig is geweest voor het berekenen van total_rows
-   * 
+   *
    * ->insert() / ->update():
    * ------------------------
    * - validation         - TRUE/FALSE, alleen als $this->validate() bij
@@ -241,7 +241,7 @@ Class Data_Core extends CI_Model {
    */
   protected $query_info = array();
 
-  
+
   /**
    * Deze wordt gebruikt om bij __call() te checken of een db-> aanroep conditioneel is.
    */
@@ -251,7 +251,7 @@ Class Data_Core extends CI_Model {
   /**
    * Maximum hoeveelheid optios die meteen wordt meegegeven als form opties worden opgevraagd (get_options())
    **/
-  private $max_no_api_options = 25;
+  private $max_no_api_options = 99999;
 
 
   /* --- CONSTRUCT & AUTOSET --- */
@@ -268,9 +268,9 @@ Class Data_Core extends CI_Model {
 
   //
   // TODO
-  // 
+  //
   // van Query Builder:
-  // 
+  //
   // public function insert_batch()
   // public function update_batch()
   // public function set_insert_batch()
@@ -343,13 +343,13 @@ Class Data_Core extends CI_Model {
         }
       }
 
-      // Cache 
+      // Cache
       if ($this->settings_caching) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
 
     return $this->settings;
   }
-  
+
 
 
   /**
@@ -376,7 +376,7 @@ Class Data_Core extends CI_Model {
     }
     return $this->settings;
   }
-  
+
 
 
   /**
@@ -394,7 +394,7 @@ Class Data_Core extends CI_Model {
 
   /**
    * Autoset cache_group
-   * 
+   *
    * Standaard wordt dit de tabel zelf en de relatie tabellen.
    * @return array
    * @author Jan den Besten
@@ -434,13 +434,13 @@ Class Data_Core extends CI_Model {
     if (empty($table)) $table = $this->settings['table'];
     return $this->db->list_fields( $table );
   }
-  
-  
+
+
   /**
    * Autoset field_info
    *
    * @param string $table [''], Standaard wordt de tabelnaam gebruikt die in het huidige model is ingesteld. Geef hier eventueel een afwijkende table naam.
-   * @param array $fields [array()], Standaard worden de velden gebruikt die in het huidige model zijn ingesteld. Geef hier eventueel een afwijkende velden lijst. 
+   * @param array $fields [array()], Standaard worden de velden gebruikt die in het huidige model zijn ingesteld. Geef hier eventueel een afwijkende velden lijst.
    * @return void
    * @author Jan den Besten
    */
@@ -454,7 +454,7 @@ Class Data_Core extends CI_Model {
     $field_info = array();
     foreach ($fields as $field) {
       $info = array();
-      
+
       /**
        * Default, eerst uit field_info_config, dan uit database
        */
@@ -463,30 +463,30 @@ Class Data_Core extends CI_Model {
         $pre = get_prefix($field);
         $info['default'] = el(array('FIELDS_prefix',$pre,'default'),$field_info_config);
       }
-      
+
       // Uit database
       if ( !isset($info['default'])) {
         $info['default'] = $this->field_data( $field, 'default' );
       }
-      
+
       /**
        * Validation
        */
       $info['validation'] = explode('|',$this->form_validation->get_rules( $table, $field ));
-      
+
       /**
        * Media path
        */
       if (in_array(get_prefix($field),array('media','medias'))) {
         $info['path'] = 'pictures';
       }
-      
+
       $field_info[$field] = $info;
     }
     // trace_($field_info);
     return $field_info;
   }
-  
+
   /**
    * Autoset opties
    */
@@ -498,24 +498,24 @@ Class Data_Core extends CI_Model {
       $options = array();
 
       $field_info = array();
-      
+
       // Via many_to_one
       if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
         $other_table = el( array('relations','many_to_one',$field,'other_table'), $this->settings);
         if ($other_table and $this->db->table_exists($other_table)) $options['table'] = $other_table;
       }
-      
+
       // Speciale velden
       $type=get_prefix($field);
       switch ($type) {
-        
+
         case 'media':
         case 'medias':
           $options['model'] = 'media';
           $options['path'] = $this->get_setting(array('field_info',$field,'path'));
           if ($type=='medias') $options['multiple']=true;
           break;
-        
+
         case 'field':
         case 'fields':
           $options['model'] = 'fields';
@@ -526,18 +526,18 @@ Class Data_Core extends CI_Model {
           $options['model'] = 'links';
           break;
       }
-      
+
       switch ($field) {
 
         case 'user':
           $options['table'] = 'cfg_users';
           break;
-        
+
         // Self parent -> tree options
         case 'self_parent':
           $options['special'] = 'self_parent';
           break;
-        
+
         case 'table':
           $options['model'] = 'tables';
           break;
@@ -549,7 +549,7 @@ Class Data_Core extends CI_Model {
         case 'api':
           $options['model'] = 'apis';
           break;
-        
+
       }
 
       if ( $options) {
@@ -559,20 +559,20 @@ Class Data_Core extends CI_Model {
     // if ($this->settings['table']=='tbl_fotoarchief') trace_($settings_options);
     return $settings_options;
   }
-  
+
 
 
   /**
    * Autoset order_by
-   * 
-   * @param array $fields [array()], Standaard worden de velden gebruikt die in het huidige model zijn ingesteld. Geef hier eventueel een afwijkende velden lijst. 
+   *
+   * @param array $fields [array()], Standaard worden de velden gebruikt die in het huidige model zijn ingesteld. Geef hier eventueel een afwijkende velden lijst.
    * @return string
    * @author Jan den Besten
    */
   protected function _autoset_order_by( $fields=array() ) {
     if (empty($fields)) $fields = $this->settings['fields'];
     $order_by = '';
-    
+
     // Zoek mogelijke standaard order fields
     $order_fields = $this->config->item( 'ORDER_default_fields' );
     $possible_order_field = current( $order_fields );
@@ -592,7 +592,7 @@ Class Data_Core extends CI_Model {
     if (empty($order_by)) $order_by = $order_fields[count($order_fields)-1];
     return $order_by;
   }
-  
+
 
 
   /**
@@ -619,7 +619,7 @@ Class Data_Core extends CI_Model {
    * Autoset abstract fields
    *
    * @param string $table [''], Standaard wordt de tabelnaam gebruikt die in het huidige model is ingesteld. Geef hier eventueel een afwijkende table naam.
-   * @param array $fields [array()], Standaard worden de velden gebruikt die in het huidige model zijn ingesteld. Geef hier eventueel een afwijkende velden lijst. 
+   * @param array $fields [array()], Standaard worden de velden gebruikt die in het huidige model zijn ingesteld. Geef hier eventueel een afwijkende velden lijst.
    * @return array
    * @author Jan den Besten
    */
@@ -627,7 +627,7 @@ Class Data_Core extends CI_Model {
     if (empty($table))  $table = $this->settings['table'];
     if (empty($fields)) $fields = $this->settings['fields'];
     if ( !is_array($fields) ) $fields = explode( ',', $fields );
-    
+
     // Als leeg zoek op type velden
 		if (empty($abstract_fields)) {
       $abstract_fields=array();
@@ -642,7 +642,7 @@ Class Data_Core extends CI_Model {
         next($fields);
   		}
     }
-    
+
     // Als leeg, zoek dan de eerste velden
 		if (empty($abstract_fields)) {
       $abstract_fields=array();
@@ -653,7 +653,7 @@ Class Data_Core extends CI_Model {
 		}
     return $abstract_fields;
   }
-  
+
 
   /**
    * Autoset abstract_delimiter
@@ -676,8 +676,8 @@ Class Data_Core extends CI_Model {
   protected function _autoset_abstract_filter() {
     return '';
   }
-  
-  
+
+
   /**
    * Autoset relations
    *
@@ -686,7 +686,7 @@ Class Data_Core extends CI_Model {
    */
   protected function _autoset_relations() {
     $relations = array();
-    
+
     // many_to_one
     $foreign_keys = filter_by( $this->settings['fields'], $this->settings['primary_key'].'_' );
     $names = array();
@@ -707,7 +707,7 @@ Class Data_Core extends CI_Model {
         );
       }
     }
-    
+
     // user is ook een many_to_one:
     $user_keys = filter_by( $this->settings['fields'], 'user' );
     if ( in_array('id_user',$this->settings['fields'])) array_unshift($user_keys,'id_user');
@@ -725,7 +725,7 @@ Class Data_Core extends CI_Model {
         );
       }
     }
-    
+
     // one_to_many
     $tables = $this->get_relation_tables( 'one_to_many', $this->settings['table'] );
     if ($tables) {
@@ -764,7 +764,7 @@ Class Data_Core extends CI_Model {
         );
       }
     }
-    
+
     return $relations;
   }
 
@@ -799,7 +799,7 @@ Class Data_Core extends CI_Model {
 
     // relaties, default
     $grid_set['with']  = array('many_to_one');
-    
+
     return $grid_set;
   }
 
@@ -815,10 +815,10 @@ Class Data_Core extends CI_Model {
     $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
     $main_fieldset = $this->settings['table'];
     $fieldsets = array($main_fieldset=>array());
-    
+
     // relaties default
     $form_set['with']      = array('many_to_one','many_to_many');
-    
+
     // fields / formset
     $form_set['fields'] = $this->settings['fields'];
     // voeg eventueel ..._to_many velden toe
@@ -830,7 +830,7 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
     foreach ($form_set['fields'] as $key => $field) {
       $fieldset=$main_fieldset;
       // trace_([$fieldset,$main_fieldset]);
@@ -839,13 +839,13 @@ Class Data_Core extends CI_Model {
     }
     $form_set['fields'] = array_values($form_set['fields']); // reset keys
     $form_set['fieldsets'] = $fieldsets;
-    
+
     return $form_set;
   }
-  
-  
+
+
   /* --- Informatie uit andere tabellen/models --- */
-  
+
   protected function get_other_table_settings( $table ) {
     $settings = NULL;
 
@@ -859,12 +859,12 @@ Class Data_Core extends CI_Model {
 
     return $settings;
   }
-  
+
 
   /**
-   * Haalt een setting op van een andere table (model) 
+   * Haalt een setting op van een andere table (model)
    *
-   * @param string $table 
+   * @param string $table
    * @param string $key
    * @param mixed $defaul [null]
    * @return mixed NULL als niet gevonden
@@ -875,14 +875,14 @@ Class Data_Core extends CI_Model {
     $setting = el( $key, $settings, $default );
     return $setting;
   }
-  
+
 
 
   /**
    * Haalt de velden van een andere table model op.
    * Als die niet gevonden worden, of niet zijn ingesteld, dan worden de velden uit de database gehaald.
    *
-   * @param string $table 
+   * @param string $table
    * @return array()
    * @author Jan den Besten
    */
@@ -893,14 +893,14 @@ Class Data_Core extends CI_Model {
     }
     return $fields;
   }
-  
+
 
 
   /**
    * Haalt de abstract fields van een andere table model op.
    * Als die niet gevonden worden, of niet zijn ingesteld, dan worden de velden gegenereerd.
    *
-   * @param string $table 
+   * @param string $table
    * @return array()
    * @author Jan den Besten
    */
@@ -912,13 +912,13 @@ Class Data_Core extends CI_Model {
     }
     return $abstract_fields;
   }
-  
 
 
-  
+
+
   /* --- DB methods --- */
 
-  
+
 
   /**
    * Alle Query Builder en andere database methods zijn beschikbaar:
@@ -942,11 +942,11 @@ Class Data_Core extends CI_Model {
     }
     throw new Exception( $method . ' does not exist in '.__CLASS__);
   }
-  
-  
-  
+
+
+
   /* -- Methods voor het klaarmaken van een query --- */
-  
+
 
 
   /**
@@ -982,18 +982,18 @@ Class Data_Core extends CI_Model {
     $this->set_result_key();
     return $this;
   }
-  
+
 
 
   /**
    * Stel hier eventueel een table in die gebruikt moet worden in data_model.
-   * 
+   *
    * Je kunt data_model ook los gebruiken, zonder een eigen model voor een table.
    * Stel dan hier de table in die gebruikt moet worden.
    * Als de bijbehorende config bestaat (bijvoorbeeld config/tables/tbl_menu.php) dan wordt die geladen.
    * Als de bijbehorende config NIET bestaat, dat wordt zover het kan alles automatisch ingesteld met autoset.
    *
-   * @param string $table 
+   * @param string $table
    * @return void
    * @author Jan den Besten
    */
@@ -1009,7 +1009,7 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
+
 
   /**
    * Stel (eventueel automatisch) een user_id in.
@@ -1039,7 +1039,7 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
+
   /**
    * Geeft de ingestelde user_id
    *
@@ -1052,7 +1052,7 @@ Class Data_Core extends CI_Model {
     }
     return $this->user_id;
   }
-  
+
 
   /**
    * TRUE als loguit is forced
@@ -1075,8 +1075,8 @@ Class Data_Core extends CI_Model {
   public function get_abstract_fields( $fields='' ) {
     return $this->settings['abstract_fields'];
   }
-  
-  
+
+
 	/**
 	 * Geeft (select) SQL voor selecteren van abstract
 	 *
@@ -1112,12 +1112,12 @@ Class Data_Core extends CI_Model {
 		$sql = "REPLACE( CONCAT_WS('".$delimiter."',".$fields. "), '".$delimiter.$delimiter."',' ' )  AS `" . $abstract_field_name . "`";
     return $sql;
 	}
-  
+
 
   /**
    * Find relation tables of a given type
    *
-   * @param string $type 
+   * @param string $type
    * @return array
    * @author Jan den Besten
    */
@@ -1135,7 +1135,7 @@ Class Data_Core extends CI_Model {
     }
     return $tables;
   }
-  
+
   /**
    * Find one_to_many tables
    *
@@ -1156,7 +1156,7 @@ Class Data_Core extends CI_Model {
     $this->relation_tables['one_to_many'] = $tables;
     return $tables;
   }
-  
+
 
   /**
    * Find many_to_many tables
@@ -1177,19 +1177,19 @@ Class Data_Core extends CI_Model {
     $this->relation_tables['many_to_many'] = $tables;
     return $tables;
   }
-  
-  
-  
+
+
+
   /* --- Getters & Setters --- */
-  
+
 
 
   /**
    * Stelt een setting in.
    * Is alleen nodig als je tijdelijk een afwijkende instelling wilt, want standaard kun je alles al instellen in de het config bestand dat bij het data_model hoort.
    *
-   * @param string $key 
-   * @param mixed $value 
+   * @param string $key
+   * @param mixed $value
    * @return $this
    * @author Jan den Besten
    */
@@ -1197,13 +1197,13 @@ Class Data_Core extends CI_Model {
     $this->settings[$key] = $value;
     return $this;
   }
-  
+
 
 
   /**
    * Stel result key in voor gebruik bij $this->get_result()
    * Staat standaard ingesteld op primary_key.
-   * 
+   *
    * NB Als het meegegeven veld geen unieke waarden bevat dan kan het resulteren in een onverwachte result_array
    *
    * @param string $key [''] Als leeg dan wordt primary_key gebruikt
@@ -1215,7 +1215,7 @@ Class Data_Core extends CI_Model {
     $this->set_setting( 'result_key', $key );
     return $this;
   }
-  
+
   /**
    * Geeft alle settings
    *
@@ -1245,8 +1245,8 @@ Class Data_Core extends CI_Model {
     }
     return el( $key, $this->settings, el( $key, $this->autoset, $default ) );
   }
-  
-  
+
+
   /**
    * Geeft $settings['field_info'] Met alse extra:
    * - Standaard informatie uit config field_info_config voor het veld
@@ -1260,7 +1260,7 @@ Class Data_Core extends CI_Model {
   public function get_setting_field_info_extended($fields=array(),$extra=array(),$include_options=FALSE) {
     $this->config->load('field_info',true);
     $field_info_config = $this->config->item('field_info');
-    
+
     // Standaard velden, of meegegeven (met mogelijk extra) velden
     if (!$fields) $fields = $this->settings['fields'];
     $fields = array_combine($fields,$fields);
@@ -1269,14 +1269,14 @@ Class Data_Core extends CI_Model {
     $field_info = array_merge($fields,$field_info);
     // Alleen de meegegeven velden
     $field_info = array_keep_keys($field_info,$fields);
-    
+
     // Loop alle velden en vul informatie aan
     $found_first_str_field = false;
     foreach ($field_info as $field => $info) {
       if (!is_array($info)) $info=array();
       // UI name
       $info['label'] = $this->lang->ui($this->settings['table'].'.'.$field);
-      
+
       // Schema: default
       $schema       = $field_info_config['FIELDS_default'];
       // Schema: from prefix
@@ -1292,13 +1292,13 @@ Class Data_Core extends CI_Model {
         $schema['is_tree_field'] = true;
       }
 
-      
+
       // Combineer
       $info = array_merge($info,$schema,$extra);
-      
+
       // Validation als string
       $info['validation'] = is_array($info['validation']) ? implode('|',$info['validation']) : $info['validation'];
-      
+
       // Options
       $options = $this->get_options(array($field),array('many_to_many','one_to_many','one_to_one')); // LET OP array($field) ipv $field !!!
       if (isset($options[$field]) and !empty($options[$field])) {
@@ -1317,7 +1317,7 @@ Class Data_Core extends CI_Model {
       }
       $field_info[$field] = $info;
     }
-    
+
 
     // Overschrijf los ingestelde settings
     if (isset($this->settings['field_info'])) {
@@ -1331,7 +1331,7 @@ Class Data_Core extends CI_Model {
     }
     return $field_info;
   }
-  
+
   // /**
   //  * Geeft form_fields terug, klaar voor gebruik in een formulier
   //  *
@@ -1362,7 +1362,7 @@ Class Data_Core extends CI_Model {
   //   }
   //   return $form_fields;
   // }
-  
+
   /**
    * Geeft de grid_set settings, met als extra:
    * - field_info_extended
@@ -1386,7 +1386,7 @@ Class Data_Core extends CI_Model {
     $grid_set['title'] = $this->lang->ui($this->settings['table']);
     return $grid_set;
   }
-  
+
   /**
    * Geeft de form_set settings, met als extra:
    * - field_info_extended
@@ -1397,7 +1397,7 @@ Class Data_Core extends CI_Model {
    */
   public function get_setting_form_set() {
     $form_set = el('form_set',$this->settings);
-    
+
     // Fields
     $fields = el('fields',$form_set);
     // Als fields niet bestaat, haal die uit de fieldsets
@@ -1422,22 +1422,22 @@ Class Data_Core extends CI_Model {
     $form_set['title'] = $this->lang->ui($this->settings['table']);
     return $form_set;
   }
-  
+
 
   /**
    * Maak relatie settings compleet (en default) voor grid_set en form_set
    *
-   * @param array $set 
-   * @param string $set_type 
+   * @param array $set
+   * @param string $set_type
    * @return array
    * @author Jan den Besten
    */
   private function _complete_relations_of_set($set,$set_type) {
     // Default
     if (!isset($set['with'])) {
-      if ($set_type==='grid_set') 
+      if ($set_type==='grid_set')
         $set['with'] = array('many_to_one');
-      else 
+      else
         $set['with'] = array('many_to_one','many_to_many');
     }
 
@@ -1448,7 +1448,7 @@ Class Data_Core extends CI_Model {
         if ($type!=='one_to_one') {
 
           // trace_([$this->settings['table']=>[$type=>$relations]]);
-          
+
           // Vul aan als alleen maar de types zijn ingesteld
           if (is_numeric($type)) {
             unset($set['with'][$type]);
@@ -1523,13 +1523,13 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
     // trace_($set);
     // trace_($set['with']);
 
     return $set;
   }
-  
+
   /**
    * Maak een handige array van [result_name => ['type'=>'',fields'=>[other_table_fields],'other_table'=>'']] voor intern gebruik
    *
@@ -1553,11 +1553,11 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
+
   /**
    * Geeft de result_name informatie van een result_name
    *
-   * @param string $result_name 
+   * @param string $result_name
    * @return array
    * @author Jan den Besten
    */
@@ -1575,7 +1575,7 @@ Class Data_Core extends CI_Model {
     }
     return $result;
   }
-  
+
   /**
    * Test of string is een result_name van een (ingestelde) relatie
    *
@@ -1597,14 +1597,14 @@ Class Data_Core extends CI_Model {
     }
     return $is_result_name;
   }
-  
-  
+
+
   /**
    * Geeft ingestelde relatie met gegeven key/waarde van die relaties setting (bv 'other_table' oid)
    *
-   * @param string $type 
-   * @param string $key 
-   * @param string $value 
+   * @param string $type
+   * @param string $key
+   * @param string $value
    * @return array
    * @author Jan den Besten
    */
@@ -1618,7 +1618,7 @@ Class Data_Core extends CI_Model {
 
   /**
    * Geeft relatie instellingen terug
-   * 
+   *
    * @param string $type [''] geef hier eventueel het type relatie dat je wilt terugkrijgen
    * @return array
    * @author Jan den Besten
@@ -1629,14 +1629,14 @@ Class Data_Core extends CI_Model {
     }
     return $this->tm_with;
   }
-  
-  
+
+
   /**
    * Geeft eventuele opties van een bepaald veld, of van alle velden met opties als geen veld is gegeven.
    * NB Roep altijd aan na een ->get..() variant.
-   * 
+   *
    * Resultaat bij één veld:
-   * 
+   *
    * Alle mogelijkheden:
    *  - array(
    *    'data' => array()         - Array met opties
@@ -1646,32 +1646,32 @@ Class Data_Core extends CI_Model {
    *    'multiple' => TRUE/FALSE  - of het meerkeuze is
    * )
    *
-   * 
+   *
    * Waar de 'data' array er zo uit ziet:
-   * 
+   *
    * array(
    *  'value' => 'name',
    *  ...
-   * ) 
-   * 
+   * )
+   *
    * Of als 'as_object' = TRUE:
-   * 
+   *
    * array(
    *  array( 'value' => ..., 'name' => .... )
    *  ...
-   * ) 
-   * 
-   * 
+   * )
+   *
+   *
    * of met gegroupeerde data (voor groepen in selects)
-   * 
+   *
    * array(
    *  'groep_naam_1' => array(...),
    *  'groep_naam_2' => array(...),
    *  ...
    * )
-   * 
+   *
    * Als geen veld wordt meegegeven worden de opties van alle velden uit de tabel teruggegeven:
-   * 
+   *
    * array(
    *    '...veldnaam...' => array( ...zie hierboven... ),
    *    ....
@@ -1702,10 +1702,10 @@ Class Data_Core extends CI_Model {
 
       $field_options  = $this->get_setting( array('options',$field) );
       $field_options['field'] = $field;
-      
+
       if ($field_options) {
         $field_options;
-        
+
         // table (zie ook onderaan bij relaties)
         if ( isset($field_options['table']) ) {
           $other_table = $field_options['table'];
@@ -1726,7 +1726,7 @@ Class Data_Core extends CI_Model {
             $field_options['insert_rights'] = TRUE;
           }
         }
-        
+
         // special (fields)
         if ( isset($field_options['special']) ) {
           switch ($field_options['special']) {
@@ -1763,7 +1763,7 @@ Class Data_Core extends CI_Model {
               break;
           }
         }
-        
+
         // model (external)
         if ( isset($field_options['model']) ) {
           $current_table = $this->settings['table'];
@@ -1777,7 +1777,7 @@ Class Data_Core extends CI_Model {
       }
       $options[$field] = $field_options;
     }
-    
+
     // one_to_one opties: die opties toevoegen
     if ( in_array('one_to_one',$with) and !$this->tm_as_grid ) {
       $relations = $this->settings['relations']['one_to_one'];
@@ -1843,19 +1843,19 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
     foreach ($options as $field => $row) {
       // Empty?
       if (is_array($row) && count($row)===1 && isset($row['field'])) $options[$field] = FALSE;
     }
-    
+
     if ($one!==FALSE) return $options[$one];
     return $options;
   }
-  
-  
 
-  
+
+
+
   /**
    * Geeft default waarden van een row. Wordt uit de database gehaald.
    *
@@ -1865,7 +1865,7 @@ Class Data_Core extends CI_Model {
    */
   public function get_defaults( $set=FALSE ) {
     $defaults = array();
-    
+
     if ($set=='form') {
       $fields = el(array('form_set','fields'),$this->settings);
       if (empty($fields)) {
@@ -1880,7 +1880,7 @@ Class Data_Core extends CI_Model {
     else {
       $fields = $this->settings['fields'];
     }
-    
+
     if ($this->tm_select) {
       $fields = array_intersect($fields,$this->tm_select);
     }
@@ -1892,7 +1892,7 @@ Class Data_Core extends CI_Model {
       if (is_null($defaults[$field])) $defaults[$field] = $this->field_data( $field, 'default' );
 		}
     $defaults[$this->settings['primary_key']] = -1;
-    
+
     // Stel eventuele eigenaar van de row in op huidige user.
     if (isset($defaults['user'])) {
       $defaults['user'] = $this->get_user_id();
@@ -1912,10 +1912,10 @@ Class Data_Core extends CI_Model {
           break;
       }
     }
-    
+
     // Relaties
     if (is_array($this->tm_with)) {
-      
+
       // one_to_one
       if (isset($this->tm_with['one_to_one'])) {
         foreach ($this->tm_with['one_to_one'] as $what => $relation) {
@@ -1930,7 +1930,7 @@ Class Data_Core extends CI_Model {
           // $defaults = array_merge($defaults,$other_defaults);
         }
       }
-      
+
       // .._to_many
       if (isset($this->tm_with['many_to_many']) or isset($this->tm_with['one_to_many'])) {
         if (isset($this->tm_with['many_to_many'])) {
@@ -1947,9 +1947,9 @@ Class Data_Core extends CI_Model {
     }
     return $defaults;
   }
-  
-  
-  
+
+
+
   /**
    * Geeft random waarden voor een row, eventueel voor gespecificeerde velden
    *
@@ -1980,7 +1980,7 @@ Class Data_Core extends CI_Model {
     // Option?
     $options = $this->get_options($field);
     if ($options and $type!=='media' and $type!=='medias') {
-      $values = random_element($options['data']); 
+      $values = random_element($options['data']);
       $value = $values['value'];
       if (el('multiple',$options) and rand(0,1)>.7) {
         $value.='|'.$value;
@@ -2122,12 +2122,12 @@ Class Data_Core extends CI_Model {
     }
     return $value;
   }
-  
 
-  
-  
+
+
+
   /* --- Methods die query data teruggeven --- */
-  
+
 
 
   /**
@@ -2140,12 +2140,12 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get( $limit=NULL, $offset=0, $reset = true ) {
-    
+
     $this->_prepare_query($limit,$offset);
 
     // get
     $query = $this->db->get();
-    
+
     // Jump to today? Pas query aan.
     if ( $query AND $this->tm_jump_to_today AND $this->tm_limit>1 ) {
       $this->query_info['limit']      = (int) $this->tm_limit;
@@ -2178,7 +2178,7 @@ Class Data_Core extends CI_Model {
       }
     }
 
-    
+
     // Query Info Complete
     if ($query) {
       $this->query_info['from_cache'] = FALSE;
@@ -2202,12 +2202,12 @@ Class Data_Core extends CI_Model {
       $this->query_info['num_fields'] = $query->num_fields();
       $this->query_info['last_query'] = $this->last_query();
     }
-    
+
     if ( $reset ) $this->reset();
     return $query;
   }
-  
-  
+
+
   /**
    * Prepares query (if not done allready) before calling get()
    *
@@ -2216,7 +2216,7 @@ Class Data_Core extends CI_Model {
    */
   private function _prepare_query( $limit=NULL, $offset=0 ) {
     if ( $this->tm_query_prepared ) return $this;
-    
+
     // Bewaar limit & offset als ingesteld (overruled eerder ingestelde door ->limit() )
     if ( isset($limit) or $offset!=0) {
       $this->limit( $limit,$offset );
@@ -2227,14 +2227,14 @@ Class Data_Core extends CI_Model {
 
     // bouw relatie queries
     $this->_with();
-    
+
     // maak select concreet
     $this->db->select( $this->tm_select, FALSE );
-    
+
     // order_by
     if (empty($this->tm_order_by)) {
       if ($this->tm_as_grid and isset($this->tm_as_grid['order_by'])) {
-        $this->order_by( $this->tm_as_grid['order_by'] );  
+        $this->order_by( $this->tm_as_grid['order_by'] );
       }
       else {
         $this->order_by( $this->settings['order_by'] );
@@ -2252,21 +2252,21 @@ Class Data_Core extends CI_Model {
           $this->db->order_by( $field, $split['direction'] );
         }
         elseif ($field=='RAND()') {
-          $this->db->order_by( 'RAND()' );  
+          $this->db->order_by( 'RAND()' );
         }
         elseif ($this->tm_as_grid and isset($this->tm_as_grid['fields']) and in_array($field,$this->tm_as_grid['fields'])) {
-          $this->db->order_by( $field, $split['direction'] ); 
+          $this->db->order_by( $field, $split['direction'] );
         }
       }
     }
 
     // JOIN
-    $this->_join();    
+    $this->_join();
 
     // FROM
     $this->_from();
 
-    
+
     // bouw find query op
     $this->_find();
 
@@ -2277,19 +2277,19 @@ Class Data_Core extends CI_Model {
     $this->query_info = array();
     $this->db->limit( $this->tm_limit );
     $this->db->offset( $this->tm_offset );
-    
+
     // Cache name
     $this->create_cache_name( $this->db->get_compiled_select( '',FALSE ), true );
-    
+
     $this->tm_query_prepared = TRUE;
     return $this;
   }
-  
+
   /**
    * Split één order item in table.veld en direction
    *
-   * @param string $order 
-   * @return array ['field'=>'...','direction'=>['ASC','DESC']] 
+   * @param string $order
+   * @return array ['field'=>'...','direction'=>['ASC','DESC']]
    * @author Jan den Besten
    */
   private function _split_order($order) {
@@ -2304,10 +2304,10 @@ Class Data_Core extends CI_Model {
     }
     return array('field'=>$order,'direction'=>$direction);
   }
-  
-  
-  
-  
+
+
+
+
   /**
    * Zelfde als bij Query Builder
    *
@@ -2321,7 +2321,7 @@ Class Data_Core extends CI_Model {
 		if ($where !== NULL) $this->where($where);
     return $this->get( $limit,$offset);
 	}
-  
+
 
   /**
    * Maakt een mooie result_array van een $query
@@ -2330,28 +2330,28 @@ Class Data_Core extends CI_Model {
    * - Met default data voor one_to_one relaties
    * - Als select_txt_abstract() is ingesteld dan worden die velden ook nog gestript van HTML tags
    *
-   * @param object $query 
+   * @param object $query
    * @return array
    * @author Jan den Besten
    */
   protected function _make_result_array( $query ) {
     if ( $query===FALSE) return array();
-    
+
     $id        = -1;
     $key       = el( 'result_key', $this->settings, el( 'primary_key',$this->settings ) );
     $result    = array();
     $with_data = array();
-    
+
     // Tree fields
     if ($this->tm_tree) {
       $tree = array();
       $needed_tree_fields = array_merge(array_keys($this->tm_tree),array($this->settings['primary_key'],'self_parent'));
     }
-    
+
     // Eventuele defaults bewaren bij een niet bestaanden one_to_one
     $one_to_one = el('one_to_one',$this->tm_with);
     $one_to_one_defaults=array();
-    
+
     while ( $row = $query->unbuffered_row('array') ) {
     // foreach ( $query->result_array() as $row) {
 
@@ -2362,7 +2362,7 @@ Class Data_Core extends CI_Model {
       else {
         $id++;
       }
-      
+
       // defaults bij niet bestaande one_to_one
       if ($one_to_one and in_array(NULL,$row)) {
         foreach ($row as $field => $value) {
@@ -2378,7 +2378,7 @@ Class Data_Core extends CI_Model {
           }
         }
       }
-      
+
       // tree
       if ($this->tm_tree)  {
         // Remember current row with necessary fields
@@ -2388,20 +2388,20 @@ Class Data_Core extends CI_Model {
           $row[$tree_info['tree_field']] = $this->_fill_tree( $tree, $id, $tree_info );
         }
       }
-      
+
       // result_key
       $result_key = el($key,$row,$id);
-      
+
       // Voeg relatie data aan row
       if ($this->tm_with) {
-        
+
         foreach ($this->tm_with as $with_type => $this_with) {
-          
+
           foreach ($this_with as $what => $info) {
 
             $other_table = $info['table'];
             $as = el('as',$info,$other_table);
-            
+
             // Flat many_to_one
             if ( $with_type==='many_to_one' AND ( (el('fields', $info)==='abstract') OR (el('flat', $info, false)===true) )) {
               $foreign_key = $this->settings['relations'][$with_type][$what]['foreign_key'];
@@ -2411,14 +2411,14 @@ Class Data_Core extends CI_Model {
                 unset($row[$abstract_field]);
               }
             }
-            
+
             // JSON: schoon lege abstract resulaten op
             elseif ( el('json',$info,FALSE) ) {
               if (el('fields',$info)==='abstract') {
                 if ($row[$as]==='{}') $row[$as] = '';
               }
             }
-            
+
             // Niet JSON en niet flat => als subarray
             elseif ($with_type!=='one_to_one') {
               $fields   = $info['fields'];
@@ -2445,7 +2445,7 @@ Class Data_Core extends CI_Model {
                 }
               }
             }
-            
+
           }
           // Merge with data met normale data in row, als mogelijk op gewenste plek
           if (isset($with_data[$result_key])) {
@@ -2459,7 +2459,7 @@ Class Data_Core extends CI_Model {
           }
         }
       }
-            
+
       // tm_txt_abstract
       if ($this->tm_txt_abstract>0) {
         $txt_row = $row;
@@ -2470,23 +2470,23 @@ Class Data_Core extends CI_Model {
           $row[$txt_field] = str_replace( "&nbsp;"," ", $row[$txt_field]);
         }
       }
-      
+
       // tm_flat_abstracts
       if ($this->tm_flat_abstracts and isset($row['abstract'])) {
         $row = $row['abstract'];
       }
-      
+
       // result_key
       $result[ $result_key ] = $row;
     }
-    
+
     // pas query info aan
     $this->query_info['num_rows']     = count($result);
     $this->query_info['num_fields']   = (is_array(current($result))?count(current($result)):false);
     if ( isset($this->tm_with['many_to_many']) or isset($this->tm_with['one_to_many']) ) {
       $this->query_info['total_rows'] = $this->total_rows(true,true);
     }
-    
+
     // where tree?
     if ( !empty($this->tm_where_tree) and !empty($result) ) {
       if (!$this->tm_tree) {
@@ -2497,17 +2497,17 @@ Class Data_Core extends CI_Model {
       }
       $this->query_info['num_rows'] = count($result);
     }
-    
+
     return $result;
   }
-  
-  
+
+
   /**
    * Vul een tree veld recursief
    *
-   * @param array $result 
+   * @param array $result
    * @param int $key
-   * @param array $tree_info 
+   * @param array $tree_info
    * @return string
    * @author Jan den Besten
    */
@@ -2519,7 +2519,7 @@ Class Data_Core extends CI_Model {
       $value .= $this->_fill_tree( $result, $parent, $tree_info, $counter+1) . $tree_info['split'];
     }
     $part = el( array($key,$tree_info['original_field']), $result );
-    
+
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
     if (is_null($part) and $key!==0) {
       $order = array();
@@ -2552,7 +2552,7 @@ Class Data_Core extends CI_Model {
    * Interne method voor get_result(), andere models kunnen zo get_result() zonder problemen aanpassen zoder de interne werking te beinvloeden.
    *
    * @param int $limit [NULL]
-   * @param int $offset [0] 
+   * @param int $offset [0]
    * @return array
    * @author Jan den Besten
    */
@@ -2566,7 +2566,7 @@ Class Data_Core extends CI_Model {
         return $result;
       }
     }
-    
+
     // No cache, just create result from database
     $result = array();
     $query = $this->get( $limit, $offset, FALSE );
@@ -2579,19 +2579,19 @@ Class Data_Core extends CI_Model {
     $this->reset();
     return $result;
   }
-  
+
 
 
   /**
    * Geeft resultaat terug als result array
    * - array key is standaard de PRIMARY KEY maar kan ingesteld worden met $this->set_result_key()
    * - relatie data komt als sub arrays in het resultaat per relatietabel
-   * 
+   *
    * Bij voorkeur niet gebruiken als resources belangrijk zijn.
    * Of alleen bij kleine resultaten en/of in combinatie met limit / pagination.
    *
    * @param int $limit [NULL]
-   * @param int $offset [0] 
+   * @param int $offset [0]
    * @return array
    * @author Jan den Besten
    */
@@ -2599,12 +2599,12 @@ Class Data_Core extends CI_Model {
     $result = $this->_get_result($limit,$offset);
     return $result;
   }
-  
+
 
 
   /**
    * Zelfde als get_result(), maar geeft nu alleen maar de eerstgevonden rij.
-   * 
+   *
    * @param mixed $where [NULL]
    * @param string $set [''] 'form' als de aanroep voor de form_set wordt gebruikt
    * @return array
@@ -2616,7 +2616,7 @@ Class Data_Core extends CI_Model {
       return $this->get_defaults($set);
     }
     if (is_numeric($where)) $this->tm_where_primary_key = $where;
-    
+
     if ($where) $this->where( $where );
     // Als er ..._to_many data is die niet JSON is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
     if ( isset($this->tm_with['many_to_many']) or isset($this->tm_with['one_to_many']) ) {
@@ -2632,7 +2632,7 @@ Class Data_Core extends CI_Model {
   /**
    * Zelfde als ->get_row() maar geeft alleen de waarde van het gevraagde field terug
    *
-   * @param string $field 
+   * @param string $field
    * @param mixed $where [NULL]
    * @return mixed
    * @author Jan den Besten
@@ -2642,13 +2642,13 @@ Class Data_Core extends CI_Model {
     $row = $this->get_row( $where );
 		return $row[$field];
 	}
-  
+
 
   /**
    * Geeft resulaat terug als opties klaar voor gebruik in vue form.
    *
    * @param int $limit [NULL]
-   * @param int $offset [0] 
+   * @param int $offset [0]
    * @return array
    * @author Jan den Besten
    */
@@ -2672,7 +2672,7 @@ Class Data_Core extends CI_Model {
     return $options;
   }
 
-  
+
   /**
    * Geeft resulaat terug als opties. Een resultaat is combinatie van hetvolgende:
    * - de key is de PRIMARY_KEY
@@ -2680,7 +2680,7 @@ Class Data_Core extends CI_Model {
    * - als geen volgorde is aangegeven in de config en niet is ingesteld worden de abstract velden als volgorde gebruikt
    *
    * @param int $limit [NULL]
-   * @param int $offset [0] 
+   * @param int $offset [0]
    * @return array
    * @author Jan den Besten
    */
@@ -2698,8 +2698,8 @@ Class Data_Core extends CI_Model {
     }
     return $options;
   }
-  
-  
+
+
   protected function _make_options_result( $query,$key='' ) {
     if ( $query===FALSE) return array();
     if (empty($key)) $key=$this->settings['primary_key'];
@@ -2710,12 +2710,12 @@ Class Data_Core extends CI_Model {
     }
     return $options;
   }
-  
-  
+
+
   /**
    * Zet caching voor dit resultaat aan of uit (werk alleen in combinatie met get_result() en get_row() )
    *
-   * @param bool [$caching=TRUE] 
+   * @param bool [$caching=TRUE]
    * @return $this
    * @author Jan den Besten
    */
@@ -2723,11 +2723,11 @@ Class Data_Core extends CI_Model {
     $this->tm_cache_result = $caching;
     return $this;
   }
-  
+
   /**
    * Maakt naam voor cache bestand specifiek voor deze query
    *
-   * @param string $sql 
+   * @param string $sql
    * @param bool $hash[false]
    * @return string
    * @author Jan den Besten
@@ -2740,13 +2740,13 @@ Class Data_Core extends CI_Model {
       $this->tm_cache_name .= $name;
     return $this->tm_cache_name;
   }
-  
+
   /**
    * Bewaar huidige resultaat in de cache
    *
-   * @param string $result 
-   * @param string $name [default = tm_cache_name] 
-   * @param int $time [default = TIME_YEAR] 
+   * @param string $result
+   * @param string $name [default = tm_cache_name]
+   * @param int $time [default = TIME_YEAR]
    * @return this
    * @author Jan den Besten
    */
@@ -2759,7 +2759,7 @@ Class Data_Core extends CI_Model {
     $this->cache->save( $name, $cache, $time );
     return $this;
   }
-  
+
   /**
    * Haalt resultaat van huidige query op uit de cache (of geef FALSE)
    *
@@ -2778,11 +2778,11 @@ Class Data_Core extends CI_Model {
     }
     return $cached;
   }
-  
+
   /**
    * Verwijder result caches (van meegegeven table)
    *
-   * @param string $table [''] 
+   * @param string $table ['']
    * @return void
    * @author Jan den Besten
    */
@@ -2801,17 +2801,17 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
-  
-  
-  
+
+
+
+
   /**
    * Geeft resultaat terug specifiek voor het admin grid:
    * - pagination
    * - zoeken
    * - abstracts van many_to_one
    *
-   * @param mixed $limit [20] 
+   * @param mixed $limit [20]
    * @param mixed $offset [FALSE] De start van het resultaat, als FALSE dan is jump_to_today aktief, anders niet.
    * @return array
    * @author Jan den Besten
@@ -2823,7 +2823,7 @@ Class Data_Core extends CI_Model {
 
     // Select
     $this->select( $grid_set['fields'] );
-    
+
     // Relations
     $flatten_fields = array();
     foreach ($grid_set['with'] as $type => $relations) {
@@ -2835,13 +2835,13 @@ Class Data_Core extends CI_Model {
         if ($type==='many_to_one') $flatten_fields = array_merge($flatten_fields, array_keys($grid_set['with'][$type]) );
       }
     }
-    
+
     // Tree als menu tabel
     if ( $this->is_menu_table() ) {
       $title_field = $this->list_fields( 'str',1 );
       $this->tree( 'uri' );//->tree( $title_field );
     }
-    
+
     // Pagination
     if (el('pagination',$grid_set,true) and isset($limit)) {
       if (is_numeric($offset) or $offset!==TRUE) $this->limit( $limit, $offset );
@@ -2879,8 +2879,8 @@ Class Data_Core extends CI_Model {
     reset($result);
     return $result;
   }
-  
-  
+
+
   /**
    * Geeft resultaat terug specifiek voor een formulier van één item
    *
@@ -2894,7 +2894,7 @@ Class Data_Core extends CI_Model {
 
     // Select
     if (empty($this->tm_select)) $this->select( $form_set['fields'] );
-    
+
     // Relations
     $one_to_one = array();
     foreach ($form_set['with'] as $type => $relations) {
@@ -2909,7 +2909,7 @@ Class Data_Core extends CI_Model {
     }
 
     $result = $this->get_row( $where, 'form' );
-    
+
     // one_to_one defaults?
     if (!empty($one_to_one)) {
       foreach ($one_to_one as $what => $fields) {
@@ -2941,9 +2941,9 @@ Class Data_Core extends CI_Model {
     }
     return $result;
   }
-  
 
-  
+
+
   /* --- Methods om de query te vormen --- */
 
 
@@ -2968,8 +2968,8 @@ Class Data_Core extends CI_Model {
     }
 		return $this;
 	}
-  
-  
+
+
   /**
    * Geef aan dat de primary_key niet hoeft mee te worden genomen in de select.
    * Oa bij ->distinct() word dit standaard ingesteld.
@@ -2981,7 +2981,7 @@ Class Data_Core extends CI_Model {
     $this->tm_select_include_primary = FALSE;
     return $this;
   }
-  
+
   /**
    * Zelfde als Query Builder distinct(), maar nu wordt de primary_key niet meegenomen in select statement.
    *
@@ -2994,8 +2994,8 @@ Class Data_Core extends CI_Model {
     if ($distinct) $this->exclude_primary_from_select();
     return $this;
   }
-  
-  
+
+
   /**
    * Zorg ervoor dat de meegegeven veld(en) niet in het SELECT deel van de query komen.
    *
@@ -3066,8 +3066,8 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
-  
+
+
 
   /**
    * Selecteert abstract fields
@@ -3081,7 +3081,7 @@ Class Data_Core extends CI_Model {
     $this->tm_flat_abstracts = $flat;
     return $this;
   }
-  
+
   /**
    * Veranderd all txt velden tot een string met een maximale lengte, zonder html tags en zonder linebreaks.
    *
@@ -3094,7 +3094,7 @@ Class Data_Core extends CI_Model {
     $this->tm_txt_abstract = $txt_abstract;
     return $this;
   }
-  
+
   /**
    * Verander alle wachtwoord velden (pwd_.. en gpw_..) in onzichtbare velden: het resultaat is een lege string.
    *
@@ -3146,22 +3146,22 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
-  
+
+
   /**
    * Selecteert een veld waarvan de waarde een samengevoegde string is van alle waarden in een pad van een tree table.
    * Een tree table is een tabel met rijen die in een boomstructuur aan elkaar gekoppeld zijn, bijvoorbeeld een menu.
    * Een tree table bevat altijd de velden order en self_parent
-   * 
+   *
    * Voorbeeld:
-   * 
+   *
    * ->tree( 'uri' )
-   * 
+   *
    * Een andere optie is om het originele veld te behouden en een extra veld toe te voegen met het hele pad.
    * In het voorbeeld hieronder zal het veld 'tree' worden toegevoegd en dezefde waarden hebben als het veld 'uri' in het voorbeeld hierboven.
-   * 
+   *
    * ->tree( 'tree', 'uri' );
-   * 
+   *
    * NB Kan alleen gebruikt worden in combinate met ->get_result() en varianten.
    * NB2 In combinatie met een ->where() statement kan het zijn dat de resultaten niet compleet zijn omdat rijen kunnen ontbreken die een tak in een tree zijn.
    *
@@ -3185,17 +3185,17 @@ Class Data_Core extends CI_Model {
     );
     return $this;
   }
-  
+
   /**
    * Speciaal where method voor het zoeken in tree velden. Kan alleen in combinatie met ->get_result() en ->tree()
-   * 
+   *
    * NB Dit gebeurt niet met de database, maar wordt aan het eind van een volledige result nog gefilterd:
    * - Het is daarom niet erg snel.
    * - Het wijkt af van normale ->where methoden.
    * - Gebruik dit alleen als het echt niet anders kan (bij Menu structuren bijvoorbeeld, die zijn niet zo groot)
    *
-   * @param string $field 
-   * @param mixed $value 
+   * @param string $field
+   * @param mixed $value
    * @return $this
    * @author Jan den Besten
    */
@@ -3206,13 +3206,13 @@ Class Data_Core extends CI_Model {
     );
     return $this;
   }
-  
+
 
   /**
    * Zelfde als QueryBuilder from().
    * Met dit verschil, FROM deel kan eventueel aangepast worden als dat nodig is voor relaties in combinatie met LIMIT
    *
-   * @param string $from 
+   * @param string $from
    * @return $this
    * @author Jan den Besten
    */
@@ -3220,7 +3220,7 @@ Class Data_Core extends CI_Model {
     $this->tm_from = $from;
     return $this;
   }
-  
+
   /**
    * Bouwt het FROM deel van de query op
    *
@@ -3230,10 +3230,10 @@ Class Data_Core extends CI_Model {
   private function _from() {
     // Als geen expliciete FROM (meestal) bouw die dan op
     if ( empty($this->tm_from) ) {
-      
+
       // Default is de ingestelde tabel
       $this->tm_from = $this->settings['table'];
-      
+
       // Als 'one_to_many' of 'many_to_many' relatie, maak dan een subselect met gevraagde LIMIT en ORDER
       if ( isset($this->tm_with['one_to_many']) or isset($this->tm_with['many_to_many']) ) {
         // table
@@ -3263,14 +3263,14 @@ Class Data_Core extends CI_Model {
         $order_by = explode(' ',$order_by);
         // Bestaat het order veld? Zo niet pak gewoon de primary_key
         if (!$this->field_exists($order_by[0])) {
-          $order_on_self = FALSE; 
+          $order_on_self = FALSE;
           $order_by = array($this->settings['primary_key'],'');
         }
         // Compile the subquery:
         $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table);
         if (!empty($where)) $this->tm_from.= ' WHERE ('.$where.') ';
         $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
-        
+
         // Limit in subquery alleen als de volgorde géén invloed heeft op resultaat. (met limit is wel sneller)
         if ( $order_on_self AND !$has_where AND !$this->tm_find AND $this->tm_limit>0) {
           if ($this->tm_offset===FALSE) $this->tm_offset=0;
@@ -3282,17 +3282,17 @@ Class Data_Core extends CI_Model {
         }
         $this->tm_from .= ') AS '.$this->db->protect_identifiers($table).'';
       }
-      
+
     }
     return $this->db->from( $this->tm_from );
   }
-  
-  
+
+
 
   /**
    * Zorgt ervoor dat alleen de rijen van de ingestelde of meegegeven user worden teruggegeven
    *
-   * @param int [$user_id] Als dit niet expliciet wordt meegegeven wordt de ingestelde user gebruikt ($this->set_user_id()) 
+   * @param int [$user_id] Als dit niet expliciet wordt meegegeven wordt de ingestelde user gebruikt ($this->set_user_id())
    * @return $this
    * @author Jan den Besten
    */
@@ -3304,8 +3304,8 @@ Class Data_Core extends CI_Model {
 		}
     return $this;
   }
-  
-  
+
+
 
 
   /**
@@ -3314,32 +3314,32 @@ Class Data_Core extends CI_Model {
    * - Je kunt ook LIKE statements hiermee aanroepen
    * - Als $value een array is wordt 'where_in' aangeroepen.
    * - Je kunt ook where statements voor relaties aangeven.
-   * 
+   *
    * primary_key ea
    * --------------
    * ->where( 2 );        // Zoekt naar het resultaat met de primary_key 2
    * ->where( 'first' );  // Zoekt naar het eerste resultaat
-   * 
+   *
    * like
    * ----
    * ->where( 'str_title LIKE', '%test%' );
-   * 
+   *
    * many_to_one
    * -----------
    * ->where( 'tbl_links.str_title', 'test' );    // Zoekt het resultaat op het veld 'str_title' uit de many_to_one relatie met tbl_links.
-   * 
+   *
    * NB Als er meerdere many_to_one relaties zijn naar dezelfde tabel is de naamgeving anders.
-   * 
+   *
    * many_to_many
    * ------------
    * ->where( 'tbl_links.str_title', 'text' );    // Zoekt het resultaat op het veld 'str_title' uit de many_to_many relatie met tbl_links.
    * ->where( 'tbl_links.id', 3 );                // idem op 'id'
-   * 
-   * 
+   *
+   *
    * LET OP: Bovenstaand many_to_many voorbeelden zijn snel, maar geven many_to_many data die voldoet aan het where statement.
    * Als je wilt zoeken, maar wel de complete many_to_many data voor een bepaald item gebruik dan ->where_exists() of ->like_exists()
    *
-   * @param string $key 
+   * @param string $key
    * @param mixed $value [NULL]
    * @param mixed $escape [NULL]
    * @return $this
@@ -3354,8 +3354,8 @@ Class Data_Core extends CI_Model {
   /**
    * Zelfd als 'where' maar dan OR
    *
-   * @param string $key 
-   * @param string $value[NULL] 
+   * @param string $key
+   * @param string $value[NULL]
    * @param string $escape[NULL]
    * @return $this
    * @author Jan den Besten
@@ -3365,12 +3365,12 @@ Class Data_Core extends CI_Model {
     return $this;
   }
 
-  
+
   /**
    * Zelfde als CI QueryBuilder
    *
-   * @param string $key 
-   * @param string $value[NULL] 
+   * @param string $key
+   * @param string $value[NULL]
    * @param string $escape[NULL]
    * @return $this
    * @author Jan den Besten
@@ -3384,8 +3384,8 @@ Class Data_Core extends CI_Model {
   /**
    * Zelfde als CI QueryBuilder
    *
-   * @param string $key 
-   * @param string $value[NULL] 
+   * @param string $key
+   * @param string $value[NULL]
    * @param string $escape[NULL]
    * @return $this
    * @author Jan den Besten
@@ -3399,8 +3399,8 @@ Class Data_Core extends CI_Model {
   /**
    * Zelfde als CI QueryBuilder
    *
-   * @param string $key 
-   * @param string $value[NULL] 
+   * @param string $key
+   * @param string $value[NULL]
    * @param string $escape[NULL]
    * @return $this
    * @author Jan den Besten
@@ -3414,8 +3414,8 @@ Class Data_Core extends CI_Model {
   /**
    * Zelfde als CI QueryBuilder
    *
-   * @param string $key 
-   * @param string $value[NULL] 
+   * @param string $key
+   * @param string $value[NULL]
    * @param string $escape[NULL]
    * @return $this
    * @author Jan den Besten
@@ -3429,10 +3429,10 @@ Class Data_Core extends CI_Model {
   /**
    * Maakt ..where..
    *
-   * @param string $key 
-   * @param string $value 
-   * @param string $escape 
-   * @param string $type 
+   * @param string $key
+   * @param string $value
+   * @param string $escape
+   * @param string $type
    * @return $this
    * @author Jan den Besten
    */
@@ -3496,7 +3496,7 @@ Class Data_Core extends CI_Model {
     if (!is_array($this->tm_where)) return $this;
     foreach ($this->tm_where as $where) {
 
-      
+
       if (is_string($where)) {
         switch ($where) {
           case 'group_start':
@@ -3518,7 +3518,7 @@ Class Data_Core extends CI_Model {
 
           // AES decryption?
           $key = $this->_aes_decrypt_field($key);
-          
+
           // Compare case insensitive with AES
           if (is_string($key) and substr($key,0,4)=='AES_') {
             $key = 'CONVERT('.$key.' USING latin1) ';
@@ -3592,7 +3592,7 @@ Class Data_Core extends CI_Model {
         }
         // other table
         else {
-          if ($this->table_exists($split_field[0])) $encrypted = $this->get_other_table_setting($split_field[0],array('field_info',$split_field[1],'encrypted'),false); 
+          if ($this->table_exists($split_field[0])) $encrypted = $this->get_other_table_setting($split_field[0],array('field_info',$split_field[1],'encrypted'),false);
         }
       }
       // normal
@@ -3615,12 +3615,12 @@ Class Data_Core extends CI_Model {
     }
     return $value;
   }
-  
+
   /**
    * Zelfde als CI QueryBuilder
    *
    * @param string $field
-   * @param string $match[''] 
+   * @param string $match['']
    * @param string $side['both']
    * @param string $escape[NULL]
    * @return $this
@@ -3634,7 +3634,7 @@ Class Data_Core extends CI_Model {
    * Zelfde als CI QueryBuilder
    *
    * @param string $field
-   * @param string $match[''] 
+   * @param string $match['']
    * @param string $side['both']
    * @param string $escape[NULL]
    * @return $this
@@ -3648,7 +3648,7 @@ Class Data_Core extends CI_Model {
    * Zelfde als CI QueryBuilder
    *
    * @param string $field
-   * @param string $match[''] 
+   * @param string $match['']
    * @param string $side['both']
    * @param string $escape[NULL]
    * @return $this
@@ -3662,7 +3662,7 @@ Class Data_Core extends CI_Model {
    * Zelfde als CI QueryBuilder
    *
    * @param string $field
-   * @param string $match[''] 
+   * @param string $match['']
    * @param string $side['both']
    * @param string $escape[NULL]
    * @return $this
@@ -3676,11 +3676,11 @@ Class Data_Core extends CI_Model {
   /**
    * Maakt ..like..
    *
-   * @param string $field 
-   * @param string $match 
-   * @param string $side 
-   * @param string $type 
-   * @param string $not 
+   * @param string $field
+   * @param string $match
+   * @param string $side
+   * @param string $type
+   * @param string $not
    * @return $this
    * @author Jan den Besten
    */
@@ -3701,7 +3701,7 @@ Class Data_Core extends CI_Model {
   /**
    * where_exists zoekt in many_to_many data en toont data waarbinnen de zoekcriteria voldoet maar met de complete many_to_many subdata.
    * In tegenstelling tot where() waar bij zoeken in 'many_to_many' alleen de subdate worden meegegeven die aan de zoekcriteria voldoen.
-   * 
+   *
    * many_to_many
    * ------------
    * ->where_exists( 'tbl_links.str_title', 'text' );    // Zoekt het resultaat op het veld 'str_title' uit de many_to_many relatie met tbl_links.
@@ -3721,18 +3721,18 @@ Class Data_Core extends CI_Model {
    * Zelfde als where_exists maar dan een OR
    *
    * @param string $key Moet in het formaat table.field zijn.
-   * @param string $value 
+   * @param string $value
    * @return void
    * @author Jan den Besten
    */
   public function or_where_exists( $key, $value = NULL ) {
     return $this->_exists( $key, $value, FALSE, 'OR');
   }
-  
-  
+
+
   /**
    * like_exists zoekt in many_to_many data en toont data waarbinnen de zoekcriteria voldoet maar met de complete many_to_many subdata.
-   * 
+   *
    * many_to_many
    * ------------
    * ->like_exists( 'tbl_links.str_title', 'text' );            // Zoekt '%text%' op het in het 'str_title' uit de many_to_many relatie met tbl_links.
@@ -3763,9 +3763,9 @@ Class Data_Core extends CI_Model {
 
   /**
    * _exists of een bepaalde waarde in many_to_many data bestaat, en geeft dan alle many_to_many date terug, en niet allen die waar de waarde in gevonden is.
-   * 
+   *
    * Bouwt een WHERE of een LIKE sql statement.
-   * 
+   *
    * WHERE `tbl_menu`.`id` IN (
    * 	SELECT `rel_menu__links`.`id_menu`
    * 	FROM `rel_menu__links`
@@ -3773,11 +3773,11 @@ Class Data_Core extends CI_Model {
    * 		SELECT `tbl_links`.`id`
    * 		FROM `tbl_links`
    * 		WHERE `str_title` = "text"   / of / WHERE `str_title` LIKE "%text%"
-   * 	)	
+   * 	)
    * )
    *
-   * @param string $key 
-   * @param string $value 
+   * @param string $key
+   * @param string $value
    * @param mixed $side[FALSE] als [both|before|after] dan is het een LIKE
    * @param string $type ['AND'|'OR']
    * @return $this
@@ -3785,20 +3785,20 @@ Class Data_Core extends CI_Model {
    */
   protected function _exists( $key, $value = NULL, $side=FALSE, $type = 'AND' ) {
     $this->tm_has_condition = TRUE;
-    
+
     if ( !isset($this->tm_with['many_to_many'])) {
       $this->reset();
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): No `many_to_many` relation set. This is needed when using `..._exists`.' );
       return $this;
     }
-    
+
     $other_table = trim(get_prefix($key,'.'),'` ');
     $key         = trim(get_suffix($key,'.'),'` ');
     if (empty($other_table) or empty($key) or $key==$other_table) {
       $this->reset();
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): First argument of `..._exists` needs to be of this format: `table.field`.' );
     }
-    
+
     $relation          = $this->_find_relation_setting_by('many_to_many','other_table',$other_table);
     $id                = $this->settings['primary_key'];
     $this_table        = $this->settings['table'];
@@ -3840,7 +3840,7 @@ Class Data_Core extends CI_Model {
     }
     $sql.='))';
     $this->_wh($sql,NULL,FALSE,$type);
-    
+
     return $this;
   }
 
@@ -3862,33 +3862,33 @@ Class Data_Core extends CI_Model {
     return $this;
   }
 
-  
+
   /**
    * Zoekt de gevraagde zoekterm(en).
    * Bouwt een uitgebreide zoekquery op.
-   * 
+   *
    * Voorbeelden met diverse termen
    * ------------------------------
-   * 
+   *
    * ->find( 'zoek' )               // Zoekt naar de letters 'zoek' in alle velden
    * ->find( 'zoek ook')            // Zoekt naar de letters 'zoek' of 'ook'.
    * ->find( array( 'zoek ook' ) )  // idem
-   * ->find( '"zoek ook"' )         // Zoekt naar de letters 'zoek ook'      
+   * ->find( '"zoek ook"' )         // Zoekt naar de letters 'zoek ook'
    * ->find( array( '"zoek ook"' )  // idem
-   * 
+   *
    * In specifieke velden
    * --------------------
-   * 
+   *
    * Alle bovenstaande combinaties zijn mogelijk en:
-   * 
+   *
    * ->find( 'zoek', array( 'str_title' ) )             // Zoekt naar de letters 'zoek' in in het veld 'str_title'
    * ->find( 'zoek', array( 'str_title', 'txt_text ) )  // Zoekt naar de letters 'zoek' in in het veld 'str_title' en 'txt_text'
-   * 
+   *
    * Specifieke instellingen
    * -----------------------
-   * 
+   *
    * Er zijn nog diverse instellingen om de zoekfunctie verder te verfijnen:
-   * 
+   *
    * - 'and'         - ['OR'] Als er meerdere zoekopdrachten worden gegeven kun je hier aangeven of ze AND of OR moeten worden gekoppeld. Default is 'OR' (wat afwijkt van ->where(), maar voor zoeken logischer).
    * - 'equals'      - [like|exact|word] Default [like]. Hiermee kun je aangeven hoe precies er gezocht moet worden:
    *                   - 'like'  - In het veld wordt op een willekeurige plaats de zoekterm te vinden zijn.
@@ -3896,24 +3896,24 @@ Class Data_Core extends CI_Model {
    *                   - 'exact' - Het veld moet precies hetzelfde zijn als de zoekterm.
    * - 'with'        - [array('many_to_one','one_to_many','many_to_many')] Geef aan welke relaties mee moeten worden genomen.
    * - 'many_exists' - [TRUE] Net als where_exists()
-   * 
+   *
    * Zoeken in relaties
    * ------------------
-   * 
+   *
    * Als je wilt dat ook in relaties wordt gezocht, roep dan ook een ->with() variant aan.
-   * 
+   *
    * - In alle 'many_to_one' relaties wordt gezocht zolang het foreign_key veld in de zoekvelden zit.
    * - Automatisch wordt in alle 'many_to_many' en 'one_to_many' relaties gezocht (zoals bij like_exists())
    * - Je kunt specifieker instellen met $settings['with'] welke relaties mee moeten worden genomen met het zoeken
-   * 
+   *
    * Verfijnd zoeken
    * ---------------
-   * 
+   *
    * Je kunt ook verfijnder zoeken door een array mee te geven waarin de zoektermen, velden en settings gespecificeerd zijn.
    * Daarmee kun je termen in specifieke velden zoeken.
-   * 
+   *
    * Die array ziet er dan zo uit:
-   * 
+   *
    * array(
    *  array(
    *    'term'    => '',       // Zoekterm (string, of array van strings)
@@ -3924,8 +3924,8 @@ Class Data_Core extends CI_Model {
    *  ...
    *  ...
    * )
-   * 
-   * 
+   *
+   *
    * @param mixed $terms Zoekterm(en) als een string of array van strings. Letterlijk zoeken kan door termen tussen "" te zetten.
    * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden (behalve id,order,self_parent). Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
    * @param array $settings [array()] Extra instelingen.
@@ -3940,10 +3940,10 @@ Class Data_Core extends CI_Model {
       'fields'   => $fields,
       'settings' => $settings,
     );
-    
+
     return $this;
   }
-    
+
 
   /**
    * Bouw een gehele zoekquery op aan de hand van ingestelde ->tm_find
@@ -3957,9 +3957,9 @@ Class Data_Core extends CI_Model {
     $terms    = el('terms',$this->tm_find,'');
     $fields   = el('fields',$this->tm_find,array());
     $settings = el('settings',$this->tm_find,array());
-    
+
     if (empty($terms)) return $this;
-    
+
     // Settings
     $with = $this->tm_with;
     if ($this->tm_as_grid) {
@@ -3993,7 +3993,7 @@ Class Data_Core extends CI_Model {
     $this->_create_complete_search( $search );
     return $this;
   }
-  
+
   private function _add_result_names_find($search,$settings) {
     foreach ($search as $key => $find) {
       $fields = $find['field'];
@@ -4016,13 +4016,13 @@ Class Data_Core extends CI_Model {
     };
     return $search;
   }
-  
+
   /**
    * Maak van een eenvoudig zoekopdracht een verfijnde zoekopdracht
    *
-   * @param mixed $terms 
-   * @param array $fields 
-   * @param array $settings 
+   * @param mixed $terms
+   * @param array $fields
+   * @param array $settings
    * @return array
    * @author Jan den Besten
    */
@@ -4048,7 +4048,7 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-  
+
     // Zet om naar (complete) zoekopdracht
     if (!is_array($terms)) $terms=array($terms);
     foreach($terms as $term) {
@@ -4064,11 +4064,11 @@ Class Data_Core extends CI_Model {
     }
     return $search;
   }
-  
+
   /**
    * Zet verfijnde zoekopdracht per term om naar SQL
    *
-   * @param array $search 
+   * @param array $search
    * @return $this
    * @author Jan den Besten
    */
@@ -4082,12 +4082,12 @@ Class Data_Core extends CI_Model {
       $terms = $item['term'];
       if ( is_array($terms) ) $terms = implode(' ',$terms);
       $terms = preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
-      
+
       $fields = $item['field'];
       if (!is_array($fields)) $fields = array($fields);
       // Sommige velden hoeft nooit in gezocht te worden:
       $fields = array_diff($fields,$this->forbidden_find_fields);
-      
+
       // Verwijder niet bestaande velden, TODO: of vervang ze door de velden uit een relatietabel array('relation'=>'','fields'=>array())
       foreach ($fields as $key => $field) {
         if (!in_array($field,$this->settings['fields'])) {
@@ -4134,24 +4134,24 @@ Class Data_Core extends CI_Model {
         // Einde van deze term
         $this->group_end();
       }
-      
+
     }
 
     if ($grouped) $this->group_end();
   }
-  
+
   private function _protect_field($field,$table='') {
     if (strpos($field,'.')===FALSE and isset($table)) $field = $table.'.'.$field;
     return $this->db->protect_identifiers($field);
   }
-  
-  
+
+
   /**
    * Bouw de query van een zoekterm op
    *
    * @param array $term
-   * @param arrat $fields 
-   * @param array $settings 
+   * @param arrat $fields
+   * @param array $settings
    * @return void
    * @author Jan den Besten
    */
@@ -4159,7 +4159,7 @@ Class Data_Core extends CI_Model {
     // Schoon term wat op (geen quotes en spaties)
     $term = trim($term,"\"' ");
 
-    
+
     // Per veld:
     foreach ($fields as $sub_fields) {
       $relation = FALSE;
@@ -4170,7 +4170,7 @@ Class Data_Core extends CI_Model {
       else {
         $sub_fields = array($sub_fields);
       }
-      
+
       foreach ($sub_fields as $field) {
 
         // Encrypted field??
@@ -4178,7 +4178,7 @@ Class Data_Core extends CI_Model {
         if ($this->get_setting(array('field_info',$real_field,'encrypted'),false)) {
           $field = 'AES_DECRYPT('.$field.' ,"'.$this->config->item('encryption_key').'")';
         }
-        
+
         // many_to_many exists...
         if ( $many_exists AND $relation==='many_to_many') {
           switch ($equals) {
@@ -4196,7 +4196,7 @@ Class Data_Core extends CI_Model {
         // Normaal
         else {
           switch ($equals) {
-            case 'exact': 
+            case 'exact':
               if (strpos($field,'AES')!==false) $field.=' = ';
               $this->or_where( $field, '"'.$term.'"', FALSE);
               break;
@@ -4211,176 +4211,176 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
     return $this;
   }
-  
-  
+
+
 
 
 
   /**
    * Geef aan welke relaties meegenomen moeten worden in het resultaat, en hoe.
    * Deze method kan vaker achter elkaar worden aangeroepen.
-   * 
+   *
    * NB Alleen de relaties die bekend zijn in settings['relations'] worden meegenomen.
-   * 
+   *
    * Voorbeelden zijn te vinden in /_admin/test/relations (NB als de 'flexyadmin_test' is geselecteerd)
-   * 
+   *
    * Reset alle relaties:
    * (wordt automatisch aangeroepen na iedere ->get() variant)
-   * 
+   *
    * ->with( FALSE );
-   * 
-   * 
+   *
+   *
    * one_to_one
    * ----------
-   * 
+   *
    * Wordt niet vaak gebruikt. Maar in sommige gevallen toch handig om data van een tabel in meerdere tabellen te splitsen.
    * Je kunt het zien als een samenvoeging van twee tabellen.
    * Werkt hetzelfde als many_to_one.
-   * 
+   *
    * ->with( 'one_to_one' );
-   * 
+   *
    * one_to_one resultaat
    * --------------------
-   * 
+   *
    * De velden uit de extra tabel krijgen de naam van zichzelf. Dus je moet altijd unieke veldnamen hebben.
    * Bij ->get_result() varianten wordt een mogelijk niet bestaande rij uit de extra tabel vervangen door default data.
-   * 
-   * 
+   *
+   *
    * many_to_one
    * -----------
-   * 
+   *
    * Voegt alle many_to_one relaties met al hun velden toe aan resultaat:
-   * 
+   *
    * ->with( 'many_to_one' );
    * ->with( 'many_to_one', [] );
-   * 
+   *
    * Specificeer welke relatietabellen mee moeten worden genomen in het resultaat (als er meerdere foreign_keys verwijzen naar dezelfde tabel, dan worden ze allemaal toegevoegd):
-   * 
+   *
    * ->with( 'many_to_one', [ 'id_posts' ] );
    * ->with( 'many_to_one', [ 'id_posts', 'id_links' ] );
-   * 
+   *
    * Specificeer per tabel welke velden meegenomen moeten worden in het resultaat:
-   * 
+   *
    * ->with( 'many_to_one', [ 'id_posts' => 'str_title,txt_text' ] );
    * ->with( 'many_to_one', [ 'id_posts' => ['str_title','txt_text'] ] );
    * ->with( 'many_to_one', [ 'id_posts' => 'str_title,txt_text', 'tbl_links' ] );
-   * 
+   *
    * many_to_one resultaat
    * ---------------------
-   * 
+   *
    * Bij ->get() varianten krijgen de resultaat arrays/objects extra velden, bijvoorbeeld:
    * - tbl_posts.str_title
    * - tbl_posts.txt_text
-   * 
+   *
    * Bij ->get_result() varianten krijgen de resultaat arrays extra velden met de data in een array, bijvoorbeeld:
    * - tbl__posts => array( ... en hier alle gevraagde velden van de foreign table ... )
-   * 
+   *
    * NB. Als er meerdere many_to_one verwijzingen zijn naar dezelfde tabel, dan wordt het resultaat anders.
-   * 
-   * 
+   *
+   *
    * many_to_one abstract
    * --------------------
-   * 
+   *
    * Een abstract resultaat is dat een deel van de velden van de andere tabel wordt samengevoegd tot een nieuw veld. Een samenvatting.
-   * 
+   *
    * Zo worden alle 'many_to_one' relaties toegevoegd als abstract:
-   * 
+   *
    * ->with( 'many_to_one', 'abstract' );
-   * 
+   *
    * En zo kun je dat per relatie aanpassen:
-   * 
+   *
    * ->with( 'many_to_one', [ 'id_posts' => 'abstract ] );
-   * 
+   *
    * Het resultaat komt in een extra veld: tbl_posts.abstract
-   * 
-   * 
+   *
+   *
    * many_to_one flat
    * ----------------
-   * 
+   *
    * Zorgt ervoor dat het resultaat van een ->get_result() en varrianten niet anders is dan die van ->get() varianten.
    * Dus het resultaat komt niet in een array.
-   * 
-   * 
+   *
+   *
    * one_to_many
    * -----------
-   * 
+   *
    * Voegt alle one_to_many relaties met al hun velden toe aan het resultaat:
-   * 
+   *
    * ->with( 'one_to_many' );
    * ->with( 'one_to_many', [] );
-   * 
+   *
    * Specificeer welke tabellen en welke van hun velden worden meegenomen in het resultaat:
-   * 
+   *
    * ->with( 'one_to_many', ['tbl_posts'] );
    * ->with( 'one_to_many', ['tbl_posts'=>['str_title','txt_text]] );
-   * 
+   *
    * Geef aan dat de velden een abstract moeten zijn in het resultaat:
-   * 
+   *
    * ->with( 'one_to_many', 'abstract' );
    * ->with( 'one_to_many', ['tbl_posts'=>'abstract'] );
-   * 
+   *
    * one_to_many resultaat
    * ---------------------
-   * 
+   *
    * Het resultaat van een one_to_many relatie wordt net als bij many_to_one relaties toegevoegd als extra velden van de andere tabel. Op dezelfde manier als bij many_to_one:
    * - tbl_posts.....
-   * 
-   * 
+   *
+   *
    * many_to_many
    * ------------
-   * 
+   *
    * Voegt alle many_to_many relaties met al hun velden toe aan resultaat:
-   * 
+   *
    * ->with( 'many_to_many' );
    * ->with( 'many_to_many', [] );
-   * 
+   *
    * Specificeer welke relatietabellen mee moeten worden meegenomen in het resultaat:
-   * 
+   *
    * ->with( 'many_to_many', [ 'rel_menu__posts' ] );
    * ->with( 'many_to_many', [ 'rel_menu__posts', 'rel_menu__links' ] );
-   * 
+   *
    * Specificeer per tabel welke velden meegenomen moeten worden in het resultaat:
-   * 
+   *
    * ->with( 'many_to_many', [ 'rel_menu__posts' => 'str_title,txt_text' ] );
    * ->with( 'many_to_many', [ 'rel_menu__posts' => ['str_title','txt_text'] ] );
    * ->with( 'many_to_many', [ 'rel_menu__posts' => 'str_title,txt_text', 'rel_menu__links' ] );
-   * 
+   *
    * Geef aan dat bij een tabel een abstract van de velden moet worden meegenomen in plaats van specifieke velden:
-   * 
+   *
    * ->with( 'many_to_many', [ 'rel_menu__posts' => 'abstract ] );
-   * 
-   * 
+   *
+   *
    * many_to_many resultaat
    * ----------------------
-   * 
+   *
    * Het resultaat van een many_to_many relatie wordt net als bij many_to_one relaties toegevoegd als extra velden van de andere tabel. Op dezelfde manier als bij many_to_one:
    * - tbl_posts.....
-   * 
+   *
    * json
    * ----
-   * 
+   *
    * Hiermee wordt de relatie data in één JSON string gestopt:
    * Voor many_to_one:
    * - tbl_posts.json => { "id":4, "str_title":"titel", "txt_text": "tekst" }
    * Voor many_to_many:
    * - tbl_posts.json => { "4": { "id":4, "str_title":"titel", "txt_text": "tekst" }, "18" { "id":18, "str_title":"test", "txt_text": "lorum" }, ... etc... }
-   * 
-   * 
+   *
+   *
    * LET OP: ->num_rows() bij 'one_to_many' en 'many_to_many'
    * --------------------------------------------------------
-   * 
+   *
    * Bij 'one_to_many' en 'many_to_many' relaties:
-   * 
+   *
    * - Kan ->get()->result_array() méér rijen als resultaat geven dan het gevraagde aantal wat met ->limit() is ingesteld.
    * - Dat is omdat voor elke relatie-rij een extra rij is toegevoegd.
    * - Dit kan voorkomen worden door de relatie data 'json' bij te voegen (zie hierboven)
-   * 
+   *
    * - Bij ->get_result() worden deze relatie rijen samengevoegd en klopt het aantal rijen wél met de ingestelde ->limit().
-   * 
-   * 
+   *
+   *
    * @param string $type De soort relatie ['many_to_one'|'many_to_many']
    * @param array  $what Een array van welke relaties meegenomen moeten worden bij deze relatie-vorm.
    *                      - Als deze paramater niet wordt meegegeven worden automatisch alle relaties gezocht en meegenomen met al hun velden
@@ -4398,7 +4398,7 @@ Class Data_Core extends CI_Model {
       $this->tm_with = array();
       return $this;
     }
-    
+
     // Bestaat relatie wel?
     if (! el( array('relations',$type), $this->settings)) return $this;
 
@@ -4410,7 +4410,7 @@ Class Data_Core extends CI_Model {
     }
     // $what moet een array zijn
     if ( ! is_array($what) ) $what=array($what);
-    
+
     // Zorg ervoor dat $what in dit formaat komt: '$what' => array( 'table'=>'', 'fields'=>'' )
     $what_new = array();
     foreach ($what as $key => $value) {
@@ -4451,7 +4451,7 @@ Class Data_Core extends CI_Model {
         $what_new[$what]['as'] = $this->settings['relations']['many_to_one'][$what]['result_name'];
       }
     }
-    
+
     // Merge met bestaande
     $tm_with_before = el( $type, $this->tm_with, array() );
     $tm_with_new    = array();
@@ -4474,26 +4474,26 @@ Class Data_Core extends CI_Model {
     // trace_([$this->settings['table'],$this->tm_with]);
     return $this;
   }
-  
-  
+
+
   /**
    * Geeft aan welke many_to_one relaties hetzelfde moeten blijven als bij ->get() varianten
    * Zie ook bij ->with()
    *
-   * @param string $forein_keys 
+   * @param string $forein_keys
    * @return $this
    * @author Jan den Besten
    */
   public function with_flat_many_to_one( $forein_keys = array() ) {
     return $this->with( 'many_to_one', $forein_keys, FALSE, TRUE );
   }
-  
-  
+
+
   /**
    * Geef aan welke relaties in één JSON veld moeten worden meegenomen
    * Zie ook bij ->with()
    *
-   * @param string $type ['many_to_many'] 
+   * @param string $type ['many_to_many']
    * @param array $what [array()]
    * @return $this
    * @author Jan den Besten
@@ -4501,7 +4501,7 @@ Class Data_Core extends CI_Model {
   public function with_json( $type='many_to_many', $what=array() ) {
     return $this->with( $type, $what, TRUE);
   }
-  
+
 
 
   /**
@@ -4523,11 +4523,11 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
     return $this;
   }
-  
-  
+
+
   /**
    * Bouwt one_to_one relatie op
    *
@@ -4548,13 +4548,13 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
+
 
 
   /**
    * Bouwt many_to_one join query
    *
-   * @param array $what 
+   * @param array $what
    * @return $this
    * @author Jan den Besten
    */
@@ -4573,12 +4573,12 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
-  
+
+
   /**
    * Bouwt one_to_many join query
    *
-   * @param array $what 
+   * @param array $what
    * @return $this
    * @author Jan den Besten
    */
@@ -4597,15 +4597,15 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
-  
-  
+
+
+
 
 
   /**
    * Bouwt many_to_many join query
    *
-   * @param string $tables 
+   * @param string $tables
    * @return $this
    * @author Jan den Besten
    */
@@ -4632,8 +4632,8 @@ Class Data_Core extends CI_Model {
     }
     return $this;
   }
-  
-  
+
+
   /**
    * Selecteerd de velden die bij SELECT moeten komen bij relaties
    *
@@ -4649,7 +4649,7 @@ Class Data_Core extends CI_Model {
   protected function _select_with_fields( $type, $other_table, $as_table, $fields, $foreign_key='', $json = FALSE ) {
     $abstract = FALSE;
     $select   = '';
-    
+
     // Welke velden van de gerelateerde tabel?
     if ( empty($fields) ) {
       $fields = $this->get_other_table_fields( $other_table );
@@ -4663,7 +4663,7 @@ Class Data_Core extends CI_Model {
       $abstract_order = $this->db->protect_identifiers(  $as_table.'.'.$other_table_order );
       $abstract_order = str_replace(array('`ASC`','`DESC`'),array('ASC','DESC'),$abstract_order);
     }
-    
+
     //
     // SELECT abstract
     //
@@ -4682,7 +4682,7 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
     //
     // SELECT anderen
     //
@@ -4703,7 +4703,7 @@ Class Data_Core extends CI_Model {
           // 'select'      => ( $type==='one_to_one' ? '' : '`'.$as_table.'`.') .'`'.$field.'`',
         );
       }
-      
+
       // SELECT normaal
       if (!$json) {
         foreach ($select_fields as $field => $select_field) {
@@ -4715,7 +4715,7 @@ Class Data_Core extends CI_Model {
               $this->tm_select[$field] = $sub_select;
             }
             elseif ($this->tm_select[$as_table]) {
-              $select .= $sub_select.', ';  
+              $select .= $sub_select.', ';
             }
           }
           else {
@@ -4725,7 +4725,7 @@ Class Data_Core extends CI_Model {
         }
         $select = trim($select,',');
       }
-      
+
       // SELECT grouped JSON
       else {
         $this->db->simple_query('SET SESSION group_concat_max_len=1048576'); // (1mb) Zorg ervoor dat het resultaat van GROUP_CONCAT lang genoeg is
@@ -4754,7 +4754,7 @@ Class Data_Core extends CI_Model {
       }
     }
     $select = trim(trim($select),',');
-    
+
     // Stop select in query, als het kan direct na foreign_key
     if (!empty($select)) {
       if (isset($foreign_key) and isset($this->tm_select[$foreign_key]) and $type!=='one_to_one') {
@@ -4769,13 +4769,13 @@ Class Data_Core extends CI_Model {
     if ($json) {
       $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
     }
-    
+
     return $this;
   }
-  
-  
-  
-  
+
+
+
+
   /**
    * Zelfde als Query Builder, met deze verschillen:
    * - Als order_by() niet specifiek wordt aangeroepen, dan wordt de in de config van de tabel ingesteld order_by gebruikt.
@@ -4783,24 +4783,24 @@ Class Data_Core extends CI_Model {
    * - Als de eerste parameter een array is en de tweede parameter (direction) is meegegeven, dan geld die direction alleen voor de eerste waarde in de array.
    * - De direction parameter kan naast 'DESC','ASC' en 'RANDOM' ook 'RAND' zijn (dit lijkt meer op de SQL)
    * - Als de naam van het veld begint met '_' dan wordt automatisch de direction op 'DESC' gezet
-   * 
+   *
    * eerste parameter is een array
    * -----------------------------
-   * 
+   *
    * ->order_by( array( 'str_title', 'dat_date DESC' ) );
-   * 
+   *
    * many_to_one
    * -----------
-   * 
-   * ->order_by( 'tbl_posts.str_title' );
-   * 
-   * many_to_many
-   * ------------
-   * 
+   *
    * ->order_by( 'tbl_posts.str_title' );
    *
-   * @param string $orderby 
-   * @param string $direction [''] 
+   * many_to_many
+   * ------------
+   *
+   * ->order_by( 'tbl_posts.str_title' );
+   *
+   * @param string $orderby
+   * @param string $direction ['']
    * @param string $escape [NULL]
    * @return $this
    * @author Jan den Besten
@@ -4832,11 +4832,11 @@ Class Data_Core extends CI_Model {
     $this->tm_order_by = array_merge( $this->tm_order_by, $orderby );
     return $this;
   }
-  
+
   /**
    * Zelfde als bij Query Builder, met als extra dat de limit instelling wordt bewaard voor intern gebruik.
    *
-   * @param int $limit 
+   * @param int $limit
    * @param int $offset [0]
    * @return $this
    * @author Jan den Besten
@@ -4846,12 +4846,12 @@ Class Data_Core extends CI_Model {
     $this->tm_offset = $offset;
 		return $this;
 	}
-  
-  
-  
+
+
+
   /* --- CRUD methods --- */
-  
-  
+
+
   /**
    * Insert & Update data moet eerst worden gevalideerd (als true).
    *
@@ -4910,17 +4910,17 @@ Class Data_Core extends CI_Model {
 
     return $validated;
   }
-  
-  
-  
+
+
+
   /**
    * Zelfde als Query Builder, behalve:
    * - relatie kan als subarray mee met de set
    * - $key kan geen object zijn
    *
-   * @param mixed $key 
-   * @param mixed $value 
-   * @param mixed $escape 
+   * @param mixed $key
+   * @param mixed $value
+   * @param mixed $escape
    * @return $this
    * @author Jan den Besten
    */
@@ -4944,8 +4944,8 @@ Class Data_Core extends CI_Model {
 		return $this;
 	}
 
-  
-  
+
+
 	/**
 	 * Zelfde als in Query Builder, maar ook met verwijzingen naar bestaande many_to_many data
 	 *
@@ -4968,7 +4968,7 @@ Class Data_Core extends CI_Model {
     }
     return $this->_update_insert( 'INSERT', $set );
 	}
-  
+
 
   /**
    * Zelfde als in Query Builder, maar ook met verwijzingen naar bestaande many_to_many data
@@ -4982,8 +4982,8 @@ Class Data_Core extends CI_Model {
 	public function update( $set = NULL, $where = NULL, $limit = NULL) {
     return $this->_update_insert( 'UPDATE', $set, $where, $limit);
 	}
-  
-  
+
+
   /**
    * Maak kopie van rijen en pas eventueel bepaalde velden aan
    *
@@ -4996,11 +4996,11 @@ Class Data_Core extends CI_Model {
 	public function copy( $set = NULL, $where = NULL, $limit = NULL) {
     // Is er een data set?
     if (!is_null($set)) $this->set( $set );
-    
+
     // Where/Limit
     if ($where) $this->where( $where );
     if ($limit) $this->limit( $limit );
-    
+
 		$set  = $this->tm_set;
     $copy = $this->unselect( array('tme_last_changed','user_changed' ));
     $copy = $this->get_result();
@@ -5009,7 +5009,7 @@ Class Data_Core extends CI_Model {
       $copy[$id] = array_merge($row,$set);
       unset($copy[$id]['id']);
     }
-    
+
     // Maak copy
     foreach ($copy as $id => $row) {
       $ok = $this->insert( $row );
@@ -5017,8 +5017,8 @@ Class Data_Core extends CI_Model {
 
     return $ok;
 	}
-  
-  
+
+
 
   /**
    * Voert insert/update uit
@@ -5037,17 +5037,17 @@ Class Data_Core extends CI_Model {
     if ( ! in_array($type,$types) ) {
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): no type set, should be one of `'.implode(',',$types).'`' );
     }
-    
+
     // Is user id nodig?
     if ( $this->field_exists('user') or $this->field_exists('user_changed') or isset($this->settings['restricted_rights']) ) {
       if ( !isset( $this->user_id )) {
         $this->set_user_id();
       }
     }
-    
+
     // Is er een data set?
     if (!is_null($set)) $this->set( $set );
-    
+
     // Als er een lege set is, dan zijn we al klaar
     if (empty( $this->tm_set )) {
       $this->reset();
@@ -5080,11 +5080,11 @@ Class Data_Core extends CI_Model {
                 $sql = 'SELECT * FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'`="'.$where.'" AND '.$rights['where'];
                 $query = $this->db->query($sql);
                 if ($query->num_rows()>=1) {
-                  $this->query_info['validation'] = FALSE;  
+                  $this->query_info['validation'] = FALSE;
                 }
               }
               else {
-                $this->query_info['validation'] = FALSE;                
+                $this->query_info['validation'] = FALSE;
               }
               if (isset($this->query_info['validation']) and $this->query_info['validation']===FALSE) {
                 if (!isset($this->query_info['validation_errors']) or empty($this->query_info['validation_errors'])) $this->query_info['validation_errors'] = array();
@@ -5103,14 +5103,14 @@ Class Data_Core extends CI_Model {
      * Maak cache leeg
      */
     $this->clear_cache($this->settings['table']);
-    
+
 
     /**
      * Stel nieuwe volgorde van een item in, indien nodig
      */
     if ( $type=='INSERT' and isset( $set["order"]) ) {
       $this->load->model('order','_order');
-      if ( isset( $set['self_parent']) ) { 
+      if ( isset( $set['self_parent']) ) {
         $set['order'] = $this->_order->get_next_order( $this->settings['table'], $set['self_parent']);
       }
       else {
@@ -5134,7 +5134,7 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+
 
     /**
      * Query verder opbouwen
@@ -5250,8 +5250,8 @@ Class Data_Core extends CI_Model {
     foreach ( $set as $key => $value ) {
       if ( !isset($value) or !$this->db->field_exists( $key, $this->settings['table'] ) ) unset( $set[$key] );
     }
-    
-    
+
+
     /**
      * Maak een hash van wachtwoordvelden
      */
@@ -5278,12 +5278,12 @@ Class Data_Core extends CI_Model {
      * Ga door als de set niet leeg is
      */
     if (!empty($set) or !empty($set_aes) or isset($to_many) or isset($to_one)) {
-      
+
       /**
        * User fields toevoegen aan set?
        */
       if ( $this->user_id!==FALSE ) $set = $this->_add_user_fields_to_set( $set,$type );
-      
+
       /**
        * Eindelijk, we kunnen...
        */
@@ -5313,17 +5313,17 @@ Class Data_Core extends CI_Model {
         }
       }
       else {
-        
+
         if (!empty($set))     $this->db->set($set);
         if (!empty($set_aes)) $this->db->set($set_aes,'',FALSE);
-    
+
         /**
          * INSERT of UPDATE doen
          */
         if ($type=='INSERT') {
   				$this->db->insert( $this->settings['table'] );
   				$id = $this->db->insert_id();
-      
+
           $log = array(
             'query' => $this->db->last_query(),
             'table' => $this->settings['table'],
@@ -5353,7 +5353,7 @@ Class Data_Core extends CI_Model {
           $log['id']=implode(',',$ids);
   			}
       }
-      
+
       /**
        * Als er to_one data is, update/insert die ook
        */
@@ -5371,7 +5371,7 @@ Class Data_Core extends CI_Model {
                 unset( $other_set[$key] );
               }
             }
-            
+
             /**
              * INSERT als niet bestaat, anders UPDATE
              */
@@ -5391,8 +5391,8 @@ Class Data_Core extends CI_Model {
           }
         }
       }
-      
-      
+
+
 			/**
 			 * Als er ..._to_many data is, update/insert die ook
 			 */
@@ -5407,7 +5407,7 @@ Class Data_Core extends CI_Model {
             $rel_table         = $this->settings['relations']['many_to_many'][$what]['rel_table'];
   					$this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
             $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
-            
+
             // Haal bestaande items op
             $existing = $this->db->where( $this_foreign_key, $id )->get( $rel_table )->result_array();
             // Update/Insert nieuwe items
@@ -5440,14 +5440,14 @@ Class Data_Core extends CI_Model {
             }
   				}
         }
-        
+
         // one_to_many
         if (isset($to_many['one_to_many'])) {
   				foreach( $to_many['one_to_many'] as $what => $other_ids ) {
             $other_ids    = $this->_check_other_ids($other_ids);
             $other_table  = $this->settings['relations']['one_to_many'][$what]['other_table'];
   					$foreign_key  = $this->settings['relations']['one_to_many'][$what]['foreign_key'];
-            
+
             // 1) Verwijder de oude verwijzingen (maak ze 0)
             $this->db->set( $foreign_key, 0);
   					$this->db->where( $foreign_key, $id );
@@ -5461,29 +5461,29 @@ Class Data_Core extends CI_Model {
               $affected++;
               $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
             }
-            
+
           }
         }
-        
+
         $this->query_info['affected_rel_rows'] = $affected;
         $this->query_info['last_query']        = $log['query'];
 			}
       $this->db->trans_complete();
 		}
 
-    
+
     if (isset($log)) {
       $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
     }
-    
+
     $this->reset();
 		return intval($id);
 	}
-  
+
   /**
    * Voeg user velden to aan set zodat kan worden bijgehouden wie wat heeft aangepast/aangemaakt.
    *
-   * @param array $set 
+   * @param array $set
    * @param string $type INSERT/UPDATE
    * @param string $table['']
    * @return arra
@@ -5500,11 +5500,11 @@ Class Data_Core extends CI_Model {
     }
     return $set;
   }
-  
+
   /**
    * Zorg ervoor dat other_ids in orde zijn (geen string oid, maar altijd een array van ids)
    *
-   * @param array $other_ids 
+   * @param array $other_ids
    * @return array
    * @author Jan den Besten
    */
@@ -5520,20 +5520,20 @@ Class Data_Core extends CI_Model {
     }
     return $other_ids;
   }
-  
-  
+
+
   /**
    * Net als Query Builder, en met verwijderen van bijbehorende many_to_many verwijzingen
    *
    * @param mixed $where ['']
    * @param int $limit [NULL]
-   * @param bool $reset_data 
+   * @param bool $reset_data
    * @return mixed FALSE als niet gelukt, anders array_result van verwijderde data
    * @author Jan den Besten
    */
 	public function delete( $where = '', $limit = NULL, $reset_data = TRUE ) {
     $this->clear_cache($this->settings['table']);
-    
+
     /**
      * Is het een ordered tabel?
      */
@@ -5558,7 +5558,7 @@ Class Data_Core extends CI_Model {
 		 * - En om huidige data op te vragen
 		 */
     $ids = $this->_get_ids( $compiled_delete );
-    
+
     /**
      * Als geen te verwijderen ids, dan zijn we al klaar
      */
@@ -5569,7 +5569,7 @@ Class Data_Core extends CI_Model {
       );
       return FALSE;
     }
-    
+
     /**
      * Onthoud huidige data van te deleten records om terug te geven.
      */
@@ -5578,12 +5578,12 @@ Class Data_Core extends CI_Model {
     $query = $this->db->get( $this->settings['table'] );
     if ($query) $deleted_data = $query->result_array();
     $this->reset();
-    
+
     /**
      * Start DELETE
      */
     $this->db->trans_start();
-		
+
     $is_deleted = $this->db->query( $compiled_delete );
     if ($is_deleted) {
       $log = array(
@@ -5592,7 +5592,7 @@ Class Data_Core extends CI_Model {
         'id'    => implode(',',$ids),
       );
     }
-    
+
     $this->query_info = array(
       'affected_rows' => $this->db->affected_rows(),
       'affected_ids'  => $ids,
@@ -5634,9 +5634,9 @@ Class Data_Core extends CI_Model {
         }
         $this->query_info['affected_rel_rows'] = $affected;
       }
-      
+
     }
-    
+
     $this->db->trans_complete();
 
     if (isset($log)) {
@@ -5647,12 +5647,12 @@ Class Data_Core extends CI_Model {
     if ($is_deleted) return $deleted_data;
 		return FALSE;
 	}
-  
-  
+
+
   /**
    * Geeft ids terug van een update of delete sql query die vereenvoudigd een resultaat teruggeeft
    *
-   * @param string $sql 
+   * @param string $sql
    * @return array
    * @author Jan den Besten
    */
@@ -5674,15 +5674,15 @@ Class Data_Core extends CI_Model {
     }
     return $ids;
   }
-  
-  
-  
+
+
+
 
   /* --- Informatieve methods --- */
-  
+
   /**
    * Geeft informatie van laatste query, zoals oa:
-   * 
+   *
    * - total_rows
    * - num_rows
    * - limit
@@ -5705,8 +5705,8 @@ Class Data_Core extends CI_Model {
     }
     return $query_info;
   }
-  
-  
+
+
   /**
    * Geeft insert_id
    *
@@ -5716,8 +5716,8 @@ Class Data_Core extends CI_Model {
   public function insert_id() {
     return $this->get_query_info('insert_id');
   }
-  
-  
+
+
   /**
    * Geeft affected_rows
    *
@@ -5727,8 +5727,8 @@ Class Data_Core extends CI_Model {
   public function affected_rows() {
     return $this->get_query_info('affected_rows');
   }
-  
-  
+
+
   /**
    * Geeft aantal rijen in laatste resultaat
    *
@@ -5738,7 +5738,7 @@ Class Data_Core extends CI_Model {
   public function num_rows() {
     return $this->get_query_info('num_rows');
   }
-  
+
   /**
    * Geeft aantal rijen in laatste resultaat zonder limit
    *
@@ -5759,7 +5759,7 @@ Class Data_Core extends CI_Model {
     }
     return $this->get_query_info('total_rows');
   }
-  
+
   /**
    * Geeft aantal rijen van de tabel
    *
@@ -5771,7 +5771,7 @@ Class Data_Core extends CI_Model {
     if (empty($table)) $table=$this->settings['table'];
     return $this->db->count_all($table);
   }
-  
+
 
   /**
    * Geeft aantal velden in laatste resultaat
@@ -5797,7 +5797,7 @@ Class Data_Core extends CI_Model {
     return $this->query_info['last_query'];
   }
 
-  
+
   /**
    * Geeft opgeschoonde last_query()
    * - Eenvoudiger SELECT met alleen primary_key
@@ -5822,7 +5822,7 @@ Class Data_Core extends CI_Model {
     $this->query_info['last_clean_query'] = $query;
     return $this->query_info['last_clean_query'];
   }
-  
+
   /**
    * Geeft het WHERE deel van de laatste query
    *
@@ -5862,13 +5862,13 @@ Class Data_Core extends CI_Model {
     }
     return $fields;
   }
-  
+
 
 
   /**
    * Test of een veld bestaat
    *
-   * @param string $field 
+   * @param string $field
    * @param string $set [''] Je kunt hier 'grid' of 'form' aangeven
    * @return boolean
    * @author Jan den Besten
@@ -5880,8 +5880,8 @@ Class Data_Core extends CI_Model {
       $fields = $this->get_setting( 'fields', $this->list_fields() );
     return in_array( $field, $fields );
   }
-  
-  
+
+
   /**
    * Een uitgebreidere versie van field_data() bij ->db.
    * En het resultaat is een array waarvan de keys de veldnamen zijn zodat het eenvoudiger kan worden opgezocht.
@@ -5922,7 +5922,7 @@ Class Data_Core extends CI_Model {
     }
     return $this->field_data;
 	}
-  
+
   /**
    * Geeft database informatie over de tabel
    *
@@ -5934,8 +5934,8 @@ Class Data_Core extends CI_Model {
     $status = current($query->result_array());
     return array_change_key_case($status);
   }
-  
-  
+
+
   /**
    * Geeft terug of de tabel een menu-achtige tabel is (met de velden 'order','self_parent' en 'uri')
    *
@@ -5945,6 +5945,6 @@ Class Data_Core extends CI_Model {
   public function is_menu_table() {
     return ( $this->field_exists('self_parent') and $this->field_exists('order') and $this->field_exists('uri') );
   }
-  
+
 
 }
