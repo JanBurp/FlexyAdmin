@@ -251,7 +251,7 @@ Class Data_Core extends CI_Model {
   /**
    * Maximum hoeveelheid optios die meteen wordt meegegeven als form opties worden opgevraagd (get_options())
    **/
-  private $max_no_api_options = 99999;
+  private $max_no_api_options = 999999;
 
 
   /* --- CONSTRUCT & AUTOSET --- */
