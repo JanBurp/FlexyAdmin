@@ -14,6 +14,12 @@ mix
 
 switch (framework) {
   case 'bootstrap3' :
+    // mix.combine([
+    //   'public/assets/js/...',
+    //   'public/assets/js/site.js',
+    //   ],
+    //   'public/assets/scripts.min.js'
+    // );
     mix.js('public/assets/js/site.js', 'public/assets/scripts.min.js');
     mix.less('public/assets/less-bootstrap/bootstrap.less', 'public/assets/styles.min.css');
     break;
