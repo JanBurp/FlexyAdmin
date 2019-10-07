@@ -1,3 +1,25 @@
+=3.5.39
+
+[nl]
+- Update naar CodeIgniter 3.1.11
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- Update to CodeIgniter 3.1.11
+- Some small bugs and improvements
+[/en]
+
+[UPDATES]
+- Update naar CodeIgniter 3.1.11
+
+[BUGS]
+- Core menu had a bug when multuple languages
+- Kleine verbetering aan site.js voor jquery (3.0)
+
+[FEATURES]
+- Added new plugin clean_tables
+
 =3.5.38
 
 [nl]

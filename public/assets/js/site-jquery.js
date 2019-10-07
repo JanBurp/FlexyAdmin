@@ -8,7 +8,7 @@ $(document).ready(function() {
   // console.log('Bootstrap Ready..');
 });
 
-// $(window).load(function() {
+// $(window).on('load', function() {
 // });
 // $(window).resize(function() {
 // });
