@@ -29,6 +29,7 @@
     if ( isset($parse_content['clean_tables']) and $parse_content['clean_tables'] ) {
       $text = preg_replace('/<td\sstyle=\".*;\"/uiU', '<td', $text);
       $text = preg_replace('/<tr\sstyle=\".*;\"/uiU', '<tr', $text);
+      $text = preg_replace('/<table\sstyle=\".*;\"/uiU', '<table', $text);
     }
     return $text;
   }
