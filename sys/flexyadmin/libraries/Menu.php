@@ -796,7 +796,7 @@ class Menu {
         $order_style=trim($order_style);
 
         // Current
-        $current = ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:''));
+        $current = ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos(chr($submenu),chr($styles['current']))>0?' '.$styles['active']:''));
 
         // Icon
         $icon = el('icon',$item,'');
