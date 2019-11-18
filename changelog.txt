@@ -1,3 +1,16 @@
+=3.5.40
+
+[nl]
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- Some small bugs and improvements
+[/en]
+
+[BUGS]
+- DatePicker did not show
+
 =3.5.39
 
 [nl]
