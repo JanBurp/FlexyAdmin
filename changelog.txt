@@ -1,3 +1,19 @@
+=3.5.41
+
+[nl]
+- Bijsnijden van afbeeldingen
+[/nl]
+
+[en]
+- Cropping of images
+[/en]
+
+[FEATURES]
+- Cropping of images (if 'scale' option in assets is set)
+
+[BUGS]
+
+
 =3.5.40
 
 [nl]

@@ -32,6 +32,7 @@
     "marked": "^0.5.2",
     "tinymce": "^4.9.4",
     "vue": "^2.6.9",
+    "vue-advanced-cropper": "^0.15.2",
     "vue-lang": "^0.2.5",
     "vue-router": "^2.7.0",
     "vue-template-compiler": "^2.6.9",
