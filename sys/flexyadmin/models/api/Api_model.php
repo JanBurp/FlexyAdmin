@@ -2,7 +2,7 @@
 
 /** \ingroup models
  * Core API model: Roept de opgevraagde API aan en verzorgt het resultaat
- * 
+ *
  * - Arguments are set in $_POST or $_GET
  * - See for all possible API calls the other files in sys/flexyadmin/models/api
  * - Common arguments are:
@@ -23,12 +23,12 @@
  *    - data=(mixed) the returned data
  *    - settings=(array) setings if asked for
  *    - info=(array) information about the data
- * 
+ *
  * Voorbeelden:
- * 
+ *
  * - _api/get_table?table=tbl_links
  * - _api/get_table?table=tbl_links&settings=true
- * 
+ *
  * @author: Jan den Besten
  * $Revision: 3780 $
  * @copyright: (c) Jan den Besten
@@ -36,7 +36,7 @@
 
 
 class Api_Model extends CI_Model {
-  
+
   protected $args=array();
   protected $needs=array();
   protected $result=array();
@@ -52,14 +52,14 @@ class Api_Model extends CI_Model {
   private $error        = '';
   private $message      = '';
   private $message_type = '';
-  
-  
+
+
   /**
    */
 	public function __construct( $loginRequest = FALSE) {
     parent::__construct();
     $this->load->library('flexy_auth');
-    
+
     // OPTIONS - preflight
     if ($this->input->server('REQUEST_METHOD')==='OPTIONS') {
       // $loginRequest word bij preflight niet goed meegegeven.. dus nog een keer.
@@ -72,7 +72,7 @@ class Api_Model extends CI_Model {
         header("Access-Control-Allow-Methods: GET, POST");
       }
       else {
-        header("Access-Control-Allow-Methods: POST"); 
+        header("Access-Control-Allow-Methods: POST");
       }
       header("Access-Control-Allow-Credentials: true");
       if (!$loginRequest) {
@@ -98,7 +98,7 @@ class Api_Model extends CI_Model {
     else {
       $loggedIn = $this->flexy_auth->login_with_authorization_header();
       // Set CORS
-      $this->cors = '*';     
+      $this->cors = '*';
       // Rights for given table?
       if (isset($this->args['table']) and !$this->_has_rights($this->args['table'])) {
         return $this->_result_norights();
@@ -114,7 +114,7 @@ class Api_Model extends CI_Model {
     $this->load->model('plugin_handler');
     $this->plugin_handler->init_plugins();
   }
-  
+
   /**
    * Geeft terug of er is ingelogd of niet
    *
@@ -149,8 +149,8 @@ class Api_Model extends CI_Model {
     $this->result=array_keep_keys($this->result,array('status','format'));
     return $this->result;
   }
-  
-  
+
+
   /**
    * Returns a 'no rights' for this api.
    *
@@ -166,8 +166,8 @@ class Api_Model extends CI_Model {
     );
     return $this->result;
   }
-  
-  
+
+
   /**
    * Returns a 'no arguments' for this api.
    *
@@ -185,8 +185,8 @@ class Api_Model extends CI_Model {
     unset($this->result['args']['_authorization']);
     return $this->result;
   }
-  
-  
+
+
   /**
    * Returns data if everything is ok, and merge data with config data if asked for
    *
@@ -210,7 +210,7 @@ class Api_Model extends CI_Model {
       if (isset($this->args['path']) && $this->args['table']==='res_assets') {
         $this->data->set_path($this->args['path']);
       }
-      
+
       // Haal alle gevraagde settings op (enkele afzonderlijk, of alles)
       $defaults = array('abstract_fields','abstract_delimiter');
       if ( $this->args['settings']!==true and $this->args['settings']!=='true') {
@@ -223,6 +223,15 @@ class Api_Model extends CI_Model {
       }
       else {
         $this->result['settings'] = $this->data->get_settings();
+      }
+
+      // Assets?
+      if (isset($this->args['path'])) {
+        $assets = $this->config->get_item(array('assets','assets',$this->args['path']));
+        if ($assets) {
+          $assets = array_keep_keys($assets,array('types','scale','img_width','img_height','min_width','min_height'));
+          $this->result['settings']['assets'] = $assets;
+        }
       }
     }
 
@@ -244,21 +253,21 @@ class Api_Model extends CI_Model {
     unset($this->result['message']);
     unset($this->result['message_type']);
 
-    // Set error/succes 
+    // Set error/succes
     if ($this->error) {
       $this->result['error']   = $this->error;
       $this->result['success'] = false;
     }
-    
+
     // Add message
     if ($this->message) {
       $this->result['message'] = $this->message;
       if (!empty($this->message_type)) $this->result['message_type'] = $this->message_type;
     }
-    
+
     // Add info
     if (isset($this->info) and $this->info) $this->result['info']=$this->info;
-    
+
     // Add user
     $this->result['user'] = FALSE;
     $user = $this->flexy_auth->get_user();
@@ -268,24 +277,24 @@ class Api_Model extends CI_Model {
         // 'auth_token'  => $user['auth_token'],
       );
     }
-    
+
     // cors
     if (!empty($this->cors)) {
       $this->result['cors'] = $this->cors;
     }
-    
+
     // if (DEBUGGING) {
     //   $this->result['server'] = $_SERVER;
     //   $this->result['headers'] = $this->input->request_headers();
     // }
-    
+
     return $this->result;
   }
-  
+
   /**
    * Sets error in result
    *
-   * @param string $error 
+   * @param string $error
    * @return this
    * @author Jan den Besten
    */
@@ -297,7 +306,7 @@ class Api_Model extends CI_Model {
   /**
    * Sets message in result
    *
-   * @param string $message 
+   * @param string $message
    * @return this
    * @author Jan den Besten
    */
@@ -309,7 +318,7 @@ class Api_Model extends CI_Model {
   /**
    * Sets message type
    *
-   * @param string $type 
+   * @param string $type
    * @return this
    * @author Jan den Besten
    */
@@ -318,12 +327,12 @@ class Api_Model extends CI_Model {
     return $this;
   }
 
-  
+
 
   /**
    * Get arguments from GET or POST
    *
-   * @param string $defaults 
+   * @param string $defaults
    * @return void
    * @author Jan den Besten
    */
@@ -331,7 +340,7 @@ class Api_Model extends CI_Model {
     $keys=array_keys($defaults);
     $keys=array_merge($keys,array('settings','format'));
     $args=array();
-    
+
     // GET
     if (!$args and (!empty($_SERVER['QUERY_STRING']) or !empty($_GET))) {
       if (empty($_GET)) parse_str($_SERVER['QUERY_STRING'],$_GET);
@@ -344,13 +353,13 @@ class Api_Model extends CI_Model {
       $args=$this->input->post();
       $args['type']='POST';
     }
-    
+
     // table=_media_ ?
     if (isset($args['table']) and $args['table']==='_media_') $args['table'] = 'res_assets';
-    
+
     // merge with defaults
     $args=array_merge($this->needs,$args);
-    
+
     // create booleans and numbers from strings
     foreach ($args as $key => $value) {
       if (is_string($value)) {
@@ -360,20 +369,20 @@ class Api_Model extends CI_Model {
         elseif (is_numeric($value)) $args[$key]=(int) $value;
       }
     }
-    
+
     if (isset($args['format'])) $this->result['format']=$args['format'];
     if (!isset($args['type'])) $args['type']='GET';
-    
+
     // trace_(['defaults'=>$defaults,'POST'=>$_POST,'GET'=>$_GET,'args'=>$args]);
-    
+
     return $args;
   }
-  
-  
+
+
   /**
    * Set arguments
    *
-   * @param array $args 
+   * @param array $args
    * @return this
    * @author Jan den Besten
    */
@@ -388,7 +397,7 @@ class Api_Model extends CI_Model {
       $types_exists = ($types_exists or array_key_exists($type,$args));
     }
     if (!$types_exists) $args=array('GET'=>$args);
-    
+
     // Set types
     foreach ($args as $type => $ar) {
       switch ($type) {
@@ -406,7 +415,7 @@ class Api_Model extends CI_Model {
     $this->args=$this->_get_args( $this->needs );
     return $this-args;
   }
-  
+
 
   /**
    * Test if call gives needed arguments
@@ -422,8 +431,8 @@ class Api_Model extends CI_Model {
     }
     return $has_args;
   }
-  
-  
+
+
   /**
    * Gives clean args and decodes (array) data if needed
    *
@@ -443,15 +452,15 @@ class Api_Model extends CI_Model {
     }
     return $data;
   }
-  
-  
-  
+
+
+
   /**
    * Test rights for item
    *
    * @param string $item
    * @param string $id default=''
-   * @param string $whatRight default=RIGHTS_NO 
+   * @param string $whatRight default=RIGHTS_NO
    * @return boolean
    * @author Jan den Besten
    */
@@ -460,8 +469,8 @@ class Api_Model extends CI_Model {
     $rights = $this->flexy_auth->has_rights( $item, $id, $whatRight );
     return $rights;
   }
-  
-  
+
+
   /**
    * Test if user has super admin rights
    *
@@ -471,8 +480,8 @@ class Api_Model extends CI_Model {
   protected function _is_super_admin() {
     return $this->flexy_auth->is_super_admin();
   }
-  
-  
+
+
   /**
    * PLUGIN STUFF
    */
@@ -491,13 +500,13 @@ class Api_Model extends CI_Model {
 		$this->_init_plugin($table,$oldData,NULL);
 		return $this->plugin_handler->call_plugins_after_delete_trigger();
 	}
-	
+
   protected function _before_form($table,$data) {
 		$this->_init_plugin($table,$data,NULL);
 		$data=$this->plugin_handler->call_plugins_before_form_trigger();
     return $data;
   }
-  
+
 	protected function _after_update($table,$oldData=NULL,$newData=NULL) {
 		$this->_init_plugin($table,$oldData,$newData);
 		$newData = $this->plugin_handler->call_plugins_after_update_trigger();
@@ -509,8 +518,8 @@ class Api_Model extends CI_Model {
     }
 		return $newData;
 	}
-  
-  
+
+
 }
 
 ?>

@@ -3,32 +3,32 @@
 /** \ingroup models
  * API: media. Geeft een lijst, bewerkt of upload bestanden toe aan een map.
  * De specifieke functie wordt bepaald door de (soort) parameters. Zie hieronder per functie.
- * 
+ *
  * ##GET files
- * 
+ *
  * Hiermee wordt een lijst opgevraagd van een map
- * 
+ *
  * ###Parameters (GET):
- * 
+ *
  * - `path`                     // De map is assets waarvan de bestanden worden opgevraagd.
  * - `[offset=0]`               // Sla de eerste bestanden in de lijst over
  * - `[limit=0]`                // Geef een maximaal aantal bestanden terug (bij 0 worden alle bestanden teruggegeven)
- * - `[settings=FALSE]`         // Instellingen van de gevraagde map 
- * 
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde map
+ *
  * ###Voorbeelden:
- * 
+ *
  * - `_api/media?path=pictures`
  * - `_api/media?path=pictures&settings=true`
- * 
+ *
  * ###Response:
- * 
+ *
  * De `info` response key geeft extra informatie over het resultaat, met de volgende keys:
- * 
+ *
  * - `files`        // Het aantal bestanden in `data`.
  * - `total_files`  // Het totaal aantal bestanden van de map die opgevraagd is. (op dit moment nog hetzelfde)
- * 
+ *
  * Voorbeeld response (dump) van `_api/media?path=pictures`:
- * 
+ *
  *     [success] => TRUE
  *      [api] => 'media'
  *      [args] => (
@@ -54,27 +54,27 @@
  *        [total_files] => 1
  *       )
  *     )
- * 
- * 
+ *
+ *
  * ##UPLOAD FILE
- * 
+ *
  * Hiermee kan een bestand worden geupload
- * 
+ *
  * ###Parameters (POST):
- * 
+ *
  * - `path`                     // De map waar het bestand naartoe moet.
  * - `file`                     // De bestandsnaam dat geupload moet worden. NB Zoals het resultaat van een HTML FORM: `<input type="file" name="file" />`. Dus ook in FILES['file'].
- * - `[settings=FALSE]`         // Instellingen van de gevraagde map 
- * 
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde map
+ *
  * ###Voorbeeld:
- * 
+ *
  * - `_api/media` met POST data: `path=pictures&file=test_03.jpg` en de corresponderende FILES data.
- * 
+ *
  * ###Response:
- * 
+ *
  * Als het uploaden is gelukt komt in `data` de informatie van het bestand (NB de naam kan veranderd zijn na het uploaden!).
  * Als het uploaden om wat voor reden niet is gelukt zal `success` FALSE zijn en komt er in `error` een foutmelding.
- * 
+ *
  *     [success] => TRUE
  *      [test] => TRUE
  *      [api] => 'media'
@@ -95,28 +95,28 @@
  *        [int_img_width] => '300'
  *        [int_img_height] => '225'
  *       )
- * 
- * 
+ *
+ *
  * ##UPDATE FILE
- * 
+ *
  * Hiermee wordt informatie van een bestand aangepast
- * 
+ *
  * ###Parameters (POST):
- * 
+ *
  * - `path`                     // De map waar het bestand in staat
  * - `where`                    // Bepaal hiermee welk bestand moet worden aangepast
  * - `data`                     // De aangepaste data (hoeft niet compleet, alleen de aan te passen velden meegeven is genoeg).
- * - `[settings=FALSE]`         // Instellingen van de gevraagde map 
- * 
- * 
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde map
+ *
+ *
  * ###Voorbeeld:
- * 
+ *
  * - `_api/media` met POST data: `path=pictures&where=test_03.jpg&data[str_title]=Nieuwe titel`
- * 
+ *
  * ###Response:
- * 
+ *
  * Als response wordt in `data` TRUE gegeven als het aanpassen is gelukt:
- * 
+ *
  *     [success] => TRUE
  *      [test] => TRUE
  *      [format] => 'dump'
@@ -130,24 +130,24 @@
  *        [type] => 'POST'
  *       )
  *      [data] => TRUE
- * 
+ *
  * ##DELETE FILE
- * 
+ *
  * Hiermee wordt een bestand uit een map verwijderd.
- * 
+ *
  * - `path`                     // De map waar het bestand in staat
  * - `where`                    // Bepaal hiermee welk bestand moet worden verwijderd
- * - `[settings=FALSE]`         // Instellingen van de gevraagde map 
- * 
- * 
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde map
+ *
+ *
  * ###Voorbeeld:
- * 
+ *
  * - `_api/media` met POST data: `path=pictures&where=test_03.jpg
- * 
+ *
  * ###Response:
- * 
+ *
  * Als response wordt in `data` TRUE gegeven als het verwijderen is gelukt:
- * 
+ *
  *     [success] => TRUE
  *      [test] => TRUE
  *      [format] => 'dump'
@@ -158,26 +158,26 @@
  *        [type] => 'POST'
  *       )
  *      [data] => TRUE
- * 
- * 
+ *
+ *
  * @author Jan den Besten
  */
 
 class Media extends Api_Model {
-  
+
   var $needs = array(
     'path'      => '',
     'settings'  => false,
   );
-  
+
 	public function __construct() {
 		parent::__construct();
     $this->load->model('assets');
 	}
-  
+
   public function index() {
     if (!$this->_has_rights('media_'.$this->args['path'])) return $this->_result_status401();
-    
+
     if ( !$this->has_args() ) {
       return $this->_result_wrong_args();
     }
@@ -194,7 +194,7 @@ class Media extends Api_Model {
       return $this->_result_ok();
     }
 
-    
+
     // GET
     if ($this->args['type']=='GET') {
       $this->result['data']=$this->_get_files();
@@ -203,11 +203,16 @@ class Media extends Api_Model {
 
     // POST
     if ($this->args['type']=='POST') {
-      
+
       // UPDATE
       if (isset($this->args['data']) and isset($this->args['where'])) {
         if (!$this->_has_rights('media_'.$this->args['path'])>=RIGHTS_EDIT) return $this->_result_norights();
-        $this->result['data']=$this->_update_file();
+        if (isset($this->args['action']) and $this->args['action']=='crop') {
+          $this->result['data']=$this->_crop_image();
+        }
+        else {
+          $this->result['data']=$this->_update_file();
+        }
         return $this->_result_ok();
       }
       // UPLOAD
@@ -223,12 +228,12 @@ class Media extends Api_Model {
         return $this->_result_ok();
       }
     }
-    
+
     // ERROR -> Wrong arguments
     return $this->_result_wrong_args();
   }
-  
-  
+
+
   /**
    * GET files
    *
@@ -261,6 +266,22 @@ class Media extends Api_Model {
     return $result;
   }
 
+  /**
+   * CROP file
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  private function _crop_image() {
+    $args   = $this->args;
+    $result = $this->assets->crop_image( $args['path'], $args['where'], $args['data'] );
+    if (!$result) {
+      $this->_set_error('MAYBE FILE NOT FOUND');
+    }
+    return $result;
+  }
+
+
 
   /**
    * UPLOAD file
@@ -272,7 +293,7 @@ class Media extends Api_Model {
     $args = $this->args;
     $path = $args['path'];
 		$file = $this->assets->upload_file( $args['path'] );
-    
+
     // Error
     if ( $file===FALSE ) {
   		$error = $this->assets->get_error();
@@ -288,7 +309,7 @@ class Media extends Api_Model {
     else {
       $this->_set_message( langp("upload_succes",$file) );
     }
-    
+
     // Return file info
     $file_info = $this->assets->get_file_info( $path, $file);
     return $file_info;
@@ -314,10 +335,10 @@ class Media extends Api_Model {
   private function _bulkupload() {
     return $this->assets->bulkupload($this->args['path'],$this->args['file']);
   }
-  
-  
-  
-  
+
+
+
+
 
 
 
