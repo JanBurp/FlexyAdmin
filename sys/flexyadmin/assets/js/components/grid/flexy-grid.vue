@@ -1020,7 +1020,7 @@ export default {
     },
 
     hasCrop : function() {
-      return (this.type=='media' && !_.isUndefined(this.assetOptions.scale) );
+      return ((this.type=='media' || this.type=='mediapicker') && !_.isUndefined(this.assetOptions.scale) );
     },
 
     isCroppingPossible : function(id) {
