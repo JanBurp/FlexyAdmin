@@ -1,4 +1,4 @@
-<?php 
+<?php
 /** \ingroup helpers
  * Aantal handige functies voor het omgaan met afbeeldingen
  *
@@ -21,7 +21,7 @@ function icon($class="",$s="",$extraClass="",$a="") {
 /**
  * Geeft alle images (src) terug uit een (html) tekst
  *
- * @param string $text 
+ * @param string $text
  * @return array
  * @author Jan den Besten
  */
@@ -37,7 +37,7 @@ function get_images_from_text($text) {
 /**
  * Geeft thumb
  *
- * @param mixed $attr 
+ * @param mixed $attr
  * @return string
  * @author Jan den Besten
  */
@@ -48,7 +48,7 @@ function show_thumb($attr) {
   $filename=array_pop($map);
   $map=array_pop($map);
 	$ext=get_file_extension($filename);
-  
+
 	$CI=& get_instance();
 	$img_types=$CI->config->item('FILE_types_img');
 	$flash_types=$CI->config->item('FILE_types_flash');
@@ -86,7 +86,7 @@ function show_thumb($attr) {
       		$CI->image_lib->initialize($config);
       		$CI->image_lib->resize();
 				}
-          
+
         $a['src']=$cachedThumb;
         $a['src'] = '_media/'.remove_assets($a['src']);
 				return img($a);
@@ -100,7 +100,7 @@ function show_thumb($attr) {
 /**
  * Deze is sneller dan show_thumb(), er worden minder checks gedaan
  *
- * @param string $attr 
+ * @param string $attr
  * @return mixed
  * @author Jan den Besten
  */
@@ -110,7 +110,7 @@ function thumb($attr) {
   $filename=array_pop($map);
   $map=array_pop($map);
 	$ext=get_suffix($filename,'.');
-  
+
 	if (!isset($attr["alt"]))		$attr["alt"]=$attr["src"];
 	if (!isset($attr["class"]))	$attr["class"]="zoom"; else $attr["class"].=" zoom";
 	if ($ext=="swf") {
@@ -172,6 +172,24 @@ function portrait_or_landscape($file) {
   $path = get_prefix($file,'/');
   $file = remove_prefix($file,'/');
   return $CI->assets->portrait_or_landscape($path,$file);
+}
+
+/**
+ * Schaal van afbeelding, breedte is 100%
+ *
+ * @param string $file afbeelding
+ * @return int percentage
+ * @author Jan den Besten
+ */
+function img_scale($file) {
+  $CI=&get_instance();
+  $CI->load->model('assets');
+  $file = remove_assets($file);
+  $path = get_prefix($file,'/');
+  $file = remove_prefix($file,'/');
+  $size = $CI->assets->get_img_size($path,$file);
+  if (!isset($size['width']) and !isset($size['height'])) return false;
+  return ($size['height']/$size['width'])*100;
 }
 
 /**
