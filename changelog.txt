@@ -1,3 +1,17 @@
+=3.5.43
+
+[nl]
+- Mediapicker verwijder knop was niet zichtbaar
+[/nl]
+
+[en]
+- Mediapicker remove button was invisible
+[/en]
+
+
+[BUGS]
+- Mediapicker remove button was invisible
+
 =3.5.42
 
 [nl]
