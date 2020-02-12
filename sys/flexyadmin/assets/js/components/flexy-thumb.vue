@@ -17,7 +17,7 @@ export default {
     },
     'sizes' : {
       type:Object,
-      default:{},
+      default:function() {return {}},
     },
   },
   computed: {
