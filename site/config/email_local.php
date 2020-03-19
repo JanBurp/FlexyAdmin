@@ -13,7 +13,7 @@
  */
 
 
-// These settings are ready for the Mac App: MockSmtp 
+// These settings are ready for the Mac App: MockSmtp
 
 // $config['mailtype'] = 'html';
 // $config['protocol'] = 'smtp';
