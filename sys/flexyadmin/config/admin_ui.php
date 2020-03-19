@@ -27,6 +27,7 @@ $config['side_menu']['tables'] = array();
 $config['side_menu']['media']  = array();
 
 $config['side_menu']['tools'] = array(
+  // 'mailbox'  => array( 'name'=>'mailbox', 'uri'=>'plugin/mailbox', 'icon'=>'inbox' ),
   'export'   => array( 'user_group'=>'[b_tools]',   'name'=>'db_export',          'uri'=>'tools/db_export',   'icon'=>'database', 'class'=>'text-muted' ),
   'import'   => array( 'user_group'=>'super_admin', 'name'=>'db_import',          'uri'=>'tools/db_import',   'icon'=>'database', 'class'=>'text-muted' ),
   'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'tools/db_backup',   'icon'=>'download', 'class'=>'text-muted' ),

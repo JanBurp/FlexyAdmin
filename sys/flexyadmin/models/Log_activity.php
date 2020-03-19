@@ -7,18 +7,18 @@
  */
 
 class Log_activity extends CI_Model {
-  
+
   /**
    * Bewaarperiode voor log-items (in unixtime seconds)
    */
-  private $remember_period = TIME_YEAR; // Standaard, verderop ingezet op half jaar
-  
+  private $remember_period = TIME_YEAR; // Standaard, verderop ingezet op kwartaal
+
   public function __construct() {
     parent::__construct();
     $this->load->library('session');
     $this->remember_period = TIME_YEAR/4;
   }
-  
+
   /**
    * Voegt iets toe aan log
    *
@@ -46,7 +46,7 @@ class Log_activity extends CI_Model {
       $this->db->insert( 'log_activity' );
     }
   }
-  
+
   public function database( $activity,$model='',$key='' ) {
     return $this->add('database',$activity,$model,$key);
   }
@@ -67,7 +67,7 @@ class Log_activity extends CI_Model {
   public function email( $activity,$model='',$key='' ) {
     return $this->add('email',$activity,$model,$key);
   }
-  
+
   /**
    * Verwijderd items ouder de ingestelde bewaarperiod
    *
@@ -85,8 +85,8 @@ class Log_activity extends CI_Model {
   /**
    * Geeft laatste user activiteit
    *
-   * @param string $user_id 
-   * @param int $limit [10] 
+   * @param string $user_id
+   * @param int $limit [10]
    * @return void
    * @author Jan den Besten
    */
@@ -100,8 +100,8 @@ class Log_activity extends CI_Model {
   /**
    * Geeft laatste user activiteit gegroupeerd weer (één rij per user per dag)
    *
-   * @param string $user_id 
-   * @param string $limit 
+   * @param string $user_id
+   * @param string $limit
    * @return void
    * @author Jan den Besten
    */
@@ -133,8 +133,36 @@ class Log_activity extends CI_Model {
     }
     return $result;
   }
-  
-  
+
+  public function get_mailbox() {
+    if (!$this->db->table_exists('log_activity')) return array();
+    $log = $this->data->table('log_activity')->select('tme_timestamp,stx_activity')->where('str_activity_type','email')->get_result();
+    $mails = array();
+    foreach ($log as $key => $row) {
+      $mail = array(
+        'date' => $row['tme_timestamp'],
+      );
+      $raw = $row['stx_activity'];
+      $mail['to']       = trim($this->_find_in_raw($raw,'/[^-]To\s=>\s\"(.*)\"\n/uU'),' <>');
+      $mail['from']     = trim($this->_find_in_raw($raw,'/From\s=>\s\"(.*)\"\n/uU'),' <>');
+      $mail['reply-to'] = trim($this->_find_in_raw($raw,'/Reply-To\s=>\s\"(.*)\"\n/uU'),' <>');
+      $mail['subject']  = $this->_find_in_raw($raw,'/Subject:\s(.*)\n/uU');
+      $mail['body']     = $this->_find_in_raw($raw,'/Body:\s(.*)Date\s=>\s/uUs');
+      $mail['body_small'] = intro_string($mail['body']);
+      $emails[] = $mail;
+    }
+    return $emails;
+  }
+
+  private function _find_in_raw($raw,$regex,$key=1) {
+    $found = '';
+    if (preg_match($regex, $raw, $match)) {
+      $found = $match[$key];
+    }
+    return $found;
+  }
+
+
 
 }
 ?>
