@@ -1,3 +1,20 @@
+=3.5.44
+
+[nl]
+- Verbeteringen aan email verzending & plugin om ze in te zien
+[/nl]
+
+[en]
+- Improvements to email sending & plugin to show them
+[/en]
+
+
+[FEATURES]
+- Better email sending (less change of spam)
+- Plugin for showing emails from log
+
+
+
 =3.5.43
 
 [nl]
