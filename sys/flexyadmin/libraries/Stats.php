@@ -38,6 +38,7 @@ class Stats {
 	public function __construct() {
 		$this->set_table();
 		$this->CI = & get_instance();
+    $this->CI->load->helper('file');
 	}
 
 	public function set_table($table="") {
@@ -82,7 +83,7 @@ class Stats {
 			// Remove authorization and passwords
 			$uri = preg_replace('/_authorization=(.*)&/u', '', $uri);
 			$uri = preg_replace('/_authorization=(.*)$/u', '', $uri);
-		
+
 			// only insert a known (mobile) browser
 			if ($AGENT->is_browser() or $AGENT->is_mobile()) {
 
@@ -93,14 +94,14 @@ class Stats {
         if ($mysqli->connect_errno) {
           echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
-				
+
 				$set=array();
 				$set['tme_date_time']	=	date('Y-m-d H:i:s');
 				$set['str_uri']				=	$uri;
 
 				$result = $mysqli->query("SHOW COLUMNS FROM `".$this->table."` LIKE 'ip_address'");
 				if ($result->num_rows>=1) $set['ip_address'] = $this->CI->input->ip_address();
-				
+
 				if ($AGENT->is_browser())
 					$set['str_browser']	=	$AGENT->browser();
 				else
