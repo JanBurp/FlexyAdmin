@@ -26,11 +26,11 @@ function embed_video($code) {
 	$ratio = str_replace(':','by',$code['ratio']);
 	switch ($code['platform']) {
 		case 'vimeo':
-			// $html = '<div class="video embed-responsive embed-responsive-'.$ratio.'"><iframe class="video-player embed-responsive-item" type="text/html" src="https://www.youtube.com/embed/'.$code['code'].'?vq=hd720&showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
+			// $html = '<div class="video embed-responsive embed-responsive-'.$ratio.'"><iframe class="video-player embed-responsive-item" type="text/html" src="https://www.youtube-nocookie.com/embed/'.$code['code'].'?vq=hd720&showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
 			break;
 		case 'youtube':
 		default:
-			$html = '<div class="video embed-responsive embed-responsive-'.$ratio.'"><iframe class="video-player embed-responsive-item" type="text/html" src="https://www.youtube.com/embed/'.$code['code'].'?vq=hd720&showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
+			$html = '<div class="video embed-responsive embed-responsive-'.$ratio.'"><iframe class="video-player embed-responsive-item" type="text/html" src="https://www.youtube-nocookie.com/embed/'.$code['code'].'?vq=hd720&showinfo=0" frameborder="0" allowfullscreen></iframe></div>';
 			break;
 	}
 	return $html;
