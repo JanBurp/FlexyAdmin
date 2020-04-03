@@ -1,3 +1,26 @@
+=3.5.45
+
+[nl]
+- Enkele kleine bugs en verbeteringen
+- Update van frontend pakketten
+- Standaard installatie aangepast
+[/nl]
+
+[en]
+- Soms small bugs and improvements
+- Update frontend packages
+- Standard installation changed
+[/en]
+
+[FEATURES]
+- Standaard installatie met vuejs & bootstrap
+
+[BUGS]
+- plugin_uri sometimes triggered search/replace links with order field
+- file_helper not loaded for stats
+- plugin_uri freeze better implementation
+- video_helper no_coockie as standard
+
 =3.5.44
 
 [nl]

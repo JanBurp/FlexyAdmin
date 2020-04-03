@@ -18,11 +18,11 @@ $config['testmode'] = false;
  * Styling framework
  *--------------------------------------------------------------------------
  *
- * Set the default frontend framework, set this also in webpack.mix.js
+ * Set the default frontend framework, set this also in webpack.mix.js, and change the site.php and menu views
  */
 // $config['framework'] = 'bootstrap3';          // bootstrap 3 & jQuery
-$config['framework'] = 'bootstrap4';          // bootstrap 4 & jQuery [DEFAULT]
-// $config['framework'] = 'bootstrap4vue';       // bootstrap 4 & VueJS
+// $config['framework'] = 'bootstrap4';          // bootstrap 4 & jQuery [DEFAULT]
+$config['framework'] = 'bootstrap4vue';       // bootstrap 4 & VueJS
 
 
 /**

@@ -39,21 +39,42 @@
 </head>
 
 <body class="<?=$class?>">
+
+<!-- start of container -->
 <div class="container" id="site">
 
-  <b-navbar toggleable="md" variant="primary">
-    <b-navbar-brand href="./"><?=ascii_to_entities($str_title)?></b-navbar-brand>
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-    <b-collapse id="nav-collapse" is-nav>
-      <?=$menu?>
-    </b-collapse>
-  </b-navbar>
-
-	<div class="content">
-    <?=$content;?>
+  <!-- header -->
+  <div class="page-header">
+    <h1><a href="./"><?=ascii_to_entities($str_title)?></a></h1>
   </div>
 
+  <!-- main navigation -->
+  <div class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <div class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+          <span class="fa fa-bars"></span>
+        </div>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <?=$menu?>
+      </div>
+    </div>
+  </div>
+
+  <!-- content -->
+  <div class="content"><?=$content;?></div>
+
+  <!-- footer -->
+  <footer class="footer navbar navbar-default">
+    <div class="container">
+      <p class="navbar-text">a flexyadmin site</p>
+    </div>
+  </footer>
 </div>
+<!-- end of container -->
+
+<!-- Javascript -->
 <script src="<?=mix_asset('scripts.min.js')?>" type="text/javascript" charset="utf-8"></script>
 
 </body>
