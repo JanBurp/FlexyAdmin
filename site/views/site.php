@@ -39,70 +39,21 @@
 </head>
 
 <body class="<?=$class?>">
-
-<!-- start of container -->
 <div class="container" id="site">
 
-<?php if ($framework == 'bootstrap3'): ?>
-
-  <!-- header -->
-  <div class="page-header">
-    <h1><a href="./"><?=ascii_to_entities($str_title)?></a></h1>
-  </div>
-
-  <!-- main navigation -->
-  <div class="navbar navbar-default">
-    <div class="container">
-      <div class="navbar-header">
-        <div class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-          <span class="fa fa-bars"></span>
-        </div>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <?=$menu?>
-      </div>
-    </div>
-  </div>
-
-  <!-- content -->
-  <div class="content"><?=$content;?></div>
-
-  <!-- footer -->
-  <footer class="footer navbar navbar-default">
-    <div class="container">
-      <p class="navbar-text">a flexyadmin site</p>
-    </div>
-  </footer>
-
-<?php else: ?>
-
-  <!--  Header -->
-  <div class="jumbotron jumbotron-fluid header">
-    <div class="container">
-      <a href="./" class="title"><?=ascii_to_entities($str_title)?></a>
-      <p><?=ascii_to_entities($stx_description)?></p>
-    </div>
-  </div>
-
-  <!-- main navigation -->
-  <nav class="navbar navbar-expand-md navbar-light bg-primary">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-nav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="main-nav">
+  <b-navbar toggleable="md" variant="primary">
+    <b-navbar-brand href="./"><?=ascii_to_entities($str_title)?></b-navbar-brand>
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+    <b-collapse id="nav-collapse" is-nav>
       <?=$menu?>
-    </div>
-  </nav>
+    </b-collapse>
+  </b-navbar>
 
-  <!-- content -->
-	<div class="content"><?=$content;?></div>
-
-<?php endif ?>
+	<div class="content">
+    <?=$content;?>
+  </div>
 
 </div>
-<!-- end of container -->
-
-<!-- Javascript -->
 <script src="<?=mix_asset('scripts.min.js')?>" type="text/javascript" charset="utf-8"></script>
 
 </body>
