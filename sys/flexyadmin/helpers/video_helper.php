@@ -13,8 +13,10 @@ function embed_video($code) {
 		'code'		 => $code,
 		'ratio'		 => '16:9',
 	);
-	if (substr($code,0,1)=='{') {
+	if (is_string($code) and substr($code,0,1)=='{') {
 		$code = json2array($code);
+	}
+	if (is_array($code)) {
 		$code = array_merge($default,$code);
 	}
 	else {
