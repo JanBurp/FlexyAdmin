@@ -1,3 +1,16 @@
+=3.5.46
+
+[nl]
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- Soms small bugs and improvements
+[/en]
+
+[BUGS]
+- smal bug in video_helper
+
 =3.5.45
 
 [nl]
