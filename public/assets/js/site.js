@@ -23,6 +23,13 @@ files.keys().map(function(key){
 //   routes
 // });
 
+// Voorkom waarschuwing door safe_mailto() <script>
+Vue.config.warnHandler = function (msg, vm, trace) {
+  if (!msg.indexOf('<script>')) {
+    console.log(msg);
+  }
+}
+
 new Vue({
   el: '#site',
   // router,
