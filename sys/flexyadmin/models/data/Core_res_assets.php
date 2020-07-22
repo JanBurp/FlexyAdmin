@@ -764,7 +764,7 @@ Class Core_res_assets extends Data_Core {
     $default_data = array(
       'path'  => $path,
       'file'  => $file,
-      'alt'   => nice_string(get_prefix($file,'.')),
+      'alt'   => $this->auto_alt($file),
       'type'  => $ext,
       'size'  => (int) floor($file_stats['size'] / 1024),
       'date'  => unix_to_mysql($file_stats['mtime']),
@@ -815,6 +815,17 @@ Class Core_res_assets extends Data_Core {
 
     }
     return $id;
+  }
+
+  /**
+   * Maak alt tekst van bestandsnaam
+   *
+   * @param string $file
+   * @return string
+   * @author Jan den Besten
+   */
+  public function auto_alt($file) {
+    return nice_string(get_prefix($file,'.'));
   }
 
   /**
