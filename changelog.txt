@@ -1,3 +1,15 @@
+=3.5.47
+
+[nl]
+- Meer help tekst bij afbeeldingen
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- More help for images
+- Soms small bugs and improvements
+[/en]
+
 =3.5.46
 
 [nl]
