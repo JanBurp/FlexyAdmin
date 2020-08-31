@@ -55,7 +55,7 @@
           </div>
           <div class="datepicker-monthRange decadeRange">
             <template v-for="decade in decadeRange">
-              <span :class="{'datepicker-dateRange-item-active':parse(this.value).getFullYear() === decade.text}"
+              <span :class="{'datepicker-dateRange-item-active':parse(value).getFullYear() === decade.text}"
                 @click.stop="yearSelect(decade.text)"
               >{{decade.text}}</span>
             </template>
@@ -327,7 +327,7 @@ export default {
   beforeDestroy () {
     window.removeEventListener('click', this._blur)
   }
-}
+};
 </script>
 
 <style>

@@ -1,46 +1,37 @@
-// jQuery based
-import $ from 'jquery';
+import Vue from 'vue';
 
-$(document).ready(function() {
-  // Menu dropdown hack voor iPhone etc
-  $('.navbar-toggle').click(function(){ });
+import { BootstrapVue } from 'bootstrap-vue'
+Vue.use(BootstrapVue);
+
+// import VueRouter from 'vue-router';
+// Vue.use(VueRouter)
+
+// import axios from 'axios'
+// import VueAxios from 'vue-axios'
+// Vue.use(VueAxios, axios);
+
+// Automatically register all Vue components
+let files = require.context('./components', true, /\.vue$/i);
+let components = [];
+files.keys().map(function(key){
+  let name = key.split('/').pop().split('.')[0];
+  components[name] = Vue.component(name, files(key).default);
 });
 
-// $(window).load(function() {
+// let routes = [];
+// const router = new VueRouter({
+//   routes
 // });
-// $(window).resize(function() {
-// });
-//
-// Minimal jQuery plugin template, for more comments see template.js (which has essentially the same template as the one here)
-//
-// (function($) {
-//   var defaults = {};
-//   var opts;
-//   var self;
-//   var methods = {
-//     init : function( options ) {
-//       self=this;
-//    		opts = $.extend({}, defaults, options);
-//       //
-//       // (Initialise) code here...
-//       //
-//       return self;
-//     }
-//     // Put more methods here
-//   };
-//   $.fn.PLUGIN_NAME = function(methodOrOptions) {
-//      if ( methods[methodOrOptions] ) {
-//        return methods[ methodOrOptions ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-//      } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
-//        return methods.init.apply( this, arguments );
-//      } else {
-//        $.error( 'Method "' +  methodOrOptions + '" does not exist on jQuery.PLUGIN_NAME' );
-//      }
-//    };
-// })(jQuery);
 
+// Voorkom waarschuwing door safe_mailto() <script>
+Vue.config.warnHandler = function (msg, vm, trace) {
+  if (!msg.indexOf('<script>')) {
+    console.log(msg);
+  }
+}
 
-
-
-
+new Vue({
+  el: '#site',
+  // router,
+});
 

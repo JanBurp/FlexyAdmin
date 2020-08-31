@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /** \ingroup models
  * Hiermee kunnen uri's worden gecreeërd uit andere velden van een database rij
@@ -15,12 +15,12 @@ class Create_uri extends CI_Model {
    */
   private $table;
   private $table_settings = array();
-  
+
   /**
    * Velden waar de uri mogelijk gecreerd van kan worden
    */
   private $source_field='';
-  
+
   /**
    * Of bepaalde uri's van een bepaald item niet aangepast mag worden
    */
@@ -36,13 +36,13 @@ class Create_uri extends CI_Model {
    * Een prefix kan dynamisch gegenereerd worden door een extern object.method
    */
   private $prefix_callback=false;
-  
-  
+
+
   /**
    * data uit tabel
    */
   private $table_data;
-  
+
   /**
    * veldnamen an tabel
    */
@@ -59,7 +59,7 @@ class Create_uri extends CI_Model {
   /**
    * Zet de database tabel waar de uri('s) gecreerd moeten worden
    *
-   * @param string $table 
+   * @param string $table
    * @return object $this
    * @author Jan den Besten
    */
@@ -78,12 +78,12 @@ class Create_uri extends CI_Model {
     }
     return $this;
   }
-  
-  
+
+
   /**
  	 * Maak uri vanuit meegegeven data (rij uit een tabel, of string)
  	 *
- 	 * @param array $data 
+ 	 * @param array $data
  	 * @return string
  	 * @author Jan den Besten
  	 */
@@ -139,16 +139,16 @@ class Create_uri extends CI_Model {
 		}
     return $uri;
  	}
-  
+
   /**
    * Maakt van een gegeven string een uri veilige string
    *
-   * @param string $uri 
+   * @param string $uri
    * @return string
    * @author Jan den Besten
    */
   public function cleanup($uri) {
-    $uri=preg_replace("/&#?[a-z0-9]+;/i","",$uri); 
+    $uri=preg_replace("/&#?[a-z0-9]+;/i","",$uri);
     if ($this->prefix!=='_') $uri=trim(strip_tags($uri),' -_');
     $uri=str_replace(" ",$this->replaceSpace,$uri);
 		$uri=clean_string($uri);
@@ -184,12 +184,12 @@ class Create_uri extends CI_Model {
 		}
  		return $uriField;
  	}
-	
-  
+
+
   /**
    * Test of een gegeven uri een verboden uri is
    *
-   * @param string $uri 
+   * @param string $uri
    * @return bool
    * @author Jan den Besten
    */
@@ -201,8 +201,8 @@ class Create_uri extends CI_Model {
   	$forbidden=array_merge($forbidden,$this->config->item('LANGUAGES'));
     return in_array($uri,$forbidden);
   }
-  
-  
+
+
   /**
    * Geef een alternatieve class die de functie _is_existing_uri zelf heeft
    *
@@ -214,8 +214,8 @@ class Create_uri extends CI_Model {
     $this->existing_class=$class;
     return $this;
   }
-  
-  
+
+
   /**
    * Checkt of de uri al bestaat
    *
@@ -264,10 +264,9 @@ class Create_uri extends CI_Model {
     // Als nog geen uri, dan geen freeze
     $uri = el('uri',$data,'');
     if (empty($uri)) return FALSE;
-    
+
     // Standaard instelling
-    $freeze = false;
-    if (is_bool($this->freeze)) return $this->freeze;
+    $freeze = $this->freeze;
     // Specifieke instelling
     if (is_array($this->freeze)) {
       foreach ($this->freeze as $field => $value) {
@@ -281,10 +280,9 @@ class Create_uri extends CI_Model {
         }
       }
     }
-    // trace_([$data,$freeze,$this->freeze]);
     return $freeze;
   }
-	
+
 
  }
 ?>

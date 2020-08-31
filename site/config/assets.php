@@ -4,7 +4,7 @@
 
 /* EXAMPLE:
 
-$config['assets'] = array( 
+$config['assets'] = array(
 
 	'pictures'  => array(
     'types'            => 'jpg,jpeg,gif,png',
@@ -13,7 +13,7 @@ $config['assets'] = array(
     'in_link_list'     => false,
     'user_restricted'  => false,
     'serve_restricted' => false,
-    
+
     'min_width'        => false,
     'min_height'       => false,
     'resize_img'       => true,
@@ -29,7 +29,7 @@ $config['assets'] = array(
     'height_2'         => false,
     'prefix_2'         => '',
     'suffix_2'         => ''
-  ), 
+  ),
 
 	'downloads' => array(
     'types'            => 'pdf,doc,docx,xls,xlsx,png,jpg',
@@ -39,12 +39,12 @@ $config['assets'] = array(
     'in_link_list'     => true,
     'user_restricted'  => false,
     'serve_restricted' => false
-  ), 
+  ),
 );
 
 */
 
-$config['assets'] = array( 
+$config['assets'] = array(
 
 'downloads' => array(
     'types'            => 'pdf,doc,docx,xls,xlsx,png,jpg',
@@ -55,7 +55,7 @@ $config['assets'] = array(
     'user_restricted'  => 0,
     'serve_restricted' => 0
   ),
-    
+
 'pictures'  => array(
     'types'            => 'jpg,jpeg,gif,png,svg',
     'encrypt_name'     => 0,
@@ -63,11 +63,12 @@ $config['assets'] = array(
     'in_link_list'     => 0,
     'user_restricted'  => 0,
     'serve_restricted' => 0,
-    'min_width'        => 0,
-    'min_height'       => 0,
+    'min_width'        => 400,
+    'min_height'       => 300,
     'resize_img'       => 1,
-    'img_width'        => 300,
-    'img_height'       => 1000,
+    'scale'            => '4:3',
+    'img_width'        => 800,
+    'img_height'       => 2000,
     'create_1'         => 1,
     'width_1'          => 100,
     'height_1'         => 1000,
@@ -79,7 +80,7 @@ $config['assets'] = array(
     'prefix_2'         => '',
     'suffix_2'         => ''
   ),
-  
+
 );
 
 ?>

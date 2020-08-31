@@ -7,11 +7,13 @@ import flexyButton      from '../flexy-button.vue'
 
 import FlexyPagination  from '../flexy-pagination.vue'
 import FlexyGridCell    from './flexy-grid-cell.vue'
+import FlexyCropperModal  from '../flexy-cropper-modal.vue'
+
 // import FlexyForm        from './../form/flexy-form.vue' // https://vuejs.org/v2/guide/components.html#Circular-References-Between-Components
 
 export default {
   name: 'FlexyGrid',
-  components: {draggable,flexyButton,FlexyGridCell,FlexyPagination },
+  components: {draggable,flexyButton,FlexyGridCell,FlexyPagination,FlexyCropperModal },
   props:{
     'name':String,
     'title':{
@@ -167,9 +169,11 @@ export default {
       extendedTermDefault : { field:'',term:'',and:'OR',equals:'exist' },
       extendedTerm        : [],
       oldExtendedTerm     : [],
+      assetOptions        : {},
       uploadFiles         : [],
       bulkuploadFiles     : [],
       dropUploadHover     : false,
+      mediaCrop           : false,
 
       mouseY              : 0,
       mouseInterval       : null,
@@ -393,6 +397,11 @@ export default {
               if (!_.isUndefined(response.data.settings.grid_set.actions)) {
                 self.actions = response.data.settings.grid_set.actions;
               }
+              // Asset options?
+              if (!_.isUndefined(response.data.settings.assets)) {
+                self.assetOptions = response.data.settings.assets;
+              }
+
             }
             // Data en die aanvullen met data
             var data = response.data.data;
@@ -1010,6 +1019,88 @@ export default {
       return '';
     },
 
+    hasCrop : function() {
+      return ((this.type=='media' || this.type=='mediapicker') && !_.isUndefined(this.assetOptions.scale) );
+    },
+
+    isCroppingPossible : function(id) {
+      let index = this.items.findIndex( item => item.id.value==id );
+      let item = this.items[index];
+      let isCroppingPossible = true;
+      if ( this.assetOptions.min_width>0 ) {
+        if ( this.assetOptions.min_width >= item.width.value) {
+          // console.log('smaller dan minimum');
+          isCroppingPossible = false;
+        }
+      }
+      else {
+        if (this.assetOptions.img_width >= item.width.value) {
+          // console.log('te smal');
+          isCroppingPossible = false;
+        }
+      }
+      if ( this.assetOptions.min_height>0 ) {
+        if (this.assetOptions.min_height >= item.height.value) {
+          // console.log('lager dan minimum');
+          isCroppingPossible = false;
+        }
+      }
+      else {
+        if (this.assetOptions.img_height >= item.height.value) {
+          // console.log('te laag');
+          isCroppingPossible = false;
+        }
+      }
+      return isCroppingPossible;
+    },
+
+    cropWidth : function() {
+      if ( this.assetOptions.min_width>0 ) {
+        return this.assetOptions.min_width;
+      }
+      return this.assetOptions.img_width;
+    },
+
+    cropHeight : function() {
+      if ( this.assetOptions.min_height>0 ) {
+        return this.assetOptions.min_height;
+      }
+      return this.assetOptions.img_height;
+    },
+
+    crop: function(id) {
+      if (this.isCroppingPossible(id)) {
+        let index = this.items.findIndex( item => item.id.value==id );
+        let item = this.items[index];
+        this.mediaCrop = item;
+      }
+      else {
+        this.mediaCrop = false;
+        flexyState.openModal({
+          'title':'',
+          'body':_flexy.language_keys.crop_warning,
+          'size':'modal-sm',
+          'buttons': [
+            {
+              type   : 'ok',
+              title  : _flexy.language_keys.ok,
+              class  : 'btn-outline-danger',
+              close  : true,
+            },
+          ],
+        });
+      }
+    },
+
+    cropped : function() {
+      this.mediaCrop = false;
+      flexyState.addMessage(this.$lang.image_cropped);
+      this.reloadPage();
+    },
+
+    stopCrop: function() {
+      this.mediaCrop = false;
+    },
 
     /**
      * Dragging methods
@@ -1171,7 +1262,7 @@ export default {
     }
 
   }
-}
+};
 </script>
 
 <template>
@@ -1304,6 +1395,7 @@ export default {
                     <flexy-button @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning action-edit" />
                     <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger action-remove" />
                     <flexy-button @click.native="select(row.id.value)" :icon="{'square-o':!isSelected(row.id.value),'check-square-o':isSelected(row.id.value)}" class="btn-outline-info action-select" />
+                    <flexy-button v-if="hasCrop()" @click.native="crop(row.id.value)" icon="crop" class="btn-outline-info action-crop" />
                     <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info action-drag" :class="{'active':isDragging(row.id.value)}" />
                   </td>
 
@@ -1324,7 +1416,9 @@ export default {
                     :primary="{ table:dataName(), id:row.id.value }"
                     :editable="isEditable(cell.name)"
                     :readonly="isReadonly(cell.name)"
-                    :options="fields[cell.name]">
+                    :options="fields[cell.name]"
+                    :assetOptions="assetOptions"
+                    >
                   </flexy-grid-cell>
 
                 </template>
@@ -1347,6 +1441,17 @@ export default {
       </div>
 
     </div>
+
+    <!-- media cropper -->
+    <flexy-cropper-modal v-if="mediaCrop!==false"
+      :path="name"
+      :src="mediaCrop.media_thumb.value"
+      :width="cropWidth()"
+      :height="cropHeight()"
+      :scale="assetOptions.scale"
+      @cropped="cropped"
+      @close="stopCrop">
+    </flexy-cropper-modal>
 
   </div>
 

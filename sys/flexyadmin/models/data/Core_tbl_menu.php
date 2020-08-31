@@ -36,9 +36,9 @@ Class Core_tbl_menu extends Data_Core {
 
   public function __construct() {
     parent::__construct();
-    $this->config->load('menu',true);
 
-    $languages = $this->config->get_item('languages');
+    $this->config->load('menu',true);
+    $languages = $this->config->get_item(array('menu','languages'));
     if ( $languages and count($languages)>1 ) {
       $this->title_field = $this->title_field .= '_'.$languages[0];
     }

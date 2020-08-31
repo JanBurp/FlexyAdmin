@@ -314,6 +314,7 @@ body.mce-fullscreen .mce-tinymce{
         position:absolute;
         top:0px;
         left:0px;
+        z-index: 10;
       }
     }
     .mediapicker-thumb-button {
@@ -343,7 +344,7 @@ body.mce-fullscreen .mce-tinymce{
       }
     }
   }
-  
+
 
 }
 
@@ -368,13 +369,13 @@ body.mce-fullscreen .mce-tinymce{
       color:$gray-600;
     }
   }
-  
+
   button.dropdown-toggle {
     min-height:2rem;
     padding:.25rem .5rem 0 .5rem;
     text-align:left;
   }
-  
+
   ul.dropdown-menu {
     display:block;
     // position:relative;
@@ -396,7 +397,7 @@ body.mce-fullscreen .mce-tinymce{
     }
 
   }
-  
+
 }
 .vselect.multiple {
   .selected-option {

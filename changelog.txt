@@ -1,3 +1,161 @@
+=3.5.48
+
+[nl]
+- Enkele kleine bugs en verbeteringen aan assets afhandelingen
+[/nl]
+
+[en]
+- Soms small bugs and improvements to core assets
+[/en]
+
+
+=3.5.47
+
+[nl]
+- Meer help tekst bij afbeeldingen
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- More help for images
+- Soms small bugs and improvements
+[/en]
+
+=3.5.46
+
+[nl]
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- Soms small bugs and improvements
+[/en]
+
+[BUGS]
+- smal bug in video_helper
+
+=3.5.45
+
+[nl]
+- Enkele kleine bugs en verbeteringen
+- Update van frontend pakketten
+- Standaard installatie aangepast
+[/nl]
+
+[en]
+- Soms small bugs and improvements
+- Update frontend packages
+- Standard installation changed
+[/en]
+
+[FEATURES]
+- Standaard installatie met vuejs & bootstrap
+
+[BUGS]
+- plugin_uri sometimes triggered search/replace links with order field
+- file_helper not loaded for stats
+- plugin_uri freeze better implementation
+- video_helper no_coockie as standard
+
+=3.5.44
+
+[nl]
+- Verbeteringen aan email verzending & plugin om ze in te zien
+[/nl]
+
+[en]
+- Improvements to email sending & plugin to show them
+[/en]
+
+
+[FEATURES]
+- Better email sending (less change of spam)
+- Plugin for showing emails from log
+
+
+
+=3.5.43
+
+[nl]
+- Mediapicker verwijder knop was niet zichtbaar
+[/nl]
+
+[en]
+- Mediapicker remove button was invisible
+[/en]
+
+
+[BUGS]
+- Mediapicker remove button was invisible
+
+=3.5.42
+
+[nl]
+- Bijsnijden nu ook bij mediapicker
+[/nl]
+
+[en]
+- Cropping now also with mediapicker
+[/en]
+
+[FEATURES]
+- Cropping of images with mediapicker
+
+[BUGS]
+- Styling issue with menu
+
+
+=3.5.41
+
+[nl]
+- Bijsnijden van afbeeldingen
+[/nl]
+
+[en]
+- Cropping of images
+[/en]
+
+[FEATURES]
+- Cropping of images (if 'scale' option in assets is set)
+
+[BUGS]
+
+
+=3.5.40
+
+[nl]
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- Some small bugs and improvements
+[/en]
+
+[BUGS]
+- DatePicker did not show
+
+=3.5.39
+
+[nl]
+- Update naar CodeIgniter 3.1.11
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- Update to CodeIgniter 3.1.11
+- Some small bugs and improvements
+[/en]
+
+[UPDATES]
+- Update naar CodeIgniter 3.1.11
+
+[BUGS]
+- Core menu had a bug when multuple languages
+- Kleine verbetering aan site.js voor jquery (3.0)
+
+[FEATURES]
+- Added new plugin clean_tables
+
 =3.5.38
 
 [nl]

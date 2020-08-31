@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $lang['vue_api_error_401'] = 'Je hebt geen rechten voor dit item';
 $lang['vue_api_timeout'] 	 = "FOUT: De website reageert traag, controleer uw internetverbiding en probeer het nogmaals.";
@@ -64,6 +64,11 @@ $lang['vue_error_delete']            = "<b>FOUT</b>. Niet gelukt om item(s) te v
 
 $lang['vue_img_popup_alt']           = "Titel";
 $lang['vue_img_popup_src']           = "Afbeelding";
+
+$lang['vue_crop_title']              = "Afbeelding bijsnijden";
+$lang['vue_crop']                    = "Bijsnijden";
+$lang['vue_image_cropped']           = 'Afbeelding is bijgesneden';
+$lang['vue_crop_warning']            = 'Afbeelding is te klein om bij te snijden';
 
 
 $lang['vue_strap_lang'] = array(

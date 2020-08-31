@@ -117,5 +117,9 @@ $lang['size']             = 'Omvang';
 $lang['width']            = 'Breedte';
 $lang['height']           = 'Hoogte';
 
+// OTHERS
+$lang['mailbox']          = 'E-mailbox';
+
+
 
 ?>

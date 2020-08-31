@@ -1,10 +1,10 @@
 // Defaults
 .grid {
-  
+
   // Table cells Focus/Editing
   td.has-focus {background-color:$warning-light}
 /*  td.is-editing {padding:2px;box-shadow:0px 0px 1px $danger inset;}*/
-  
+
   // Relation item
   .grid-relation-item {
     border:solid 1px $gray-600;
@@ -13,7 +13,7 @@
     margin-right:.25rem;
   }
   .grid-relation-item:hover {border-color:$primary;background-color:$warning-light};
-  
+
   // Thumb
   .color-thumb-sm {
     width:5.5rem;
@@ -23,8 +23,8 @@
     text-transform:uppercase;
     border-radius:$border-radius;
   }
-  
-  
+
+
   // HEADERS
   .grid-actions {
     .grid-action {
@@ -43,7 +43,7 @@
     margin-right:.25rem;
     border-color:$body-bg;
   }
-  
+
   // Extended find Header
   .card-header.grid-extended-find {
     background-color:$gray-200!important;
@@ -66,12 +66,12 @@
     }
     .form-group,.flexy-button {margin-left:1px;}
   }
-   
+
    // CARD BLOCK
    .card-body {
       padding:0;
    }
-   
+
    // UPLOAD ROW
    .grid-upload {
      background-color:$gray-200;
@@ -98,12 +98,12 @@
        color:$body-bg!important;
      }
    }
-   
+
    // TABLE
    table {
      margin-bottom:0;
    }
-   
+
    // Table header
    th {
      overflow:hidden;
@@ -128,7 +128,7 @@
        margin-top:1px;
      }
    }
-   
+
   // Header sort (for media)
   #dropdown-sort {
     .dropdown-menu {
@@ -144,19 +144,19 @@
         z-index:999999;
       }
    }
-   
+
    // Table primary header
    th.grid-header-type-hidden.text-primary {
      width:2rem;
      white-space:nowrap;
    }
-   
-   
+
+
    th.grid-header-muted {
      font-weight:normal;
    }
-   
-   
+
+
   // Table cell (grid-cell)
   td {
      overflow:hidden;
@@ -187,7 +187,7 @@
       min-height:1.5rem;
     }
   }
-   
+
    td.grid-cell-type-relation {
      div {display:inline;}
    }
@@ -196,7 +196,7 @@
      div {display:block;}
    }
 
-   
+
    // FOOTER
    .card-footer {
      padding:.35rem .35rem;
@@ -221,10 +221,18 @@
 
 
 // MEDIA
+.grid.grid-media-view-list {
+  td[name="media_thumb"] {
+    .flexy-thumb {
+      .scale {display:none;}
+    }
+  }
+}
+
 .grid.grid-media-view-thumbs, .grid.grid-media-view-small {
-  
+
   table.grid-data {
-    
+
     // Header
     thead th {
       overflow: visible;
@@ -232,12 +240,12 @@
     thead th:not(.grid-actions) {
       display:none;
     }
-    
+
     // Body
     tbody {
       display:flex;
       flex-wrap:wrap;
-      
+
       tr {
         display: block;
         float:left;
@@ -267,20 +275,23 @@
         background-color:transparent;
         input {text-align:center;}
       }
-      
+
       td.action {
         // display:none;
         position:absolute;
         text-align:center;
-        background-color:rgba(255,255,255,.8);
+        background-color:#FFF;//rgba(255,255,255,0);
         width: 100%;
-        padding:.25rem;
+        padding:.25rem 0;
 
         z-index:999;
         .flexy-button {display:none;}
-        .flexy-button.action-remove, .flexy-button.action-select {display:inline;margin-top:-.25rem;}
+        .flexy-button.action-remove, .flexy-button.action-select, .flexy-button.action-crop  {
+          display:inline;
+          margin-top:-.25rem;
+        }
       }
-      
+
       td[name="media_thumb"] {
         display:block;
         position: absolute;
@@ -317,8 +328,8 @@
       td[name='height'] {
         // display:none
       }
-      
-      
+
+
       // UPLOAD ROW
       tr.grid-upload {
         background-color:$gray-200;
@@ -342,11 +353,11 @@
         border-color:$danger;
         box-shadow:none;
       }
-      
+
     }
-    
+
   }
-  
+
 }
 
 .grid.grid-media-view-small {
@@ -372,8 +383,8 @@
     }
   }
 }
-  
-  
+
+
 
 /* SORTABLE */
 .sortable-chosen {
@@ -410,9 +421,8 @@
       .flexy-button-text {display:none}
     }
     td.action {
-      .flexy-button-text {display:none} 
+      .flexy-button-text {display:none}
     }
   }
 
 }
-  

@@ -12,17 +12,17 @@ class MY_Upload extends CI_Upload {
 	 * Maximum duplicate filename increment ID
 	 */
 	public $max_filename_increment = 10000000;
-  
+
 
 	protected $settings;
 	protected $error='';
 	protected $result;
-  
+
   /**
    * Array met extra gecreerde bestanden door resizen
    */
   protected $extraFiles=array();
-  
+
   /**
    */
 	public function __construct($config=NULL) {
@@ -34,7 +34,7 @@ class MY_Upload extends CI_Upload {
   /**
    * Zelfde als origineel met wat extra automatische instellingen
    *
-   * @param array $config 
+   * @param array $config
    * @return void
    * @author Jan den Besten
    */
@@ -82,7 +82,7 @@ class MY_Upload extends CI_Upload {
   /**
    * Googeld met geheugeninstellingen om afbeeldingen te kunnen resizen
    *
-   * @param string $imageInfo 
+   * @param string $imageInfo
    * @return void
    * @author Jan den Besten
    * @internal
@@ -120,7 +120,7 @@ class MY_Upload extends CI_Upload {
     $name=clean_file_name($name);
     $fullpath=$this->_CI->config->item('ASSETSFOLDER').$path;
     $fullname=$fullpath.'/'.$name;
-    
+
     $file = fopen ($url, "rb");
     if ($file) {
       $newf = fopen ($fullname, "wb");
@@ -129,10 +129,10 @@ class MY_Upload extends CI_Upload {
         fwrite($newf, fread($file, 1024 * 8 ), 1024 * 8 );
       }
     }
-    
+
     if ($file) { fclose($file); }
     if ($newf) { fclose($newf); }
-    
+
     // if file exists, and more sizez needed, make them
     if (file_exists($fullname)) {
       $this->resize_image($name,$fullpath);
@@ -152,14 +152,14 @@ class MY_Upload extends CI_Upload {
     $this->error = '';
 		$config=$this->settings;
 		$this->initialize($config);
-    
+
     // Start upload
 		if ( !$this->do_upload( $file ) ) {
       $this->error = $this->display_errors();
 			log_("info","[UPLOAD] error while uploaded: '$this->file_name' [$this->error]");
       return false;
     }
-    
+
     // Als gelukt, pas naam aan als dat nodig is
 			$this->result=$this->data();
 			$this->file_name=$this->result['file_name'];
@@ -174,8 +174,8 @@ class MY_Upload extends CI_Upload {
 			log_("info","[UPLOAD] uploaded: '$this->file_name'");
     return true;
 		}
-	
-  
+
+
   /**
    * Controleert of afbeelding groot genoeg is
    *
@@ -194,8 +194,8 @@ class MY_Upload extends CI_Upload {
     }
     return true;
   }
-  
-  
+
+
   /**
    * Vult velden in database automatisch aan de hand van instellingen in **Media Info**
    * TODO: database model maken voor dit soort dingen
@@ -239,7 +239,7 @@ class MY_Upload extends CI_Upload {
     // }
 		return TRUE;
 	}
-	
+
   /**
    * Resized een afbeelding aan de hand van instellingen in **Img Info**
    *
@@ -276,7 +276,7 @@ class MY_Upload extends CI_Upload {
             $sizes["width_$nr"]=$current_size[0];
             $sizes["height_$nr"]=$current_size[1];
           }
-          
+
           // Resize config
           $resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
           $resize_config['maintain_ratio'] = TRUE;
@@ -285,10 +285,10 @@ class MY_Upload extends CI_Upload {
           $resize_config['height']         = $sizes["height_$nr"];
           $resize_config['new_image']      = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$create_name;
           $resize_config['master_dim']     = 'auto';
-          
+
           // Zorg voor voldoende geheugen
           $this->_setMemory($current_size);
-          
+
           // Start resize
           $this->_CI->image_lib->initialize($resize_config);
           if ( !$this->_CI->image_lib->resize() ) {
@@ -321,7 +321,7 @@ class MY_Upload extends CI_Upload {
 
 				// set mem higher if needed
 				$this->_setMemory($current_size);
-        
+
         // Rezize
 				$this->_CI->image_lib->initialize($resize_config);
 				if ( !$this->_CI->image_lib->resize() ) {
@@ -361,13 +361,54 @@ class MY_Upload extends CI_Upload {
 
 		return $result;
 	}
-  
-  
+
+  /**
+   * Snij een afbeelding bij
+   *
+   * @param string $image Afbeelding
+   * @param string $path Pad naar afbeelding
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function crop_image( $path,$image, $top,$left,$width,$height, $path_settings ) {
+    $result = TRUE;
+    $this->file_name=$image;
+    $ext = get_file_extension($this->file_name);
+    // Crop config
+    $resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
+    $resize_config['new_image']      = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
+    $resize_config['maintain_ratio'] = FALSE;
+    if (isset($sizes['quality']))    $resize_config['quality'] = $sizes['quality'];
+    $resize_config['width']          = $width;
+    $resize_config['height']         = $height;
+    $resize_config['x_axis']         = $left;
+    $resize_config['y_axis']         = $top;
+
+    // Zorg voor voldoende geheugen
+    $current_size = @getimagesize( $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name);
+    $this->_setMemory($current_size);
+
+    // Start crop
+    $this->_CI->image_lib->initialize($resize_config);
+    if ( !$this->_CI->image_lib->crop() ) {
+      $this->error=$this->_CI->image_lib->display_errors().' -- '.$nr;
+      $result = FALSE;
+    }
+    else {
+      // Maak nieuwe thumbs (indien nodig)
+      $this->resize_image($path,$image, $path_settings);
+    }
+
+    return $result;
+  }
+
+
   /**
    * Controleert of de orientatie van de afbeelding klopt met de meta-data, zo niet corrigeer dat (komt vooral voor bij mobiele apparaten)
    *
-   * @param string $file 
-   * @param string $path 
+   * @param string $file
+   * @param string $path
    * @return bool $success
    * @author Jan den Besten
    */
@@ -379,7 +420,7 @@ class MY_Upload extends CI_Upload {
 
     // Of als de exifdata niet op te vragen is, stop dan ook meteen.
     if (!function_exists('read_exif_data')) return FALSE;
-    
+
     // Get all the exif data from the file
     $exif=FALSE;
     $errorreporting=error_reporting(E_ERROR);
@@ -389,19 +430,19 @@ class MY_Upload extends CI_Upload {
     // If we dont get any exif data at all, then we may as well stop now
     if(!$exif || !is_array($exif))  return false;
     $exif = array_change_key_case($exif, CASE_LOWER);
-    
+
     // If theres no orientation key, then we can give up
     if(!array_key_exists('orientation', $exif)) return false;
-    
+
     // strace_($exif['orientation']);
-    
+
     // Start rotation
     $rotateConfig=array(
       'source_image' => $fileandpath,
       'new_image'    => $fileandpath,
       'quality'      => '100%',
     );
-    
+
     switch($exif['orientation']) {
       // upside down
       case 3:
@@ -421,7 +462,7 @@ class MY_Upload extends CI_Upload {
         return true;
         break;
     }
-    
+
     $this->_CI->image_lib->initialize($rotateConfig);
     // strace_($rotateConfig['rotation_angle']);
     if ( ! $this->_CI->image_lib->rotate()) {
@@ -433,7 +474,7 @@ class MY_Upload extends CI_Upload {
     $this->_CI->image_lib->clear();
     return true;
   }
-  
+
 
 
   /**
@@ -455,16 +496,16 @@ class MY_Upload extends CI_Upload {
 
 
   /**
-   * @param string $open 
-   * @param string $close 
+   * @param string $open
+   * @param string $close
    * @return void
    * @author Jan den Besten
    */
 	public function display_errors($open = '', $close = '') {
 		return trim(parent::display_errors($open,$close));
 	}
-  
-  
+
+
 	/**
 	 * Verify that the filetype is allowed, set checking of mime in config
 	 *
@@ -474,7 +515,7 @@ class MY_Upload extends CI_Upload {
     $ignore_mime=$this->_CI->config->item('IGNORE_MIME',$ignore_mime);
     return parent::is_allowed_filetype($ignore_mime);
   }
-  
+
 
 
 }

@@ -24,6 +24,10 @@ export default {
     'editable':Boolean,
     'readonly':Boolean,
     'options':Object,
+    'assetOptions' :{
+      type : Object,
+      default : {},
+    },
     'focus':Boolean,
   },
 
@@ -61,6 +65,28 @@ export default {
       if (_.isUndefined(this.options.is_tree_field)) return false;
       return (this.options.is_tree_field===true && this.level>0);
     },
+
+    scaleOptions : function() {
+      if (this.assetOptions.scale) {
+        var scale = this.assetOptions.scale.split(':');
+        scale = Math.round(scale[0]/scale[1]*100)/100;
+        return scale;
+      }
+      return false;
+    },
+
+    imgSize : function() {
+      if (this.valuecomplete.width) {
+        return {
+          width:  this.valuecomplete.width.value,
+          height: this.valuecomplete.height.value,
+          scale:  Math.round(this.valuecomplete.width.value / this.valuecomplete.height.value * 100)/100,
+          size:   this.valuecomplete.size.value,
+        }
+      }
+      return {};
+    }
+
   },
 
   data : function() {
@@ -247,7 +273,7 @@ export default {
 
   },
 
-}
+};
 </script>
 
 <template>
@@ -267,7 +293,7 @@ export default {
 
     <template v-if="isType('media',type)">
       <template v-if="item !==''">
-        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :key="img.src" :src="img.src" :alt="img.alt" />
+        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :key="img.src" :src="img.src" :alt="img.alt" :scale="scaleOptions" :sizes="imgSize" />
       </template>
     </template>
 

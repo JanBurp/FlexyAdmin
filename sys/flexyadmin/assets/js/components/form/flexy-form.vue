@@ -1113,7 +1113,7 @@ export default {
 
   }
 
-}
+};
 </script>
 
 <template>
