@@ -1,3 +1,14 @@
+=3.5.48
+
+[nl]
+- Enkele kleine bugs en verbeteringen aan assets afhandelingen
+[/nl]
+
+[en]
+- Soms small bugs and improvements to core assets
+[/en]
+
+
 =3.5.47
 
 [nl]
