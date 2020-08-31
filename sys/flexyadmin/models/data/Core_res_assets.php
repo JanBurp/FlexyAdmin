@@ -851,7 +851,7 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function get_img_title($path,$file) {
-    $info =  $this->get_file_info($path,$file);
+    $info = $this->get_file_info($path,$file);
     return ascii_to_entities($info['alt']);
   }
 
@@ -939,7 +939,7 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function has_serve_rights($path,$file) {
-    if ($path='_tmp') return true;
+    if ($path=='_tmp') return true;
     if ($path==='_thumbcache') {
       $path = get_prefix($file,'___');
     }
