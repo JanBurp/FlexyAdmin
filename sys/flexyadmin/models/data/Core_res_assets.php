@@ -461,7 +461,11 @@ Class Core_res_assets extends Data_Core {
   public function resize_file( $path, $file) {
     $this->load->library('upload');
     $path_settings = $this->get_folder_settings($path);
-    return $this->upload->resize_image( $path,$file,$path_settings );
+    $result = $this->upload->resize_image( $path,$file,$path_settings );
+    if ($result) {
+      $this->update_file($path,$file);
+    }
+    return $result;
   }
 
   /**
@@ -478,7 +482,10 @@ Class Core_res_assets extends Data_Core {
     $path_settings = $this->get_folder_settings($path);
     $files = $this->get_files($path);
     foreach ($files as $file) {
-      $this->upload->resize_image( $path,$file['file'],$path_settings );
+      $result = $this->upload->resize_image( $path,$file['file'],$path_settings );
+      if ($result) {
+        $this->update_file($path,$file['file']);
+      }
     }
     return $path;
   }
@@ -838,6 +845,23 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function update_file($path,$file,$data=array()) {
+    // new img sizes?
+    if (empty($data)) {
+      $ext=strtolower(get_suffix($file,'.'));
+      $name = $this->config->item('ASSETSFOLDER').$path.'/'.$file;
+      $file_stats = @stat($name);
+      $data = array(
+        'size'  => (int) floor($file_stats['size'] / 1024),
+        'date'  => unix_to_mysql($file_stats['mtime']),
+      );
+      if ( in_array($ext,$this->config->item('FILE_types_img')) ) {
+        $sizes = @getimagesize( $name );
+        if ($sizes) {
+          $data['width'] = $sizes[0];
+          $data['height'] = $sizes[1];
+        }
+      }
+    }
     return $this->where('file',$file)->where('path',$path)->set($data)->update();
   }
 
