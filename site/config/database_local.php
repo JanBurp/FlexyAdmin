@@ -25,7 +25,7 @@ $query_builder = TRUE;
 $db['local']['hostname'] = "127.0.0.1";
 $db['local']['username'] = "root";
 $db['local']['password'] = "eonisme20";
-$db['local']['database'] = "2020_blanksmaklokken";
+$db['local']['database'] = "flexyadmin_test";
 
 /* End of file database.php */
 /* Location: ./system/application/config/database.php */

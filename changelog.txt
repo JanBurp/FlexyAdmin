@@ -1,3 +1,14 @@
+=3.5.49
+
+[nl]
+- Ready for local serving with valet
+[/nl]
+
+[en]
+- Ready for local serving with valet
+[/en]
+
+
 =3.5.48
 
 [nl]
