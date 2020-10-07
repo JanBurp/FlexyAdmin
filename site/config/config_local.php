@@ -15,7 +15,9 @@ elseif (isset($_SERVER['HTTP_HOST']) and isset($_SERVER['SCRIPT_NAME'])) {
   $protocol = 'http';
   $config['base_url']=$protocol."://".$_SERVER['HTTP_HOST'];
   $config['base_url'].=str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+  $config['base_url']=str_replace('Users/jan/.composer/vendor/laravel/valet/',"",$config['base_url']);
 }
+
 
 
 /*
