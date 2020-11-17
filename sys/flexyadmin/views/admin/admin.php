@@ -10,6 +10,7 @@
 	<title>FlexyAdmin - <?=strip_tags($str_title)?></title>
 	<base href="<?=base_url()?>" />
 
+  <link rel="shortcut icon" href="about:blank">
   <link rel="stylesheet" href="<?=mix_asset('flexyadmin.css',true)?>" type="text/css" media="screen">
 </head>
 
