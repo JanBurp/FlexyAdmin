@@ -340,7 +340,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_first_name','tbl_adressen.id','tbl_adressen.str_address'), $keys );
-    // $this->assertIsString( $row['tbl_adressen.str_address'] );
+    $this->assertIsString( $row['tbl_adressen.str_address'] );
 
     // tbl_kinderen ->get_result()
     $array = $this->CI->data->select('str_first_name')->with( 'many_to_one', array('id_adressen'=>'str_address') )->get_result();
@@ -360,14 +360,14 @@ class DataTest extends CITestCase {
                             ->where('tbl_adressen.str_address','Schooolstraat 1')->get_result();
     // data, klopt num_rows & num_fields?
     $this->assertLessThan( 92, count($array) );
-    // $row = current($array);
-    // $this->assertEquals( 3, count($row) );
+    $row = current($array);
+    $this->assertEquals( 3, count($row) );
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_first_name','tbl_adressen'), $keys );
     $this->assertIsArray( $row['tbl_adressen'] );
     $this->assertEquals( 2, count($row['tbl_adressen']) );
-    // $this->assertEquals( 'Schooolstraat 1', $row['tbl_adressen']['str_address'] );
+    $this->assertEquals( 'Schooolstraat 1', $row['tbl_adressen']['str_address'] );
 
   }
 
@@ -417,7 +417,7 @@ class DataTest extends CITestCase {
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_city','str_address','tbl_kinderen'), $keys );
     $this->assertIsArray( $row['tbl_kinderen'] );
-    $this->assertEquals( 6, count($row['tbl_kinderen']) );
+    $this->assertEquals( 11, count($row['tbl_kinderen']) );
 
     // tbl_adressen ->where()->get_result()
     $array = $this->CI->data->select('str_city')
@@ -502,7 +502,7 @@ class DataTest extends CITestCase {
     // kloppen keys in row?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_title','tbl_adressen.id','tbl_adressen.str_address'), $keys );
-    // $this->assertIsString( $row['tbl_adressen.str_address'] );
+    $this->assertIsString( $row['tbl_adressen.str_address'] );
 
     // tbl_groepen - grouped
     $query = $this->CI->data->select('str_title')
@@ -539,15 +539,15 @@ class DataTest extends CITestCase {
                             ->get_result();
     // data, klopt num_rows & num_fields?
     $this->assertLessThan( 8, count($array) );
-    // $row = current($array);
-    // $this->assertEquals( 3, count($row) );
+    $row = current($array);
+    $this->assertEquals( 3, count($row) );
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_title','tbl_adressen'), $keys );
     $this->assertIsArray( $row['tbl_adressen'] );
-    // $this->assertEquals( 1, count($row['tbl_adressen']) );
-    // $sub=current($row['tbl_adressen']);
-    // $this->assertEquals( 'Schooolstraat 1', $sub['str_address'] );
+    $this->assertEquals( 1, count($row['tbl_adressen']) );
+    $sub=current($row['tbl_adressen']);
+    $this->assertEquals( 'Schooolstraat 1', $sub['str_address'] );
 
     // tbl_groepen ->where_exists()->get_result()
     $array = $this->CI->data->select('str_title')
@@ -556,16 +556,16 @@ class DataTest extends CITestCase {
                             ->get_result();
     // data, klopt num_rows & num_fields?
     $this->assertLessThan( 8, count($array) );
-    // $row = current($array);
-    // $this->assertEquals( 3, count($row) );
+    $row = current($array);
+    $this->assertEquals( 3, count($row) );
     // kloppen keys in row en subdata?
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_title','tbl_adressen'), $keys );
     $this->assertIsArray( $row['tbl_adressen'] );
     $this->assertGreaterThan( 1, count($row['tbl_adressen']) );
     $found = find_row_by_value( $row['tbl_adressen'], 'Schooolstraat 1', 'str_address');
-    // $this->assertGreaterThanOrEqual( 1, count($found) );
-    // $this->assertLessThan( count($row['tbl_adressen']), count($found) );
+    $this->assertGreaterThanOrEqual( 1, count($found) );
+    $this->assertLessThan( count($row['tbl_adressen']), count($found) );
   }
 
   public function test_order() {
@@ -667,8 +667,8 @@ class DataTest extends CITestCase {
     $this->CI->data->with( 'many_to_one' );
     $this->CI->data->find('straat');
     $result = $this->CI->data->get_result();
-    // $info = $this->CI->data->get_query_info();
-    // $this->assertEquals( 6, $info['num_rows'] );
+    $info = $this->CI->data->get_query_info();
+    $this->assertEquals( 6, $info['num_rows'] );
     // Zoeken in many_to_one 'straat' word_boundaries
     $this->CI->data->with( 'many_to_one' );
     $this->CI->data->find('straat',null,array('equals'=>'word'));
@@ -689,7 +689,8 @@ class DataTest extends CITestCase {
     $this->CI->data->with( 'one_to_many' );
     $this->CI->data->find( 'van', null, array('equals'=>'word'));
     $query = $this->CI->data->get();
-    $info = $this->CI->data->get_query_info();
+    // $info = $this->CI->data->get_query_info();
+    // trace_($info);
     // $this->assertEquals( 26, $info['num_rows'] );
 
     // Zoeken in many_to_many 'straat' (LET OP query resultaat omdat sommige dubbel kunnen zijn, get_result geeft dan ander aantal)
@@ -698,7 +699,7 @@ class DataTest extends CITestCase {
     $this->CI->data->find( 'straat' );
     $query = $this->CI->data->get();
     $info = $this->CI->data->get_query_info();
-    // $this->assertEquals( 22, $info['num_rows'] );
+    $this->assertEquals( 22, $info['num_rows'] );
 
     // Zoeken in many_to_many 'straat' result
     $this->CI->data->table( 'tbl_groepen' );
@@ -706,7 +707,7 @@ class DataTest extends CITestCase {
     $this->CI->data->find( 'straat' );
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
-    // $this->assertEquals( 4, $info['num_rows'] );
+    $this->assertEquals( 4, $info['num_rows'] );
 
     // Zoeken in combinatie met andere WHERE statements
     $this->CI->data->table('tbl_kinderen');
@@ -923,7 +924,7 @@ class DataTest extends CITestCase {
     // order_by & abstract test
     $first = current($page1);
     $this->assertEquals( 'Aafje', $first['str_first_name'] );
-    // $this->assertEquals( '{"4":"Rekenpark 42 | 1234IJ"}', $first['id_adressen'] );
+    $this->assertEquals( '{"4":"Rekenpark 42 | 1234IJ"}', $first['id_adressen'] );
     $this->assertEquals( '{"31":"Gym | vak"}', $first['id_groepen'] );
 
     // DESC
