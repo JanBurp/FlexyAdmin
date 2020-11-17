@@ -273,7 +273,7 @@ VALUES
 	(3,1,'intomyarms.doc','downloads','doc','IntoMyArms','2017-01-14',12,0,0),
 	(4,1,'test_01.jpg','pictures','jpg','kU2XGziV','2017-01-13',60,300,400),
 	(5,1,'test_02.jpg','pictures','jpg','ut5q3G2Z','2017-01-13',33,300,225),
-	(6,1,'test_11.jpg','pictures','jpg','cfCqUwoD','2017-01-14',34,300,225);
+	(6,1,'test_03.jpg','pictures','jpg','cfCqUwoD','2017-01-14',34,300,225);
 
 /*!40000 ALTER TABLE `res_assets` ENABLE KEYS */;
 UNLOCK TABLES;

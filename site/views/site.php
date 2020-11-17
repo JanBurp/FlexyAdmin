@@ -13,6 +13,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <base href="<?=base_url()?>">
+
+  <link rel="shortcut icon" href="about:blank">
   <!-- <link rel="shortcut icon" href="<?=$publicassets?>img/favicon.ico" type="image/x-icon"> -->
   <!-- <link rel="alternate" type="application/rss+xml" title="<?=$title;?>" href="<?=site_url('_rss');?>" /> -->
 

@@ -6,7 +6,9 @@ let mix = require('laravel-mix');
 // var framework = 'bootstrap4';          // bootstrap 4 & jQuery [DEFAULT]
 var framework = 'bootstrap4vue';       // bootstrap 4 & VueJS
 
-var proxy = __dirname.replace('/Users/jan/Sites/','http://localhost/') + '/public';
+// var proxy = __dirname.replace('/Users/jan/Sites/','http://localhost/') + '/public';
+var proxy = __dirname.replace('/Users/jan/Sites/projecten_2020/','http://') + '.test';
+
 
 mix
   .setResourceRoot('../assets/')

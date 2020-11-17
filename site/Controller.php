@@ -1,7 +1,7 @@
 <?php
 /** \ingroup controllers
  * FlexyAdmin frontend controller
- * 
+ *
  * Verzorgt de afhandeling van alle frontend uri's:
  * - Checkt of het een AJAX request is, zo ja laad dan de AJAX module
  * - Stelt de taal in
@@ -9,7 +9,7 @@
  * - Laad modules
  * - Laad een pagina met eventueel gekoppelde modules
  * - Verzorgt de output
- * 
+ *
  * @author Jan den Besten
  * @copyright (c) Jan den Besten
  */
@@ -20,14 +20,14 @@ class Main extends FrontEndController {
 		parent::__construct();
 	}
 
-	
+
 	/**
 	 * Elke uri wordt hier afgehandeld
 	 */
 	public function index() {
-    
+
     if (defined('PHPUNIT_TEST')) return;
-		
+
 		$this->benchmark->mark('Controller_start');
 
     /********************************************
@@ -43,7 +43,7 @@ class Main extends FrontEndController {
       $this->benchmark->mark('Controller_end');
       die($this->_call_library($ajax_module,$ajax_method,$ajax_args));
     }
-    
+
 		/***********************************************
 		 * Set Language for localisation (set possible languages at the start of the controller, near line 30)
 		 * See config.php for language settings
@@ -112,7 +112,7 @@ class Main extends FrontEndController {
 		 * Send the site view to the browser
 		 */
 		$this->view();
-		
+
 		/***********************************************
 		 * Caching
 		 * See: http://codeigniter.com/user_guide/general/caching.html
@@ -133,11 +133,11 @@ class Main extends FrontEndController {
 
 	/*
 	 * function _page($page)
-	 * 
+	 *
 	 * This functions is called when a page item exists
 	 * It handles what to do with the item and shows the content.
 	 */
-	
+
 	private function _page($page) {
 		// Load and call modules
     $page=$this->_module($page);
@@ -149,7 +149,7 @@ class Main extends FrontEndController {
 
 		// Add page content (if no break)
     $page['show_page']=!$this->site['break'];
-    
+
     $this->add_content( $this->view($this->config->item('page_view'),$page,true) );
 		return $page;
 	}
@@ -157,7 +157,7 @@ class Main extends FrontEndController {
 
 	/**
 	 * function _set_language()
-	 * 
+	 *
 	 * Sets the current prefered language of the visitor. If you use other methods (ie: query string or sessions), change it accordingly.
 	 */
 	private function _set_language() {
@@ -177,17 +177,17 @@ class Main extends FrontEndController {
     $this->config->set_item('language',$lang);
   	return $lang;
 	}
-	
+
 	// Test if language is set to a possible language (and not empty)
 	private function _is_possible_language($lang) {
 		return (in_array($lang,$this->site['languages']));
 	}
 
-	
-	
+
+
 	/*
 	 * function _redirect($page)
-	 * 
+	 *
 	 * Redirect to a (set) page (and anchor), or down in the menu tree if current page is empty
 	 */
 	private function _redirect($page) {
