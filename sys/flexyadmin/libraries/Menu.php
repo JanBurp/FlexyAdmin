@@ -804,6 +804,7 @@ class Menu {
           $current .= ' '.$styles['active'];
         }
 
+
         // Icon
         $icon = el('icon',$item,'');
         $iconactive = el('iconactive',$item);
