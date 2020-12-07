@@ -379,7 +379,7 @@ $config['cookie_path']    = '/';
 $config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= FALSE;
 
-ini_set('session.cookie_samesite', 'None');
+ini_set('session.cookie_samesite', 'Strict');
 ini_set('session.cookie_secure', TRUE);
 
 /*
