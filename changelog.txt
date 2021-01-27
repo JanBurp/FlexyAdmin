@@ -1,3 +1,14 @@
+=3.5.51
+
+[nl]
+- Fout in statistieken, soms niet geladen
+[/nl]
+
+[en]
+- Bug in stats, in some cases won't load
+[/en]
+
+
 =3.5.50
 
 [nl]
