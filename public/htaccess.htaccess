@@ -1,3 +1,6 @@
+# Prevent loading pages in an iframe
+Header always unset X-Frame-Options
+
 # Prevent .htaccess access
 <Files ~ "^.*\.([Hh][Tt][Aa])">
 order allow,deny
