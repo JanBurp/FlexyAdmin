@@ -1,1 +1,1 @@
-User-agent: *Disallow: /sysDisallow: /_cronjobDisallow: /_adminDisallow: /_apiSitemap: http://www.flexyadmin.com//sitemap.xml
+User-agent: *Disallow: /sysDisallow: /_cronjobDisallow: /_adminDisallow: /_apiSitemap: http://www.flexyadmin.com//sitemap.xml

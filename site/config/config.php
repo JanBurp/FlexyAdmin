@@ -353,7 +353,7 @@ $config['force_https'] = FALSE;
  * 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
  *
  */
-// $config['uri_protocol']	= "AUTO";
+$config['uri_protocol']	= "AUTO";
 
 /*
 |--------------------------------------------------------------------------
@@ -363,7 +363,7 @@ $config['force_https'] = FALSE;
 | 'session_cookie_name' = the name you want for the cookie - automatic set at install
 |
 */
-$config['sess_cookie_name'] = 'FlexyAdminDEMO';
+$config['sess_cookie_name'] = 'flexyadminDEMO';
 
 /*
 |--------------------------------------------------------------------------

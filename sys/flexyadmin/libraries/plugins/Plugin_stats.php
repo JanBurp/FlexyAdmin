@@ -29,7 +29,7 @@ class Plugin_stats extends Plugin {
 		$this->CI->lang->load("stats");
 	}
 
-	
+
 	public function _admin_api($args=NULL) {
 		if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
 		if (isset($args[0])) $year=$args[0];
@@ -46,10 +46,10 @@ class Plugin_stats extends Plugin {
 
 		if (empty($year))  $year=date('Y');
 		if (empty($month)) $month=date('m');
-		
+
 		$todayMonth=date('n');
 		$todayYear=date('Y');
-		
+
 		$this->Data=array();
 		$this->Data['year']=$year;
 		$this->Data['month']=$month;
@@ -61,7 +61,7 @@ class Plugin_stats extends Plugin {
 		// Is there xml data for earlier years? Give option to show it
 		$xmlYearFiles=read_map(SITEPATH.'stats','xml',FALSE,FALSE);
 		ksort($xmlYearFiles);
-		
+
 		$years = array();
 		foreach ($xmlYearFiles as $file => $info) {
 			if (strlen($file)>8)
@@ -73,7 +73,7 @@ class Plugin_stats extends Plugin {
 		}
     if (count($years)>1) {
       $years = implode(' ',$years);
-      $this->add_content('<p>'.$years.'</p>');		  
+      $this->add_content('<p>'.$years.'</p>');
     }
 
 		$this->url = $this->CI->data->table('tbl_site')->get_field('url_url');
@@ -98,7 +98,7 @@ class Plugin_stats extends Plugin {
 		if (isset($thisYearMonth[$todayMonth])) {
       $this->Data['this_year'][$todayMonth]=$thisYearMonth[$todayMonth];
 		}
-		
+
 		// show data
 		foreach ($statTypes as $type) {
 			$this->_show_stat($type);
@@ -128,13 +128,13 @@ class Plugin_stats extends Plugin {
 			$oldMonth--;
 			if ($oldMonth<1) { $oldMonth=12; $oldYear--; }
 		} while ($notReady);
-		
+
 		// Delete data from DB older than current months
     $delete_from_unix_date = time() - ($this->keep * 24 * 60 * 60);
-    $delete_from_date = date('Y-m',$delete_from_unix_date);
+    $delete_from_date = date('Y-m-d',$delete_from_unix_date);
     $sql = "DELETE FROM `".$this->logTable."` WHERE `tme_date_time` < '".$delete_from_date."' ";
     $query = $this->CI->db->query($sql);
-    
+
     // $this->_download_links($year,$month);
     return $this->content;
 	}
@@ -162,7 +162,7 @@ class Plugin_stats extends Plugin {
       // $this->add_content(br());
 		}
 	}
-	
+
 	private function _add_table($stats,$title,$s='') {
 		if (!empty($stats) and is_array($stats)) {
 			$stats=$this->_lang($stats);
@@ -215,7 +215,7 @@ class Plugin_stats extends Plugin {
         $this->_add_table($data,$type,$this->MonthTxt);
         break;
 		}
-		
+
 	}
 
   // function _download_links($year,$month) {
@@ -246,7 +246,7 @@ class Plugin_stats extends Plugin {
 		$xmlYear=array2xml($xmlYearArray);
     // trace_($xmlYearArray);
 		write_file($xmlYearFile, $xmlYear);
-		
+
 		$xmlMonthFile=$this->_xmlMonthFile($stats['month'],$stats['year']);
 		$monthData=$stats;
 		unset($monthData['this_year']);
@@ -274,14 +274,14 @@ class Plugin_stats extends Plugin {
       $yearData=$this->_clean_id_bug($yearData);
 			$yearData['stats']['this_year']=reformXmlArrayKey($yearData['stats']['this_year'],'month');
 		}
-    
+
 		// other months of this year?
 		if (isset($yearData['stats']['this_year'])) {
 			$yearDataMonths=$yearData['stats']['this_year'];
 			$firstMonth=current($yearDataMonths);
 			$firstMonth=el('month',$firstMonth,0);
 			if ($firstMonth>1) {
-				for ($m=1; $m < $firstMonth ; $m++) { 
+				for ($m=1; $m < $firstMonth ; $m++) {
 					$xmlMonthFile=$this->_xmlMonthFile($m,$this->Data['year']);
 					if (file_exists($xmlMonthFile)) {
 						$xmlMonth=file_get_contents($xmlMonthFile);
@@ -295,7 +295,7 @@ class Plugin_stats extends Plugin {
 				$yearData['stats']['this_year']=$this_year;
 			}
 		}
-    
+
 		// this month
 		$xmlMonthFile=$this->_xmlMonthFile();
 		if (file_exists($xmlMonthFile)) {
@@ -316,7 +316,7 @@ class Plugin_stats extends Plugin {
     // trace_($xmlData);
     if (isset($yearData['stats']))  $xmlData=array_merge($xmlData,$yearData['stats']);
 		if (isset($monthData['stats'])) $xmlData=array_merge($xmlData,$monthData['stats']);
-    
+
 		return $xmlData;
 	}
 
@@ -391,7 +391,7 @@ class Plugin_stats extends Plugin {
 				$this->CI->data->order_by("hits DESC");
 				break;
 		}
-		
+
 		// get data
 		if ($type!='total') $data = $this->CI->data->get_result( $limit );
     // if ($type=='this_year') {
@@ -400,12 +400,12 @@ class Plugin_stats extends Plugin {
     //   trace_($data);
     //   // die();
     // }
-    
+
     // trace_(array(
     //   'this->Total'=>$this->Total,
     //   'data'=>$data
     // ));
-		
+
 		// special data transformations
 		switch ($type) {
 			case 'this_year':
@@ -448,11 +448,11 @@ class Plugin_stats extends Plugin {
 				}
 				break;
 		}
-    
+
     if (is_array($data)) {
       foreach ($data as $id => $value) unset($data[$id]['id']);
     }
-		
+
 		return $data;
 	}
 

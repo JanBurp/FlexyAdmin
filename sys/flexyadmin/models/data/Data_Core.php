@@ -4201,7 +4201,7 @@ Class Data_Core extends CI_Model {
               $this->or_where( $field, '"'.$term.'"', FALSE);
               break;
             case 'word':
-              $this->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
+              $this->or_where( $field." REGEXP '\\\b".$term."\\\b'", NULL, FALSE);
               break;
             case 'like':
             default:
