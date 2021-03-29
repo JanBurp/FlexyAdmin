@@ -101,6 +101,32 @@ Class Core_tbl_menu extends Data_Core {
 
 
   /**
+   * Geeft parent
+   *
+   * @param string $uri ['']
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_parent($uri) {
+    $uri = remove_suffix($uri,'/');
+    $items = $this->get_menu_result();
+    return $items[$uri];
+  }
+
+  /**
+   * Test of een item een submenu heeft
+   *
+   * @param string $uri ['']
+   * @return array
+   * @author Jan den Besten
+   */
+  public function has_sub_items( $uri='') {
+    $items = $this->get_menu_result();
+    return isset($items[$uri]);
+  }
+
+
+  /**
    * Geeft submenu van (samengesteld) menu
    *
    * @param string $uri ['']
@@ -574,8 +600,13 @@ Class Core_tbl_menu extends Data_Core {
     // Add Grouped data
     foreach ($this->_menu as $menu_item) {
       $place = false;
-      foreach ($item['place'] as $key => $value) {
-        if ($menu_item[$key]==$value) $place = el('full_uri',$menu_item,el('uri',$menu_item));
+      if (isset($item['place'])) {
+        foreach ($item['place'] as $key => $value) {
+          if ($menu_item[$key]==$value) $place = el('full_uri',$menu_item,el('uri',$menu_item));
+        }
+      }
+      else {
+        $place = el('full_uri',$menu_item,el('uri',$menu_item));
       }
       if ($place!==false) {
         foreach ($item['grouped_by'] as $key => $field) {
@@ -584,6 +615,7 @@ Class Core_tbl_menu extends Data_Core {
         if (isset($item['where']))    $this->data->where($item['where']);
         if (isset($item['order_by'])) $this->data->order_by($item['order_by']);
         $data_items = $this->data->get_result( el('limit',$item,NULL), el('offset',$item,0) );
+        // trace_([$place,$data_items]);
 
         // Add
         $nr=1;
