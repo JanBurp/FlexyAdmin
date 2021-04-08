@@ -1,3 +1,19 @@
+=3.5.52
+
+[nl]
+- Soms ontstond een 500 error tijdens het maken van een uri
+- Extra functies voor CoreMenu
+- Fout in caching
+- Extra cleanup van input
+[/nl]
+
+[en]
+- Bug when creating uri's could cause a 500
+- Extra methods for CoreMenu
+- Bug in caching
+- Remove external malicious scripts from input
+[/en]
+
 =3.5.51
 
 [nl]
