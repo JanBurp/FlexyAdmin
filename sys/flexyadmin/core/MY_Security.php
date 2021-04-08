@@ -32,4 +32,15 @@ class MY_Security extends CI_Security {
 
         return $this;
     }
+
+
+    /*
+      Remove external malicious scripts from input (found in broodfonds.nl security checks)
+     */
+    public function xss_clean($str, $is_image = FALSE)
+    {
+      $str = preg_replace('/\".*\"http.*/ui', '', $str);
+      return parent::xss_clean($str,$is_image);
+    }
+
 }
