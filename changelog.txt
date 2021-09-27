@@ -1,3 +1,13 @@
+=???
+
+[nl]
+- Kleine verbetering aan standaard frontend menu
+[/nl]
+
+[en]
+- Small improvement on default frontend menu
+[/en]
+
 =3.5.52
 
 [nl]
