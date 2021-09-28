@@ -13,19 +13,24 @@ class ComposerAutoloaderInit11f29e82defaaa1fb3c645f5fd377325
         }
     }
 
+    /**
+     * @return \Composer\Autoload\ClassLoader
+     */
     public static function getLoader()
     {
         if (null !== self::$loader) {
             return self::$loader;
         }
 
+        require __DIR__ . '/platform_check.php';
+
         spl_autoload_register(array('ComposerAutoloaderInit11f29e82defaaa1fb3c645f5fd377325', 'loadClassLoader'), true, true);
-        self::$loader = $loader = new \Composer\Autoload\ClassLoader();
+        self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(\dirname(__FILE__)));
         spl_autoload_unregister(array('ComposerAutoloaderInit11f29e82defaaa1fb3c645f5fd377325', 'loadClassLoader'));
 
-        $useStaticLoader = PHP_VERSION_ID >= 50600 && !defined('HHVM_VERSION');
+        $useStaticLoader = PHP_VERSION_ID >= 50600 && !defined('HHVM_VERSION') && (!function_exists('zend_loader_file_encoded') || !zend_loader_file_encoded());
         if ($useStaticLoader) {
-            require_once __DIR__ . '/autoload_static.php';
+            require __DIR__ . '/autoload_static.php';
 
             call_user_func(\Composer\Autoload\ComposerStaticInit11f29e82defaaa1fb3c645f5fd377325::getInitializer($loader));
         } else {
@@ -47,6 +52,24 @@ class ComposerAutoloaderInit11f29e82defaaa1fb3c645f5fd377325
 
         $loader->register(true);
 
+        if ($useStaticLoader) {
+            $includeFiles = Composer\Autoload\ComposerStaticInit11f29e82defaaa1fb3c645f5fd377325::$files;
+        } else {
+            $includeFiles = require __DIR__ . '/autoload_files.php';
+        }
+        foreach ($includeFiles as $fileIdentifier => $file) {
+            composerRequire11f29e82defaaa1fb3c645f5fd377325($fileIdentifier, $file);
+        }
+
         return $loader;
+    }
+}
+
+function composerRequire11f29e82defaaa1fb3c645f5fd377325($fileIdentifier, $file)
+{
+    if (empty($GLOBALS['__composer_autoload_files'][$fileIdentifier])) {
+        require $file;
+
+        $GLOBALS['__composer_autoload_files'][$fileIdentifier] = true;
     }
 }
