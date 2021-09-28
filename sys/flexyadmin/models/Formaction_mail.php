@@ -85,6 +85,7 @@
     }
     // Template?
     $template=el('template',$this->settings,'');
+
     if ($template) {
       // Send with template
       $this->_attach_files($data);
@@ -139,7 +140,12 @@
         // add path if needed
         $file=$value;
         if (get_suffix($file,'/')===$file) {
-          $file=SITEPATH.'assets/'.$this->settings['upload_path'].'/'.$value;
+            if (isset($this->settings['upload_path'])) {
+                $file=SITEPATH.'assets/'.$this->settings['upload_path'].'/'.$value;
+            }
+            else {
+                $file=SITEPATH.'assets/'.$this->settings['attachment_folder'].'/'.$value;
+            }
         }
         $this->email->attach($file);
       }
