@@ -1,11 +1,19 @@
 =???
 
 [nl]
+- Updated composer
 - Kleine verbetering aan standaard frontend menu
+- Bug: uploading en toevoegen attachments aan email
+- date input type toegevoegd aan formulieren
+- Mailhog local email config
 [/nl]
 
 [en]
+- Updated composer
+- Bug: uploading and adding attachments to email
 - Small improvement on default frontend menu
+- Added date input type to forms
+- Mailhog local email config
 [/en]
 
 =3.5.52
