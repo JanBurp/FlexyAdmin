@@ -3,6 +3,7 @@
 	"require": {
     "firebase/php-jwt":"*",
 		"mpdf/mpdf": "^6.1",
-		"defuse/php-encryption": "^2.2"
+		"defuse/php-encryption": "^2.2",
+		"spatie/ray": "^1.30"
 	}
 }

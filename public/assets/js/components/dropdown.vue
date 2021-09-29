@@ -1,14 +1,14 @@
 <template>
   <li v-if="dropdown" class="nav-item dropdown">
     <a class="nav-link" :class="attr" :href="href">
-      {{title}}
+      <span v-html="title"></span>
       <span class="dropdown-toggle dropdown-toggle-split" @click.stop.prevent="showDropdown"></span>
       <slot v-if="show"></slot>
     </a>
   </li>
   <li v-else class="nav-item">
     <a class="nav-link" :class="attr" :href="href">
-      {{title}}
+      <span v-html="title"></span>
     </a>
   </li>
 </template>
