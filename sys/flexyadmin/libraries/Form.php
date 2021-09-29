@@ -1112,7 +1112,7 @@ class Form {
 					$date=date("Y-m-d");
 				}
 				$attr["value"]=$date;
-        $attr['type']='';
+        $attr['type']='date';
 				$field['control']=form_input($attr);
 				break;
 			case 'datetime':
