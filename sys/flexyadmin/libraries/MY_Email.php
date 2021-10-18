@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once __DIR__ . '/../../vendor/mpdf/mpdf/mpdf.php';
+require_once __DIR__ . '/../../vendor/mpdf/mpdf/src/Mpdf.php';
 
 /** \ingroup libraries
  * Uitbreiding op [CI_Email](http://codeigniter.com/user_guide/libraries/email.html)
@@ -534,7 +534,12 @@ class MY_Email extends CI_Email {
       $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
       if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;
       // Create PDF from HTML
-      $mpdf = new mPDF('utf-8','',0,'',15,60,16,16,9,9,'L');
+      $mpdf = new \Mpdf\Mpdf([
+        'mode' => 'utf-8',
+        'format' => [190, 236],
+        'orientation' => 'L',
+        'tempDir' => __DIR__.'/../../'.SITEPATH.'cache/',
+      ]);
       $pdf_body = $this->pdf_body;
       if (empty($pdf_body)) $pdf_body = $this->body;
       $pdf_body = $this->prepare_body($pdf_body);
