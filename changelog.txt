@@ -1,4 +1,4 @@
-=3.5.54
+=3.5.55
 
 [nl]
 - Updated composer
