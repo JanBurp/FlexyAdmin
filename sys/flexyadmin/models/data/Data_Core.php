@@ -1029,11 +1029,13 @@ Class Data_Core extends CI_Model {
       else {
         $this->load->library('flexy_auth');
         $user = $this->flexy_auth->get_user();
-        $this->user_id = $user['id'];
-        if ($user['groups']) {
-          $groups = array_column($user['groups'],'id');
-          sort($groups);
-          $this->user_groups = $groups;
+        if ($user) {
+            $this->user_id = $user['id'];
+            if ($user['groups']) {
+              $groups = array_column($user['groups'],'id');
+              sort($groups);
+              $this->user_groups = $groups;
+            }
         }
       }
     }
@@ -1779,7 +1781,7 @@ Class Data_Core extends CI_Model {
     }
 
     // one_to_one opties: die opties toevoegen
-    if ( in_array('one_to_one',$with) and !$this->tm_as_grid ) {
+    if ( in_array('one_to_one',$with) and !$this->tm_as_grid and isset($this->settings['relations']['one_to_one'])) {
       $relations = $this->settings['relations']['one_to_one'];
       if ($relations) {
         foreach ($relations as $relation) {
