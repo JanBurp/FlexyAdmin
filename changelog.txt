@@ -1,15 +1,17 @@
-=3.5.55
+=3.5.56
 
 [nl]
 - Updated composer
 - Update mpdf
 - PHP8 check
+- Local phpunit (npm run test)
 [/nl]
 
 [en]
 - Updated composer
 - Update mpdf
 - PHP8 check
+- Local phpunit (npm run test)
 [/en]
 
 =3.5.53
