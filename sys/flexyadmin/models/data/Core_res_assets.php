@@ -196,7 +196,7 @@ Class Core_res_assets extends Data_Core {
           $file['path'] = $path;
           $file['file'] = str_replace($path.'/','',$name);
           $file['b_exists'] = true;
-          $file['date'] = str_replace(' ','-',$file['rawdate']);
+          if (isset($file['rawdate'])) $file['date'] = str_replace(' ','-',$file['rawdate']);
           if ($hasMetaInfo and isset($file['meta'])) $file['meta'] = json_encode($file['meta']);
           if ($hasUsedInfo) $file['b_used'] = $this->is_file_used($path,$name);
           if ($clean or !$existingInfo) {
