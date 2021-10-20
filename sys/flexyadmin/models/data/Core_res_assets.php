@@ -186,7 +186,7 @@ Class Core_res_assets extends Data_Core {
 
     foreach ($paths as $key=>$path) {
       $assetsPath = add_assets($path);
-      $files = read_map($assetsPath,'',FALSE,TRUE,$hasMetaInfo);
+      $files = read_map($assetsPath,'',TRUE,TRUE,$hasMetaInfo);
       $files = not_filter_by($files,'_');
       foreach ($files as $file) {
         $name = $file['name'];
@@ -196,6 +196,7 @@ Class Core_res_assets extends Data_Core {
           $file['path'] = $path;
           $file['file'] = str_replace($path.'/','',$name);
           $file['b_exists'] = true;
+          if (empty($file['alt'])) $file['alt'] = $name;
           if (isset($file['rawdate'])) $file['date'] = str_replace(' ','-',$file['rawdate']);
           if ($hasMetaInfo and isset($file['meta'])) $file['meta'] = json_encode($file['meta']);
           if ($hasUsedInfo) $file['b_used'] = $this->is_file_used($path,$name);
@@ -270,7 +271,7 @@ Class Core_res_assets extends Data_Core {
     // A folder
     if (is_dir($name)) {
       if (file_exists($name) and !defined('PHPUNIT_TEST')) {
-        $result=rmdir($name);
+        $result = delete_directory($name);
       }
     }
     // A file
