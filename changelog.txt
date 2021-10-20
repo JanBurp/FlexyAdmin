@@ -1,3 +1,9 @@
+=3.5.57
+
+[en]
+- Assets can now show and delete folders
+[/en]
+
 =3.5.56
 
 [nl]
