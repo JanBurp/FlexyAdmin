@@ -9,7 +9,7 @@ import flexyVideo   from '../flexy-video.vue'
 import flexyButton  from '../flexy-button.vue'
 
 export default {
-  name: 'VueGridCell',
+  name: 'FlexyGridCell',
   components: {flexyThumb,flexyVideo,flexyButton},
   props:{
     'type':String,
@@ -85,7 +85,12 @@ export default {
         }
       }
       return {};
-    }
+    },
+
+    isFolder() {
+        if (this.valuecomplete.type.value == 'dir') return true;
+        return false;
+    },
 
   },
 
@@ -293,7 +298,7 @@ export default {
 
     <template v-if="isType('media',type)">
       <template v-if="item !==''">
-        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :key="img.src" :src="img.src" :alt="img.alt" :scale="scaleOptions" :sizes="imgSize" />
+        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :key="img.src" :src="img.src" :alt="img.alt" :scale="scaleOptions" :sizes="imgSize" :isFolder="isFolder" />
       </template>
     </template>
 

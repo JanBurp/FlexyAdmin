@@ -457,6 +457,7 @@ export default {
         limit  : parts.limit,
         order  : parts.order,
         filter : parts.filter,
+        // folder : 'test',
       };
       if (this.changeUrlApi) history.pushState(this.urlOptions, '', location.pathname+'?options='+JSON.stringify(this.urlOptions));
       return url;
@@ -1019,8 +1020,8 @@ export default {
       return '';
     },
 
-    hasCrop : function() {
-      return ((this.type=='media' || this.type=='mediapicker') && !_.isUndefined(this.assetOptions.scale) );
+    hasCrop : function(item) {
+      return ((this.type=='media' || this.type=='mediapicker') && item.type.value!=='dir' && !_.isUndefined(this.assetOptions.scale) );
     },
 
     isCroppingPossible : function(id) {
@@ -1395,7 +1396,7 @@ export default {
                     <flexy-button @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning action-edit" />
                     <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger action-remove" />
                     <flexy-button @click.native="select(row.id.value)" :icon="{'square-o':!isSelected(row.id.value),'check-square-o':isSelected(row.id.value)}" class="btn-outline-info action-select" />
-                    <flexy-button v-if="hasCrop()" @click.native="crop(row.id.value)" icon="crop" class="btn-outline-info action-crop" />
+                    <flexy-button v-if="hasCrop(row)" @click.native="crop(row.id.value)" icon="crop" class="btn-outline-info action-crop" />
                     <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info action-drag" :class="{'active':isDragging(row.id.value)}" />
                   </td>
 
