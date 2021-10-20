@@ -1,9 +1,15 @@
 {
 	"description" : "Auto update & install CodeIgniter and others",
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    },
 	"require": {
-    "firebase/php-jwt":"*",
+        "firebase/php-jwt":"*",
 		"mpdf/mpdf": "^8.0",
 		"defuse/php-encryption": "^2.2",
 		"spatie/ray": "^1.30"
-	}
+	},
+    "config": {
+        "platform-check": false
+    }
 }
