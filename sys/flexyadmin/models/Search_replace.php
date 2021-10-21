@@ -55,6 +55,7 @@ class Search_replace extends CI_Model {
     if (!is_array($types)) $types=array($types);
 		$result=FALSE;
 		$tables=$this->data->list_tables();
+    $tables = filter_by($tables,'tbl_');
 		foreach($tables as $table) {
 			$type=get_prefix($table);
 			if (in_array($type,$this->table_types)) {
