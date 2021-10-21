@@ -1,5 +1,9 @@
 =3.5.57
 
+[nl]
+- Mappen kunnen nu worden getoond en verwijderd
+[/nl]
+
 [en]
 - Assets can now show and delete folders
 [/en]
