@@ -765,6 +765,9 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function insert_file($path,$file,$data=array()) {
+    if ( !isset($data['file']) ) {
+      $data['file'] = $file;
+    }
     // Default data
     $this->load->helper('date');
     $name = $this->config->item('ASSETSFOLDER').$path.'/'.$data['file'];
