@@ -197,7 +197,12 @@ export default {
     },
 
     select : function() {
-      this.$emit('select');
+        if ( this.isFolder ) {
+            this.$emit('select_folder');
+        }
+        else {
+            this.$emit('select');
+        }
     },
 
     saveEdit : function(value) {

@@ -149,6 +149,7 @@ export default {
         filter        : this.filter,
         offset        : 0,
         limit         : this.limit,
+        folder        : '',
         txt_abstract  : true,
         as_grid       : true,
       },
@@ -193,6 +194,15 @@ export default {
         handle        : '.draggable-handle',
         forceFallback : true,
       }
+    },
+
+    uiFolder() {
+        if (this.gridType()==='media') {
+            if ( this.apiParts.folder!=='' ) {
+                return ' / ' + this.apiParts.folder;
+            }
+        }
+        return '';
     },
 
   },
@@ -338,6 +348,7 @@ export default {
           limit  : this.apiParts.limit,
           order  : this.apiParts.order,
           filter : this.apiParts.filter,
+          folder : this.apiParts.folder,
         };
         if (reset===true || this.type==='mediapicker') {
           args = {
@@ -345,6 +356,7 @@ export default {
             limit  : this.apiParts.limit,
             order  : '',
             filter : '',
+            folder : '',
           };
         }
         this.reloadPage(args);
@@ -442,7 +454,7 @@ export default {
       this.apiParts = parts;
       var url = this.api;
       if (this.gridType()==='media') {
-        url += '?table=res_assets&path='+this.name;
+        url += '?table=res_assets&path='+this.name+'&folder='+parts.folder;
       }
       else {
         url += '?table='+this.name + '&txt_abstract='+parts.txt_abstract + '&as_grid='+parts.as_grid;
@@ -457,7 +469,7 @@ export default {
         limit  : parts.limit,
         order  : parts.order,
         filter : parts.filter,
-        // folder : 'test',
+        folder : parts.folder,
       };
       if (this.changeUrlApi) history.pushState(this.urlOptions, '', location.pathname+'?options='+JSON.stringify(this.urlOptions));
       return url;
@@ -649,6 +661,11 @@ export default {
       }
 
       this.emitToggleMedia(id);
+    },
+
+    selectFolder: function(item) {
+        this.apiParts.folder = item;
+        this.reloadPage();
     },
 
     reverseSelection:function() {
@@ -1272,7 +1289,8 @@ export default {
     <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
       <!-- MAIN HEADER -->
       <div class="card-header">
-        <h1>{{uiTitle}}</h1>
+        <h1 v-if="gridType()==='media'"><span @click="selectFolder('')"><span class="fa fa-folder-open-o"></span> {{uiTitle}}</span>{{uiFolder}}</h1>
+        <h1 v-else>{{uiTitle}}</h1>
 
         <!-- ACTIONS ?-->
         <div v-if="actions.length>0" class="grid-actions">
@@ -1408,6 +1426,7 @@ export default {
                   <!-- CELL -->
                   <flexy-grid-cell v-else
                     @select="select(row.id.value)"
+                    @select_folder="selectFolder(row.alt.value)"
                     :focus="false"
                     :type="cell.type"
                     :name="cell.name"
@@ -1457,3 +1476,9 @@ export default {
   </div>
 
 </template>
+
+<style scoped>
+    .grid.card .card-header > h1 > span {
+        cursor: pointer;
+    }
+</style>

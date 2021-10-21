@@ -189,7 +189,7 @@ class Media extends Api_Model {
     }
 
     // BULKUPLOAD
-    if ( $this->args['action']==='bulkupload' and $this->assets->has_bulkupload()>=1 ) {
+    if ( isset($this->args['action']) and $this->args['action']==='bulkupload' and $this->assets->has_bulkupload()>=1 ) {
       $this->result['data'] = $this->_bulkupload();
       return $this->_result_ok();
     }

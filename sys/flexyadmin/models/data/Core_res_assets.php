@@ -236,7 +236,7 @@ Class Core_res_assets extends Data_Core {
    */
 	public function delete( $where = '', $limit = NULL, $reset_data = TRUE ) {
     $deleted_data = parent::delete($where,$limit,$reset_data);
-    // return $this->delete_files( $deleted_data );
+    return $this->delete_files( $deleted_data );
   }
 
   /**
@@ -992,6 +992,7 @@ Class Core_res_assets extends Data_Core {
    * Eventueel gefilterd op:
    * - user   - alleen bestanden van een bepaalde gebruiker (als het user veld bestaat)
    * - type   - alleen bestanden bepaalde type(n) bestanden
+   * - folder - alleen bestanden in bepaalde (sub)folder
    * - ...    - nog meer eigen filters: vergelijkbaar zoals je aan ->where() mee kunt geven
    *
    * Het resultaat is wat anders dan een standaard database resultaat, de veldnamen wijken af en zijn als volgt:
@@ -1100,13 +1101,24 @@ Class Core_res_assets extends Data_Core {
     $this->where( 'b_exists', TRUE );
     // Bestanden van bepaalde map
     $this->where( 'path', $path );
+    // Subfolder ?
+    if ( !isset($filter['folder']) || empty($filter['folder']) ) {
+      $this->where( 'NOT `file` REGEXP("\/")', NULL, FALSE);
+    }
+    else {
+      $this->where( '`file` REGEXP("'.$filter['folder'].'\/")', NULL, FALSE);
+    }
+    if (isset($filter['folder'])) {
+      unset($filter['folder']);
+    }
+
     // Standaard filters
     if ($filter) {
       if (!is_array($filter)) {
         $this->find($filter,array(),array('and'=>'AND'));
       }
       else {
-        // find array of mulitple where's?
+        // find array of multiple where's?
         $first = current($filter);
         if ( isset($first['field']) ) {
           $this->find( $filter, array(),array('and'=>'AND') );
