@@ -1,11 +1,13 @@
-=3.5.57
+=3.5.58
 
 [nl]
 - Mappen kunnen nu worden getoond en verwijderd
+- Navigatie in mappen
 [/nl]
 
 [en]
 - Assets can now show and delete folders
+- Navigation in folders
 [/en]
 
 =3.5.56

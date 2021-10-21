@@ -1063,7 +1063,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function logout() {
-    return $this->loguit;
+    return $this->logout;
   }
 
 
