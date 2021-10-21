@@ -133,6 +133,9 @@ export default {
       var array = [];
       var src = '';
       var alt = '';
+      if (typeof(media)=='number') {
+        media += '';
+      }
       if (typeof(media)=='string') {
         array = media.split('|');
         for (var i = 0; i < array.length; i++) {
@@ -298,7 +301,7 @@ export default {
 
     <template v-if="isType('media',type)">
       <template v-if="item !==''">
-        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :key="img.src" :src="img.src" :alt="img.alt" :scale="scaleOptions" :sizes="imgSize" :isFolder="isFolder" />
+        <flexy-thumb @click.native="select()" v-for="img in thumbs(item)" :key="img.src" :src="img.src" :alt="img.alt" :scale="scaleOptions" :sizes="imgSize" :isFolder="isFolder" />
       </template>
     </template>
 
