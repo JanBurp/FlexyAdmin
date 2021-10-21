@@ -186,25 +186,26 @@ Class Core_res_assets extends Data_Core {
 
     foreach ($paths as $key=>$path) {
       $assetsPath = add_assets($path);
-      $files = read_map($assetsPath,'',TRUE,TRUE,$hasMetaInfo);
+      $files = read_map($assetsPath,'',TRUE,TRUE,$hasMetaInfo,FALSE);
       $files = not_filter_by($files,'_');
       foreach ($files as $file) {
         $name = $file['name'];
+        $full_name = str_replace($assetsPath.'/','',$file['path']);
         if (is_visible_file($name)) {
-          $existingInfo = $this->get_file_info($path,$name);
+          $existingInfo = $this->get_file_info($path,$full_name);
           if ($existingInfo) $file = array_merge($file,$existingInfo);
+          $file['file'] = $full_name;
           $file['path'] = $path;
-          $file['file'] = str_replace($path.'/','',$name);
           $file['b_exists'] = true;
           if (empty($file['alt'])) $file['alt'] = $name;
           if (isset($file['rawdate'])) $file['date'] = str_replace(' ','-',$file['rawdate']);
           if ($hasMetaInfo and isset($file['meta'])) $file['meta'] = json_encode($file['meta']);
-          if ($hasUsedInfo) $file['b_used'] = $this->is_file_used($path,$name);
+          if ($hasUsedInfo) $file['b_used'] = $this->is_file_used($path,$full_name);
           if ($clean or !$existingInfo) {
-            $this->insert_file($path,$name,$file);
+            $this->insert_file($path,$full_name,$file);
           }
           else {
-            $this->update_file($path,$name,$file);
+            $this->update_file($path,$full_name,$file);
           }
         }
       }
@@ -235,7 +236,7 @@ Class Core_res_assets extends Data_Core {
    */
 	public function delete( $where = '', $limit = NULL, $reset_data = TRUE ) {
     $deleted_data = parent::delete($where,$limit,$reset_data);
-    return $this->delete_files( $deleted_data );
+    // return $this->delete_files( $deleted_data );
   }
 
   /**
@@ -337,7 +338,7 @@ Class Core_res_assets extends Data_Core {
    */
   private function _remove_file_from_fields($path,$file) {
     $this->load->model('search_replace');
-    $this->search_replace->media($path,$file,'');
+    $this->search_replace->media($path,str_replace('/','\/',$file),'');
   }
 
   /**
@@ -766,7 +767,7 @@ Class Core_res_assets extends Data_Core {
   public function insert_file($path,$file,$data=array()) {
     // Default data
     $this->load->helper('date');
-    $name = $this->config->item('ASSETSFOLDER').$path.'/'.$file;
+    $name = $this->config->item('ASSETSFOLDER').$path.'/'.$data['file'];
     $ext=strtolower(get_suffix($file,'.'));
     $file_stats = @stat($name);
     $default_data = array(
