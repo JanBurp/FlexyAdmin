@@ -225,6 +225,9 @@
   td[name="media_thumb"] {
     .flexy-thumb {
       .scale {display:none;}
+      .fa-folder {
+          color: $primary;
+      }
     }
   }
 }
@@ -311,6 +314,7 @@
             color: $primary;
         }
       }
+
       td[name="alt"] {
         display: block;
         position:absolute;

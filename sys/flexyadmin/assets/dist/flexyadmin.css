@@ -13023,6 +13023,10 @@ a > .fa,
   display: none;
 }
 
+.grid.grid-media-view-list td[name=media_thumb] .flexy-thumb .fa-folder {
+  color: #696;
+}
+
 .grid.grid-media-view-thumbs table.grid-data thead th,
 .grid.grid-media-view-small table.grid-data thead th {
   overflow: visible;
