@@ -88,7 +88,8 @@ export default {
     },
 
     isFolder() {
-        if (this.valuecomplete.type.value == 'dir') return true;
+        if ( _.isUndefined(this.valuecomplete.type) ) return false;
+        if ( this.valuecomplete.type.value == 'dir') return true;
         return false;
     },
 
