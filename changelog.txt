@@ -1,4 +1,4 @@
-=3.5.59
+=3.5.60
 
 [nl]
 - Mappen kunnen nu worden getoond en verwijderd
