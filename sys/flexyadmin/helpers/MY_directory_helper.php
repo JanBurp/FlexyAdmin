@@ -216,7 +216,7 @@ function delete_directory( $src ) {
     while(false !== ( $file = readdir($dir)) ) {
         if (( $file != '.' ) && ( $file != '..' )) {
             if ( is_dir($src . '/' . $file) ) {
-                delete_dir($src . '/' . $file);
+                delete_directory($src . '/' . $file);
             }
             else {
                 unlink($src . '/' . $file);
