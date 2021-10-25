@@ -675,11 +675,13 @@ export default {
 
     intoFolder: function(folder) {
         this.apiParts.folder = (this.apiParts.folder + '/' + folder).replace(/^\/(.*?)/g, "$1");
+        this.apiParts.offset = 0;
         this.reloadPage();
     },
 
     selectFolder: function(item) {
         this.apiParts.folder = item;
+        this.apiParts.offset = 0;
         this.reloadPage();
     },
 
