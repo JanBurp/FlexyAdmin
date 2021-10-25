@@ -855,6 +855,7 @@ Class Core_res_assets extends Data_Core {
       $ext=strtolower(get_suffix($file,'.'));
       $name = $this->config->item('ASSETSFOLDER').$path.'/'.$file;
       $file_stats = @stat($name);
+      if ( !$file_stats ) return false;
       $data = array(
         'size'  => (int) floor($file_stats['size'] / 1024),
         'date'  => unix_to_mysql($file_stats['mtime']),
@@ -1105,13 +1106,14 @@ Class Core_res_assets extends Data_Core {
     // Bestanden van bepaalde map
     $this->where( 'path', $path );
     // Subfolder ?
-    if ( !isset($filter['folder']) || empty($filter['folder']) ) {
-      $this->where( 'NOT `file` REGEXP("\/")', NULL, FALSE);
-    }
-    else {
-      $this->where( '`file` REGEXP("'.$filter['folder'].'\/")', NULL, FALSE);
-    }
-    if (isset($filter['folder'])) {
+    if ( isset($filter['folder']) ) {
+      $folder = $filter['folder'];
+      if (empty($folder)) {
+        $this->where( 'NOT `file` REGEXP("\/")', NULL, FALSE);
+      }
+      else {
+        $this->where( '`file` REGEXP("^'.$folder.'\/[^\/]*$")', NULL, FALSE);
+      }
       unset($filter['folder']);
     }
 

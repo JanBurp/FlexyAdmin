@@ -34,6 +34,14 @@ function get_images_from_text($text) {
   return $images;
 }
 
+function image($file, $size='') {
+  $path = explode('/',$file);
+  $last = count($path)-1;
+  $path[$last] = $size.$path[$last];
+  $file = join('/',$path);
+  return $file;
+}
+
 /**
  * Geeft thumb
  *

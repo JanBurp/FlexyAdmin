@@ -199,10 +199,20 @@ export default {
     uiFolder() {
         if (this.gridType()==='media') {
             if ( this.apiParts.folder!=='' ) {
-                return ' / ' + this.apiParts.folder;
+                let folders = this.apiParts.folder.split('/');
+                for (var i = 0; i < folders.length; i++) {
+                    folders[i] = {
+                        'name' : folders[i],
+                        'path' : folders[i],
+                    }
+                    if (i>0) {
+                        folders[i].path = folders[i-1].path + '/' + folders[i].path;
+                    }
+                }
+                return folders;
             }
         }
-        return '';
+        return [];
     },
 
   },
@@ -661,6 +671,11 @@ export default {
       }
 
       this.emitToggleMedia(id);
+    },
+
+    intoFolder: function(folder) {
+        this.apiParts.folder = (this.apiParts.folder + '/' + folder).replace(/^\/(.*?)/g, "$1");
+        this.reloadPage();
     },
 
     selectFolder: function(item) {
@@ -1289,7 +1304,11 @@ export default {
     <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
       <!-- MAIN HEADER -->
       <div class="card-header">
-        <h1 v-if="gridType()==='media'"><span @click="selectFolder('')"><span class="fa fa-folder-open-o"></span> {{uiTitle}}</span>{{uiFolder}}</h1>
+        <h1 v-if="gridType()==='media'"><span @click="selectFolder('')"><span class="fa fa-folder-open-o"></span> {{uiTitle}}</span>
+            <span v-for="folder in uiFolder" @click="selectFolder(folder.path)">
+                / {{folder.name}}
+            </span>
+        </h1>
         <h1 v-else>{{uiTitle}}</h1>
 
         <!-- ACTIONS ?-->
@@ -1426,7 +1445,7 @@ export default {
                   <!-- CELL -->
                   <flexy-grid-cell v-else
                     @select="select(row.id.value)"
-                    @select_folder="selectFolder(row.alt.value)"
+                    @select_folder="intoFolder(row.alt.value)"
                     :focus="false"
                     :type="cell.type"
                     :name="cell.name"
