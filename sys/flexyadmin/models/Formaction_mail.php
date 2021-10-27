@@ -31,6 +31,8 @@
    public function __construct() {
      parent::__construct();
      $this->load->library('email');
+     $this->load->helper('language');
+     $this->lang->load('scaffolding');
    }
 
 
@@ -83,6 +85,14 @@
     if (is_array(el('body_data',$this->settings,FALSE))) {
       $replace=array_merge($replace,el('body_data',$this->settings));
     }
+
+    // Nicer replace fields
+    foreach ($replace as $field => $value) {
+      if ( isset($this->settings['fields'][$field]['type']) and $this->settings['fields'][$field]['type']=='checkbox' ) {
+        $replace[$field] = $value ? lang('scaff_yes') : lang('scaff_no');
+      }
+    }
+
     // Template?
     $template=el('template',$this->settings,'');
 
