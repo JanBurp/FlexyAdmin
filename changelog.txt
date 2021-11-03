@@ -1,3 +1,13 @@
+=3.5.61
+
+[nl]
+- Mooiere antwoorden in emails (checkbox)
+[/nl]
+
+[en]
+- Nicer answers is emails (checkbox)
+[/en]
+
 =3.5.60
 
 [nl]
