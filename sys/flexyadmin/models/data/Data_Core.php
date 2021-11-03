@@ -2930,7 +2930,7 @@ Class Data_Core extends CI_Model {
     if (isset($form_set['with']['many_to_one'])) {
       foreach ($result as $field => $value) {
         if (isset($form_set['field_info'][$field]['options'])) {
-          $result_name = $this->settings['relations']['many_to_one'][$field]['result_name'];
+          $result_name = el($this->settings,array('relations','many_to_one',$field,'result_name'));
           if (!isset($result[$result_name])) {
             $result_name .= '.abstract';
           }
