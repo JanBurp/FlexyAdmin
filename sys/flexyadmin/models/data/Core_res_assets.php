@@ -882,7 +882,8 @@ Class Core_res_assets extends Data_Core {
    */
   public function get_img_title($path,$file) {
     $info = $this->get_file_info($path,$file);
-    return ascii_to_entities($info['alt']);
+    if (isset($info['alt'])) return ascii_to_entities($info['alt']);
+    return '';
   }
 
   /**
@@ -1115,6 +1116,10 @@ Class Core_res_assets extends Data_Core {
         $this->where( '`file` REGEXP("^'.$folder.'\/[^\/]*$")', NULL, FALSE);
       }
       unset($filter['folder']);
+      $first = current($filter);
+      if ( count($filter)<2 && !is_array($first) ) {
+        $filter = $first;
+      }
     }
 
     // Standaard filters

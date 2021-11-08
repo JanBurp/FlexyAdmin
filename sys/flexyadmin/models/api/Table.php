@@ -201,8 +201,8 @@ class Table extends Api_Model {
       // Media?
       if ( $is_media ) {
         $this->data->order_by( $this->args['order'] );
-        if ( isset($this->args['folder']) ) {
-          if (!is_array($this->args['filter'])) $this->args['filter'] = [];
+        if ( isset($this->args['folder'])) {
+          if (!is_array($this->args['filter'])) $this->args['filter'] = [$this->args['filter']];
           $this->args['filter']['folder'] = $this->args['folder'];
         }
         $items = $this->data->get_files( $this->args['path'], $this->args['filter'], $this->args['limit'], $this->args['offset'], TRUE );
