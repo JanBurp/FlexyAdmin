@@ -1,3 +1,13 @@
+=3.5.62
+
+[nl]
+- Bug: zoeken in assets werkte niet meer sinds 3.5.60
+[/nl]
+
+[en]
+- Bug: searching in assets did not work anymore since 3.5.60
+[/en]
+
 =3.5.61
 
 [nl]
