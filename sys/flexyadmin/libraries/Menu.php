@@ -163,7 +163,14 @@ class Menu {
       'has_sub' => 'dropdown-menu',
       'is_sub'  => 'dropdown'
     ),
-
+    'bootstrap4' => array(
+      'current' => 'active',
+      'active'  => 'active active-branch',
+      'first'   => 'first',
+      'last'    => 'last',
+      'has_sub' => 'dropdown-menu',
+      'is_sub'  => 'dropdown'
+    ),
   );
 
   private $field_set_methods = array();
@@ -741,7 +748,6 @@ class Menu {
 		if (!isset($menu)) $menu=$this->menu;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
-
     $styles=$this->styles[$this->settings['framework']];
 
     $html='';

@@ -413,7 +413,7 @@ class Api_Model extends CI_Model {
       }
     }
     $this->args=$this->_get_args( $this->needs );
-    return $this-args;
+    return $this->args;
   }
 
 

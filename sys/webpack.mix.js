@@ -11,8 +11,8 @@ let mix = require('laravel-mix');
  |
  */
 
-// /Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys => http://localhost:3000/FlexyAdmin/FlexyAdmin/public/_admin
-var proxy = __dirname.replace('/Users/jan/Sites/','http://localhost/').replace('/sys','/public/_admin');
+var proxy = 'http://flexyadmin.test';
+
 
 mix
   .setResourceRoot('../_admin_assets/')

@@ -186,24 +186,26 @@ Class Core_res_assets extends Data_Core {
 
     foreach ($paths as $key=>$path) {
       $assetsPath = add_assets($path);
-      $files = read_map($assetsPath,'',FALSE,TRUE,$hasMetaInfo);
+      $files = read_map($assetsPath,'',TRUE,TRUE,$hasMetaInfo,FALSE);
       $files = not_filter_by($files,'_');
       foreach ($files as $file) {
         $name = $file['name'];
+        $full_name = str_replace($assetsPath.'/','',$file['path']);
         if (is_visible_file($name)) {
-          $existingInfo = $this->get_file_info($path,$name);
+          $existingInfo = $this->get_file_info($path,$full_name);
           if ($existingInfo) $file = array_merge($file,$existingInfo);
+          $file['file'] = $full_name;
           $file['path'] = $path;
-          $file['file'] = str_replace($path.'/','',$name);
           $file['b_exists'] = true;
-          $file['date'] = str_replace(' ','-',$file['rawdate']);
+          if (empty($file['alt'])) $file['alt'] = $name;
+          if (isset($file['rawdate'])) $file['date'] = str_replace(' ','-',$file['rawdate']);
           if ($hasMetaInfo and isset($file['meta'])) $file['meta'] = json_encode($file['meta']);
-          if ($hasUsedInfo) $file['b_used'] = $this->is_file_used($path,$name);
+          if ($hasUsedInfo) $file['b_used'] = $this->is_file_used($path,$full_name);
           if ($clean or !$existingInfo) {
-            $this->insert_file($path,$name,$file);
+            $this->insert_file($path,$full_name,$file);
           }
           else {
-            $this->update_file($path,$name,$file);
+            $this->update_file($path,$full_name,$file);
           }
         }
       }
@@ -270,7 +272,7 @@ Class Core_res_assets extends Data_Core {
     // A folder
     if (is_dir($name)) {
       if (file_exists($name) and !defined('PHPUNIT_TEST')) {
-        $result=rmdir($name);
+        $result = delete_directory($name);
       }
     }
     // A file
@@ -336,7 +338,7 @@ Class Core_res_assets extends Data_Core {
    */
   private function _remove_file_from_fields($path,$file) {
     $this->load->model('search_replace');
-    $this->search_replace->media($path,$file,'');
+    $this->search_replace->media($path,str_replace('/','\/',$file),'');
   }
 
   /**
@@ -763,9 +765,12 @@ Class Core_res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function insert_file($path,$file,$data=array()) {
+    if ( !isset($data['file']) ) {
+      $data['file'] = $file;
+    }
     // Default data
     $this->load->helper('date');
-    $name = $this->config->item('ASSETSFOLDER').$path.'/'.$file;
+    $name = $this->config->item('ASSETSFOLDER').$path.'/'.$data['file'];
     $ext=strtolower(get_suffix($file,'.'));
     $file_stats = @stat($name);
     $default_data = array(
@@ -850,6 +855,7 @@ Class Core_res_assets extends Data_Core {
       $ext=strtolower(get_suffix($file,'.'));
       $name = $this->config->item('ASSETSFOLDER').$path.'/'.$file;
       $file_stats = @stat($name);
+      if ( !$file_stats ) return false;
       $data = array(
         'size'  => (int) floor($file_stats['size'] / 1024),
         'date'  => unix_to_mysql($file_stats['mtime']),
@@ -876,7 +882,8 @@ Class Core_res_assets extends Data_Core {
    */
   public function get_img_title($path,$file) {
     $info = $this->get_file_info($path,$file);
-    return ascii_to_entities($info['alt']);
+    if (isset($info['alt'])) return ascii_to_entities($info['alt']);
+    return '';
   }
 
   /**
@@ -990,6 +997,7 @@ Class Core_res_assets extends Data_Core {
    * Eventueel gefilterd op:
    * - user   - alleen bestanden van een bepaalde gebruiker (als het user veld bestaat)
    * - type   - alleen bestanden bepaalde type(n) bestanden
+   * - folder - alleen bestanden in bepaalde (sub)folder
    * - ...    - nog meer eigen filters: vergelijkbaar zoals je aan ->where() mee kunt geven
    *
    * Het resultaat is wat anders dan een standaard database resultaat, de veldnamen wijken af en zijn als volgt:
@@ -1098,13 +1106,29 @@ Class Core_res_assets extends Data_Core {
     $this->where( 'b_exists', TRUE );
     // Bestanden van bepaalde map
     $this->where( 'path', $path );
+    // Subfolder ?
+    if ( isset($filter['folder']) ) {
+      $folder = $filter['folder'];
+      if (empty($folder)) {
+        $this->where( 'NOT `file` REGEXP("\/")', NULL, FALSE);
+      }
+      else {
+        $this->where( '`file` REGEXP("^'.$folder.'\/[^\/]*$")', NULL, FALSE);
+      }
+      unset($filter['folder']);
+      $first = current($filter);
+      if ( count($filter)<2 && !is_array($first) ) {
+        $filter = $first;
+      }
+    }
+
     // Standaard filters
     if ($filter) {
       if (!is_array($filter)) {
         $this->find($filter,array(),array('and'=>'AND'));
       }
       else {
-        // find array of mulitple where's?
+        // find array of multiple where's?
         $first = current($filter);
         if ( isset($first['field']) ) {
           $this->find( $filter, array(),array('and'=>'AND') );

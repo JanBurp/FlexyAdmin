@@ -149,6 +149,7 @@ export default {
         filter        : this.filter,
         offset        : 0,
         limit         : this.limit,
+        folder        : '',
         txt_abstract  : true,
         as_grid       : true,
       },
@@ -193,6 +194,25 @@ export default {
         handle        : '.draggable-handle',
         forceFallback : true,
       }
+    },
+
+    uiFolder() {
+        if (this.gridType()==='media') {
+            if ( this.apiParts.folder!=='' ) {
+                let folders = this.apiParts.folder.split('/');
+                for (var i = 0; i < folders.length; i++) {
+                    folders[i] = {
+                        'name' : folders[i],
+                        'path' : folders[i],
+                    }
+                    if (i>0) {
+                        folders[i].path = folders[i-1].path + '/' + folders[i].path;
+                    }
+                }
+                return folders;
+            }
+        }
+        return [];
     },
 
   },
@@ -338,6 +358,7 @@ export default {
           limit  : this.apiParts.limit,
           order  : this.apiParts.order,
           filter : this.apiParts.filter,
+          folder : this.apiParts.folder,
         };
         if (reset===true || this.type==='mediapicker') {
           args = {
@@ -345,6 +366,7 @@ export default {
             limit  : this.apiParts.limit,
             order  : '',
             filter : '',
+            folder : '',
           };
         }
         this.reloadPage(args);
@@ -442,7 +464,7 @@ export default {
       this.apiParts = parts;
       var url = this.api;
       if (this.gridType()==='media') {
-        url += '?table=res_assets&path='+this.name;
+        url += '?table=res_assets&path='+this.name+'&folder='+parts.folder;
       }
       else {
         url += '?table='+this.name + '&txt_abstract='+parts.txt_abstract + '&as_grid='+parts.as_grid;
@@ -457,6 +479,7 @@ export default {
         limit  : parts.limit,
         order  : parts.order,
         filter : parts.filter,
+        folder : parts.folder,
       };
       if (this.changeUrlApi) history.pushState(this.urlOptions, '', location.pathname+'?options='+JSON.stringify(this.urlOptions));
       return url;
@@ -648,6 +671,18 @@ export default {
       }
 
       this.emitToggleMedia(id);
+    },
+
+    intoFolder: function(folder) {
+        this.apiParts.folder = (this.apiParts.folder + '/' + folder).replace(/^\/(.*?)/g, "$1");
+        this.apiParts.offset = 0;
+        this.reloadPage();
+    },
+
+    selectFolder: function(item) {
+        this.apiParts.folder = item;
+        this.apiParts.offset = 0;
+        this.reloadPage();
     },
 
     reverseSelection:function() {
@@ -1019,8 +1054,8 @@ export default {
       return '';
     },
 
-    hasCrop : function() {
-      return ((this.type=='media' || this.type=='mediapicker') && !_.isUndefined(this.assetOptions.scale) );
+    hasCrop : function(item) {
+      return ((this.type=='media' || this.type=='mediapicker') && item.type.value!=='dir' && !_.isUndefined(this.assetOptions.scale) );
     },
 
     isCroppingPossible : function(id) {
@@ -1271,7 +1306,12 @@ export default {
     <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
       <!-- MAIN HEADER -->
       <div class="card-header">
-        <h1>{{uiTitle}}</h1>
+        <h1 v-if="gridType()==='media'"><span @click="selectFolder('')"><span class="fa fa-folder-open-o"></span> {{uiTitle}}</span>
+            <span v-for="folder in uiFolder" @click="selectFolder(folder.path)">
+                / {{folder.name}}
+            </span>
+        </h1>
+        <h1 v-else>{{uiTitle}}</h1>
 
         <!-- ACTIONS ?-->
         <div v-if="actions.length>0" class="grid-actions">
@@ -1395,7 +1435,7 @@ export default {
                     <flexy-button @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning action-edit" />
                     <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger action-remove" />
                     <flexy-button @click.native="select(row.id.value)" :icon="{'square-o':!isSelected(row.id.value),'check-square-o':isSelected(row.id.value)}" class="btn-outline-info action-select" />
-                    <flexy-button v-if="hasCrop()" @click.native="crop(row.id.value)" icon="crop" class="btn-outline-info action-crop" />
+                    <flexy-button v-if="hasCrop(row)" @click.native="crop(row.id.value)" icon="crop" class="btn-outline-info action-crop" />
                     <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info action-drag" :class="{'active':isDragging(row.id.value)}" />
                   </td>
 
@@ -1407,6 +1447,7 @@ export default {
                   <!-- CELL -->
                   <flexy-grid-cell v-else
                     @select="select(row.id.value)"
+                    @select_folder="intoFolder(row.alt.value)"
                     :focus="false"
                     :type="cell.type"
                     :name="cell.name"
@@ -1456,3 +1497,9 @@ export default {
   </div>
 
 </template>
+
+<style scoped>
+    .grid.card .card-header > h1 > span {
+        cursor: pointer;
+    }
+</style>
