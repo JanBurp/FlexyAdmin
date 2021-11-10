@@ -1,3 +1,51 @@
+=3.5.62
+
+[nl]
+- Bug: zoeken in assets werkte niet meer sinds 3.5.60
+[/nl]
+
+[en]
+- Bug: searching in assets did not work anymore since 3.5.60
+[/en]
+
+=3.5.61
+
+[nl]
+- Mooiere antwoorden in emails (checkbox)
+[/nl]
+
+[en]
+- Nicer answers is emails (checkbox)
+[/en]
+
+=3.5.60
+
+[nl]
+- Mappen kunnen nu worden getoond en verwijderd
+- Navigatie in mappen
+[/nl]
+
+[en]
+- Assets can now show and delete folders
+- Navigation in folders
+[/en]
+
+=3.5.56
+
+[nl]
+- Updated composer
+- Update mpdf
+- PHP8 check
+- Local phpunit (npm run test)
+[/nl]
+
+[en]
+- Updated composer
+- Update mpdf
+- PHP8 check
+- Local phpunit (npm run test)
+[/en]
+
 =3.5.53
 
 [nl]

@@ -205,4 +205,28 @@ function copy_directory( $source,$destination, $exclude=array('/.') ) {
 }
 
 
+/**
+ * Delete a directory recursively, including files
+ *
+ * @param string $source
+ * @return void
+ */
+function delete_directory( $src ) {
+    $dir = opendir($src);
+    while(false !== ( $file = readdir($dir)) ) {
+        if (( $file != '.' ) && ( $file != '..' )) {
+            if ( is_dir($src . '/' . $file) ) {
+                delete_directory($src . '/' . $file);
+            }
+            else {
+                unlink($src . '/' . $file);
+            }
+        }
+    }
+    closedir($dir);
+    return rmdir($src);
+}
+
+
+
 ?>

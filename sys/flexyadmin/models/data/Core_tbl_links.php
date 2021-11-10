@@ -150,7 +150,7 @@ Class Core_tbl_links extends Data_Core {
    */
   public function get_grid( $limit = 20, $offset = FALSE ) {
     $checked_order = FALSE;
-    if (strpos($this->tm_order_by[0],'checked')===0) {
+    if ( isset($this->tm_order_by[0]) and  strpos($this->tm_order_by[0],'checked')===0) {
       $checked_order = 'ASC';
       if (strpos($this->tm_order_by[0],'DESC')>0) $checked_order = 'DESC';
       $this->tm_order_by = array();

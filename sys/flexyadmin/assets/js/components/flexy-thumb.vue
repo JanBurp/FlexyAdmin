@@ -19,6 +19,10 @@ export default {
       type:Object,
       default:function() {return {}},
     },
+    'isFolder' : {
+        type:Boolean,
+        default:false,
+    },
   },
   computed: {
 
@@ -30,6 +34,8 @@ export default {
         'gif'   : 'image',
         'png'   : 'image',
         'svg'   : 'image',
+
+        'dir'   : 'fa-folder',
 
         'zip'   : 'fa-file-archive-o',
         'pdf'   : 'fa-file-pdf-o',
@@ -56,7 +62,12 @@ export default {
       };
 
       var ext = this.src.split('.');
-      ext = ext[ext.length-1].toLowerCase();
+      if (ext.length<3 && this.isFolder) {
+        ext = 'dir';
+      }
+      else {
+        ext = ext[ext.length-1].toLowerCase();
+      }
 
       var type = DEFAULT;
       if ( !_.isUndefined(TYPES[ext]) ) type = TYPES[ext];
