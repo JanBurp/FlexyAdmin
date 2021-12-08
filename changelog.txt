@@ -1,3 +1,13 @@
+=3.5.63
+
+[nl]
+- Video helper herkend nu ook youtube links als https://youtu.be/CQ6szCNA4TA
+[/nl]
+
+[en]
+- Video helper now recognises youtube links as https://youtu.be/CQ6szCNA4TA
+[/en]
+
 =3.5.62
 
 [nl]
