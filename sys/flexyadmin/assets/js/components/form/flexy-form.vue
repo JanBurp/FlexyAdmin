@@ -554,6 +554,7 @@ export default {
     },
 
     splitTags(field) {
+        if (this.row[field]=="") return [];
         let items = this.row[field].split('|');
         items.sort();
         items = items.map( e => {
