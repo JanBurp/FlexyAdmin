@@ -265,6 +265,11 @@ $config['FIELDS_special'] = array(
     'type'        => 'input',
   ),
 
+  'str_tags'      => array(
+    'type'      => 'tagpicker',
+    'grid-type' => 'split',
+  ),
+
   // Tijdstip van laatste aanpassing
   'tme_last_changed' => array(
     'type'        => 'hidden',
