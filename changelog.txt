@@ -1,3 +1,14 @@
+=3.5.64
+
+[nl]
+- Tag veld met bijbehorende tabel is nu mogelijk
+[/nl]
+
+[en]
+- Tag field with table is now possible
+[/en]
+
+
 =3.5.63
 
 [nl]
