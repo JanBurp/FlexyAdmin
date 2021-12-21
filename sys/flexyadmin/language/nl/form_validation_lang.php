@@ -50,7 +50,7 @@ $lang['form_validation_valid_rgb']				       = "{field} bevat geen juiste kleurc
 $lang['form_validation_valid_date']              = "{field} moet een datum bevatten in dit formaat dd-mm-yyyy";
 $lang['form_validation_valid_google_analytics']	 = "{field} bevat geen juiste code voor Google Analytics";
 $lang['form_validation_valid_same']	             = "{field} is niet juist.";
-$lang['form_validation_valid_password']	         = "{field} moet minimaal 8 karakters lang zijn met minimaal één hoofletter, één kleine letter en één cijfer.";
+$lang['form_validation_valid_password']	         = "{field} moet minimaal 8 karakters lang zijn met minimaal één hoofdletter, één kleine letter en één cijfer.";
 
 $lang['form_validation_valid_regex_rule']        = "Regex rule {field} bestaat niet.";
 $lang['form_validation_valid_regex']	           = "{field} bevat geen juiste waarde";
