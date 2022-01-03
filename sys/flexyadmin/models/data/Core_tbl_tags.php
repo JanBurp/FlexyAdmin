@@ -19,7 +19,7 @@ Class Core_tbl_tags extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  public function get_tag_list($find) {
+  public function get_tag_list($find='') {
     $result = $this->data->table('tbl_tags')->find( $find, array('str_tag'), array('equals'=>'like') )->get_result();
 
     $currentTags = array();
