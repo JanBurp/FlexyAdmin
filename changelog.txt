@@ -1,3 +1,14 @@
+=3.5.66
+
+[nl]
+- Verbeteringen voor tags
+[/nl]
+
+[en]
+- Improvements for tags
+[/en]
+
+
 =3.5.65
 
 [nl]
