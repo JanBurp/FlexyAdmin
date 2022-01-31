@@ -23,7 +23,10 @@ class Plugin_create_video_thumbs extends Plugin {
 
         $videos = scan_map($path);
         foreach ($videos as $video) {
-          $this->create_thumb($video,$path);
+          $ext = get_suffix($video,'.');
+          if ( ! in_array($ext, $this->CI->config->item('FILE_types_img')) ) {
+            $this->create_thumb($video,$path);
+          }
         }
 
         $this->add_message("<p>Video thumbs created in <b>$folder</b>.</p>");
@@ -41,7 +44,7 @@ class Plugin_create_video_thumbs extends Plugin {
     $image  = $path . '/'.$name.'.jpg';
 
     // default time to get the image
-    $second = 10;
+    $second = 1;
     // // get the duration and a random place within that
     // $cmd = "$ffmpeg -i $video 2>&1";
     // if (preg_match('/Duration: ((\d+):(\d+):(\d+))/s', `$cmd`, $time)) {
