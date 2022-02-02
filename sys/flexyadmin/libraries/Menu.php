@@ -171,6 +171,7 @@ class Menu {
       'has_sub' => 'dropdown-menu',
       'is_sub'  => 'dropdown'
     ),
+
   );
 
   private $field_set_methods = array();
@@ -748,7 +749,8 @@ class Menu {
 		if (!isset($menu)) $menu=$this->menu;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
-    $styles=$this->styles[$this->settings['framework']];
+
+    $styles = $this->styles[$this->settings['framework']];
 
     $html='';
 		if ($menu and is_array($menu)) {
@@ -809,7 +811,6 @@ class Menu {
         if ($styles['current'] and strpos($submenu,$styles['current'])>0) {
           $current .= ' '.$styles['active'];
         }
-
 
         // Icon
         $icon = el('icon',$item,'');
