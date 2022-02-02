@@ -2968,6 +2968,9 @@ Class Data_Core extends CI_Model {
     // Bewaar
     foreach ($select as $value) {
       $key = remove_prefix( $value,'.' );
+      if (!is_array($this->tm_select)) {
+        $this->tm_select = [];
+      }
       $this->tm_select[$key] = $value;
     }
 		return $this;
