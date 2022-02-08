@@ -1,3 +1,14 @@
+=3.5.67
+
+[nl]
+- PHP8 waarschuwingen opgelost
+[/nl]
+
+[en]
+- PHP8 warnings solved
+[/en]
+
+
 =3.5.66
 
 [nl]
