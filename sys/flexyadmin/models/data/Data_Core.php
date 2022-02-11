@@ -1781,24 +1781,27 @@ Class Data_Core extends CI_Model {
     }
 
     // one_to_one opties: die opties toevoegen
-    if ( in_array('one_to_one',$with) and !$this->tm_as_grid and isset($this->settings['relations']['one_to_one'])) {
-      $relations = $this->settings['relations']['one_to_one'];
-      if ($relations) {
-        foreach ($relations as $relation) {
-          $other_table   = $relation['other_table'];
-          $table = $this->settings['table'];
-          $other_options = $this->data->table( $other_table )->get_options();
-          $this->data->table($table); // Terug naar huidige data table.
-          unset($other_options[$relation['foreign_key']]);
-          if ($other_options) {
-            foreach ($other_options as $field => $info) {
-              $info['data'] = array_column($info['data'],'name','value');;
-              $options[$field] = $info;
+    if ( in_array('one_to_one',$with) and !$this->tm_as_grid ) {
+      if (isset($this->settings['relations']['one_to_one'])) {
+        $relations = $this->settings['relations']['one_to_one'];
+        if ($relations) {
+          foreach ($relations as $relation) {
+            $other_table   = $relation['other_table'];
+            $table = $this->settings['table'];
+            $other_options = $this->data->table( $other_table )->get_options();
+            $this->data->table($table); // Terug naar huidige data table.
+            unset($other_options[$relation['foreign_key']]);
+            if ($other_options) {
+              foreach ($other_options as $field => $info) {
+                $info['data'] = array_column($info['data'],'name','value');;
+                $options[$field] = $info;
+              }
             }
           }
         }
       }
     }
+
 
     // ..._to_many opties
     if ( in_array('many_to_many',$with) or in_array('one_to_many',$with) ) {
