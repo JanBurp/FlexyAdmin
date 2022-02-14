@@ -53,7 +53,7 @@ class Plugin_create_video_thumbs extends Plugin {
     // }
 
     // get the screenshot
-    $cmd = "$ffmpeg -i $video -deinterlace -an -ss $second -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg $image 2>&1";
+    $cmd = "$ffmpeg -i '$video' -deinterlace -an -ss $second -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg '$image' 2>&1";
     $return = `$cmd`;
 
     $this->add_message("$name -> $image<br>");
