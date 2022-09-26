@@ -1,3 +1,14 @@
+=3.5.68
+
+[nl]
+- Mogelijk om bestanden vanuit CMS te downloaden
+[/nl]
+
+[en]
+- From CMS downloading files is possible
+[/en]
+
+
 =3.5.67
 
 [nl]
