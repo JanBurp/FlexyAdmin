@@ -1,3 +1,68 @@
+=3.5.69
+
+[nl]
+- Extra PHP8 updates
+[/nl]
+
+[en]
+- Extra PHP8 updates
+[/en]
+
+
+=3.5.68
+
+[nl]
+- Mogelijk om bestanden vanuit CMS te downloaden
+[/nl]
+
+[en]
+- From CMS downloading files is possible
+[/en]
+
+
+=3.5.67
+
+[nl]
+- PHP8 waarschuwingen opgelost
+[/nl]
+
+[en]
+- PHP8 warnings solved
+[/en]
+
+
+=3.5.66
+
+[nl]
+- Verbeteringen voor tags
+[/nl]
+
+[en]
+- Improvements for tags
+[/en]
+
+
+=3.5.65
+
+[nl]
+- Tag veld met bijbehorende tabel is nu mogelijk
+[/nl]
+
+[en]
+- Tag field with table is now possible
+[/en]
+
+
+=3.5.63
+
+[nl]
+- Video helper herkend nu ook youtube links als https://youtu.be/CQ6szCNA4TA
+[/nl]
+
+[en]
+- Video helper now recognises youtube links as https://youtu.be/CQ6szCNA4TA
+[/en]
+
 =3.5.62
 
 [nl]

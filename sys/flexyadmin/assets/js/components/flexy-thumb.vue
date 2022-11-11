@@ -112,7 +112,13 @@ export default {
         if (!_.isUndefined(this.sizes.size))    src += this.sizes.size;
       }
       return src;
-    }
+    },
+
+    url : function() {
+        let url= this.src;
+        url = url.replace('/thumb','');
+        return url;
+    },
 
   },
 };
@@ -120,14 +126,16 @@ export default {
 
 <template>
   <div class="flexy-thumb">
-    <img  v-if="type==='image'" :class="mediaClass" :src="file" :alt="alt" :title="alt">
-    <span v-if="type!=='image'" class="fa" :class="typeClass" :title="file" :alt="alt"></span>
-    <span v-if="type!=='image'" class="thumb-title">{{alt}}</span>
-    <div v-if="type==='image' && scale" class="scale">
-      <div class="scale-inner" :style="scaleSizes">
-        <img :src="file">
-      </div>
-    </div>
+    <a :href="url" target="_blank">
+        <img  v-if="type==='image'" :class="mediaClass" :src="file" :alt="alt" :title="alt">
+        <span v-if="type!=='image'" class="fa" :class="typeClass" :title="file" :alt="alt"></span>
+        <span v-if="type!=='image'" class="thumb-title">{{alt}}</span>
+        <div v-if="type==='image' && scale" class="scale">
+          <div class="scale-inner" :style="scaleSizes">
+            <img :src="file">
+          </div>
+        </div>
+    </a>
   </div>
 </template>
 
