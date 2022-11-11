@@ -51,6 +51,7 @@ export default {
         relation    : ['relation'],
         select      : ['select','radio'],
         abstract    : ['abstract'],
+        split       : ['split'],
       };
       var defaultTypes = [];
       for(var type in types) {
@@ -190,6 +191,12 @@ export default {
       return value;
     },
 
+    splitItem(value) {
+        let items = value.split('|');
+        items.sort();
+        return items;
+    },
+
     itemObject : function(item) {
       if (typeof(item)==='string' && item.substr(0,1)==='{') {
         item = JSON.parse(item);
@@ -303,6 +310,12 @@ export default {
 
     <template v-if="isType('abstract',type)">
       <span v-for="(abstract,key) in itemObject(item)">{{abstract}}</span>
+    </template>
+
+    <template v-if="isType('split',type)">
+        <div v-for="item in splitItem(item)" @click="showAllItemsToggle()">
+            <span class="grid-split-item" v-if="item!==''" v-html="item"></span>
+        </div>
     </template>
 
     <template v-if="isType('media',type)">

@@ -14,6 +14,14 @@
   }
   .grid-relation-item:hover {border-color:$primary;background-color:$warning-light};
 
+  // split item
+  .grid-split-item {
+    border:solid 1px $gray-600;
+    border-radius:$border-radius;
+    padding:.15rem .35rem;
+    margin-right:.25rem;
+  }
+
   // Thumb
   .color-thumb-sm {
     width:5.5rem;
@@ -188,9 +196,11 @@
     }
   }
 
+   td.grid-cell-type-split,
    td.grid-cell-type-relation {
      div {display:inline;}
    }
+   td.grid-cell-type-split.show-all,
    td.grid-cell-type-relation.show-all {
      max-width:none;
      div {display:block;}

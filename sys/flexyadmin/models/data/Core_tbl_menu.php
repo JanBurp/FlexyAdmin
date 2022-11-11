@@ -316,7 +316,12 @@ Class Core_tbl_menu extends Data_Core {
 
       // Test if parent is visible/restricted
       $uri      = $item['uri'];
-      $full_uri = $item['full_uri'];
+      if (isset($item['full_uri'])) {
+        $full_uri = $item['full_uri'];
+      }
+      else {
+        $full_uri = $uri;
+      }
       if ( $full_uri!=$item['uri'] ) {
         $parent_uri = remove_suffix($item['full_uri'],'/');
         if ($parent_uri!='') {
@@ -387,7 +392,13 @@ Class Core_tbl_menu extends Data_Core {
 
     // Add '_level'
     foreach ($this->_menu as $key => $item) {
-      $this->_menu[$key]['_level'] = substr_count($item['full_uri'],'/');
+      if (isset($item['full_uri'])) {
+        $uri = $item['full_uri'];
+      }
+      else {
+        $uri = $item['uri'];
+      }
+      $this->_menu[$key]['_level'] = substr_count($uri,'/');
     }
 
     return $this->_menu;

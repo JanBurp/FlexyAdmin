@@ -344,10 +344,28 @@ body.mce-fullscreen .mce-tinymce{
       }
     }
   }
-
-
 }
 
+.vue-tags-input {
+    padding:0;
+    max-width: 100%!important;
+    .ti-input {
+        border:none!important;
+        .ti-tag {
+            background-color:$primary;
+        }
+        .ti-tag.deletion-mark {
+            background-color:$danger;
+        }
+    }
+    .ti-autocomplete {
+        border:solid 1px $gray-600!important;
+        border-radius:$border-radius;
+        .ti-selected-item {
+            background-color:$primary;
+        }
+    }
+}
 
 
 // VSELECT

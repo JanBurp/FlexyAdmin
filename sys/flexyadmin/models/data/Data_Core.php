@@ -1030,12 +1030,12 @@ Class Data_Core extends CI_Model {
         $this->load->library('flexy_auth');
         $user = $this->flexy_auth->get_user();
         if ($user) {
-            $this->user_id = $user['id'];
-            if ($user['groups']) {
-              $groups = array_column($user['groups'],'id');
-              sort($groups);
-              $this->user_groups = $groups;
-            }
+          $this->user_id = $user['id'];
+          if ($user['groups']) {
+            $groups = array_column($user['groups'],'id');
+            sort($groups);
+            $this->user_groups = $groups;
+          }
         }
       }
     }
@@ -1781,24 +1781,27 @@ Class Data_Core extends CI_Model {
     }
 
     // one_to_one opties: die opties toevoegen
-    if ( in_array('one_to_one',$with) and !$this->tm_as_grid and isset($this->settings['relations']['one_to_one'])) {
-      $relations = $this->settings['relations']['one_to_one'];
-      if ($relations) {
-        foreach ($relations as $relation) {
-          $other_table   = $relation['other_table'];
-          $table = $this->settings['table'];
-          $other_options = $this->data->table( $other_table )->get_options();
-          $this->data->table($table); // Terug naar huidige data table.
-          unset($other_options[$relation['foreign_key']]);
-          if ($other_options) {
-            foreach ($other_options as $field => $info) {
-              $info['data'] = array_column($info['data'],'name','value');;
-              $options[$field] = $info;
+    if ( in_array('one_to_one',$with) and !$this->tm_as_grid ) {
+      if (isset($this->settings['relations']['one_to_one'])) {
+        $relations = $this->settings['relations']['one_to_one'];
+        if ($relations) {
+          foreach ($relations as $relation) {
+            $other_table   = $relation['other_table'];
+            $table = $this->settings['table'];
+            $other_options = $this->data->table( $other_table )->get_options();
+            $this->data->table($table); // Terug naar huidige data table.
+            unset($other_options[$relation['foreign_key']]);
+            if ($other_options) {
+              foreach ($other_options as $field => $info) {
+                $info['data'] = array_column($info['data'],'name','value');;
+                $options[$field] = $info;
+              }
             }
           }
         }
       }
     }
+
 
     // ..._to_many opties
     if ( in_array('many_to_many',$with) or in_array('one_to_many',$with) ) {
@@ -2792,16 +2795,16 @@ Class Data_Core extends CI_Model {
     $cache_filter = 'data_result_';
     $cached_results = $this->cache->cache_info();
     if ($cached_results) {
-      foreach ($cached_results as $cache) {
-        if ($this->settings['cache_group']) {
-          foreach ($this->settings['cache_group'] as $filter) {
-            $filter = $cache_filter.$filter;
-            if ( substr($cache['name'],0,strlen($filter))===$filter ) {
-              $this->cache->delete($cache['name']);
-            }
+    foreach ($cached_results as $cache) {
+      if ($this->settings['cache_group']) {
+        foreach ($this->settings['cache_group'] as $filter) {
+          $filter = $cache_filter.$filter;
+          if ( substr($cache['name'],0,strlen($filter))===$filter ) {
+            $this->cache->delete($cache['name']);
           }
         }
       }
+    }
     }
     return $this;
   }
@@ -2968,6 +2971,9 @@ Class Data_Core extends CI_Model {
     // Bewaar
     foreach ($select as $value) {
       $key = remove_prefix( $value,'.' );
+      if (!is_array($this->tm_select)) {
+        $this->tm_select = [];
+      }
       $this->tm_select[$key] = $value;
     }
 		return $this;
@@ -3276,7 +3282,7 @@ Class Data_Core extends CI_Model {
         $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
 
         // Limit in subquery alleen als de volgorde géén invloed heeft op resultaat. (met limit is wel sneller)
-        if ( $order_on_self AND !$has_where AND !$this->tm_find AND $this->tm_limit>0) {
+        if ( empty($order_by) AND !$has_where AND !$this->tm_find AND $this->tm_limit>0) {
           if ($this->tm_offset===FALSE) $this->tm_offset=0;
           $this->tm_where_limit = $this->tm_limit;
           $this->tm_where_offset = $this->tm_offset;
@@ -3286,8 +3292,8 @@ Class Data_Core extends CI_Model {
         }
         $this->tm_from .= ') AS '.$this->db->protect_identifiers($table).'';
       }
-
     }
+
     return $this->db->from( $this->tm_from );
   }
 

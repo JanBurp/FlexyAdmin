@@ -27,7 +27,7 @@ export default {
   },
 
   updated : function() {
-    // this.calcData();
+    this.calcData();
   },
 
   methods : {
@@ -90,6 +90,9 @@ export default {
           case 'youtube':
           default:
             match = url.match(/v=([0-9a-z_-]+)/i);
+            if ( match==null ) {
+                match = url.match(/youtu\.be\/(CQ6szCNA4TA)/i);
+            }
             break;
         }
         code = match[1];

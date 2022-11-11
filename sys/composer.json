@@ -4,10 +4,8 @@
         "phpunit/phpunit": "^9"
     },
 	"require": {
-        "firebase/php-jwt":"*",
-		"mpdf/mpdf": "^8.0",
-		"defuse/php-encryption": "^2.2",
-		"spatie/ray": "^1.30"
+        "firebase/php-jwt":"^5.5",
+		"defuse/php-encryption": "^2.2"
 	},
     "config": {
         "platform-check": false

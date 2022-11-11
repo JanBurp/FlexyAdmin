@@ -17,6 +17,7 @@ import videopicker      from './videopicker.vue'
 import joinselect       from './joinselect.vue'
 import radioimage       from './radio-image.vue'
 import markdown         from './markdown.vue'
+import VueTagsInput from '@johmun/vue-tags-input'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
@@ -25,7 +26,7 @@ import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,videopicker,joinselect,radioimage,tab,tabs,datepicker,vselect,markdown},
+  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,videopicker,joinselect,radioimage,tab,tabs,datepicker,vselect,markdown,VueTagsInput},
   props:{
     'name'    :String,
     'primary' :{
@@ -74,6 +75,7 @@ export default {
         timepicker        : ['time'],
         datetimepicker    : ['datetime'],
         colorpicker       : ['color','rgb'],
+        tagpicker         : ['tagpicker'],
         mediapicker       : ['media','medias'],
         videopicker       : ['video'],
         thumb             : ['thumb'],
@@ -98,7 +100,8 @@ export default {
       if (val !== this.currentName) {
         this.reloadForm();
       }
-    }
+    },
+    'newTag': 'loadCurrentTags',
   },
 
   // Copy of props.data (& more)
@@ -118,6 +121,8 @@ export default {
       isEdited         : !this.disabled,
       wysiwygJustReady : false,
       displayedMessage : '',
+      newTag           : '',
+      currentTags      : [],
     }
   },
 
@@ -527,6 +532,37 @@ export default {
         return this.form_groups[field]['options']['data'][index]['name'];
       }
       return this.row[field];
+    },
+
+    loadCurrentTags() {
+        let self = this;
+        flexyState.api({
+          url : 'get_tag_list?tag='+this.newTag,
+        })
+        .then(function(response){
+            if (response.data) {
+                self.currentTags = response.data.map( e => {
+                    return {
+                        'text' : e,
+                    }
+                });
+            }
+        })
+        .catch(function(){
+            self.currentTags = [];
+        });
+    },
+
+    splitTags(field) {
+        if (this.row[field]=="") return [];
+        let items = this.row[field].split('|');
+        items.sort();
+        items = items.map( e => {
+            return {
+                'text' : e,
+            }
+        });
+        return items;
     },
 
     selectValue: function(field) {
@@ -966,6 +1002,12 @@ export default {
       return this.row['id'] === -1;
     },
 
+    updateTags(field,tags) {
+        tags = tags.map( e => e.text );
+        let value = tags.join('|');
+        this.updateField(field,value);
+    },
+
     updateField : function( field, value ) {
       // console.log('updateField',field,value);
       // this.validationErrors = {};
@@ -1182,6 +1224,12 @@ export default {
                   <!-- Colorpicker -->
                   <colorpicker :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event)"></colorpicker>
                 </template>
+
+                <template v-if="isType('tagpicker',field)">
+                    <!-- Tagpicker -->
+                    <vue-tags-input class="form-control" :id="field" :name="field" v-model="newTag" :tags="splitTags(field)" @tags-changed="updateTags(field,$event)" :autocomplete-items="currentTags"></vue-tags-input>
+                </template>
+
 
                 <template v-if="isType('mediapicker',field)">
                   <!-- Mediapiacker -->
