@@ -1,3 +1,14 @@
+=3.5.69
+
+[nl]
+- Extra PHP8 updates
+[/nl]
+
+[en]
+- Extra PHP8 updates
+[/en]
+
+
 =3.5.68
 
 [nl]
