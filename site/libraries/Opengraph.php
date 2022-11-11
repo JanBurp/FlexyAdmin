@@ -18,7 +18,7 @@ class Opengraph extends Module {
       $image = $this->CI->config->item('ASSETS').'pictures/'.current($images);
     }
     else {
-      if (preg_match('/<img.*src="(.*)"/uiU', $page['txt_text'],$match)) {
+      if (isset($page['txt_text']) && preg_match('/<img.*src="(.*)"/uiU', $page['txt_text'],$match)) {
         $image = $match[1];
       }
     }
