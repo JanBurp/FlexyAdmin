@@ -122,8 +122,8 @@ class Table extends Api_Model {
    */
   public function index() {
     
-    if (!$this->has_args()) return $this->_result_wrong_args(); 
-    
+    if (!$this->has_args()) return $this->_result_wrong_args();
+
     // Check rechten
     if ($this->args['table']==='res_assets' AND isset($this->args['path'])) {
       $this->rights = $this->_has_rights('media_'.$this->args['path']);
@@ -201,6 +201,10 @@ class Table extends Api_Model {
       // Media?
       if ( $is_media ) {
         $this->data->order_by( $this->args['order'] );
+        if ( isset($this->args['folder'])) {
+          if (!is_array($this->args['filter'])) $this->args['filter'] = [$this->args['filter']];
+          $this->args['filter']['folder'] = $this->args['folder'];
+        }
         $items = $this->data->get_files( $this->args['path'], $this->args['filter'], $this->args['limit'], $this->args['offset'], TRUE );
       }
       else {

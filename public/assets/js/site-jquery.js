@@ -4,11 +4,11 @@ window.$ = window.jQuery = $;
 import 'bootstrap/dist/js/bootstrap';
 
 $(document).ready(function() {
-  // console.log('jQuery Ready..');
-  // console.log('Bootstrap Ready..');
+  // Menu dropdown hack voor iPhone etc
+  $('.navbar-toggle').click(function(){ });
 });
 
-// $(window).load(function() {
+// $(window).on('load', function() {
 // });
 // $(window).resize(function() {
 // });

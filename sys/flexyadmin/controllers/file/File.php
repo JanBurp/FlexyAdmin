@@ -24,6 +24,13 @@ class File extends CI_Controller {
     $this->load->model( 'assets' );
 	}
 
+  private function decode_args($args) {
+    foreach ($args as $key => $arg) {
+      $args[$key] = rawurldecode($arg);
+    }
+    return $args;
+  }
+
   /**
    * Geeft het gevraagde bestand alleen terug als de user rechten daarvoor heeft.
    *
@@ -32,9 +39,14 @@ class File extends CI_Controller {
    * @return void
    * @author Jan den Besten
    */
-  public function serve($path='',$file='') {
-		if (!empty($path) and !empty($file)) {
-      $fullpath = SITEPATH.'assets/'.$path.'/'.$file;
+  public function serve() {
+    if ( func_num_args() >=2 ) {
+      $args = $this->decode_args(func_get_args());
+      $fullpath = $this->config->item('ASSETSFOLDER').join('/',$args);
+      $path = array_shift($args);
+      $file = join('/',$args);
+      $fullfile = join('/',$args);
+
 			if ( file_exists($fullpath) ) {
         $serve = false;
         if ( in_array($path,$this->serve_rights) ) $serve = true;
@@ -108,9 +120,13 @@ class File extends CI_Controller {
     return false;
   }
   
-  public function thumb($path,$file) {
-		if (!empty($path) and !empty($file)) {
-      $fullpath = $this->config->item('THUMBCACHE').$path.'___'.$file;
+  public function thumb() {
+		if ( func_num_args() >=2 ) {
+      $args = $this->decode_args(func_get_args());
+      $fullpath = $this->config->item('THUMBCACHE').join('___',$args);
+      $path = array_shift($args);
+      $file = join('/',$args);
+      $fullfile = join('___',$args);
 
       // Create thumb if not exists
       if ( !file_exists($fullpath) ) {

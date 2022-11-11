@@ -163,8 +163,10 @@ class Order extends CI_Model {
         $this->data->order_by('order');
       $parents[$parent_id] = $this->data->get_result();
     }
-    $merged = $parents[0];
-    unset($parents[0]);
+    if (isset($parents[0])) {
+      $merged = $parents[0];
+      unset($parents[0]);
+    }
 
     // 4) Voeg ze samen in nieuwe volgorde
     $depth = 10;
@@ -195,7 +197,7 @@ class Order extends CI_Model {
     // re-id & reorder
     $order = $from;
     $result = array();
-    if (is_array($merged)) {
+    if ( isset($merged) && is_array($merged) ) {
       foreach ($merged as $item) {
         $result[$item['id']] = $item;
         $result[$item['id']]['order'] = $order;

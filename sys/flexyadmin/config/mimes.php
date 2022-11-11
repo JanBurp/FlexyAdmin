@@ -15,7 +15,7 @@ return array(
   '3gp'   => array('video/3gp', 'video/3gpp'),
   '7z'    => array('application/x-7z-compressed', 'application/x-compressed', 'application/x-zip-compressed', 'application/zip', 'multipart/x-zip'),
   '7zip'  => array('application/x-7z-compressed', 'application/x-compressed', 'application/x-zip-compressed', 'application/zip', 'multipart/x-zip'),
-  'aac'   => 'audio/x-acc',
+  'aac'   => array('audio/x-aac', 'audio/aac'),
   'ac3'   => 'audio/ac3',
   'ai'    => array('application/pdf', 'application/postscript'),
   'aif'   => array('audio/x-aiff', 'audio/aiff'),
@@ -160,7 +160,6 @@ return array(
   'tar'   => 'application/x-tar',
   'text'  => 'text/plain',
   'tgz'   => array('application/x-tar', 'application/x-gzip-compressed'),
-  'tgz'   => array('application/x-tar', 'application/x-gzip-compressed'),
   'tif'   => 'image/tiff',
   'tiff'  => 'image/tiff',
   'txt'   => array('text/plain','text/html','text/x-lisp'),
@@ -186,6 +185,6 @@ return array(
   'zip'   => array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip'),
   'zsh'   => 'text/x-scriptzsh',
 );
-      
+
 /* End of file mimes.php */
 /* Location: ./system/application/config/mimes.php */

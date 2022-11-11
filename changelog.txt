@@ -1,3 +1,341 @@
+=3.5.69
+
+[nl]
+- Extra PHP8 updates
+[/nl]
+
+[en]
+- Extra PHP8 updates
+[/en]
+
+
+=3.5.68
+
+[nl]
+- Mogelijk om bestanden vanuit CMS te downloaden
+[/nl]
+
+[en]
+- From CMS downloading files is possible
+[/en]
+
+
+=3.5.67
+
+[nl]
+- PHP8 waarschuwingen opgelost
+[/nl]
+
+[en]
+- PHP8 warnings solved
+[/en]
+
+
+=3.5.66
+
+[nl]
+- Verbeteringen voor tags
+[/nl]
+
+[en]
+- Improvements for tags
+[/en]
+
+
+=3.5.65
+
+[nl]
+- Tag veld met bijbehorende tabel is nu mogelijk
+[/nl]
+
+[en]
+- Tag field with table is now possible
+[/en]
+
+
+=3.5.63
+
+[nl]
+- Video helper herkend nu ook youtube links als https://youtu.be/CQ6szCNA4TA
+[/nl]
+
+[en]
+- Video helper now recognises youtube links as https://youtu.be/CQ6szCNA4TA
+[/en]
+
+=3.5.62
+
+[nl]
+- Bug: zoeken in assets werkte niet meer sinds 3.5.60
+[/nl]
+
+[en]
+- Bug: searching in assets did not work anymore since 3.5.60
+[/en]
+
+=3.5.61
+
+[nl]
+- Mooiere antwoorden in emails (checkbox)
+[/nl]
+
+[en]
+- Nicer answers is emails (checkbox)
+[/en]
+
+=3.5.60
+
+[nl]
+- Mappen kunnen nu worden getoond en verwijderd
+- Navigatie in mappen
+[/nl]
+
+[en]
+- Assets can now show and delete folders
+- Navigation in folders
+[/en]
+
+=3.5.56
+
+[nl]
+- Updated composer
+- Update mpdf
+- PHP8 check
+- Local phpunit (npm run test)
+[/nl]
+
+[en]
+- Updated composer
+- Update mpdf
+- PHP8 check
+- Local phpunit (npm run test)
+[/en]
+
+=3.5.53
+
+[nl]
+- Updated composer
+- Kleine verbetering aan standaard frontend menu
+- Bug: uploading en toevoegen attachments aan email
+- date input type toegevoegd aan formulieren
+- Mailhog local email config
+[/nl]
+
+[en]
+- Updated composer
+- Bug: uploading and adding attachments to email
+- Small improvement on default frontend menu
+- Added date input type to forms
+- Mailhog local email config
+[/en]
+
+=3.5.52
+
+[nl]
+- Soms ontstond een 500 error tijdens het maken van een uri
+- Extra functies voor CoreMenu
+- Fout in caching
+- Extra cleanup van input
+[/nl]
+
+[en]
+- Bug when creating uri's could cause a 500
+- Extra methods for CoreMenu
+- Bug in caching
+- Remove external malicious scripts from input
+[/en]
+
+=3.5.51
+
+[nl]
+- Fout in statistieken, soms niet geladen
+[/nl]
+
+[en]
+- Bug in stats, in some cases won't load
+[/en]
+
+
+=3.5.50
+
+[nl]
+- Cookie update for PHP 7.3
+[/nl]
+
+[en]
+- Cookie update for PHP 7.3
+[/en]
+
+
+=3.5.49
+
+[nl]
+- Ready for local serving with valet
+[/nl]
+
+[en]
+- Ready for local serving with valet
+[/en]
+
+
+=3.5.48
+
+[nl]
+- Enkele kleine bugs en verbeteringen aan assets afhandelingen
+[/nl]
+
+[en]
+- Soms small bugs and improvements to core assets
+[/en]
+
+
+=3.5.47
+
+[nl]
+- Meer help tekst bij afbeeldingen
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- More help for images
+- Soms small bugs and improvements
+[/en]
+
+=3.5.46
+
+[nl]
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- Soms small bugs and improvements
+[/en]
+
+[BUGS]
+- smal bug in video_helper
+
+=3.5.45
+
+[nl]
+- Enkele kleine bugs en verbeteringen
+- Update van frontend pakketten
+- Standaard installatie aangepast
+[/nl]
+
+[en]
+- Soms small bugs and improvements
+- Update frontend packages
+- Standard installation changed
+[/en]
+
+[FEATURES]
+- Standaard installatie met vuejs & bootstrap
+
+[BUGS]
+- plugin_uri sometimes triggered search/replace links with order field
+- file_helper not loaded for stats
+- plugin_uri freeze better implementation
+- video_helper no_coockie as standard
+
+=3.5.44
+
+[nl]
+- Verbeteringen aan email verzending & plugin om ze in te zien
+[/nl]
+
+[en]
+- Improvements to email sending & plugin to show them
+[/en]
+
+
+[FEATURES]
+- Better email sending (less change of spam)
+- Plugin for showing emails from log
+
+
+
+=3.5.43
+
+[nl]
+- Mediapicker verwijder knop was niet zichtbaar
+[/nl]
+
+[en]
+- Mediapicker remove button was invisible
+[/en]
+
+
+[BUGS]
+- Mediapicker remove button was invisible
+
+=3.5.42
+
+[nl]
+- Bijsnijden nu ook bij mediapicker
+[/nl]
+
+[en]
+- Cropping now also with mediapicker
+[/en]
+
+[FEATURES]
+- Cropping of images with mediapicker
+
+[BUGS]
+- Styling issue with menu
+
+
+=3.5.41
+
+[nl]
+- Bijsnijden van afbeeldingen
+[/nl]
+
+[en]
+- Cropping of images
+[/en]
+
+[FEATURES]
+- Cropping of images (if 'scale' option in assets is set)
+
+[BUGS]
+
+
+=3.5.40
+
+[nl]
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- Some small bugs and improvements
+[/en]
+
+[BUGS]
+- DatePicker did not show
+
+=3.5.39
+
+[nl]
+- Update naar CodeIgniter 3.1.11
+- Enkele kleine bugs en verbeteringen
+[/nl]
+
+[en]
+- Update to CodeIgniter 3.1.11
+- Some small bugs and improvements
+[/en]
+
+[UPDATES]
+- Update naar CodeIgniter 3.1.11
+
+[BUGS]
+- Core menu had a bug when multuple languages
+- Kleine verbetering aan site.js voor jquery (3.0)
+
+[FEATURES]
+- Added new plugin clean_tables
+
 =3.5.38
 
 [nl]

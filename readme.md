@@ -7,11 +7,11 @@ A Flexible and userfriendly CMS.
 
 In the examples below, replace `<dir>` with the folder you'd like to have FlexyAdmin installed
 
-### Complete repository ###
+### Complete repository
 
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git <dir>`
 
-### Shallow repository (for just a simple website) ###
+### Shallow repository (for just a simple website)
 
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>`
 
@@ -19,7 +19,7 @@ In the examples below, replace `<dir>` with the folder you'd like to have FlexyA
 
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --branch releases/latest --single-branch --depth 10 <dir>`
     
-### Shallow repository a branch ###
+### Shallow repository a branch
 
 `git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 -b <branch> <dir>`
 

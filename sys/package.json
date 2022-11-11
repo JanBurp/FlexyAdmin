@@ -1,8 +1,8 @@
 {
   "name": "FlexyAdmin",
-  "version": "3.5.38",
+  "version": "3.5.69",
   "description": "== FLEXYADMIN == (c)  Jan den Besten www.flexyadmin.com",
-  "author": "Jan den Besen",
+  "author": "Jan den Besten",
   "license": "ISC",
   "private": true,
   "main": "index.php",
@@ -12,7 +12,8 @@
     "watch": "npm run development -- --watch",
     "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
     "prod": "npm run production",
-    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "test": "./vendor/phpunit/phpunit/phpunit"
   },
   "eslintConfig": {
     "parserOptions": {
@@ -24,6 +25,7 @@
     ]
   },
   "dependencies": {
+    "@johmun/vue-tags-input": "^2.1.0",
     "axios": "^0.15.2",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^1.5.1",
@@ -32,6 +34,7 @@
     "marked": "^0.5.2",
     "tinymce": "^4.9.4",
     "vue": "^2.6.9",
+    "vue-advanced-cropper": "^0.15.2",
     "vue-lang": "^0.2.5",
     "vue-router": "^2.7.0",
     "vue-template-compiler": "^2.6.9",

@@ -25,8 +25,13 @@ Class Admin_menu extends CI_Model {
   }
   
   private function _get_config_item($name) {
-    $item = $this->ui_config[$name];
-    if (isset($this->ui_config[$name.'_replace'])) $item = $this->ui_config[$name.'_replace'];
+    $item = null;
+    if (isset($this->ui_config[$name])) {
+      $item = $this->ui_config[$name];
+    }
+    if (isset($this->ui_config[$name.'_replace'])) {
+      $item = $this->ui_config[$name.'_replace'];
+    }
     return $item;
   }
   

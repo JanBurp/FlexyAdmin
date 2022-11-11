@@ -163,6 +163,14 @@ class Menu {
       'has_sub' => 'dropdown-menu',
       'is_sub'  => 'dropdown'
     ),
+    'bootstrap4' => array(
+      'current' => 'active',
+      'active'  => 'active active-branch',
+      'first'   => 'first',
+      'last'    => 'last',
+      'has_sub' => 'dropdown-menu',
+      'is_sub'  => 'dropdown'
+    ),
 
   );
 
@@ -742,7 +750,7 @@ class Menu {
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
 
-    $styles=$this->styles[$this->settings['framework']];
+    $styles = $this->styles[$this->settings['framework']];
 
     $html='';
 		if ($menu and is_array($menu)) {
@@ -796,7 +804,13 @@ class Menu {
         $order_style=trim($order_style);
 
         // Current
-        $current = ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:''));
+        $current = '';
+        if ( $this->settings['current']==$cleanUri ) {
+          $current = $styles['current'];
+        }
+        if ($styles['current'] and strpos($submenu,$styles['current'])>0) {
+          $current .= ' '.$styles['active'];
+        }
 
         // Icon
         $icon = el('icon',$item,'');

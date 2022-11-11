@@ -2,22 +2,22 @@
 
 /**
  * Dit is een Formaction die de data verstuurd formdata naar het standaard emailadres
- * 
+ *
  * Hieronder config velden (met hun defaults):
- * 
+ *
  * - to_field             => Het database veld waar het mailadres in staat ('tbl_site.email_email')
  * - subject              => Onderwerp van de mail: Je kunt er codes inzetten die vervangen worden: %URL% = Url van de site, %MAIL% = 1e email veld, of een willekeurig veld %veldnaam%
  * - send_copy_to_sender  => Of er een kopie naar de afzender moet gaan (FALSE)
  * - from_address_field   => Veld in de formulierdata waar het emailadres van de afzender in staat ('email_email')
  * - attachment_folder    => 'downloads'
  * - attachment_types     => 'gif|jpg|png|doc|docx|xls|xlsx|pdf|zip'
- * 
- * 
+ *
+ *
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
  */
  class Formaction_mail extends Formaction {
-   
+
    var $settings = array(
      'to_field'             => 'tbl_site.email_email',
      'subject'              => 'Mail from site',
@@ -26,13 +26,15 @@
      'attachment_folder'    => 'downloads',
      'attachment_types'     => 'gif|jpg|png|doc|docx|xls|xlsx|pdf|zip'
    );
-   
+
 
    public function __construct() {
      parent::__construct();
      $this->load->library('email');
+     $this->load->helper('language');
+     $this->lang->load('scaffolding');
    }
-   
+
 
    /**
     * Voer de actie uit, in dit geval: verstuur de mail met als body de veldnamen met hun gegevens
@@ -44,7 +46,7 @@
   public function go($data) {
     parent::go($data);
     unset($data['int_spamscore']);
-    
+
     // TO
     if (!isset($this->settings['to']) or empty($this->settings['to'])) {
      $table=get_prefix($this->settings['to_field'],'.');
@@ -53,14 +55,16 @@
     }
     $this->email->to($this->settings['to']);
     // FROM
+    $this->email->from($this->settings['to']);
+    // REPLY TO
     $from = $this->get_from_addres($data);
-    $this->email->from( $from );
-    
+    $this->email->reply_to( $from );
+
     // COPY TO SENDER?
     if ($this->settings['send_copy_to_sender']) {
       $this->email->cc( $from );
     }
-   
+
     // SEND With a template from cfg_email, or standard
     $send=false;
     // Prepare Replace array
@@ -81,8 +85,17 @@
     if (is_array(el('body_data',$this->settings,FALSE))) {
       $replace=array_merge($replace,el('body_data',$this->settings));
     }
+
+    // Nicer replace fields
+    foreach ($replace as $field => $value) {
+      if ( isset($this->settings['fields'][$field]['type']) and $this->settings['fields'][$field]['type']=='checkbox' ) {
+        $replace[$field] = $value ? lang('scaff_yes') : lang('scaff_no');
+      }
+    }
+
     // Template?
     $template=el('template',$this->settings,'');
+
     if ($template) {
       // Send with template
       $this->_attach_files($data);
@@ -122,29 +135,34 @@
       $this->_attach_files($data);
       $send = $this->email->send();
     }
-    
+
     if ( ! $send) {
       $this->errors=$this->email->print_debugger();
       return false;
     }
     return true;
   }
-  
-  
+
+
   private function _attach_files($data) {
     foreach ($data as $field => $value) {
       if (in_array(get_prefix($field),array('file','media'))) {
         // add path if needed
         $file=$value;
         if (get_suffix($file,'/')===$file) {
-          $file=SITEPATH.'assets/'.$this->settings['upload_path'].'/'.$value;
+            if (isset($this->settings['upload_path'])) {
+                $file=SITEPATH.'assets/'.$this->settings['upload_path'].'/'.$value;
+            }
+            else {
+                $file=SITEPATH.'assets/'.$this->settings['attachment_folder'].'/'.$value;
+            }
         }
         $this->email->attach($file);
       }
     }
   }
-  
-  
+
+
   private function get_from_addres($data) {
     $from='';
     if (isset($this->settings['from_address_field']) and !empty($this->settings['from_address_field'])) {

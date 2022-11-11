@@ -36,9 +36,9 @@ Class Core_tbl_menu extends Data_Core {
 
   public function __construct() {
     parent::__construct();
-    $this->config->load('menu',true);
 
-    $languages = $this->config->get_item('languages');
+    $this->config->load('menu',true);
+    $languages = $this->config->get_item(array('menu','languages'));
     if ( $languages and count($languages)>1 ) {
       $this->title_field = $this->title_field .= '_'.$languages[0];
     }
@@ -97,6 +97,32 @@ Class Core_tbl_menu extends Data_Core {
     // trace_( array_column($menu_result, 'full_title','full_uri') );
     // trace_( array_column($menu_result, 'uri','full_uri') );
     return $menu_result;
+  }
+
+
+  /**
+   * Geeft parent
+   *
+   * @param string $uri ['']
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_parent($uri) {
+    $uri = remove_suffix($uri,'/');
+    $items = $this->get_menu_result();
+    return $items[$uri];
+  }
+
+  /**
+   * Test of een item een submenu heeft
+   *
+   * @param string $uri ['']
+   * @return array
+   * @author Jan den Besten
+   */
+  public function has_sub_items( $uri='') {
+    $items = $this->get_menu_result();
+    return isset($items[$uri]);
   }
 
 
@@ -290,7 +316,12 @@ Class Core_tbl_menu extends Data_Core {
 
       // Test if parent is visible/restricted
       $uri      = $item['uri'];
-      $full_uri = $item['full_uri'];
+      if (isset($item['full_uri'])) {
+        $full_uri = $item['full_uri'];
+      }
+      else {
+        $full_uri = $uri;
+      }
       if ( $full_uri!=$item['uri'] ) {
         $parent_uri = remove_suffix($item['full_uri'],'/');
         if ($parent_uri!='') {
@@ -361,7 +392,13 @@ Class Core_tbl_menu extends Data_Core {
 
     // Add '_level'
     foreach ($this->_menu as $key => $item) {
-      $this->_menu[$key]['_level'] = substr_count($item['full_uri'],'/');
+      if (isset($item['full_uri'])) {
+        $uri = $item['full_uri'];
+      }
+      else {
+        $uri = $item['uri'];
+      }
+      $this->_menu[$key]['_level'] = substr_count($uri,'/');
     }
 
     return $this->_menu;
@@ -574,8 +611,13 @@ Class Core_tbl_menu extends Data_Core {
     // Add Grouped data
     foreach ($this->_menu as $menu_item) {
       $place = false;
-      foreach ($item['place'] as $key => $value) {
-        if ($menu_item[$key]==$value) $place = el('full_uri',$menu_item,el('uri',$menu_item));
+      if (isset($item['place'])) {
+        foreach ($item['place'] as $key => $value) {
+          if ($menu_item[$key]==$value) $place = el('full_uri',$menu_item,el('uri',$menu_item));
+        }
+      }
+      else {
+        $place = el('full_uri',$menu_item,el('uri',$menu_item));
       }
       if ($place!==false) {
         foreach ($item['grouped_by'] as $key => $field) {
@@ -584,6 +626,7 @@ Class Core_tbl_menu extends Data_Core {
         if (isset($item['where']))    $this->data->where($item['where']);
         if (isset($item['order_by'])) $this->data->order_by($item['order_by']);
         $data_items = $this->data->get_result( el('limit',$item,NULL), el('offset',$item,0) );
+        // trace_([$place,$data_items]);
 
         // Add
         $nr=1;

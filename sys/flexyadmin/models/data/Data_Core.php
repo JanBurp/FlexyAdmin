@@ -251,7 +251,7 @@ Class Data_Core extends CI_Model {
   /**
    * Maximum hoeveelheid optios die meteen wordt meegegeven als form opties worden opgevraagd (get_options())
    **/
-  private $max_no_api_options = 99999;
+  private $max_no_api_options = 999999;
 
 
   /* --- CONSTRUCT & AUTOSET --- */
@@ -1029,11 +1029,13 @@ Class Data_Core extends CI_Model {
       else {
         $this->load->library('flexy_auth');
         $user = $this->flexy_auth->get_user();
-        $this->user_id = $user['id'];
-        if ($user['groups']) {
-          $groups = array_column($user['groups'],'id');
-          sort($groups);
-          $this->user_groups = $groups;
+        if ($user) {
+          $this->user_id = $user['id'];
+          if ($user['groups']) {
+            $groups = array_column($user['groups'],'id');
+            sort($groups);
+            $this->user_groups = $groups;
+          }
         }
       }
     }
@@ -1061,7 +1063,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function logout() {
-    return $this->loguit;
+    return $this->logout;
   }
 
 
@@ -1780,23 +1782,26 @@ Class Data_Core extends CI_Model {
 
     // one_to_one opties: die opties toevoegen
     if ( in_array('one_to_one',$with) and !$this->tm_as_grid ) {
-      $relations = $this->settings['relations']['one_to_one'];
-      if ($relations) {
-        foreach ($relations as $relation) {
-          $other_table   = $relation['other_table'];
-          $table = $this->settings['table'];
-          $other_options = $this->data->table( $other_table )->get_options();
-          $this->data->table($table); // Terug naar huidige data table.
-          unset($other_options[$relation['foreign_key']]);
-          if ($other_options) {
-            foreach ($other_options as $field => $info) {
-              $info['data'] = array_column($info['data'],'name','value');;
-              $options[$field] = $info;
+      if (isset($this->settings['relations']['one_to_one'])) {
+        $relations = $this->settings['relations']['one_to_one'];
+        if ($relations) {
+          foreach ($relations as $relation) {
+            $other_table   = $relation['other_table'];
+            $table = $this->settings['table'];
+            $other_options = $this->data->table( $other_table )->get_options();
+            $this->data->table($table); // Terug naar huidige data table.
+            unset($other_options[$relation['foreign_key']]);
+            if ($other_options) {
+              foreach ($other_options as $field => $info) {
+                $info['data'] = array_column($info['data'],'name','value');;
+                $options[$field] = $info;
+              }
             }
           }
         }
       }
     }
+
 
     // ..._to_many opties
     if ( in_array('many_to_many',$with) or in_array('one_to_many',$with) ) {
@@ -2790,6 +2795,7 @@ Class Data_Core extends CI_Model {
   public function clear_cache($table='') {
     $cache_filter = 'data_result_';
     $cached_results = $this->cache->cache_info();
+    if ($cached_results) {
     foreach ($cached_results as $cache) {
       if ($this->settings['cache_group']) {
         foreach ($this->settings['cache_group'] as $filter) {
@@ -2799,6 +2805,7 @@ Class Data_Core extends CI_Model {
           }
         }
       }
+    }
     }
     return $this;
   }
@@ -2927,7 +2934,7 @@ Class Data_Core extends CI_Model {
     if (isset($form_set['with']['many_to_one'])) {
       foreach ($result as $field => $value) {
         if (isset($form_set['field_info'][$field]['options'])) {
-          $result_name = $this->settings['relations']['many_to_one'][$field]['result_name'];
+          $result_name = el($this->settings,array('relations','many_to_one',$field,'result_name'));
           if (!isset($result[$result_name])) {
             $result_name .= '.abstract';
           }
@@ -2965,6 +2972,9 @@ Class Data_Core extends CI_Model {
     // Bewaar
     foreach ($select as $value) {
       $key = remove_prefix( $value,'.' );
+      if (!is_array($this->tm_select)) {
+        $this->tm_select = [];
+      }
       $this->tm_select[$key] = $value;
     }
 		return $this;
@@ -3273,7 +3283,7 @@ Class Data_Core extends CI_Model {
         $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
 
         // Limit in subquery alleen als de volgorde géén invloed heeft op resultaat. (met limit is wel sneller)
-        if ( $order_on_self AND !$has_where AND !$this->tm_find AND $this->tm_limit>0) {
+        if ( empty($order_by) AND !$has_where AND !$this->tm_find AND $this->tm_limit>0) {
           if ($this->tm_offset===FALSE) $this->tm_offset=0;
           $this->tm_where_limit = $this->tm_limit;
           $this->tm_where_offset = $this->tm_offset;
@@ -3283,8 +3293,8 @@ Class Data_Core extends CI_Model {
         }
         $this->tm_from .= ') AS '.$this->db->protect_identifiers($table).'';
       }
-
     }
+
     return $this->db->from( $this->tm_from );
   }
 
@@ -4202,7 +4212,7 @@ Class Data_Core extends CI_Model {
               $this->or_where( $field, '"'.$term.'"', FALSE);
               break;
             case 'word':
-              $this->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
+              $this->or_where( $field." REGEXP '\\\b".$term."\\\b'", NULL, FALSE);
               break;
             case 'like':
             default:

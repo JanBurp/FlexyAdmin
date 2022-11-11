@@ -57,4 +57,7 @@ $lang['USED']             = 'Used';
 $lang['alt']              = $lang['str_title'];
 $lang['date']             = 'Date';
 
+// OTHERS
+$lang['mailbox']          = 'Mailbox';
+
 ?>
