@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once __DIR__ . '/../../vendor/mpdf/mpdf/src/Mpdf.php';
+// require_once __DIR__ . '/../../vendor/mpdf/mpdf/src/Mpdf.php';
 
 /** \ingroup libraries
  * Uitbreiding op [CI_Email](http://codeigniter.com/user_guide/libraries/email.html)
@@ -11,12 +11,12 @@ require_once __DIR__ . '/../../vendor/mpdf/mpdf/src/Mpdf.php';
 class MY_Email extends CI_Email {
 
   private $CI;
-  
+
   /**
-   * Houdt bij naar hoeveel adressen 
+   * Houdt bij naar hoeveel adressen
    */
   private $total_send_addresses=0;
-  
+
   /**
    * Remember to for logging
    */
@@ -26,7 +26,7 @@ class MY_Email extends CI_Email {
    * Taal voor het verzenden van emails uit cfg_email
    */
   private $lang='';
-  
+
   /**
    * Template van cfg_email
    */
@@ -36,7 +36,7 @@ class MY_Email extends CI_Email {
    * Parse data
    */
   private $_parse_data = array();
-  
+
   /**
    * Resulting subject
    */
@@ -51,9 +51,9 @@ class MY_Email extends CI_Email {
    * Of emails altijd individueel worden verzonden
    */
   private $split_send = false;
-  
+
   /**
-   * Send with with/as pdf 
+   * Send with with/as pdf
    */
   private $send_with_pdf = false;
   private $pdf_body = '';
@@ -67,8 +67,8 @@ class MY_Email extends CI_Email {
     parent::__construct($config);
   }
 
-  
-  
+
+
 	/**
 	 * Send Email, met logging
 	 *
@@ -77,7 +77,7 @@ class MY_Email extends CI_Email {
 	 */
   public function send($auto_clear = TRUE) {
     $send = parent::send(FALSE);
-    
+
     if (empty( $this->_to ))   $this->_to = el('To',$this->_headers, 'unknown' );
     if (!is_array($this->_to)) $this->_to = array($this->_to);
     if (is_multi($this->_to))  $this->_to = array_keys($this->_to);
@@ -97,10 +97,10 @@ class MY_Email extends CI_Email {
 
   /**
    * to()
-   * 
+   *
    * Zelfde als origineel, maar onthoud adressen voor logging
    *
-   * @param string $to 
+   * @param string $to
    * @return $this
    * @author Jan den Besten
    */
@@ -111,13 +111,13 @@ class MY_Email extends CI_Email {
     }
     return parent::to($to);
   }
-  
+
   /**
    * cc()
-   * 
+   *
    * Zelfde als origineel, maar onthoud adressen voor logging
    *
-   * @param string $cc 
+   * @param string $cc
    * @return $this
    * @author Jan den Besten
    */
@@ -125,14 +125,14 @@ class MY_Email extends CI_Email {
     $this->add_to($cc);
     return parent::cc($cc);
   }
-  
+
   /**
    * bcc()
-   * 
+   *
    * Zelfde als origineel, maar onthoud adressen voor logging
    *
-   * @param string $bcc 
-   * @param string $limit [''] 
+   * @param string $bcc
+   * @param string $limit ['']
    * @return $this
    * @author Jan den Besten
    */
@@ -167,7 +167,7 @@ class MY_Email extends CI_Email {
   /**
    * Zelfde als CI clear(), met wat extra's
    *
-   * @param string $clear_attachments 
+   * @param string $clear_attachments
    * @return void
    * @author Jan den Besten
    */
@@ -182,7 +182,7 @@ class MY_Email extends CI_Email {
     $this->pdf_body = '';
     return parent::clear($clear_attachments);
 	}
-  
+
 
   /**
    * Test if an email could be send (send to a testmail)
@@ -199,10 +199,10 @@ class MY_Email extends CI_Email {
 		$this->message('TEST at '.date(DATE_RFC2822));
     return $this->send();
   }
-  
 
 
-  
+
+
   /**
    * Stel template in
    *
@@ -226,7 +226,7 @@ class MY_Email extends CI_Email {
       $this->template = array(
         'subject' => $template,
         'body'    => $body,
-      ); 
+      );
     }
     return $this;
   }
@@ -235,7 +235,7 @@ class MY_Email extends CI_Email {
 
   /**
    * Stel de email class in één keer in met een array ipv losse methods aanroepen, bijvoorbeeld:
-   * 
+   *
    *      $this->email->set_mail(
    *        'from'    => 'your@sender.com',
    *        'name'    => 'Name of Sender',
@@ -271,7 +271,7 @@ class MY_Email extends CI_Email {
       $this->bcc($mail['bcc']);
       $this->total_send_addresses += $this->_count_addresses($mail['bcc']);
     }
-    if (isset($mail['template'])) $this->set_template($mail['template']); 
+    if (isset($mail['template'])) $this->set_template($mail['template']);
     if (isset($mail['subject']))  $this->subject($mail['subject']);
 		if (isset($mail['body']))     $this->message($mail['body']);
     if (isset($mail['attachment'])) {
@@ -284,7 +284,7 @@ class MY_Email extends CI_Email {
     }
     return $this;
 	}
-  
+
   /**
    * Voeg adres aan de 'to' lijst voor logging
    *
@@ -300,11 +300,11 @@ class MY_Email extends CI_Email {
     }
     return $this;
   }
-  
+
   /**
    * Telt aantal adressen
    *
-   * @param string $addresses 
+   * @param string $addresses
    * @return void
    * @author Jan den Besten
    * @internal
@@ -313,27 +313,27 @@ class MY_Email extends CI_Email {
     if (!is_array($addresses)) $addresses=explode(',',$addresses);
     return count($addresses);
   }
-  
+
   /**
    * Geeft het aantal adressen waarnaar de mail is verzonden (To, Cc en Bcc)
-   * 
+   *
    * Werkt alleen als de mail is ingesteld met set_mail()
    *
-   * @return int het aantal adressen 
+   * @return int het aantal adressen
    * @author Jan den Besten
    */
   public function get_total_send_addresses() {
     return $this->total_send_addresses;
   }
-  
-  
-  
-  
+
+
+
+
   /**
    * Stel taal in (voordat je een mail stuurt met vanuit cfg_email)
    * Standaard wordt de taal ingesteld op de taal in de sessie (als die bestaat), of de taal die in de config is ingesteld
    *
-   * @param string $lang 
+   * @param string $lang
    * @return $this
    * @author Jan den Besten
    */
@@ -351,8 +351,8 @@ class MY_Email extends CI_Email {
     $this->lang=$lang;
     return $this;
   }
-  
-  
+
+
   /**
    * Stuur pdf mee van gehele email in de bijlage
    *
@@ -382,7 +382,7 @@ class MY_Email extends CI_Email {
 
   /**
    * Stel parse data in voor subject & body
-   * 
+   *
    * @param array $data
    * @return void
    */
@@ -394,11 +394,11 @@ class MY_Email extends CI_Email {
 
   /**
    * Send email(s) zoals ingesteld:
-   * - Parse subject & body 
+   * - Parse subject & body
    * - Van template  ->set_template()
    * - Met PDF in bijlage ->send_with_pdf()
    * - TODO: individueel
-   * - TODO: distributed 
+   * - TODO: distributed
    *
    * @param      bool     $auto_clear  TRUE
    * @return     integer  Aantal verstuurde emails
@@ -427,11 +427,11 @@ class MY_Email extends CI_Email {
     // Prepare body (styling and links)
     $body = $this->prepare_body($body);
 
-       
+
     // Create PDF and attach
     if ($this->send_with_pdf) {
       $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
-      if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;  
+      if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;
       $mpdf = new mPDF('utf-8','',0,'',15,60,16,16,9,9,'L');
       $pdf_body = $this->pdf_body;
       if (empty($pdf_body)) $pdf_body = $this->body;
@@ -449,7 +449,7 @@ class MY_Email extends CI_Email {
       $this->message( $body );
       return $this->send($auto_clear);
     }
-    
+
     // Losse mails
     $to_all = $this->_to;
     foreach ($to_all as $address) {
@@ -488,12 +488,12 @@ class MY_Email extends CI_Email {
 
   /**
    * Stuur een email van een template in cfg_email
-   * 
+   *
    * Standaard parse data:
    * site_url        => url zoals ingesteld in tbl_site
    * site_title      => title zoals ingesteld in tbl_site
    *
-   * @param string $key The key in cfg_email to find the subject and body 
+   * @param string $key The key in cfg_email to find the subject and body
    * @param array $data Array of values that will be parsed in the subject and body, example: {name} $data=array('name'=>'My Name')
    * @param bool $prepare_body default=TRUE
    * @param string $body [''] Je kunt een expliciete body meegeven. (overruled de body uit cfg_email)
@@ -503,14 +503,14 @@ class MY_Email extends CI_Email {
   public function send_lang($key,$data=array(),$prepare_body=TRUE, $body='' ) {
     if (empty($this->lang)) $this->set_language();
     $this->body='';
-    
+
     // Get subject & body
     $mail = $this->CI->data->table('cfg_email')->where('key',$key)->get_row();
     if (!$mail) {
       $this->_set_error_message('email_key_not_found', $key);
       return false;
     }
-    
+
     // Get mail info
     $subject=el('str_subject_'.$this->lang,$mail,'');
     if (empty($body)) $body=el('txt_email_'.$this->lang,$mail,'');
@@ -518,7 +518,7 @@ class MY_Email extends CI_Email {
       $this->_set_error_message('email_subject_text_empty', $key);
       return false;
     }
-    
+
     // Parse values in subject and body
     $this->_set_default_parse_data();
     $data=array_merge($this->_parse_data,$data);
@@ -552,13 +552,13 @@ class MY_Email extends CI_Email {
     // Set email
     $this->subject($subject);
     $this->message($body);
-    
+
     // Send email
-    $send = $this->send(); 
+    $send = $this->send();
     // trace_(['send_lang','key'=>$key,'send'=>$send,'mail'=>$mail,'subject'=>$subject,'body'=>$body]);
     return $send;
   }
-  
+
   /**
    * Sets default data for send_lang()
    *
@@ -571,13 +571,13 @@ class MY_Email extends CI_Email {
     if (!isset($this->_parse_data['today']))       $this->_parse_data['today'] = strftime('%A %e %B %Y');
     return $this;
   }
-  
-  
-  
+
+
+
   /**
    * Zorgt voor juiste verwijzingen in de tekst van een mailbody en de juiste styling
    *
-   * @param string $body 
+   * @param string $body
    * @return string
    * @author Jan den Besten
    */
@@ -587,7 +587,7 @@ class MY_Email extends CI_Email {
 		$body=str_replace('href="undefined/','href="'.base_url(),$body);
 		$body=preg_replace('/href=\"(?!https?:\/\/).*?/','href="'.base_url(),$body);
 		$body=str_replace('##MAIL##','href="mailto:',$body);
-    
+
 
     // If restricted image -> copy in _tmp assets folder and serve from there
     if (preg_match_all('/<img.*src=\".*_media\/(.*)\/(.*)"/iu', $body, $matches)) {
@@ -616,29 +616,29 @@ class MY_Email extends CI_Email {
     $body = preg_replace('/(url\([\'|"])/uU', '$1'.base_url(), $body);
     return $body;
   }
-  
+
   /**
    * Add styling to tags
-   * 
+   *
    * Met deze functie kun je aan tags en tags met een class in de html van je email styling toevoegen.
    * Je geeft een array met styles mee:
    * - Waarvan de key de tag is of een tag met een class: 'td' of 'td.speciaal' bijvoorbeeld.
    * - De value komt dat bij al die tags ('<td>' of '<td class="speciaal">) in de vorm van een style attribuut: style="..."
    * - Let op dat bij emails overerving en dat soort zaken niet (of niet geheel) worden ondersteund.
    * - Verder is de volgorde van de style array van belang. Zorg ervoor dat een tag zonder class eerder komt dan dezelfde tag met een class.
-   * 
+   *
    * Voorbeeld:
-   * 
+   *
    * array(
    *  'td'           => 'color:grey',
    *  'td.speciaal'  => 'font-weight:bold',
    *  'p'            => 'font-family:Arial;font-size:16px;',
    *  'a'            => 'font-family:Arial;font-size:16px;'
    * )
-   * 
+   *
    *
    * @param string $body
-   * @param array $styles 
+   * @param array $styles
    * @return string
    * @author Jan den Besten
    */
@@ -654,12 +654,12 @@ class MY_Email extends CI_Email {
         else {
           $body = preg_replace("/<".$tag."(|\s[^>]*)>/uiU", "<".$tag." style=\"".$style."\"$1$2>", $body);
         }
-        
+
       }
     }
     return $body;
   }
-  
+
   /**
    * Get resulting body after sending
    *
@@ -669,8 +669,8 @@ class MY_Email extends CI_Email {
   public function get_body() {
     return $this->body;
   }
-  
-  
 
-	
+
+
+
 }
