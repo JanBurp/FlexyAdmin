@@ -94,13 +94,13 @@ if ( ! function_exists('create_captcha'))
 		// -----------------------------------
 
 		$now = str_replace(',','',microtime(TRUE)); // Changed by JDB
-	
+
 		$current_dir = @opendir($img_path);
 		while ($filename = @readdir($current_dir))
 		{
 			$timename = str_replace('_captcha_','',$filename); // JDB
 			if (in_array(substr($timename, -4), array('.jpg', '.png'))
-				&& (str_replace(array('.jpg', '.png'), '', $timename) + $expiration) < $now)
+                && ( intval(str_replace(array('.jpg', '.png'), '', $timename)) + $expiration) < $now)
 			{
 				@unlink($img_path.$filename);
 			}
