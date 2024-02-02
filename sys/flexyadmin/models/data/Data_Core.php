@@ -2643,9 +2643,10 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	public function get_field( $field, $where = NULL ) {
-    $this->select( $field );
-    $row = $this->get_row( $where );
-		return $row[$field];
+        $this->select( $field );
+        $row = $this->get_row( $where );
+        if ($row) return $row[$field];
+        return null;
 	}
 
 
