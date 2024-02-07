@@ -56,7 +56,7 @@ class Plugin_stats extends Plugin {
 		$this->Year=$year;
 		$this->Time=mktime(0,0,0,$month,1,$year);
 		$this->Month=date('m',$this->Time);
-		$this->MonthTxt=strftime('%B',$this->Time);
+		$this->MonthTxt=@strftime('%B',$this->Time);
 
 		// Is there xml data for earlier years? Give option to show it
 		$xmlYearFiles=read_map(SITEPATH.'stats','xml',FALSE,FALSE);
@@ -181,7 +181,7 @@ class Plugin_stats extends Plugin {
 		switch ($type) {
 			case 'this_year':
 				foreach ($data as $key => $value) {
-					$data[$key]['month'] = '<a class="btn btn-sm btn-warning" href="'.site_url($this->CI->config->item('API_home').'plugin/stats/'.$this->Year.'/'.$value['month']).'">'.strftime('%b',mktime(0,0,0,$value['month'])).'</a>';
+					$data[$key]['month'] = '<a class="btn btn-sm btn-warning" href="'.site_url($this->CI->config->item('API_home').'plugin/stats/'.$this->Year.'/'.$value['month']).'">'.@strftime('%b',mktime(0,0,0,$value['month'])).'</a>';
 				}
 				$this->_add_graph($data,$type,$this->Year);
 				break;

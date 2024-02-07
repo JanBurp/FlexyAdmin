@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeIgniter
  *
@@ -113,23 +114,35 @@ date_default_timezone_set('Europe/Amsterdam');
  * You can set several localhosts if needed.
  */
 if (defined('PHPUNIT_TEST')) {
-  define("IS_LOCALHOST",TRUE);
-}
-else {
-  define("LOCALHOSTS","0.0.0.0,127.0.0.1,localhost,localhost:8888,10.37.129.2,192.168.178.20");
-	function is_local_host() { $is=FALSE; $localhosts=explode(",",LOCALHOSTS); foreach ($localhosts as $host) { if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; } } if (substr($_SERVER['HTTP_HOST'],-5)=='.test') { $is=TRUE; } return $is; }
-  // HTTP SERVER?
-  if (isset($_SERVER['HTTP_HOST'])) {
-    if (is_local_host())
-      define("IS_LOCALHOST",TRUE);
+    define("IS_LOCALHOST", TRUE);
+} else {
+    define("LOCALHOSTS", "0.0.0.0,127.0.0.1,localhost,localhost:8888,10.37.129.2,192.168.178.20");
+    function is_local_host()
+    {
+        $is = FALSE;
+        $localhosts = explode(",", LOCALHOSTS);
+        foreach ($localhosts as $host) {
+            if ($host == $_SERVER['HTTP_HOST']) {
+                $is = TRUE;
+            }
+        }
+        if (substr($_SERVER['HTTP_HOST'], -5) == '.test') {
+            $is = TRUE;
+        }
+        return $is;
+    }
+    // HTTP SERVER?
+    if (isset($_SERVER['HTTP_HOST'])) {
+        if (is_local_host())
+            define("IS_LOCALHOST", TRUE);
+        else
+            define("IS_LOCALHOST", FALSE);
+    }
+    // or CLI?
+    elseif (isset($_SERVER['SHELL']))
+        define("IS_LOCALHOST", TRUE);
     else
-    	define("IS_LOCALHOST",FALSE);
-  }
-  // or CLI?
-  elseif (isset($_SERVER['SHELL']))
-    define("IS_LOCALHOST",TRUE);
-  else
-    define("IS_LOCALHOST",FALSE);
+        define("IS_LOCALHOST", FALSE);
 }
 
 
@@ -138,10 +151,10 @@ else {
  * FLEXYADMIN: IS AJAX request?
  *---------------------------------------------------------------
  */
-if ( !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' )
-  define("IS_AJAX",true);
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')
+    define("IS_AJAX", true);
 else
-  define("IS_AJAX",false);
+    define("IS_AJAX", false);
 
 
 
@@ -168,13 +181,11 @@ else
  * FLEXYADMIN: Set according to IS_LOCALHOST
  */
 if (defined('PHPUNIT_TEST') or DEBUGGING) {
-  define('ENVIRONMENT','testing');
-}
-elseif (IS_LOCALHOST) {
-  define('ENVIRONMENT', 'development');
-}
-else {
-  define('ENVIRONMENT', 'production');
+    define('ENVIRONMENT', 'testing');
+} elseif (IS_LOCALHOST) {
+    define('ENVIRONMENT', 'development');
+} else {
+    define('ENVIRONMENT', 'production');
 }
 
 
@@ -186,30 +197,26 @@ else {
  * Different environments will require different levels of error reporting.
  * By default development will show errors but testing and live will hide them.
  */
-switch (ENVIRONMENT)
-{
-	case 'development':
-	case 'testing':
-    error_reporting(E_ALL & ~E_DEPRECATED);
-		ini_set('display_errors', 1);
-	break;
+switch (ENVIRONMENT) {
+    case 'development':
+    case 'testing':
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        break;
 
-	case 'production':
-		ini_set('display_errors', 0);
-		if (version_compare(PHP_VERSION, '5.3', '>='))
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
-		}
-		else
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
-		}
-	break;
+    case 'production':
+        ini_set('display_errors', 0);
+        if (version_compare(PHP_VERSION, '5.3', '>=')) {
+            error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+        } else {
+            error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
+        }
+        break;
 
-	default:
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'The application environment is not set correctly.';
-		exit(1); // EXIT_ERROR
+    default:
+        header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+        echo 'The application environment is not set correctly.';
+        exit(1); // EXIT_ERROR
 }
 
 /*
@@ -224,12 +231,11 @@ switch (ENVIRONMENT)
 
 // FLEXYADMIN changes
 if (SAFE_INSTALL) {
-	$system_path = '../sys'.DIRECTORY_SEPARATOR.'codeigniter';
-  $site_folder = '../site';
-}
-else {
-  $system_path = 'sys'.DIRECTORY_SEPARATOR.'codeigniter';
-  $site_folder = 'site';
+    $system_path = '../sys' . DIRECTORY_SEPARATOR . 'codeigniter';
+    $site_folder = '../site';
+} else {
+    $system_path = 'sys' . DIRECTORY_SEPARATOR . 'codeigniter';
+    $site_folder = 'site';
 }
 
 
@@ -252,10 +258,9 @@ else {
 
 // FLEXYADMIN changes
 if (SAFE_INSTALL) {
-	$application_folder = '../sys'.DIRECTORY_SEPARATOR.'flexyadmin';
-}
-else {
-  $application_folder = 'sys'.DIRECTORY_SEPARATOR.'flexyadmin';
+    $application_folder = '../sys' . DIRECTORY_SEPARATOR . 'flexyadmin';
+} else {
+    $application_folder = 'sys' . DIRECTORY_SEPARATOR . 'flexyadmin';
 }
 
 
@@ -272,7 +277,7 @@ else {
  *
  * NO TRAILING SLASH!
  */
-	$view_folder = '';
+$view_folder = '';
 
 
 /*
@@ -294,15 +299,15 @@ else {
  *
  * Un-comment the $routing array below to use this feature
  */
-	// The directory name, relative to the "controllers" directory.  Leave blank
-	// if your controller is not in a sub-directory within the "controllers" one
-	// $routing['directory'] = '';
+// The directory name, relative to the "controllers" directory.  Leave blank
+// if your controller is not in a sub-directory within the "controllers" one
+// $routing['directory'] = '';
 
-	// The controller class file name.  Example:  mycontroller
-	// $routing['controller'] = '';
+// The controller class file name.  Example:  mycontroller
+// $routing['controller'] = '';
 
-	// The controller function you wish to be called.
-	// $routing['function']	= '';
+// The controller function you wish to be called.
+// $routing['function']	= '';
 
 
 /*
@@ -319,7 +324,7 @@ else {
  *
  * Un-comment the $assign_to_config array below to use this feature
  */
-	// $assign_to_config['name_of_config_item'] = 'value of config item';
+// $assign_to_config['name_of_config_item'] = 'value of config item';
 
 
 
@@ -333,122 +338,99 @@ else {
  * ---------------------------------------------------------------
  */
 
-	// Set the current directory correctly for CLI requests
-	if (defined('STDIN'))
-	{
-		chdir(dirname(__FILE__));
-	}
+// Set the current directory correctly for CLI requests
+if (defined('STDIN')) {
+    chdir(dirname(__FILE__));
+}
 
-	if (($_temp = realpath($system_path)) !== FALSE)
-	{
-		$system_path = $_temp.DIRECTORY_SEPARATOR;
-	}
-	else
-	{
-		// Ensure there's a trailing slash
-		$system_path = strtr(
-			rtrim($system_path, '/\\'),
-			'/\\',
-			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-		).DIRECTORY_SEPARATOR;
-	}
+if (($_temp = realpath($system_path)) !== FALSE) {
+    $system_path = $_temp . DIRECTORY_SEPARATOR;
+} else {
+    // Ensure there's a trailing slash
+    $system_path = strtr(
+        rtrim($system_path, '/\\'),
+        '/\\',
+        DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR
+    ) . DIRECTORY_SEPARATOR;
+}
 
-	// Is the system path correct?
-	if ( ! is_dir($system_path))
-	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'Your system folder path does not appear to be set correctly. Please open the following file and correct this: '.pathinfo(__FILE__, PATHINFO_BASENAME);
-		exit(3); // EXIT_CONFIG
-	}
+// Is the system path correct?
+if (!is_dir($system_path)) {
+    header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+    echo 'Your system folder path does not appear to be set correctly. Please open the following file and correct this: ' . pathinfo(__FILE__, PATHINFO_BASENAME);
+    exit(3); // EXIT_CONFIG
+}
 
 /*
  * -------------------------------------------------------------------
  *  Now that we know the path, set the main path constants
  * -------------------------------------------------------------------
  */
-	// The name of THIS file
-	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
+// The name of THIS file
+define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 
-	// Path to the system directory
-	define('BASEPATH', $system_path);
+// Path to the system directory
+define('BASEPATH', $system_path);
 
-	// Path to the front controller (this file) directory
-	define('FCPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
+// Path to the front controller (this file) directory
+define('FCPATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
-	// Name of the "system" directory
-	define('SYSDIR', basename(BASEPATH));
+// Name of the "system" directory
+define('SYSDIR', basename(BASEPATH));
 
-	// The path to the "application" directory
-	if (is_dir($application_folder))
-	{
-		if (($_temp = realpath($application_folder)) !== FALSE)
-		{
-			$application_folder = $_temp;
-		}
-		else
-		{
-			$application_folder = strtr(
-				rtrim($application_folder, '/\\'),
-				'/\\',
-				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-			);
-		}
-	}
-	elseif (is_dir(BASEPATH.$application_folder.DIRECTORY_SEPARATOR))
-	{
-		$application_folder = BASEPATH.strtr(
-			trim($application_folder, '/\\'),
-			'/\\',
-			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-		);
-	}
-	else
-	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'Your application folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
-		exit(3); // EXIT_CONFIG
-	}
+// The path to the "application" directory
+if (is_dir($application_folder)) {
+    if (($_temp = realpath($application_folder)) !== FALSE) {
+        $application_folder = $_temp;
+    } else {
+        $application_folder = strtr(
+            rtrim($application_folder, '/\\'),
+            '/\\',
+            DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR
+        );
+    }
+} elseif (is_dir(BASEPATH . $application_folder . DIRECTORY_SEPARATOR)) {
+    $application_folder = BASEPATH . strtr(
+        trim($application_folder, '/\\'),
+        '/\\',
+        DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR
+    );
+} else {
+    header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+    echo 'Your application folder path does not appear to be set correctly. Please open the following file and correct this: ' . SELF;
+    exit(3); // EXIT_CONFIG
+}
 
-	define('APPPATH', $application_folder.DIRECTORY_SEPARATOR);
+define('APPPATH', $application_folder . DIRECTORY_SEPARATOR);
 
-	// The path to the "views" directory
-	if ( ! isset($view_folder[0]) && is_dir(APPPATH.'views'.DIRECTORY_SEPARATOR))
-	{
-		$view_folder = APPPATH.'views';
-	}
-	elseif (is_dir($view_folder))
-	{
-		if (($_temp = realpath($view_folder)) !== FALSE)
-		{
-			$view_folder = $_temp;
-		}
-		else
-		{
-			$view_folder = strtr(
-				rtrim($view_folder, '/\\'),
-				'/\\',
-				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-			);
-		}
-	}
-	elseif (is_dir(APPPATH.$view_folder.DIRECTORY_SEPARATOR))
-	{
-		$view_folder = APPPATH.strtr(
-			trim($view_folder, '/\\'),
-			'/\\',
-			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-		);
-	}
-	else
-	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
-		exit(3); // EXIT_CONFIG
-	}
+// The path to the "views" directory
+if (!isset($view_folder[0]) && is_dir(APPPATH . 'views' . DIRECTORY_SEPARATOR)) {
+    $view_folder = APPPATH . 'views';
+} elseif (is_dir($view_folder)) {
+    if (($_temp = realpath($view_folder)) !== FALSE) {
+        $view_folder = $_temp;
+    } else {
+        $view_folder = strtr(
+            rtrim($view_folder, '/\\'),
+            '/\\',
+            DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR
+        );
+    }
+} elseif (is_dir(APPPATH . $view_folder . DIRECTORY_SEPARATOR)) {
+    $view_folder = APPPATH . strtr(
+        trim($view_folder, '/\\'),
+        '/\\',
+        DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR
+    );
+} else {
+    header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+    echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: ' . SELF;
+    exit(3); // EXIT_CONFIG
+}
 
-	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
+define('VIEWPATH', $view_folder . DIRECTORY_SEPARATOR);
 
-  define('SITEPATH', $site_folder.DIRECTORY_SEPARATOR);			// FLEXYADMIN change
+define('SITEPATH', $site_folder . DIRECTORY_SEPARATOR);            // FLEXYADMIN change
 
 /*
  * --------------------------------------------------------------------
@@ -457,4 +439,4 @@ else {
  *
  * And away we go...
  */
-require_once BASEPATH.'core/CodeIgniter.php';
+require_once BASEPATH . 'core/CodeIgniter.php';

@@ -568,7 +568,7 @@ class MY_Email extends CI_Email {
   private function _set_default_parse_data() {
     if (!isset($this->_parse_data['site_url']))    $this->_parse_data['site_url'] = site_url();
     if (!isset($this->_parse_data['site_title']))  $this->_parse_data['site_title'] = $this->CI->data->table('tbl_site')->get_field('str_title');
-    if (!isset($this->_parse_data['today']))       $this->_parse_data['today'] = strftime('%A %e %B %Y');
+    if (!isset($this->_parse_data['today']))       $this->_parse_data['today'] = @strftime('%A %e %B %Y');
     return $this;
   }
 
