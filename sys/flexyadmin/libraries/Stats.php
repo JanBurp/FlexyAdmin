@@ -6,7 +6,7 @@
  * @author Jan den Besten
  * @internal
  */
-
+#[AllowDynamicProperties]
 class Stats
 {
 
