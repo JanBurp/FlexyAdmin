@@ -1,3 +1,14 @@
+=3.5.71
+
+[nl]
+- PHP 8.3 ondersteuning
+[/nl]
+
+[en]
+- PHP 8.3 ready
+[/en]
+
+
 =3.5.70
 
 [nl]
