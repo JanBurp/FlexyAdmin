@@ -3,10 +3,10 @@
 /** \ingroup plugins
  * Maakt een zipbestand van de gekozen module of plugin.
  * Met dit zipbestand kan de module/plugin geïnstalleerd worden met de plugin_install_plugin
- *  
+ *
  * @author Jan den Besten
  */
- 
+
 class Plugin_create_plugin extends Plugin {
 
   var $wizard;
@@ -18,13 +18,13 @@ class Plugin_create_plugin extends Plugin {
     $this->CI->load->library('zip');
 	}
 
-	
+
   /**
    */
   public function _admin_api($args=false) {
 		if ($this->CI->flexy_auth->is_super_admin()) {
 			$this->add_content(h($this->name,1));
-      
+
       $wizard = array(
                       'title'         => 'Create zipfile from module/plugin',
                       'object'        => $this,
@@ -66,28 +66,28 @@ class Plugin_create_plugin extends Plugin {
         </ul>
         <code>\$config['_files']=array(<br/>&nbsp;&nbsp;'db/example.sql'<br/>);</code><br/><br/>"
       );
-      
+
       $this->add_content( $this->wizard->render().$this->wizard->call_step($args) );
-      
+
       return $this->content;
 		}
 	}
-  
+
   public function choose_addon() {
     $out='';
     $addons = read_map(SITEPATH.'libraries','php',TRUE,FALSE);
     $addons = array_unset_keys($addons,$this->config('exclude'));
     $addons = array_keys($addons);
     $addons = array_combine($addons,$addons);
-    
+
     foreach ($addons as $key => $value) {
       $addons[$key]=str_replace('.php','',$value);
     }
-    
+
     $form = new Form();
     $formdata=array('addon'=>array('label'=>'module/plugin','type'=>'dropdown','options'=>$addons));
     $form->set_data($formdata);
-    
+
     if ($form->validation()) {
       $data=$form->get_data();
       $addon = $data['addon'];
@@ -101,14 +101,14 @@ class Plugin_create_plugin extends Plugin {
     }
     return $out;
   }
-  
+
   public function collect_files($args) {
     $out='';
-    
+
     $addon=$args[0];
     $addon_file=$addon.'.php';
     $is_plugin=(substr($addon,0,6)=='plugin');
-    
+
     // Collect files with same name
     $files=array();
     $files[]=SITEPATH.'libraries/'.$addon_file;
@@ -122,7 +122,7 @@ class Plugin_create_plugin extends Plugin {
     foreach ($langs as $lang) {
       if (file_exists(SITEPATH.'language/'.$lang.'/'.$langfile)) $files[]=SITEPATH.'language/'.$lang.'/'.$langfile;
     }
-    
+
     // Files mentioned in config
     if (file_exists(SITEPATH.'config/'.$addon_file)) {
       $this->CI->config->load($addon_file,true);
@@ -152,10 +152,10 @@ class Plugin_create_plugin extends Plugin {
         foreach ($files as $key => $file) {
           if (substr($file,-1,1)=='*') unset($files[$key]);
         }
-        
+
       }
     }
-    
+
     // Readme
     $code=file_get_contents(SITEPATH.'libraries/'.$addon_file);
     $readme='';
@@ -169,11 +169,11 @@ class Plugin_create_plugin extends Plugin {
 
     sort($files);
     $files=array_combine($files,$files);
-    
+
     $filename='flexyadmin_'.$addon.'.zip';
-    
+
     $readme.="\n\npacked files\n------\n\n- ".implode("\n- ",$files);
-    $readme.="\n\n'".$filename."' is a flexyadmin ".($is_plugin?'plugin':'module')." - packed at ".strftime('%d %b %Y %R')."\nwww.flexyadmin.com";
+    $readme.="\n\n'".$filename."' is a flexyadmin ".($is_plugin?'plugin':'module')." - packed at ".@strftime('%d %b %Y %R')."\nwww.flexyadmin.com";
 
     // Choose files & name
     $form = new Form();
@@ -183,7 +183,7 @@ class Plugin_create_plugin extends Plugin {
       'zipname'       =>array('label'=>'Name of the zipfile','value'=>$filename)
     );
     $form->set_data($formdata);
-    
+
     if ($form->validation()) {
       $data=$form->get_data();
       $files=explode('|',$data['files']);
@@ -199,11 +199,11 @@ class Plugin_create_plugin extends Plugin {
     else {
       $out.=$form->render();
     }
-    
+
     return $out;
   }
-  
-  
+
+
   public function create_zip($args) {
     $out='';
     $addon=$args[0];
@@ -212,18 +212,18 @@ class Plugin_create_plugin extends Plugin {
     $zipname = $this->CI->session->userdata('zipname');
     $this->CI->session->unset_userdata('addon_files');
     $this->CI->session->unset_userdata('zipname');
-  
-    $this->CI->zip->add_data($addon.'_readme.md',$readme); 
+
+    $this->CI->zip->add_data($addon.'_readme.md',$readme);
     foreach ($files as $file) {
-      $this->CI->zip->read_file($file,true); 
+      $this->CI->zip->read_file($file,true);
     }
     $this->CI->zip->download($zipname);
-    
+
     $out.=p().'Download will start...'._p();
     return $out;
   }
-  
-	
+
+
 }
 
 ?>
