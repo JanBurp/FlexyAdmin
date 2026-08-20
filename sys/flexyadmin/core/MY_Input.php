@@ -7,9 +7,11 @@
  */
 
 class MY_Input extends CI_Input {
-  
-  public function __construct() {
-    parent::__construct();
+
+  // pocketarc/codeigniter's CI_Input::__construct() requires the CI_Security instance
+  // (stock CI3 3.1.13's didn't take any argument) - accept and forward it here.
+  public function __construct($security = NULL) {
+    parent::__construct($security);
   }
   
 	/**

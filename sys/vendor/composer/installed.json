@@ -932,6 +932,46 @@
             "install-path": "../phpunit/phpunit"
         },
         {
+            "name": "pocketarc/codeigniter",
+            "version": "3.4.4",
+            "version_normalized": "3.4.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pocketarc/codeigniter.git",
+                "reference": "fb57d3519fa929a35e78e279c3dcdd5cc47b2456"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pocketarc/codeigniter/zipball/fb57d3519fa929a35e78e279c3dcdd5cc47b2456",
+                "reference": "fb57d3519fa929a35e78e279c3dcdd5cc47b2456",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.8"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "1.6.*",
+                "phpunit/phpunit": "4.* || 5.* || 8.* || 9.*"
+            },
+            "suggest": {
+                "paragonie/random_compat": "Provides better randomness in PHP 5.x"
+            },
+            "time": "2026-07-18T22:23:24+00:00",
+            "type": "project",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Actively maintained CodeIgniter 3 fork with support for PHP 5.4 - PHP 8.5 (and beyond). Fully backward compatible.",
+            "homepage": "https://github.com/pocketarc/codeigniter",
+            "support": {
+                "issues": "https://github.com/pocketarc/codeigniter/issues",
+                "source": "https://github.com/pocketarc/codeigniter"
+            },
+            "install-path": "../pocketarc/codeigniter"
+        },
+        {
             "name": "sebastian/cli-parser",
             "version": "1.0.1",
             "version_normalized": "1.0.1.0",

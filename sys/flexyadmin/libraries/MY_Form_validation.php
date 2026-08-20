@@ -41,6 +41,12 @@ class MY_Form_validation extends CI_Form_validation {
         if (empty($rule)) unset($rules[$key]);
       }
     }
+    // pocketarc/codeigniter's set_rules() throws a RuntimeException for an empty $rules
+    // parameter (stock CI3 3.1.13 silently did nothing) - our callers set_rules() per
+    // field regardless of whether that field has any rules, so keep the old no-op.
+    if (is_string($field) and ($field === '' or empty($rules))) {
+      return $this;
+    }
     return parent::set_rules($field,$label,$rules,$errors);
   }
   
@@ -50,10 +56,14 @@ class MY_Form_validation extends CI_Form_validation {
 	 *
 	 * JDB Change: als er geen validation data is, dan is er geen validatie nodig en is het waar.
 	 *
-	 * @param	string	$group
+	 * pocketarc/codeigniter added a by-reference $data param to CI_Form_validation::run()
+	 * (stock CI3 3.1.13 only had $group) - match that signature so it stays compatible.
+	 *
+	 * @param	string	$config
+	 * @param	array	$data
 	 * @return	bool
 	 */
-	public function run($group = '') {
+	public function run($config = NULL, &$data = NULL) {
 		// Do we even have any data to process?  Mm?
 		$validation_array = empty($this->validation_data) ? $_POST : $this->validation_data;
 		if (count($validation_array) === 0)
@@ -71,8 +81,8 @@ class MY_Form_validation extends CI_Form_validation {
 				return TRUE;
 			}
     }
-    
-    return parent::run($group);
+
+    return parent::run($config, $data);
   }
 
 

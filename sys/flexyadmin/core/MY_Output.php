@@ -15,12 +15,18 @@ class MY_Output extends CI_OUTPUT {
 
   /**
    * Display en voegt toe aan stats
-   * 
-   * @param string $output['']
+   *
+   * pocketarc/codeigniter's CI_Output::_display() defaults $output to NULL and falls back
+   * to $this->final_output only when $output === NULL (stock CI3 3.1.13 defaulted to '' and
+   * always used the passed value as-is). CodeIgniter.php's bootstrap calls $OUT->_display()
+   * with no argument, so this override must keep NULL as its own default too, or every page
+   * renders blank.
+   *
+   * @param string $output[NULL]
    * @return void
    * @author Jan den Besten
    */
-	public function _display($output = '')	{
+	public function _display($output = NULL)	{
 		parent::_display($output);
 		$this->add_to_stats();
 	}
