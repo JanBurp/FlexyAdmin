@@ -7,6 +7,15 @@ class DataTest extends CITestCase {
 
   protected function setUp() :void   {
     $this->CI->load->model('data/data');
+    // test_create_uri() needs $this->CI->flexy_auth and $this->CI->row - these are
+    // normally only loaded as a side effect of ApiTestModel's constructor (via
+    // ApiRowTest etc.), which isn't part of every testsuite (e.g. "commit" excludes
+    // it). $this->CI is a singleton shared across the whole PHPUnit run, so relying
+    // on some other test file having run first is fragile; load them explicitly
+    // here instead. Both loaders no-op if already loaded.
+    $this->CI->load->library('flexy_auth');
+    $this->CI->load->model('api/Api_Model'); // Row.php extends Api_Model, load it first
+    $this->CI->load->model('api/row');
   }
 
   protected function tearDown() :void  {
