@@ -365,8 +365,50 @@ UPDATE `tbl_menu` SET `order`='5', `self_parent`='0', `uri`='contact' WHERE `id`
 
 
   }
-    
-    
+
+
+  /**
+   * Test dat een 'new' positie buiten de geldige order-range (bijv. door een
+   * client-side bug of corrupte input) wordt begrensd in plaats van de tabel
+   * te corrumperen.
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function testSetOutOfRange() {
+
+    // 'new' veel groter dan de hoogste geldige order (5) -> begrenzen tot 5
+    // (zelfde resultaat als een geldige "Set 1 => 5", zie testSet)
+    $new = $this->CI->order->set($this->table,1,999);
+    $this->assertEquals( 5, $new );
+    $result = $this->_result(true);
+    $expected = array(
+      '6'=>array( 'id'=>'6', 'order'=>'0', 'self_parent' => 0 ),
+      '2'=>array( 'id'=>'2', 'order'=>'1', 'self_parent' => 0 ),
+      '3'=>array( 'id'=>'3', 'order'=>'2', 'self_parent' => 2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'3', 'self_parent' => 2 ),
+      '4'=>array( 'id'=>'4', 'order'=>'4', 'self_parent' => 0 ),
+      '1'=>array( 'id'=>'1', 'order'=>'5', 'self_parent' => 0 ),
+    );
+    $this->assertEquals($expected, $result);
+
+    // 'new' negatief -> begrenzen tot 0
+    // (zelfde resultaat als een geldige "Set 4 => 0", zie testSet)
+    $new = $this->CI->order->set($this->table,4,-50);
+    $this->assertEquals( 0, $new );
+    $result = $this->_result(true);
+    $expected = array(
+      '4'=>array( 'id'=>'4', 'order'=>'0', 'self_parent' => 0 ),
+      '6'=>array( 'id'=>'6', 'order'=>'1', 'self_parent' => 0 ),
+      '2'=>array( 'id'=>'2', 'order'=>'2', 'self_parent' => 0 ),
+      '3'=>array( 'id'=>'3', 'order'=>'3', 'self_parent' => 2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'4', 'self_parent' => 2 ),
+      '1'=>array( 'id'=>'1', 'order'=>'5', 'self_parent' => 0 ),
+    );
+    $this->assertEquals($expected, $result);
+  }
+
+
   // /**
   //  * Test verschuiven
   //  *
