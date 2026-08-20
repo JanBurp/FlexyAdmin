@@ -230,11 +230,12 @@ switch (ENVIRONMENT) {
  */
 
 // FLEXYADMIN changes
+// CodeIgniter core is now the pocketarc/codeigniter Composer package (see sys/composer.json)
 if (SAFE_INSTALL) {
-    $system_path = '../sys' . DIRECTORY_SEPARATOR . 'codeigniter';
+    $system_path = '../sys' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'pocketarc' . DIRECTORY_SEPARATOR . 'codeigniter' . DIRECTORY_SEPARATOR . 'system';
     $site_folder = '../site';
 } else {
-    $system_path = 'sys' . DIRECTORY_SEPARATOR . 'codeigniter';
+    $system_path = 'sys' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'pocketarc' . DIRECTORY_SEPARATOR . 'codeigniter' . DIRECTORY_SEPARATOR . 'system';
     $site_folder = 'site';
 }
 

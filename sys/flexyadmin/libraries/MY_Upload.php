@@ -6,6 +6,7 @@
  *
  * @author Jan den Besten
  */
+#[AllowDynamicProperties]
 class MY_Upload extends CI_Upload
 {
 

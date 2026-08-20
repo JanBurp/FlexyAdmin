@@ -27,7 +27,8 @@ $config['ci_website'] = 'http://www.codeigniter.com';
 
 $config['ci_download_link'] = 'http://www.codeigniter.com/download';
 
-$config['ci_update_uri'] = 'https://raw.githubusercontent.com/bcit-ci/CodeIgniter/develop/system/core/CodeIgniter.php';
+// Was bcit-ci/CodeIgniter, but that's unmaintained for PHP 8.2+; we now track pocketarc/codeigniter (see sys/composer.json)
+$config['ci_update_uri'] = 'https://raw.githubusercontent.com/pocketarc/codeigniter/develop/system/core/CodeIgniter.php';
 
 $config['develbar_update_uri'] = 'https://raw.githubusercontent.com/JCSama/CodeIgniter-develbar/master/version.json';
 

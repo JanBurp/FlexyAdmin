@@ -5,6 +5,7 @@
  * Add sharpen parameter for quality improvement with imagemagick
  *
  */
+#[AllowDynamicProperties]
 class MY_Image_lib extends CI_Image_lib {
 
   // Added by JdB, idea DirkKokx

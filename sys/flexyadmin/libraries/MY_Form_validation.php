@@ -41,6 +41,12 @@ class MY_Form_validation extends CI_Form_validation {
         if (empty($rule)) unset($rules[$key]);
       }
     }
+    // pocketarc/codeigniter's set_rules() throws a RuntimeException for an empty $rules
+    // parameter (stock CI3 3.1.13 silently did nothing) - our callers set_rules() per
+    // field regardless of whether that field has any rules, so keep the old no-op.
+    if (is_string($field) and ($field === '' or empty($rules))) {
+      return $this;
+    }
     return parent::set_rules($field,$label,$rules,$errors);
   }
   
@@ -50,10 +56,24 @@ class MY_Form_validation extends CI_Form_validation {
 	 *
 	 * JDB Change: als er geen validation data is, dan is er geen validatie nodig en is het waar.
 	 *
-	 * @param	string	$group
+	 * pocketarc/codeigniter added a by-reference $data param to CI_Form_validation::run()
+	 * (stock CI3 3.1.13 only had $group) - match that signature so it stays compatible.
+	 *
+	 * pocketarc's own run() uses func_num_args() to decide what to do with the finalized/
+	 * prepped field data: called with 2 args, it fills &$data; called with 0-1 args (as
+	 * stock CI3 always was, and as Auth.php's $this->form_validation->run() still does), it
+	 * writes back into $_POST instead - same as stock always did. Since func_num_args()
+	 * reflects THIS call frame, always forwarding 2 args to parent::run() below would
+	 * permanently switch every caller into "&$data" mode and silently stop $_POST from
+	 * being repopulated with prepped values (e.g. trim'd/xss_clean'd) after run(), which
+	 * code like Auth.php relies on by reading $this->input->post(...) right after run().
+	 * So mirror the caller's own argument count instead of always passing both through.
+	 *
+	 * @param	string	$config
+	 * @param	array	$data
 	 * @return	bool
 	 */
-	public function run($group = '') {
+	public function run($config = NULL, &$data = NULL) {
 		// Do we even have any data to process?  Mm?
 		$validation_array = empty($this->validation_data) ? $_POST : $this->validation_data;
 		if (count($validation_array) === 0)
@@ -71,8 +91,15 @@ class MY_Form_validation extends CI_Form_validation {
 				return TRUE;
 			}
     }
-    
-    return parent::run($group);
+
+    switch (func_num_args()) {
+      case 0:
+        return parent::run();
+      case 1:
+        return parent::run($config);
+      default:
+        return parent::run($config, $data);
+    }
   }
 
 

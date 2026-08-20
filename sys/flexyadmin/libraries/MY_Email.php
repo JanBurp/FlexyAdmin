@@ -8,6 +8,7 @@
  * @author Jan den Besten
  */
 
+#[AllowDynamicProperties]
 class MY_Email extends CI_Email {
 
   private $CI;
