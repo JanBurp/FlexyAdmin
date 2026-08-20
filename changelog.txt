@@ -1,3 +1,22 @@
+=3.5.72
+
+[nl]
+- CodeIgniter kern vervangen door de actief onderhouden Composer package pocketarc/codeigniter (i.p.v. de gebundelde sys/codeigniter map) - beter voorbereid op nieuwe PHP versies
+- Standaard input sanitizing (o.a. global_xss_filtering) hersteld, die verloren ging door de nieuwe CodeIgniter package
+- Bug: volgorde/menu-structuur kon corrupt raken bij het slepen van items in gepagineerde grids
+- Automatisch opschonen van loggegevens (activiteitenlog, login pogingen, statistieken, sessies) na 3 maanden
+- Enkele kleine bugs opgelost (formulier validatie, lege IN() filters)
+[/nl]
+
+[en]
+- Replaced the CodeIgniter core with the actively maintained Composer package pocketarc/codeigniter (instead of the bundled sys/codeigniter folder) - better prepared for future PHP versions
+- Restored default input sanitizing (incl. global_xss_filtering), which was lost due to the new CodeIgniter package
+- Bug: order/menu structure could get corrupted when dragging items in paginated grids
+- Automatic cleanup of log data (activity log, login attempts, stats, sessions) after 3 months
+- Some small bugs solved (form validation, empty IN() filters)
+[/en]
+
+
 =3.5.71
 
 [nl]
