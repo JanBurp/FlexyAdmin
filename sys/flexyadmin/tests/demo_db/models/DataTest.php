@@ -51,6 +51,30 @@ class DataTest extends CITestCase {
     $this->assertEquals( 3, $query->num_rows() );
   }
 
+  /**
+   * pocketarc/codeigniter's CI_DB_query_builder throws an InvalidArgumentException when
+   * where_in()/where_not_in() (and the or_ variants) are given an empty $values array -
+   * stock CI3 3.1.13 silently produced malformed "... IN ()" / "... NOT IN ()" SQL instead.
+   * Data_Core::_where() now handles this explicitly (see there for the reasoning): "IN ()"
+   * can never match anything, "NOT IN ()" excludes nothing.
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function test_where_in_with_empty_array() {
+    // IN an empty set -> matches nothing, but must not throw
+    $query = $this->CI->data->table('tbl_menu')->where_in('id', array())->get();
+    $this->assertEquals(0, $query->num_rows());
+
+    // NOT IN an empty set -> excludes nothing, must not throw
+    $query = $this->CI->data->table('tbl_menu')->where_not_in('id', array())->get();
+    $this->assertEquals(6, $query->num_rows());
+
+    // A normal, non-empty where_in should still behave as before
+    $query = $this->CI->data->table('tbl_menu')->where_in('id', array(1, 2))->get();
+    $this->assertEquals(2, $query->num_rows());
+  }
+
   public function test_settings() {
     $this->CI->data->table( 'tbl_menu' );
     // null
