@@ -51,6 +51,19 @@ class Stats
         $this->table = $table;
     }
 
+    /**
+     * Verwijderd items ouder dan 3 maanden
+     *
+     * @return int Aantal verwijderde items
+     * @author Jan den Besten
+     */
+    public function clean_up()
+    {
+        $this->CI->db->where('tme_date_time <', date('Y-m-d H:i:s', time() - (3 * TIME_MONTH)));
+        $this->CI->db->delete($this->table);
+        return $this->CI->db->affected_rows();
+    }
+
     public function add_current_uri()
     {
         global $URI;

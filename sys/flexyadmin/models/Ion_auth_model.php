@@ -1149,6 +1149,19 @@ class Ion_auth_model extends CI_Model
 		return FALSE;
 	}
 
+	/**
+	 * Verwijderd login attempts ouder dan de ingestelde bewaarperiode
+	 *
+	 * @return int Aantal verwijderde items
+	 * @author Jan den Besten
+	 */
+	public function clean_up() {
+		$this->db->where( 'time <', time()-(3*TIME_MONTH) );
+		$this->db->delete( $this->tables['login_attempts'] );
+		$deleted = $this->db->affected_rows();
+		return $deleted;
+	}
+
 	public function limit($limit)
 	{
 		$this->trigger_events('limit');
