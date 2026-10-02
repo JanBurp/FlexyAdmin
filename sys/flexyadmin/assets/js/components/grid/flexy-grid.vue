@@ -1244,7 +1244,11 @@ export default {
           self._log(self.items);
         }
 
-        var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
+        // 'items[i].order.value' is hierboven al gezet op de absolute order
+        // (orderStart + i), dus orderStart mag hier niet nogmaals worden opgeteld
+        // (dat gaf op gepagineerde grids - orderStart!=0 - een veel te hoge/verkeerde
+        // 'from' waarde en corrumpeerde zo de order/self_parent in de tabel).
+        var newOrder = this.items[ this.draggable.newIndex ].order.value;
         // console.log(newOrder);
         if (self.draggable.children && newIndex>oldIndex) newOrder = newOrder - self.draggable.children.length;
         self.postNewOrder( newOrder ).then(function(response){
@@ -1262,7 +1266,6 @@ export default {
     postNewOrder : function(newOrder) {
       var self=this;
       var itemId = this.draggable.item;
-      // var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
       return flexyState.api({
         method: 'POST',
         url : 'table_order',

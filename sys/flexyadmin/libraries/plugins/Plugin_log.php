@@ -42,6 +42,11 @@ class Plugin_log extends Plugin {
     if ( !$this->CI->flexy_auth->allowed_to_use_cms()) return false;
     $this->CI->load->model('log_activity');
     $this->CI->log_activity->clean_up();
+    $this->CI->load->model('ion_auth_model');
+    $this->CI->ion_auth_model->clean_up();
+    $this->CI->load->library('stats');
+    $this->CI->stats->clean_up();
+    $this->_clean_up_sessions();
     $this->CI->lang->load('home');
     $log = $this->CI->log_activity->get_grouped_user_activity();
     if (empty($log)) return '';
@@ -64,6 +69,19 @@ class Plugin_log extends Plugin {
   
   
   
+
+  /**
+   * cfg_sessions wordt al opgeruimd door CI's eigen session garbage collector,
+   * maar we ruimen ook hier op als extra vangnet.
+   *
+   * @return int Aantal verwijderde items
+   * @author Jan den Besten
+   */
+  private function _clean_up_sessions() {
+    $this->CI->db->where( 'timestamp <', time()-(3*TIME_MONTH) );
+    $this->CI->db->delete( 'cfg_sessions' );
+    return $this->CI->db->affected_rows();
+  }
 
   /**
    * @author Jan den Besten

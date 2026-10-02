@@ -257,12 +257,22 @@ class Order extends CI_Model {
    */
   public function set( $table,$id,$new ) {
     $is_tree=$this->is_a_tree($table);
-    
+
+    // Begrens $new binnen de daadwerkelijke rij-range, zodat een verkeerde/corrupte
+    // waarde (bijv. door een client-side bug) niet een veel te grote/kleine 'order'
+    // wegschrijft en zo de tabel corrumpeert.
+    $new = (int)$new;
+    $max = $this->_get_bottom($table);
+    if ($new < 0)    $new = 0;
+    if ($new > $max) $new = $max;
+
     // Wat is de huidige order?
     $old=(int)$this->_get_order($table,$id);
     // Is dat hetzelfde, dan hoeft er niets te gebeuren
     if ($old===$new) return $new;
-    
+
+    $this->db->trans_begin();
+
     $moved_ids=array($id);
 
     // Neem kinderen mee...
@@ -326,9 +336,16 @@ class Order extends CI_Model {
     if ($log['query']) {
       $this->log_activity->add('order', $log['query'], $log['table'], $log['id'] );
     }
+
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      return $old;
+    }
+    $this->db->trans_commit();
+
     return $new;
   }
-  
+
   /**
    * Geef ids van de kinderen terug
    *

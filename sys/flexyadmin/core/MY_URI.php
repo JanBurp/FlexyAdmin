@@ -6,6 +6,7 @@
  * @author Jan den Besten
  */
 
+#[AllowDynamicProperties]
 class MY_URI extends CI_URI
 {
 
@@ -30,10 +31,12 @@ class MY_URI extends CI_URI
     private $remove = array();
 
     /**
+     * pocketarc/codeigniter's CI_URI::__construct() requires the CI_Config instance
+     * (stock CI3 3.1.13's didn't take any argument) - accept and forward it here.
      */
-    public function __construct()
+    public function __construct($config = NULL)
     {
-        parent::__construct();
+        parent::__construct($config);
         $this->set_home();
         $this->set_remove();
     }

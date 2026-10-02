@@ -3619,7 +3619,21 @@ class Data_Core extends CI_Model
 
                         // WHERE IN ?
                         if (isset($value) and is_array($value)) {
-                            if ($type == 'AND') {
+                            // pocketarc/codeigniter throws an InvalidArgumentException for an
+                            // empty $values array (stock CI3 3.1.13 silently generated malformed
+                            // "... IN ()" / "... NOT IN ()" SQL instead). Handle it explicitly with
+                            // correct semantics: "IN ()" can never match anything, so force this
+                            // condition to fail; "NOT IN ()" excludes nothing, so just skip it.
+                            if (empty($value)) {
+                                if (empty($not)) {
+                                    if ($type == 'AND')
+                                        $this->db->where('0=1', NULL, FALSE);
+                                    else
+                                        $this->db->or_where('0=1', NULL, FALSE);
+                                }
+                                // else: NOT IN () -> excludes nothing, nothing to add
+                            }
+                            elseif ($type == 'AND') {
                                 if (empty($not))
                                     $this->db->where_in($key, $value, $escape);
                                 else
