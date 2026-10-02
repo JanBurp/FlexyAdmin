@@ -1,70 +1,36 @@
 # FlexyAdmin
 
 A Flexible and userfriendly CMS.
-(c) Jan den Besten - www.flexyadmin.com
 
-# Installing
+(c) Jan den Besten - www.flexyadmin.com (2006-2021)
 
-In the examples below, replace `<dir>` with the folder you'd like to have FlexyAdmin installed
+# Goals
 
-### Complete repository
+This CMS was made to make life of my clients more enjoyable. Most of the existing CMSes (at the time i started this) are unfriendly or bloated.
+This CMS keeps everything simple for the user and meanwhile make it possible to build all kinds of websites due to the design priciples of not using standard tenmplates, but easy to use building blocks. For examples see www.jandenbesten.net/portfolio and a demo at www.demo.flexyadmin.com/_admin (login with user/user).
 
-`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git <dir>`
+# Local installation
 
-### Shallow repository (for just a simple website)
-
-`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>`
-
-### Shallow copy of branch (latest for example)
-
-`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --branch releases/latest --single-branch --depth 10 <dir>`
-    
-### Shallow repository a branch
-
-`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 -b <branch> <dir>`
-
-### Move to other remote branch
-
-- Rename the old website folder
-- Make a fresh clone (see above)
-- Copy all importane folders from old to new (public, site, db) 
-  
-## More git
-
-### Removing (old) tags
-
-`git push https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git :refs/tags/3.5.0-beta.x`
-Or use the script: `php scripts/git_remove_tags.php _root_ _from_ _to_`
-
-git push https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git :refs/tags/3.2.3
-git push https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git :refs/tags/3.3.5
-git push https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git :refs/tags/3.4.7
-php scripts/git_remove_tags.php schoool-2.0. 0 5
-php scripts/git_remove_tags.php 3.5.0-beta. 5 25
- 
-### Removing all assets in all the commits in history (See: https://dalibornasevic.com/posts/2-permanently-remove-files-and-folders-from-a-git-repository)
-
-`git filter-branch --tree-filter 'rm -rf site/assets' HEAD`
-After that push all tags and branches with `--force`
-
-# Update
-
-Local URL: /admin/update
+- Install the repo in its own folder
+- Create a new MySQL database and fill the database login in `config/database_local.php`
+- Call the (local) URL thats pointed to the folder (use a local server with PHP for example Laravels Valet)
+- The database is automatically filled with the core tables for a simple website
+- Goto to `{your_local_url}/_admin` to show the CMS admin panel
 
 # Login
 
-Two users exists with a fresh install in de demo database:
+Two users exists with a fresh install:
 
 - admin/admin
 - user/user
 
 # Security
 
-Change these items in site/config/config.php for you're website:
+Change these items in site/config/config.php for you're website. With a normal installation process these should be changed automatically.
 - sess_cookie_name
 - encryption_key
 
+# Userguide
 
-# License
-
-For license see */sys/flexyadmin/flexyadmin_license.txt*.
+You can find a basic userguide in the folder `userguide` with all the basics covered.
+Apart from the userguide, just look at documentation in the code itself. For example `sys\flexyadmin\models\data\Data_Core.php` for the data model.
